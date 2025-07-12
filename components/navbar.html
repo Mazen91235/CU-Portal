@@ -1,0 +1,67 @@
+  <!-- components/navbar.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3 py-2" >
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+
+    <!-- Left: Menu toggle + Logo + Date -->
+    <div class="d-flex align-items-start">
+      <!-- Menu Button  -->
+              <button id="menu-toggle" class="menu-btn">
+                  <img src="../assets/Group.svg" alt="Menu" width="24" height="24" />
+
+              </button>
+      <!-- Logo + Date -->
+      <div class="d-flex flex-column align-items-start">
+        <img src="../assets/Heading 1.svg" alt="Logo" width="172" height="48" />
+        <small class="text-muted" id="current-date"></small>
+      </div>
+    </div>
+
+    <!-- Right: Search + Icons + Profile -->
+    <div class="d-flex align-items-center gap-3">
+
+   <div class="d-none d-md-block position-relative" id="search" 
+     style="height: 40px; width: 220px; transition: all 0.3s ease;">
+
+  <!-- Search Input with more left padding -->
+  <input type="text" name="searchString" 
+         class="form-control form-control-sm ps-5" 
+         placeholder="Search anything..." 
+         style="font-size: 0.9rem; border-radius: 50px; height: 100%;" />
+
+  <!-- Inline Search Icon -->
+  <i class="fas fa-search text-muted position-absolute" 
+     style="top: 50%; left: 15px; transform: translateY(-50%); font-size: 14px;"></i>
+</div>
+
+
+      
+      <!-- Icons -->
+      <a href="#" class="position-relative text-dark me-3" id="notification-icon">
+  <i class="fas fa-bell fa-lg"></i>
+  <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+    
+  </span>
+</a>
+
+      <a href="#" class="position-relative text-dark me-3" id="announcement-icon">
+  <i class="fas fa-bullhorn fa-lg"></i>
+  <span id="announcement-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+    
+  </span>
+</a>
+
+     <a href="../html/profile.html" id="profile-link" class="me-3">
+  <img id="profile-img" src="../assets/avatar.jpg"
+       class="rounded-circle"
+       width="40"
+       height="40"
+       alt="Profile"
+       style="cursor: pointer;" />
+</a>
+
+    </div>
+  </div>
+</nav>
+
+
+

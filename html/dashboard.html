@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+
+
+
+</head>
+  
+ <body>
+  <!-- Sidebar -->
+  <div id="sidebar-container" ></div>
+
+  <!-- Content wrapper: navbar + main content -->
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" ></div>
+    <div id="main-content" class="p-4">
+    </div>
+  </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  // Load navbar
+  fetch("../components/navbar.html")
+    .then(res => res.text())
+    .then(navbarHtml => {
+      document.getElementById("navbar-container").innerHTML = navbarHtml;
+
+      // Load sidebar
+      fetch("../components/sidebar.html")
+        .then(res => res.text())
+        .then(sidebarHtml => {
+          document.getElementById("sidebar-container").innerHTML = sidebarHtml;
+
+          const toggleButton = document.getElementById("menu-toggle");
+          const sidebar = document.getElementById("sidebar");
+          const contentWrapper = document.getElementById("content-wrapper");
+
+          if (toggleButton && sidebar && contentWrapper) {
+            toggleButton.addEventListener("click", () => {
+              sidebar.classList.toggle("hidden");
+              contentWrapper.classList.toggle("sidebar-hidden");
+            });
+          }
+        });
+    });
+});
+</script>
+
+
+
+     </body>
+</html>
+      

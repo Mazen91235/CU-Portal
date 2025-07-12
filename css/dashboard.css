@@ -1,0 +1,35 @@
+
+    
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+/* Sidebar default style */
+#sidebar {
+  width: 256px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+#sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* Content wrapper shifts right when sidebar is visible */
+#content-wrapper {
+  margin-left: 256px;
+  transition: margin-left 0.3s ease;
+}
+
+#content-wrapper.sidebar-hidden {
+  margin-left: 0;
+}
+
