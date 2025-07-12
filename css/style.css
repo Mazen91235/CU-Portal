@@ -1,0 +1,653 @@
+/* General Styling */
+:root {
+    --primary-purple: #6A1B9A; /* Deep Purple */
+    --light-purple: #B39DDB; /* Light Purple for background */
+    --dark-grey: #616161; /* For text */
+    --medium-grey: #9E9E9E; /* For hints/placeholders */
+    --light-grey: #F5F5F5; /* For input backgrounds/borders */
+    --white: #FFFFFF;
+    --beige-background: #E0B496; /* For background shape */
+    --success-green: #4CAF50;
+    --error-red: #F44336;
+    --text-on-light: #424242;
+    --text-on-dark: #FFFFFF;
+    --orangered: #FF4500; /* For logo 'u' and 'o' */
+    --gradient-start: #FFA8A7;
+    --gradient-end: #881792;
+    --gradient-deg: 90deg;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif; /* You can replace with a specific font if you have one */
+}
+
+body {
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* To keep background shapes within bounds */
+}
+
+.container {
+    width: 100%;
+    /* max-width: 1400px; */ /* Removed or commented out as requested for full width */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; /* For containing the absolute positioned shapes */
+    background-color: var(--white); /* Default background */
+}
+
+.container.grey-bg {
+    background-color: #ECEFF1; /* Specific grey background for password reset pages */
+}
+
+/* Header */
+.header {
+    padding: 20px 40px;
+    z-index: 10;
+}
+
+.logo {
+    color: var(--primary-purple);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo .orangered {
+    color: var(--orangered);
+}
+
+/* Background Shapes */
+.background-shape-top-right {
+    position: absolute;
+    top: -50px; /* Adjust to move partly off-screen */
+    right: -50px; /* Adjust to move partly off-screen */
+    width: 300px; /* Adjust size */
+    height: 300px; /* Adjust size */
+    background-color: var(--light-purple);
+    border-radius: 50%;
+    filter: blur(80px); /* Soften the edges */
+    opacity: 0.6;
+    z-index: 1;
+}
+
+.background-shape-top-right.light-purple {
+    background-color: #B39DDB; /* The specific light purple from the screenshot */
+    filter: blur(80px);
+    opacity: 0.6;
+}
+
+.background-shape-bottom-left {
+    position: absolute;
+    bottom: -50px; /* Adjust to move partly off-screen */
+    left: -50px; /* Adjust to move partly off-screen */
+    width: 250px; /* Adjust size */
+    height: 250px; /* Adjust size */
+    background-color: var(--beige-background);
+    border-radius: 50%;
+    filter: blur(80px); /* Soften the edges */
+    opacity: 0.6;
+    z-index: 1;
+}
+
+.background-shape-bottom-left.light-beige {
+    background-color: #E0B496; /* The specific light beige from the screenshot */
+    filter: blur(80px);
+    opacity: 0.6;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px; /* Space between illustration and card */
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+}
+
+/* Illustration (Man) */
+.illustration {
+    flex-shrink: 0;
+    margin-right: 60px; /* Add margin to separate from card */
+}
+
+.illustration img {
+    max-width: 400px; /* Adjust size as needed */
+    height: auto;
+    display: block; /* Remove extra space below image */
+}
+
+.welcome-page .illustration,
+.google-linked-page .illustration,
+.create-profile-page .illustration {
+    margin-left: -100px; /* Move the illustration slightly to the left */
+}
+
+/* Cards */
+.card {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    max-width: 500px; /* Max width for cards */
+    width: 100%;
+}
+
+/* Gradient Text Style */
+.gradient-text-h2 {
+    background: linear-gradient(var(--gradient-deg), var(--gradient-start) 0%, var(--gradient-end) 32.21%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; /* Fallback for browsers not supporting background-clip */
+    font-weight: bold; /* Ensure it stands out */
+}
+
+
+/* Welcome Card */
+.welcome-card {
+    text-align: center; /* Centered as per new request */
+    padding: 60px 40px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.welcome-card h2 {
+    font-size: 36px;
+    color: var(--primary-purple); /* Fallback for gradient */
+    margin-bottom: 10px;
+    font-weight: bold;
+    line-height: 1.2; /* For two lines */
+}
+
+.welcome-card p {
+    color: var(--dark-grey);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.google-signin-btn {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px; /* Adjust as needed */
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.google-signin-btn:hover {
+    background-color: #5b1582; /* Slightly darker purple */
+}
+
+.google-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+/* Success Card (Google Linked & Password Reset Success) */
+.success-card {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--light-purple);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Centering for icons, especially for reset password page */
+.icon-circle.centered-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px auto; /* Center horizontally */
+}
+
+
+.icon-circle.success {
+    background-color: var(--success-green);
+    color: var(--white);
+}
+
+.icon-circle .material-icons {
+    font-size: 36px;
+    color: var(--white);
+}
+
+.icon-circle.success .material-icons {
+    color: var(--white);
+}
+
+
+.success-card h2 {
+    font-size: 28px;
+    color: var(--primary-purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.success-card p {
+    color: var(--dark-grey);
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.btn {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* For button acting as a link */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn.primary-btn:hover {
+    background-color: #5b1582;
+}
+
+/* Create Profile Card */
+.profile-form-card {
+    text-align: left;
+    padding: 40px 50px; /* Increased padding slightly for more internal space */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    max-width: 550px; /* Slightly increased max-width to accommodate fields better */
+}
+
+.profile-form-card h2 {
+    font-size: 32px;
+    color: var(--primary-purple); /* Fallback for gradient */
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.profile-form-card .subtitle {
+    color: var(--medium-grey);
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.profile-form .input-group {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd; /* Softer border than light-grey background */
+    border-radius: 8px;
+    padding: 12px 15px;
+    background-color: var(--white); /* Ensure input background is white */
+}
+
+.profile-form .input-group .material-icons.icon-prefix {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="tel"],
+.profile-form select {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-on-light);
+    background-color: transparent;
+    padding: 0;
+}
+
+.profile-form input::placeholder {
+    color: var(--medium-grey);
+}
+
+.profile-form .input-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-form .input-row .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.profile-form .select-group {
+    position: relative;
+}
+
+.profile-form .select-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px; /* Space for dropdown arrow */
+}
+
+.profile-form .select-group .dropdown-arrow {
+    position: absolute;
+    right: 15px;
+    color: var(--medium-grey);
+    pointer-events: none;
+    font-size: 24px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+    color: var(--dark-grey);
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--medium-grey);
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Checkmark character */
+    font-size: 14px;
+    color: var(--white);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profile-form .btn {
+    width: 100%;
+}
+
+/* Reset Password Content (No Card) */
+.reset-password-content {
+    
+    border-radius: 20px;
+    padding: 60px 50px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.reset-password-content h2 {
+    font-size: 32px;
+    color: var(--primary-purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.reset-password-content .instruction-text {
+    color: var(--dark-grey);
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.reset-password-form label {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    color: var(--dark-grey);
+    margin-bottom: 8px;
+}
+
+.reset-password-form .input-group.email-input {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 15px;
+    background-color: var(--white); /* White background for input field */
+    margin-bottom: 25px;
+}
+
+.reset-password-form .input-group.email-input input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-on-light);
+    background-color: transparent;
+}
+
+.reset-password-form .btn {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.timer-box {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    width: fit-content;
+    margin: 0 auto 30px auto;
+}
+
+.back-to-login {
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Specific style for "Back to login" on password reset pages */
+.back-to-login.grey-link {
+    color: var(--dark-grey); /* Grey color */
+}
+
+.back-to-login.no-underline {
+    text-decoration: none; /* No underline */
+}
+
+.back-to-login.grey-link:hover {
+    text-decoration: underline; /* Add underline on hover for usability */
+}
+
+
+/* Create New Password Card */
+.create-password-card {
+    padding: 60px 50px;
+}
+
+.create-password-card h2 {
+    font-size: 32px;
+    color: var(--primary-purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.create-password-card .instruction-text {
+    color: var(--dark-grey);
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.new-password-form .input-group.password-input {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 15px;
+    background-color: var(--white); /* White background for input field */
+}
+
+.new-password-form .input-group.password-input input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-on-light);
+    background-color: transparent;
+}
+
+.new-password-form .visibility-toggle {
+    color: var(--medium-grey);
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.password-requirements {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 25px;
+    padding-left: 0;
+}
+
+.password-requirements li {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--dark-grey);
+    margin-bottom: 8px;
+}
+
+.password-requirements li .material-icons {
+    font-size: 18px;
+    margin-right: 8px;
+    color: var(--success-green); /* For checked items */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .content-wrapper {
+        flex-direction: column;
+        gap: 40px;
+        padding: 20px;
+    }
+
+    .illustration {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .welcome-page .illustration,
+    .google-linked-page .illustration,
+    .create-profile-page .illustration {
+        margin-left: 0;
+    }
+
+    .card, .reset-password-content {
+        max-width: 90%;
+        padding: 30px;
+    }
+
+    .profile-form .input-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .profile-form .input-row .input-group {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .content-wrapper {
+        padding: 15px;
+    }
+
+    .illustration img {
+        max-width: 300px;
+    }
+
+    .card, .reset-password-content {
+        padding: 25px;
+    }
+
+    .welcome-card h2,
+    .success-card h2,
+    .profile-form-card h2,
+    .reset-password-content h2, /* Adjusted for no card */
+    .create-password-card h2 {
+        font-size: 24px;
+    }
+
+    .google-signin-btn,
+    .btn {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .illustration {
+        display: none; /* Hide illustration on very small screens */
+    }
+
+    .card, .reset-password-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .background-shape-top-right,
+    .background-shape-bottom-left {
+        width: 150px;
+        height: 150px;
+        filter: blur(50px);
+    }
+}

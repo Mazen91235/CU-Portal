@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Create Profile</title>
+    <link rel="stylesheet" href="/StudentsPortal-CU/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">St<span class="orangered">u</span>dent P<span class="orangered">o</span>rtal</h1>
+        </header>
+
+        <div class="content-wrapper create-profile-page">
+            <div class="illustration">
+                <img src="/StudentsPortal-CU/assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" alt="Student writing illustration">
+            </div>
+            <div class="card profile-form-card">
+                <h2 class="gradient-text-h2">create your profile</h2>
+                <p class="subtitle">Don't miss out! Create your profile in minutes</p>
+
+                <form class="profile-form">
+                    <div class="input-group">
+                        <span class="material-icons icon-prefix">person</span>
+                        <input type="text" placeholder="Enter Your Name">
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">email</span>
+                            <input type="email" placeholder="Enter Your Email">
+                        </div>
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">phone</span>
+                            <input type="tel" placeholder="Enter Your Phone Number">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">fingerprint</span>
+                            <input type="text" placeholder="Enter Your National ID">
+                        </div>
+                        <div class="input-group select-group">
+                            <span class="material-icons icon-prefix">wc</span>
+                            <select>
+                                <option value="" disabled selected>select your gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms">
+                        <label for="terms">agree to our terms & privacy policy</label>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Create Profile Now!</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="background-shape-top-right"></div>
+        <div class="background-shape-bottom-left"></div>
+    </div>
+</body>
+</html>
