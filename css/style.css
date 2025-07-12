@@ -1,17 +1,17 @@
-/* General Styling */
+
 :root {
-    --primary-purple: #6A1B9A; /* Deep Purple */
-    --light-purple: #B39DDB; /* Light Purple for background */
-    --dark-grey: #616161; /* For text */
-    --medium-grey: #9E9E9E; /* For hints/placeholders */
-    --light-grey: #F5F5F5; /* For input backgrounds/borders */
+    --primary-purple: #6A1B9A; 
+    --light-purple: #B39DDB; 
+    --dark-grey: #616161; 
+    --medium-grey: #9E9E9E; 
+    --light-grey: #F5F5F5; 
     --white: #FFFFFF;
-    --beige-background: #E0B496; /* For background shape */
+    --beige-background: #E0B496; 
     --success-green: #4CAF50;
     --error-red: #F44336;
     --text-on-light: #424242;
     --text-on-dark: #FFFFFF;
-    --orangered: #FF4500; /* For logo 'u' and 'o' */
+    --orangered: #FF4500; 
     --gradient-start: #FFA8A7;
     --gradient-end: #881792;
     --gradient-deg: 90deg;
@@ -21,7 +21,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif; /* You can replace with a specific font if you have one */
+    font-family: 'Arial', sans-serif; 
 }
 
 body {
@@ -30,25 +30,25 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden; /* To keep background shapes within bounds */
+    overflow: hidden; 
 }
 
 .container {
     width: 100%;
-    /* max-width: 1400px; */ /* Removed or commented out as requested for full width */
+     
     height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden; /* For containing the absolute positioned shapes */
-    background-color: var(--white); /* Default background */
+    overflow: hidden; 
+    background-color: var(--white); 
 }
 
 .container.grey-bg {
-    background-color: #ECEFF1; /* Specific grey background for password reset pages */
+    background-color: #ECEFF1; 
 }
 
-/* Header */
+
 .header {
     padding: 20px 40px;
     z-index: 10;
@@ -64,111 +64,111 @@ body {
     color: var(--orangered);
 }
 
-/* Background Shapes */
+
 .background-shape-top-right {
     position: absolute;
-    top: -50px; /* Adjust to move partly off-screen */
-    right: -50px; /* Adjust to move partly off-screen */
-    width: 300px; /* Adjust size */
-    height: 300px; /* Adjust size */
+    top: -50px; 
+    right: -50px; 
+    width: 300px; 
+    height: 300px; 
     background-color: var(--light-purple);
     border-radius: 50%;
-    filter: blur(80px); /* Soften the edges */
+    filter: blur(80px); 
     opacity: 0.6;
     z-index: 1;
 }
 
 .background-shape-top-right.light-purple {
-    background-color: #B39DDB; /* The specific light purple from the screenshot */
+    background-color: #B39DDB; 
     filter: blur(80px);
     opacity: 0.6;
 }
 
 .background-shape-bottom-left {
     position: absolute;
-    bottom: -50px; /* Adjust to move partly off-screen */
-    left: -50px; /* Adjust to move partly off-screen */
-    width: 250px; /* Adjust size */
-    height: 250px; /* Adjust size */
+    bottom: -50px; 
+    left: -50px; 
+    width: 250px; 
+    height: 250px; 
     background-color: var(--beige-background);
     border-radius: 50%;
-    filter: blur(80px); /* Soften the edges */
+    filter: blur(80px); 
     opacity: 0.6;
     z-index: 1;
 }
 
 .background-shape-bottom-left.light-beige {
-    background-color: #E0B496; /* The specific light beige from the screenshot */
+    background-color: #E0B496; 
     filter: blur(80px);
     opacity: 0.6;
 }
 
-/* Content Wrapper */
+
 .content-wrapper {
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 80px; /* Space between illustration and card */
+    gap: 80px; 
     padding: 20px;
     position: relative;
     z-index: 5;
 }
 
-/* Illustration (Man) */
+
 .illustration {
     flex-shrink: 0;
-    margin-right: 60px; /* Add margin to separate from card */
+    margin-right: 60px; 
 }
 
 .illustration img {
-    max-width: 400px; /* Adjust size as needed */
+    max-width: 400px; 
     height: auto;
-    display: block; /* Remove extra space below image */
+    display: block; 
 }
 
 .welcome-page .illustration,
 .google-linked-page .illustration,
 .create-profile-page .illustration {
-    margin-left: -100px; /* Move the illustration slightly to the left */
+    margin-left: -100px; 
 }
 
-/* Cards */
+
 .card {
     background-color: var(--white);
     border-radius: 20px;
     padding: 50px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     text-align: center;
-    max-width: 500px; /* Max width for cards */
+    max-width: 500px; 
     width: 100%;
 }
 
-/* Gradient Text Style */
+
 .gradient-text-h2 {
     background: linear-gradient(var(--gradient-deg), var(--gradient-start) 0%, var(--gradient-end) 60%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
     background-clip: text;
-    color: transparent; /* Fallback for browsers not supporting background-clip */
-    font-weight: bold; /* Ensure it stands out */
+    color: transparent; 
+    font-weight: bold; 
 }
 
 
-/* Welcome Card */
+
 .welcome-card {
-    text-align: center; /* Centered as per new request */
+    text-align: center; 
     padding: 60px 40px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
 
 .welcome-card h2 {
     font-size: 36px;
-    color: var(--primary-purple); /* Fallback for gradient */
+    color: var(--primary-purple); 
     margin-bottom: 10px;
     font-weight: bold;
-    line-height: 1.2; /* For two lines */
+    line-height: 1.2; 
 }
 
 .welcome-card p {
@@ -190,13 +190,13 @@ body {
     justify-content: center;
     gap: 15px;
     width: 100%;
-    max-width: 300px; /* Adjust as needed */
+    max-width: 300px; 
     margin: 0 auto;
     transition: background-color 0.3s ease;
 }
 
 .google-signin-btn:hover {
-    background-color: #5b1582; /* Slightly darker purple */
+    background-color: #5b1582; 
 }
 
 .google-icon {
@@ -205,7 +205,7 @@ body {
     vertical-align: middle;
 }
 
-/* Success Card (Google Linked & Password Reset Success) */
+
 .success-card {
     padding: 60px 40px;
     display: flex;
@@ -225,12 +225,12 @@ body {
     margin-bottom: 20px;
 }
 
-/* Centering for icons, especially for reset password page */
+
 .icon-circle.centered-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto 20px auto; /* Center horizontally */
+    margin: 0 auto 20px auto; 
 }
 
 
@@ -272,7 +272,7 @@ body {
     font-size: 18px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    text-decoration: none; /* For button acting as a link */
+    text-decoration: none; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -283,17 +283,17 @@ body {
     background-color: #5b1582;
 }
 
-/* Create Profile Card */
+
 .profile-form-card {
     text-align: left;
-    padding: 40px 50px; /* Increased padding slightly for more internal space */
+    padding: 40px 50px; 
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    max-width: 650px; /* Slightly increased max-width to accommodate fields better */
+    max-width: 650px; 
 }
 
 .profile-form-card h2 {
     font-size: 32px;
-    color: var(--primary-purple); /* Fallback for gradient */
+    color: var(--primary-purple); 
     margin-bottom: 10px;
     font-weight: bold;
     text-transform: capitalize;
@@ -311,10 +311,10 @@ body {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    border: 1px solid #ddd; /* Softer border than light-grey background */
+    border: 1px solid #ddd; 
     border-radius: 8px;
     padding: 12px 15px;
-    background-color: var(--white); /* Ensure input background is white */
+    background-color: var(--white); 
 }
 
 .profile-form .input-group .material-icons.icon-prefix {
@@ -359,7 +359,7 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    padding-right: 30px; /* Space for dropdown arrow */
+    padding-right: 30px; 
 }
 
 .profile-form .select-group .dropdown-arrow {
@@ -398,7 +398,7 @@ body {
 }
 
 .checkbox-group input[type="checkbox"]:checked::after {
-    content: '\2713'; /* Checkmark character */
+    content: '\2713'; 
     font-size: 14px;
     color: var(--white);
     position: absolute;
@@ -411,7 +411,7 @@ body {
     width: 100%;
 }
 
-/* Reset Password Content (No Card) */
+
 .reset-password-content {
     
     border-radius: 20px;
@@ -447,7 +447,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px 15px;
-    background-color: var(--white); /* White background for input field */
+    background-color: var(--white); 
     margin-bottom: 25px;
 }
 
@@ -487,21 +487,21 @@ body {
     gap: 5px;
 }
 
-/* Specific style for "Back to login" on password reset pages */
+
 .back-to-login.grey-link {
-    color: var(--dark-grey); /* Grey color */
+    color: var(--dark-grey); 
 }
 
 .back-to-login.no-underline {
-    text-decoration: none; /* No underline */
+    text-decoration: none; 
 }
 
 .back-to-login.grey-link:hover {
-    text-decoration: underline; /* Add underline on hover for usability */
+    text-decoration: underline; 
 }
 
 
-/* Create New Password Card */
+
 .create-password-card {
     padding: 60px 50px;
 }
@@ -528,7 +528,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px 15px;
-    background-color: var(--white); /* White background for input field */
+    background-color: var(--white); 
 }
 
 .new-password-form .input-group.password-input input {
@@ -564,10 +564,10 @@ body {
 .password-requirements li .material-icons {
     font-size: 18px;
     margin-right: 8px;
-    color: var(--success-green); /* For checked items */
+    color: var(--success-green); 
 }
 
-/* Responsive Design */
+
 @media (max-width: 992px) {
     .content-wrapper {
         flex-direction: column;
@@ -624,7 +624,7 @@ body {
     .welcome-card h2,
     .success-card h2,
     .profile-form-card h2,
-    .reset-password-content h2, /* Adjusted for no card */
+    .reset-password-content h2, 
     .create-password-card h2 {
         font-size: 24px;
     }
@@ -638,7 +638,7 @@ body {
 
 @media (max-width: 480px) {
     .illustration {
-        display: none; /* Hide illustration on very small screens */
+        display: none; 
     }
 
     .card, .reset-password-content {
