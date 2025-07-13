@@ -57,6 +57,90 @@ body {
   font-size: 24px;
   border-radius: 5px;
   cursor: pointer;
-padding-right: 20px;}
+padding-right: 20px;
+}
+#menu-toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+/* Sidebar default style */
+#sidebar {
+  width: 256px;
+ position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  overflow-y: auto; 
+}
 
+#sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+@media  (max-width: 768px) {
+  #sidebar {
+        position: absolute;
+
+    top: 0;
+    left: -250px; /* Hide sidebar off-screen */
+    width: 250px;
+    height: 100%;
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+  }
+  #logo {
+    width: 120px; /* Adjust logo size for smaller screens */
+    height: auto;
+  }
+  #sidebar.active {
+    left: 0; /* Show sidebar */
+  }
+  
+  .menu-btn {
+        height: auto;
+    width: 40px; /* Adjust width for smaller screens */
+    display: block; /* Show menu button on smaller screens */
+  }
+  
+  .nav-link {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+  #btn {
+    width: 25px; /* Adjust button size for smaller screens */
+    height: 25px;
+  }
+  #sidebar-footer {
+    width: 100%; /* Full width on smaller screens */
+    height: auto; /* Adjust height for smaller screens */
+    padding: 10px; /* Add padding for better spacing */
+  }
+  #notification-icon{
+    width: 18px; /* Adjust icon size for smaller screens */
+    height: 18px;
+  }
+  #announcement-icon{
+    width: 18px; /* Adjust icon size for smaller screens */
+    height: 18px;
+  }
+  #profile-img {
+    width: 35px; /* Adjust icon size for smaller screens */
+    height: 35px;
+    margin-right: 0;
+  }
+  .nav-item{
+    font-size: 14px; /* Adjust font size for smaller screens */
+    padding: 8px; /* Adjust padding for smaller screens */
+    display: flex;
+    align-items: center;
+
+  }
+  .nav-link.active {
+    font-size: 14px; /* Adjust font size for active link on smaller screens */
+  }
+  
+}
 
