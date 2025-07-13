@@ -110,9 +110,11 @@ body {
 .illustration {
     flex-shrink: 0;
     margin-right: 60px; 
+    bottom: 0;
 }
 
 .illustration img {
+    bottom: 0;
     max-width: 400px;
     height: auto;
     margin-left: -200px;
@@ -307,7 +309,7 @@ body {
 }
 
 /* --- Small Mobile Devices (under 400px) --- */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
     .illustration {
         position: fixed;
         bottom: 0;
