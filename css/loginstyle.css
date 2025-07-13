@@ -194,8 +194,12 @@ body {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .welcome-card {
         width: calc(100% - 40px);
+        padding: 36px 18px;
+    }
+    .google-signin-btn{
+        font-size: 14pt;
     }
 }
