@@ -1,0 +1,603 @@
+/* createprofilestyle.css */
+
+/* --- Variables --- */
+:root {
+    --primary-purple: #5A0F61;
+    --light-purple: #B39DDB;
+    --dark-grey: #616161;
+    --medium-grey: #9E9E9E;
+    --light-grey: #F5F5F5;
+    --white: #FFFFFF;
+    --beige-background: #E0B496;
+    --success-green: #4CAF50;
+    --error-red: #F44336;
+    --text-on-light: #424242;
+    --text-on-dark: #FFFFFF;
+    --gradient-start: #FFA8A7;
+    --gradient-end: #881792;
+    --gradient-deg: 90deg;
+    --main-bg-grey: #E8EBF1;
+}
+ html, body {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+/* --- Base Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden;
+    min-height: 100vh;
+    /* Removed overflow: hidden to allow background images to extend */
+    overflow-x: hidden; /* Added to prevent horizontal scrolling */
+}
+
+.container {
+    width: 100%;
+    height: 100vh; /* Ensure container takes full viewport height */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Removed overflow: hidden */
+    background-color: #F8FAFC; /* Light grey background as seen in the image */
+}
+
+/* --- Header Styles --- */
+.header {
+    padding: 20px 40px;
+    z-index: 10;
+}
+
+.logo {
+    color: #5A0F61;
+    font-size: 24px;
+    font-weight: bold;
+    /* Reset background clip and text fill for solid color */
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+}
+
+.logo .highlight {
+    color: #FDBA74; /* Highlight color for 'u' and 'o' */
+}
+
+/* --- Background Corner Images (Adjusted for image accuracy) --- */
+.corner-image-top-right {
+    position: absolute;
+    top: -250px;  /* Adjusted to be more visible */
+    right: -250px;
+    width: 600px; /* Adjusted size */
+    height: auto;
+    z-index: 0;
+    opacity: 0.8; /* Slightly more opaque */
+}
+
+.corner-image-bottom-left {
+    position: absolute;
+    bottom: -250px;  /* Adjusted to be more visible */
+    left: -250px;
+    width: 600px; /* Adjusted size */
+    
+    z-index: 0;
+    opacity: 0.8; /* Slightly more opaque */
+}
+
+/* --- Content Wrapper (Main layout for illustration and card) --- */
+.content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    gap: 60px; /* Original gap from style.css for desktop */
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    align-items: center;
+    padding-bottom: 0;
+}
+
+/* --- Illustration Styles --- */
+.illustration {
+    flex-shrink: 0;
+    margin-right: 60px; /* Original margin from style.css for desktop */
+    align-self: center; /* Center illustration vertically by default */
+}
+
+.illustration img {
+    max-width: 400px; /* Original max-width from style.css for desktop */
+    height: auto;
+    margin-left: -200px; /* Original margin from style.css for desktop */
+    display: block;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Specific illustration adjustments for create-profile-page (desktop) */
+.create-profile-page .illustration {
+    margin-left: 0; /* No left offset for this page's illustration */
+    margin-right: 60px; /* Consistent right margin */
+    align-self: flex-end; /* Aligns to the bottom of the flex container */
+    margin-bottom: 0; /* No extra bottom margin */
+}
+
+
+/* --- Card Base Styles --- */
+.card {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    max-width: 500px; /* Original max-width from style.css for desktop */
+    width: 100%;
+    margin-bottom: 0;
+}
+
+/* --- Gradient Text for Headings --- */
+.gradient-text-h2 {
+    background: linear-gradient(var(--gradient-deg), var(--gradient-start) 30%, var(--gradient-end) 75%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+/* --- Profile Form Card Specific Styles (Desktop) --- */
+.profile-form-card {
+    text-align: center;
+    padding: 60px 70px; /* Original padding from style.css for desktop */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    max-width: 800px; /* Original max-width from style.css for desktop */
+    width: 100%;
+    margin-left: -150px; /* Original margin from style.css for desktop */
+    margin-top: 0; /* No extra top margin for desktop */
+}
+
+.profile-form-card h2 {
+    font-size: 38px; /* Original font-size from style.css for desktop */
+    color: var(--primary-purple);
+    margin-bottom: 10px; /* Original margin from style.css for desktop */
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.profile-form-card .subtitle {
+    color: var(--medium-grey);
+    font-size: 16px; /* Original font-size from style.css for desktop */
+    margin-bottom: 40px; /* Original margin from style.css for desktop */
+}
+
+/* --- Form Element Styles --- */
+.profile-form {
+    text-align: left;
+}
+
+.profile-form .input-group {
+    position: relative;
+    margin-bottom: 20px; /* Original margin from style.css for desktop */
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 15px; /* Original padding from style.css for desktop */
+    background-color: var(--white);
+    height: 50px; /* Original height from style.css for desktop */
+}
+
+.profile-form .input-group .material-icons.icon-prefix {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px; /* Original font-size from style.css for desktop */
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="tel"],
+.profile-form select,
+.profile-form .file-label {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px; /* Original font-size from style.css for desktop */
+    color: var(--text-on-light);
+    background-color: transparent;
+    padding: 0;
+    height: 100%;
+}
+
+.profile-form input::placeholder,
+.profile-form .file-label {
+    color: var(--medium-grey);
+}
+
+.profile-form .input-row {
+    display: flex;
+    gap: 20px; /* Original gap from style.css for desktop */
+    margin-bottom: 20px; /* Original margin from style.css for desktop */
+}
+
+.profile-form .input-row .input-group {
+    flex: 1;
+    margin-bottom: 0; /* No extra margin within rows */
+}
+
+.profile-form .select-group {
+    position: relative;
+}
+
+.profile-form .select-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px;
+}
+
+.profile-form .select-group .dropdown-arrow {
+    position: absolute;
+    right: 15px;
+    color: var(--medium-grey);
+    pointer-events: none;
+    font-size: 24px;
+}
+
+.file-upload-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.attachment-info-text {
+    font-size: 11px; /* Original font-size from style.css for desktop */
+    color: var(--medium-grey);
+    text-align: left;
+    line-height: 1.2;
+    margin-bottom: 0px;
+    width: 100%;
+}
+
+.file-input-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 15px; /* Original padding from style.css for desktop */
+    background-color: var(--white);
+    height: 50px; /* Original height from style.css for desktop */
+    cursor: pointer;
+}
+
+.file-input-group .material-icons.icon-prefix {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.file-label {
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--medium-grey);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px; /* Original margin from style.css for desktop */
+    margin-bottom: 30px; /* Original margin from style.css for desktop */
+    font-size: 14px; /* Original font-size from style.css for desktop */
+    color: var(--dark-grey);
+    width: 100%;
+    padding-left: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px; /* Original margin from style.css for desktop */
+    width: 18px; /* Original width from style.css for desktop */
+    height: 18px; /* Original height from style.css for desktop */
+    border: 1px solid var(--medium-grey);
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+    content: '\2713';
+    font-size: 14px; /* Original font-size from style.css for desktop */
+    color: var(--white);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- Button Styles --- */
+.btn {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+    padding: 15px 30px; /* Original padding from style.css for desktop */
+    border-radius: 10px;
+    font-size: 18px; /* Original font-size from style.css for desktop */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn.primary-btn:hover {
+    background-color: #5b1582;
+}
+
+.profile-form .btn {
+    width: 100%;
+    margin-top: 10px; /* Original margin from style.css for desktop */
+}
+
+
+/* --- Responsive Adjustments (Media Queries) --- */
+
+/* For screens smaller than 992px (e.g., tablets and smaller desktops) */
+    @media (max-width: 992px) {
+        .content-wrapper {
+            flex-direction: column; /* Stack illustration and card vertically */
+            gap: 20px; /* Reduced gap */
+            padding: 20px;
+            padding-bottom: 20px;
+        }
+        body{
+            overflow: hidden;
+        }
+    .logo{
+        text-align: center;
+    }
+        .illustration {
+            margin-right: 0; /* Remove right margin */
+            margin-bottom: 20px; /* Add bottom margin */
+            margin-top: 0;
+        }
+
+        .create-profile-page .illustration {
+            margin: 0;
+            padding: 0  ;
+            align-self: center; /* Center illustration on smaller screens */
+            margin-bottom: 20px; /* Consistent bottom margin */
+        }
+
+        .illustration img {
+            max-width: 300px; /* Adjust illustration size for tablets */
+            margin-left: 0; /* Remove negative margin */
+        }
+
+        .card {
+            max-width: 90%; /* Allow card to take more width */
+            padding: 30px; /* Adjusted padding */
+        }
+
+        .profile-form-card {
+            padding: 40px 30px; /* Adjusted padding to match image for smaller screens */
+            max-width: 400px; /* Narrower card for smaller screens */
+            margin: 0 auto;
+            margin-top: 20px; /* Remove top margin */
+        }
+
+        .profile-form-card h2 {
+            font-size: 32px; /* Adjusted font size for heading on smaller screens */
+            margin-bottom: 5px; /* Reduced margin */
+        }
+
+        .profile-form-card .subtitle {
+            font-size: 14px; /* Adjusted font size for subtitle on smaller screens */
+            margin-bottom: 30px; /* Adjusted margin */
+        }
+
+        .profile-form .input-row {
+            flex-direction: column; /* Stack input groups vertically within a row */
+            gap: 15px; /* Adjusted gap between input groups in a row */
+            margin-bottom: 15px; /* Adjusted margin for rows */
+        }
+        .profile-form .input-row .input-group {
+            margin-bottom: 0; /* Remove redundant margin */
+        }
+
+        .profile-form .input-group {
+            margin-bottom: 15px; /* Adjusted margin between input groups */
+            padding: 10px 15px; /* Adjusted padding */
+            height: 45px; /* Adjusted height */
+        }
+
+        .profile-form .input-group .material-icons.icon-prefix {
+            font-size: 22px; /* Adjusted icon size */
+        }
+
+        .profile-form input[type="text"],
+        .profile-form input[type="email"],
+        .profile-form input[type="tel"],
+        .profile-form select,
+        .profile-form .file-label {
+            font-size: 15px; /* Adjusted font size */
+        }
+
+        .file-upload-container {
+            margin-bottom: 0;
+            gap: 5px;
+            margin-top: 5px; /* Slightly more space for the file upload */
+        }
+        .attachment-info-text {
+            width: auto;
+            max-width: none;
+            text-align: left;
+            font-size: 10px; /* Smaller font size for info text */
+        }
+
+        .file-input-group {
+            padding: 10px 15px; /* Adjusted padding */
+            height: 45px; /* Adjusted height */
+        }
+
+        .file-input-group .material-icons.icon-prefix {
+            font-size: 22px;
+        }
+
+        .checkbox-group {
+            margin-top: 15px; /* Adjusted margin */
+            margin-bottom: 25px; /* Adjusted margin */
+            font-size: 13px; /* Smaller font size for checkbox label */
+            padding-left: 5px;
+        }
+    body{
+            overflow: hidden;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px; /* Adjusted margin */
+            width: 16px; /* Smaller checkbox */
+            height: 16px; /* Smaller checkbox */
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            font-size: 12px; /* Adjusted checkmark size */
+        }
+.content-wrapper.create-profile-page {
+    gap: 10px;          /* Minimize the space between illustration and card */
+    padding: 0;
+    align-items: center;
+}
+        .profile-form .btn {
+            margin-top: 0px; /* Adjusted margin */
+            padding: 14px 30px; /* Adjusted button padding */
+            font-size: 17px; /* Adjusted button font size */
+        }
+    }
+
+    /* For screens smaller than 768px (e.g., larger phones) */
+    @media (max-width: 768px) {
+        .header {
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+        }
+
+        .content-wrapper {
+            padding: 15px;
+        }
+
+        .illustration img {
+            max-width: 250px; /* Further reduce illustration size */
+        }
+
+        .card {
+            padding: 25px;
+        }
+
+        .profile-form-card h2 {
+            font-size: 24px; /* Even smaller heading */
+        }
+
+        .profile-form-card .subtitle {
+            font-size: 13px; /* Even smaller subtitle */
+        }
+    body{
+            overflow: hidden;
+        }
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+        .profile-form-card {
+            padding: 30px 25px;
+        }
+    }
+
+    /* For screens smaller than 480px (e.g., small phones) */
+    @media (max-width: 480px) {
+        body{
+            overflow: hidden;
+        }
+        .logo{
+            font-size: 24px;
+        }
+        .illustration img{
+            position: absolute;
+            top: 100px;
+            left: 310px;
+            transform: scaleX(-1);
+            z-index: 999;
+            width: 70px;
+    
+        }
+
+        .card {
+            width: 95%;
+            padding: 10px;
+        }
+
+        .corner-image-top-right{
+            width: 600px;
+            height: auto;
+            z-index: 1;
+            top: 2px; /* Adjust for smaller screens */
+            right: -350px;
+            
+        }
+         .illustration {
+        margin: 0 ;
+        padding: 0 ;
+        height: 0;
+        position: absolute;  /* Ensure it doesn't occupy space */
+        top: 0;
+        left: 0;
+        width: 0;
+        overflow: visible;
+    }
+.profile-form-card {
+        margin-top: 0 ;
+    }
+
+    .content-wrapper.create-profile-page {
+        gap: 0 ;
+        padding: 0 ;
+    }
+
+        .corner-image-bottom-left {
+            width: 600px;
+            height: auto;
+            
+            
+            top: 450px;
+            left: -50px;
+        }
+    }
