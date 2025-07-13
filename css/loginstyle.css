@@ -27,12 +27,13 @@ body {
     min-height: 100vh;
     position: relative;
     background-color: #F8FAFC;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .header {
     padding: 20px 40px;
     text-align: left;
+    height: 10vh;
 }
 
 .logo {
@@ -53,7 +54,7 @@ body {
 .corner-image-top-right {
     position: absolute;
     top: -150px;
-    right: -350px;
+    right: -300px;
     width: 665.222px;
     height: 471.028px;
     z-index: 0;
@@ -61,8 +62,8 @@ body {
 
 .corner-image-bottom-left {
     position: absolute;
-    bottom: -50px;
-    right: -350px;
+    bottom: -150px;
+    left: -220px;
     width: 665.222px;
     height: 471.028px;
     z-index: 0;
@@ -76,15 +77,16 @@ body {
     padding: 20px;
     position: relative;
     z-index: 5;
-    height: calc(100% - 80px);
+    min-height: 90vh;
 }
 
 .illustration img {
-    width: 547px;
-    height: 820px;
-    flex-shrink: 0;
-    
-    aspect-ratio: 547 / 820;
+    width: calc(547px * 0.8);
+    height: calc(820px * 0.8);
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0px;
+    left: 100px;
     object-fit: contain;
 }
 
@@ -92,11 +94,17 @@ body {
     display: inline-flex;
     padding: 36px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: space-between;
     gap: 13px;
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-top: -150px;
+    margin-right: -250px;
+    text-align: center;
+    width: calc(380px * 1.2);
+    height: calc(234px * 1.2);
 }
 
 .welcome-card h2 {
@@ -104,6 +112,8 @@ body {
     font-weight: bold;
     color: var(--primary-purple);
     line-height: 1.2;
+    text-align: center;
+    margin: 0px auto;
 }
 
 .gradient-text-h2 {
@@ -133,7 +143,6 @@ body {
     justify-content: center;
     gap: 15px;
     width: 100%;
-    max-width: 300px;
     margin: 0 auto;
     transition: background-color 0.3s ease;
 }
@@ -151,117 +160,42 @@ body {
 @media (max-width: 1024px) {
     .content-wrapper {
         gap: 40px;
+        flex-direction: column;
+        padding-top: 200px;
+        box-sizing: border-box;
+        margin: 0px;
+        padding: 0px;
+        align-items: flex-start;
     }
     .illustration{
         order: 2;
     }
     .welcome-card{
         order: 1;
+        margin: 200px auto 0 auto;
     }
     .illustration img {
         width: 400px;
         height: auto;
+        position: static;
+        padding: 0px;
+        margin-left: -60px;
     }
-    
+    .corner-image-top-right{
+        top: 50px;
+        right: -400px;
+    }
     .corner-image-top-right,
     .corner-image-bottom-left {
         opacity: 0.7;
     }
-}
-
-@media (max-width: 768px) {
-    .container {
-        height: auto;
-    }
-
-    .illustration{
-        order: 2;
-    }
-    .welcome-card{
-        order: 1;
-    }
     .header {
-        padding: 15px 20px;
         text-align: center;
-    }
-
-    .content-wrapper {
-        flex-direction: column;
-        padding: 20px;
-        height: auto;
-        margin-top: 20px;
-    }
-
-    .illustration img {
-        width: 100%;
-        max-width: 350px;
-        height: auto;
-    }
-
-    .welcome-card {
-        width: 90%;
-        max-width: 400px;
-        padding: 30px;
-        text-align: center;
-        align-items: center;
-    }
-
-    .welcome-card h2 {
-        font-size: 32px;
-    }
-
-    .corner-image-top-right,
-    .corner-image-bottom-left {
-        width: 400px;
-        height: auto;
-        opacity: 0.5;
-    }
-
-    .corner-image-top-right {
-        top: -50px;
-        right: -200px;
-    }
-
-    .corner-image-bottom-left {
-        bottom: -100px;
-        left: -150px;
     }
 }
 
-@media (max-width: 480px) {
-    .logo {
-        font-size: 20px;
-    }
-    
-    .illustration{
-        order: 2;
-    }
-    .welcome-card{
-        order: 1;
-    }
-    .welcome-card h2 {
-        font-size: 28px;
-    }
-    
-    .welcome-card p {
-        font-size: 14px;
-    }
-    
-    .google-signin-btn {
-        padding: 12px 20px;
-        font-size: 16px;
-    }
-    
-    .corner-image-top-right,
-    .corner-image-bottom-left {
-        width: 300px;
-    }
-    
-    .corner-image-top-right {
-        right: -150px;
-    }
-    
-    .corner-image-bottom-left {
-        left: -100px;
+@media (max-width: 600px) {
+    .welcome-card {
+        width: calc(100% - 40px);
     }
 }
