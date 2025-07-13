@@ -130,3 +130,113 @@ padding-right: 10px;
 }
 
 }
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  padding: 8px;
+}
+
+.calendar-cell {
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  min-height: 80px;
+  background-color: #F9FAFB;
+}
+
+.calendar-cell.today {
+  background-color: #5A0F61;
+  color: white;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.my-courses {
+  background-color: #fff;
+  max-width: 400px;
+}
+
+.course-item {
+  border-left: 3px solid #5A0F61;
+  padding-left: 12px;
+  margin-bottom: 16px;
+}
+
+.course-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #2c2c2c;
+}
+
+.course-detail {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 2px 0;
+}
+
+.text-purple {
+  color: #5A0F61;
+}
+
+.btn-outline-purple {
+  border: 1px solid #5A0F61;
+  color: #5A0F61;
+  border-radius: 4px;
+}
+.btn-outline-purple:hover {
+  background-color: #5A0F61;
+  color: #fff;
+}
+@media screen and (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem !important;
+    font-size: 12px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr); /* ensures 7 small columns */
+    gap: 4px;
+  }
+
+  .calendar-cell {
+    padding: 8px;
+    font-size: 10px;
+    min-height: 40px;
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    font-size: 10px;
+    gap: 10px;
+  }
+
+  #prev-month,
+  #next-month {
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+
+  #current-month {
+    font-size: 14px;
+  }
+}
+.tooltip-inner {
+  background-color: #fff;
+  color: black;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.tooltip.bs-tooltip-auto .tooltip-arrow::after {
+  border-top-color: #5A0F61;
+}
+.purple-border {
+  border-color: #5A0F61 !important;
+}

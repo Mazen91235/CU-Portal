@@ -1,82 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../css/sidebar.css" />
-    <link rel="stylesheet" href="../css/dashboard.css" />
-
-
-
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 </head>
-  
- <body>
+<body>
   <!-- Sidebar -->
-  <div id="sidebar-container" ></div>
+  <div id="sidebar-container"></div>
 
   <!-- Content wrapper: navbar + main content -->
   <div id="content-wrapper" class="sidebar-hidden">
-    <div id="navbar-container" ></div>
+    <div id="navbar-container"></div>
     <div id="main-content" class="p-4">
       <div id="header" class="d-flex justify-content-between align-items-center ">
         <div id="r-header" class="d-flex flex-column align-items-start gap-3">
           <h3 id="welcome-message" class="m-0"> Welcome back, ${username}! 👋</h3>
-        <p id="quot" class="m-0">Ready to make today productive?</p>
-        <div class="quote-box">
-        <p id="quot2" class="m-0">Every expert was once a beginner. Keep learning! 📚</p>
+          <p id="quot" class="m-0">Ready to make today productive?</p>
+          <div class="quote-box">
+            <p id="quot2" class="m-0">Every expert was once a beginner. Keep learning! 📚</p>
+          </div>
         </div>
-                </div>
-                
-                <div id="f-header" class="emoji-group position-relative">
-<p  id="cap" style="width: 60px; height: 60px; font-size: 56px; margin: 0; opacity: 0.2; ">
-  🎓
-</p>
-                  <p id="rocket" style="width: 60px; height: 60px; font-size: 100px; margin: 0;  ">
-  🚀
-  </p>
-                  
-  <p id="star" style="width: 60px; height: 60px;  font-size: 28px; margin: 0; opacity: 0.2; ">⭐</p>
-                </div>
-      </div>
 
-      
+        <div id="f-header" class="emoji-group position-relative">
+          <p id="cap" style="width: 60px; height: 60px; font-size: 56px; margin: 0; opacity: 0.2; ">
+            🎓
+          </p>
+          <p id="rocket" style="width: 60px; height: 60px; font-size: 100px; margin: 0;  ">
+            🚀
+          </p>
+
+          <p id="star" style="width: 60px; height: 60px;  font-size: 28px; margin: 0; opacity: 0.2; ">⭐</p>
+        </div>
+      </div>
+<div class="row mt-3">
+        <div class="col-lg-8 col-md-12 mb-3">    
+        <div class="calendar-container p-4 shadow bg-white rounded-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold">Calendar</h4>
+    <div>
+      <button id="prev-month" class="btn btn-light"><</button>
+      <span id="current-month" class="mx-2 fw-semibold text-purple"></span>
+      <button id="next-month" class="btn btn-light">></button>
     </div>
   </div>
+  <div id="calendar-grid" class="calendar-grid">
+
+    <!-- Days will be injected via JavaScript -->
+  </div>
+  <div class="legend mt-3 d-flex gap-3">
+    <span><span class="dot bg-danger"></span> Exams</span>
+    <span><span class="dot bg-warning"></span> Assignments</span>
+    <span><span class="dot bg-success"></span> Events</span>
+  </div>
+</div>
+      </div>
+        <div class="col-lg-4 col-md-12  mb-3" >
+          <div class="my-courses card shadow rounded-4 p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold" style="color: #5A0F61; "><img src="../assets/book.svg" alt="book">  My Courses</h5>
+    <a href="#" class="btn btn-outline-purple btn-sm">View All</a>
+  </div>
+  <div id="courses-list">
+    <!-- Courses will be inserted dynamically here -->
+  </div>
+
+</div>
+</div>
+
+    </div>
+
+    </div>
+  </div>
+  <template id="course-template">
+  <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
+    <h6 class="fw-bold mb-2 course-name"></h6>
+    <p class="mb-1 text-muted">
+      <span class="icon-wrapper me-2">
+        <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
+      </span>
+      <span class="course-time"></span>
+    </p>
+    <p class="mb-1 text-muted">
+      <span class="icon-wrapper me-2">
+        <img src="../assets/person.svg" alt="person" style="width: 20px;">
+      </span>
+      <span class="course-instructor"></span>
+    </p>
+    <p class="mb-0 text-muted">
+      <span class="icon-wrapper me-2">
+        <img src="../assets/locat.svg" alt="location" style="width: 20px;">
+      </span>
+      <span class="course-location"></span>
+    </p>
+  </div>
+</template>
+
+<template id="calendar-cell-template">
+  <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true">
+    <span class="day-number"></span>
+    <div class="dots mt-2"></div>
+  </div>
+</template>
+
+<template id="tooltip-item-template">
+  <div class="d-flex align-items-start mb-2">
+    <span class="dot __COLOR__ me-2 mt-1" style="width:10px; height:10px;"></span>
+    <div>
+      <div><strong>__TITLE__</strong></div>
+      <div class="text-muted small">__TIME__</div>
+    </div>
+  </div>
+</template>
 
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-  // Load navbar
-  fetch("../components/navbar.html")
-    .then(res => res.text())
-    .then(navbarHtml => {
-      document.getElementById("navbar-container").innerHTML = navbarHtml;
 
-      // Load sidebar
-      fetch("../components/sidebar.html")
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Load navbar
+      fetch("../components/navbar.html")
         .then(res => res.text())
-        .then(sidebarHtml => {
-          document.getElementById("sidebar-container").innerHTML = sidebarHtml;
+        .then(navbarHtml => {
+          document.getElementById("navbar-container").innerHTML = navbarHtml;
 
-          const toggleButton = document.getElementById("menu-toggle");
-          const sidebar = document.getElementById("sidebar");
-          const contentWrapper = document.getElementById("content-wrapper");
+          // Load sidebar
+          fetch("../components/sidebar.html")
+            .then(res => res.text())
+            .then(sidebarHtml => {
+              document.getElementById("sidebar-container").innerHTML = sidebarHtml;
 
-          if (toggleButton && sidebar && contentWrapper) {
-            toggleButton.addEventListener("click", () => {
-              sidebar.classList.toggle("hidden");
-              contentWrapper.classList.toggle("sidebar-hidden");
+              const toggleButton = document.getElementById("menu-toggle");
+              const sidebar = document.getElementById("sidebar");
+              const contentWrapper = document.getElementById("content-wrapper");
+
+              if (toggleButton && sidebar && contentWrapper) {
+                toggleButton.addEventListener("click", () => {
+                  sidebar.classList.toggle("hidden");
+                  contentWrapper.classList.toggle("sidebar-hidden");
+                });
+              }
             });
-          }
         });
-    });
-});
+    })
+
+
+  //   calendarGrid.innerHTML += `
+  // <div class="calendar-cell ${isToday ? "today" : ""}" 
+  //      data-bs-toggle="tooltip"
+  //      data-bs-placement="bottom"
+  //      data-bs-html="true" 
+  //      title="${tooltipHtml.replace(/"/g, '&quot;')}">
+  //   ${day}
+  //   <div class="mt-2">${dots}</div>
+  // </div>`;
+  // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  // tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+  //   new bootstrap.Tooltip(tooltipTriggerEl);
+  // });
 </script>
+</body>
 
-
-
-     </body>
 </html>
-      
