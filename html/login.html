@@ -4,36 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal - Welcome</title>
-    <link rel="stylesheet" href="/StudentsPortal-CU/css/style.css   ">
+    <link rel="stylesheet" href="../css/loginstyle.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body style="background-color: #F8FAFC;">
     <div class="container">
-    <img src="/StudentsPortal-CU/assets/freepik--background-simple--inject-251.png" alt="" class="corner-image-top-right">
-    <img src="/StudentsPortal-CU/assets/freepik--background-simple--inject-251 (1).png" alt="" class="corner-image-bottom-left">
-    <header class="header">
-       <h1 class="logo">St<span class="highlight">u</span>dent P<span class="highlight">o</span>rtal</h1>
+        <img src="../assets/freepik--background-simple--inject-251.png" alt="Decorative background element" class="corner-image-top-right">
+        <img src="../assets/freepik--background-simple--inject-251 (1).png" alt="Decorative background element" class="corner-image-bottom-left">
+        <header class="header">
+           <h1 class="logo">St<span class="highlight" aria-hidden="true">u</span>dent P<span class="highlight" aria-hidden="true">o</span>rtal</h1>
+        </header>
 
-    </header>
-
-    <div class="content-wrapper welcome-page">
-        <div class="illustration">
-            <img src="/StudentsPortal-CU/assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" alt="Happy student illustration">
-        </div>
-        <div class="card welcome-card">
-            <h2 class="gradient-text-h2">Hello,<br>welcome back</h2>
-            <p>You need to sign in with Google to continue</p>
-            <button class="google-signin-btn">
-                <img src="/StudentsPortal-CU/assets/icons8-google 1.svg" alt="Google icon" class="google-icon">
-                Sign up / in with Google
-            </button>
-        </div>
-    </div>
-
-    </div>
-
-       
+        <main class="content-wrapper welcome-page">  <!-- Changed to main for semantic HTML -->
+            <div class="illustration">
+                <img src="../assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" alt="Happy student illustration">
+            </div>
+            <div class="card welcome-card">
+                <h2 class="gradient-text-h2">Hello,<br>welcome back</h2>
+                <p>You need to sign in with Google to continue</p>
+                <button class="google-signin-btn" aria-label="Sign in with Google">
+                    <img src="../assets/icons8-google 1.svg" alt="" class="google-icon" aria-hidden="true">
+                    Sign up / in with Google
+                </button>
+            </div>
+        </main>
     </div>
 </body>
 </html>
