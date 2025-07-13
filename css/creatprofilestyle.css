@@ -87,7 +87,7 @@ body {
 .corner-image-bottom-left {
     position: absolute;
     bottom: -250px;  /* Adjusted to be more visible */
-    left: -250px;
+    left: -200px;
     width: 600px; /* Adjusted size */
     
     z-index: 0;
@@ -115,12 +115,15 @@ body {
 }
 
 .illustration img {
-    max-width: 400px; /* Original max-width from style.css for desktop */
-    height: auto;
-    margin-left: -200px; /* Original margin from style.css for desktop */
+    width: calc(445px * 0.8);
+    height: calc(667px * 0.8);
+    margin-left: -250px; /* Original margin from style.css for desktop */
     display: block;
     margin-bottom: 0;
     padding-bottom: 0;
+    position: absolute;
+    bottom: 0px;
+    left: 280px;
 }
 
 /* Specific illustration adjustments for create-profile-page (desktop) */
@@ -141,7 +144,6 @@ body {
     text-align: center;
     max-width: 500px; /* Original max-width from style.css for desktop */
     width: 100%;
-    margin-bottom: 0;
 }
 
 /* --- Gradient Text for Headings --- */
@@ -161,8 +163,8 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     max-width: 800px; /* Original max-width from style.css for desktop */
     width: 100%;
-    margin-left: -150px; /* Original margin from style.css for desktop */
-    margin-top: 0; /* No extra top margin for desktop */
+    margin-top: -100px; /* No extra top margin for desktop */
+    margin-right: -150px;
 }
 
 .profile-form-card h2 {
@@ -355,6 +357,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
+
 }
 
 .btn.primary-btn:hover {
@@ -362,8 +365,8 @@ body {
 }
 
 .profile-form .btn {
-    width: 100%;
-    margin-top: 10px; /* Original margin from style.css for desktop */
+    width: 70%;
+    margin: 10px 15%;
 }
 
 

@@ -10,15 +10,15 @@
 </head>
 <body>
     <div class="container">
-    <img src="/StudentsPortal-CU/assets/freepik--background-simple--inject-251.png" alt="" class="corner-image-top-right">
-    <img src="/StudentsPortal-CU/assets/freepik--background-simple--inject-251 (1).png" alt="" class="corner-image-bottom-left">
+    <img src="../assets/freepik--background-simple--inject-251.png" alt="" class="corner-image-top-right">
+    <img src="../assets/freepik--background-simple--inject-251 (1).png" alt="" class="corner-image-bottom-left">
         <header class="header">
 <h1 class="logo">St<span class="highlight">u</span>dent P<span class="highlight">o</span>rtal</h1>
         </header>
 
         <div class="content-wrapper create-profile-page">
             <div class="illustration">
-                <img src="/StudentsPortal-CU/assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" alt="Student writing illustration">
+                <img src="../assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" alt="Student writing illustration">
             </div>
             <div class="card profile-form-card">
                 <h2 class="gradient-text-h2">create your profile</h2>
@@ -28,46 +28,45 @@
                     <div class="input-row">
                         <div class="input-group">
                             <span class="material-icons icon-prefix">person</span>
-                            <input type="text" placeholder="Enter Your Name">
+                            <input type="text" name="name" placeholder="Name">
                         </div>
                         <div class="input-group">
                             <span class="material-icons icon-prefix">email</span>
-                            <input type="email" placeholder="Yourname@University.Edu">
+                            <input type="email" name="email" placeholder="yourname@stud.cu.edu.eg">
                         </div>
                     </div>
                     <div class="input-row">
                         <div class="input-group">
                             <span class="material-icons icon-prefix">phone</span>
-                            <input type="tel" placeholder="Enter Your Phone Number">
+                            <input type="tel" name="phone" placeholder="Phone Number">
                         </div>
                         <div class="input-group">
                             <span class="material-icons icon-prefix">fingerprint</span>
-                            <input type="text" placeholder="Enter Your National ID">
+                            <input type="text" name="national_id" placeholder="National ID">
                         </div>
                     </div>
                     <div class="input-row">
                         <div class="input-group select-group">
                             <span class="material-icons icon-prefix">wc</span>
-                            <select>
+                            <select name="gender">
                                 <option value="" disabled selected>select your gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
-                                <option value="other">Other</option>
                             </select>
                             <span class="material-icons dropdown-arrow">arrow_drop_down</span>
                         </div>
                         <div class="file-upload-container">
                             <div class="input-group file-input-group">
                                 <span class="material-icons icon-prefix">attach_file</span>
-                                <input type="file" id="university_id" class="hidden-file-input">
+                                <input type="file" name="file" id="university_id" class="hidden-file-input">
                                 <label for="university_id" class="file-label">University ID Or Photo Of Approval</label>
                             </div>
                             <label class="attachment-info-text">Only needed if the email you entered isn't The University Email</label>
                         </div>
                     </div>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="terms" name="terms">
-                        <label for="terms">agree to our terms & privacy policy</label>
+                        <input type="checkbox" id="terms" name="agreed">
+                        <label for="terms">agree to <a href="#!">our terms</a>  & <a href="#!">privacy policy</a> </label>
                     </div>
                     <button type="submit" class="btn primary-btn">Create Profile Now!</button>
                 </form>
