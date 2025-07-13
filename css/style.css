@@ -1,6 +1,6 @@
 
 :root {
-    --primary-purple: #6A1B9A; 
+    --primary-purple: #5A0F61; 
     --light-purple: #B39DDB; 
     --dark-grey: #616161; 
     --medium-grey: #9E9E9E; 
@@ -55,15 +55,18 @@ body {
 }
 
 .logo {
-    color: var(--primary-purple); 
+    color: #5A0F61;
     font-size: 24px;
     font-weight: bold;
-    
+
     -webkit-background-clip: unset;
     -webkit-text-fill-color: unset;
     background-clip: unset;
 }
 
+.logo .highlight {
+    color: #FDBA74;
+}
 
 .background-shape-top-right {
     position: absolute;
@@ -585,26 +588,20 @@ body {
 
 .corner-image-top-right {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: auto; 
-    height: auto; 
-    max-width: 300px; 
-    max-height: 300px; 
+    top: -250px;  /* Adjust to control visibility */
+    right: -250px;
+    width: 600px; /* Control size */
+    height: auto;
     z-index: 0; 
-    pointer-events: none; 
 }
 
 .corner-image-bottom-left {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: auto; 
-    height: auto; 
-    max-width: 250px; 
-    max-height: 250px; 
-    z-index: 0; 
-    pointer-events: none; 
+    bottom: -250px;  /* Adjust to control visibility */
+    left: -250px;
+    width: 600px;
+    height: auto;
+    z-index: 0;
 }
 .illustration {
     align-self: flex-end;
