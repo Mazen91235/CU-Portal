@@ -74,5 +74,19 @@
         </div>
 
         </div>
+        <script>
+document.getElementById('university_id').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : 'University ID Or Photo Of Approval';
+    document.querySelector('.file-label').textContent = fileName;
+    
+    // Update the info text if a file is selected
+    const infoText = document.querySelector('.attachment-info-text');
+    if (e.target.files[0]) {
+        infoText.textContent = `Uploaded: ${fileName}`;
+    } else {
+        infoText.textContent = 'Only needed if the email you entered isn\'t The University Email';
+    }
+});
+</script>
 </body>
 </html>

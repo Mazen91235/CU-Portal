@@ -142,12 +142,19 @@ body {
 
 /* --- Success Card Specific Styles --- */
 .success-card {
-    padding: 60px 40px;
-    margin-left: -150px;
-    display: flex;
+     display: inline-flex;
+    padding: 36px;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 13px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-top: -150px;
+    margin-right: -250px;
+    text-align: center;
+  
 }
 
 .icon-circle {
