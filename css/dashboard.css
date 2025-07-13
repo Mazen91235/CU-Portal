@@ -6,22 +6,8 @@ html, body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
-}
-/* Sidebar default style */
-#sidebar {
-  width: 256px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background-color: #fff;
-  z-index: 1000;
-  transition: transform 0.3s ease;
-}
+background:linear-gradient(90deg, #FAF5FF, #FFFFFF);}
 
-#sidebar.hidden {
-  transform: translateX(-100%);
-}
 
 /* Content wrapper shifts right when sidebar is visible */
 #content-wrapper {
@@ -32,4 +18,115 @@ html, body {
 #content-wrapper.sidebar-hidden {
   margin-left: 0;
 }
+#header{
+  height: 208px;
+  width: 100%;
+  background: linear-gradient(100deg, #5A0F61 60%, #FFA8A7 100%);
+border-radius: 16px;
+overflow: hidden;}
+#welcome-message {
+  color: #FFFFFF;
+  font-size: 36px;
+  font-weight: bold;
+  padding-left: 20px;
+}
+#quot {
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: normal;
+  padding-left: 20px;
+}
+#quot2 {
+  
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 0 100px 0 15px;
+}
+.quote-box {
+  background: rgba(255, 255, 255, 0.2); /* semi-transparent */
+  backdrop-filter: blur(4px);          /* blur effect */
+  -webkit-backdrop-filter: blur(4px);  /* for Safari */
+  border-radius: 8px;
+  max-width: 448px;
+  height: 52px;
+  justify-content: center;
+  align-items: center; 
+ color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  margin-left: 18px;
+}
+#r-header{
+  display: flex;
+  padding-left: 20px;
+  flex-direction: column;
+  align-items: flex-start; /* aligns text and boxes on same vertical line */
+  gap: 8px;
+}
+#rocket {
+    position: absolute;
+  top: 30px;
+  left: -20px;
+ 
+}
+.emoji-group {
+  position: relative;
+  width: 120px;
+  height: 100%;
+}
+#cap{
+    position: absolute;
 
+top: 5px;
+  left: 80px;
+}
+#star{
+    position: absolute;
+
+  top: 120px;
+  left: -300px;
+
+}
+@media screen and (max-width: 768px) {
+  
+  #welcome-message {
+    font-size: 16px;
+        white-space: nowrap;
+
+  }
+  #quot {
+    font-size: 12px;}
+  #quot2 {
+    font-size: 10px;
+    white-space: nowrap;
+margin: 0 ;  
+padding-left: 2px;
+padding-right: 10px;
+
+}
+  #header{
+  height: 150px;
+}
+#rocket {
+    font-size: 32px !important;
+  width: auto;
+   height: auto;
+}
+#r-header {
+    gap: 10px !important ;
+      padding-left: 3px !important ;
+            margin-right: 30px !important ;
+
+
+}
+.quote-box{
+  font-size: 10px !important;
+     margin-right: 10px !important;
+    padding: 4px 8px !important;
+    height: 37px !important;
+    line-height: 1.2;
+    border-radius: 6px !important;
+}
+
+}
