@@ -26,7 +26,7 @@
                 <h2 class="gradient-text-h2">create your profile</h2>
                 <p class="subtitle">Don't miss out! Create your profile in minutes</p>
 
-                <form class="profile-form">
+                <form class="profile-form" onsubmit="Signup(this);">
                     <div class="input-row">
                         <div class="input-group">
                             <span class="material-icons icon-prefix">person</span>
@@ -124,7 +124,7 @@ window.onload = function () {
         ShowError(GetParams("message"));
     }
     if (GetParams("success") == "true") {
-        ShowError(GetParams("message"));
+        ShowSuccess(GetParams("message"));
     }
 
     if (GetParams("get_stored_token") == "true" ) {
