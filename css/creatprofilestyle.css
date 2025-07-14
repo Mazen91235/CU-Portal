@@ -631,6 +631,20 @@ body {
         }
     }
     @media (max-width: 768px){
+        .header{
+            margin-top: 210px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            
+            text-align: center;
+            z-index: 30;
+            position: relative;
+            font-size: 30px;
+            width: 100%;
+            box-sizing: border-box;
+        }
         .profile-form-card{
             max-width: 100%;
         }

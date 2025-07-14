@@ -4,26 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Portal</title>
-  <link rel="stylesheet" href="./css/style1.css" />
+  <link rel="stylesheet" href="./css/styleindex.css" />
 </head>
 <body>
   <!-- Header -->
   <header class="main-header">
 
-    <div class="header-left">St<span style="color: orangered">u</span>dent P<span style="color: orangered;">o</span>rtal</div>
+    <div class="header-left">
+      St<span class="highlight">u</span>dent P<span class="highlight">o</span>rtal
+    </div>
 
     <nav class="header-center">
-      <a href="#">home</a>
-      <a href="#">features</a>
+      <a href="#">Home</a>
+      <a href="#">Features</a>
       <a href="#">How to Start</a>
       <a href="#">Snapshots</a>
     </nav>
     <div class="header-right">
-      <button class="btn login">login</button>
-      <button class="btn signup">sign up</button>
+      <button class="btn login">Login</button>
+      <button class="btn signup">Sign Up</button>
     </div>
+    
+    
+    
   </header>
-
+  <div class="line"> </div>
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-text">
@@ -38,5 +43,20 @@
       <img src="students.png" alt="Illustration of two students with books">
     </div>
   </section>
+  <script>
+document.querySelectorAll('.header-center a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Remove 'active' from all links
+    document.querySelectorAll('.header-center a').forEach(el => {
+      el.classList.remove('active');
+    });
+    
+    // Add 'active' to the clicked link
+    link.classList.add('active');
+  });
+});
+  </script>
 </body>
 </html>
