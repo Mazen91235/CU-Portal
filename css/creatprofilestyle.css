@@ -59,7 +59,6 @@ body {
     z-index: 10;
     box-sizing: border-box;
 }
-
 .logo {
     color: #5A0F61;
     font-size: 24px;
@@ -165,7 +164,7 @@ body {
     max-width: 800px; /* Original max-width from style.css for desktop */
     width: 100%;
     margin-top: -100px; /* No extra top margin for desktop */
-    margin-right: -250px;
+    margin-right: -200px;
 }
 
 .profile-form-card h2 {
@@ -474,6 +473,11 @@ body {
             flex-direction: column; /* Stack illustration and card vertically */
             gap: 20px; /* Reduced gap */
             padding: 20px;
+            box-sizing: border-box;
+        }
+        .create-profile-page{
+            padding: 0px;
+            box-sizing: border-box;
         }
         body{
             overflow-y: visible;
@@ -489,8 +493,12 @@ body {
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0px auto;
         }
         .logo{
+            z-index: 20;
+            display: block;
+            margin: 0 auto;
             text-align: center;
         }
         .profile-form .select-group ul{
@@ -529,9 +537,10 @@ body {
 
         .profile-form-card {
             padding: 40px 30px; /* Adjusted padding to match image for smaller screens */
-            max-width: 90%; /* Narrower card for smaller screens */
-            margin: 0px auto;
-            margin-top: 200px; 
+            max-width: calc(100% - 80px); /* Narrower card for smaller screens */
+            margin: 0px;
+            box-sizing: border-box;
+            /* margin-top: 200px;  */
         }
 
         .profile-form-card h2 {
@@ -619,5 +628,10 @@ body {
         }
         .corner-image-bottom-left {
             bottom: -200px;
+        }
+    }
+    @media (max-width: 768px){
+        .profile-form-card{
+            max-width: 100%;
         }
     }
