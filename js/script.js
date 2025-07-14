@@ -1,4 +1,4 @@
-const domain = "https://example.com";
+const domain = "https://bfd42b02449c.ngrok-free.app"; // Update with your actual domain
 
 
 //lets Understand the Code git pull
@@ -293,39 +293,3 @@ function Logout() {
     SetCookie("refresh_token", "", -1);
     window.location.href = "/";
 }
-
-// Initialize on page load
-window.onload = function () {
-    if (GetUser()) {
-        window.location.href = `${domain}/dashboard`;
-        return;
-    }
-
-    if (GetParams("error") == "true") {
-        ShowError(GetParams("message"));
-    }
-    if (GetParams("success") == "true") {
-        ShowError(GetParams("message"));
-    }
-
-    if (GetParams("get_stored_token") == "true" ) {
-        axios.get(`${domain}/api/v1/auth/get-stored-user`, {
-            headers: { "ngrok-skip-browser-warning": "true" }
-        })
-        .then(response => {
-            const data = response.data;
-            if (data.status == "success") {
-                let newdata = data.data;
-                if (!newdata ||!newdata.access_token || !newdata.refresh_token) return;
-                SetCookie("access_token", newdata.access_token, newdata.expire_at);
-                SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
-                window.location.href = `${domain}/dashboard`;
-            } else {
-                ShowError(data.message);
-            }
-        })
-        .catch(error => {
-            ShowError(error.response?.data?.message || "Error retrieving login session");
-        });
-    }
-};

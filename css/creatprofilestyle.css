@@ -45,7 +45,7 @@ body {
 
 .container {
     width: 100%;
-    height: 100vh; /* Ensure container takes full viewport height */
+    min-height: 100vh; /* Ensure container takes full viewport height */
     display: flex;
     flex-direction: column;
     position: relative;
@@ -57,6 +57,7 @@ body {
 .header {
     padding: 20px 40px;
     z-index: 10;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -164,7 +165,7 @@ body {
     max-width: 800px; /* Original max-width from style.css for desktop */
     width: 100%;
     margin-top: -100px; /* No extra top margin for desktop */
-    margin-right: -150px;
+    margin-right: -250px;
 }
 
 .profile-form-card h2 {
@@ -196,6 +197,7 @@ body {
     padding: 12px 15px; /* Original padding from style.css for desktop */
     background-color: var(--white);
     height: 50px; /* Original height from style.css for desktop */
+    width: 45%;
 }
 
 .profile-form .input-group .material-icons.icon-prefix {
@@ -218,7 +220,6 @@ body {
     padding: 0;
     height: 100%;
 }
-
 .profile-form input::placeholder,
 .profile-form .file-label {
     color: var(--medium-grey);
@@ -228,22 +229,17 @@ body {
     display: flex;
     gap: 20px; /* Original gap from style.css for desktop */
     margin-bottom: 20px; /* Original margin from style.css for desktop */
+    justify-content: space-between;
 }
 
 .profile-form .input-row .input-group {
     flex: 1;
     margin-bottom: 0; /* No extra margin within rows */
+    width: 45%;
 }
 
 .profile-form .select-group {
     position: relative;
-}
-
-.profile-form .select-group select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding-right: 30px;
 }
 
 .profile-form .select-group .dropdown-arrow {
@@ -271,7 +267,7 @@ body {
 }
 
 .file-input-group {
-    width: 100%;
+    width: 45%;
     display: flex;
     align-items: center;
     border: 1px solid #ddd;
@@ -281,7 +277,9 @@ body {
     height: 50px; /* Original height from style.css for desktop */
     cursor: pointer;
 }
-
+.file-input-group input{
+    cursor: pointer!important;
+}
 .file-input-group .material-icons.icon-prefix {
     color: var(--medium-grey);
     margin-right: 10px;
@@ -364,7 +362,19 @@ body {
 .profile-form input[type="tel"],
 .profile-form select,
 .profile-form .file-label {
+    cursor: text;
+}
+.profile-form span{
     cursor: default;
+    padding: 10px 0px 10px 15px;
+}
+.select-group input, .file-input-group label {
+    cursor: pointer!important;
+}
+.profile-form label{
+    padding: 0px;
+    margin: 0px;
+    align-self: center;
 }
 /* Make all input groups equal width */
 .profile-form .input-row {
@@ -377,16 +387,50 @@ body {
 .profile-form .input-row .input-group {
     flex: 1;
     min-width: 0; /* Crucial for equal distribution */
-    width: 100%; /* Add this to enforce equal width */
+    /* width: 100%; Add this to enforce equal width */
 }
 
 /* Specific fix for select group */
 .profile-form .select-group {
     flex: 1;
     min-width: 0;
-    width: 100%;
+    width: 45%;
+    position: relative;
+    cursor: pointer;
 }
-
+.profile-form .select-group ul{
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    list-style: none;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 3px 3xp rgba(0, 0, 0, 0.1);
+    background: white;
+    z-index: 2;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-bottom: none;
+    max-height: 0px;
+    overflow: hidden;
+    transition: 0.2s ease-in-out;
+}
+.profile-form .select-group ul.active {
+    max-height: 200px; /* Adjust as needed for dropdown height */
+}
+.profile-form .select-group ul li{
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+.profile-form .select-group ul li:hover{
+    background-color: #f0f0f0;
+}
+.profile-form .select-group ul li.active {
+    background-color: #f0f0f0; /* Highlight active item */
+}
 .profile-form .select-group select {
     width: 100%;
     -webkit-appearance: none;
@@ -401,7 +445,9 @@ body {
 
 /* Remove any extra padding that might be affecting width */
 .profile-form .input-group {
-    padding: 12px 15px;
+    padding: 12px 15px 12px 0px;
+    width: 45%;
+    box-sizing: border-box;
 }
 
 /* Ensure dropdown arrow doesn't affect width */
@@ -423,19 +469,33 @@ body {
 /* --- Responsive Adjustments (Media Queries) --- */
 
 /* For screens smaller than 992px (e.g., tablets and smaller desktops) */
-    @media (max-width: 992px) {
+    @media (max-width: 1024px) {
         .content-wrapper {
             flex-direction: column; /* Stack illustration and card vertically */
             gap: 20px; /* Reduced gap */
             padding: 20px;
-            padding-bottom: 20px;
         }
         body{
-            overflow: hidden;
+            overflow-y: visible;
         }
-    .logo{
-        text-align: center;
-    }
+        .container {
+            overflow: hidden;
+            height: auto; /* Allow container to adjust height based on content */
+            padding-bottom: 100px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo{
+            text-align: center;
+        }
+        .profile-form .select-group ul{
+            top: 40px;
+        }
         .illustration {
             margin-right: 0; /* Remove right margin */
             margin-bottom: 20px; /* Add bottom margin */
@@ -450,8 +510,16 @@ body {
         }
 
         .illustration img {
-            max-width: 300px; /* Adjust illustration size for tablets */
+            width: calc(445px * 0.5);
+            height: calc(667px * 0.5);
             margin-left: 0; /* Remove negative margin */
+            transform: rotateY(180deg);
+            position: absolute;
+            top: -100px;
+            right: 0px;
+            bottom: unset;
+            left: unset;
+            display: none;
         }
 
         .card {
@@ -461,9 +529,9 @@ body {
 
         .profile-form-card {
             padding: 40px 30px; /* Adjusted padding to match image for smaller screens */
-            max-width: 400px; /* Narrower card for smaller screens */
-            margin: 0 auto;
-            margin-top: 20px; /* Remove top margin */
+            max-width: 90%; /* Narrower card for smaller screens */
+            margin: 0px auto;
+            margin-top: 200px; 
         }
 
         .profile-form-card h2 {
@@ -479,15 +547,16 @@ body {
         .profile-form .input-row {
             flex-direction: column; /* Stack input groups vertically within a row */
             gap: 15px; /* Adjusted gap between input groups in a row */
-            margin-bottom: 15px; /* Adjusted margin for rows */
         }
         .profile-form .input-row .input-group {
             margin-bottom: 0; /* Remove redundant margin */
+            width: 100%;
+            margin: 5px 0px 0px 0px;
         }
 
         .profile-form .input-group {
             margin-bottom: 15px; /* Adjusted margin between input groups */
-            padding: 10px 15px; /* Adjusted padding */
+            padding: 0px 15px 0px 0px; /* Adjusted padding */
             height: 45px; /* Adjusted height */
         }
 
@@ -530,9 +599,6 @@ body {
             font-size: 13px; /* Smaller font size for checkbox label */
             padding-left: 5px;
         }
-    body{
-            overflow: hidden;
-        }
         .checkbox-group input[type="checkbox"] {
             margin-right: 8px; /* Adjusted margin */
             width: 16px; /* Smaller checkbox */
@@ -542,79 +608,16 @@ body {
         .checkbox-group input[type="checkbox"]:checked::after {
             font-size: 12px; /* Adjusted checkmark size */
         }
-.content-wrapper.create-profile-page {
-    gap: 10px;          /* Minimize the space between illustration and card */
-    padding: 0;
-    align-items: center;
-}
+
         .profile-form .btn {
             margin-top: 0px; /* Adjusted margin */
             padding: 14px 30px; /* Adjusted button padding */
             font-size: 17px; /* Adjusted button font size */
         }
-    }
-
-    /* For screens smaller than 768px (e.g., larger phones) */
-    @media (max-width: 768px) {
-        .header {
-            padding: 15px 20px;
+        .corner-image-top-right{
+            top: -150px;
         }
-
-        .logo {
-            font-size: 20px;
-        }
-
-        .content-wrapper {
-            padding: 15px;
-        }
-
-        .illustration img {
-            max-width: 250px; /* Further reduce illustration size */
-        }
-
-        .card {
-            padding: 25px;
-        }
-
-        .profile-form-card h2 {
-            font-size: 24px; /* Even smaller heading */
-        }
-
-        .profile-form-card .subtitle {
-            font-size: 13px; /* Even smaller subtitle */
-        }
-    body{
-            overflow: hidden;
-        }
-        .btn {
-            padding: 12px 25px;
-            font-size: 16px;
-        }
-        .profile-form-card {
-            padding: 30px 25px;
+        .corner-image-bottom-left {
+            bottom: -200px;
         }
     }
-
-    /* For screens smaller than 480px (e.g., small phones) */
-   @media (max-width: 480px) {
-    .illustration img {
-        position: fixed;      /* Fix image to viewport */
-        top :100px;            /* Stick to bottom */
-        left:80%;
-        transform: translateX(-50%);
-        transform: scaleX(-1);
-        width: 90px;         /* Increase size as needed */
-        height: auto;
-        z-index: 99;           /* Keep behind the card */
-    }
-
-    .profile-form-card {
-        margin-top: 70px;    /* Pull the card slightly up */
-        position: relative;
-        z-index: 2;           /* Ensure it stays above the illustration */
-    }
-
-    .content-wrapper.create-profile-page {
-        padding-bottom: 150px; /* Leave space for the fixed image */
-    }
-}

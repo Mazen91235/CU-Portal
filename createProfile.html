@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Create Profile</title>
+    <link rel="stylesheet" href="./css/creatprofilestyle.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/all.min-new.css">
+</head>
+<body>
+    <div class="container">
+        <img src="./assets/freepik--background-simple--inject-251.png" alt="" class="corner-image-top-right">
+        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="" class="corner-image-bottom-left">
+        <header class="header">
+            <h1 class="logo">St<span class="highlight">u</span>dent P<span class="highlight">o</span>rtal</h1>
+        </header>
+
+        <div class="content-wrapper create-profile-page">
+            <div class="illustration">
+                <img src="./assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" alt="Student writing illustration">
+            </div>
+            <div class="card profile-form-card">
+                <h2 class="gradient-text-h2">create your profile</h2>
+                <p class="subtitle">Don't miss out! Create your profile in minutes</p>
+
+                <form class="profile-form">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">person</span>
+                            <input type="text" name="name" placeholder="Name">
+                        </div>
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">email</span>
+                            <input type="email" name="email" placeholder="yourname@stud.cu.edu.eg">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">phone</span>
+                            <input type="tel" name="phone" placeholder="Phone Number">
+                        </div>
+                        <div class="input-group">
+                            <span class="material-icons icon-prefix">fingerprint</span>
+                            <input type="text" name="national_id" placeholder="National ID">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group select-group">
+                            <span class="material-icons icon-prefix">wc</span>
+                            <input type="text" name="gender_input" id="gender_input" placeholder="Gender" readonly>
+                            <ul>
+                                <li id="list_gender">Gender</li>
+                                <li id="list_male">Male</li>
+                                <li id="list_female">Female</li>
+                            </ul>
+                            <select name="gender" id="gender" style="display: none;">
+                                <option value="gender">Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                            <i class="fa-solid fa-caret-down" style="color: var(--medium-grey);"></i>
+                        </div>
+                        <div class="input-group file-input-group">
+                            <span class="material-icons icon-prefix">attach_file</span>
+                            <input type="file" name="file" id="file" class="hidden-file-input">
+                            <!-- <label for="file" class="file-label">University ID Or Photo Of Approval</label> -->
+                            <input type="text" placeholder="University ID Or Photo of Approval" id="university_id" readonly>
+                            <label class="attachment-info-text" style="position: absolute;top: -15px;left: 5px;">Only needed if the email you entered isn't The University Email</label>
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="agreed">
+                        <label for="terms">agree to <a href="#!">our terms</a>  & <a href="#!">privacy policy</a> </label>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Create Profile Now!</button>
+                </form>
+            </div>
+        </div>
+
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="/js/script.js"></script>
+        <script>
+            document.querySelector('.file-input-group #university_id').onclick = () => {
+                document.getElementById('file').click();
+            }
+            document.getElementById('file').addEventListener('change', function(e) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : 'University ID Or Photo of Approval';
+                document.querySelector('#university_id').setAttribute('placeholder',fileName);
+            });
+            document.querySelector('.select-group').addEventListener('click', function() {
+                document.querySelector('.select-group ul').classList.toggle('active');
+                if(document.querySelector('.select-group i').classList.contains('fa-caret-down')) {
+                    document.querySelector('.select-group i').classList.remove('fa-caret-down');
+                    document.querySelector('.select-group i').classList.add('fa-caret-up');
+                } else {
+                    document.querySelector('.select-group i').classList.remove('fa-caret-up');
+                    document.querySelector('.select-group i').classList.add('fa-caret-down');
+                }
+            });
+            document.querySelectorAll('.select-group ul li').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelector('.select-group ul').querySelector('.active')?.classList.remove('active');
+                    item.classList.add('active');
+                    const selectedText = this.getAttribute('id').replace('list_', '');
+                    $('#gender').val(selectedText).trigger('change');
+                    document.querySelector('#gender_input').setAttribute('placeholder', document.querySelector('#gender').value.charAt(0).toUpperCase() + document.querySelector('#gender').value.slice(1));
+                });
+            });
+            
+// Initialize on page load
+window.onload = function () {
+    document.querySelectorAll('.select-group ul li')[0].click();
+    document.querySelector('.select-group').click();
+    if (GetUser()) {
+        window.location.href = `${domain}/dashboard`;
+        return;
+    }
+
+    if (GetParams("error") == "true") {
+        ShowError(GetParams("message"));
+    }
+    if (GetParams("success") == "true") {
+        ShowError(GetParams("message"));
+    }
+
+    if (GetParams("get_stored_token") == "true" ) {
+        axios.get(`${domain}/api/v1/auth/get-stored-user`, {
+            headers: { "ngrok-skip-browser-warning": "true" }
+        })
+        .then(response => {
+            const data = response.data;
+            if (data.status == "success") {
+                let newdata = data.data;
+                if (!newdata ||!newdata.access_token || !newdata.refresh_token) return;
+                SetCookie("access_token", newdata.access_token, newdata.expire_at);
+                SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
+                window.location.href = `${domain}/dashboard`;
+            } else {
+                ShowError(data.message);
+            }
+        })
+        .catch(error => {
+            ShowError(error.response?.data?.message || "Error retrieving login session");
+        });
+    }
+};
+
+</script>
+</body>
+</html>

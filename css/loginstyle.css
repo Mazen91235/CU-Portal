@@ -4,6 +4,17 @@
     --beige-background: #E0B496;
     --white: #FFFFFF;
     --highlight-color: #FDBA74;
+    --dark-grey: #616161; 
+    --medium-grey: #9E9E9E; 
+    --light-grey: #F5F5F5; 
+    --success-green: #4CAF50;
+    --error-red: #F44336;
+    --text-on-light: #424242;
+    --text-on-dark: #FFFFFF;
+    --gradient-start: #FFA8A7;
+    --gradient-end: #881792;
+    --gradient-deg: 90deg;
+    --main-bg-grey: #E8EBF1; 
 }
 
 * {
@@ -155,6 +166,34 @@ body {
     width: 24px;
     height: 24px;
 }
+
+
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--light-purple); /* This is general, but success overrides it */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.icon-circle.success {
+    background-color: var(--success-green);
+    color: var(--white);
+}
+
+.icon-circle .material-icons {
+    font-size: 36px;
+    color: var(--white); /* This is general, but success overrides it, effectively */
+}
+
+.icon-circle.success .material-icons {
+    color: var(--white);
+}
+
 
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
