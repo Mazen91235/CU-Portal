@@ -13,6 +13,7 @@ background:linear-gradient(90deg, #FAF5FF, #FFFFFF);}
 #content-wrapper {
   margin-left: 256px; /* Sidebar width */
   transition: margin-left 0.3s ease;
+  
 }
 
 #content-wrapper.sidebar-hidden {
@@ -129,76 +130,7 @@ padding-right: 10px;
     line-height: 1.2;
     border-radius: 6px !important;
 }
-
-}
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-  padding: 8px;
-}
-
-.calendar-cell {
-  padding: 6px;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  position: relative;
-  height: 50px;
-}
-.calendar-cell:hover {
-  background-color: #5A0F611A;
-
-}
-.calendar-cell.today {
-  background-color: #5A0F61;
-  color: white;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.my-courses {
-  background-color: #fff;
-  max-width: 430px;
-}
-
-.course-item {
-  border-left: 3px solid #5A0F61;
-  padding-left: 12px;
-  margin-bottom: 16px;
-}
-
-.course-title {
-  font-weight: 600;
-  font-size: 16px;
-  color: #2c2c2c;
-}
-
-.course-detail {
-  font-size: 14px;
-  color: #6c757d;
-  margin: 2px 0;
-}
-
-.text-purple {
-  color: #5A0F61;
-}
-
-.btn-outline-purple {
-  border: 1px solid #5A0F61;
-  color: #5A0F61;
-  border-radius: 4px;
-}
-.btn-outline-purple:hover {
-  background-color: #5A0F61;
-  color: #fff;
-}
-@media screen and (max-width: 768px) {
-   .responsive-btn {
+.responsive-btn {
     padding: 10px 20px;
     font-size: 10px;
     overflow: hidden;
@@ -235,6 +167,155 @@ padding-right: 10px;
   #current-month {
     font-size: 14px;
   }
+  .my-courses {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+white-space: nowrap;
+overflow: hidden;
+    padding: 30px !important;
+font-size: medium;
+  }
+  #courses-list{
+    flex-wrap: wrap;
+    display: flex;
+    font-size: 16px;
+     margin-right: 0 !important;
+    margin-left: 0 !important;
+
+  }
+  .my-courses .course-item {
+     margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin-bottom: 12px;
+    padding-left: 8px;
+   padding-right: 30px;
+white-space: nowrap;
+font-size: 14px;
+  }
+  .calendar-container{
+    white-space: nowrap;
+      margin-left: 0  !important;
+
+
+  }
+   #exam-table {
+    font-size: 12px;
+    
+  }
+
+
+  .exam-overview {
+    padding: 0.5rem !important;
+    margin-left: 0  !important;
+
+  }
+
+  .table-responsive {
+    padding: 0 !important;
+    margin: 0 auto;
+    overflow-x: auto; /* Prevent unnecessary scrollbars */
+  }
+
+  #exam-table {
+    width: 100% !important;
+    table-layout: fixed;
+  }
+
+  #exam-table th,
+  #exam-table td {
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .exam-overview h5 {
+    font-size: 16px;
+  }
+  #task-table{
+    width: 100% !important;
+    table-layout: fixed;
+    font-size: 12px;
+
+  }
+#task-table th,
+  #task-table td {
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+  .tasks-assignments {
+    padding: 0.5rem !important;
+    margin-left: 0  !important;
+
+  }
+  .tasks-assignments h5 {
+    font-size: 16px;
+  }
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  padding: 8px;
+}
+
+.calendar-cell {
+  padding: 6px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  height: 50px;
+}
+.calendar-cell:hover {
+  background-color: #5A0F611A;
+
+}
+.calendar-cell.today {
+  background-color: #5A0F61;
+  color: white;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.my-courses {
+  background-color: #fff;
+  max-width: 430px !important;
+  margin-left: 40px !important;
+}
+
+.course-item {
+  border-left: 3px solid #5A0F61;
+  padding-left: 12px;
+  margin-bottom: 16px;
+}
+
+.course-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #2c2c2c;
+}
+
+.course-detail {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 2px 0;
+}
+
+.text-purple {
+  color: #5A0F61;
+}
+
+.btn-outline-purple {
+  border: 1px solid #5A0F61;
+  color: #5A0F61;
+  border-radius: 4px;
+}
+.btn-outline-purple:hover {
+  background-color: #5A0F61;
+  color: #fff;
 }
 .tooltip-inner {
   background-color: #fff;
@@ -262,4 +343,124 @@ padding-right: 10px;
 .responsive-btn {
   padding: 4px 10px;
   font-size: 16px;
+}
+.calendar-container{
+
+  margin-left: 40px;
+  }
+  
+  #exam-table thead th {
+  background-color: rgba(90, 15, 97, 0.1); /* 0.1 = 10% opacity */
+  margin-bottom:20px;
+  color: #1F2937;
+  justify-content: center;
+    vertical-align: middle !important;
+
+}
+
+  .exam-overview .badge {
+  font-size: 0.75rem;
+  padding: 0.5em 0.75em;
+  border-radius: 8px;
+}
+.eCourse {
+  background-color: #F3E8FF !important;
+  color: #5A0F61 !important;
+  font-size: 16px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+}
+.eStatus {
+  background-color: #5A0F61 !important;
+  color: #ffffff !important;
+  font-size: 12px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+}
+.eStatus.completed {
+  background-color: #DCFCE7 !important;
+  color: #166534 !important;
+  font-size: 12px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+}
+.exam-row.e td{
+  background-color: #FAFAFA !important;
+}
+.exam-row:hover td {
+  background-color: #EDEDED !important ; /* Slightly darker gray on hover */
+}
+
+#exam-table,
+#exam-table th,
+#exam-table td {
+  border: none !important;
+  border-top: none !important;
+}
+#exam-table tr {
+  height: 58px; 
+}
+.exam-overview{
+    margin-left: 40px;
+
+}
+#exam-table {
+  table-layout: auto;
+}
+//////////////////////
+
+.tasks-assignments.badge {
+  font-size: 0.75rem;
+  padding: 0.5em 0.75em;
+  border-radius: 8px;
+}
+
+.tStatus{
+  background-color: #FFEDD5 !important;
+  color: #9A3412 !important;
+  font-size: 12px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+}
+.tStatus.subm {
+  background-color: #DCFCE7 !important;
+  color: #166534 !important;
+  font-size: 12px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+}
+#task-table,
+#task-table th,
+#task-table td {
+  border: none !important;
+  border-top: none !important;
+}
+#task-table tr {
+  height: 58px; 
+}
+
+.tasks-assignments{
+      margin-left: 40px;
+
+}
+#task-table {
+  table-layout: auto;
+}
+table#task-table thead th {
+  background-color: rgba(90, 15, 97, 0.1) !important;
+  color: #1F2937 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 12px !important;
+}
+td.tTask{
+  font-weight: 600;
+  color: #1F2937;
+  font-size: 16px;
+
 }
