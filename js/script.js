@@ -48,6 +48,21 @@ function ShowError(msg) {
         alert(msg);
     }
 }
+function ShowSuccess(msg) {
+    const errorDiv = document.getElementById("error-message");
+    if (errorDiv) {
+        errorDiv.innerText = msg;
+        errorDiv.classList.remove("hidden");
+        errorDiv.classList.add("show");
+
+        setTimeout(() => {
+            errorDiv.classList.remove("show");
+            errorDiv.classList.add("hidden");
+        }, 5000);
+    } else {
+        alert(msg);
+    }
+}
 
 
 //get google Stored token 
@@ -245,48 +260,6 @@ function GetUser() {
         }
     });
 }
-
-
-function HandleGoogleLoginCallback() {
-    if (GetParams("google_linked") === "true") {
-        // First check if we already have a valid session
-        GetUser().then(user => {
-            if (user) {
-                // User already has a valid session
-                window.location.href = `${domain}/dashboard`;
-            } else {
-                // No valid session, proceed with Google auth callback
-                axios.get(`${domain}/api/v1/auth/google-oauth-callback`, {
-                    headers: { "ngrok-skip-browser-warning": "true" }
-                })
-                .then(response => {
-                    const data = response.data;
-                    if (data.status === "success") {
-                        SetCookie("access_token", JSON.stringify(data.access_token), data.expire_at);
-                        SetCookie("refresh_token", JSON.stringify(data.refresh_token), data.refresh_expire_at);
-                        
-                        // Check if user needs to complete profile or go to dashboard
-                        if (data.profile_complete) {
-                            window.location.href = `${domain}/dashboard`;
-                        } else {
-                            window.location.href = `${domain}/create-profile`;
-                        }
-                    } else {
-                        ShowError(data.message || "Google authorization failed");
-                    }
-                })
-                .catch(error => {
-                    ShowError(error.response?.data?.message || "Error linking Google account");
-                });
-            }
-        });
-    }
-
-    if (GetParams("google_linked") === "false" && GetParams("error")) {
-        ShowError(GetParams("error"));
-    }
-}
-
 
 function Logout() {
     SetCookie("access_token", "", -1);

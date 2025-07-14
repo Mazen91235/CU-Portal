@@ -22,10 +22,11 @@
                 <img src="./assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" alt="Student writing illustration">
             </div>
             <div class="card profile-form-card">
+                <img src="./assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png" id="illustration_img" alt="Student writing illustration">
                 <h2 class="gradient-text-h2">create your profile</h2>
                 <p class="subtitle">Don't miss out! Create your profile in minutes</p>
 
-                <form class="profile-form">
+                <form class="profile-form" onsubmit="Signup(this);">
                     <div class="input-row">
                         <div class="input-group">
                             <span class="material-icons icon-prefix">person</span>
@@ -66,7 +67,7 @@
                             <span class="material-icons icon-prefix">attach_file</span>
                             <input type="file" name="file" id="file" class="hidden-file-input">
                             <!-- <label for="file" class="file-label">University ID Or Photo Of Approval</label> -->
-                            <input type="text" placeholder="University ID Or Photo of Approval" id="university_id" readonly>
+                            <input type="text" placeholder="University ID or Photo of Approval" id="university_id" readonly>
                             <label class="attachment-info-text" style="position: absolute;top: -15px;left: 5px;">Only needed if the email you entered isn't The University Email</label>
                         </div>
                     </div>
@@ -87,8 +88,10 @@
                 document.getElementById('file').click();
             }
             document.getElementById('file').addEventListener('change', function(e) {
-                const fileName = e.target.files[0] ? e.target.files[0].name : 'University ID Or Photo of Approval';
-                document.querySelector('#university_id').setAttribute('placeholder',fileName);
+                const fileName = e.target.files[0] ? e.target.files[0].name : 'University ID or Photo of Approval';
+                // Size in MB
+                const fileSize = e.target.files[0] ? `(${(e.target.files[0].size / (1024 * 1024)).toFixed(2)} MB)` : '';
+                document.querySelector('#university_id').setAttribute('placeholder',`${fileName} ${fileSize}`);
             });
             document.querySelector('.select-group').addEventListener('click', function() {
                 document.querySelector('.select-group ul').classList.toggle('active');
@@ -123,7 +126,7 @@ window.onload = function () {
         ShowError(GetParams("message"));
     }
     if (GetParams("success") == "true") {
-        ShowError(GetParams("message"));
+        ShowSuccess(GetParams("message"));
     }
 
     if (GetParams("get_stored_token") == "true" ) {

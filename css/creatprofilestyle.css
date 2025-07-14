@@ -23,6 +23,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #F8FAFC; /* Light grey background as seen in the image */
 }
 /* --- Base Styles --- */
 * {
@@ -41,6 +42,7 @@ body {
     min-height: 100vh;
     /* Removed overflow: hidden to allow background images to extend */
     overflow-x: hidden; /* Added to prevent horizontal scrolling */
+    background-color: #F8FAFC!important; /* Light grey background as seen in the image */
 }
 
 .container {
@@ -50,7 +52,6 @@ body {
     flex-direction: column;
     position: relative;
     /* Removed overflow: hidden */
-    background-color: #F8FAFC; /* Light grey background as seen in the image */
 }
 
 /* --- Header Styles --- */
@@ -308,7 +309,10 @@ body {
     width: 100%;
     padding-left: 5px;
 }
-
+.checkbox-group label{
+    cursor: text;
+    user-select: none;
+}
 .checkbox-group input[type="checkbox"] {
     margin-right: 10px; /* Original margin from style.css for desktop */
     width: 18px; /* Original width from style.css for desktop */
@@ -464,7 +468,9 @@ body {
     margin: 10px 15%;
 }
 
-
+#illustration_img {
+    display: none;
+}
 /* --- Responsive Adjustments (Media Queries) --- */
 
 /* For screens smaller than 992px (e.g., tablets and smaller desktops) */
@@ -474,26 +480,27 @@ body {
             gap: 20px; /* Reduced gap */
             padding: 20px;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .create-profile-page{
             padding: 0px;
             box-sizing: border-box;
+            position: relative;
         }
         body{
             overflow-y: visible;
         }
         .container {
-            overflow: hidden;
+            overflow: visible;
             height: auto; /* Allow container to adjust height based on content */
-            padding-bottom: 100px;
-            box-sizing: border-box;
+            padding-bottom: 0px;
             position: relative;
         }
         .header {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0px auto;
+            margin-bottom: -1000px;
         }
         .logo{
             z-index: 20;
@@ -505,31 +512,20 @@ body {
             top: 40px;
         }
         .illustration {
-            margin-right: 0; /* Remove right margin */
-            margin-bottom: 20px; /* Add bottom margin */
-            margin-top: 0;
+            display: none;
         }
-
-        .create-profile-page .illustration {
-            margin: 0;
-            padding: 0  ;
-            align-self: center; /* Center illustration on smaller screens */
-            margin-bottom: 20px; /* Consistent bottom margin */
-        }
-
-        .illustration img {
-            width: calc(445px * 0.5);
-            height: calc(667px * 0.5);
+        #illustration_img {
+            display: block;
+            width: calc(445px * 0.25);
+            height: calc(667px * 0.25);
             margin-left: 0; /* Remove negative margin */
             transform: rotateY(180deg);
             position: absolute;
-            top: -100px;
+            top: -50px;
             right: 0px;
             bottom: unset;
             left: unset;
-            display: none;
         }
-
         .card {
             max-width: 90%; /* Allow card to take more width */
             padding: 30px; /* Adjusted padding */
@@ -539,7 +535,9 @@ body {
             padding: 40px 30px; /* Adjusted padding to match image for smaller screens */
             max-width: calc(100% - 80px); /* Narrower card for smaller screens */
             margin: 0px;
+            margin-bottom: -1000px;
             box-sizing: border-box;
+            position: relative;
             /* margin-top: 200px;  */
         }
 
@@ -628,6 +626,7 @@ body {
         }
         .corner-image-bottom-left {
             bottom: -200px;
+            left: -400px; /* Adjusted for better visibility on smaller screens */
         }
     }
     @media (max-width: 768px){
