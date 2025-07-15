@@ -147,9 +147,7 @@ padding-right: 10px;
   }
 
   .calendar-cell {
-    padding: 6px;
     font-size: 10px;
-    min-height: 44px;
   }
 
   .legend {
@@ -167,31 +165,8 @@ padding-right: 10px;
   #current-month {
     font-size: 14px;
   }
-  .my-courses {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-white-space: nowrap;
-overflow: hidden;
-    padding: 30px !important;
-font-size: medium;
-  }
-  #courses-list{
-    flex-wrap: wrap;
-    display: flex;
-    font-size: 16px;
-     margin-right: 0 !important;
-    margin-left: 0 !important;
 
-  }
-  .my-courses .course-item {
-     margin-right: 0 !important;
-    margin-left: 0 !important;
-    margin-bottom: 12px;
-    padding-left: 8px;
-   padding-right: 30px;
-white-space: nowrap;
-font-size: 14px;
-  }
+
   .calendar-container{
     white-space: nowrap;
       margin-left: 0  !important;
@@ -249,6 +224,29 @@ font-size: 14px;
   .tasks-assignments h5 {
     font-size: 16px;
   }
+
+.upcoming-events {
+  margin-left: 0px !important;
+      white-space: nowrap;
+
+}
+.study-tracker {
+  margin-left: 0px !important;
+      white-space: nowrap;
+
+}
+#fot-quoot {
+  margin-left: 0px !important;
+      white-space: nowrap;
+
+}
+.my-courses{
+  margin-left: 0px !important;
+      white-space: nowrap;
+
+  }
+
+
 }
 .calendar-grid {
   display: grid;
@@ -258,12 +256,14 @@ font-size: 14px;
 }
 
 .calendar-cell {
-  padding: 6px;
+  padding-top: 15px;
   border-radius: 10px;
   text-align: center;
   cursor: pointer;
   position: relative;
   height: 50px;
+  width: 90px;
+
 }
 .calendar-cell:hover {
   background-color: #5A0F611A;
@@ -283,7 +283,7 @@ font-size: 14px;
 .my-courses {
   background-color: #fff;
   max-width: 430px !important;
-  margin-left: 40px !important;
+  margin-left: 40px;
 }
 
 .course-item {
@@ -462,4 +462,178 @@ td.tTask{
   color: #1F2937;
   font-size: 16px;
 
+}
+.upcoming-events {
+  max-width: 430px;
+  margin-left: 40px;
+}
+
+.event-item {
+  background-color: #fff;
+}
+
+.emoji-tag.care {
+  background-color: #EFF6FF;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+}
+.emoji-tag.compt {
+  background-color: #F0FDF4;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+}
+.emoji-tag.trav {
+  background-color: #FFF7ED;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+}
+.event-data{
+margin-left: 45px;}
+#event-location {
+  white-space: nowrap;
+}
+.btn-outline-purple {
+  border: 1px;
+  color: #5A0F61;
+  border-radius: 8px;
+  padding: 4px 16px;
+  font-size: 14px;
+   font-weight: bold;
+  transition: 0.3s ease;
+  border: 1px solid #5A0F61;
+  
+}
+.btn-outline-purple.goin{
+    border: 1px solid white !important;
+
+}
+.btn-outline-purple:hover {
+  background-color: #5A0F61;
+  color: #fff;
+}
+
+.event-category.career{
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+ 
+}
+.event-category.travel{
+  background: linear-gradient(90deg, #F97316, #EA580C);
+ 
+}
+.event-category.compet{
+  background: linear-gradient(90deg, #22C55E, #16A34A);
+ 
+}
+.event-category{
+  margin-left: 10px;
+   color: white;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.btn-purple {
+  background-color: #5A0F61;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+.btn-purple:hover {
+  background-color: #3e0846;
+}
+.study-tracker {
+  max-width: 430px;
+  margin-left: 40px;
+}
+
+.circle-progress {
+      position: relative;
+      width: 130px;
+      height: 130px;
+    }
+
+    .circle-progress svg {
+      transform: rotate(-90deg);
+      width: 130px;
+      width: 130px;
+    }
+
+    .circle-progress circle {
+      fill: none;
+      stroke-width: 7;
+    }
+
+    .circle-bg {
+      stroke: #e5e7eb; 
+      stroke-dasharray: 30 30 ;
+    }
+
+    .circle-fg {
+      stroke: #5A0F61; 
+      stroke-dasharray: 30 30;
+      stroke-linecap: round;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .progress-text .main {
+      font-size: 24px;
+      font-weight: bold;
+      color: #5A0F61;
+    }
+
+    .progress-text .sub {
+      font-size: 14px;
+      color: #6B7280; 
+    }
+.week-chart .d-flex {
+  align-items: flex-end; 
+  gap: 5px; 
+}
+
+.week-chart .day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:
+  height: 120px; 
+  width: 36px;
+}
+.week-chart .bar {
+  width: 20px;
+  margin: 0 auto 4px;
+ background:linear-gradient(to top, #5A0F61, #7B1FA2) !important;
+  border-radius: 4px;
+}
+
+.bg-success-subtle {
+  background-color: #DCFCE7;
+}
+.bg-primary-subtle {
+  background-color: #DBEAFE;
+}
+.bg-gradient-light-purple {
+  background: linear-gradient(90deg, #F3E8FF, #E0F2FE);
+}
+.bg-gradient-light {
+  background: linear-gradient(90deg, #FAF5FF, #FFECEC);
+}
+#fot-quoot {
+max-width: 430px;
+  margin-left: 40px;
 }
