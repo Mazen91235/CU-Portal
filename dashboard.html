@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../css/sidebar.css" />
-  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="./components/navbar.html" />
+  <link rel="stylesheet" href="./components/sidebar.html" />
+  <link rel="stylesheet" href="./css/dashboard.css" />
   <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 </head>
@@ -143,15 +144,15 @@
                 <div class="calendar-cell"><span class="day-number">21</span></div>
                 <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
                   title="
-  <div class='mb-2 d-flex align-items-start'>
-    <span class='dot bg-danger me-2 mt-1'></span>
-    <div>
-      <div><strong>Project Submission</strong></div>
-      <div class='text-muted small'>4:00 PM</div>
-    </div>
-  </div>
-  
-">
+                        <div class='mb-2 d-flex align-items-start'>
+                          <span class='dot bg-danger me-2 mt-1'></span>
+                          <div>
+                            <div><strong>Project Submission</strong></div>
+                            <div class='text-muted small'>4:00 PM</div>
+                          </div>
+                        </div>
+                        
+                      ">
                   <span class="day-number">22</span>
                   <div class="dots">
                     <span class="dot bg-danger"></span>
@@ -527,46 +528,8 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
+  <script src="./js/loading.js"></script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      // Load navbar
-      fetch("../components/navbar.html")
-        .then(res => res.text())
-        .then(navbarHtml => {
-          document.getElementById("navbar-container").innerHTML = navbarHtml;
-
-          // Load sidebar
-          fetch("../components/sidebar.html")
-            .then(res => res.text())
-            .then(sidebarHtml => {
-              document.getElementById("sidebar-container").innerHTML = sidebarHtml;
-
-              const toggleButton = document.getElementById("menu-toggle");
-              const sidebar = document.getElementById("sidebar");
-              const contentWrapper = document.getElementById("content-wrapper");
-
-              if (toggleButton && sidebar && contentWrapper) {
-                toggleButton.addEventListener("click", () => {
-                  sidebar.classList.toggle("visible");
-                  sidebar.classList.toggle("hidden");
-                  contentWrapper.classList.toggle("sidebar-hidden");
-                });
-              } else {
-                console.warn("Toggle failed. Elements missing:", { toggleButton, sidebar, contentWrapper });
-              }
-            });
-        });
-    });
-
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-        new bootstrap.Tooltip(tooltipTriggerEl);
-      });
-    });
   </script>
 </body>
 
