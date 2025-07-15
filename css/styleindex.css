@@ -9,17 +9,15 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom right, #fff, #f4ecff);
   color: #222;
-  
 }
 
 /* Header */
 .main-header {
   display: flex;
-  
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 5%;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   padding-top: 2rem;
   padding-bottom: 2rem;
   background-color: #ffffff;
@@ -27,57 +25,48 @@ body {
 }
 
 .header-left {
-  
   font-weight: 700;
-  color: #7e22ce;
   letter-spacing: 1px;
   color: var(--primary-500, #5A0F61);
   font-family: Roboto, 'Segoe UI', sans-serif;
-  font-size: 32px;
-  font-style: normal;
+  font-size: 28px;
   font-weight: 600;
-  line-height: normal;
   text-transform: capitalize;
 }
 
 .header-left .highlight {
   color: var(--orange-300, #FDBA74);
   font-family: Roboto, 'Segoe UI', sans-serif;
-  font-size: 32px;
-  font-style: normal;
+  font-size: 28px;
   font-weight: 600;
-  line-height: normal;
   text-transform: capitalize;
 }
 
-/* Base link style */
+/* Navigation Links */
 .header-center a {
   position: relative;
-  
   display: inline-block;
-  padding-bottom: 10px; /* Space for underline */
-  font-weight: 500; /* Default weight (non-active) */
-  font-size: 24px;
+  padding-bottom: 10px;
+  font-weight: 500;
+  font-size: 22px;
   text-decoration: none;
   padding: 0.5rem;
-  color: #333; /* Default text color (fallback) */
-  transition: all 0.4s ease; /* Smooth transitions for text/underline */
+  color: #333;
+  transition: all 0.4s ease;
 }
 
-/* Active link styles (applied via JS) */
 .header-center a.active {
   background: linear-gradient(90deg, #FFA8A7 0%, #881792 60%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 600; /* Bold when active */
+  font-weight: 600;
 }
 
-/* Underline animation */
 .header-center a::after {
   content: "";
   display: block;
-  width: 0; /* Start hidden */
+  width: 0;
   height: 3px;
   border-radius: 12px;
   background: linear-gradient(90deg, #FFA8A7 0%, #881792 32.21%);
@@ -85,14 +74,16 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.4s ease; /* Animate width + opacity */
-  opacity: 0; /* Start invisible */
+  transition: all 0.4s ease;
+  opacity: 0;
 }
 
 .header-center a.active::after {
-  width: 58px; /* Full width when active */
-  opacity: 1; /* Fade in */
+  width: 58px;
+  opacity: 1;
 }
+
+/* Buttons */
 .header-right .btn {
   padding: 0.5rem 1.1rem;
   font-size: 18px;
@@ -105,107 +96,419 @@ body {
 
 .login {
   color: var(--slate-700, #334155);
-font-size: 16px;
-font-style: normal;
-font-weight: 600;
-line-height: normal;
-text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 600;
   border-radius: 12px;
-background-color: #FFEDD5;
-  border-radius: 12px;
+  background-color: #FFEDD5;
   border-color: #FFEDD5;
   border-style: solid;
 }
-.signup {
-padding: 10px 16px;
 
-gap: 10px;
+.signup {
+  padding: 10px 16px;
+  gap: 10px;
   color: white;
   border-radius: 12px;
-  background: var(--signup-button, linear-gradient(0deg, #520E58 0%, #7B1684 100%));
+  background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
   box-shadow: 0px 4px 4px 0px rgba(117, 21, 125, 0.10);
-  border-radius: 12px;
   border-color: #7B1684;
 }
-.line{
-  .line {
-  border-top: 1px solid #000; /* Thin black line */
-  width: 80%; /* 80% width */
-  margin: 0 auto; /* Center the line */
-  padding-bottom: 20px; /* Space between line and content */
-}
-}
 
-/* Hero */
+/* Hero Section */
 .hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 4rem 5%;
+  border-radius: 24px;
+  margin: 0.75rem auto 0 auto;
 }
 
 .hero-text {
-  max-width: 50%;
+  max-width: 80%;
+  display: flex;
+  font-size: 32px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: -200px;
+  padding-right: 3rem;
 }
 
 .hero-text h1 {
-  font-size: 3rem;
-  line-height: 1.3;
-  margin-bottom: 1rem;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2d133a;
+  line-height: 1.2;
+}
+
+.hero-text h2 {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #7e22ce, #a855f7);
+  background: linear-gradient(90deg, #f472b6 0%, #7e22ce 100%);
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: bold;
+  background-clip: text;
+  font-weight: 700;
   display: inline-block;
 }
 
-.hero-text p {
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 1.8rem;
+.hero-description {
+  width: 500px;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  color: black;
+  font-weight: 400;
+  margin-bottom: 2.2rem;
+  line-height: 150%;
 }
 
 .cta-button {
-  background-color: #7e22ce;
+  background: #7B1584;
   color: white;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  font-size: 30px;
+  padding: 1rem 2.2rem;
+  width: fit-content;
+  border-radius: 10px;
+  font-size: 1.15rem;
   text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
-  transition: background 0.3s ease;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.15);
+  border: none;
+  outline: none;
+  display: inline-block;
 }
 
 .cta-button:hover {
-  background-color: #5b0d84;
+  background: linear-gradient(90deg, #7B1584 0%, #a91eb6 100%);
+  box-shadow: 0 6px 18px rgba(126, 34, 206, 0.22);
 }
 
-/* Hero Image */
+.hero-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .hero-image img {
+  margin-top: -120px;
   max-width: 100%;
-  width: 400px;
+  width: 700px;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Features Section */
+.features {
+  width: 100%;
+  padding: 3rem 0 4rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.toolkit-card {
+  background: #f8f5ff;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(126, 34, 206, 0.09);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toolkit-title {
+  font-size: 48px;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #222;
+}
+
+.mini-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 90px 0;
+  width: 100%;
+}
+
+.mini-feature-pair {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Feature card icon as a circle */
+.feature-icon-circle {
+  
+  margin-left: 50px;
+
+
+
+}
+
+.feature-icon-circle img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Mini feature card styles */
+.mini-feature-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(126, 34, 206, 0.07);
+  padding: 1.2rem 1.5rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.mini-feature-card:hover {
+  box-shadow: 0 6px 24px rgba(126, 34, 206, 0.13);
+}
+
+/* Mini card title and text color */
+.mini-card-title {
+  font-family: "Roboto", "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #5A0F61;
+  letter-spacing: 0.66px;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+}
+
+/* Mini card text class for <p> */
+.mini-card-text {
+  color: #5A0F61;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 26.72px; /* 167% of 16px */
+  text-transform: capitalize;
+}
+
+/* Simple Steps Section */
+.simple-steps-section {
+  width: 100%;
+  background: transparent;
+  padding: 2.5rem 0 3.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.simple-steps-container {
+  display: flex;
+  flex-direction: row; /* Ensure row layout */
+  justify-content: center;
+  gap: 8rem;
+  width: 100%;
+ 
+  
+}
+
+.main-steps-card {
+  border-radius: 32px;
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
+  padding: 3.5rem 2.5rem 2.5rem 2.5rem;
+  background-color: whitesmoke;
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.simple-steps-cta {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  bottom: -32px;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 2;
+}
+
+.simple-steps-btn {
+  background: #881792;
+  color: #fff;
+  
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  padding: 1.1rem 3.2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(136, 23, 146, 0.08);
+  transition: background 0.2s;
+  position: static;
+}
+
+.simple-steps-btn:hover {
+  background: #6d1376;
+}
+
+/* Add bottom margin to main card to avoid button overlap with next section */
+.simple-steps-section {
+  padding-bottom: 5.5rem;
+}
+
+/* Restore the style for the smaller cards inside the main steps card */
+.simple-step-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 340px;
+
+  min-height: 320px;
+  transition: box-shadow 0.2s;
+  margin-bottom: 5rem;
+  margin-top: 5rem;
+}
+
+.simple-step-card:hover {
+  box-shadow: 0 12px 36px rgba(126, 34, 206, 0.18);
+}
+
+.simple-step-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 0 6px #f3e8ff;
+}
+
+.simple-step-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: none;
+}
+
+.simple-step-title {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(90deg, #881792 0%, #FFA8A7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+.simple-step-desc {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 17px;
+  color: #292929;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+}
+
+/* Background Vector for Steps */
+.vector-bg-steps {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 1000px;
+  max-width: 95vw;
+  z-index: 0;
+  pointer-events: none;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .mini-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
   .hero {
     flex-direction: column-reverse;
-    text-align: center;
+    padding: 2.5rem 2%;
+    max-width: 98vw;
   }
-
   .hero-text {
+    order: 1;
+    font-size: 32px;
+    text-align: left;
+    margin-top: 1.5rem;
     max-width: 100%;
-    margin-top: 2rem;
   }
+  .hero-description {
+    text-align: left;
+    width: auto;
+  }
+  .hero-image img {
+    margin-top: 20px;
+    order: 2;
+    width: 90vw;
+    max-width: 350px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-text h1, .hero-text h2 {
+    font-size: 2rem;
+  }
+  .mini-features-grid {
+    grid-template-columns: 1fr;
+    gap: 30px 0;
+  }
+  .mini-feature-card {
+    width: 90vw;
+    max-width: 400px;
+  }
+}
 
-  .header-center {
-    display: none;
+@media (max-width: 1100px) {
+  .simple-steps-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .simple-step-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .main-steps-card {
+    padding: 2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .simple-steps-cta {
+    bottom: -24px;
   }
 }
