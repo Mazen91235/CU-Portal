@@ -6,7 +6,7 @@
   <title>Student Portal</title>
   <link rel="stylesheet" href="./css/styleindex.css" />
 </head>
-<body>
+<body style="overflow-x:hidden;background: var(--slate-50, #F8FAFC);">
   <!-- Header -->
   <header class="main-header">
     <div class="header-left">
@@ -120,31 +120,37 @@ background-clip: text;
 
     <div class="main-steps-card">
     <div class="simple-steps-container">
-      <div class="simple-step-card">
-        <div class="simple-step-icon">
+      <div class="simple-step-group">
+        <div class="simple-step-icon-above">
           <img src="./assets/iconsax-user.png" alt="Create Account" />
         </div>
-        <div class="simple-step-title">Create Your Account</div>
-        <div class="simple-step-desc">
-          Join our community in just a few clicks. It's quick, simple, and absolutely free
+        <div class="simple-step-card">
+          <div class="simple-step-title">Create Your Account</div>
+          <div class="simple-step-desc">
+            Join our community in just a few clicks. It's quick, simple, and absolutely free
+          </div>
         </div>
       </div>
-      <div class="simple-step-card">
-        <div class="simple-step-icon">
+      <div class="simple-step-group">
+        <div class="simple-step-icon-above">
           <img src="./assets/Clip path group.png" alt="Personalize Dashboard" />
         </div>
-        <div class="simple-step-title">Personalize Your Dashboard</div>
-        <div class="simple-step-desc">
-          Input your class schedules, assignments, and exam dates. Our intuitive tools help you get organized in minutes.
+        <div class="simple-step-card">
+          <div class="simple-step-title">Personalize Your Dashboard</div>
+          <div class="simple-step-desc">
+            Input your class schedules, assignments, and exam dates. Our intuitive tools help you get organized in minutes.
+          </div>
         </div>
       </div>
-      <div class="simple-step-card">
-        <div class="simple-step-icon">
+      <div class="simple-step-group">
+        <div class="simple-step-icon-above">
           <img src="./assets/iconsax-status-up.png  " alt="Thrive In Studies" />
         </div>
-        <div class="simple-step-title">Thrive In Your Studies</div>
-        <div class="simple-step-desc">
-          Access all the resources you need, get timely reminders, and connect with a supportive community. It's time to reach your full potential.
+        <div class="simple-step-card">
+          <div class="simple-step-title">Thrive In Your Studies</div>
+          <div class="simple-step-desc">
+            Access all the resources you need, get timely reminders, and connect with a supportive community. It's time to reach your full potential.
+          </div>
         </div>
       </div>
     </div>
@@ -153,12 +159,156 @@ background-clip: text;
     </div>
   </div>
 </section>
-<section class="screenshot-section" style="background-color: white;">
-<img src="./assets/1440w light 1.png" alt="Screenshot of the Student Portal" style="position: relative; top: 325px; left: 50%; width: 750px; height: auto; z-index: 1;">
-<img src="./assets/1440w light 2.png" alt="Screenshot of the Student Portal" style="position: absolute; top: 2600px; left: 350px; width: 750px; height: auto; z-index: 0;">
-<img src="./assets/freepik--background-simple--inject-251.png" alt="Screenshot of the Student Portal" style="position: absolute; top: 2600px; right: -275px; opacity: 0.7; width: 750px; height: auto; z-index: 0;">
-
+<section class="screenshot-section">
+  <div class="screenshots-gallery-overlap">
+    <img src="./assets/1440w light 2.png" alt="Student Portal 1" class="screenshot-img screenshot-img-back">
+    <img src="./assets/1440w light 1.png" alt="Student Portal 2" class="screenshot-img screenshot-img-front">
+  </div>
 </section>
+<section class="opinions">
+  <h2 class="opinions-title">Success Stories From Our Community</h2>
+  <div class="opinions-cards-row">
+    <div class="opinion-card-group">
+      <div class="opinion-icon-above">
+        <img src="./assets/Ellipse 1.png" alt="Opinion Icon 1" />
+      </div>
+      <div class="opinion-card">
+        <div class="opinion-card-title">Sarah Lee<br><span class="opinion-card-dept">Computer Science</span></div>
+        <div class="opinion-card-message">"This portal has transformed my academic life! I can finally keep track of everything in one place."</div>
+      </div>
+    </div>
+    <div class="opinion-card-group">
+      <div class="opinion-icon-above">
+        <img src="./assets/Ellipse 1 (1).png" alt="Opinion Icon 2" />
+      </div>
+      <div class="opinion-card">
+        <div class="opinion-card-title">Alex Johnson<br><span class="opinion-card-dept">Business Administration</span></div>
+        <div class="opinion-card-message">"The study tracker is a game-changer. I feel more organized and motivated than ever!"</div>
+      </div>
+    </div>
+  </div>
+  <div class="opinions-cta">
+    <button class="opinions-btn">Leave Your Comment</button>
+  </div>
+</section>
+<section class="contact-form-section">
+  <img src="./assets/Cheerful Young Woman with Book 2.png" alt="Decor Top" class="form-decor-top">
+  <div class="contact-form-card">
+    <h2 class="contact-form-title">Contact Us</h2>
+    <div class="contact-form-subtitle">Stay updated with our latest news and events</div>
+    <form class="contact-form-fields">
+      <div class="form-row">
+        <label class="form-label" for="contact-name">Name:</label><br>
+        <input type="text" id="contact-name" class="form-input"  required>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="contact-email">Email:</label><br>  
+        <input type="email" id="contact-email" class="form-input"  required>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="contact-message">Message:</label><br>
+        <textarea id="contact-message" class="form-textarea" rows="5"  required></textarea>
+      </div>
+      <div class="form-row">
+        <button type="submit" class="form-submit-btn">Get In Touch</button>
+      </div>
+    </form>
+  </div>
+  <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decor Bottom" class="form-decor-bottom">
+</section>
+<section class="team-section">
+  <h2 class="team-title">Our Team</h2>
+  <div class="team-members">
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Dr. Emily Carter</div>
+      <div class="team-role">Lead Developer</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+        <a href="#"><img src="./assets/icon-twitter.png" alt="Twitter"></a>
+        <a href="#"><img src="./assets/icon-github.png" alt="GitHub"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Michael Lee</div>
+      <div class="team-role">UI/UX Designer</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+        <a href="#"><img src="./assets/icon-instagram.png" alt="Instagram"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Sara Ahmed</div>
+      <div class="team-role">Community Manager</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-facebook.png" alt="Facebook"></a>
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">John Smith</div>
+      <div class="team-role">Backend Engineer</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-github.png" alt="GitHub"></a>
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Linda Zhao</div>
+      <div class="team-role">Frontend Engineer</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-instagram.png" alt="Instagram"></a>
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Carlos Ruiz</div>
+      <div class="team-role">QA Specialist</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-twitter.png" alt="Twitter"></a>
+        <a href="#"><img src="./assets/icon-facebook.png" alt="Facebook"></a>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-card-semicircle">
+        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
+      </div>
+      <div class="team-name">Fatima Noor</div>
+      <div class="team-role">Product Owner</div>
+      <div class="team-socials">
+        <a href="#"><img src="./assets/icon-linkedin.png" alt="LinkedIn"></a>
+        <a href="#"><img src="./assets/icon-twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+   
+</section>
+<footer class="footer">
+  <div style="text-align: center; background-color: #5A0F61;">
+     <div class="header-left" style="color: white;font-size: 56px;">
+      St<span class="highlight"style="font-size: 56px;">u</span>dent P<span class="highlight"style="font-size: 56px;">o</span>rtal <br><br>
+      <div class="footer-links">
+        <a href="#">Reviews</a>
+        <a href="#">Our team</a>
+        <a href="#">Contact Us</a>
+    </div>
+  </div>
   <script src="./js/loading.js"></script>
 </body>
 </html>

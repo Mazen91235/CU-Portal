@@ -213,7 +213,7 @@ body {
 }
 
 .toolkit-card {
-  background: #f8f5ff;
+  background: rgba(248, 250, 252, 1);
   border-radius: 24px;
   box-shadow: 0 4px 24px rgba(126, 34, 206, 0.09);
   padding: 2.5rem 2.5rem 2rem 2.5rem;
@@ -253,8 +253,6 @@ body {
   
   margin-left: 50px;
 
-
-
 }
 
 .feature-icon-circle img {
@@ -265,7 +263,7 @@ body {
 
 /* Mini feature card styles */
 .mini-feature-card {
-  background: #fff;
+  background: rgba(156, 165, 178, 0.15);
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(126, 34, 206, 0.07);
   padding: 1.2rem 1.5rem;
@@ -319,6 +317,8 @@ body {
   justify-content: center;
   gap: 8rem;
   width: 100%;
+    background: transparent;
+
  
   
 }
@@ -327,7 +327,7 @@ body {
   border-radius: 32px;
   box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
   padding: 3.5rem 2.5rem 2.5rem 2.5rem;
-  background-color: whitesmoke;
+  background-color: white;
   width: 95%;
   margin: 0 auto;
   display: flex;
@@ -343,7 +343,7 @@ body {
   justify-content: center;
   position: absolute;
   left: 50%;
-  bottom: -32px;
+  bottom: -52px;
   transform: translateX(-50%);
   margin: 0;
   z-index: 2;
@@ -376,84 +376,694 @@ body {
 
 /* Restore the style for the smaller cards inside the main steps card */
 .simple-step-card {
-  background: #fff;
+  background: rgba(156, 165, 178, 0.15);
   border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
-  padding: 2.5rem 2rem 2rem 2rem;
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.12);
+  padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 340px;
+  min-height: 220px;
+  transition: box-shadow 0.2s;
+  margin-bottom: 0;
+  margin-top: 0;
+  z-index: 1;
+}
+
+/* Group for icon above card */
+.simple-step-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 340px;
-
-  min-height: 320px;
-  transition: box-shadow 0.2s;
-  margin-bottom: 5rem;
-  margin-top: 5rem;
+  margin-bottom: 0;
 }
 
-.simple-step-card:hover {
-  box-shadow: 0 12px 36px rgba(126, 34, 206, 0.18);
-}
-
-.simple-step-icon {
-  width: 72px;
-  height: 72px;
+/* Icon above the card */
+.simple-step-icon-above {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 0 0 6px #f3e8ff;
+  margin-bottom: 32px; /* Increase gap so icon is fully above card */
+  z-index: 2;
+  box-shadow: 0 0 0 4px #f3e8ff;
 }
 
-.simple-step-icon img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  filter: none;
+/* Screenshot Section */
+.screenshot-section {
+  width: 100%;
+
+  padding: 4rem 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
-.simple-step-title {
+.screenshots-title {
   font-family: 'Roboto', 'Segoe UI', sans-serif;
-  font-size: 24px;
+  font-size: 38px;
   font-weight: 700;
-  margin-bottom: 1rem;
+  color: #5A0F61;
   text-align: center;
-  background: linear-gradient(90deg, #881792 0%, #FFA8A7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 2.5rem;
   letter-spacing: 0.5px;
 }
 
-.simple-step-desc {
+.screenshots-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.screenshot-img {
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
+  width: 700px;
+  height: auto;
+  
+  background: #fff;
+  border: 1px solid #f3e8ff;
+  transition: box-shadow 0.2s;
+}
+
+.screenshot-img:hover {
+  box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
+}
+
+/* Overlapping Screenshots Gallery */
+.screenshots-gallery-overlap {
+  position: relative;
+  width: 920px;
+  height: 670px;
+  margin: 0 auto 1.5rem auto;
+  display: block;
+}
+
+.screenshot-img-back,
+.screenshot-img-front {
+  position: absolute;
+  width: 700px;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
+  border: 1px solid #f3e8ff;
+  object-fit: cover;
+}
+
+.screenshot-img-back {
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.screenshot-img-front {
+  left: 500px;   /* shift right */
+  top: 250px;    /* shift lower */
+  z-index: 2;
+  box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
+}
+
+/* Opinions Section */
+.opinions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 50px;
+  padding: 0 0 4rem 0;
+  background: transparent;
+  position: relative;
+}
+
+.opinions-title {
+  margin-bottom: 2.2rem;
+  background: linear-gradient(90deg, #FFA8A7 30%, #881792 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
   font-family: 'Roboto', 'Segoe UI', sans-serif;
-  font-size: 17px;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.opinions-cards-row {
+  display: flex;
+  flex-direction: row;
+  gap: 250px;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+  z-index: 1;
+}
+
+.opinion-card-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.opinion-icon-above {
+  width: 76px;
+  height: 76px;
+  background: linear-gradient(135deg, #881792 60%, #f8f5ff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -32px;
+  z-index: 2;
+  box-shadow: 0 0 0 4px #f3e8ff;
+}
+
+.opinion-icon-above img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.opinion-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(126, 34, 206, 0.09);
+  padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 550px;
+  min-height: 380px;
+  transition: box-shadow 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.opinion-card-title {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #5A0F61;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.opinion-card-dept {
+  font-size: 16px;
+  font-weight: 500;
+  color: #881792;
+  display: block;
+  margin-top: 2px;
+  letter-spacing: 0.2px;
+}
+
+.opinion-card-message {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 20px;
   color: #292929;
   font-weight: 400;
   text-align: center;
-  line-height: 1.7;
-  margin-bottom: 0;
+  line-height: 1.6;
   margin-top: 0.5rem;
 }
 
-/* Background Vector for Steps */
-.vector-bg-steps {
+.opinions-cta {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: -40px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.opinions-btn {
+  background: #F97316;
+  color: #fff;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(136, 23, 146, 0.08);
+  transition: background 0.2s;
+}
+
+.opinions-btn:hover {
+  background: #6d1376;
+}
+
+/* Contact Form Section */
+.contact-form-section {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  
+  min-height: 520px;
+  margin-bottom: 4rem;
+  background: transparent;
+}
+
+.form-decor-top {
   position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  width: 1000px;
-  max-width: 95vw;
-  z-index: 0;
+  top: -350px;
+  right: 300px;
+  width: 220px;
+  margin-top: 50px;
+  z-index: 2;
+  width: 351px;
+  height: auto;
   pointer-events: none;
+}
+.form-decor-bottom {
+  position: absolute;
+  top: -200px;
+  right: -150px;
+  width: 665px;
+  height: auto;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.contact-form-card {
+  display: flex;
+  flex-direction: column;
+ 
+  gap: 34px;
+  width: 873px;
+  padding: 32px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #FFA8A7 0%, #881792 32.21%);
+  box-shadow: 0 8px 32px rgba(126, 34, 206, 0.10);
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
+}
+
+.contact-form-title {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.5px;
+}
+
+.contact-form-subtitle {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.contact-form-fields {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.form-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-label {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  margin-left: 0.2rem;
+  letter-spacing: 0.02em;
+  text-align: left;
+  width: 450px;
+  display: block;
+}
+
+.form-input,
+.form-textarea {
+  width:435px;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 18px;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  border: 1.5px solid #881792;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #f3e8ff;
+  opacity: 1;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #F97316;
+}
+
+.form-submit-btn {
+  border-radius: 12px;
+  background: var(--orange-500, #F97316);
+  display: flex;
+  width: 357px;
+  height: 86px;
+  padding: 0px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(136, 23, 146, 0.08);
+  transition: background 0.2s;
+  margin-top: 0.5rem;
+}
+
+.form-submit-btn:hover {
+  background: #d97706;
+}
+
+/* Team Section */
+.team-section {
+  width: 100%;
+  padding: 4rem 0 3rem 0;
+background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-title {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #881792;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.5px;
+}
+
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+  grid-auto-flow: row;
+}
+
+/* Team member card with upper half-circle containing the icon, bold name, lighter role, and 3 social icons */
+.team-card {
+  background: rgba(156, 165, 178, 0.15);
+  border-top-left-radius: 48px;
+  border-top-right-radius: 48px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+ 
+  box-shadow: 0 4px 18px rgba(126, 34, 206, 0.09);
+  padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: visible;
+}
+
+
+
+.team-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   object-fit: cover;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.10);
+  display: block;
+}
+
+.team-name {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: #5A0F61;
+  text-align: center;
+  margin-top: 32px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.team-role {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #881792;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.8px;
+}
+
+.team-socials {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.team-socials a img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.10);
+  transition: transform 0.2s;
+}
+
+.team-socials a img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 16px rgba(126, 34, 206, 0.18);
+}
+
+/* Custom Team Card */
+.custom-team-card {
+  background: #f6f6f6;
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(126, 34, 206, 0.09);
+  min-width: 0;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+  padding-top: 48px;
+  padding-bottom: 1.5rem;
+}
+
+
+
+.custom-team-card .team-profile-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.10);
+  border: 3px solid #fff;
+  margin-bottom: -36px;
+  margin-top: 12px;
+  z-index: 3;
+}
+
+.custom-team-card .team-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.custom-team-card .team-card-name {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #222;
+  text-align: center;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.5px;
+}
+
+.custom-team-card .team-card-role {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #666;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.8px;
+}
+
+.custom-team-card .team-card-socials {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.custom-team-card .social-icon svg {
+  display: block;
+}
+
+.custom-team-card .social-icon.google svg g [fill="#4285F4"],
+.custom-team-card .social-icon.google svg g [fill="#34A853"],
+.custom-team-card .social-icon.google svg g [fill="#FBBC05"],
+.custom-team-card .social-icon.google svg g [fill="#EA4335"] {
+  /* Use official Google colors */
+}
+
+.custom-team-card .social-icon.facebook svg path[fill="#1877F3"] {
+  /* Facebook blue */
+}
+
+.custom-team-card .social-icon.linkedin svg path[fill="#0A66C2"] {
+  /* LinkedIn blue */
+}
+
+.custom-team-card .social-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  background: transparent;
+}
+
+.custom-team-card .social-icon:hover {
+  transform: scale(1.15);
+}
+
+/* Responsive grid for team members */
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+}
+
+@media (max-width: 1200px) {
+  .team-members {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .team-members {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .custom-team-card {
+    max-width: 98vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-members {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .custom-team-card {
+    max-width: 98vw;
+    padding-top: 36px;
+  }
+  .custom-team-card .team-card-semicircle {
+    width: 80px;
+    height: 40px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    top: -20px;
+  }
+  .custom-team-card .team-profile-img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: -24px;
+    margin-top: 8px;
+  }
+  .custom-team-card .team-card-name {
+    font-size: 16px;
+  }
+  .custom-team-card .team-card-role {
+    font-size: 13px;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .mini-features-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .screenshots-gallery {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .opinions-container {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .team-members {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .team-title {
+    font-size: 30px;
   }
 }
 
@@ -492,9 +1102,23 @@ body {
     width: 90vw;
     max-width: 400px;
   }
+  .contact-form-card {
+    max-width: 98vw;
+    padding: 2rem 1rem;
+  }
+  .form-decor-top {
+    width: 120px;
+    left: -20px;
+    top: -20px;
+  }
+  .form-decor-bottom {
+    width: 180px;
+    right: -20px;
+    bottom: -20px;
+  }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
   .simple-steps-container {
     flex-direction: column;
     align-items: center;
@@ -510,5 +1134,350 @@ body {
   }
   .simple-steps-cta {
     bottom: -24px;
+  }
+  .body {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 900px) {
+  .opinions-cards-row {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    max-width: 98vw;
+  }
+  .opinion-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .opinions-cta {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .team-members {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .team-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .team-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-section {
+    padding: 2rem 0 1.5rem 0;
+  }
+  .team-title {
+    font-size: 24px;
+    margin-bottom: 1.2rem;
+  }
+  .team-card {
+    padding: 1.2rem 0.5rem;
+    width: 98vw;
+  }
+  .team-photo {
+    width: 72px;
+    height: 72px;
+  }
+  .team-name {
+    font-size: 18px;
+  }
+  .team-role {
+    font-size: 15px;
+  }
+  .team-bio {
+    font-size: 13px;
+  }
+}
+
+/* Team Section */
+.team-section {
+  width: 100%;
+  padding: 4rem 0 3rem 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-title {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #881792;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.5px;
+}
+
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+  grid-auto-flow: row;
+}
+
+.team-card {
+  background: rgba(156, 165, 178, 0.15);
+  border-radius: 18px;
+  height: auto;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
+  width: 400px  ;
+  box-shadow: 0 4px 18px rgba(126, 34, 206, 0.09);
+  padding: 3rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* Profile image positioned within the semi-circle */
+.team-card img.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+  position: relative;
+  margin-top: -50px; /* Pull image up into the semi-circle */
+}
+
+
+
+.team-icon {
+  width: 222px;
+  height: 222px;
+  gap: 39px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.10);
+  display: block;
+}
+
+.team-name {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: #5A0F61;
+  text-align: center;
+  margin-top: 32px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.team-role {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #881792;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.8px;
+}
+
+.team-socials {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.team-socials a img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.10);
+  transition: transform 0.2s;
+}
+
+.team-socials a img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 16px rgba(126, 34, 206, 0.18);
+}
+.footer-links{
+  text-align: center;
+  
+}
+.footer-links a {
+  color: #FFF;
+  font-size: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+}
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .mini-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .screenshots-gallery {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .opinions-container {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .team-members {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .team-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column-reverse;
+    padding: 2.5rem 2%;
+    max-width: 98vw;
+  }
+  .hero-text {
+    order: 1;
+    font-size: 32px;
+    text-align: left;
+    margin-top: 1.5rem;
+    max-width: 100%;
+  }
+  .hero-description {
+    text-align: left;
+    width: auto;
+  }
+  .hero-image img {
+    margin-top: 20px;
+    order: 2;
+    width: 90vw;
+    max-width: 350px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-text h1, .hero-text h2 {
+    font-size: 2rem;
+  }
+  .mini-features-grid {
+    grid-template-columns: 1fr;
+    gap: 30px 0;
+  }
+  .mini-feature-card {
+    width: 90vw;
+    max-width: 400px;
+  }
+  .contact-form-card {
+    max-width: 98vw;
+    padding: 2rem 1rem;
+  }
+  .form-decor-top {
+    width: 120px;
+    left: -20px;
+    top: -20px;
+  }
+  .form-decor-bottom {
+    width: 180px;
+    right: -20px;
+    bottom: -20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .simple-steps-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .simple-step-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .main-steps-card {
+    padding: 2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .simple-steps-cta {
+    bottom: -24px;
+  }
+  .body {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 900px) {
+  .opinions-cards-row {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    max-width: 98vw;
+  }
+  .opinion-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .opinions-cta {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .team-members {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .team-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .team-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-section {
+    padding: 2rem 0 1.5rem 0;
+  }
+  .team-title {
+    font-size: 24px;
+    margin-bottom: 1.2rem;
+  }
+  .team-card {
+    padding: 1.2rem 0.5rem;
+    width: 98vw;
+  }
+  .team-photo {
+    width: 72px;
+    height: 72px;
+  }
+  .team-name {
+    font-size: 18px;
+  }
+  .team-role {
+    font-size: 15px;
+  }
+  .team-bio {
+    font-size: 13px;
   }
 }
