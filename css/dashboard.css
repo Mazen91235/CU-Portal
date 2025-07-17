@@ -139,15 +139,24 @@ padding-right: 10px;
   .calendar-container {
     padding: 1rem !important;
     font-size: 12px;
+          white-space: nowrap;
+
   }
 
   .calendar-grid {
     grid-template-columns: repeat(7, 1fr); /* ensures 7 small columns */
-    gap: 4px;
+    gap: 1px !important; ;
+          white-space: nowrap;
+
   }
 
   .calendar-cell {
     font-size: 10px;
+    white-space: nowrap;
+    height: 40px !important;
+    width: 50px !important; 
+
+
   }
 
   .legend {
@@ -253,6 +262,8 @@ padding-right: 10px;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
   padding: 8px;
+        white-space: nowrap;
+
 }
 
 .calendar-cell {
@@ -263,6 +274,8 @@ padding-right: 10px;
   position: relative;
   height: 50px;
   width: 90px;
+        white-space: nowrap;
+
 
 }
 .calendar-cell:hover {
@@ -345,6 +358,7 @@ padding-right: 10px;
   font-size: 16px;
 }
 .calendar-container{
+      white-space: nowrap;
 
   margin-left: 40px;
   }
