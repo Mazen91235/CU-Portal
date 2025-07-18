@@ -1428,6 +1428,9 @@ body {
 /* ========== Improved Mobile Responsive Adjustments (max-width: 600px) ========== */
 @media (max-width: 600px) {
   /* Header */
+  body{
+    overflow-x: hidden;
+  }
   .main-header {
     padding: 0.7rem 1rem;
     flex-direction: row;
