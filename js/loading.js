@@ -1,4 +1,18 @@
-
+  document.addEventListener('DOMContentLoaded', function() {
+      const navLinks = document.querySelectorAll('.header-center a');
+      
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevents page reload (remove if using real links)
+          
+          // Remove 'active' class from all links
+          navLinks.forEach(item => item.classList.remove('active'));
+          
+          // Add 'active' class to clicked link
+          this.classList.add('active');
+        });
+      });
+    });
     document.addEventListener("DOMContentLoaded", () => {
       // Load navbar
       fetch("../components/navbar.html")
