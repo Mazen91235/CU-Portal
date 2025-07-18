@@ -27,18 +27,18 @@
       <button class="btn signup">Sign Up</button>
     </div>
     <div class="mob-menu">
-    <button class="mobile-nav-toggle" aria-label="Open navigation" onclick="document.querySelector('.mobile-nav-menu').classList.toggle('open')">
-      <span class="navbar-toggler-icon"></span>
+      <button class="mobile-nav-toggle" aria-label="Open navigation" onclick="document.querySelector('.mobile-nav-menu').classList.toggle('open')">
+        <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Mobile Dropdown Menu (right side) -->
       <nav class="mobile-nav-menu" style="z-index:2100;height:auto;right:0;left:auto;">
-      <a href="#" class="nav-link active">Home</a>
-      <a href="#" class="nav-link">Features</a>
-      <a href="#" class="nav-link">Contact Us</a>
-      <a href="#" class="nav-link">Login</a>
-      <a href="#" class="nav-link">Sign Up</a>
-    </nav>
-  </div>
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">Features</a>
+        <a href="#" class="nav-link">Contact Us</a>
+        <a href="#" class="nav-link">Login</a>
+        <a href="#" class="nav-link">Sign Up</a>
+      </nav>
+    </div>
     </nav>
     <!-- Bootstrap JS and Popper.js should be loaded at the end of body for best performance -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVpZPnhJBLjSByZ0JGFoPTAjyvkU7WwIJYhA4mFVYyY" crossorigin="anonymous"></script>
@@ -337,5 +337,22 @@ background-clip: text;
     </div>
   </div>
   <script src="./js/loading.js"></script>
+  <script>
+  // Hide/show nav icon based on screen width
+  function toggleMobileMenuDisplay() {
+    var mobMenu = document.querySelector('.mob-menu');
+    if (!mobMenu) return;
+    if (window.innerWidth <= 600) {
+      mobMenu.style.display = 'block';
+    } else {
+      mobMenu.style.display = 'none';
+      // Also close menu if open
+      var navMenu = document.querySelector('.mobile-nav-menu');
+      if (navMenu) navMenu.classList.remove('open');
+    }
+  }
+  window.addEventListener('resize', toggleMobileMenuDisplay);
+  window.addEventListener('DOMContentLoaded', toggleMobileMenuDisplay);
+</script>
  </body>
 </html>
