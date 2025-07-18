@@ -1425,30 +1425,158 @@ body {
   to { opacity: 1; transform: translateX(0);}
 }
 
-/* ========== Mobile Responsive Adjustments (max-width: 600px) ========== */
+/* ========== Improved Mobile Responsive Adjustments (max-width: 600px) ========== */
 @media (max-width: 600px) {
-  /* Hero section: text width */
-  .hero-text {
-    width: 80vw;
-   
+  /* Header */
+  .main-header {
+    padding: 0.7rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 56px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 2000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+  }
+  .header-left {
     font-size: 20px;
-    margin: 0 auto 1.5rem auto;
-    padding-right: 0;
+    margin: 0;
+    padding: 0;
+    color: #5A0F61;
+    font-weight: 700;
+    letter-spacing: 1px;
+    flex: 1 1 auto;
+    text-align: left;
+  }
+  .header-center,
+  .header-right {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 2rem;
+    cursor: pointer;
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2100;
+    color: #5A0F61;
+  }
+  .mob-menu {
+    display: inline !important;
   }
 
-  /* Features section: vertical cards, margin for icon/card, full display */
+  /* Mobile nav menu */
+  .mobile-nav-menu {
+    display: none;
+    position: fixed;
+    top: 56px;
+    right: 0;
+    left: auto;
+    width: 75vw;
+    max-width: 320px;
+    height: calc(100vh - 56px);
+    background: #fff;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.08);
+    z-index: 2200;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0;
+    overflow-y: auto;
+    animation: slideDown 0.2s ease;
+  }
+  .mobile-nav-menu.open {
+    display: flex;
+  }
+  .mobile-nav-menu a {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    color: #5A0F61;
+    font-size: 18px;
+    text-decoration: none;
+    border-bottom: 1px solid #f3e8ff;
+    background: none;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mobile-nav-menu a:last-child {
+    border-bottom: none;
+  }
+  .mobile-nav-menu a.active,
+  .mobile-nav-menu a:hover {
+    background: #f3e8ff;
+    color: #881792;
+  }
+
+  /* Hero section */
+  .hero {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    padding: 2.5rem 0.5rem 0.5rem 0.5rem;
+    margin-top: 4.5rem;
+    gap: 0;
+    border-radius: 0;
+  }
+  .hero-text {
+    width: 90vw;
+    max-width: 90vw;
+    font-size: 18px;
+    margin: 0 0 1.2rem 0;
+    padding-right: 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .hero-text h1,
+  .hero-text h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero-description {
+    width: 100%;
+    font-size: 15px;
+    margin-bottom: 1.2rem;
+  }
+  .hero-image {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .hero-image img {
+    width: 90vw;
+    max-width: 320px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 0;
+  }
+
+  /* Features section */
   .features {
-    padding: 1.5rem 0 2rem 0;
+    padding: 1.2rem 0 1.2rem 0;
   }
   .toolkit-card {
     width: 98vw;
     padding: 1rem 0.5rem;
     box-sizing: border-box;
+    border-radius: 12px;
+  }
+  .toolkit-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
   }
   .mini-features-grid {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 10px;
     width: 100%;
   }
   .mini-feature-pair {
@@ -1468,25 +1596,40 @@ body {
     max-width: calc(100vw - 70px);
     min-width: 0;
     box-sizing: border-box;
+    font-size: 15px;
   }
 
-  /* Simple Steps section: image right, inverted, titles right, steps below */
+  /* Simple Steps section */
   .simple-steps-section {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 1.5rem 0 2rem 0;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.2rem 0 1.2rem 0;
     position: relative;
+  }
+  .how-it-work {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-right: 1rem;
+    margin-bottom: 0;
+  }
+  .how-it-work h2 {
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.2rem !important;
+    text-align: right !important;
   }
   .simple-steps-section > img:first-child {
     order: 2;
     position: static !important;
-    width: 120px !important;
+    width: 90px !important;
     height: auto;
     transform: scaleX(-1);
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     margin-top: 0.5rem;
+    align-self: flex-end;
   }
   .main-steps-card {
     width: 100vw;
@@ -1510,6 +1653,7 @@ body {
     max-width: 98vw;
     min-width: 0;
     margin-bottom: 1rem;
+    font-size: 15px;
   }
   .simple-steps-cta {
     position: static;
@@ -1520,73 +1664,129 @@ body {
   .simple-steps-btn {
     width: 100%;
     max-width: 340px;
-    font-size: 18px;
-    padding: 0.8rem 0;
-  }
-  /* How it works titles on right */
-  .how-it-work {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding-right: 1rem;
-    margin-bottom: 0;
-  }
-  .how-it-work h2 {
-    font-size: 22px !important;
-    line-height: 1.2 !important;
-    margin-bottom: 0.2rem !important;
-    text-align: right !important;
+    font-size: 16px;
+    padding: 0.7rem 0;
   }
 
-  /* Screenshots section: back image above left, front below right, space between */
+  /* Screenshots section */
   .screenshot-section {
-    padding: 1.5rem 0 1rem 0;
+    padding: 1.2rem 0 1rem 0;
+  }
+  .screenshots-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
   }
   .screenshots-gallery-overlap {
     width: 98vw;
-    height: 320px;
+    height: 220px;
     max-width: 98vw;
     position: relative;
   }
+  .screenshot-img {
+    display: none;
+  }
   .screenshot-img-back {
+    display: block !important;
     position: absolute;
     left: 0;
     top: 0;
-    width: 180px;
+    width: 250px;
     z-index: 1;
   }
   .screenshot-img-front {
+    display: block !important;
     position: absolute;
-    right: 0;
+    left: 150px;
     bottom: 0;
-    width: 180px;
+    width: 250px;
+    max-width: 100%;
     z-index: 2;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
-  /* Opinions section: button margin top */
+  /* Opinions section */
+  .opinions {
+    padding: 0 0 1.5rem 0;
+  }
+  .opinions-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .opinions-cards-row {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    max-width: 98vw;
+  }
+  .opinion-card {
+    width: 90vw;
+    min-width: 0;
+    min-height: 180px;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    font-size: 15px;
+  }
+  .opinion-card-title {
+    font-size: 16px;
+
+    margin-top: 30px;
+  }
+  .opinion-card-message {
+    font-size: 14px;
+  }
   .opinions-cta {
     margin-top: 15px !important;
+    margin-bottom: 1.5rem;
+  }
+  .opinions-btn {
+    font-size: 16px;
+    padding: 0.7rem 1.2rem;
   }
 
-  /* Contact form: center, 5px space each side */
+  /* Contact form */
   .contact-form-section {
     padding: 0;
     margin: 0;
     min-height: unset;
   }
+  .form-decor-top{
+    display: none;
+  }
+  
   .contact-form-card {
     margin: 0 auto;
     width: calc(100vw - 10px);
     max-width: 98vw;
-    padding: 16px 5px;
+    padding: 12px 5px;
     box-sizing: border-box;
+    border-radius: 10px;
+  }
+  .form-label,
+  .form-input,
+  .form-textarea {
+    width: 98%;
+    max-width: 98vw;
+    font-size: 15px;
+  }
+  .form-submit-btn {
+    width: 100%;
+    font-size: 16px;
+    height: 40px;
+    padding: 0 10px;
   }
 
   /* Team section: 2 by 2 rows, auto width */
+  .team-section {
+    padding: 1.5rem 0 1rem 0;
+  }
+  .team-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
   .team-members {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.7rem;
     width: 100%;
     margin: 0 auto;
     max-width: 98vw;
@@ -1595,7 +1795,8 @@ body {
     width: auto;
     min-width: 0;
     max-width: 98vw;
-    margin: 0 auto 1rem auto;
-    padding: 1.2rem 0.5rem;
+    margin: 0 auto 0.7rem auto;
+    padding: 0.8rem 0.3rem;
+    font-size: 15px;
   }
 }
