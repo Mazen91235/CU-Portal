@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Toggle</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            transition: margin-left 0.3s ease;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: #444;
+            color: white;
+            padding: 20px;
+            transition: left 0.3s ease;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar li {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .sidebar li:hover {
+            background: #555;
+        }
+
+        main {
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        body.sidebar-active {
+            margin-left: 250px;
+        }
+
+        .menu-toggle.active::before {
+            content: "✖";
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    <h1>My Header</h1>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <ul>
+        <li>Home</li>
+        <li>About</li>
+        <li>Contact</li>
+    </ul>
+</aside>
+
+<main>
+    <p>Main content goes here.</p>
+</main>
+
+<script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const body = document.body;
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+        body.classList.toggle('sidebar-active');
+    });
+</script>
+</body>
+</html> 
