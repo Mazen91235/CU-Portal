@@ -374,40 +374,38 @@
         <a href="#" style="margin: 10px;">Contact Us</a>
       </div>
     </div>
-    <script src="./js/loading.js"></script>
-    <script>
-      // Hide/show nav icon based on screen width
-      function toggleMobileMenuDisplay() {
-        var mobMenu = document.querySelector('.mob-menu');
-        if (!mobMenu) return;
-        if (window.innerWidth <= 600) {
-          mobMenu.style.display = 'block';
-        } else {
-          mobMenu.style.display = 'none';
-          // Also close menu if open
-          var navMenu = document.querySelector('.mobile-nav-menu');
-          if (navMenu) navMenu.classList.remove('open');
-        }
-      }
-      window.addEventListener('resize', toggleMobileMenuDisplay);
-      window.addEventListener('DOMContentLoaded', toggleMobileMenuDisplay);
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
+    <script src="./js/loading.js"></script><script>
+    document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('mobile-menu-toggle');
+    const toggleIcon = document.getElementById('toggle-icon');
     const sidebar = document.getElementById('sidebar');
     const closeSidebar = document.getElementById('close-sidebar');
 
-    // Open sidebar
+    // Show/hide hamburger icon based on screen width
+    function updateMenuToggleVisibility() {
+        if (window.innerWidth <= 768) {
+            menuToggle.style.display = 'block';
+        } else {
+            menuToggle.style.display = 'none';
+            sidebar.classList.remove('active');
+        }
+    }
+
+    window.addEventListener('resize', updateMenuToggleVisibility);
+    updateMenuToggleVisibility(); // run on initial load
+
+    // Open sidebar on hamburger click
     menuToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         sidebar.classList.add('active');
     });
 
-    // Close sidebar when X is clicked
-    closeSidebar.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-    });
+    // Close sidebar on close icon click
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+    }
 
     // Close sidebar when clicking outside
     document.addEventListener('click', (e) => {
@@ -419,8 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-    </script>
+</script>
     <nav id="sidebar" class="sidebar">
     <ul>
         <li><a href="#">Home</a></li>
