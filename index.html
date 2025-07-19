@@ -30,22 +30,24 @@
     <button class="btn signup">Sign Up</button>
     <!-- Mobile menu toggle button -->
     <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Open mobile menu" style="display:none;">
-      <span class="toggle-icon" id="toggle-icon">&#9776;</span>
-    </button>
+  <span class="toggle-icon" id="toggle-icon">&#9776;</span>
+</button>
   </div>
   <!-- Mobile menu (directly after header-right, inside header for full width) -->
-  <nav class="mobile-menu" id="mobile-menu">
-    <a href="#">Home</a>
-    <a href="#">Features</a>
-    <a href="#">How to Start</a>
-    <a href="#">Snapshots</a>
-    <a href="#">Contact Us</a>
-    <div class="divider"></div>
-    <div class="auth-links">
-      <a href="#">Login</a>
-      <a href="#">Sign Up</a>
+<nav id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <span id="close-sidebar" class="close-btn">&times;</span>
     </div>
-  </nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Snapshots</a></li>
+        <li><a href="#">How It Works</a></li>
+        <hr>
+        <li><a href="#">Login</a></li>
+        <li><a href="#">Sign Up</a></li>
+    </ul>
+</nav>
 </header>
 
   <!-- Hero Section -->
@@ -220,6 +222,9 @@
           <button class="opinion-slider-btn left">
             <img src="/assets/Vector 1.png" alt="Previous" style="transform: scaleX(-1) ;">
           </button>
+          <button class="opinion-slider-btn right">
+            <img src="/assets/Vector 1.png" alt="Next">
+          </button>
           <div class="opinion-card-title">Sarah Lee<br><span class="opinion-card-dept">Computer Science</span></div>
           <div class="opinion-card-message">"This portal has transformed my academic life! I can finally keep track of
             everything in one place."</div>
@@ -231,9 +236,6 @@
         </div>
         <div class="opinion-card">
           <!-- Only right button for the last card -->
-          <button class="opinion-slider-btn right">
-            <img src="/assets/Vector 1.png" alt="Next">
-          </button>
           <div class="opinion-card-title">Alex Johnson<br><span class="opinion-card-dept">Business Administration</span>
           </div>
           <div class="opinion-card-message">"The study tracker is a game-changer. I feel more organized and motivated
@@ -391,53 +393,45 @@
       window.addEventListener('DOMContentLoaded', toggleMobileMenuDisplay);
     </script>
     <script>
-      // Mobile menu toggle logic
-      document.addEventListener('DOMContentLoaded', function() {
-        const menuToggle = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const toggleIcon = document.getElementById('toggle-icon');
-        let menuOpen = false;
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const closeSidebar = document.getElementById('close-sidebar');
 
-        function openMenu() {
-          mobileMenu.classList.add('active');
-          menuToggle.classList.add('menu-open');
-          toggleIcon.innerHTML = '&times;';
-          menuOpen = true;
-        }
-        function closeMenu() {
-          // Animate out
-          mobileMenu.classList.add('hide-anim');
-          menuToggle.classList.remove('menu-open');
-          toggleIcon.innerHTML = '&#9776;';
-          menuOpen = false;
-          setTimeout(() => {
-            mobileMenu.classList.remove('active');
-            mobileMenu.classList.remove('hide-anim');
-          }, 350);
-        }
+    // Open sidebar
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.add('active');
+    });
 
-        if (menuToggle && mobileMenu && toggleIcon) {
-          menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (!menuOpen) {
-              openMenu();
-            } else {
-              closeMenu();
-            }
-          });
-          // Close menu when clicking outside
-          document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768 &&
-              menuOpen &&
-              !mobileMenu.contains(e.target) &&
-              e.target !== menuToggle &&
-              !menuToggle.contains(e.target)) {
-              closeMenu();
-            }
-          });
+    // Close sidebar when X is clicked
+    closeSidebar.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('active') &&
+            !sidebar.contains(e.target) &&
+            e.target !== menuToggle &&
+            !menuToggle.contains(e.target)) {
+            sidebar.classList.remove('active');
         }
-      });
+    });
+});
+
     </script>
+    <nav id="sidebar" class="sidebar">
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Snapshots</a></li>
+        <li><a href="#">How It Works</a></li>
+        <hr>
+        <li><a href="#">Login</a></li>
+        <li><a href="#">Sign Up</a></li>
+    </ul>
+</nav>
 </body>
 
 </html>
