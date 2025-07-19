@@ -2479,12 +2479,13 @@ html{
     z-index: 2;
     box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
     object-fit: cover;
-    margin-right: 0; /* Remove any margin that could shift it further */
+    margin-right: 30px; /* Remove any margin that could shift it further */
   }
   .screenshot-img {
     display: none;
   }
   .sidebar {
+    
     position: fixed;
     top: 0;
     right: -100%;
