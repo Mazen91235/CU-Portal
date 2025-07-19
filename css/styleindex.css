@@ -411,6 +411,7 @@ body {
   font-size: 48px;
   font-style: normal;
   font-weight: 500;
+ 
   background: var(--words-gradiant, linear-gradient(90deg, #FFA8A7 30%, #881792 80%));
   background-clip: text;
   -webkit-background-clip: text;
@@ -1554,6 +1555,7 @@ body {
     text-align: left;
     justify-content: left;
   }
+
   
   .simple-steps-section > img:first-child {
     order: 2;
@@ -1856,10 +1858,13 @@ body {
     display: flex;
     text-align: left;
   } 
-  .how-it-work-title{
+  .how-it-work-title , .how-it-work-subtitle{
     text-align: left;
     justify-content: left;
+    width: 70%;
+    padding-left: 2rem;
   }
+
   
   .simple-steps-section > img:first-child {
     order: 2;
@@ -2119,14 +2124,14 @@ body {
   color: #881792;
 }
 .sss-img {
-  display: block;
+  display: flex;
   position: absolute;
   top: 0;
-  right: 0;
+  right: 90%;
   width: 200px;
   max-width: 30vw;
   height: auto;
-  z-index: 10;
+  z-index: 1000;
  
 }
 
@@ -2142,6 +2147,7 @@ body {
     transform: scaleX(-1);
     max-width: 40vw;
     top: 10px;
+    z-index: 1000;
     right: 10px;
   }
  .opinions-cards-row {
