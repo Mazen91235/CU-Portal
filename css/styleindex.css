@@ -1421,8 +1421,13 @@ body {
   pointer-events: none;
   }
   .team-members {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 1rem;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 100vw;
+    padding-left: 0;
+    padding-right: 0;
   }
   .team-card {
     width: 90vw;
@@ -2408,7 +2413,7 @@ html{
 }
 
   .team-members {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 1rem;
     width: 100%;
     margin: 0 auto;
@@ -2479,7 +2484,7 @@ html{
     z-index: 2;
     box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
     object-fit: cover;
-    margin-right: 30px; /* Remove any margin that could shift it further */
+    margin-right: 0; /* Remove any margin that could shift it further */
   }
   .screenshot-img {
     display: none;
