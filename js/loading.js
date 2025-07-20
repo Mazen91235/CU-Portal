@@ -15,13 +15,13 @@
     });
     document.addEventListener("DOMContentLoaded", () => {
       // Load navbar
-      fetch("../components/navbar.html")
+      fetch("/components/navbar.html")
         .then(res => res.text())
         .then(navbarHtml => {
           document.getElementById("navbar-container").innerHTML = navbarHtml;
 
           // Load sidebar
-          fetch("../components/sidebar.html")
+          fetch("/components/sidebar.html")
             .then(res => res.text())
             .then(sidebarHtml => {
               document.getElementById("sidebar-container").innerHTML = sidebarHtml;

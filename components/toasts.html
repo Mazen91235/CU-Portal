@@ -5,7 +5,11 @@
     <meta charset="UTF-8" />
     <title>title</title>
     <link rel="stylesheet" href="../css/sidebar.css" />
-
+    <style>
+        body{
+            --toast-duration: 5s;
+        }
+    </style>
 
 </head>
 
@@ -74,6 +78,10 @@
         <div class="toast-bar toast-info"></div>
     </div>
     <script>
+        let toastDuration = 3000; // Default duration in milliseconds
+        window.onload = () => {
+            document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
+        }
         function showToast(type) {
             const toast = document.getElementById(`toast-${type}`);
             if (!toast) return;
@@ -99,7 +107,7 @@
                     toast.classList.add("hidden");
                     toast.classList.remove("fade-out");
                 }, 500);
-            }, 2000);
+            }, toastDuration);
         }
 
 
