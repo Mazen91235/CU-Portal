@@ -29,12 +29,16 @@
               const toggleButton = document.getElementById("menu-toggle");
               const sidebar = document.getElementById("sidebar");
               const contentWrapper = document.getElementById("content-wrapper");
+              const navbar = document.getElementById('navbar-container');
+
 
               if (toggleButton && sidebar && contentWrapper) {
                 toggleButton.addEventListener("click", () => {
                   sidebar.classList.toggle("visible");
                   sidebar.classList.toggle("hidden");
                   contentWrapper.classList.toggle("sidebar-hidden");
+                    navbar.classList.toggle('navbar-shrink');
+
                 });
               } else {
                 console.warn("Toggle failed. Elements missing:", { toggleButton, sidebar, contentWrapper });

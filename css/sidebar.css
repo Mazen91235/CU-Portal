@@ -26,6 +26,12 @@ body {
   gap: 8px;
   
 }
+
+.navbar-shrink {
+  margin-left: 256px; 
+   width: calc(100% - 256px);
+  transition: all 0.3s ease;
+}
 .nav-link:hover {
   color: #000000!important;
   cursor: pointer;
