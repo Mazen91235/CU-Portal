@@ -477,7 +477,7 @@ li{
         .toast-bar {
             height: 5px;
             margin-top: 5px;
-            animation: grow 2s linear forwards;
+            animation: grow var(--toast-duration) linear forwards;
             border-radius: 2px;
         }
 
