@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <title>title</title>
-        <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
 
 
 </head>
 
 <body>
 
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-<img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
 
     <button onclick="showToast('success')">Show Success</button>
     <button onclick="showToast('warning')">Show Warning</button>
@@ -92,9 +92,13 @@
             // Show the toast
             toast.classList.remove("hidden");
 
-            // Auto-hide after 3 seconds
             setTimeout(() => {
-                toast.classList.add("hidden");
+                toast.classList.add("fade-out");
+
+                setTimeout(() => {
+                    toast.classList.add("hidden");
+                    toast.classList.remove("fade-out");
+                }, 500);
             }, 2000);
         }
 

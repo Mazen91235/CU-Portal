@@ -422,8 +422,13 @@ li{
             overflow: hidden;
             flex-direction: column;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.5s ease forwards;
+
         }
+        .toast.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+       
         .toast::before {
   content: "";
   position: absolute;
@@ -549,6 +554,8 @@ li{
 
         .hidden {
             display: none;
+                        animation: fadeOut 0.3s ease;
+
         }
 
         @keyframes grow {
@@ -572,3 +579,13 @@ li{
                 transform: translateY(0);
             }
         }
+         @keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
