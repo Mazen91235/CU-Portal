@@ -43,6 +43,21 @@
               } else {
                 console.warn("Toggle failed. Elements missing:", { toggleButton, sidebar, contentWrapper });
               }
+
+          // ✅ HIGHLIGHT ACTIVE NAV ITEM HERE
+          const navItems = document.querySelectorAll('.nav-item');
+          const currentPage = window.location.pathname.split('/').pop();
+
+          navItems.forEach(item => {
+            const link = item.querySelector('a.nav-link');
+            if (!link) return;
+
+            const linkPage = link.getAttribute('href').split('/').pop();
+            if (linkPage === currentPage) {
+              navItems.forEach(i => i.classList.remove('active'));
+              item.classList.add('active');
+            }
+          });
             });
         });
     });

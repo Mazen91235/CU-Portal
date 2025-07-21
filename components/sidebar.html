@@ -16,14 +16,14 @@
 
     </li>
 
-    <li class="nav-item ">
-      <a class="nav-link  " href="../dashboard.html">
+    <li class="nav-item">
+      <a class="nav-link" href="../dashboard.html">
         <img src="../assets/dashboard.svg" alt="Dashboard" width="20" height="20" class="me-2 " />
         Admin Page
       </a>
     </li>
-    <li class="nav-item active  ">
-      <a class="nav-link  " href="../dashboard.html">
+    <li class="nav-item">
+      <a class="nav-link" href="../dashboard.html">
         <img src="../assets/dashboard.svg" alt="Dashboard" width="20" height="20" class="me-2 " />
         Dashboard
       </a>
@@ -35,7 +35,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link " href="#">
+      <a class="nav-link" href="#">
         <img src="../assets/iconsax-enhance-prize.svg" alt="Grades" width="20" height="20" class="me-2" />
         Grades
       </a>
@@ -102,18 +102,3 @@
 
   </div>
 </div>
-
-<script>
-  const navLinks = document.querySelectorAll('.nav-item');
-
-  navLinks.forEach(link => {
-    const linkPath = link.getAttribute('href');
-    const currentPath = window.location.pathname;
-
-    if (currentPath.includes(linkPath)) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-    }
-  });
-
-</script>
