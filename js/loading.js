@@ -19,6 +19,42 @@
         .then(res => res.text())
         .then(navbarHtml => {
           document.getElementById("navbar-container").innerHTML = navbarHtml;
+            //  Notification logic 
+      const notificationIcon = document.getElementById("notification-icon");
+      const notificationsDropdown = document.getElementById("notifications-dropdown");
+       const announcementIcon = document.getElementById("announcement-icon");
+      const announcementsDropdown = document.getElementById("announcements-dropdown");
+    
+      // Toggle dropdown
+      if (notificationIcon && notificationsDropdown) {
+        notificationIcon.addEventListener("click", (e) => {
+          e.preventDefault();
+          notificationsDropdown.classList.toggle("d-none");
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!notificationIcon.contains(event.target) && !notificationsDropdown.contains(event.target)) {
+            notificationsDropdown.classList.add("d-none");
+          }
+        });
+
+      
+      }
+       // Toggle dropdown
+      if (announcementIcon && announcementsDropdown) {
+        announcementIcon.addEventListener("click", (e) => {
+          e.preventDefault();
+          announcementsDropdown.classList.toggle("d-none");
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!announcementIcon.contains(event.target) && !announcementsDropdown.contains(event.target)) {
+            announcementsDropdown.classList.add("d-none");
+          }
+        });
+
+      
+      }
 
           // Load sidebar
           fetch("/components/sidebar.html")
