@@ -6,7 +6,7 @@
     <title>title</title>
     <link rel="stylesheet" href="../css/sidebar.css" />
     <style>
-        body{
+        body {
             --toast-duration: 5s;
         }
     </style>
@@ -23,6 +23,10 @@
     <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
     <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
     <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
+    <button onclick="showToast('success', 'Saved!', 'Everything went well ')">Show Custom Success</button>
+    <button onclick="showToast('error', 'Failed', 'Something went wrong')">Show Custom Error</button>
+    <button onclick="showToast('success', 'Success', 'You will be redirected', '/dashboard.html')">Show Toast &
+        Redirect</button>
 
     <button onclick="showToast('success')">Show Success</button>
     <button onclick="showToast('warning')">Show Warning</button>
@@ -82,7 +86,7 @@
         window.onload = () => {
             document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
         }
-        function showToast(type) {
+        function showToast(type, headerText = "", messageText = "", redirectUrl = "") {
             const toast = document.getElementById(`toast-${type}`);
             if (!toast) return;
 
@@ -90,7 +94,15 @@
             document.querySelectorAll(".toast").forEach(t => {
                 t.classList.add("hidden");
             });
+            if (headerText) {
+                const header = toast.querySelector(".toast-header");
+                if (header) header.textContent = headerText;
+            }
 
+            if (messageText) {
+                const text = toast.querySelector(".toast-text");
+                if (text) text.textContent = messageText;
+            }
             // Restart bar animation
             const bar = toast.querySelector(".toast-bar");
             bar.style.animation = "none"; // reset
@@ -106,6 +118,9 @@
                 setTimeout(() => {
                     toast.classList.add("hidden");
                     toast.classList.remove("fade-out");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
                 }, 500);
             }, toastDuration);
         }
