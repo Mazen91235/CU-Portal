@@ -529,12 +529,24 @@
                     }
                 });
 
-                // Add click event listener to sidebar links
+                // Sidebar navigation with header offset
                 sidebarLinks.forEach(link => {
                     link.addEventListener('click', function (e) {
-                        // Remove active class from all links
-                        setActiveSidebarLink(this.dataset.section);
-                        sidebar.classList.remove('active'); // Close sidebar when a link is clicked
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            setActiveSidebarLink(this.dataset.section);
+                            sidebar.classList.remove('active');
+                            // Scroll with header offset
+                            const header = document.querySelector('.main-header');
+                            const headerHeight = header ? header.offsetHeight : 0;
+                            const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                            window.scrollTo({
+                                top: sectionTop - headerHeight,
+                                behavior: 'smooth'
+                            });
+                        }
                     });
                 });
             });
