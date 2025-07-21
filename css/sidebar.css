@@ -595,3 +595,22 @@ li{
     transform: translateY(10px);
   }
 }
+
+.notification .badge {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #EF4444;
+  color: white;
+}
+.announcement .badge {
+   position: absolute;
+  top: -6px;
+  right: -10px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #EF4444;
+  color: white;
+}
