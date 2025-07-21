@@ -829,12 +829,18 @@ body {
 .form-decor-bottom {
   
   position: absolute;
-  top: -20%;
-  right: -15%;
-  width: 665px;
+  left: 70%;
+  bottom: 30%;
   height: auto;
-  z-index: -5;
-  
+  width: 665px;
+  max-width: 665px;
+  z-index: -9;
+  overflow-x: hidden;
+  object-fit: cover;
+}
+
+html body {
+  overflow-x: hidden;
 }
 
 .contact-form-card {
@@ -2567,4 +2573,10 @@ html{
   .how-it-work-subtitle {
     font-size: 36px !important;
   }
+}
+@media screen and (max-width: 1500px) and (min-width: 1280px) {
+  .form-decor-bottom{
+    display: none;
+  }
+
 }
