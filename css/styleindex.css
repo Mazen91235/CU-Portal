@@ -2574,9 +2574,9 @@ html{
     font-size: 36px !important;
   }
 }
-@media screen and (max-width: 1500px) and (min-width: 1280px) {
+@media (max-width: 1500px) and (min-width: 1280px) {
   .form-decor-bottom{
-    display: none;
+    display: none !important; 
   }
 
 }
