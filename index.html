@@ -128,6 +128,8 @@
                 display: none;
             }
         }
+
+
     </style>
 </head>
 
@@ -163,9 +165,9 @@
                 <li><a href="#Snapshots" class="sidebar-nav-link" data-section="snapshots">Snapshots</a></li>
                 <li><a href="#how-it-work" class="sidebar-nav-link" data-section="how-it-work">How It Works</a></li>
                 <hr>
-                <li><button class="btn login" id="loginButton"
+                <li><button class="btn login" id="sidebarLoginButton"
                         style="width: 90%; text-align: center; justify-content: center;">Login</button></li>
-                <li><button class="btn signup" id="signupButton"
+                <li><button class="btn signup" id="sidebarSignupButton"
                         style="width: 90%; text-align: center; justify-content: center;">Sign Up</button></li>
             </ul>
         </nav>
@@ -363,6 +365,25 @@
         <div class="form-decor-bottom-container">
             <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decor Bottom" class="form-decor-bottom">
         </div>
+    </section>
+     <section class="beginning-section" id="beginning" style="position: relative;">
+         <div class="beginning-decor-top">
+             <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
+         </div>
+         <div class="beginning-card">
+             <h2 class="beginning-title">How did we start</h2>
+             <div class="beginning-content">
+                <p>In 2024, <strong>Mazen</strong> came up with the idea of creating 
+                    a platform where university students could study, share resources, and connect. But the idea remained simple — a seed that hadn’t yet grown.
+
+A year later - in 2025 - <strong>Mohamed</strong> came with a similar concept, but with a fresh 
+perspective shaped by what students truly needed. When <strong>Mohamed</strong> shared his vision, <strong>Mazen</strong> saw the spark of his old idea reignited — only stronger this time. They teamed up, determined to build something real and impactful.</p>
+
+<p>To turn their vision into action, they reached out to <strong>Jana</strong>, a skilled programmer, who helped lay the technical foundation. Soon after, <strong>Yasmine</strong>, a professional full-stack developer, joined to bolster development. <strong>Marwa</strong> and <strong>Hadeer</strong>, two top UI/UX designers, completed the team, ensuring the platform would be both functional and beautifully designed.</p>
+
+<p>Seven minds, one mission — to create a platform that transforms the student experience and brings the university community closer together.</p>
+
+                </div></div>
     </section>
     <section class="team-section" id="team-section">
         <img src="./assets/team-decor-bottom.png" alt="" class="team-decor-bottom">
@@ -614,20 +635,36 @@
 });
 const loginButton = document.getElementById('loginButton');
 const signupButton = document.getElementById('signupButton');
+const sidebarLoginButton = document.getElementById('sidebarLoginButton');
+const sidebarSignupButton = document.getElementById('sidebarSignupButton');
 
-// Add an event listener to the Login button
-loginButton.addEventListener('click', function() {
-    // When the Login button is clicked, navigate to login.html
-    window.location.href = 'login.html';
-});
+// Add an event listener to the Login button (header)
+if (loginButton) {
+    loginButton.addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+}
 
-// Add an event listener to the Sign Up button
-signupButton.addEventListener('click', function() {
-    // When the Sign Up button is clicked, navigate to createprofile.html
-    window.location.href = 'createprofile.html';
-});
+// Add an event listener to the Sign Up button (header)
+if (signupButton) {
+    signupButton.addEventListener('click', function() {
+        window.location.href = 'createprofile.html';
+    });
+}
 
-            // Smooth scroll for header nav links
+// Add event listeners for sidebar buttons
+if (sidebarLoginButton) {
+    sidebarLoginButton.addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+}
+if (sidebarSignupButton) {
+    sidebarSignupButton.addEventListener('click', function() {
+        window.location.href = 'createprofile.html';
+    });
+}
+
+// Smooth scroll for header nav links
             document.addEventListener('DOMContentLoaded', () => {
                 const navLinks = document.querySelectorAll('.header-center .nav-link');
                 navLinks.forEach(link => {
