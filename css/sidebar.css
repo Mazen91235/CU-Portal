@@ -26,6 +26,12 @@ body {
   gap: 8px;
   
 }
+
+.navbar-shrink {
+  margin-left: 256px; 
+   width: calc(100% - 256px);
+  transition: all 0.3s ease;
+}
 .nav-link:hover {
   color: #000000!important;
   cursor: pointer;
@@ -408,3 +414,324 @@ li{
                 height: 50px;
             }
         }
+
+ .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding-bottom: 0;
+            padding-right: 12px;
+            display: flex;
+            overflow: hidden;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease forwards;
+
+        }
+        .toast.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+       
+        .toast::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 30%;
+  height: 100px;
+  background: radial-gradient(circle at left, transparent, white);
+}
+.toast-success::before {
+  background: radial-gradient(circle at left, rgba(82, 195, 108, 0.2), transparent);
+}
+
+.toast-warning::before {
+  background: radial-gradient(circle at left, rgba(255, 193, 7, 0.2), transparent);
+}
+
+.toast-error::before {
+  background: radial-gradient(circle at left, rgba(222, 84, 98, 0.2), transparent);
+}
+
+.toast-info::before {
+  background: radial-gradient(circle at left, rgba(132, 171, 229, 0.2), transparent);
+}
+
+
+        .toast-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            align-items: center;
+
+        }
+
+        .toast-icon img {
+            width: 24px;
+            height: 24px;
+            padding-left: 12px;
+
+        }
+
+        .toast-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toast-bar {
+            height: 5px;
+            margin-top: 5px;
+            animation: grow var(--toast-duration) linear forwards;
+            border-radius: 2px;
+        }
+
+        .toast-success .toast {
+            background: radial-gradient(circle at 30px 50%, #e6f4ea 60px, #ffffff 150px);
+        }
+
+        .toast .toast-warning {
+            background: radial-gradient(circle at 30px 50%, #fff9e6 60px, #ffffff 150px);
+        }
+
+        .toast-error .toast {
+            background: radial-gradient(circle at 30px 50%, #fbeaea 60px, #ffffff 150px);
+        }
+
+        .toast-info .toast {
+            background: radial-gradient(circle at 30px 50%, #e6f4f8 60px, #ffffff 150px);
+        }
+
+        .toast-success .toast-bar {
+            background: #01E17B;
+        }
+
+        .toast-warning .toast-bar {
+            background: #FFD21F;
+        }
+
+        .toast-error .toast-bar {
+            background: #F04349;
+        }
+
+        .toast-info .toast-bar {
+            background: #3B82F6;
+        }
+
+        .toast-header {
+            font-weight: bold;
+            padding: 6px 2px !important;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .toast-success .toast-header {
+            color: #30D158;
+        }
+
+        .toast-warning .toast-header {
+            color: #FFC100;
+        }
+
+        .toast-error .toast-header {
+            color: #F04248;
+        }
+
+        .toast-info .toast-header {
+            color: #3B82F6;
+        }
+
+        .toast-success .toast-text {
+            color: #C8C5C5;
+        }
+
+        .toast-warning .toast-text {
+            color: #C8C5C5;
+        }
+
+        .toast-error .toast-text {
+            color: #C8C5C5;
+        }
+
+        .toast-info .toast-text {
+            color: #C8C5C5;
+        }
+
+        .hidden {
+            display: none;
+                        animation: fadeOut 0.3s ease;
+
+        }
+
+        @keyframes grow {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+         @keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.notification .badge {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #EF4444;
+  color: white;
+}
+.announcement .badge {
+   position: absolute;
+  top: -6px;
+  right: -10px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #EF4444;
+  color: white;
+}
+.notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 60px; 
+  width: 320px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+.notification-item {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.notification-icon {
+  color: purple;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: 400;
+  color: #000;
+}
+
+.notification-meta {
+  color: #555;
+  font-size: 13px;
+}
+
+.view-all-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #5A0F61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+#notifications-list{
+height: fit-content;
+overflow: scroll;
+}
+.notification-item a{
+  text-decoration: none;
+
+}
+
+
+
+.announcements-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 60px; 
+  width: 350px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+.announcement-item {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+
+
+.announcement-content {
+  flex: 1;
+}
+
+.announcement-title {
+  font-weight: 600;
+  color: #000;
+}
+
+.announcement-meta {
+  color: #555;
+  font-size: 13px;
+}
+
+.view-all-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #5A0F61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+#announcements-list{
+height: fit-content;
+overflow: scroll;
+}
+.announcement-item a{
+  text-decoration: none;
+
+}
+.announcement-header{
+  color: #5A0F61;
+}
+.announcement-date{
+    color: #5A0F61;
+    font-size: 14px;
+background-color: #F5ECFE;
+padding: 4px 8px;
+border-radius: 6px;
+}

@@ -20,6 +20,7 @@ background:linear-gradient(90deg, #FAF5FF, #FFFFFF);}
   margin-left: 0;
 }
 
+
 #header{
   height: 208px;
   width: 100%;
@@ -651,3 +652,32 @@ margin-left: 45px;}
 max-width: 430px;
   margin-left: 40px;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  padding: 0 !important;
+  border-radius: 8px;
+ 
+
+}
+
+.dropdown-item {
+  padding: 6px 12px !important;  
+  margin: 0 !important;  
+  font-size: 14px;        
+  border-bottom: 1px solid #eee; 
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa !important;
+}
+
+

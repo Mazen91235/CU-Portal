@@ -16,16 +16,28 @@
 
     </li>
 
-    <li class="nav-item active  ">
-      <a class="nav-link  " href="../html/dashboard.html">
+    <li class="nav-item">
+      <a class="nav-link" href="../dashboard.html">
+        <img src="../assets/dashboard.svg" alt="Dashboard" width="20" height="20" class="me-2 " />
+        Admin Page
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../dashboard.html">
         <img src="../assets/dashboard.svg" alt="Dashboard" width="20" height="20" class="me-2 " />
         Dashboard
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link " href="#">
+      <a class="nav-link " href="../courses.html">
         <img src="../assets/courses.svg" alt="Courses" width="20" height="20" class="me-2" />
         Courses
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+        <img src="../assets/iconsax-enhance-prize.svg" alt="Grades" width="20" height="20" class="me-2" />
+        Grades
       </a>
     </li>
     <li class="nav-item">
@@ -76,6 +88,11 @@
         <img src="../assets/disscution.svg" alt="Discussion" width="20" height="20" class="me-2" />
         Discussion </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+        <img src="../assets/uil_setting.svg" alt="Account Setting" width="22" height="22" class="me-2" />
+        Account Setting </a>
+    </li>
 
     <li class="nav-item">
       <a class="nav-link" href="#" id="logout-btn">
@@ -90,18 +107,3 @@
 
   </div>
 </div>
-
-<script>
-  const navLinks = document.querySelectorAll('.nav-item');
-
-  navLinks.forEach(link => {
-    const linkPath = link.getAttribute('href');
-    const currentPath = window.location.pathname;
-
-    if (currentPath.includes(linkPath)) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-    }
-  });
-
-</script>

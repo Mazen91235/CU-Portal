@@ -1,358 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Portal</title>
-  <link rel="stylesheet" href="./css/styleindex.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="./css/styleindex.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-</head>
-<body style="overflow-x: hidden;background: var(--slate-50, #F8FAFC);">
-  <!-- Header -->
-  <header class="main-header">
-    <div class="header-left">
-      <a href="index.html" style="text-decoration: none; font-family: 'Roboto', 'Segoe UI', sans-serif; font-size: 28px; font-weight: 600; color: rgb(90,15,97); letter-spacing: 1px; text-transform: capitalize;">
-        St<span style="color: rgb(253,186,116);">u</span>dent P<span style="color: rgb(253,186,116);">o</span>rtal
-      </a>
-    </div>
-    <nav class="header-center">
-  <a href="#" class="nav-link active">Home</a> 
-  <a href="#" class="nav-link">Features</a>
-  <a href="#" class="nav-link">How to Start</a>
-  <a href="#" class="nav-link">Snapshots</a>
-</nav>
-    <div class="header-right">
-      <button class="btn login">Login</button>
-      <button class="btn signup">Sign Up</button>
-    </div>
-    <div class="mob-menu">
-      <button class="mobile-nav-toggle" aria-label="Open navigation" onclick="document.querySelector('.mobile-nav-menu').classList.toggle('open')">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Mobile Dropdown Menu (right side) -->
-      <nav class="mobile-nav-menu" style="z-index:2100;height:auto;right:0;left:auto;">
-        <a href="#" class="nav-link active">Home</a>
-        <a href="#" class="nav-link">Features</a>
-        <a href="#" class="nav-link">Contact Us</a>
-        <a href="#" class="nav-link">Login</a>
-        <a href="#" class="nav-link">Sign Up</a>
-      </nav>
-    </div>
-    </nav>
-    <!-- Bootstrap JS and Popper.js should be loaded at the end of body for best performance -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVpZPnhJBLjSByZ0JGFoPTAjyvkU7WwIJYhA4mFVYyY" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlco9N4SFC0j3f4E+E36v+bUqbJ6d5U5z/o0Bf5p+B5P/D+" crossorigin="anonymous"></script>
-  </header>
-  <div class="line"></div>
+    <style>
+        /* New CSS for the sidebar and active link */
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Simplify Your Student Life</h1>
-      <h2><span class="gradient-text">Succeed</span> Smarter</h2>
-      <p class="hero-description">Organize your studies, track your progress, and connect with your academic community.</p>
-      <a href="#" class="cta-button">Get Started Now!</a>
-    </div>
-    <div class="hero-image">
-      <img src="./assets/hero section photo.png" alt="Illustration of two students with books">
-    </div>
-    <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Vector Graphic" style="position: absolute; top: 500px; left: -550px; z-index: -1;">
-  </section>
+        /* Existing sidebar styles (adjust as needed based on your current styleindex.css) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px; /* Start off-screen */
+            width: 300px;
+            height: 100vh; /* Changed from 100% to 100vh for full viewport height */
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease-out, opacity 0.3s ease-out; /* Add opacity to transition */
+            z-index: 1000;
+            
+            opacity: 0; /* Start hidden */
+            display: flex; /* Use flex to align content */
+            flex-direction: column; /* Stack header and ul vertically */
+        }
 
-  <!-- Features Section -->
-  <section class="features">
-    <div class="toolkit-card">
-      <h2 class="toolkit-title">
-        Your Toolkit for <span class="gradient-text">A Smarter Semester</span>
-      </h2>
-      <div class="mini-features-grid">
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/iconsax-book-saved.png" alt="Feature 1">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Enrolled Courses</h3>
-            <p>Access course materials, syllabi, grades, and schedules for all your enrolled courses in one dedicated dashboard.</p>
-          </div>
-        </div>
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/tracker.png" alt="Feature 2">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Study Tracker</h3>
-            <p>Monitor your study hours, set goals, and visualize your progress across all your courses.</p>
-          </div>
-        </div>
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/target.png" alt="Feature 3">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Roadmaps</h3>
-            <p>Plan your entire academic journey, explore career paths, and visualize your required courses step-by-step.</p>
-          </div>
-        </div>
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/chat.png" alt="Feature 4">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Discussion</h3>
-            <p>Connect with classmates, ask questions, share insights, and form study groups in a supportive environment.</p>
-          </div>
-        </div>
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/events.png" alt="Feature 5">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Events</h3>
-            <p>Explore campus events, workshops, guest lectures, and social gatherings. Enhance your university experience.</p>
-          </div>
-        </div>
-        <div class="mini-feature-pair">
-          <div class="feature-icon-circle">
-            <img src="./assets/volume (1).png" alt="Feature 6">
-          </div>
-          <div class="mini-feature-card">
-            <h3 class="mini-card-title">Announcements</h3>
-            <p>Stay informed with real-time announcements from your university, departments, and course instructors.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="star">
-    <img src="./assets/Star 1.png" alt="Star Image" style="position: relative; top: 10px; left:75%;  object-fit: cover; z-index: -1;">
-    <img src="./assets/Star 1.png" alt="Star Image" style="position: relative; top: -15px; left: 35%;  object-fit: cover; z-index: -1;">
-  </section>
-  <section class="how-it-work">
-<h2 style="text-align: center;color: #292929;text-align: center;font-family: 'Roboto' , 'Segoe UI', sans-serif;font-size: 56px;font-style: normal;font-weight: 700;line-height: 86px; letter-spacing: 1.44px;text-transform: capitalize; ">How It Works</h2><br>
-<h2 style="font-family: 'Roboto', 'Segoe UI', sans-serif;font-size: 56px;font-style: normal;font-weight: 500;line-height: 86px; background: var(--words-gradiant, linear-gradient(90deg, #FFA8A7 30%, #881792 80%));
+        .sidebar.active {
+            right: 0; /* Slide in */
+            opacity: 1; /* Fade in */
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            justify-content: flex-end; /* Align close button to the right */
+            align-items: center;
+        }
+
+        .close-btn {
+            font-size: 30px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1; /* Allow the ul to take available space */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center links horizontally */
+        }
+
+        .sidebar ul li {
+            width: 90%; /* Make list items take most of the width */
+            margin-bottom: 10px; /* Space between links */
+        }
+
+        .sidebar ul li a,
+        .sidebar ul li button {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            border-radius: 8px; /* For the "Admin Page" button look */
+            
+            transition: background 0.3s ease, color 0.3s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .sidebar ul li a:hover:not(.sidebar-link-active),
+        .sidebar ul li button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Style for the active sidebar link - mimicking the Admin Page button */
+        .sidebar-link-active {
+            background: linear-gradient(to right, #5A0F61, #FD8F6B); /* Gradient from your image */
+            color: #fff !important; /* Important to override default link color */
+            font-weight: 600; /* Bolder text */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            padding-left: 20px; /* Add some padding for the icon if you want to include it */
+            position: relative;
+            overflow: hidden; /* For pseudo-element if icon is added */
+        }
+
+        /* If you want to add the icon to the active link, you can use a pseudo-element */
+        .sidebar-link-active::before {
+            content: url('./assets/Admin_Icon.png'); /* Replace with your icon path */
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            width: 24px; /* Adjust icon size */
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            /* You might need to use background-image and background-size if the icon is not a simple image tag */
+        }
+
+
+        /* Adjustments for mobile menu toggle */
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block !important;
+                /* Override inline style if necessary */
+                background: none;
+                border: none;
+                font-size: 30px;
+                cursor: pointer;
+                color: #5A0F61;
+                padding: 0 15px;
+            }
+
+            .main-header .header-center {
+                display: none;
+            }
+
+            .main-header .header-right .login,
+            .main-header .header-right .signup {
+                display: none;
+            }
+        }
+
+        .beginning-flex-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            margin-bottom: 10rem;
+        }
+        .beginning-title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 32px;
+            margin-top: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--words-gradiant, linear-gradient(90deg, #FFA8A7 40%, #881792 55%));
 background-clip: text;
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;letter-spacing: 1.44px;text-transform: capitalize;text-align: center; ">Your Success in 3 Simple Steps</h2><br>
-  </section>
-  <section class="simple-steps-section">
-    <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" class="screenshot-img" style="position: absolute; top: -120px; left:-5%; width: 250px; z-index: 999;">
-      <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Vector Graphic" style="position: absolute; top: -250px; left: -550px; z-index: -1;width: 1000px;">
+-webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .beginning-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 22px;
+            width: 100%;
+        }
+        .beginning-content {
+            flex: 1 1 0;
+            text-align: left;
+            font-size: 18px;
+            align-self: flex-start;
+            font-size: 1.15rem;
+            color: #22223b;
+            line-height: 1.7;
+        }
+        .beginning-image-container {
+            flex: 0 0 380px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            margin: 0;
+        }
+        .beginning-side-image {
+            max-width: 340px;
+            width: 100%;
+            height: auto;
+            
+            object-fit: contain;
+        }
+        @media (max-width: 1024px) {
+            .beginning-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            .beginning-image-container {
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                margin-top: -50px;
+            }
+            .beginning-side-image {
+                max-width: 40vw;
+                margin: 0 auto;
+            }
+        }
 
-    <div class="main-steps-card">
-    <div class="simple-steps-container">
-      <div class="simple-step-group">
-        <div class="simple-step-icon-above">
-          <img src="./assets/iconsax-user.png" alt="Create Account" />
+        .form-decor-bottom-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 80px; /* Adjust as needed for how much of the image you want visible */
+        }
+        .form-decor-bottom {
+            width: 150%; /* Make image wider than container for partial display */
+            max-width: none;
+            min-width: 1000px; /* Prevents shrinking too much on small screens */
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            pointer-events: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body style="overflow-x: hidden;background: var(--slate-50, #F8FAFC);">
+    <header class="main-header">
+        <div class="header-left">
+            <a href="index.html"
+                style="text-decoration: none; font-family: 'Roboto', 'Segoe UI', sans-serif; font-size: 28px; font-weight: 600; color: rgb(90,15,97); letter-spacing: 1px; text-transform: capitalize;">
+                St<span style="color: rgb(253,186,116);">u</span>dent P<span
+                    style="color: rgb(253,186,116);">o</span>rtal
+            </a>
         </div>
-        <div class="simple-step-card">
-          <div class="simple-step-title">Create Your Account</div>
-          <div class="simple-step-desc">
-            Join our community in just a few clicks. It's quick, simple, and absolutely free
-          </div>
+        <nav class="header-center">
+            <a href="#hero" class="nav-link active" style="font-size: 18px;">Home</a>
+            <a href="#features" class="nav-link" style="font-size: 18px;">Features</a>
+            <a href="#how-it-work" class="nav-link" style="font-size: 18px;">How to Start</a>
+            <a href="#Snapshots" class="nav-link" style="font-size: 18px;">Snapshots</a>
+            <a href="#beginning-card" class="nav-link" style="font-size: 18px;">How We Started</a>
+        </nav>
+        <div class="header-right">
+            <button class="btn login" id="loginButton">Login</button>
+            <button class="btn signup" id="signupButton">Sign Up</button>
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Open mobile menu">
+                <span class="toggle-icon" id="toggle-icon">&#9776;</span>
+            </button>
         </div>
-      </div>
-      <div class="simple-step-group">
-        <div class="simple-step-icon-above">
-          <img src="./assets/Clip path group.png" alt="Personalize Dashboard" />
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <span id="close-sidebar" class="close-btn">&times;</span>
+            </div>
+            <ul>
+                <li><a href="#hero" class="sidebar-nav-link sidebar-link-active" data-section="hero">Home</a></li>
+                <li><a href="#features" class="sidebar-nav-link" data-section="features">Features</a></li>
+                <li><a href="#Snapshots" class="sidebar-nav-link" data-section="snapshots">Snapshots</a></li>
+                <li><a href="#how-it-work" class="sidebar-nav-link" data-section="how-it-work">How It Works</a></li>
+                <li><a href="#beginning-card" class="sidebar-nav-link" data-section="beginning-card">How We Started</a></li>
+
+                <hr>
+                <li><button class="btn login" id="sidebarLoginButton"
+                        style="width: 90%; text-align: center; justify-content: center;">Login</button></li>
+                <li><button class="btn signup" id="sidebarSignupButton"
+                        style="width: 90%; text-align: center; justify-content: center;">Sign Up</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="hero-text">
+            <h1>Simplify Your Student Life</h1>
+            <h2><span class="gradient-text">Succeed</span> Smarter</h2>
+            <p class="hero-description">Organize your studies, track your progress, and connect with your academic
+                community.
+            </p>
+            <a href="login.html" class="cta-button">Get Started Now!</a>
         </div>
-        <div class="simple-step-card">
-          <div class="simple-step-title">Personalize Your Dashboard</div>
-          <div class="simple-step-desc">
-            Input your class schedules, assignments, and exam dates. Our intuitive tools help you get organized in minutes.
-          </div>
+        <div class="hero-image">
+            <img src="./assets/hero section photo.png" alt="Illustration of two students with books">
         </div>
-      </div>
-      <div class="simple-step-group">
-        <div class="simple-step-icon-above">
-          <img src="./assets/iconsax-status-up.png  " alt="Thrive In Studies" />
+        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Vector Graphic"
+            style="position: absolute; top: 500px; left: -550px; z-index: -1;">
+    </section>
+
+    <section class="features" id="features">
+        <div class="toolkit-card">
+            <h2 class="toolkit-title">
+                Your Toolkit for <span class="gradient-text">A Smarter Semester</span>
+            </h2>
+            <div class="mini-features-grid">
+                <div class="mini-feature-pair">
+                    <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/iconsax-book-saved.png" width="40" alt="Feature 1">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Enrolled Courses</h3>
+                        <p>Access course materials, syllabi, grades, and schedules for all your enrolled courses in one
+                            dedicated
+                            dashboard.</p>
+                    </div>
+                </div>
+                <div class="mini-feature-pair">
+                    <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/tracker.png" alt="Feature 2">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Study Tracker</h3>
+                        <p>Monitor your study hours, set goals, and visualize your progress across all your courses.</p>
+                    </div>
+                </div>
+                <div class="mini-feature-pair">
+                    <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/target.png" alt="Feature 3">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Roadmaps</h3>
+                        <p>Plan your entire academic journey, explore career paths, and visualize your required courses
+                            step-by-step.</p>
+                    </div>
+                </div>
+                <div class="mini-feature-pair">
+                    <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/chat.png" alt="Feature 4">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Discussion</h3>
+                        <p>Connect with classmates, ask questions, share insights, and form study groups in a supportive
+                            environment.</p>
+                        </div>
+                    </div>
+                    <div class="mini-feature-pair">
+                        <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/events.png" alt="Feature 5">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Events</h3>
+                        <p>Explore campus events, workshops, guest lectures, and social gatherings. Enhance your
+                            university
+                            experience.</p>
+                    </div>
+                </div>
+                <div class="mini-feature-pair">
+                    <div class="feature-icon-circle">
+                        <span class="feature-icon-bg">
+                            <img src="./assets/volume (1).png" alt="Feature 6">
+                        </span>
+                    </div>
+                    <div class="mini-feature-card">
+                        <h3 class="mini-card-title">Announcements</h3>
+                        <p>Stay informed with real-time announcements from your university, departments, and course
+                            instructors.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="star">
+            <img src="./assets/Star 1.png" alt="Star Image"
+            style="position: relative; top: 10px; left:75%; object-fit: cover; z-index: -1;">
+        <img src="./assets/Star 1.png" alt="Star Image"
+            style="position: relative; top: -15px; left: 35%; object-fit: cover; z-index: -1;">
+    </section>
+    <section class="how-it-work" id="how-it-work">
+        <div class="how-it-work-text">
+
+            <h2 class="how-it-work-title">How It Works</h2><br>
+            <h2 class="how-it-work-subtitle">Your Success in 3 Simple Steps</h2><br>
         </div>
-        <div class="simple-step-card">
-          <div class="simple-step-title">Thrive In Your Studies</div>
-          <div class="simple-step-desc">
-            Access all the resources you need, get timely reminders, and connect with a supportive community. It's time to reach your full potential.
-          </div>
+        <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" class="screenshot-img hide-img sss-img"
+        alt="Vector Graphic">
+    </section>
+    <section class="simple-steps-section">
+        <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" class=" ssss-img" alt="Vector Graphic">
+        <div class="main-steps-card">
+            <div class="simple-steps-container">
+                <div class="simple-step-group">
+                    <div class="simple-step-icon-above">
+                        <img src="./assets/iconsax-user.png" alt="Create Account" />
+                    </div>
+                    <div class="simple-step-card">
+                        <div class="simple-step-title">Create Your Account</div>
+                        <div class="simple-step-desc">
+                            Join our community in just a few clicks. It's quick, simple, and absolutely free
+                        </div>
+                    </div>
+                </div>
+                <div class="simple-step-group">
+                    <div class="simple-step-icon-above">
+                        <img src="./assets/Clip path group.png" alt="Personalize Dashboard" />
+                    </div>
+                    <div class="simple-step-card">
+                        <div class="simple-step-title">Personalize Your Dashboard</div>
+                        <div class="simple-step-desc">
+                            Input your class schedules, assignments, and exam dates. Our intuitive tools help you get
+                            organized in
+                            minutes.
+                        </div>
+                    </div>
+                </div>
+                <div class="simple-step-group">
+                    <div class="simple-step-icon-above">
+                        <img src="./assets/iconsax-status-up.png " alt="Thrive In Studies" />
+                    </div>
+                    <div class="simple-step-card">
+                        <div class="simple-step-title">Thrive In Your Studies</div>
+                        <div class="simple-step-desc">
+                            Access all the resources you need, get timely reminders, and connect with a supportive
+                            community. It's
+                            time to reach your full potential.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="simple-steps-cta">
+                <button class="simple-steps-btn">Organize Your Academic Life</button>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="simple-steps-cta">
-      <button class="simple-steps-btn">Organize Your Academic Life</button>
-    </div>
-  </div>
-</section>
-<section class="screenshot-section">
-  <div class="screenshots-gallery-overlap">
-    <img src="./assets/1440w light 2.png" alt="Student Portal 1" class="screenshot-img screenshot-img-back">
-    <img src="./assets/1440w light 1.png" alt="Student Portal 2" class="screenshot-img screenshot-img-front">
-  </div>
-</section>
-<section class="opinions">
-  <h2 class="opinions-title">Success Stories From Our Community</h2>
-  <div class="opinions-cards-row">
-    <div class="opinion-card-group">
-      <div class="opinion-icon-above">
-        <img src="./assets/Ellipse 1.png" alt="Opinion Icon 1" />
-      </div>
-      <div class="opinion-card">
-        <div class="opinion-card-title">Sarah Lee<br><span class="opinion-card-dept">Computer Science</span></div>
-        <div class="opinion-card-message">"This portal has transformed my academic life! I can finally keep track of everything in one place."</div>
-      </div>
-    </div>
-    <div class="opinion-card-group">
-      <div class="opinion-icon-above">
-        <img src="./assets/Ellipse 1 (1).png" alt="Opinion Icon 2" />
-      </div>
-      <div class="opinion-card">
-        <div class="opinion-card-title">Alex Johnson<br><span class="opinion-card-dept">Business Administration</span></div>
-        <div class="opinion-card-message">"The study tracker is a game-changer. I feel more organized and motivated than ever!"</div>
-      </div>
-    </div>
-  </div>
-  <div class="opinions-cta">
-    <button class="opinions-btn">Leave Your Comment</button>
-  </div>
-</section>
-<section class="contact-form-section">
-  <img src="./assets/Cheerful Young Woman with Book 2.png" alt="Decor Top" class="form-decor-top">
-  <div class="contact-form-card">
-    <h2 class="contact-form-title">Contact Us</h2>
-    <div class="contact-form-subtitle">Stay updated with our latest news and events</div>
-    <form class="contact-form-fields">
-      <div class="form-row">
-        <label class="form-label" for="contact-name">Name:</label><br>
-        <input type="text" id="contact-name" class="form-input"  required>
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="contact-email">Email:</label><br>  
-        <input type="email" id="contact-email" class="form-input"  required>
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="contact-message">Message:</label><br>
-        <textarea id="contact-message" class="form-textarea" rows="5"  required></textarea>
-      </div>
-      <div class="form-row">
-        <button type="submit" class="form-submit-btn">Get In Touch</button>
-      </div>
-    </form>
-  </div>
-  <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decor Bottom" width="665" class="form-decor-bottom">
-</section>
-<section class="team-section">
-  <img src="./assets/team-decor-bottom.png" alt="" class="team-decor-bottom">
-  <h2 class="team-title">Our Team</h2>
-  <div class="team-members">
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Dr. Emily Carter</div>
-      <div class="team-role">Lead Developer</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" ></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Michael Lee</div>
-      <div class="team-role">UI/UX Designer</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" ></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Sara Ahmed</div>
-      <div class="team-role">Community Manager</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" ></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">John Smith</div>
-      <div class="team-role">Backend Engineer</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" "></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Linda Zhao</div>
-      <div class="team-role">Frontend Engineer</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" "></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Carlos Ruiz</div>
-      <div class="team-role">QA Specialist</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" "></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-card-semicircle">
-        <img src="./assets/Rectangle 58.png" alt="Person Icon" class="team-icon">
-      </div>
-      <div class="team-name">Fatima Noor</div>
-      <div class="team-role">Product Owner</div>
-      <div class="team-socials">
-        <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn" "></a>
-        <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
-        <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
-      </div>
-    </div>
-  </div>
-</section>
-<footer class="footer">
-  <div style="text-align: center; background-color: #5A0F61;">
-    <div style="color: white; font-size: 32px;margin-bottom: 15px;font-style: normal; font-weight: 600;">St<span style="color: #FFA8A7;font-style: normal; font-weight: 600;">u</span>dent P<span style="color: #FFA8A7;font-style: normal; font-weight: 600;">o</span>rtal</div>
-      <div class="footer-links">
-        <a href="#" style="margin: 10px;">Reviews</a>
-        <a href="#" style="margin: 10px;">Our team</a>
-        <a href="#" style="margin: 10px;">Contact Us</a>
-    </div>
-  </div>
-  <script src="./js/loading.js"></script>
-  <script>
-  // Hide/show nav icon based on screen width
-  function toggleMobileMenuDisplay() {
-    var mobMenu = document.querySelector('.mob-menu');
-    if (!mobMenu) return;
-    if (window.innerWidth <= 600) {
-      mobMenu.style.display = 'block';
-    } else {
-      mobMenu.style.display = 'none';
-      // Also close menu if open
-      var navMenu = document.querySelector('.mobile-nav-menu');
-      if (navMenu) navMenu.classList.remove('open');
+    </section>
+    <section class="screenshot-section" id="Snapshots">
+        <div class="screenshots-gallery-overlap">
+            <img src="./assets/1440w light 2.png" alt="Student Portal 1" class="screenshot-img screenshot-img-back">
+            <img src="./assets/1440w light 1.png" alt="Student Portal 2" class="screenshot-img screenshot-img-front">
+        </div>
+    </section>
+    <section class="beginning-section" id="beginning-card" style="position: relative;">
+        <div class="beginning-decor-top">
+            <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
+        </div>
+        <div class="beginning-card beginning-flex-container">
+            <h2 class="beginning-title">How did we start</h2>
+            <div class="beginning-row">
+                <div class="beginning-content">
+                   <p>In 2024, <strong>Mazen</strong> came up with the idea of creating  
+a platform where university students could study, share resources, and connect. But the idea remained simple — a seed that hadn’t yet grown.
+<br><p>
+After a year - In 2025 - <strong>Mohamed</strong> came with a similar concept, but with a fresh  
+perspective focused on what students actually need in their academic journey. When <strong>Mohamed</strong> shared his vision, <strong>Mazen</strong> saw the spark of his old idea reignited — only stronger this time. They teamed up, determined to build something real and impactful.</p>
+</p>
+<p><strong>Shahd</strong>, a former member of the team, suggested creating a survey to gather feedback and opinions from students — a step that helped shape the direction of the platform based on real needs.</p>
+
+<p>To turn their vision into action, they reached out to <strong>Jana</strong>, a skilled programmer who helped lay the technical foundation. Soon after, <strong>Yasmine</strong>, a professional full-stack developer, joined to support the development process. The UI/UX team — <strong>Marwa</strong>, <strong>Hadeer</strong>, and <strong>Somaya</strong> — played a crucial role in designing the user experience and interface, ensuring the platform was both intuitive and visually appealing.</p>
+
+<p>Seven minds, one mission — to create a platform that transforms the student experience and brings the university community closer together.</p>
+
+                </div>
+                <div class="beginning-image-container">
+                    <img src="./assets/07f6dd25a32bd2ff52da6577db907c2d9698606d.png" alt="Our Beginning" class="beginning-side-image" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact-form-section" id="contact-form-section">
+        <img src="./assets/Cheerful Young Woman with Book 2.png" alt="Decor Top" class="form-decor-top">
+        <div class="contact-form-card">
+            <h2 class="contact-form-title">Contact Us</h2>
+            <div class="contact-form-subtitle">Stay updated with our latest news and events</div>
+            <form class="contact-form-fields">
+                <div class="form-row">
+                    <label class="form-label" for="contact-name">Name:</label><br>
+                    <input type="text" id="contact-name" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="contact-email">Email:</label><br>
+                    <input type="email" id="contact-email" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="contact-message">Message:</label><br>
+                    <textarea id="contact-message" class="form-textarea" rows="5" required></textarea>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="form-submit-btn">Get In Touch</button>
+                </div>
+            </form>
+        </div>
+        <div class="form-decor-bottom-container">
+            <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decor Bottom" class="form-decor-bottom">
+        </div>
+    </section>
+    <section class="team-section" id="team-section">
+        <img src="./assets/team-decor-bottom.png" alt="" class="team-decor-bottom">
+        <h2 class="team-title">Our Team</h2>
+        <div class="team-members">
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Mazen Mohsen</div>
+                <div class="team-role">Tech lead <br> Computer engineer, CU</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Mohamed Ahmed</div>
+                <div class="team-role">Frontend Developer <br> Computer engineer, CU</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Sara Ahmed</div>
+                <div class="team-role">Community Manager</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">John Smith</div>
+                <div class="team-role">Backend Engineer</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Linda Zhao</div>
+                <div class="team-role">Frontend Engineer</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Carlos Ruiz</div>
+                <div class="team-role">QA Specialist</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-semicircle">
+                    <img src="./assets/user.png" alt="Person Icon" class="team-icon">
+                </div>
+                <div class="team-name">Fatima Noor</div>
+                <div class="team-role">Product Owner</div>
+                <div class="team-socials">
+                    <a href="#"><img src="./assets/Group 4.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="./assets/Group 5.png" alt="Twitter"></a>
+                    <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
+                </div>
+            </div>
+        </div>
+        <div class="beginning-decor-top">
+            <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
+        </div>
+    </section>
+    <footer class="footer">
+        <div style="text-align: center; background-color: #5A0F61;">
+            <div style="color: white; font-size: 32px;margin-bottom: 15px;font-style: normal; font-weight: 600;">St<span
+                    style="color: #FFA8A7;font-style: normal; font-weight: 600;">u</span>dent P<span
+                    style="color: #FFA8A7;font-style: normal; font-weight: 600;">o</span>rtal</div>
+            <div class="footer-links">
+                <!--<a href="#" style="margin: 10px;">Reviews</a>-->
+                <a href="#Snapshots" class="footer-link" style="margin: 10px;">Snapshots</a>
+                <a href="#team-section" class="footer-link" style="margin: 10px;">Our team</a>
+                <a href="#contact-form-section" class="footer-link" style="margin: 10px;">Contact Us</a>
+            </div>
+        </div>
+        <script src="./js/loading.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const menuToggle = document.getElementById('mobile-menu-toggle');
+                const toggleIcon = document.getElementById('toggle-icon');
+                const sidebar = document.getElementById('sidebar');
+                const closeSidebar = document.getElementById('close-sidebar');
+                const sidebarLinks = document.querySelectorAll('#sidebar ul li a'); // Select all sidebar links
+
+                // Function to set the active link in the sidebar
+                function setActiveSidebarLink(targetId) {
+                    sidebarLinks.forEach(link => {
+                        link.classList.remove('sidebar-link-active');
+                    });
+                    const activeLink = document.querySelector(`#sidebar ul li a[data-section="${targetId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('sidebar-link-active');
+                    }
+                }
+
+                // Initial active link based on current hash, if any
+                const initialHash = window.location.hash.substring(1);
+                if (initialHash) {
+                    setActiveSidebarLink(initialHash);
+                } else {
+                    // Default to 'hero' if no hash
+                    setActiveSidebarLink('hero');
+                }
+
+                // Show/hide hamburger icon based on screen width
+                function updateMenuToggleVisibility() {
+                    if (window.innerWidth <= 768) {
+                        menuToggle.style.display = 'block';
+                    } else {
+                        menuToggle.style.display = 'none';
+                        sidebar.classList.remove('active'); // Close sidebar on larger screens
+                    }
+                }
+
+                window.addEventListener('resize', updateMenuToggleVisibility);
+                updateMenuToggleVisibility(); // run on initial load
+
+                // Open sidebar on hamburger click
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.add('active');
+                });
+
+                // Close sidebar on close icon click
+                if (closeSidebar) {
+                    closeSidebar.addEventListener('click', () => {
+                        sidebar.classList.remove('active');
+                    });
+                }
+
+                // Close sidebar when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (sidebar.classList.contains('active') &&
+                        !sidebar.contains(e.target) &&
+                        e.target !== menuToggle &&
+                        !menuToggle.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+
+                // Sidebar navigation with header offset
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function (e) {
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            setActiveSidebarLink(this.dataset.section);
+                            sidebar.classList.remove('active');
+                            // Scroll with header offset
+                            const header = document.querySelector('.main-header');
+                            const headerHeight = header ? header.offsetHeight : 0;
+                            const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                            window.scrollTo({
+                                top: sectionTop - headerHeight,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const sidebar = document.getElementById('sidebar');
+    const closeSidebar = document.getElementById('close-sidebar');
+    const sidebarLinks = document.querySelectorAll('#sidebar ul li a');
+
+    // Function to open sidebar
+    function openSidebar() {
+        sidebar.classList.add('active');
     }
-  }
-  window.addEventListener('resize', toggleMobileMenuDisplay);
-  window.addEventListener('DOMContentLoaded', toggleMobileMenuDisplay);
-</script>
- </body>
+
+    // Function to close sidebar
+    function closeSidebarFn() {
+        sidebar.classList.remove('active');
+    }
+
+    // Toggle sidebar on burger click
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openSidebar();
+    });
+
+    // Close sidebar on close button
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', closeSidebarFn);
+    }
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('active') &&
+            !sidebar.contains(e.target) &&
+            e.target !== menuToggle &&
+            !menuToggle.contains(e.target)) {
+            closeSidebarFn();
+        }
+    });
+
+    // Highlight active link + close sidebar
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            sidebarLinks.forEach(l => l.classList.remove('sidebar-link-active'));
+            this.classList.add('sidebar-link-active');
+            closeSidebarFn();
+        });
+    });
+
+    // Show burger icon if screen <= 1024px
+    function updateMenuToggleVisibility() {
+        if (window.innerWidth <= 1024) {
+            menuToggle.style.display = 'block';
+        } else {
+            menuToggle.style.display = 'none';
+            closeSidebarFn();
+        }
+    }
+
+    window.addEventListener('resize', updateMenuToggleVisibility);
+    updateMenuToggleVisibility();
+});
+const loginButton = document.getElementById('loginButton');
+const signupButton = document.getElementById('signupButton');
+const sidebarLoginButton = document.getElementById('sidebarLoginButton');
+const sidebarSignupButton = document.getElementById('sidebarSignupButton');
+
+// Add an event listener to the Login button (header)
+if (loginButton) {
+    loginButton.addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+}
+
+// Add an event listener to the Sign Up button (header)
+if (signupButton) {
+    signupButton.addEventListener('click', function() {
+        window.location.href = 'createprofile.html';
+    });
+}
+
+// Add event listeners for sidebar buttons
+if (sidebarLoginButton) {
+    sidebarLoginButton.addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+}
+if (sidebarSignupButton) {
+    sidebarSignupButton.addEventListener('click', function() {
+        window.location.href = 'createprofile.html';
+    });
+}
+
+// Smooth scroll for header nav links
+            document.addEventListener('DOMContentLoaded', () => {
+                const navLinks = document.querySelectorAll('.header-center .nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            section.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                });
+
+                // Smooth scroll for footer links
+                const footerLinks = document.querySelectorAll('.footer-link');
+                footerLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            section.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                });
+            });
+
+            // Smooth scroll for header and footer links with header offset
+            document.addEventListener('DOMContentLoaded', () => {
+                function scrollWithHeaderOffset(section) {
+                    if (!section) return;
+                    const header = document.querySelector('.main-header');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                    window.scrollTo({
+                        top: sectionTop - headerHeight,
+                        behavior: 'smooth'
+                    });
+                }
+
+                // Header nav links
+                const navLinks = document.querySelectorAll('.header-center .nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            scrollWithHeaderOffset(section);
+                        }
+                    });
+                });
+
+                // Footer links
+                const footerLinks = document.querySelectorAll('.footer-link');
+                footerLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const targetId = this.getAttribute('href').replace('#', '');
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                            e.preventDefault();
+                            scrollWithHeaderOffset(section);
+                        }
+                    });
+                });
+            });
+
+            // === Highlight nav and sidebar links on scroll ===
+            document.addEventListener('DOMContentLoaded', () => {
+                // Section IDs to track (must match hrefs and data-section)
+                const sectionIds = [
+                    'hero',
+                    'features',
+                    'Snapshots',
+                    'how-it-work',
+                    'beginning-card'
+                ];
+
+                // Get section elements
+                const sections = sectionIds.map(id => document.getElementById(id));
+                // Get header nav links
+                const navLinks = Array.from(document.querySelectorAll('.header-center .nav-link'));
+                // Get sidebar links
+                const sidebarLinks = Array.from(document.querySelectorAll('#sidebar ul li a'));
+
+                function getCurrentSection() {
+                    const header = document.querySelector('.main-header');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    let currentId = sectionIds[0];
+                    let maxVisible = 0;
+
+                    for (let i = 0; i < sections.length; i++) {
+                        const section = sections[i];
+                        if (!section) continue;
+                        const rect = section.getBoundingClientRect();
+                        // Calculate visible height of section in viewport
+                        const visible =
+                            Math.min(rect.bottom, window.innerHeight) -
+                            Math.max(rect.top, headerHeight);
+                        if (visible > maxVisible && visible > 0) {
+                            maxVisible = visible;
+                            currentId = sectionIds[i];
+                        }
+                    }
+                    return currentId;
+                }
+
+                function updateActiveLinks() {
+                    const currentId = getCurrentSection();
+
+                    // Header nav
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === '#' + currentId) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                    // Sidebar
+                    sidebarLinks.forEach(link => {
+                        if (
+                            link.getAttribute('href') === '#' + currentId ||
+                            link.dataset.section === currentId
+                        ) {
+                            link.classList.add('sidebar-link-active');
+                        } else {
+                            link.classList.remove('sidebar-link-active');
+                        }
+                    });
+                }
+
+                // Initial highlight
+                updateActiveLinks();
+
+                // Update on scroll
+                window.addEventListener('scroll', updateActiveLinks);
+            });
+        </script>
+    </footer>
+</body>
+
 </html>
