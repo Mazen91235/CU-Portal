@@ -129,7 +129,94 @@
             }
         }
 
+        .beginning-flex-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            margin-bottom: 10rem;
+        }
+        .beginning-title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 32px;
+            margin-top: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--words-gradiant, linear-gradient(90deg, #FFA8A7 40%, #881792 55%));
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .beginning-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 22px;
+            width: 100%;
+        }
+        .beginning-content {
+            flex: 1 1 0;
+            text-align: left;
+            font-size: 18px;
+            align-self: flex-start;
+            font-size: 1.15rem;
+            color: #22223b;
+            line-height: 1.7;
+        }
+        .beginning-image-container {
+            flex: 0 0 380px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            margin: 0;
+        }
+        .beginning-side-image {
+            max-width: 340px;
+            width: 100%;
+            height: auto;
+            
+            object-fit: contain;
+        }
+        @media (max-width: 1024px) {
+            .beginning-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            .beginning-image-container {
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                margin-top: -50px;
+            }
+            .beginning-side-image {
+                max-width: 40vw;
+                margin: 0 auto;
+            }
+        }
 
+        .form-decor-bottom-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 80px; /* Adjust as needed for how much of the image you want visible */
+        }
+        .form-decor-bottom {
+            width: 150%; /* Make image wider than container for partial display */
+            max-width: none;
+            min-width: 1000px; /* Prevents shrinking too much on small screens */
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            pointer-events: none;
+            user-select: none;
+        }
     </style>
 </head>
 
@@ -147,6 +234,7 @@
             <a href="#features" class="nav-link" style="font-size: 18px;">Features</a>
             <a href="#how-it-work" class="nav-link" style="font-size: 18px;">How to Start</a>
             <a href="#Snapshots" class="nav-link" style="font-size: 18px;">Snapshots</a>
+            <a href="#beginning-card" class="nav-link" style="font-size: 18px;">How We Started</a>
         </nav>
         <div class="header-right">
             <button class="btn login" id="loginButton">Login</button>
@@ -164,6 +252,8 @@
                 <li><a href="#features" class="sidebar-nav-link" data-section="features">Features</a></li>
                 <li><a href="#Snapshots" class="sidebar-nav-link" data-section="snapshots">Snapshots</a></li>
                 <li><a href="#how-it-work" class="sidebar-nav-link" data-section="how-it-work">How It Works</a></li>
+                <li><a href="#beginning-card" class="sidebar-nav-link" data-section="beginning-card">How We Started</a></li>
+
                 <hr>
                 <li><button class="btn login" id="sidebarLoginButton"
                         style="width: 90%; text-align: center; justify-content: center;">Login</button></li>
@@ -241,10 +331,10 @@
                         <h3 class="mini-card-title">Discussion</h3>
                         <p>Connect with classmates, ask questions, share insights, and form study groups in a supportive
                             environment.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="mini-feature-pair">
-                    <div class="feature-icon-circle">
+                    <div class="mini-feature-pair">
+                        <div class="feature-icon-circle">
                         <span class="feature-icon-bg">
                             <img src="./assets/events.png" alt="Feature 5">
                         </span>
@@ -266,13 +356,13 @@
                         <h3 class="mini-card-title">Announcements</h3>
                         <p>Stay informed with real-time announcements from your university, departments, and course
                             instructors.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="star">
-        <img src="./assets/Star 1.png" alt="Star Image"
+        </section>
+        <section class="star">
+            <img src="./assets/Star 1.png" alt="Star Image"
             style="position: relative; top: 10px; left:75%; object-fit: cover; z-index: -1;">
         <img src="./assets/Star 1.png" alt="Star Image"
             style="position: relative; top: -15px; left: 35%; object-fit: cover; z-index: -1;">
@@ -284,7 +374,7 @@
             <h2 class="how-it-work-subtitle">Your Success in 3 Simple Steps</h2><br>
         </div>
         <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" class="screenshot-img hide-img sss-img"
-            alt="Vector Graphic">
+        alt="Vector Graphic">
     </section>
     <section class="simple-steps-section">
         <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" class=" ssss-img" alt="Vector Graphic">
@@ -339,6 +429,33 @@
             <img src="./assets/1440w light 1.png" alt="Student Portal 2" class="screenshot-img screenshot-img-front">
         </div>
     </section>
+    <section class="beginning-section" id="beginning-card" style="position: relative;">
+        <div class="beginning-decor-top">
+            <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
+        </div>
+        <div class="beginning-card beginning-flex-container">
+            <h2 class="beginning-title">How did we start</h2>
+            <div class="beginning-row">
+                <div class="beginning-content">
+                   <p>In 2024, <strong>Mazen</strong> came up with the idea of creating  
+a platform where university students could study, share resources, and connect. But the idea remained simple — a seed that hadn’t yet grown.
+<br><p>
+After a year - In 2025 - <strong>Mohamed</strong> came with a similar concept, but with a fresh  
+perspective focused on what students actually need in their academic journey. When <strong>Mohamed</strong> shared his vision, <strong>Mazen</strong> saw the spark of his old idea reignited — only stronger this time. They teamed up, determined to build something real and impactful.</p>
+</p>
+<p><strong>Shahd</strong>, a former member of the team, suggested creating a survey to gather feedback and opinions from students — a step that helped shape the direction of the platform based on real needs.</p>
+
+<p>To turn their vision into action, they reached out to <strong>Jana</strong>, a skilled programmer who helped lay the technical foundation. Soon after, <strong>Yasmine</strong>, a professional full-stack developer, joined to support the development process. The UI/UX team — <strong>Marwa</strong>, <strong>Hadeer</strong>, and <strong>Somaya</strong> — played a crucial role in designing the user experience and interface, ensuring the platform was both intuitive and visually appealing.</p>
+
+<p>Seven minds, one mission — to create a platform that transforms the student experience and brings the university community closer together.</p>
+
+                </div>
+                <div class="beginning-image-container">
+                    <img src="./assets/07f6dd25a32bd2ff52da6577db907c2d9698606d.png" alt="Our Beginning" class="beginning-side-image" />
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="contact-form-section" id="contact-form-section">
         <img src="./assets/Cheerful Young Woman with Book 2.png" alt="Decor Top" class="form-decor-top">
         <div class="contact-form-card">
@@ -365,25 +482,6 @@
         <div class="form-decor-bottom-container">
             <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decor Bottom" class="form-decor-bottom">
         </div>
-    </section>
-     <section class="beginning-section" id="beginning" style="position: relative;">
-         <div class="beginning-decor-top">
-             <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
-         </div>
-         <div class="beginning-card">
-             <h2 class="beginning-title">How did we start</h2>
-             <div class="beginning-content">
-                <p>In 2024, <strong>Mazen</strong> came up with the idea of creating 
-                    a platform where university students could study, share resources, and connect. But the idea remained simple — a seed that hadn’t yet grown.
-
-A year later - in 2025 - <strong>Mohamed</strong> came with a similar concept, but with a fresh 
-perspective shaped by what students truly needed. When <strong>Mohamed</strong> shared his vision, <strong>Mazen</strong> saw the spark of his old idea reignited — only stronger this time. They teamed up, determined to build something real and impactful.</p>
-
-<p>To turn their vision into action, they reached out to <strong>Jana</strong>, a skilled programmer, who helped lay the technical foundation. Soon after, <strong>Yasmine</strong>, a professional full-stack developer, joined to bolster development. <strong>Marwa</strong> and <strong>Hadeer</strong>, two top UI/UX designers, completed the team, ensuring the platform would be both functional and beautifully designed.</p>
-
-<p>Seven minds, one mission — to create a platform that transforms the student experience and brings the university community closer together.</p>
-
-                </div></div>
     </section>
     <section class="team-section" id="team-section">
         <img src="./assets/team-decor-bottom.png" alt="" class="team-decor-bottom">
@@ -473,6 +571,9 @@ perspective shaped by what students truly needed. When <strong>Mohamed</strong> 
                     <a href="#"><img src="./assets/Group 6.png" alt="GitHub"></a>
                 </div>
             </div>
+        </div>
+        <div class="beginning-decor-top">
+            <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
         </div>
     </section>
     <footer class="footer">
@@ -730,6 +831,78 @@ if (sidebarSignupButton) {
                         }
                     });
                 });
+            });
+
+            // === Highlight nav and sidebar links on scroll ===
+            document.addEventListener('DOMContentLoaded', () => {
+                // Section IDs to track (must match hrefs and data-section)
+                const sectionIds = [
+                    'hero',
+                    'features',
+                    'Snapshots',
+                    'how-it-work',
+                    'beginning-card'
+                ];
+
+                // Get section elements
+                const sections = sectionIds.map(id => document.getElementById(id));
+                // Get header nav links
+                const navLinks = Array.from(document.querySelectorAll('.header-center .nav-link'));
+                // Get sidebar links
+                const sidebarLinks = Array.from(document.querySelectorAll('#sidebar ul li a'));
+
+                function getCurrentSection() {
+                    const header = document.querySelector('.main-header');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    let currentId = sectionIds[0];
+                    let maxVisible = 0;
+
+                    for (let i = 0; i < sections.length; i++) {
+                        const section = sections[i];
+                        if (!section) continue;
+                        const rect = section.getBoundingClientRect();
+                        // Calculate visible height of section in viewport
+                        const visible =
+                            Math.min(rect.bottom, window.innerHeight) -
+                            Math.max(rect.top, headerHeight);
+                        if (visible > maxVisible && visible > 0) {
+                            maxVisible = visible;
+                            currentId = sectionIds[i];
+                        }
+                    }
+                    return currentId;
+                }
+
+                function updateActiveLinks() {
+                    const currentId = getCurrentSection();
+
+                    // Header nav
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === '#' + currentId) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                    // Sidebar
+                    sidebarLinks.forEach(link => {
+                        if (
+                            link.getAttribute('href') === '#' + currentId ||
+                            link.dataset.section === currentId
+                        ) {
+                            link.classList.add('sidebar-link-active');
+                        } else {
+                            link.classList.remove('sidebar-link-active');
+                        }
+                    });
+                }
+
+                // Initial highlight
+                updateActiveLinks();
+
+                // Update on scroll
+                window.addEventListener('scroll', updateActiveLinks);
             });
         </script>
     </footer>
