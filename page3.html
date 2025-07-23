@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2 - Operating Systems</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/aasigmant.css">
+    <link rel="stylesheet" href="components/navbar.html" />
+  <link rel="stylesheet" href="components/sidebar.html" />
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <script src="js/loading.js"></script>
+
+</head>
+<body>
+    <div>
+    <div id="sidebar-container"></div>
+          <div id="content-wrapper" class="sidebar-hidden">
+         <div class="row">
+
+         <div id="navbar-container"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <a href="#" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Tasks
+            </a>
+        </div>
+        <div class="main-header">
+            <div class="title-section">
+                <h1>Assignment 2 - Operating Systems</h1>
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <i class="fas fa-desktop"></i>
+                        Operating Systems
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        Dr. Smith
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        Tuesday, July 16, 2024
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        Due 23:59
+                    </div>
+                    <span class="status-badge">Active</span>
+                </div>
+            </div>
+            <div class="points-section">
+                <div class="points">100 pts</div>
+                <div class="points-label">Total Points</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-file-text"></i>
+                            Assignment Description
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <p class="assignment-description">
+                            This assignment is based on synchronization problems with the NACHOS. The assignment consists of two parts and focuses on understanding process synchronization, different synchronization primitives, and classic algorithms like the Banker's Algorithm and Dining Philosophers Problem.
+                        </p>
+
+                        <div class="section">
+                            <h3 class="section-title">Assignment Objectives</h3>
+                            <p>Upon successful completion of this assignment, you will be able to:</p>
+                            <ol class="requirements-list">
+                                <li>Understand process synchronization problem solving procedures</li>
+                                <li>Understand the working principles of different synchronization primitives</li>
+                                <li>Understand algorithms like "Banker's Algorithm" for deadlock management</li>
+                                <li>Understand "Producer Consumer" algorithm task synchronization</li>
+                                <li>Understand "Dining Philosophers" Problem and write a program for it</li>
+                            </ol>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title">Task Details</h3>
+                            <p>Students should give a 5-10 minute presentation covering the following topics:</p>
+                            <ul class="deliverables-list">
+                                <li>Explain your group's solution and implementation</li>
+                                <li>Answer questions from the instructor</li>
+                                <li>Provide detailed understanding of the algorithms</li>
+                                <li>Demonstrate practical application scenarios</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title">File Formats</h3>
+                            <ul class="submission-list">
+                                <li>Text Entry</li>
+                                <li>Website URL</li>
+                                <li>Media recordings</li>
+                                <li>Student annotation</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title">Additional Requirements</h3>
+                            <ul class="grading-list">
+                                <li>Submit complete NACHOS implementation</li>
+                                <li>Provide working code for all algorithms</li>
+                                <li>Include performance analysis and testing</li>
+                                <li>Document all assumptions and design decisions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-paperclip"></i>
+                            Attachments & Resources
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="attachment-item">
+                            <div class="attachment-info">
+                                <div class="attachment-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="attachment-details">
+                                    <h4>Assignment-handout</h4>
+                                    <div class="attachment-size">PDF Document</div>
+                                </div>
+                            </div>
+                            <button class="download-button">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        </div>
+
+                        <div class="attachment-item">
+                            <div class="attachment-info">
+                                <div class="attachment-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="attachment-details">
+                                    <h4>Resource document</h4>
+                                    <div class="attachment-size">Study Material</div>
+                                </div>
+                            </div>
+                            <button class="download-button">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        </div>
+
+                        <div class="attachment-item">
+                            <div class="attachment-info">
+                                <div class="attachment-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div class="attachment-details">
+                                    <h4>quiz_questions</h4>
+                                    <div class="attachment-size">Assessment File</div>
+                                </div>
+                            </div>
+                            <button class="download-button">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="submission-card">
+                    <div class="submission-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-upload"></i>
+                            Submission Status
+                        </h2>
+                    </div>
+                    <div class="submission-content">
+                        <button class="submission-button">
+                            <i class="fas fa-check"></i>
+                            Add Submission
+                        </button>
+                        <a href="#" class="submission-link">Go To Submission</a>
+                        <div class="submission-status">
+                            <p><strong>Submission status:</strong> No submission</p>
+                            <p style="margin-top: 8px;"><strong>Grading status:</strong> Not graded</p>
+                            <p style="margin-top: 8px;"><strong>Time remaining:</strong> Assignment not started</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Quick Info
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="quick-info-item">
+                            <span class="quick-info-label">Assignment:</span>
+                            <span class="quick-info-value">100 pts</span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="quick-info-label">Available:</span>
+                            <span class="quick-info-value status-active">Yes</span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="quick-info-label">Due date:</span>
+                            <span class="quick-info-value">No due date</span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="quick-info-label">Last modified:</span>
+                            <span class="quick-info-value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth hover effects and interactions
+        document.querySelectorAll('.download-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Add download animation
+                const icon = this.querySelector('i');
+                const originalClass = icon.className;
+                
+                icon.className = 'fas fa-spinner fa-spin';
+                this.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    icon.className = 'fas fa-check';
+                    this.style.background = 'var(--active-green)';
+                    this.style.color = 'white';
+                    this.style.borderColor = 'var(--active-green)';
+                    this.innerHTML = '<i class="fas fa-check"></i>Downloaded';
+                    
+                    setTimeout(() => {
+                        icon.className = originalClass;
+                        this.style.background = '';
+                        this.style.color = '';
+                        this.style.borderColor = '';
+                        this.innerHTML = '<i class="fas fa-download"></i>Download';
+                        this.style.pointerEvents = '';
+                    }, 2000);
+                }, 1000);
+            });
+        });
+
+        // Add submission button interaction
+        document.querySelector('.submission-button').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            const originalText = this.innerHTML;
+            
+            icon.className = 'fas fa-spinner fa-spin';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Processing...';
+            this.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check"></i>Submitted Successfully!';
+                this.style.background = 'var(--active-green)';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.background = '';
+                    this.style.pointerEvents = '';
+                }, 3000);
+            }, 1500);
+        });
+
+        // Add subtle animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.card, .submission-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Initialize cards with slight delay for better UX
+        setTimeout(() => {
+            document.querySelectorAll('.card, .submission-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }, 100);
+    </script>
+    <script src="js/loading.js"></script>
+</body>
+</html>
