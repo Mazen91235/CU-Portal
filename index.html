@@ -434,7 +434,7 @@ background-clip: text;
             <img src="./assets/freepik--background-simple--inject-251.png" alt="Decor Top" class="beginning-decor-top-img">
         </div>
         <div class="beginning-card beginning-flex-container">
-            <h2 class="beginning-title">How did we start</h2>
+            <h2 class="beginning-title">How Did We Start</h2>
             <div class="beginning-row">
                 <div class="beginning-content">
                    <p>In 2024, <strong>Mazen</strong> came up with the idea of creating  
@@ -851,10 +851,12 @@ if (sidebarSignupButton) {
                 // Get sidebar links
                 const sidebarLinks = Array.from(document.querySelectorAll('#sidebar ul li a'));
 
+                let lastActiveId = sectionIds[0];
+
                 function getCurrentSection() {
                     const header = document.querySelector('.main-header');
                     const headerHeight = header ? header.offsetHeight : 0;
-                    let currentId = sectionIds[0];
+                    let currentId = null;
                     let maxVisible = 0;
 
                     for (let i = 0; i < sections.length; i++) {
@@ -876,9 +878,17 @@ if (sidebarSignupButton) {
                 function updateActiveLinks() {
                     const currentId = getCurrentSection();
 
+                    // Only update if currentId is not null and has a link
+                    if (currentId && (
+                        navLinks.some(link => link.getAttribute('href') === '#' + currentId) ||
+                        sidebarLinks.some(link => link.getAttribute('href') === '#' + currentId || link.dataset.section === currentId)
+                    )) {
+                        lastActiveId = currentId;
+                    }
+
                     // Header nav
                     navLinks.forEach(link => {
-                        if (link.getAttribute('href') === '#' + currentId) {
+                        if (link.getAttribute('href') === '#' + lastActiveId) {
                             link.classList.add('active');
                         } else {
                             link.classList.remove('active');
@@ -888,8 +898,8 @@ if (sidebarSignupButton) {
                     // Sidebar
                     sidebarLinks.forEach(link => {
                         if (
-                            link.getAttribute('href') === '#' + currentId ||
-                            link.dataset.section === currentId
+                            link.getAttribute('href') === '#' + lastActiveId ||
+                            link.dataset.section === lastActiveId
                         ) {
                             link.classList.add('sidebar-link-active');
                         } else {
