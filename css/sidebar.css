@@ -349,20 +349,29 @@ li{
             justify-content: center;
             gap: 15px;
         }
-
+.popup-icon{
+  width: 60px; 
+  height: 60px; 
+  margin-bottom: -35px;
+}
         @media (max-width: 768px) {
             .popup-box {
                 flex-direction: row;
-                height: auto;
-                overflow-y: auto;
+                height: 250px;
+                width: 450px;
                 padding: 15px;
             }
+.popup-icon{
+  width: 40px; 
+  height: 40px; 
+    margin-bottom: 3px;
 
+}
             .popup-img {
-                margin: 0 auto 10px;
                 width: 60%;
-                max-width: 300px;
+                max-width: 200px;
                 height: 200px;
+                
             }
 
             .popup-box.confirm span {
@@ -372,7 +381,7 @@ li{
             }
 
             .popup-box.confirm h2 {
-                margin-top: 20px !important;
+                margin-top: 18px !important;
 
             }
 
@@ -392,16 +401,18 @@ li{
             }
 
             .popup-content h2 {
-                margin-top: 10px;
-                font-size: 20px;
+                margin-top: 6px;
+                font-size: 18px;
             }
 
             .popup-content p {
-                font-size: 12px !important;
+             margin-top: 0 !important;
+
+                font-size: 10px !important;
             }
 
             .popup-content button {
-                font-size: 14px !important;
+                font-size: 12px !important;
                 margin-top: 0 !important;
             }
 
@@ -410,8 +421,8 @@ li{
             }
 
             .gradient-spinner {
-                width: 50px;
-                height: 50px;
+                width: 30px;
+                height: 30px;
             }
         }
 
@@ -734,4 +745,30 @@ overflow: scroll;
 background-color: #F5ECFE;
 padding: 4px 8px;
 border-radius: 6px;
+}
+
+
+.popup-btn {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-btn-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: rgba(255, 255, 255, 0.3);
+  transition: width 5s linear;
+    z-index: 0;
+}
+
+.popup-btn-text {
+    position: relative;
+    z-index: 1;
 }
