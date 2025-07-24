@@ -1,4 +1,5 @@
   document.addEventListener('DOMContentLoaded', function() {
+    
       const navLinks = document.querySelectorAll('.header-center a');
       
       navLinks.forEach(link => {
@@ -13,6 +14,7 @@
         });
       });
     });
+    
     document.addEventListener("DOMContentLoaded", () => {
       // Load navbar
       fetch("/components/navbar.html")
@@ -80,6 +82,7 @@
                 console.warn("Toggle failed. Elements missing:", { toggleButton, sidebar, contentWrapper });
               }
 
+              
           // ✅ HIGHLIGHT ACTIVE NAV ITEM HERE
           const navItems = document.querySelectorAll('.nav-item');
           const currentPage = window.location.pathname.split('/').pop();
@@ -93,12 +96,44 @@
               navItems.forEach(i => i.classList.remove('active'));
               item.classList.add('active');
             }
-          });
+          }
+        );
             });
         });
     });
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  const navItems = document.querySelectorAll('.nav-item');
+
+  navItems.forEach(item => {
+    const link = item.querySelector('a.nav-link');
+
+    if (!link) return;
+
+    // If the link is a collapse toggle
+    if (link.getAttribute('data-bs-toggle') === 'collapse') {
+      // Observe the aria-expanded state
+      const observer = new MutationObserver(() => {
+        if (link.getAttribute('aria-expanded') === 'true') {
+          item.classList.add('active');
+          link.classList.add('active');
+        } else {
+          item.classList.remove('active');
+          link.classList.remove('active');
+        }
+      });
+
+      observer.observe(link, { attributes: true, attributeFilter: ['aria-expanded'] });
+
+      // Initial check on page load
+      if (link.getAttribute('aria-expanded') === 'true') {
+        item.classList.add('active');
+        link.classList.add('active');
+      }
+    }
+  });
+});
 
     document.addEventListener("DOMContentLoaded", function () {
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

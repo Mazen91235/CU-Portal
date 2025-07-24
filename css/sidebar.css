@@ -772,3 +772,32 @@ border-radius: 6px;
     position: relative;
     z-index: 1;
 }
+
+.collaplink{
+  font-size: 14px;
+  text-decoration: none;
+  color: #6C6C6C;
+  align-items: center;
+  margin-left: 14px;
+
+}
+.collaplink:hover{
+color:#5A0F61}
+
+.nav-link[aria-expanded="true"] .fa-chevron-down {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+.nav-link .fa-chevron-down {
+  transition: transform 0.3s ease;
+}
+#accountCollapse li{
+margin-bottom: -10px;}
+#accountCollapse{
+  justify-content: center;
+  align-items: center;
+}
+
+
+
