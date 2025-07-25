@@ -12,6 +12,24 @@
     <script src="./js/loading.js"></script>
     <script src="./js/sidebar.js"></script>
     <title>Calender</title>
+    <style>
+      /* Tablet responsiveness */
+      @media (min-width: 768px) and (max-width: 1024px) {
+        #calendar-main {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+        .calendar-title, .calendar-subtitle {
+          font-size: 1.5rem;
+        }
+        .calendar-card {
+          max-width: 100%;
+        }
+        .event-details-card.card, .card.calendar-card {
+          padding: 2rem 1rem;
+        }
+      }
+    </style>
 </head>
 <body>
 <!-- Navbar -->
@@ -20,7 +38,7 @@
 <div id="sidebar-container"></div>
 
 <!-- Main content -->
-<div class="container mt-5" id="calendar-main">
+<div class="calendar-main" id="calendar-main">
     <!-- Moved header and subtitle outside the card -->
     <h2 class="calendar-title text-center mb-3">Student Calendar</h2>
     <p class="calendar-subtitle text-center mb-4">Keep track of your academic schedule</p>
@@ -55,9 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             document.getElementById('sidebar-container').innerHTML = data;
             // Initialize sidebar toggle logic after sidebar is loaded
-            if (typeof initSidebar === 'function') {
-                initSidebar();
-            }
+            
         })
         .catch(err => {
             console.error('Sidebar load error:', err);
@@ -298,5 +314,11 @@ document.addEventListener("DOMContentLoaded", function() {
     renderDetails();
 });
 </script>
+ <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script src="./js/loading.js"></script>
+
 </body>
 </html>
