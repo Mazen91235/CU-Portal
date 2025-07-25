@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="./css/calendercss.css" />
-    <link rel="stylesheet" href="css/sidebar.css" />
-    <link rel="stylesheet" href="css/dashboard.css" />
-    <script src="js/loading.js"></script>
-    <script src="js/sidebar.js"></script>
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+    <script src="./js/loading.js"></script>
+    <script src="./js/sidebar.js"></script>
     <title>Calender</title>
 </head>
 <body>
@@ -21,9 +21,10 @@
 
 <!-- Main content -->
 <div class="container mt-5" id="calendar-main">
-    <div class="card p-4 mb-4">
-        <h2 class="text-center mb-3" style="font-weight:600;">Student Calendar</h2>
-        <p class="text-center mb-4" style="color:#888;">Keep track of your academic schedule</p>
+    <!-- Moved header and subtitle outside the card -->
+    <h2 class="calendar-title text-center mb-3">Student Calendar</h2>
+    <p class="calendar-subtitle text-center mb-4">Keep track of your academic schedule</p>
+    <div class="card calendar-card p-4 mb-4">
         <!-- Calendar Section -->
         <div id="calendar-section-wrapper" class="calendar-section-wrapper">
             <div id="calendar-section"></div>
@@ -92,6 +93,12 @@ document.addEventListener("DOMContentLoaded", function() {
     let selectedDate = null;
     let currentMonth = 6; // July (0-based)
     let currentYear = 2025;
+
+    // Select today's date if in current month/year
+    const today = new Date();
+    if (today.getFullYear() === currentYear && today.getMonth() === currentMonth) {
+        selectedDate = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    }
 
     function renderCalendar(year, month) {
         const today = new Date();
@@ -230,58 +237,43 @@ document.addEventListener("DOMContentLoaded", function() {
                 `;
             } else {
                 // Events for selected day
-                imgSrc = "assets/SVG.png";
+                imgSrc = ""; // No image, use icon
                 imgAlt = "calendar";
                 title = dateStr;
                 eventList = events.map(ev => {
                     if (ev.type === "event") {
                         return `
                             <div class="event-detail-card mb-3">
-                                <div class="d-flex align-items-center">
-                                    <span class="event-dot event-dot-event me-2"></span>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-semibold">${ev.title} <span class="badge badge-event ms-1">Event</span></div>
-                                        <div class="small text-muted mt-1"><i class="fa fa-clock me-1"></i>${ev.time || ""} <i class="fa fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
-                                        <div class="small mt-1">${ev.prof || ""}</div>
-                                    </div>
-                                    <button class="btn btn-view btn-event ms-3"> <i class="fa fa-eye me-1"></i>View Event</button>
-                                </div>
+                                <div class="fw-semibold">${ev.title} <span class="badge badge-event ms-1">Event</span></div>
+                                <div class="small text-muted mt-1"><i class="far fa-clock me-1"></i>${ev.time || ""} <i class="fa-solid fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
+                                <div class="small mt-1">${ev.prof || ""}</div>
+                                <button class="btn btn-view btn-event"><i class="far fa-eye me-1"></i>View Event</button>
                             </div>
                         `;
                     }
                     if (ev.type === "assignment") {
                         return `
                             <div class="event-detail-card mb-3">
-                                <div class="d-flex align-items-center">
-                                    <span class="event-dot event-dot-assignment me-2"></span>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-semibold">${ev.title} 
-                                            <span class="badge badge-assignment ms-1">Assignment</span>
-                                            <span class="badge badge-active ms-1">${ev.status}</span>
-                                        </div>
-                                        <div class="small text-muted mt-1"><i class="fa fa-clock me-1"></i>${ev.due ? "Due: " + ev.due : ""} <i class="fa fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
-                                        <div class="small mt-1">${ev.prof || ""}</div>
-                                    </div>
-                                    <button class="btn btn-view btn-assignment ms-3"><i class="fa fa-eye me-1"></i>View Assignment</button>
+                                <div class="fw-semibold">${ev.title} 
+                                    <span class="badge badge-assignment ms-1">Assignment</span>
+                                    <span class="badge badge-active ms-1">${ev.status}</span>
                                 </div>
+                                <div class="small text-muted mt-1"><i class="far fa-clock me-1"></i>${ev.due ? "Due: " + ev.due : ""} <i class="fa-solid fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
+                                <div class="small mt-1">${ev.prof || ""}</div>
+                                <button class="btn btn-view btn-assignment"><i class="far fa-eye me-1"></i>View Assignment</button>
                             </div>
                         `;
                     }
                     if (ev.type === "exam") {
                         return `
                             <div class="event-detail-card mb-3">
-                                <div class="d-flex align-items-center">
-                                    <span class="event-dot event-dot-exam me-2"></span>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-semibold">${ev.title} 
-                                            <span class="badge badge-exam ms-1">Exam</span>
-                                            <span class="badge badge-due ms-1">${ev.status}</span>
-                                        </div>
-                                        <div class="small text-muted mt-1"><i class="fa fa-clock me-1"></i>${ev.time || ""} <i class="fa fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
-                                        <div class="small mt-1">${ev.prof || ""}</div>
-                                    </div>
-                                    <button class="btn btn-view btn-exam ms-3"><i class="fa fa-eye me-1"></i>View Exam</button>
+                                <div class="fw-semibold">${ev.title} 
+                                    <span class="badge badge-exam ms-1">Exam</span>
+                                    <span class="badge badge-due ms-1">${ev.status}</span>
                                 </div>
+                                <div class="small text-muted mt-1"><i class="far fa-clock me-1"></i>${ev.time || ""} <i class="fa-solid fa-location-dot ms-2 me-1"></i>${ev.location || ""}</div>
+                                <div class="small mt-1">${ev.prof || ""}</div>
+                                <button class="btn btn-view btn-exam"><i class="far fa-eye me-1"></i>View Exam</button>
                             </div>
                         `;
                     }
@@ -290,8 +282,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 content = `
                     <div class="event-details-card card p-4" style="background:#fff;border:none;box-shadow:0 2px 16px 0 rgba(44,44,44,0.08);">
                         <div class="d-flex align-items-center mb-4" style="gap:16px;">
-                            <img src="${imgSrc}" alt="${imgAlt}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;margin-right:8px;">
-                            <span style="color:#6c2eb7;font-size:1.1rem;font-weight:600;vertical-align:middle;">${title}</span>
+                            <i class="far fa-calendar"></i>
+                            <span style="color:rgba(54, 61, 73, 1);font-size:1.1rem;font-weight:600;vertical-align:middle;">${title}</span>
                         </div>
                         ${eventList}
                     </div>
