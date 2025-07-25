@@ -486,7 +486,7 @@
     }
     .btn-view {
         font-size: 0.85rem;
-        margin-top: 204px !important; /* Increased space above button */
+        margin-top: 32px !important; /* Increased space above button */
         border-radius: 7px;
         gap: 2px;
     }
