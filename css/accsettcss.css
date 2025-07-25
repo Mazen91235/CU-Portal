@@ -1,0 +1,130 @@
+.personal-details-header {
+  margin-bottom: 0.5rem;
+}
+.personal-details-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+}
+.personal-details-underline {
+  width: 120px;
+  height: 2px;
+  background: rgba(90, 15, 97, 1);
+ margin-left: 30px;
+  margin-top: 4px;
+  border-radius: 2px;
+}
+.personal-details-card {
+  border-radius: 16px;
+  background: #fff;
+  border-style: none;
+  width: 90%;
+  margin-top: 2rem;
+  padding: 2rem;
+  box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
+}
+.personal-details-avatar {
+  width: 79px;
+  height: 79px;
+  object-fit: cover;
+}
+.btn-purple {
+  background: rgba(90, 15, 97, 1) !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 12px !important;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none !important;
+}
+.personal-details-remove {
+  background: rgba(150, 150, 150, 0.69) !important;
+  font-weight: 500;
+  border-radius: 12px !important;
+  color: #fff !important;
+  min-width: 180px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none !important;
+}
+.personal-details-label {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.38);
+}
+.personal-details-save {
+  width: 260px;
+  font-weight: 500;
+  font-size: 18px;
+  border-radius: 12px;
+  background: rgba(90, 15, 97, 1);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+}
+.personal-details-google {
+  width: 260px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  color: #333;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+}
+.personal-details-google-img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Input fields styling */
+.personal-details-card .form-control,
+.personal-details-card .form-select {
+  border-radius: 12px;
+  border: 1px solid #E0E0E0;
+  background: #fff;
+  font-size: 15px;
+  color: #333;
+  height: 44px;
+  box-shadow: none;
+  padding-left: 16px;
+  padding-right: 40px;
+}
+.personal-details-card .form-control::placeholder,
+.personal-details-card .form-select option {
+  color: #BDBDBD;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  opacity: 1;
+}
+.personal-details-card .input-group-text {
+  background: #fff;
+  border: none;
+  color: #BDBDBD;
+  font-size: 18px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.personal-details-card .input-group {
+  align-items: center;
+}
+.personal-details-card .form-select {
+  border-radius: 12px;
+  border: 1px solid #E0E0E0;
+  background: #fff;
+  font-size: 15px;
+  color: #333;
+  height: 44px;
+  padding-left: 40px;
+}
+.personal-details-card .input-group-text i {
+  font-size: 18px;
+  color: #BDBDBD;
+  margin-left: 0;
+  margin-right: 0;
+}

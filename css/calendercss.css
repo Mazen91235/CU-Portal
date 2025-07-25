@@ -245,6 +245,7 @@
     right: 20px;
     bottom: 16px;
     margin: 0;
+    padding-top: 10px;
     /* Make sure it overlays content, not requiring extra space */
 }
 
@@ -401,20 +402,12 @@
     box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     background: #fff;
     border: none;
-    width: 100%;
 }
 
 /* Padding adjustments for calendar main section */
 #calendar-main {
     padding-top: 0.75rem;
     padding-bottom: 2rem;
-}
-
-/* Ensure calendar-main has 90% width on all screens */
-.calendar-main {
-  width: 90vw;
-  max-width: 90vw;
-  margin: 0 auto;
 }
 
 /* Responsive styles for mobile */
@@ -493,7 +486,7 @@
     }
     .btn-view {
         font-size: 0.85rem;
-        padding: 5px 14px;
+        margin-top: 204px !important; /* Increased space above button */
         border-radius: 7px;
         gap: 2px;
     }
