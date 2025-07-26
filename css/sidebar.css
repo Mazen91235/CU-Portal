@@ -4,6 +4,16 @@ body {
   margin: 0;
   padding: 0;
 }
+/* Content wrapper shifts right when sidebar is visible */
+#content-wrapper {
+  margin-left: 256px; /* Sidebar width */
+  transition: margin-left 0.3s ease;
+  
+}
+
+#content-wrapper.sidebar-hidden {
+  margin-left: 0;
+}
 .nav-item.active {
   background: linear-gradient(90deg, #5A0F61, #FFA8A7);
   border-radius: 10px;

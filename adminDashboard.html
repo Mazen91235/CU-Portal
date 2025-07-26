@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="./components/navbar.html" />
+    <link rel="stylesheet" href="./components/sidebar.html" />
+    <link rel="stylesheet" href="./components/toasts.html" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/adminDashboard.css" />
+
+</head>
+
+<body>
+    <div id="sidebar-container"></div>
+
+    <!-- Content wrapper: navbar + main content -->
+    <div id="content-wrapper" class="sidebar-hidden">
+
+        <div id="navbar-container" class="fixed-top"></div>
+        <div id="main-content" class="p-4 mt-5">
+            <div id="header" class="d-flex justify-content-start align-items-center shadow ">
+                <img id="avatar" src="./assets/avatar.jpg" class="rounded-circle">
+                <div class="gradient-container">
+                    <h1 id="user" class="gradient-text">Hello, Yasmeen</h1>
+                    <h1 class="gradient-text">welcome back</h1>
+                </div>
+
+            </div>
+            <div class="dropdown">
+                <button class="dropdown-tog" id="dropdownBtn">
+                    <span id="req-period">This week</span>
+                    <span class="arrow">&#9662;</span>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <input type="text" placeholder="Custom" class="custom-input" />
+                    <ul>
+                        <li>This Month</li>
+                        <li>Past 3 Months</li>
+                        <li>Past 6 Months</li>
+                        <li>This Year</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center bg-white shadow " id="cards">
+
+                <div class="card-item d-flex col-6" style="background-color: #BA68C81A; " id="students">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (1).svg">
+                            Total Students</p>
+                        <p class="in-period">+125 new this week</p>
+
+                    </div>
+                    <h1 class="total">12.00K</h1>
+
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #F973161A;" id="admins">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Group (1).svg">
+                            Site Admins</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #FDA4AF1A;" id="Representatives">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (2).svg">
+                            Representatives</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #D3DEF152;" id="Materials">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (3).svg">
+                            Materials</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #D8B4FE1A;" id="Grades">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Group (2).svg">
+                            Grades</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #C4B5FD1A;" id="Total-Courses">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (4).svg">
+                            Total Courses</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #A5B4FC1A;" id="Sessions">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/session-svgrepo-com 1.svg">
+                            Sessions</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #0A84FF1A;" id="Active-Tasks">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/iconsax-calendar-search.svg">
+                            Active Tasks</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #93C5FD1A;" id="Task-Attachments">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/attachment-svgrepo-com 1.svg">
+                            Task Attachments</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #7DD3FC1A;" id="Tasks-submitted">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/submit-success-check-mark-svgrepo-com 1.svg">
+                            Tasks submitted</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #94E9B81A;" id="exams">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (5).svg">
+                            Exams</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #7DD3FC1A;" id="Announcements">
+                    <div class="mt-2">
+                        <p class="h-card"> <img style="margin-right: 2px;"
+                                src="./assets/announcement-megaphone-svgrepo-com 2.svg">
+                            Announcements</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #5EEAD41A;" id="announ-attachment">
+                    <div class="mt-2">
+                        <p class="h-card"> <img style="margin-right: 2px;"
+                                src="./assets/announcement-megaphone-svgrepo-com 2.svg">
+                            Announ.Attachment</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #6EE7B71A;" id="Events">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (6).svg">
+                            Events </p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #86EFAC1A;" id="Timetables">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Group (3).svg">
+                            Timetables</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #BEF2641A;" id="Public-Timetables">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Group (3).svg">
+                            Public Timetables</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #7DD3FC1A;" id="Timetable-Tasks">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Group (3).svg">
+                            Timetable Tasks</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #FCD34D1A;" id="Roadmaps">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/Clip path group (7).svg">
+                            Roadmaps</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #FDBA741A;" id="Questions">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/question-answer-help-svgrepo-com 1.svg">
+                            Questions</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+                <div class="card-item d-flex col-6" style="background-color: #FCA5A51A;" id="Answers">
+                    <div class="mt-2">
+                        <p class="h-card"> <img src="./assets/question-and-answer-svgrepo-com 1.svg">
+                            Answers</p>
+                        <p class="in-period">+ new in this period</p>
+
+                    </div>
+                    <h1 class="total">89</h1>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./js/loading.js"></script>
+    <script>
+        const dropdownBtn = document.getElementById("dropdownBtn");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+
+        dropdownBtn.addEventListener("click", () => {
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -9,16 +9,7 @@ html, body {
 background:linear-gradient(90deg, #FAF5FF, #FFFFFF);}
 
 
-/* Content wrapper shifts right when sidebar is visible */
-#content-wrapper {
-  margin-left: 256px; /* Sidebar width */
-  transition: margin-left 0.3s ease;
-  
-}
 
-#content-wrapper.sidebar-hidden {
-  margin-left: 0;
-}
 
 
 #header{

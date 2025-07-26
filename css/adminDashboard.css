@@ -1,0 +1,141 @@
+#header{
+height: 250px;
+  width: 98%;
+  background-color: #FFFFFF;
+border-radius: 10px;
+overflow: hidden;
+margin-bottom: 20px;
+}
+#avatar{
+     display: inline-block;
+  height: 220px; 
+  width: 220px;
+object-fit: cover;  
+margin-left: 40px;
+margin-right: 20px;
+}
+
+.gradient-container {
+  display: inline-block;
+  background: linear-gradient(to bottom, #FFA8A7, #881792);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.gradient-text {
+  font-size: 48px;
+  font-weight: 500;
+  margin: 0;
+  color: transparent;
+   background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#cards{
+  width: 100%;
+border-radius: 10px;
+}
+#engagement{
+    width: 700px;
+}
+.card-item {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    width: 640px;
+    justify-content: space-between;
+    align-items: center;
+    color: #545454;
+}
+.h-card{
+    font-weight: 500;
+    font-size: 22px;
+}
+@media screen and (max-width: 766px) {
+  .card-item{
+    width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  #avatar{
+    width: 100px ;
+    height: 100px ;
+    margin-left: 20px;
+
+  }
+#header{
+  height: 180px
+}
+.gradient-text{
+  font-size: 30px;
+}
+}
+.dropdown {
+  position:relative;
+  display:block;
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+float: right;
+margin-right: 50px;
+}
+
+.dropdown-tog {
+  background: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-size: 18px;
+  width: 190px;
+  text-align: left;
+}
+
+.arrow {
+  float: right;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 100%;
+  height: 270px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  margin-top: 8px;
+  z-index: 1;
+  padding: 8px 0;
+  overflow-y: scroll;
+}
+
+.custom-input {
+  width: 90%;
+  margin: 0 auto 8px;
+  display: block;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+  color: #555;
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-menu li {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  height: 50px;
+  border-radius: 10px;
+  margin: 1;
+}
+
+.dropdown-menu li:hover {
+  background-color: #5A0F611A;
+}

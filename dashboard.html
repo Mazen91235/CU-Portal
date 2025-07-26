@@ -28,66 +28,64 @@
 
   <!-- Content wrapper: navbar + main content -->
   <div id="content-wrapper" class="sidebar-hidden">
-    <div class="row">
 
-      <div id="navbar-container" class="fixed-top"></div>
-      <div id="main-content" class="p-4 mt-5">
-        <div id="header" class="d-flex justify-content-between align-items-center ">
-          <div id="r-header" class="d-flex flex-column align-items-start gap-3">
-            <h3 id="welcome-message" class="m-0"> Welcome back, Yasmeen! 👋</h3>
-            <p id="quot" class="m-0">Ready to make today productive?</p>
-            <div class="quote-box">
-              <p id="quot2" class="m-0">Every expert was once a beginner. Keep learning! 📚</p>
-            </div>
-          </div>
-
-          <div id="f-header" class="emoji-group position-relative">
-            <p id="cap" style="width: 60px; height: 60px; font-size: 56px; margin: 0; opacity: 0.2; ">
-              🎓
-            </p>
-            <p id="rocket" style="width: 60px; height: 60px; font-size: 100px; margin: 0;  ">
-              🚀
-            </p>
-
-            <p id="star" style="width: 60px; height: 60px;  font-size: 28px; margin: 0; opacity: 0.2; ">⭐</p>
+    <div id="navbar-container" class="fixed-top"></div>
+    <div id="main-content" class="p-4 mt-5">
+      <div id="header" class="d-flex justify-content-between align-items-center ">
+        <div id="r-header" class="d-flex flex-column align-items-start gap-3">
+          <h3 id="welcome-message" class="m-0"> Welcome back, Yasmeen! 👋</h3>
+          <p id="quot" class="m-0">Ready to make today productive?</p>
+          <div class="quote-box">
+            <p id="quot2" class="m-0">Every expert was once a beginner. Keep learning! 📚</p>
           </div>
         </div>
-        <div class="row mt-3">
-          <div class="col-lg-8 col-md-12 mb-3 mt-4">
-            <div class=" order-sm-1 calendar-container p-4 shadow bg-white rounded-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold">Calendar</h4>
-                <div>
-                  <button id="prev-month" class="btn btn-light">
-                    < </button>
-                      <span id="current-month" class="mx-2 fw-semibold text-purple">July 2025</span>
-                      <button id="next-month" class="btn btn-light">></button>
-                </div>
+
+        <div id="f-header" class="emoji-group position-relative">
+          <p id="cap" style="width: 60px; height: 60px; font-size: 56px; margin: 0; opacity: 0.2; ">
+            🎓
+          </p>
+          <p id="rocket" style="width: 60px; height: 60px; font-size: 100px; margin: 0;  ">
+            🚀
+          </p>
+
+          <p id="star" style="width: 60px; height: 60px;  font-size: 28px; margin: 0; opacity: 0.2; ">⭐</p>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-8 col-md-12 mb-3 mt-4">
+          <div class=" order-sm-1 calendar-container p-4 shadow bg-white rounded-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="fw-bold">Calendar</h4>
+              <div>
+                <button id="prev-month" class="btn btn-light">
+                  < </button>
+                    <span id="current-month" class="mx-2 fw-semibold text-purple">July 2025</span>
+                    <button id="next-month" class="btn btn-light">></button>
               </div>
-              <div class="calendar-header d-grid text-center fw-semibold mb-2">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
+            </div>
+            <div class="calendar-header d-grid text-center fw-semibold mb-2">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+
+            <div id="calendar-grid" class="calendar-grid">
+              <!-- Weekdays start on Monday -->
+              <div class="calendar-cell empty"></div> <!-- Monday -->
+
+              <!-- July 1st is Tuesday -->
+              <div class="calendar-cell">
+                <span class="day-number">1</span>
+
               </div>
-
-              <div id="calendar-grid" class="calendar-grid">
-                <!-- Weekdays start on Monday -->
-                <div class="calendar-cell empty"></div> <!-- Monday -->
-
-                <!-- July 1st is Tuesday -->
-                <div class="calendar-cell">
-                  <span class="day-number">1</span>
-
-                </div>
-                <div class="calendar-cell"><span class="day-number">2</span></div>
-                <div class="calendar-cell"><span class="day-number">3</span></div>
-                <div class="calendar-cell"><span class="day-number">4</span></div>
-                <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                  title="
+              <div class="calendar-cell"><span class="day-number">2</span></div>
+              <div class="calendar-cell"><span class="day-number">3</span></div>
+              <div class="calendar-cell"><span class="day-number">4</span></div>
+              <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="
   <div class='mb-2 d-flex align-items-start'>
     <span class='dot bg-warning me-2 mt-1'></span>
     <div>
@@ -103,21 +101,20 @@
     </div>
   </div>
 ">
-                  <span class="day-number">5</span>
-                  <div class="dots">
-                    <span class="dot bg-warning"></span>
-                    <span class="dot bg-success"></span>
-                  </div>
+                <span class="day-number">5</span>
+                <div class="dots">
+                  <span class="dot bg-warning"></span>
+                  <span class="dot bg-success"></span>
                 </div>
-                <div class="calendar-cell"><span class="day-number">6</span></div>
+              </div>
+              <div class="calendar-cell"><span class="day-number">6</span></div>
 
-                <div class="calendar-cell"><span class="day-number">7</span></div>
-                <div class="calendar-cell"><span class="day-number">8</span></div>
-                <div class="calendar-cell"><span class="day-number">9</span></div>
-                <div class="calendar-cell"><span class="day-number">10</span></div>
-                <div class="calendar-cell"><span class="day-number">11</span></div>
-                <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                  title="
+              <div class="calendar-cell"><span class="day-number">7</span></div>
+              <div class="calendar-cell"><span class="day-number">8</span></div>
+              <div class="calendar-cell"><span class="day-number">9</span></div>
+              <div class="calendar-cell"><span class="day-number">10</span></div>
+              <div class="calendar-cell"><span class="day-number">11</span></div>
+              <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="
   <div class='mb-2 d-flex align-items-start'>
     <span class='dot bg-danger me-2 mt-1'></span>
     <div>
@@ -127,31 +124,30 @@
   </div>
   
 ">
-                  <div class="day-content">
+                <div class="day-content">
 
-                    <span class="day-number">12</span>
-                    <div class="dots">
-                      <span class="dot bg-danger"></span>
-                    </div>
+                  <span class="day-number">12</span>
+                  <div class="dots">
+                    <span class="dot bg-danger"></span>
                   </div>
                 </div>
+              </div>
 
-                <div class="calendar-cell"><span class="day-number">13</span></div>
+              <div class="calendar-cell"><span class="day-number">13</span></div>
 
-                <div class="calendar-cell "><span class="day-number">14</span></div>
-                <div class="calendar-cell"><span class="day-number">15</span></div>
-                <div class="calendar-cell"><span class="day-number">16</span></div>
-                <div class="calendar-cell today"><span class="day-number">17</span></div>
-                <div class="calendar-cell"><span class="day-number">18</span></div>
-                <div class="calendar-cell"><span class="day-number">19</span></div>
-                <div class="calendar-cell">
-                  <span class="day-number">20</span>
+              <div class="calendar-cell "><span class="day-number">14</span></div>
+              <div class="calendar-cell"><span class="day-number">15</span></div>
+              <div class="calendar-cell"><span class="day-number">16</span></div>
+              <div class="calendar-cell today"><span class="day-number">17</span></div>
+              <div class="calendar-cell"><span class="day-number">18</span></div>
+              <div class="calendar-cell"><span class="day-number">19</span></div>
+              <div class="calendar-cell">
+                <span class="day-number">20</span>
 
-                </div>
+              </div>
 
-                <div class="calendar-cell"><span class="day-number">21</span></div>
-                <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                  title="
+              <div class="calendar-cell"><span class="day-number">21</span></div>
+              <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="
                         <div class='mb-2 d-flex align-items-start'>
                           <span class='dot bg-danger me-2 mt-1'></span>
                           <div>
@@ -161,710 +157,693 @@
                         </div>
                         
                       ">
-                  <span class="day-number">22</span>
-                  <div class="dots">
-                    <span class="dot bg-danger"></span>
-                  </div>
+                <span class="day-number">22</span>
+                <div class="dots">
+                  <span class="dot bg-danger"></span>
                 </div>
-                <div class="calendar-cell"><span class="day-number">23</span></div>
-                <div class="calendar-cell"><span class="day-number">24</span></div>
-                <div class="calendar-cell"><span class="day-number">25</span></div>
-                <div class="calendar-cell"><span class="day-number">26</span></div>
-                <div class="calendar-cell"><span class="day-number">27</span></div>
+              </div>
+              <div class="calendar-cell"><span class="day-number">23</span></div>
+              <div class="calendar-cell"><span class="day-number">24</span></div>
+              <div class="calendar-cell"><span class="day-number">25</span></div>
+              <div class="calendar-cell"><span class="day-number">26</span></div>
+              <div class="calendar-cell"><span class="day-number">27</span></div>
 
-                <div class="calendar-cell"><span class="day-number">28</span></div>
-                <div class="calendar-cell"><span class="day-number">29</span></div>
-                <div class="calendar-cell"><span class="day-number">30</span></div>
-                <div class="calendar-cell"><span class="day-number">31</span></div>
-              </div>
-              <div class="legend mt-3 d-flex gap-3">
-                <span><span class="dot bg-danger"></span> Exams</span>
-                <span><span class="dot bg-warning"></span> Assignments</span>
-                <span><span class="dot bg-success"></span> Events</span>
-              </div>
+              <div class="calendar-cell"><span class="day-number">28</span></div>
+              <div class="calendar-cell"><span class="day-number">29</span></div>
+              <div class="calendar-cell"><span class="day-number">30</span></div>
+              <div class="calendar-cell"><span class="day-number">31</span></div>
             </div>
-
-
-
-
-            <div class="exam-overview   rounded-4 p-3 mt-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold">
-                  <img src="../assets/exm.svg" alt="exam"
-                    style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
-                  Exam Overview
-                </h5>
-              </div>
-
-              <div class="table-responsive exam-table-scroll rounded-4 ">
-                <table class="table align-middle text-center" id="exam-table">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Exam Name</th>
-                      <th>Course</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Location</th>
-                      <th>Actions</th>
-
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="exam-row">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus completed">Completed</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row ">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row ">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus completed ">Completed</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="eName">Midterm Exam</td>
-                      <td><span class="eCourse">CS201</span></td>
-                      <td class="eDate">Jan 15, 2023</td>
-                      <td><span class="eStatus">Upcoming</span></td>
-                      <td class="eLocation">123 Main St, New York, NY 10001</td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-
-
-            <div class="tasks-assignments   rounded-4 p-4 mt-1">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold">
-                  <img src="../assets/exm.svg" alt="exam"
-                    style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
-                  Tasks & Assignments
-                </h5>
-              </div>
-
-              <div class="table-responsive exam-table-scroll rounded-4 ">
-                <table class="table align-middle text-center" id="task-table">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Task</th>
-                      <th>Course</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="exam-row">
-                      <td class="tTask">Problem Set 4</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus ">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="tTask">Homework 3</td>
-                      <td><span class="tCourse">Mathematics</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus subm">Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row">
-                      <td class="tTask">Problem Set 4</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="tTask">Problem Set 4</td>
-                      <td><span class="tCourse">Mathematics</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row">
-                      <td class="tTask">Homework 3</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e">
-                      <td class="tTask">Homework 3</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row">
-                      <td class="tTask">Homework 3</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus subm">Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="exam-row e ">
-                      <td class="tTask">Homework 3</td>
-                      <td><span class="tCourse">Physics Lab</span></td>
-                      <td class="tDate">Jan 15, 2023</td>
-                      <td><span class="tStatus">Not Submitted</span></td>
-                      <td class="Actbtn">
-                        <div class="dropdown">
-                          <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-start shadow-sm">
-                            <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
-                            <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
-                            <a class="dropdown-item text-danger" href="#"><i
-                                class="fas fa-trash-alt me-2"></i>Delete</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-
-
-
-          </div>
-          <div class="col-lg-4 col-md-12   mb-3">
-            <div class="my-courses order-sm-2 shadow rounded-4 p-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold" style="color: #5A0F61; "><img src="../assets/book.svg" alt="book"> My Courses</h5>
-                <a href="#" class="btn btn-outline-purple responsive-btn">View All</a>
-              </div>
-              <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
-                <h6 class="fw-bold mb-2 course-name">Data Structures</h6>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
-                  </span>
-                  <span class="course-time">Tuesday - 2:00 PM</span>
-                </p>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/person.svg" alt="person" style="width: 20px;">
-                  </span>
-                  <span class="course-instructor">Dr. Ahmed Saleh</span>
-                </p>
-                <p class="mb-0 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/locat.svg" alt="location" style="width: 20px;">
-                  </span>
-                  <span class="course-location">Room 204, Science Building</span>
-                </p>
-              </div>
-              <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
-                <h6 class="fw-bold mb-2 course-name">Calculus II</h6>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
-                  </span>
-                  <span class="course-time">Tuesday - 2:00 PM</span>
-                </p>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/person.svg" alt="person" style="width: 20px;">
-                  </span>
-                  <span class="course-instructor">Dr. Ahmed Saleh</span>
-                </p>
-                <p class="mb-0 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/locat.svg" alt="location" style="width: 20px;">
-                  </span>
-                  <span class="course-location">Room 204, Science Building</span>
-                </p>
-              </div>
-              <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
-                <h6 class="fw-bold mb-2 course-name">Physics Lab</h6>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
-                  </span>
-                  <span class="course-time">Tuesday - 2:00 PM</span>
-                </p>
-                <p class="mb-1 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/person.svg" alt="person" style="width: 20px;">
-                  </span>
-                  <span class="course-instructor">Dr. Ahmed Saleh</span>
-                </p>
-                <p class="mb-0 text-muted">
-                  <span class="icon-wrapper me-2">
-                    <img src="../assets/locat.svg" alt="location" style="width: 20px;">
-                  </span>
-                  <span class="course-location">Room 204, Science Building</span>
-                </p>
-              </div>
-
-            </div>
-            <div class="upcoming-events bg-white shadow rounded-4 p-4 mt-4">
-              <div class="d-flex  justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-purple">
-                  <img src="../assets/SVG_margin (1).svg" alt="event"> Upcoming Events
-                </h5>
-                <button class="btn btn-outline-purple btn-sm">View All</button>
-              </div>
-
-
-              <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
-                <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
-                  <span class="emoji-tag care me-2">💼</span>
-                  Tech Career Fair
-                </h6>
-                <div class="event-data row d-flex flex-wrap text-muted small ">
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3">
-                    <p class=" me-4 mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
-                      <span id="event-date">March 15</span>
-                    </p>
-                    <p class="me-4  d-flex align-items-center">
-                      <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
-                      <span id="event-location">Student Center</span>
-                    </p>
-                  </div>
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
-                    <p class="mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
-                      <span id="event-time">10:00 AM</span>
-                    </p>
-                    <p class="d-flex align-items-center">
-                      <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
-                      <span id="event-attendees">150 attending</span>
-                    </p>
-                  </div>
-                </div>
-                <div class="d-flex flex-wrap align-items-center justify-content-between  ">
-                  <span class="event-category career" class="badge bg-primary">Career</span>
-                  <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
-                </div>
-              </div>
-
-
-              <!-- Spring Break Trip -->
-
-              <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
-                <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
-                  <span class="emoji-tag  trav me-2"><img
-                      src="../assets/fluent-emoji_beach-with-umbrella copy.svg"></span>
-                  Spring Break Trip
-                </h6>
-                <div class="event-data row d-flex flex-wrap text-muted small ">
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3">
-                    <p class=" me-4 mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
-                      <span id="event-date">March 15</span>
-                    </p>
-                    <p class="me-4  d-flex align-items-center">
-                      <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
-                      <span id="event-location">Beach Resort</span>
-                    </p>
-                  </div>
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
-                    <p class="mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
-                      <span id="event-time">10:00 AM</span>
-                    </p>
-                    <p class="d-flex align-items-center">
-                      <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
-                      <span id="event-attendees">150 attending</span>
-                    </p>
-                  </div>
-                </div>
-                <div class="d-flex flex-wrap align-items-center justify-content-between  ">
-                  <span class="event-category travel" class="badge bg-primary">Travel</span>
-                  <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
-                </div>
-              </div>
-
-              <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
-                <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
-                  <span class="emoji-tag compt me-2">💻</span>
-                  Coding Competition
-                </h6>
-                <div class="event-data row d-flex flex-wrap text-muted small ">
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3">
-                    <p class=" me-4 mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
-                      <span id="event-date">March 15</span>
-                    </p>
-                    <p class="me-4  d-flex align-items-center">
-                      <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
-                      <span id="event-location">Beach Resort</span>
-                    </p>
-                  </div>
-                  <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
-                    <p class="mb-3 d-flex align-items-center">
-                      <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
-                      <span id="event-time">10:00 AM</span>
-                    </p>
-                    <p class="d-flex align-items-center">
-                      <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
-                      <span id="event-attendees">150 attending</span>
-                    </p>
-                  </div>
-                </div>
-                <div class="d-flex flex-wrap align-items-center justify-content-between  ">
-                  <span class="event-category compet" class="badge bg-primary">Competition</span>
-                  <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin">Going</button>
-                </div>
-              </div>
-
-
-
-
-              <!-- Create Event -->
-              <div class="create-event-box d-flex justify-content-between align-items-center p-3 mt-4 rounded-4"
-                style="background: linear-gradient(90deg, #F3E8FF, #E0F2FE);">
-                <div>
-                  <h6 class="fw-bold mb-1">Create Event</h6>
-                  <small class="text-muted">Organize your own event</small>
-                </div>
-                <button class="btn btn-purple">+ Create</button>
-              </div>
-            </div>
-
-
-
-            <div class="study-tracker bg-white shadow rounded-4 p-4 mt-4">
-              <!-- Header -->
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold text-purple ">
-                  <img src="../assets/SVG_margin (2).svg" alt="tracker"> Study Tracker
-                </h5>
-                <button class="btn btn-outline-purple btn-sm">Full View</button>
-              </div>
-
-              <!-- Progress Circle -->
-              <div class="d-flex justify-content-center mb-3">
-                <div class="circle-progress">
-                  <svg viewBox="0 0 120 120">
-                    <circle class="circle-bg" cx="60" cy="60" r="50" />
-                    <circle class="circle-fg" cx="60" cy="60" r="50" stroke-dashoffset="calc(314 - 314 * 0.72)" />
-                  </svg>
-                  <div class="progress-text">
-                    <div class="main">18h</div>
-                    <div class="sub">of 25h</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Weekly Bar Chart -->
-              <div class="week-chart text-center mb-3">
-                <div class="d-flex justify-content-between text-muted small">
-                  <div class="day mon">
-                    <div class="bar" style="height: 70px;"></div>
-                    <div>Mon<br><strong>3.5h</strong></div>
-                  </div>
-                  <div class="day tue">
-                    <div class="bar" style="height: 40px;"></div>
-                    <div>Tue<br><strong>2h</strong></div>
-                  </div>
-                  <div class="day wed">
-                    <div class="bar" style="height: 80px;"></div>
-                    <div>Wed<br><strong>4h</strong></div>
-                  </div>
-                  <div class="day thu">
-                    <div class="bar" style="height: 50px;"></div>
-                    <div>Thu<br><strong>2.5h</strong></div>
-                  </div>
-                  <div class="day fri">
-                    <div class="bar" style="height: 60px;"></div>
-                    <div>Fri<br><strong>3h</strong></div>
-                  </div>
-                  <div class="day sat">
-                    <div class="bar" style="height: 30px;"></div>
-                    <div>Sat<br><strong>2h</strong></div>
-                  </div>
-                  <div class="day sun">
-                    <div class="bar" style="height: 20px;"></div>
-                    <div>Sun<br><strong>1h</strong></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Goal and Today Summary -->
-              <div class="d-flex justify-content-between mb-3">
-                <div class="bg-success-subtle rounded-3 p-2 flex-fill me-2">
-                  <div class=" w-semibold" style="color: #166534;"> <img src="../assets/SVG (11).svg" alt="target">
-                    Goal
-                  </div>
-                  <div class="  fw-bold" style="color: #16A34A;">72%</div>
-                </div>
-                <div class="bg-primary-subtle rounded-3 p-2  flex-fill ms-2">
-                  <div class="w-semibold" style="color: #1E40AF;"> <img src="../assets/SVG (10).svg" alt="cloc"> Today
-                  </div>
-                  <div class="fw-bold" style="color: #2563EB;">2.5h</div>
-                </div>
-              </div>
-
-              <!-- Motivation -->
-              <div class="bg-gradient-light-purple p-3 rounded-3 text-center fw-semibold text-purple">
-                <img src="../assets/arr.svg" alt="arrow"> Keep it up!
-              </div>
-            </div>
-
-            <!--  Footer Message -->
-            <div class="text-center mt-3 p-3 rounded-4 text-dark" id="fot-quoot"
-              style="background: linear-gradient(90deg, #F3E8FF, #FCE7F3);">
-              <div class="mb-1"><span style="font-size: 36px;">🌟</span> </div>
-              <div class="mb-1"> <strong>You're doing great!</strong></div>
-              <small>Keep up the momentum</small>
+            <div class="legend mt-3 d-flex gap-3">
+              <span><span class="dot bg-danger"></span> Exams</span>
+              <span><span class="dot bg-warning"></span> Assignments</span>
+              <span><span class="dot bg-success"></span> Events</span>
             </div>
           </div>
 
+
+
+
+          <div class="exam-overview   rounded-4 p-3 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold">
+                <img src="../assets/exm.svg" alt="exam"
+                  style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
+                Exam Overview
+              </h5>
+            </div>
+
+            <div class="table-responsive exam-table-scroll rounded-4 ">
+              <table class="table align-middle text-center" id="exam-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Exam Name</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus completed">Completed</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row ">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row ">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus completed ">Completed</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+          <div class="tasks-assignments   rounded-4 p-4 mt-1">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold">
+                <img src="../assets/exm.svg" alt="exam"
+                  style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
+                Tasks & Assignments
+              </h5>
+            </div>
+
+            <div class="table-responsive exam-table-scroll rounded-4 ">
+              <table class="table align-middle text-center" id="task-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Task</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exam-row">
+                    <td class="tTask">Problem Set 4</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus ">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus subm">Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="tTask">Problem Set 4</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Problem Set 4</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus subm">Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e ">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-primary" href="#"><i class="fas fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-warning" href="#"><i class="fas fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="col-lg-4 col-md-12   mb-3">
+          <div class="my-courses order-sm-2 shadow rounded-4 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold" style="color: #5A0F61; "><img src="../assets/book.svg" alt="book"> My Courses</h5>
+              <a href="#" class="btn btn-outline-purple responsive-btn">View All</a>
+            </div>
+            <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
+              <h6 class="fw-bold mb-2 course-name">Data Structures</h6>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
+                </span>
+                <span class="course-time">Tuesday - 2:00 PM</span>
+              </p>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/person.svg" alt="person" style="width: 20px;">
+                </span>
+                <span class="course-instructor">Dr. Ahmed Saleh</span>
+              </p>
+              <p class="mb-0 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/locat.svg" alt="location" style="width: 20px;">
+                </span>
+                <span class="course-location">Room 204, Science Building</span>
+              </p>
+            </div>
+            <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
+              <h6 class="fw-bold mb-2 course-name">Calculus II</h6>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
+                </span>
+                <span class="course-time">Tuesday - 2:00 PM</span>
+              </p>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/person.svg" alt="person" style="width: 20px;">
+                </span>
+                <span class="course-instructor">Dr. Ahmed Saleh</span>
+              </p>
+              <p class="mb-0 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/locat.svg" alt="location" style="width: 20px;">
+                </span>
+                <span class="course-location">Room 204, Science Building</span>
+              </p>
+            </div>
+            <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
+              <h6 class="fw-bold mb-2 course-name">Physics Lab</h6>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/clock.svg" alt="clock" style="width: 20px;">
+                </span>
+                <span class="course-time">Tuesday - 2:00 PM</span>
+              </p>
+              <p class="mb-1 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/person.svg" alt="person" style="width: 20px;">
+                </span>
+                <span class="course-instructor">Dr. Ahmed Saleh</span>
+              </p>
+              <p class="mb-0 text-muted">
+                <span class="icon-wrapper me-2">
+                  <img src="../assets/locat.svg" alt="location" style="width: 20px;">
+                </span>
+                <span class="course-location">Room 204, Science Building</span>
+              </p>
+            </div>
+
+          </div>
+          <div class="upcoming-events bg-white shadow rounded-4 p-4 mt-4">
+            <div class="d-flex  justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-purple">
+                <img src="../assets/SVG_margin (1).svg" alt="event"> Upcoming Events
+              </h5>
+              <button class="btn btn-outline-purple btn-sm">View All</button>
+            </div>
+
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                <span class="emoji-tag care me-2">💼</span>
+                Tech Career Fair
+              </h6>
+              <div class="event-data row d-flex flex-wrap text-muted small ">
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Student Center</span>
+                  </p>
+                </div>
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category career" class="badge bg-primary">Career</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
+              </div>
+            </div>
+
+
+            <!-- Spring Break Trip -->
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                <span class="emoji-tag  trav me-2"><img
+                    src="../assets/fluent-emoji_beach-with-umbrella copy.svg"></span>
+                Spring Break Trip
+              </h6>
+              <div class="event-data row d-flex flex-wrap text-muted small ">
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Beach Resort</span>
+                  </p>
+                </div>
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category travel" class="badge bg-primary">Travel</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
+              </div>
+            </div>
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                <span class="emoji-tag compt me-2">💻</span>
+                Coding Competition
+              </h6>
+              <div class="event-data row d-flex flex-wrap text-muted small ">
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Beach Resort</span>
+                  </p>
+                </div>
+                <div class="col-6 d-flex flex-wrap align-items-center mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category compet" class="badge bg-primary">Competition</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin">Going</button>
+              </div>
+            </div>
+
+
+
+
+            <!-- Create Event -->
+            <div class="create-event-box d-flex justify-content-between align-items-center p-3 mt-4 rounded-4"
+              style="background: linear-gradient(90deg, #F3E8FF, #E0F2FE);">
+              <div>
+                <h6 class="fw-bold mb-1">Create Event</h6>
+                <small class="text-muted">Organize your own event</small>
+              </div>
+              <button class="btn btn-purple">+ Create</button>
+            </div>
+          </div>
+
+
+
+          <div class="study-tracker bg-white shadow rounded-4 p-4 mt-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-purple ">
+                <img src="../assets/SVG_margin (2).svg" alt="tracker"> Study Tracker
+              </h5>
+              <button class="btn btn-outline-purple btn-sm">Full View</button>
+            </div>
+
+            <!-- Progress Circle -->
+            <div class="d-flex justify-content-center mb-3">
+              <div class="circle-progress">
+                <svg viewBox="0 0 120 120">
+                  <circle class="circle-bg" cx="60" cy="60" r="50" />
+                  <circle class="circle-fg" cx="60" cy="60" r="50" stroke-dashoffset="calc(314 - 314 * 0.72)" />
+                </svg>
+                <div class="progress-text">
+                  <div class="main">18h</div>
+                  <div class="sub">of 25h</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weekly Bar Chart -->
+            <div class="week-chart text-center mb-3">
+              <div class="d-flex justify-content-between text-muted small">
+                <div class="day mon">
+                  <div class="bar" style="height: 70px;"></div>
+                  <div>Mon<br><strong>3.5h</strong></div>
+                </div>
+                <div class="day tue">
+                  <div class="bar" style="height: 40px;"></div>
+                  <div>Tue<br><strong>2h</strong></div>
+                </div>
+                <div class="day wed">
+                  <div class="bar" style="height: 80px;"></div>
+                  <div>Wed<br><strong>4h</strong></div>
+                </div>
+                <div class="day thu">
+                  <div class="bar" style="height: 50px;"></div>
+                  <div>Thu<br><strong>2.5h</strong></div>
+                </div>
+                <div class="day fri">
+                  <div class="bar" style="height: 60px;"></div>
+                  <div>Fri<br><strong>3h</strong></div>
+                </div>
+                <div class="day sat">
+                  <div class="bar" style="height: 30px;"></div>
+                  <div>Sat<br><strong>2h</strong></div>
+                </div>
+                <div class="day sun">
+                  <div class="bar" style="height: 20px;"></div>
+                  <div>Sun<br><strong>1h</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Goal and Today Summary -->
+            <div class="d-flex justify-content-between mb-3">
+              <div class="bg-success-subtle rounded-3 p-2 flex-fill me-2">
+                <div class=" w-semibold" style="color: #166534;"> <img src="../assets/SVG (11).svg" alt="target">
+                  Goal
+                </div>
+                <div class="  fw-bold" style="color: #16A34A;">72%</div>
+              </div>
+              <div class="bg-primary-subtle rounded-3 p-2  flex-fill ms-2">
+                <div class="w-semibold" style="color: #1E40AF;"> <img src="../assets/SVG (10).svg" alt="cloc"> Today
+                </div>
+                <div class="fw-bold" style="color: #2563EB;">2.5h</div>
+              </div>
+            </div>
+
+            <!-- Motivation -->
+            <div class="bg-gradient-light-purple p-3 rounded-3 text-center fw-semibold text-purple">
+              <img src="../assets/arr.svg" alt="arrow"> Keep it up!
+            </div>
+          </div>
+
+          <!--  Footer Message -->
+          <div class="text-center mt-3 p-3 rounded-4 text-dark" id="fot-quoot"
+            style="background: linear-gradient(90deg, #F3E8FF, #FCE7F3);">
+            <div class="mb-1"><span style="font-size: 36px;">🌟</span> </div>
+            <div class="mb-1"> <strong>You're doing great!</strong></div>
+            <small>Keep up the momentum</small>
+          </div>
         </div>
 
       </div>
+
     </div>
   </div>
 
