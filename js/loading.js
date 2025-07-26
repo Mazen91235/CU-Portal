@@ -65,20 +65,33 @@
               document.getElementById("sidebar-container").innerHTML = sidebarHtml;
 
               const toggleButton = document.getElementById("menu-toggle");
-              const sidebar = document.getElementById("sidebar");
-              const contentWrapper = document.getElementById("content-wrapper");
-              const navbar = document.getElementById('navbar-container');
+const sidebar = document.getElementById("sidebar");
+const contentWrapper = document.getElementById("content-wrapper");
+const navbar = document.getElementById("navbar-container");
 
+    if (window.innerWidth > 768) {
+      // Desktop: show sidebar
+      sidebar.classList.add("visible");
+      sidebar.classList.remove("hidden");
+      contentWrapper.classList.remove("sidebar-hidden");
+      navbar.classList.add("navbar-shrink");
+    } else {
+      // Mobile: hide sidebar
+      sidebar.classList.remove("visible");
+      sidebar.classList.add("hidden");
+      contentWrapper.classList.add("sidebar-hidden");
 
-              if (toggleButton && sidebar && contentWrapper) {
-                toggleButton.addEventListener("click", () => {
-                  sidebar.classList.toggle("visible");
-                  sidebar.classList.toggle("hidden");
-                  contentWrapper.classList.toggle("sidebar-hidden");
-                    navbar.classList.toggle('navbar-shrink');
+    }
 
-                });
-              } else {
+if (toggleButton && sidebar && contentWrapper) {
+  toggleButton.addEventListener("click", () => {
+    sidebar.classList.toggle("visible");
+    sidebar.classList.toggle("hidden");
+    contentWrapper.classList.toggle("sidebar-hidden");
+    navbar.classList.toggle("navbar-shrink");
+  });
+}
+ else {
                 console.warn("Toggle failed. Elements missing:", { toggleButton, sidebar, contentWrapper });
               }
 
