@@ -383,7 +383,7 @@
 /* Calendar header and subtitle styling */
 .calendar-title {
     font-weight: 600;
-    
+    padding-top: 2.5rem;
     font-size: 36px;
     color: rgba(54, 61, 73, 1);
     font-family: 'Inter', Arial, sans-serif;
