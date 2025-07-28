@@ -1,3 +1,10 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 #header{
 height: 250px;
   width: 98%;
@@ -148,6 +155,11 @@ margin-right: 20px;
   color: #5A0F61;
   margin-top: 30px;
 }
+.title.charts{
+  color:#7B1584;
+}
+
+
 .mange-card{
   background-color: #F1F5F9;
 }
@@ -207,3 +219,66 @@ margin-right: 20px;
   .grid-container {
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));}
 }
+ canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+
+    .chart-container {
+      max-width: 700px;
+      width: 100%;
+      padding: 20px;
+    }
+    .ring {
+      max-width: 600px;
+       width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+   #circularChart{
+    height: 400px;
+
+   }
+
+.b-title{
+  color: #475569;
+  font-size: 24px;
+  align-items: center;
+  display: inline-block;
+  text-align: center;
+}
+ .card {
+      background-color: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .stats {
+      font-size: 32px;
+      font-weight: 550;
+      color: #475569;
+    }
+
+    .stats span {
+      font-size: 10px;
+      color: #94E9B8;
+      margin-left: 10px;
+    }
+
+    canvas {
+      margin-top: 20px;
+    }
+
+    .chart-label {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 400;
+      font-size: 22px;
+      color: #5a5a89;
+    }
+#activityChart{
+ width: 100%;
+  height: 100%;}

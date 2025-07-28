@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="./components/toasts.html" />
     <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="./css/adminDashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+
+
 
 </head>
 
@@ -233,12 +237,77 @@
                     <h1 class="total">89</h1>
                 </div>
             </div>
+            <div class="row d-flex justify-content-between align-items-center p-4 mb-3">
+                <h2 class="fw-bold title charts">
+                    over view & statistics
+                </h2>
+                    <div class="container ring justify-content-between align-items-center col-5 ">
+                        <div id="circularChart" class="bg-white shadow rounded-4 mt-5"></div>
+<div class="text-center mt-2">
+    <span class="b-title">Student Distribution by Faculty</span>
+  </div>
+                    </div>
+
+                    <div class="chart-container justify-content-between align-items-center col-7 ">
+                        <canvas id="myChart" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+<div class="text-center mt-2">
+    <span class="b-title">Task Submission Rate by Faculty</span>
+  </div>
+                    </div>
+
+            </div>
+
+<div class="justify-content-between align-items-center col-12" style="width: 100%;">
+    <div class="card">
+ <div class="stats">
+    4.38K <span><img src="./assets/Vector (1).svg"> 22.41%</span>
+  </div>
+  <canvas id="activityChart" height="90"></canvas>
+    </div>
+<div class="text-center mt-2">
+    <span class="b-title">Student Distribution by Faculty</span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="manage   rounded-4 p-4 mt-1">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h2 class="fw-bold title">
                         Manage Your Pages
                     </h2>
                 </div>
+
+
+
+
+
                 <div class="mange-card rounded-4 shadow row d-flex justify-content-center align-items-center">
 
                     <div class="grid-container">
@@ -356,68 +425,13 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
     </div>
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.30.1.min.js"></script>
 
     <script src="./js/loading.js"></script>
     <script>
@@ -435,7 +449,190 @@
                 dropdownMenu.style.display = "none";
             }
         });
-    </script>
+//////////
+        const canvas = document.getElementById("myChart");
+        const ctx = canvas.getContext("2d");
+        let chart;
+        function createChart() {
+            const width = canvas.offsetWidth;
+
+            const gradient = ctx.createLinearGradient(0, 0, 500, 0);
+            gradient.addColorStop(0, "#881792");
+            gradient.addColorStop(1, "#FFA8A7");
+
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: ["label", "label", "label", "label", "label"],
+                    datasets: [{
+                        data: [70, 60, 45, 60, 10],
+                        backgroundColor: gradient,
+                        borderRadius: 6,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: "y",
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: "#eee"
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        createChart();
+        window.addEventListener("resize", () => {
+            createChart();
+        });
+        ///////
+        var chart2 = JSC.chart('circularChart', {
+            debug: false,
+            toolbar_visible: true,
+            type: 'gauge ',
+            legend_visible: false,
+            title: {
+                label_text: 'Student Distribution By Faculty',
+                position: 'center',
+                label_style: {
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: 'black',
+                }
+            },
+            // The radial axis 
+            xAxis: {
+                spacingPercentage: 0.3,
+                orientation: 'opposite',
+                line: { width: 0, color: 'white' },
+                markers: [
+                    {
+                        value: [3.6, 4.4],
+                        color: ['white', 0.3]
+                    }
+                ],
+                defaultTick: {
+                    padding: 4,
+                    gridLine: { width: 0 },
+                    line: { length: 0 },
+                    label: { text: '%value' }
+                },
+
+            },
+            // The circular axis 
+            yAxis: {
+                defaultTick: {
+                    label_visible: false
+                },
+                line: { width: 0, color: 'white' },
+                markers: [
+                    {
+                        value: [0, 100000000],
+                        color: ['white', 0.3]
+                    }
+                ],
+                scale: { invert: true, range: [0, 10000] }
+            },
+            series: [
+                {
+                    type: 'column',
+                    angle: { start: 270, sweep: 359 },
+                    shape_innerSize: '45%',
+                    name: 'students per faculty',
+                    palette: ['#FDD835', '#4285F4', '#FB8C00', '#9c27b0'],
+
+                    defaultPoint: {
+                        marker: {
+                            outline: { width: 0, color: 'white' },
+                            type: 'circle',
+                            visible: false,
+                            size: 10
+                        }
+                    },
+                    points: [
+                        ['medicine', 7220],
+                        ['engineering', 6148],
+                        ['art', 3733],
+                        ['computer scince', 6740],
+
+
+
+                    ]
+                }
+            ]
+        }); 
+   //////
+   const isMobile = window.innerWidth < 576;
+
+ const ctx3 = document.getElementById('activityChart').getContext('2d');
+
+  const gradient = ctx3.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(0, 'rgba(128,0,128,0.15)');
+  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+
+  new Chart(ctx3, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: [{
+        label: 'Activity',
+        data: [120, 300, 90, 140, 150, 220, 210, 250, 340, 190, 170, 180],
+        fill: true,
+        backgroundColor: gradient,
+        borderColor: '#7B1584',
+         borderWidth: 2,
+        tension: 0.1,
+        pointRadius: 0.2
+      }]
+    },
+    options: {
+          responsive: true,
+  maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          display: false
+        },
+        x: {
+          grid: {
+            display: false
+          }, border: {
+          display: false 
+        } ,ticks: {
+    font: {
+      size:isMobile ? 9:15 
+    },maxRotation: 0,
+  minRotation: 0,
+  autoSkip: false  
+  }
+        }
+      }
+    }
+  });
+   </script>
+
 
 </body>
 
