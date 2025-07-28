@@ -1,0 +1,178 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+body{
+    background-color: rgb(248, 250, 252);
+}
+/* Card styling */
+.personal-details-card {
+  border-radius: 24px;
+  background: #fff;
+  border-style: none;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 2rem;
+  padding: 2rem;
+  box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
+}
+
+/* Title and underline */
+.personal-details-header {
+  margin-bottom: 0.5rem;
+}
+.personal-details-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+  font-weight: 400 !important;
+}
+.personal-details-underline {
+  width: 120px;
+  height: 2px;
+  background: rgba(90, 15, 97, 1);
+  margin-left: 30px;
+  margin-top: 4px;
+  border-radius: 2px;
+}
+
+/* Field label styling */
+.form-label,
+.personal-details-label {
+  color: #9E9E9E;
+  text-align: left;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Select dropdown styling */
+.personal-details-card .form-select {
+  border-radius: 12px;
+  border: 1px solid #9E9E9E;
+  background: #fff;
+  font-size: 17px;
+  color: #333;
+  height: 56px;
+  box-shadow: none;
+  padding-left: 20px;
+  padding-right: 40px;
+  margin-bottom: 1rem;
+  background-image: url('../assets/iconsax-arrow-down-02.png');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 20px 20px;
+}
+
+/* Placeholder color */
+.personal-details-card .form-select option {
+  color: #000000;
+  font-size: 17px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Button styles */
+.btn-purple {
+  background: rgba(90, 15, 97, 1);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 12px;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none;
+}
+
+.personal-details-save {
+  background: rgba(90, 15, 97, 1) !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  border-radius: 12px !important;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem !important;
+  height: 44px !important;
+  border: none !important;
+  font-size: 16px !important;
+  margin-top: 1rem;
+  box-shadow: none !important;
+  display: inline-block;
+}
+
+/* Focus states */
+.personal-details-card .form-select:focus,
+input:focus, 
+select:focus {
+  border-color: #5a0f61;
+  box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1);
+  outline: none;
+}
+
+/* Input with icon */
+.input-icon-right {
+  background-position: right 1rem center;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 991.98px) {
+  .personal-details-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem;
+    margin-top: 5rem;
+  }
+  
+  .personal-details-card .form-select {
+    width: 100%;
+    font-size: 15px;
+    height: 44px;
+    padding-left: 16px;
+    padding-right: 40px;
+  }
+  
+  .container.mt-5 {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .personal-details-save {
+    width: 290px;
+    font-size: 15px;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .personal-details-card {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+  }
+  
+  .personal-details-title {
+    font-size: 1rem;
+  }
+  
+  .personal-details-underline {
+    margin-left: 15px;
+    width: 25%;
+  }
+}
+
+/* Select dropdown text color */
+.personal-details-card .form-select,
+.personal-details-card .form-select:invalid,
+.personal-details-card .form-select:focus {
+  color: #BDBDBD;
+}

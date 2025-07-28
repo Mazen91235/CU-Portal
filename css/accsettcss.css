@@ -54,8 +54,8 @@
   background: #fff;
   border-style: none;
   width: 90%;
-  margin-top: 2rem;
-  padding: 2rem;
+  margin-top: 1rem;    /* Reduced from 2rem to 1rem */
+  padding: 1.2rem !important;     /* Reduced from 2rem to 1.2rem */
   box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
 }
 .personal-details-avatar {
@@ -481,4 +481,4 @@ input:focus, select:focus, textarea:focus {
     display: block !important;
   }
 }
-  
+
