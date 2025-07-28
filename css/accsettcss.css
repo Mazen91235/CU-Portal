@@ -87,6 +87,7 @@
   font-family: 'Roboto', Arial, sans-serif !important;
   font-weight: 500 !important;
   font-size: 16px !important;
+  text-align: left !important;
   color: rgba(0, 0, 0, 0.38);
 }
 .personal-details-save {
@@ -424,6 +425,13 @@ input:focus, select:focus, textarea:focus {
   padding-left: 3.2rem;
   padding-right: 2.5rem;
 }
+.form-label,
+.personal-details-label {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    display: block !important;
+  }
 }
 
 @media (max-width: 575.98px) {
