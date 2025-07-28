@@ -323,7 +323,11 @@ select.form-select.input-icon-right.icon-venus-mars option {
 select.form-select.input-icon-right.icon-venus-mars::-ms-expand {
   display: none;
 }
-
+input:focus, select:focus, textarea:focus {
+        border-color: #5a0f61 !important;
+        box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1) !important;
+        outline: none !important;
+      }
 /* Responsive styles for mobile and tablet */
 @media (max-width: 991.98px) {
   .personal-details-card {
