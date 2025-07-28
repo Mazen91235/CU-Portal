@@ -425,13 +425,7 @@ input:focus, select:focus, textarea:focus {
   padding-left: 3.2rem;
   padding-right: 2.5rem;
 }
-.form-label,
-.personal-details-label {
-    text-align: left !important;
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
-    display: block !important;
-  }
+
 }
 
 @media (max-width: 575.98px) {
@@ -477,3 +471,14 @@ input:focus, select:focus, textarea:focus {
     box-sizing: border-box;
   }
 }
+
+@media screen and (max-width:1280px) {
+  .form-label,
+.personal-details-label {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    display: block !important;
+  }
+}
+  
