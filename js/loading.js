@@ -21,6 +21,22 @@
         .then(res => res.text())
         .then(navbarHtml => {
           document.getElementById("navbar-container").innerHTML = navbarHtml;
+          // Set current date in navbar
+          const currentDateElem = document.getElementById("current-date");
+          if (currentDateElem) {
+            const now = new Date();
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const monthNames = [
+              "January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"
+            ];
+            const dayName = dayNames[now.getDay()];
+            const monthName = monthNames[now.getMonth()];
+            const dayNumber = now.getDate();
+            const year = now.getFullYear();
+            currentDateElem.textContent = `${dayName}, ${monthName} ${dayNumber}, ${year}`;
+          }
+
             //  Notification logic 
       const notificationIcon = document.getElementById("notification-icon");
       const notificationsDropdown = document.getElementById("notifications-dropdown");
@@ -110,43 +126,37 @@ if (toggleButton && sidebar && contentWrapper) {
               item.classList.add('active');
             }
           }
+          
         );
-            });
-        });
-    });
+         // ✅ Highlight the active collaplinkli and  parent collapse
+          document.querySelectorAll(".collaplinkli").forEach(linkItem => {
+            const anchor = linkItem.querySelector("a");
+            if (!anchor) return;
 
+            const href = anchor.getAttribute("href")?.split('/').pop();
+            if (href === currentPage) {
+              linkItem.classList.add("active");
 
-document.addEventListener('DOMContentLoaded', function () {
-  const navItems = document.querySelectorAll('.nav-item');
+    const collapseElement = linkItem.closest(".collapse");
+    if (collapseElement) {
+      collapseElement.classList.add("show");
 
-  navItems.forEach(item => {
-    const link = item.querySelector('a.nav-link');
+      const toggleLink = document.querySelector(`[href="#${collapseElement.id}"]`);
+      if (toggleLink) {
+        toggleLink.setAttribute("aria-expanded", "true");
 
-    if (!link) return;
-
-    // If the link is a collapse toggle
-    if (link.getAttribute('data-bs-toggle') === 'collapse') {
-      // Observe the aria-expanded state
-      const observer = new MutationObserver(() => {
-        if (link.getAttribute('aria-expanded') === 'true') {
-          item.classList.add('active');
-          link.classList.add('active');
-        } else {
-          item.classList.remove('active');
-          link.classList.remove('active');
-        }
-      });
-
-      observer.observe(link, { attributes: true, attributeFilter: ['aria-expanded'] });
-
-      // Initial check on page load
-      if (link.getAttribute('aria-expanded') === 'true') {
-        item.classList.add('active');
-        link.classList.add('active');
+        const navItem = toggleLink.closest(".nav-item");
+        if (navItem) navItem.classList.add("active");
       }
     }
-  });
+  }
 });
+        });
+    });
+});
+          
+
+
 
     document.addEventListener("DOMContentLoaded", function () {
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

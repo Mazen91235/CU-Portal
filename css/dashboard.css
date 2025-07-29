@@ -82,7 +82,7 @@ top: 5px;
   left: -300px;
 
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   
   #welcome-message {
     font-size: 16px;
@@ -244,11 +244,9 @@ padding-right: 10px;
 .my-courses{
   margin-left: 0px !important;
       white-space: nowrap;
-
   }
-
-
 }
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -287,7 +285,7 @@ padding-right: 10px;
 }
 .my-courses {
   background-color: #fff;
-  max-width: 430px !important;
+  max-width: 430px ;
   margin-left: 40px;
 }
 

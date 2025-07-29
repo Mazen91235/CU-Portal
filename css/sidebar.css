@@ -7,7 +7,26 @@ body {
 #content-wrapper {
   margin-left: 256px; /* Sidebar width */
   transition: margin-left 0.3s ease;
+
   
+}
+@media screen and (max-width: 820px) {
+  #content-wrapper {
+margin-top: 90px !important;
+  }
+  #content-wrapper.sidebar-hidden {
+    margin-top: 10px !important;
+
+  }
+}
+@media screen and (max-width: 500px) {
+  #content-wrapper {
+margin-top: 150px !important;
+  }
+  #content-wrapper.sidebar-hidden {
+    margin-top: 10px !important;
+
+  }
 }
 
 #content-wrapper.sidebar-hidden {
@@ -757,7 +776,15 @@ background-color: #F5ECFE;
 padding: 4px 8px;
 border-radius: 6px;
 }
+        @media (max-width: 400px) {
+          .notifications-dropdown {
+            right: 10px;
+          }
+          .announcements-dropdown {
+                        right: 10px;
 
+          }
+        }
 
 .popup-btn {
     position: relative;
@@ -784,31 +811,46 @@ border-radius: 6px;
     z-index: 1;
 }
 
+.collaplinkli{
+  font-size: 13px;
+  align-items: center !important;
+  height: 50px;
+  border-radius: 6px;
+  padding-top: 15px;
+  padding-left:42px;
+  margin-bottom: 0;
+
+}
 .collaplink{
-  font-size: 14px;
   text-decoration: none;
   color: #6C6C6C;
-  align-items: center;
-  margin-left: 45px;
+  align-items: center !important;
+
+}
+#accountCollapse{
+  margin-top: -5px;
 
 }
 .collaplink:hover{
 color:#5A0F61}
-
-.nav-link[aria-expanded="true"] .fa-chevron-down {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
+.collaplinkli.active{
+  background: linear-gradient(to right, #dccdde, #ffffff);
 }
+.collaplinkli.active a{
+  color: #5A0F61;
 
+}
 .nav-link .fa-chevron-down {
   transition: transform 0.3s ease;
 margin-left: 10px;}
-#accountCollapse li{
-margin-bottom: -10px;}
-#accountCollapse{
-  justify-content: center;
-  align-items: center;
+
+.nav-link[aria-expanded="true"] .fa-chevron-down {
+  transform: rotate(180deg);
 }
+
+
+
+
 
 
 
