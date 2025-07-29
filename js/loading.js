@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
     
       const navLinks = document.querySelectorAll('.header-center a');
       
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Remove 'active' class from all links
           navLinks.forEach(item => item.classList.remove('active'));
           
-          // Add 'active' class to clicked link 
+          // Add 'active' class to clicked link
           this.classList.add('active');
         });
       });
@@ -17,29 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.addEventListener("DOMContentLoaded", () => {
       // Load navbar
-      fetch("../components/navbar.html")
+      fetch("./components/navbar.html")
         .then(res => res.text())
         .then(navbarHtml => {
           document.getElementById("navbar-container").innerHTML = navbarHtml;
-
-          // Set current date in navbar
-          const currentDateElem = document.getElementById("current-date");
-          if (currentDateElem) {
-            const now = new Date();
-            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            const monthNames = [
-              "January", "February", "March", "April", "May", "June",
-              "July", "August", "September", "October", "November", "December"
-            ];
-            const dayName = dayNames[now.getDay()];
-            const monthName = monthNames[now.getMonth()];
-            const dayNumber = now.getDate();
-            const year = now.getFullYear();
-            currentDateElem.textContent = `${dayName}, ${monthName} ${dayNumber}, ${year}`;
-          }
-
-          //  Notification logic 
-          const notificationIcon = document.getElementById("notification-icon");
+            //  Notification logic 
+      const notificationIcon = document.getElementById("notification-icon");
       const notificationsDropdown = document.getElementById("notifications-dropdown");
        const announcementIcon = document.getElementById("announcement-icon");
       const announcementsDropdown = document.getElementById("announcements-dropdown");
@@ -76,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
           // Load sidebar
-          fetch("../components/sidebar.html")
+          fetch("./components/sidebar.html")
             .then(res => res.text())
             .then(sidebarHtml => {
               document.getElementById("sidebar-container").innerHTML = sidebarHtml;
