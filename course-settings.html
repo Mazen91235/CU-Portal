@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Settings</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/course-settings.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/loading.css">
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Main Card Container -->
+        <div class="container-fluid d-flex justify-content-center align-items-start py-4 main-card-container">
+            <div class="bg-white shadow rounded-4 p-4 main-card">
+                <!-- Title -->
+                <h3 class="fw-semibold mb-1">Subject Settings</h3>
+                <div class="section-underline"></div>
+                
+                <!-- Current Semester Courses Section -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="assets/hat.png" alt="Hat Icon" class="me-2" style="width:24px;height:24px;vertical-align:-0.15em;">
+                        <span class="fs-4 fw-semibold me-2">Current Semester Courses</span>
+                        <span class="badge rounded-pill px-3 py-1 courses-badge">6 Courses</span>
+                    </div>
+                    <!-- Courses Grid -->
+                    <div class="row g-3">
+                        <!-- Card 1 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Operating Systems</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 301</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Sarah Johnson
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon & Wed, 2:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Database Systems</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 320</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Prof. Michael Chen
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 10:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Software Engineering</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 315</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Emily Rodriguez
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon, Wed & Fri, 9:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        4 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Discrete Mathematics</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">MATH 301</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. James Wilson
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 1:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Computer Networks</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 330</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Lisa Park
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon & Wed, 11:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Machine Learning</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 340</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. David Kim
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 3:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        4 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Second section goes here -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="assets/hat.png" alt="Hat Icon" class="me-2" style="width:24px;height:24px;vertical-align:-0.15em;">
+                        <span class="fs-4 fw-semibold">Past Courses</span>
+                    </div>
+                    <div class="d-flex gap-2 mb-3 flex-nowrap">
+                        <input type="text" class="form-control filter-search flex-grow-1"
+                            placeholder="Search by subject name, instructor, or code" aria-label="Search">
+                        <select class="form-select filter-select flex-grow-1" aria-label="Filter by Term">
+                            <option selected>Filter by Term</option>
+                            <option>Fall</option>
+                            <option>Spring</option>
+                            <option>Summer</option>
+                        </select>
+                        <select class="form-select filter-year flex-grow-1" aria-label="Academic Year">
+                            <option selected>Academic Year</option>
+                            <option>2023/2024</option>
+                            <option>2022/2023</option>
+                            <option>2021/2022</option>
+                        </select>
+                    </div>
+                    <!-- Courses Grid (reuse the same 6 cards) -->
+                    <div class="row g-3">
+                        <!-- Card 1 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Operating Systems</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 301</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Sarah Johnson
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon & Wed, 2:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Database Systems</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 320</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Prof. Michael Chen
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 10:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Software Engineering</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 315</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Emily Rodriguez
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon, Wed & Fri, 9:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        4 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Discrete Mathematics</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">MATH 301</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. James Wilson
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 1:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Computer Networks</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 330</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. Lisa Park
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Mon & Wed, 11:00 AM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        3 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="card h-100 shadow-sm border-0 course-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title mb-0 fw-semibold">Machine Learning</h6>
+                                        <span class="badge bg-light text-dark border course-code-badge">CS 340</span>
+                                    </div>
+                                    <div class="mb-2 small course-meta">
+                                        <img src="assets/SVG.png" alt="Prof" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Dr. David Kim
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (1).png" alt="Schedule" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Tue & Thu, 3:00 PM
+                                    </div>
+                                    <div class="mb-1 small course-meta">
+                                        <img src="assets/SVG (2).png" alt="Credits" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        4 Credits
+                                    </div>
+                                    <div class="mb-3 small course-meta">
+                                        <img src="assets/SVG (3).png" alt="Location" class="me-1" style="height:1em;vertical-align:-0.15em;">
+                                        Math Building, Room 301
+                                    </div>
+                                    <button class="btn w-100 remove-btn d-flex align-items-center justify-content-center">
+                                        <img src="assets/group 119.png" alt="Add" style="width:1.2em;height:1.2em;" class="me-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/loading.js"></script>
+        <script src="./js/course-settings-filters.js"></script>
+</body>
+</html>

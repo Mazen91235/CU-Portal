@@ -1,0 +1,145 @@
+:root {
+    --theme-color: #5A0F61;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@600&display=swap');
+
+.main-card-container {
+    min-height: 100vh;
+    margin-top: 80px;
+}
+
+.main-card {
+    width: 92vw;
+    max-width: 1400px;
+}
+
+.section-underline {
+    height: 4px;
+    width: 150px;
+    background: var(--theme-color);
+    border-radius: 2px;
+    margin-left: 30px;
+    margin-bottom: 2rem;
+}
+
+.theme-color {
+    color: var(--theme-color) !important;
+}
+
+.courses-badge {
+    background: var(--theme-color);
+    color: #fff;
+    font-size: 0.95em;
+}
+
+.course-card {
+    border: 1px solid #E5E7EB !important;
+    /* Add any card-specific styling if needed */
+}
+
+.course-card .card-body {
+    padding: 2rem;
+}
+
+.course-card .card-title {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 600;
+}
+
+.course-code-badge {
+    font-size: 0.85em;
+    border-radius: 50rem !important;
+    color: #5E0B66 !important;
+    border: 1px solid #e0e0e0 !important;
+    background: #f8f9fa !important;
+    padding-left: 0.9em;
+    padding-right: 0.9em;
+    padding-top: 0.35em;
+    padding-bottom: 0.35em;
+}
+
+.remove-btn {
+    background: var(--theme-color);
+    color: #fff;
+}
+
+.remove-btn:hover {
+    background: #480c4e;
+    color: #fff;
+}
+
+.filter-input input,
+.filter-input .form-select,
+.filter-input .input-group-text {
+    background: rgb(250, 250, 250) !important;
+    color: rgb(113, 113, 122) !important;
+    border: solid 1px #EAEAEC !important;
+    box-shadow: none !important;
+}
+
+.filter-input input::placeholder {
+    color: rgb(113, 113, 122) !important;
+    opacity: 1;
+}
+
+.filter-input .form-select {
+    background-image: none !important;
+}
+
+.filter-addon img {
+    filter: invert(20%) sepia(8%) saturate(500%) hue-rotate(210deg) brightness(95%);
+}
+
+.filter-search,
+.filter-select,
+.filter-year {
+    background-color: rgb(250, 250, 250) !important;
+    color: rgb(113, 113, 122) !important;
+   border: solid 1px #EAEAEC !important;
+    box-shadow: none !important;
+    min-width: 0;
+    /* Make sure they shrink/grow properly */
+}
+
+.filter-search::placeholder {
+    color: rgb(113, 113, 122) !important;
+    opacity: 1;
+}
+
+.filter-search {
+    background-image: url('../assets/search.png');
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 18px 18px;
+    padding-left: 40px !important;
+}
+
+.filter-select,
+.filter-year {
+    background-image: url('../assets/iconsax-arrow-down-02.png');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px 18px;
+    padding-right: 40px !important;
+}
+
+/* Remove default arrow for select */
+.filter-select,
+.filter-year {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.course-meta {
+    color: #6B7280 !important;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 767px) {
+    .d-flex.mb-3.flex-nowrap {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+}
