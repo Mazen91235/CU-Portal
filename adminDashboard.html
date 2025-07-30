@@ -241,33 +241,562 @@
                 <h2 class="fw-bold title charts">
                     over view & statistics
                 </h2>
-                    <div class="container ring justify-content-between align-items-center col-5 ">
-                        <div id="circularChart" class="bg-white shadow rounded-4 mt-5"></div>
-<div class="text-center mt-2">
-    <span class="b-title">Student Distribution by Faculty</span>
-  </div>
+                <div class="container ring justify-content-between align-items-center col-5 ">
+                    <div id="circularChart" class="bg-white shadow rounded-4 mt-5"></div>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Student Distribution by Faculty</span>
                     </div>
+                </div>
 
-                    <div class="chart-container justify-content-between align-items-center col-7 ">
-                        <canvas id="myChart" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
-<div class="text-center mt-2">
-    <span class="b-title">Task Submission Rate by Faculty</span>
-  </div>
+                <div class="chart-container justify-content-between align-items-center col-7 ">
+                    <canvas id="myChart" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Task Submission Rate by Faculty</span>
                     </div>
+                </div>
 
             </div>
 
-<div class="justify-content-between align-items-center col-12" style="width: 100%;">
-    <div class="card">
- <div class="stats">
-    4.38K <span><img src="./assets/Vector (1).svg"> 22.41%</span>
-  </div>
-  <canvas id="activityChart" height="90"></canvas>
-    </div>
-<div class="text-center mt-2">
-    <span class="b-title">Student Distribution by Faculty</span>
-  </div>
-</div>
+            <div class="justify-content-between align-items-center col-12 " style="width: 100%;">
+                <div class="card">
+                    <div class="stats">
+                        4.38K <span><img src="./assets/Vector (1).svg"> 22.41%</span>
+                    </div>
+                    <canvas id="activityChart" height="90"></canvas>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="b-title">Student Distribution by Faculty</span>
+                </div>
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart3" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Students Activity Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart4" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Students Activity Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart5" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Students Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart6" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Students Activity Per Year Over Time</span>
+                </div>
+            </div>
+
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart7" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Representatives Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart8" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Courses Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart9" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Materials Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart10" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Materials Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart11" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Materials Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart12" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Grades Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart13" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Grades Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart14" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Grades Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart15" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Tasks Published Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart16" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Tasks Published Over Time</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart17" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Tasks Published Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart18" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Task Submission Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart19" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Task Submission Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart20" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Task Submission Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart21" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Attachments Per Task Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart22" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Attachments Per Task Over Time</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart23" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Attachment Per Task Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart24" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Exams Published Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart25" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Exams Published Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart26" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Exams Published Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart27" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Announcements Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart28" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Announcements Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart29" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Announcements Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart30" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Attachments Per Announcement Over Time</span>
+                </div>
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart31" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Attachments Per Announcement Per Faculty</span>
+                </div>
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart32" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Attachments Per Announcement Per Faculty Over Time</span>
+                </div>
+            </div>
+
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart33" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Events Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart34" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Events Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart35" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Events Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart36" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Timetables Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart37" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Timetables Over Time</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart38" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Timetables Per Faculty Over Time</span>
+                </div>
+            </div>
+
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart39" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Tasks Per Table Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart40" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Tasks Per Table Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart41" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Tasks Per Table Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart42" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Tasks Finished Per Timetable Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart43" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Tasks Finished Per Timetable Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart44" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Tasks Finished Per Timetable Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart45" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Tasks Finished Per Timetable Per Faculty Over Time</span>
+                </div>
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart46" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Timetables Copied Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart47" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Timetables Copied Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart48" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Pull Requests Accepted Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart49" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Pull Requests Accepted Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart50" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Pull Requests Accepted Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart51" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Timetables Copied Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart52" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Public Timetables Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart53" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Public Timetables Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart54" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Public Timetables Per Faculty Over Time</span>
+                </div>
+            </div>
+
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart55" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Roadmaps Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart56" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Roadmaps Over Time</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart57" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Roadmaps Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <div id="roadmapChart" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></div>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Roadmaps Categorization</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart58" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Students Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart59" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Roadmaps Per Faculty Over Time</span>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart60" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Discussions Over Time</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart61" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Discussions Per Faculty</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-center align-items-center  mb-3">
+                <div class="chart-container justify-content-center align-items-center col-7 ">
+                    <canvas id="Chart62" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Answers to Questions Per Faculty</span>
+                    </div>
+                </div>
+                <div class="chart-container justify-content-center align-items-center col-5 ">
+                    <canvas id="Chart63" width="400" height="300" class="bg-white shadow rounded-4 mt-5 p-3"></canvas>
+                    <div class="text-center mt-2">
+                        <span class="b-title">Average Answers to Questions Over Time</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class=" justify-content-between align-items-center col-12 " style="width: 100%;">
+
+                <canvas id="Chart64" class="bg-white shadow rounded-4 mt-5 p-3 "></canvas>
+
+                <div class="text-center mt-2">
+                    <span class="b-title">Average Answers to Questions Per Faculty Over Time</span>
+                </div>
+            </div>
+
+
+
+
+
 
 
 
@@ -432,6 +961,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.30.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
     <script src="./js/loading.js"></script>
     <script>
@@ -449,7 +982,7 @@
                 dropdownMenu.style.display = "none";
             }
         });
-//////////
+        //////////
         const canvas = document.getElementById("myChart");
         const ctx = canvas.getContext("2d");
         let chart;
@@ -577,61 +1110,443 @@
                     ]
                 }
             ]
-        }); 
-   //////
-   const isMobile = window.innerWidth < 576;
+        });
+        //////
+        const isMobile = window.innerWidth < 576;
 
- const ctx3 = document.getElementById('activityChart').getContext('2d');
+        const ctx3 = document.getElementById('activityChart').getContext('2d');
 
-  const gradient = ctx3.createLinearGradient(0, 0, 0, 300);
-  gradient.addColorStop(0, 'rgba(128,0,128,0.15)');
-  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        const gradient = ctx3.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(128,0,128,0.15)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
-  new Chart(ctx3, {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      datasets: [{
-        label: 'Activity',
-        data: [120, 300, 90, 140, 150, 220, 210, 250, 340, 190, 170, 180],
-        fill: true,
-        backgroundColor: gradient,
-        borderColor: '#7B1584',
-         borderWidth: 2,
-        tension: 0.3,
-        pointRadius: 0
-      }]
-    },
-    options: {
-          responsive: true,
-  maintainAspectRatio: false,
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Activity',
+                    data: [120, 300, 90, 140, 150, 220, 210, 250, 340, 190, 170, 180],
+                    fill: true,
+                    backgroundColor: gradient,
+                    borderColor: '#7B1584',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
 
-      plugins: {
-        legend: {
-          display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        display: false
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }, border: {
+                            display: false
+                        }, ticks: {
+                            font: {
+                                size: isMobile ? 9 : 15
+                            }, maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: false
+                        }
+                    }
+                }
+            }
+        });
+
+
+
+        function renderLineChart(canvasId, chartTitle, labels, datasets) {
+            const ctx4 = document.getElementById(canvasId).getContext('2d');
+
+            new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets.map(ds => ({
+                        label: ds.label,
+                        data: ds.data,
+                        borderColor: ds.color,
+                        backgroundColor: ds.color + '22',
+                        fill: false,
+                        borderWidth: isMobile ? 1 : 1,
+                        pointRadius: isMobile ? 1 : 3,
+                        pointBackgroundColor: ds.color,
+                        pointBorderColor: ds.color,
+                        pointStyle: 'circle',
+                        tension: 0
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: false,
+                            text: chartTitle,
+                            font: {
+                                size: 20,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'right',
+                            display: !isMobile
+
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: false,
+                            }, ticks: {
+                                font: {
+                                    size: isMobile ? 9 : 15
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: false,
+                                text: 'Date'
+                            }, ticks: {
+                                font: {
+                                    size: isMobile ? 9 : 15
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
-      },
-      scales: {
-        y: {
-          display: false
-        },
-        x: {
-          grid: {
-            display: false
-          }, border: {
-          display: false 
-        } ,ticks: {
-    font: {
-      size:isMobile ? 9:15 
-    },maxRotation: 0,
-  minRotation: 0,
-  autoSkip: false  
-  }
+
+        const labels = ['09/23', '09/24', '09/25', '09/26', '09/27', '09/28', '09/29', '09/30', '10/01'];
+        const dataset1 = [
+            { label: 'Art', data: [27, 20, 36, 34, 29, 39, 38, 52, 56], color: '#FFD700' },
+            { label: 'Business', data: [40, 35, 46, 45, 41, 48, 47, 57, 59], color: '#800080' },
+            { label: 'Law', data: [19, 11, 29, 27, 21, 32, 46, 50, 53], color: '#00BFFF' },
+            { label: 'Com.sc', data: [13, 7, 22, 20, 14, 24, 23, 37, 40], color: '#FF8C00' }
+        ];
+        renderLineChart('Chart3', 'Task Submission Rate by Faculty', labels, dataset1);
+        renderLineChart('Chart6', 'Students Activity Per Year Over Time', labels, dataset1);
+        renderLineChart('Chart11', 'Materials Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart14', 'Grades Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart17', 'Tasks Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart20', ' avg Tasks Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart23', ' avg attachments Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart26', ' exam Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart29', ' Announcements Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart30', ' Average Attachments Per Announcement Over Time', labels, dataset1);
+        renderLineChart('Chart31', ' Average Attachments Per Announcement Per Faculty', labels, dataset1);
+        renderLineChart('Chart32', ' Average Attachments Per Announcement Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart35', ' Events Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart38', ' Timetables Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart41', ' Average Tasks Per Table Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart42', ' Average Tasks Finished Per Timetable Over Time', labels, dataset1);
+        renderLineChart('Chart45', ' Average Tasks Finished Per Timetable Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart46', ' Timetables Copied Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart49', ' Pull Requests Accepted Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart54', ' Public Timetables Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart57', ' Roadmaps Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart59', ' Discussions Per Faculty Over Time', labels, dataset1);
+        renderLineChart('Chart64', ' Average Answers to Questions Per Faculty Over Time', labels, dataset1);
+
+
+
+
+
+
+        function createAlternatingBarChart(canvasId, labels, values, firstColor = '#A41BB1', secondColor = '#94A3B8') {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            const backgroundColors = values.map((_, i) =>
+                i % 2 === 0 ? firstColor : secondColor
+            );
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: backgroundColors,
+                        borderRadius: 10,
+                        barThickness: isMobile ? 20 : 40
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#eaeaea' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
         }
-      }
-    }
-  });
-   </script>
+        createAlternatingBarChart(
+            'Chart5',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart7',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart8',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart10',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart13',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart15',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart19',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart21',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart25',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart28',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart34',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart36',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart40',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart44',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart48',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart51',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart53',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart55',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart58',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart61',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        createAlternatingBarChart(
+            'Chart62',
+            ['Computer Science', 'Business', 'Art', 'Law', 'Medicine', 'Engineering'],
+            [8, 10, 12, 6, 10, 9]
+        );
+        function createLineChart(chartId, labels, data) {
+            const ctx = document.getElementById(chartId).getContext('2d');
+
+            // Create gradient stroke
+            const gradient = ctx.createLinearGradient(0, 0, 700, 0);
+            gradient.addColorStop(0, '#800080');
+            gradient.addColorStop(0.7, '#800080');
+            gradient.addColorStop(1, '#FFA8A7');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Activity',
+                        data: data,
+                        fill: false,
+                        borderColor: gradient,
+                        borderWidth: 2,
+                        tension: 0,
+                        pointRadius: 4,
+                        pointBackgroundColor: gradient,
+                        pointBorderColor: gradient,
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6,
+                        pointHoverBorderWidth: 2,
+                        pointHoverBackgroundColor: gradient,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: window.innerWidth < 576 ? 9 : 12
+                                }
+                            },
+                            grid: {
+                                display: false
+                            },
+                            border: {
+                                color: '#f9cfcf'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: '#ddd',
+                                borderDash: [4, 2]
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Example usage:
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep'];
+        const values = [1.7, 0.8, 1.5, 2.8, 2.5, 1.9, 3.0, 2.9, 4.8];
+        createLineChart('Chart4', months, values);
+        createLineChart('Chart9', months, values);
+        createLineChart('Chart12', months, values);
+        createLineChart('Chart16', months, values);
+        createLineChart('Chart18', months, values);
+        createLineChart('Chart22', months, values);
+        createLineChart('Chart24', months, values);
+        createLineChart('Chart27', months, values);
+        createLineChart('Chart33', months, values);
+        createLineChart('Chart37', months, values);
+        createLineChart('Chart39', months, values);
+        createLineChart('Chart43', months, values);
+        createLineChart('Chart47', months, values);
+        createLineChart('Chart50', months, values);
+        createLineChart('Chart52', months, values);
+        createLineChart('Chart56', months, values);
+        createLineChart('Chart60', months, values);
+        createLineChart('Chart63', months, values);
+
+
+        function renderDonutChart(containerId, data, colors) {
+            Highcharts.chart(containerId, {
+                colors: colors || ['#F97316', '#FB923C', '#FFF7ED', '#FED7AA'],
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}: {y} %'
+                        },
+                        showInLegend: true
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Roadmap',
+                    colorByPoint: true,
+                    innerSize: '70%',
+                    data: data
+                }]
+            });
+        }
+        const roadmapData = [
+            { name: 'CS', y: 30 },
+            { name: 'Medicine', y: 25 },
+            { name: 'Art', y: 25 },
+            { name: 'Engineering', y: 20 }
+        ];
+
+        renderDonutChart('roadmapChart', roadmapData,);
+
+
+
+
+
+    </script>
 
 
 </body>
