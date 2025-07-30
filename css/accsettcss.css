@@ -1,0 +1,592 @@
+/* Responsive profile image and button group */
+.personal-details-header {
+  /* No change, just for context */
+}
+.personal-details-avatar {
+  /* No change, just for context */
+}
+.personal-details-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem; /* Increased gap for more space between avatar and buttons */
+  align-items: center;
+}
+.personal-details-btn-group .btn {
+  flex: 1 1 120px;
+  min-width: 100px;
+  max-width: 220px;
+  width: auto;
+}
+.form-label{
+  text-align: left !important;
+  justify-content: left !important;
+  font-family: 'Inter', sans-serif !important;
+}
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+.personal-details-label {
+      font-family: 'Roboto', Arial, sans-serif !important;
+      font-weight: 500 !important;
+      font-size: 16px !important;
+      text-align: left !important;
+}
+.personal-details-header {
+  margin-bottom: 0.5rem;
+}
+.personal-details-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+}
+.personal-details-underline {
+  width: 120px;
+  height: 2px;
+  background: rgba(90, 15, 97, 1);
+ margin-left: 30px;
+  margin-top: 4px;
+  border-radius: 2px;
+}
+.personal-details-card {
+  border-radius: 16px;
+  background: #fff;
+  border-style: none;
+  width: 90%;
+  margin-top: 1rem;    /* Reduced from 2rem to 1rem */
+  padding: 1.2rem !important;     /* Reduced from 2rem to 1.2rem */
+  box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
+}
+.personal-details-avatar {
+  width: 79px;
+  height: 79px;
+  object-fit: cover;
+}
+.btn-purple {
+  background: rgba(90, 15, 97, 1) !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 12px !important;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none !important;
+}
+.personal-details-remove {
+  background: rgba(150, 150, 150, 0.69) !important;
+  font-weight: 500;
+  border-radius: 12px !important;
+  color: #fff !important;
+  min-width: 180px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none !important;
+}
+.personal-details-label {
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+  text-align: left !important;
+  color: rgba(0, 0, 0, 0.38);
+}
+.personal-details-save {
+  width: 260px !important;
+  font-weight: 500;
+  font-size: 18px;
+  border-radius: 12px;
+  background: rgba(90, 15, 97, 1);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+}
+.personal-details-google {
+  width: 260px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  color: #333;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+}
+.personal-details-google-img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Input fields styling */
+.personal-details-card .form-control,
+.personal-details-card .form-select {
+  border-radius: 12px;
+  border: 1px solid #E0E0E0;
+  background: #fff;
+  font-size: 15px;
+  color: #333;
+  height: 44px;
+  box-shadow: none;
+  padding-left: 16px;
+  padding-right: 40px;
+}
+.personal-details-card .form-control::placeholder,
+.personal-details-card .form-select option {
+  color: #BDBDBD;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  opacity: 1;
+}
+.personal-details-card .input-group-text {
+  background: #fff;
+  border: none;
+  color: #BDBDBD;
+  font-size: 18px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.personal-details-card .input-group {
+  align-items: center;
+}
+.personal-details-card .form-select {
+  border-radius: 12px;
+  border: 1px solid #E0E0E0;
+  background: #fff;
+  font-size: 15px;
+  color: #333;
+  height: 44px;
+  padding-left: 40px;
+}
+.personal-details-card .input-group-text i {
+  font-size: 18px;
+  color: #BDBDBD;
+  margin-left: 0;
+  margin-right: 0;
+}
+.input-icon-right {
+ 
+  background-position: right 1rem center  !important;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat !important;
+  padding-right: 2.5rem !important;
+}
+.input-icon-right.icon-user {
+  background-image: url('../assets/user-icon.png');
+}
+.input-icon-right.icon-envelope {
+  background-image: url('../assets/Letter.png');
+}
+
+.input-icon-right.icon-idcard {
+  background-image: url('../assets/User\ Id.png');
+}
+
+input.no-spinner::-webkit-inner-spin-button,
+  input.no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input.no-spinner {
+    -moz-appearance: textfield; /* Firefox */
+  }
+.input-icon-right.icon-google {
+  background-image: url('../assets/google-icon.png');
+  background-color: transparent !important;
+  /* ensures transparent background for the icon area */
+}
+.phone-code.phone-icon-right {
+  background-image: 
+    url('../assets/phone-code.png'), 
+    url('../assets/phone-icon.png');
+  background-position: left 0.5rem center, right 1rem center;
+  background-size: 30px 25px, 20px 20px;
+  background-repeat: no-repeat, no-repeat;
+  padding-left: 3.2rem;
+  padding-right: 2.5rem;
+}
+
+/* Custom select for gender */
+select.form-select.input-icon-right.icon-venus-mars {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #F9F9FB;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #22223B;
+  height: 48px;
+  padding-left: 2.7rem;
+  padding-right: 2.7rem;
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.75rem center;
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
+  box-shadow: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+select.form-select.input-icon-right.icon-venus-mars:focus {
+  border-color: #5a0f61;
+  box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.08);
+  outline: none;
+}
+
+select.form-select.input-icon-right.icon-venus-mars option {
+  color: #22223B;
+  background: #fff;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  padding: 10px 16px;
+}
+
+/* Hide default arrow in IE */
+select.form-select.input-icon-right.icon-venus-mars::-ms-expand {
+  display: none;
+}
+
+.input-icon-right.icon-envelope {
+  background-image: url('../assets/Letter.png');
+}
+
+.input-icon-right.icon-idcard {
+  background-image: url('../assets/User\ Id.png');
+}
+.input-icon-right.icon-venus-mars {
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.5rem center !important;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat !important;
+  padding-left: 2.5rem !important;
+  padding-right: 2.5rem !important;
+}
+
+.input-icon-right.icon-google {
+background-image: url('../assets/google-icon.png');
+}
+.phone-code.phone-icon-right {
+  background-image: 
+    url('../assets/phone-code.png'), 
+    url('../assets/phone-icon.png');
+  background-position: left 0.5rem center, right 1rem center;
+  background-size: 30px 25px, 20px 20px;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* Custom select for gender */
+
+select.form-select {
+  border: 1.5px solid #E0E0E0;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #22223B;
+  height: 48px;
+  padding-left: 2.7rem;
+  padding-right: 2.7rem;
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.75rem center;
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
+  box-shadow: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+select.form-select.input-icon-right.icon-venus-mars:focus {
+  border-color: #5a0f61;
+  box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.08);
+  outline: none;
+}
+
+select.form-select.input-icon-right.icon-venus-mars option {
+  color: #22223B;
+  background: #fff;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  padding: 10px 16px;
+}
+
+/* Hide default arrow in IE */
+
+input:focus, select:focus, textarea:focus {
+        border-color: #5a0f61 !important;
+        box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1) !important;
+        outline: none !important;
+}
+/* Responsive styles for mobile and tablet */
+@media (max-width: 991.98px) {
+  .personal-details-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+    margin-top: 5rem !important;
+    box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
+    float: none;
+  }
+  .personal-details-underline{
+    margin-left: 30px !important;
+    
+  }
+  .personal-details-btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .personal-details-btn-group .btn {
+    font-size: 13px;
+    min-width: 120px;
+    height: 40px;
+    /* Add this to prevent flex from stretching buttons */
+    flex: none !important;
+  }
+  .btn-purple {
+    min-width: 103px !important;
+    width: 103px !important;
+    font-size: 13px !important;
+    padding: 0.36rem 0.2rem !important;
+    flex: none !important;
+  }
+  .personal-details-remove {
+    min-width: 160px !important;
+    width: 160px !important;
+    font-size: 13px !important;
+    flex: none !important;
+  }
+  .personal-details-save,
+  .personal-details-google {
+    width: 290px !important;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 13px;
+    margin-bottom: 0.7rem;
+    padding: 0.7rem 1.5rem;
+  }
+  .personal-details-google {
+    margin-bottom: 0;
+  }
+  .personal-details-card .form-control,
+  .personal-details-card .form-select {
+    width: 100% !important;
+    min-width: 0;
+    font-size: 15px;
+    height: 44px;
+    padding-left: 16px;
+    padding-right: 40px;
+  }
+  .personal-details-card .input-group,
+  .personal-details-card .form-control {
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .container.mt-5 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .row.justify-content-center {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .phone-code.phone-icon-right {
+  background-image: 
+    url('../assets/phone-code.png'), 
+    url('../assets/phone-icon.png');
+  background-position: left 0.5rem center, right 1rem center;
+  background-size: 30px 25px, 20px 20px;
+  background-repeat: no-repeat, no-repeat;
+  padding-left: 3.2rem;
+  padding-right: 2.5rem;
+}
+
+}
+
+@media (max-width: 575.98px) {
+  .personal-details-card {
+    margin: 0 !important;
+        margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+
+    padding: 0.5rem !important;
+  }
+  .personal-details-header h4,
+  .personal-details-title {
+    font-size: 1rem !important;
+  }
+  .personal-details-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  .personal-details-save,
+  .personal-details-google {
+    font-size: 15px;
+    padding: 0.6rem 1rem;
+  }
+  .personal-details-underline{
+    margin-left: 15px !important;
+    width: 25%;
+    
+}
+  .personal-details-google {
+    font-size: 15px;
+    padding: 0.6rem 1rem;
+  }
+
+
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .personal-details-card .form-control,
+  .personal-details-card .form-select,
+  .personal-details-card .input-group {
+    width: 90% !important;
+    min-width: 220px;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width:1280px) {
+  .form-label,
+.personal-details-label {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    display: block !important;
+  }
+}
+
+/* Custom gender select and dropdown styles */
+#gender-select-group {
+  position: relative;
+  
+}
+
+.gender-dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: 12px;
+  border-color: #5a0f61;
+}
+
+.gender-dropdown-list li {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 7px 14px 7px 22px; /* balanced padding */
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: block;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;
+  color: #5a0f61;
+}
+
+.gender-dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: 12px;
+  border-color: #5a0f61;
+}
+
+.gender-dropdown-list li {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 7px 14px 7px 22px; /* balanced padding */
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: block;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;
+  color: #5a0f61;
+}
+
+.btn,
+.btn-purple,
+.personal-details-remove,
+.personal-details-save,
+.personal-details-google {
+  transition: 
+    background 0.2s, 
+    color 0.2s, 
+    box-shadow 0.2s, 
+    border-color 0.2s, 
+    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.18s;
+}
+
+.btn:hover,
+.btn-purple:hover,
+.personal-details-remove:hover,
+.personal-details-save:hover,
+.personal-details-google:hover {
+  transform: scale(1.08);
+  filter: brightness(0.85);
+  box-shadow: 0 4px 16px 0 rgba(90, 15, 97, 0.10);
+}
+
+
