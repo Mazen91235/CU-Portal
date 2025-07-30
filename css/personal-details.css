@@ -8,7 +8,7 @@
 .personal-details-btn-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1.5rem; /* Increased gap for more space between avatar and buttons */
   align-items: center;
 }
 .personal-details-btn-group .btn {
@@ -179,14 +179,7 @@
 .input-icon-right.icon-idcard {
   background-image: url('../assets/User\ Id.png');
 }
-.input-icon-right.icon-venus-mars {
-  background-image: url('../assets/Users Group Rounded.png'), url('../assets/iconsax-arrow-down-02.png');
-  background-position: left 0.5rem center, right 1rem center !important;
-  background-size: 20px 20px, 20px 20px !important;
-  background-repeat: no-repeat, no-repeat !important;
-  padding-left: 2.5rem !important;
-  padding-right: 2.5rem !important;
-}
+
 input.no-spinner::-webkit-inner-spin-button,
   input.no-spinner::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -197,7 +190,9 @@ input.no-spinner::-webkit-inner-spin-button,
     -moz-appearance: textfield; /* Firefox */
   }
 .input-icon-right.icon-google {
-  background-image: url('../assets/icons8-google\ 1.png');
+  background-image: url('../assets/google-icon.png');
+  background-color: transparent !important;
+  /* ensures transparent background for the icon area */
 }
 .phone-code.phone-icon-right {
   background-image: 
@@ -223,10 +218,10 @@ select.form-select.input-icon-right.icon-venus-mars {
   height: 48px;
   padding-left: 2.7rem;
   padding-right: 2.7rem;
-  background-image: url('../assets/Users Group Rounded.png'), url('../assets/iconsax-arrow-down-02.png');
-  background-position: left 0.75rem center, right 1.2rem center;
-  background-size: 22px 22px, 18px 18px;
-  background-repeat: no-repeat, no-repeat;
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.75rem center;
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
   box-shadow: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -259,24 +254,16 @@ select.form-select.input-icon-right.icon-venus-mars::-ms-expand {
   background-image: url('../assets/User\ Id.png');
 }
 .input-icon-right.icon-venus-mars {
-  background-image: url('../assets/Users Group Rounded.png'), url('../assets/iconsax-arrow-down-02.png');
-  background-position: left 0.5rem center, right 1rem center !important;
-  background-size: 20px 20px, 20px 20px !important;
-  background-repeat: no-repeat, no-repeat !important;
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.5rem center !important;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat !important;
   padding-left: 2.5rem !important;
   padding-right: 2.5rem !important;
 }
-input.no-spinner::-webkit-inner-spin-button,
-  input.no-spinner::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
 
-  input.no-spinner {
-    -moz-appearance: textfield; /* Firefox */
-  }
 .input-icon-right.icon-google {
-  background-image: url('../assets/icons8-google\ 1.png');
+background-image: url('../assets/google-icon.png');
 }
 .phone-code.phone-icon-right {
   background-image: 
@@ -285,16 +272,11 @@ input.no-spinner::-webkit-inner-spin-button,
   background-position: left 0.5rem center, right 1rem center;
   background-size: 30px 25px, 20px 20px;
   background-repeat: no-repeat, no-repeat;
-  padding-left: 3.2rem;
-  padding-right: 2.5rem;
 }
 
 /* Custom select for gender */
-select.form-select.input-icon-right.icon-venus-mars {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: #F9F9FB;
+
+select.form-select {
   border: 1.5px solid #E0E0E0;
   border-radius: 12px;
   font-size: 16px;
@@ -302,15 +284,14 @@ select.form-select.input-icon-right.icon-venus-mars {
   height: 48px;
   padding-left: 2.7rem;
   padding-right: 2.7rem;
-  background-image: url('../assets/Users Group Rounded.png'), url('../assets/iconsax-arrow-down-02.png');
-  background-position: left 0.75rem center, right 1.2rem center;
-  background-size: 22px 22px, 18px 18px;
-  background-repeat: no-repeat, no-repeat;
+  background-image: url('../assets/Users Group Rounded.png');
+  background-position: left 0.75rem center;
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
   box-shadow: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
-
 select.form-select.input-icon-right.icon-venus-mars:focus {
   border-color: #5a0f61;
   box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.08);
@@ -326,9 +307,7 @@ select.form-select.input-icon-right.icon-venus-mars option {
 }
 
 /* Hide default arrow in IE */
-select.form-select.input-icon-right.icon-venus-mars::-ms-expand {
-  display: none;
-}
+
 input:focus, select:focus, textarea:focus {
         border-color: #5a0f61 !important;
         box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1) !important;
@@ -481,4 +460,133 @@ input:focus, select:focus, textarea:focus {
     display: block !important;
   }
 }
+
+/* Custom gender select and dropdown styles */
+#gender-select-group {
+  position: relative;
+  
+}
+
+.gender-dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: 12px;
+  border-color: #5a0f61;
+}
+
+.gender-dropdown-list li {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 7px 14px 7px 22px; /* balanced padding */
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: block;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;
+  color: #5a0f61;
+}
+
+.gender-dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: 12px;
+  border-color: #5a0f61;
+}
+
+.gender-dropdown-list li {
+  width: 90%;
+  box-sizing: border-box;
+  padding: 7px 14px 7px 22px; /* balanced padding */
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: block;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;
+  color: #5a0f61;
+}
+
+.btn,
+.btn-purple,
+.personal-details-remove,
+.personal-details-save,
+.personal-details-google {
+  transition: 
+    background 0.2s, 
+    color 0.2s, 
+    box-shadow 0.2s, 
+    border-color 0.2s, 
+    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.18s;
+}
+
+.btn:hover,
+.btn-purple:hover,
+.personal-details-remove:hover,
+.personal-details-save:hover,
+.personal-details-google:hover {
+  transform: scale(1.08);
+  filter: brightness(0.85);
+  box-shadow: 0 4px 16px 0 rgba(90, 15, 97, 0.10);
+}
+
 
