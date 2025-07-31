@@ -40,7 +40,8 @@
                     <span class="arrow">&#9662;</span>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <div class="date-filter">
+                    <button onclick="showCustomDate()" class="custom-input">Custom</button>
+                    <div id="date-filter">
                         <label>
                             From:
                             <input type="date" id="from-date" class="date-input" placeholder="From" /> </label>
@@ -991,6 +992,13 @@
             }
         });
         //////////
+        function showCustomDate() {
+    const filterDiv = document.getElementById("date-filter");
+    if (filterDiv) {
+      filterDiv.style.display = 'flex';
+    }
+  }
+  ///////////
         const canvas = document.getElementById("myChart");
         const ctx = canvas.getContext("2d");
         let chart;
