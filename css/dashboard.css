@@ -138,16 +138,15 @@ padding-right: 10px;
   .calendar-grid {
     grid-template-columns: repeat(7, 1fr); /* ensures 7 small columns */
     gap: 1px !important; ;
-          white-space: nowrap;
+              gap: 22px !important;
+
 
   }
 
   .calendar-cell {
     font-size: 10px;
-    white-space: nowrap;
     height: 40px !important;
-    width: 50px !important; 
-
+    width: 60px !important; 
 
   }
 
@@ -200,7 +199,9 @@ padding-right: 10px;
   #exam-table th,
   #exam-table td {
     padding: 6px 4px;
-    font-size: 12px;
+    font-size: 14px;
+        white-space: nowrap;
+
   }
 
   .exam-overview h5 {
@@ -215,7 +216,8 @@ padding-right: 10px;
 #task-table th,
   #task-table td {
     padding: 6px 4px;
-    font-size: 12px;
+    font-size: 14px;
+    white-space: nowrap;
   }
   .tasks-assignments {
     padding: 0.5rem !important;
@@ -228,9 +230,10 @@ padding-right: 10px;
 
 .upcoming-events {
   margin-left: 0px !important;
-      white-space: nowrap;
+ white-space: nowrap;
 
 }
+
 .study-tracker {
   margin-left: 0px !important;
       white-space: nowrap;
@@ -250,9 +253,8 @@ padding-right: 10px;
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
+  gap: 29px;
   padding: 8px;
-        white-space: nowrap;
 
 }
 
@@ -264,7 +266,6 @@ padding-right: 10px;
   position: relative;
   height: 50px;
   width: 90px;
-        white-space: nowrap;
 
 
 }
@@ -669,4 +670,32 @@ max-width: 430px;
   background-color: #f8f9fa !important;
 }
 
+@media screen and (max-width: 450px) {
 
+.event-data{
+margin-left: -10px;
+}
+ .calendar-container {
+    padding: 1rem !important;
+    font-size: 8px;
+          white-space: nowrap;
+
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr); /* ensures 7 small columns */
+    gap: 0 !important; 
+margin-left: -15px;
+
+
+  }
+
+  .calendar-cell {
+    font-size: 10px;
+    height: 30px !important;
+    width: 45px !important; 
+    text-align: center;
+    padding-top: 10px !important;
+
+  }
+}

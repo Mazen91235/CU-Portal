@@ -993,12 +993,12 @@
         });
         //////////
         function showCustomDate() {
-    const filterDiv = document.getElementById("date-filter");
-    if (filterDiv) {
-      filterDiv.style.display = 'flex';
-    }
-  }
-  ///////////
+            const filterDiv = document.getElementById("date-filter");
+            if (filterDiv) {
+                filterDiv.style.display = 'flex';
+            }
+        }
+        ///////////
         const canvas = document.getElementById("myChart");
         const ctx = canvas.getContext("2d");
         let chart;
@@ -1313,6 +1313,11 @@
                             grid: { color: '#eaeaea' }
                         },
                         y: {
+                            ticks: {
+                                font: {
+                                    size: isMobile ? 8 : 15,
+                                }
+                            },
                             grid: { display: false }
                         }
                     }
