@@ -40,7 +40,15 @@
                     <span class="arrow">&#9662;</span>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <input type="text" placeholder="Custom" class="custom-input" />
+                    <div class="date-filter">
+                        <label>
+                            From:
+                            <input type="date" id="from-date" class="date-input" placeholder="From" /> </label>
+                        <label>
+                            To:
+                            <input type="date" id="to-date" class="date-input" placeholder="To" /></label>
+                    </div>
+
                     <ul>
                         <li>This Month</li>
                         <li>Past 3 Months</li>
