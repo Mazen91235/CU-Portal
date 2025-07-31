@@ -201,7 +201,7 @@ input.no-spinner::-webkit-inner-spin-button,
   background-position: left 0.5rem center, right 1rem center;
   background-size: 30px 25px, 20px 20px;
   background-repeat: no-repeat, no-repeat;
-  padding-left: 3.2rem;
+    padding-left: 3.2rem;
   padding-right: 2.5rem;
 }
 
@@ -493,68 +493,64 @@ input:focus, select:focus, textarea:focus {
 }
 
 .gender-dropdown-list li {
-  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   box-sizing: border-box;
-  padding: 7px 14px 7px 22px; /* balanced padding */
+  width: 100%; /* full width for separator and background */
+  padding: 6px 12px; /* minimized and equal padding */
+  margin: 0;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
-  display: block;
   font-family: 'Inter', 'Roboto', Arial, sans-serif;
   font-size: 16px;
   color: #333;
   font-weight: 500;
   letter-spacing: 0.01em;
   border-bottom: 1px solid #f0f0f0;
+  background: transparent;
 }
 
-.gender-dropdown-list li:last-child {
-  border-bottom: none;
+.gender-dropdown-list li > span {
+  display: inline-block;
+  transition: transform 0.18s;
 }
 
 .gender-dropdown-list li:hover {
   background: #f3f3f3;
   color: #5a0f61;
-}
-
-.gender-dropdown-list {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  z-index: 10;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  min-width: 100%;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-.gender-dropdown-list.open {
-  opacity: 1;
-  pointer-events: auto;
   border-radius: 12px;
-  border-color: #5a0f61;
 }
 
-.gender-dropdown-list li {
-  width: 90%;
-  box-sizing: border-box;
-  padding: 7px 14px 7px 22px; /* balanced padding */
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  display: block;
-  font-family: 'Inter', 'Roboto', Arial, sans-serif;
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  border-bottom: 1px solid #f0f0f0;
+.gender-dropdown-list li:hover > span {
+  transform: scale(1.1);  
 }
+
+
+.btn,
+.btn-purple,
+.personal-details-remove,
+.personal-details-save,
+.personal-details-google {
+  transition: 
+    background 0.2s, 
+    color 0.2s, 
+    box-shadow 0.2s, 
+    border-color 0.2s, 
+    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.18s;
+}
+
+.btn:hover,
+.btn-purple:hover,
+.personal-details-remove:hover,
+.personal-details-save:hover,
+.personal-details-google:hover {
+  transform: scale(1.08);
+  filter: brightness(0.85);
+  box-shadow: 0 4px 16px 0 rgba(90, 15, 97, 0.10);
+}
+
 
 .gender-dropdown-list li:last-child {
   border-bottom: none;
