@@ -765,49 +765,15 @@
             <!-- Progress Circle -->
             <div class="d-flex justify-content-center mb-3">
               <div class="circle-progress">
-                <svg viewBox="0 0 120 120">
-                  <circle class="circle-bg" cx="60" cy="60" r="50" />
-                  <circle class="circle-fg" cx="60" cy="60" r="50" stroke-dashoffset="calc(314 - 314 * 0.72)" />
-                </svg>
-                <div class="progress-text">
-                  <div class="main">18h</div>
-                  <div class="sub">of 25h</div>
-                </div>
+                <canvas id="circularChart" width="200" height="200"></canvas>
               </div>
             </div>
 
             <!-- Weekly Bar Chart -->
-            <div class="week-chart text-center mb-3">
-              <div class="d-flex justify-content-between text-muted small">
-                <div class="day mon">
-                  <div class="bar" style="height: 70px;"></div>
-                  <div>Mon<br><strong>3.5h</strong></div>
-                </div>
-                <div class="day tue">
-                  <div class="bar" style="height: 40px;"></div>
-                  <div>Tue<br><strong>2h</strong></div>
-                </div>
-                <div class="day wed">
-                  <div class="bar" style="height: 80px;"></div>
-                  <div>Wed<br><strong>4h</strong></div>
-                </div>
-                <div class="day thu">
-                  <div class="bar" style="height: 50px;"></div>
-                  <div>Thu<br><strong>2.5h</strong></div>
-                </div>
-                <div class="day fri">
-                  <div class="bar" style="height: 60px;"></div>
-                  <div>Fri<br><strong>3h</strong></div>
-                </div>
-                <div class="day sat">
-                  <div class="bar" style="height: 30px;"></div>
-                  <div>Sat<br><strong>2h</strong></div>
-                </div>
-                <div class="day sun">
-                  <div class="bar" style="height: 20px;"></div>
-                  <div>Sun<br><strong>1h</strong></div>
-                </div>
-              </div>
+            <div class="week-chart mb-3">
+              <p class="text-muted mt-3" style="font-weight: 600; ">This Week</p>
+              <canvas id="weeklyBarChart" max-width="400" height="200"></canvas>
+
             </div>
 
             <!-- Goal and Today Summary -->
@@ -882,11 +848,106 @@
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
   <script src="./js/loading.js"></script>
   <script>
+    // === Circular Progress (Donut) ===
+    const circularChart = new Chart(document.getElementById("circularChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ["Completed", "Remaining"],
+        datasets: [{
+          data: [18, 25 - 18],
+          backgroundColor: ["#5A0F61", "#e0e0e0"],
+          borderWidth: 0,
+          borderRadius: 3
+        }]
+      },
+      options: {
+        cutout: "80%",
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          title: {
+            display: false,
+            text: '18h of 25h',
+            position: 'center',
+            font: { size: 16 },
+            color: '#333'
+          }
+        }
+      },
+      plugins: [{
+        id: 'centerText',
+        beforeDraw: chart => {
+          const { width } = chart;
+          const ctx = chart.ctx;
+          ctx.restore();
+          ctx.font = 'bold 20px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#5A0F61';
+          ctx.fillText('18h', width / 2, chart.height / 2 - 10);
+          ctx.font = '14px sans-serif';
+          ctx.fillText('of 25h', width / 2, chart.height / 2 + 10);
+          ctx.save();
+        }
+      }]
+    });
 
+    // === Weekly Bar Chart ===
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const hours = [3.5, 2, 4, 2.5, 3, 2, 1];
+    const barCanvas = document.getElementById("weeklyBarChart");
+    const barCtx = barCanvas.getContext("2d");
+    const gradient = barCtx.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, "#7B1FA2");
+    gradient.addColorStop(1, "#5A0F61");
+    new Chart(barCanvas, {
+      type: 'bar',
+      data: {
+        labels: days,
+        datasets: [{
+          label: 'Study Time (h)',
+          data: hours,
+          backgroundColor: gradient,
+          borderRadius: 6,
+          barThickness: 30
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: context => `${context.parsed.y}h`
+            }
+          }
+        },
+        scales: {
+          y: {
+            grid: {
+              display: false
+            },
+            beginAtZero: true,
+            display: false,
+            max: 5,
+            ticks: {
+              stepSize: 1,
+              callback: value => `${value}h`
+            }
+          }, x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              stepSize: 1,
+            }
+          }
+        }
+      }
+    });
   </script>
 </body>
 

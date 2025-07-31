@@ -699,3 +699,12 @@ margin-left: -15px;
 
   }
 }
+ canvas {
+    display: block;
+    margin: 20px auto;
+  }
+@media screen and (min-width: 600px) {
+    #weeklyBarChart{
+      width: 350px !important;
+    }
+  }
