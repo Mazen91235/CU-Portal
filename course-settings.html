@@ -495,6 +495,13 @@
                 dropdown.classList.toggle('open', willOpen);
                 arrow.style.transform = willOpen ? 'rotate(180deg)' : 'rotate(0deg)';
             }
+            function setDropdownInputState(input, dropdown) {
+                if (dropdown.classList.contains('open')) {
+                    input.classList.add('dropdown-open');
+                } else {
+                    input.classList.remove('dropdown-open');
+                }
+            }
             function closeDropdown(e) {
                 if (!termGroup.contains(e.target)) {
                     termDropdown.classList.remove('open');
@@ -504,14 +511,20 @@
                     yearDropdown.classList.remove('open');
                     yearArrow.style.transform = 'rotate(0deg)';
                 }
+                setDropdownInputState(termInput, termDropdown);
+                setDropdownInputState(yearInput, yearDropdown);
             }
             termInput.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleDropdown(termDropdown, termArrow, yearDropdown, yearArrow);
+                setDropdownInputState(termInput, termDropdown);
+                setDropdownInputState(yearInput, yearDropdown);
             });
             yearInput.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleDropdown(yearDropdown, yearArrow, termDropdown, termArrow);
+                setDropdownInputState(termInput, termDropdown);
+                setDropdownInputState(yearInput, yearDropdown);
             });
             termDropdown.querySelectorAll('li').forEach(li => {
                 li.addEventListener('click', function(e) {
@@ -734,6 +747,18 @@
   background: #f3f3f3;
   color: #5a0f61;
   border-radius: 12px;
+}
+.filter-select-group .form-control:focus,
+.filter-select-group .form-control.active,
+.filter-select-group .form-control.open,
+.filter-select-group .form-control.dropdown-open {
+  border-color: #5a0f61 !important;
+  box-shadow: 0 0 0 2px rgba(90,15,97,0.15);
+  outline: none;
+}
+.filter-select-group .form-control.dropdown-open {
+  border-color: #5a0f61 !important;
+  box-shadow: 0 0 0 2px rgba(90,15,97,0.15);
 }
     </style>
 
