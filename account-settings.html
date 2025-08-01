@@ -166,15 +166,16 @@
     }
     .gender-dropdown-list li > span {
       display: inline-block;
-      transition: transform 0.18s;
     }
     .gender-dropdown-list li:hover {
       background: #f3f3f3;
       color: #5a0f61;
       border-radius: 12px;
     }
-    .gender-dropdown-list li:hover > span {
-      transform: scale(1.1);
+    .gender-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #5a0f61;
+      border-radius: 12px;
     }
     .gender-dropdown-list li:last-child {
       border-bottom: none;
@@ -226,6 +227,9 @@
         li.addEventListener('click', function() {
           input.value = li.textContent;
           hidden.value = li.getAttribute('data-value');
+          // Remove active from all, add to selected
+          dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+          li.classList.add('active');
           dropdown.classList.remove('open');
           arrow.style.transform = 'rotate(0deg)';
         });
