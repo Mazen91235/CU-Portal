@@ -83,7 +83,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-purple personal-details-save">Save changes</button>
+            <button type="submit" class="btn btn-purple personal-details-save" style="margin-bottom: 20px;">Save changes</button>
           </div>
         </form>
       </div>
@@ -137,6 +137,7 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       min-width: 100%;
       opacity: 0;
+      overflow: hidden;
       pointer-events: none;
       transition: opacity 0.2s;
     }
@@ -170,16 +171,39 @@
     .gender-dropdown-list li:hover {
       background: #f3f3f3;
       color: #5a0f61;
-      border-radius: 12px;
+      
     }
     .gender-dropdown-list li.active {
-      background: #f3f3f3;
       color: #5a0f61;
-      border-radius: 12px;
+      background: #f3f3f3;
+      
     }
     .gender-dropdown-list li:last-child {
       border-bottom: none;
     }
+    .btn,
+.btn-purple {
+  transition: transform 0.4s ease !important;
+}
+
+/* Scale up on hover */
+.btn:hover,
+.btn-purple:hover,
+.personal-details-remove:hover,
+.personal-details-save:hover,
+.personal-details-google:hover {
+  transform: scale(1.07) !important;
+}
+
+/* Scale down slightly on click/active */
+.btn:active,
+.btn-purple:active {
+  transform: scale(0.96) !important;
+}
+.btn-purple:active {
+  transform: scale(0.98) !important;
+  box-shadow: 0 2px 8px 0 rgba(90, 15, 97, 0.08) !important;
+}
   </style>
   <script>
     // Sidebar and navbar fetch logic

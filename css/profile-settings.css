@@ -102,9 +102,9 @@
 }
 .personal-details-google {
   width: 260px;
-  border-radius: 12px;
+  border-radius: 12px !important;
   border: 1px solid #E5E7EB;
-  background: #fff;
+  background: #d7d7d7 !important;
   color: #333;
   font-weight: 500;
   padding: 0.7rem 1.5rem;
@@ -470,7 +470,7 @@ input:focus, select:focus, textarea:focus {
 .gender-dropdown-list {
   position: absolute;
   left: 0;
-  right: 0;
+  right: 0;overflow: hidden;
   top: 100%;
   z-index: 10;
   margin: 0;
@@ -499,7 +499,7 @@ input:focus, select:focus, textarea:focus {
   box-sizing: border-box;
   width: 100%; /* full width for separator and background */
   padding: 6px 12px; /* minimized and equal padding */
-  margin: 0;
+  margin: 0;overflow: hidden;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   font-family: 'Inter', 'Roboto', Arial, sans-serif;
@@ -518,38 +518,16 @@ input:focus, select:focus, textarea:focus {
 .gender-dropdown-list li:hover {
   background: #f3f3f3;
   color: #5a0f61;
-  border-radius: 12px;
+  
 }
 .gender-dropdown-list li.active {
   background: #f3f3f3;
   color: #5a0f61;
-  border-radius: 12px;
+  
 }
 
 
-.btn,
-.btn-purple,
-.personal-details-remove,
-.personal-details-save,
-.personal-details-google {
-  transition: 
-    background 0.2s, 
-    color 0.2s, 
-    box-shadow 0.2s, 
-    border-color 0.2s, 
-    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.18s;
-}
 
-.btn:hover,
-.btn-purple:hover,
-.personal-details-remove:hover,
-.personal-details-save:hover,
-.personal-details-google:hover {
-  transform: scale(1.08);
-  filter: brightness(0.85);
-  box-shadow: 0 4px 16px 0 rgba(90, 15, 97, 0.10);
-}
 
 
 .gender-dropdown-list li:last-child {
@@ -561,28 +539,40 @@ input:focus, select:focus, textarea:focus {
   color: #5a0f61;
 }
 
+/* Transition only for scaling (transform) on buttons */
 .btn,
 .btn-purple,
 .personal-details-remove,
 .personal-details-save,
 .personal-details-google {
-  transition: 
-    background 0.2s, 
-    color 0.2s, 
-    box-shadow 0.2s, 
-    border-color 0.2s, 
-    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.18s;
+  transition: transform 0.4s ease !important;
 }
 
+/* Scale up on hover */
 .btn:hover,
 .btn-purple:hover,
 .personal-details-remove:hover,
 .personal-details-save:hover,
 .personal-details-google:hover {
-  transform: scale(1.08);
-  filter: brightness(0.85);
-  box-shadow: 0 4px 16px 0 rgba(90, 15, 97, 0.10);
+  transform: scale(1.07) !important;
+  filter: brightness(0.8);
 }
+
+/* Scale down slightly on click/active */
+.btn:active,
+.btn-purple:active,
+.personal-details-remove:active,
+.personal-details-save:active,
+.personal-details-google:active {
+  transform: scale(0.96) !important;
+}
+.btn-purple:active,
+.personal-details-remove:active,
+.personal-details-save:active,
+.personal-details-google:active {
+  transform: scale(0.98) !important;
+  box-shadow: 0 2px 8px 0 rgba(90, 15, 97, 0.08) !important;
+}
+
 
 

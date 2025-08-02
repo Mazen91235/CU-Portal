@@ -627,12 +627,13 @@
         display: none;
         position: absolute;
         left: 0;
+        overflow: hidden;
         right: 0;
         top: 110%;
         z-index: 100;
         background: #fff;
         border: 1.5px solid #5a0f61;
-        border-radius: 12px;
+        
         box-shadow: 0 4px 16px rgba(90,15,97,0.08);
         margin: 0;
         padding: 0;
@@ -693,6 +694,7 @@
 .filter-dropdown-list {
   position: absolute;
   left: 0;
+  overflow: hidden;
   right: 0;
   top: 100%;
   z-index: 10;
@@ -722,6 +724,7 @@
   width: 100%;
   padding: 6px 12px;
   margin: 0;
+  overflow: hidden;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   font-family: 'Inter', 'Roboto', Arial, sans-serif;
@@ -738,7 +741,8 @@
 .filter-dropdown-list li.active {
   background: #f3f3f3;
   color: #5a0f61;
-  border-radius: 12px;
+  overflow: hidden;
+  
 }
 .filter-dropdown-list li:last-child {
   border-bottom: none;
@@ -746,7 +750,8 @@
 .filter-dropdown-list li:hover {
   background: #f3f3f3;
   color: #5a0f61;
-  border-radius: 12px;
+  overflow: hidden;
+ 
 }
 .filter-select-group .form-control:focus,
 .filter-select-group .form-control.active,
