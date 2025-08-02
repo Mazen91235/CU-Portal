@@ -1,132 +1,46 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>title</title>
-    <link rel="stylesheet" href="../css/sidebar.css" />
-    <style>
-        body {
-            --toast-duration: 5s;
-        }
-    </style>
-
-</head>
-
-<body>
-
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <button onclick="showToast('success', 'Saved!', 'Everything went well ')">Show Custom Success</button>
-    <button onclick="showToast('error', 'Failed', 'Something went wrong')">Show Custom Error</button>
-    <button onclick="showToast('success', 'Success', 'You will be redirected', '/dashboard.html')">Show Toast &
-        Redirect</button>
-
-    <button onclick="showToast('success')">Show Success</button>
-    <button onclick="showToast('warning')">Show Warning</button>
-    <button onclick="showToast('error')">Show Error</button>
-    <button onclick="showToast('info')">Show Info</button>
-
-
-    <!-- ✅ Success Toast -->
-    <div id="toast-success" class="toast toast-success hidden">
-        <div class="toast-message">
-            <span class="toast-icon"><img src="../assets/Icon (2).svg" alt=""></span>
-            <div class="toast-content">
-                <div class="toast-header">Saved Successfully</div>
-                <span class="toast-text">Your changes have been saved successfully</span>
-            </div>
+<!-- ✅ Success Toast -->
+<div id="toast-success" class="toast toast-success hidden">
+    <div class="toast-message">
+        <span class="toast-icon"><img src="../assets/Icon (2).svg" alt=""></span>
+        <div class="toast-content">
+            <div class="toast-header">Saved Successfully</div>
+            <span class="toast-text">Your changes have been saved successfully</span>
         </div>
-        <div class="toast-bar toast-success"></div>
     </div>
+    <div class="toast-bar toast-success"></div>
+</div>
 
-    <!-- ⚠️ Warning Toast -->
-    <div id="toast-warning" class="toast toast-warning hidden">
-        <div class="toast-message">
-            <span class="toast-icon"><img src="../assets/Icon (1).svg" alt=""></span>
-            <div class="toast-content">
-                <div class="toast-header">Action Required</div>
-                <span class="toast-text">Incomplete fields. Please fill in all required information now</span>
-            </div>
+<!-- ⚠️ Warning Toast -->
+<div id="toast-warning" class="toast toast-warning hidden">
+    <div class="toast-message">
+        <span class="toast-icon"><img src="../assets/Icon (1).svg" alt=""></span>
+        <div class="toast-content">
+            <div class="toast-header">Action Required</div>
+            <span class="toast-text">Incomplete fields. Please fill in all required information now</span>
         </div>
-        <div class="toast-bar toast-warning"></div>
     </div>
+    <div class="toast-bar toast-warning"></div>
+</div>
 
-    <!-- ❌ Error Toast -->
-    <div id="toast-error" class="toast toast-error hidden">
-        <div class="toast-message">
-            <span class="toast-icon"><img src="../assets/Icon.svg" alt=""></span>
-            <div class="toast-content">
-                <div class="toast-header">Error Occurred</div>
-                <span class="toast-text">Connection error. Unable to connect to the server at present</span>
-            </div>
+<!-- ❌ Error Toast -->
+<div id="toast-error" class="toast toast-error hidden">
+    <div class="toast-message">
+        <span class="toast-icon"><img src="../assets/Icon.svg" alt=""></span>
+        <div class="toast-content">
+            <div class="toast-header">Error Occurred</div>
+            <span class="toast-text">Connection error. Unable to connect to the server at present</span>
         </div>
-        <div class="toast-bar toast-error"></div>
     </div>
+    <div class="toast-bar toast-error"></div>
 
-    <!-- 💬 Info Toast -->
-    <div id="toast-info" class="toast toast-info hidden">
-        <div class="toast-message">
-            <span class="toast-icon"><img src="../assets/iconsax-message-text.svg" alt=""></span>
-            <div class="toast-content">
-                <div class="toast-header">New Message</div>
-                <span class="toast-text">New message waiting for you! It might be important</span>
-            </div>
+<!-- 💬 Info Toast -->
+<div id="toast-info" class="toast toast-info hidden">
+    <div class="toast-message">
+        <span class="toast-icon"><img src="../assets/iconsax-message-text.svg" alt=""></span>
+        <div class="toast-content">
+            <div class="toast-header">New Message</div>
+            <span class="toast-text">New message waiting for you! It might be important</span>
         </div>
-        <div class="toast-bar toast-info"></div>
     </div>
-    <script>
-        let toastDuration = 3000; // Default duration in milliseconds
-        window.onload = () => {
-            document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
-        }
-        function showToast(type, headerText = "", messageText = "", redirectUrl = "") {
-            const toast = document.getElementById(`toast-${type}`);
-            if (!toast) return;
-
-            // Hide all other toasts first
-            document.querySelectorAll(".toast").forEach(t => {
-                t.classList.add("hidden");
-            });
-            if (headerText) {
-                const header = toast.querySelector(".toast-header");
-                if (header) header.textContent = headerText;
-            }
-
-            if (messageText) {
-                const text = toast.querySelector(".toast-text");
-                if (text) text.textContent = messageText;
-            }
-            // Restart bar animation
-            const bar = toast.querySelector(".toast-bar");
-            bar.style.animation = "none"; // reset
-            bar.offsetHeight; // trigger reflow
-            bar.style.animation = null;
-
-            // Show the toast
-            toast.classList.remove("hidden");
-
-            setTimeout(() => {
-                toast.classList.add("fade-out");
-
-                setTimeout(() => {
-                    toast.classList.add("hidden");
-                    toast.classList.remove("fade-out");
-                    if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                    }
-                }, 500);
-            }, toastDuration);
-        }
-
-
-    </script>
-</body>
-
-</html>
+    <div class="toast-bar toast-info"></div>
+</div>

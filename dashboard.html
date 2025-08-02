@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="./components/navbar.html" />
   <link rel="stylesheet" href="./components/sidebar.html" />
   <link rel="stylesheet" href="./components/toasts.html" />
+  <link rel="stylesheet" href="./components/popup.html" />
   <link rel="stylesheet" href="./css/sidebar.css" />
   <link rel="stylesheet" href="./css/dashboard.css" />
+
   <!--  880cbf1918c07df03a8dc42b7fefc09a984eb233 -->
   <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
@@ -809,38 +811,16 @@
       </div>
 
     </div>
+   
+
+
+
   </div>
 
-  <template id="course-template">
-    <div class="course-item border-start border-3 ps-3 mb-4 purple-border">
-      <h6 class="fw-bold mb-2 course-name"></h6>
-      <p class="mb-1 text-muted">
-        <span class="icon-wrapper me-2">
-          <img src="./assets/clock.svg" alt="clock" style="width: 20px;">
-        </span>
-        <span class="course-time"></span>
-      </p>
-      <p class="mb-1 text-muted">
-        <span class="icon-wrapper me-2">
-          <img src="./assets/person.svg" alt="person" style="width: 20px;">
-        </span>
-        <span class="course-instructor"></span>
-      </p>
-      <p class="mb-0 text-muted">
-        <span class="icon-wrapper me-2">
-          <img src="./assets/locat.svg" alt="location" style="width: 20px;">
-        </span>
-        <span class="course-location"></span>
-      </p>
-    </div>
-  </template>
 
-  <template id="calendar-cell-template">
-    <div class="calendar-cell" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true">
-      <span class="day-number"></span>
-      <div class="dots mt-2"></div>
-    </div>
-  </template>
+
+
+
 
 
 
@@ -849,6 +829,7 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
   <script src="./js/loading.js"></script>
@@ -948,6 +929,7 @@
         }
       }
     });
+
   </script>
 </body>
 

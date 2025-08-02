@@ -153,6 +153,8 @@ if (toggleButton && sidebar && contentWrapper) {
 });
         });
     });
+       
+            
 });
           
 
@@ -285,3 +287,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+   
+  

@@ -1,85 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- Trigger -->
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loading Popup</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/sidebar.css" />
+<!-- Popup Overlay (Shared) -->
+<div id="popupOverlay" class="popup-overlay">
 
-</head>
+    <!-- SUCCESS POPUP -->
+    <div class="popup-box success" id="popup-success">
+        <img src="../assets/20250715_1015_فرحة النجاح القفزية_remix_01k06evmrjedrbtwg0f42qx01s.png" class="popup-img" />
+        <div class="popup-content justify-content-center align-items-center">
+            <img class="popup-icon" src="../assets/Icon (2).svg" />
 
-<body>
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png">
-    <button onclick="showPopup('error', 'Task Submitted!', 'Redirecting...', '', 5000)">
-        Show error
-    </button>
-    <button onclick="showPopup('success', 'Task Submitted!', 'Redirecting...', 'profile.html', 5000)">
-        Show success
-    </button>
-    <button onclick="showPopup('loading', 'Task Submitted!', 'Redirecting...', 'profile.html', 2000)">
-        Show loading
-    </button>
-    <button onclick="showPopup('confirm', 'Task Submitted!', 'Redirecting...', 'profile.html', 5000)">
-        Show confirm
-    </button>
-
-    <!-- Trigger -->
-
-    <!-- Popup Overlay (Shared) -->
-    <div id="popupOverlay" class="popup-overlay">
-
-        <!-- SUCCESS POPUP -->
-        <div class="popup-box success" id="popup-success">
-            <img src="../assets/20250715_1015_فرحة النجاح القفزية_remix_01k06evmrjedrbtwg0f42qx01s.png"
-                class="popup-img" />
-            <div class="popup-content justify-content-center align-items-center">
-                <img class="popup-icon" src="../assets/Icon (2).svg" />
-
-                <h2 class="justify-content-center popup-heading" style="color: #22C55E;">Task Submitted Successfully!
-                </h2>
-                <p class="popup-message text-muted">Great job! We wish you the best in evaluation.</p>
-                <button class="popup-btn redirect-button" style="display: none;">
-                    <span class="popup-btn-text">Back to Your Profile</span>
-                    <div class="popup-btn-fill"></div>
-                </button>
-            </div>
+            <h2 class="justify-content-center popup-heading" style="color: #22C55E;">Task Submitted Successfully!
+            </h2>
+            <p class="popup-message text-muted">Great job! We wish you the best in evaluation.</p>
+            <button class="popup-btn redirect-button" style="display: none;">
+                <span class="popup-btn-text">Back to Your Profile</span>
+                <div class="popup-btn-fill"></div>
+            </button>
         </div>
+    </div>
 
 
-        <!-- ERORR POPUP -->
-        <div class="popup-box error" id="popup-error">
-            <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png" style=" margin-right: -75px;
+    <!-- ERORR POPUP -->
+    <div class="popup-box error" id="popup-error">
+        <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png" style=" margin-right: -75px;
 " class="popup-img" />
-            <div class="popup-content justify-content-center align-items-center">
+        <div class="popup-content justify-content-center align-items-center">
 
-                <img class="popup-icon" src="../assets/Icon.svg" />
+            <img class="popup-icon" src="../assets/Icon.svg" />
 
-                <h2 class="justify-content-center popup-heading" style="color: #DC2626;">Oops, we couldn't submit your
-                    task</h2>
-                <p class="popup-message text-muted">Please check your internet connection and try again.</p>
-                <button class="popup-btn error redirect-button" style="display: none;">
-                    <span class="popup-btn-text">try again later</span>
-                    <div class="popup-btn-fill"></div>
-                </button>
-            </div>
+            <h2 class="justify-content-center popup-heading" style="color: #DC2626;">Oops, we couldn't submit your
+                task</h2>
+            <p class="popup-message text-muted">Please check your internet connection and try again.</p>
+            <button class="popup-btn error redirect-button" style="display: none;">
+                <span class="popup-btn-text">try again later</span>
+                <div class="popup-btn-fill"></div>
+            </button>
         </div>
+    </div>
 
 
-        <!-- Confirm POPUP -->
-        <div class="popup-box confirm" id="popup-confirm">
-            <img src="../assets/20250715_1031_تحذير خطأ الموقع_remix_01k06fsfkkftcv79nhhjkj7f1e.png"
-                class="popup-img" />
-            <div class="popup-content justify-content-center align-items-center">
-                <span style="
+    <!-- Confirm POPUP -->
+    <div class="popup-box confirm" id="popup-confirm">
+        <img src="../assets/20250715_1031_تحذير خطأ الموقع_remix_01k06fsfkkftcv79nhhjkj7f1e.png" class="popup-img" />
+        <div class="popup-content justify-content-center align-items-center">
+            <span style="
   background-color: #FFF7ED;
   border-radius: 999999px;
   width: 60px;
@@ -89,141 +53,46 @@
   justify-content: center;
   overflow: hidden;
 ">
-                    <img src="../assets/warning-circle-svgrepo-com 1.svg" style="width: 25px; height: 25px;" />
-                </span>
+                <img src="../assets/warning-circle-svgrepo-com 1.svg" style="width: 25px; height: 25px;" />
+            </span>
 
 
-                <h2 class="justify-content-center popup-heading" style="background: linear-gradient(90deg, #F97316, #fa6115);
+            <h2 class="justify-content-center popup-heading" style="background: linear-gradient(90deg, #F97316, #fa6115);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 margin-top: 40px;"> Are you sure?</h2>
-                <p class="popup-message text-muted" style="margin-bottom: 0px; font-size: 16px;
+            <p class="popup-message text-muted" style="margin-bottom: 0px; font-size: 16px;
 ">This action might affect other data.</p>
-                <p class="popup-message text-muted" style="  font-size: 16px;
+            <p class="popup-message text-muted" style="  font-size: 16px;
 "> You won’t be able to undo it later</p>
-                <div class="button-row">
-                    <button class="confirm no">No, Go Back</button>
-                    <button class="confirm yes">Yes, I'm Sure</button>
-                </div>
-
+            <div class="button-row">
+                <button class="confirm no">No, Go Back</button>
+                <button class="confirm yes">Yes, I'm Sure</button>
             </div>
+
         </div>
+    </div>
 
 
-        <div class="popup-box loading" id="popup-loading">
-            <img src="../assets/20250715_1131_فتاة مبتسمة تنتظر_remix_01k06k8ngeee8bbrg8m0y9f32s.png"
-                class="popup-img" />
-            <div class="popup-content justify-content-center align-items-center">
-                <div class="gradient-spinner"></div>
+    <div class="popup-box loading" id="popup-loading">
+        <img src="../assets/20250715_1131_فتاة مبتسمة تنتظر_remix_01k06k8ngeee8bbrg8m0y9f32s.png" class="popup-img" />
+        <div class="popup-content justify-content-center align-items-center">
+            <div class="gradient-spinner"></div>
 
-                <h2 class="justify-content-center popup-heading" style=" background: linear-gradient(90deg, #520E58, #7B1684);
+            <h2 class="justify-content-center popup-heading" style=" background: linear-gradient(90deg, #520E58, #7B1684);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 ""> Just a sec…</h2>
  <p class=" popup-message text-muted" style="margin-bottom: 0px; font-size: 16px;
 ">We’re processing your request. </p>
-                    <p class="popup-message text-muted" style="  font-size: 16px;
+                <p class="popup-message text-muted" style="  font-size: 16px;
 "> This won’t take long</p>
-            </div>
         </div>
-
     </div>
 
+</div>
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function showPopup(type, heading, message, url = "", timer = 5000) {
-            const overlay = document.getElementById("popupOverlay");
-            overlay.style.display = "flex";
-
-            // Hide all other popups
-            document.querySelectorAll(".popup-box").forEach(el => el.style.display = "none");
-
-            // Show correct popup
-            const popup = document.getElementById(`popup-${type}`);
-            popup.style.display = "flex";
-
-            // Set content
-            popup.querySelector(".popup-heading").innerText = heading;
-            popup.querySelector(".popup-message").innerText = message;
-
-            // Handle redirect/action button
-            const actionBtn = popup.querySelector("button.popup-btn");
-            if (actionBtn) {
-                const btnText = actionBtn.querySelector(".popup-btn-text");
-                const btnFill = actionBtn.querySelector(".popup-btn-fill");
 
 
-
-                // Handle success/error button logic
-                if (type === "success" || type === "error") {
-                    const btn = popup.querySelector(".redirect-button");
-
-                    if (btn) {
-                        if (url) {
-                            btn.style.display = "inline-block";
-                            btn.onclick = () => window.location.href = url;
-
-                            if (timer > 0) {
-                                setTimeout(() => {
-                                    window.location.href = url;
-                                }, timer);
-                            }
-                        } else {
-                            btn.style.display = "none";
-                            btn.onclick = null;
-                        }
-                    }
-                }
-                if (btnFill) {
-                    btnFill.style.transition = "none";
-                    btnFill.style.width = "0%";
-                    void btnFill.offsetWidth; // force reflow
-                    btnFill.style.transition = `width ${timer}ms linear`;
-                    btnFill.style.width = "100%";
-                }
-            }
-            // Loading popup logic
-
-            if (type === "loading") {
-                setTimeout(() => {
-                    window.location.href = url;
-                }, timer); // default 5000
-            }
-            // Confirm popup logic
-            if (type === "confirm") {
-                const btnYes = popup.querySelector(".confirm.yes");
-                const btnNo = popup.querySelector(".confirm.no");
-
-                btnYes.onclick = () => {
-                    if (url) {
-                        window.location.href = url;
-                    } else {
-                        closePopup();
-                    }
-                };
-                btnNo.onclick = () => closePopup();
-            }
-
-            // Close on outside click
-            overlay.onclick = (e) => {
-                if (e.target === overlay) closePopup();
-            };
-        }
-
-        // Close popup
-        function closePopup() {
-            const overlay = document.getElementById("popupOverlay");
-            overlay.style.display = "none";
-            overlay.onclick = null;
-        }
-
-
-    </script>
-
-</body>
-
-</html>
