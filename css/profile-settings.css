@@ -1,10 +1,5 @@
 /* Responsive profile image and button group */
-.personal-details-header {
-  /* No change, just for context */
-}
-.personal-details-avatar {
-  /* No change, just for context */
-}
+
 .personal-details-btn-group {
   display: flex;
   flex-wrap: wrap;
@@ -186,9 +181,7 @@ input.no-spinner::-webkit-inner-spin-button,
     margin: 0;
   }
 
-  input.no-spinner {
-    -moz-appearance: textfield; /* Firefox */
-  }
+ 
 .input-icon-right.icon-google {
   background-image: url('../assets/google-icon.png');
   background-color: transparent !important;
