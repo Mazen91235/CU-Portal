@@ -1,191 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operating Systems - Midterm Exam</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="components/navbar.html" />
-  <link rel="stylesheet" href="components/sidebar.html" />
-  <link rel="stylesheet" href="css/sidebar.css" />
-  <link rel="stylesheet" href="css/dashboard.css" />
-  <script src="js/loading.js"></script>
-  <link rel="stylesheet" href="css/exams.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/extable.css">
 </head>
 <body>
-    <div id="sidebar-container"></div>
-          <div id="content-wrapper" class="sidebar-hidden">
-         <div class="row">
-
-         <div id="navbar-container"></div>
-         </div>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <a href="#" class="back-link">
-                <i class="fas fa-arrow-left"></i>
-                Back to Exams
-            </a>
-            
-            <div class="header-content">
-                <div class="course-info">
-                    <div class="course-icon">
-                        <i class="fas fa-book" style="font-size: 20px;"></i>
-                    </div>
-                    
-                    <div class="course-details">
-                        <div class="course-badges">
-                            <span class="badge-cs">CS 4810</span>
-                            <span class="badge-upcoming">Upcoming</span>
-                        </div>
-                        <h1>Operating Systems</h1>
-                        <p>Midterm Exam</p>
-                    </div>
-                </div>
-                
-                <div class="header-actions">
-                    <a href="#" class="btn-header">
-                        <i class="fas fa-bell"></i>
-                        Set Reminder
-                    </a>
-                    <a href="#" class="btn-header">
-                        <i class="fas fa-download"></i>
-                        Download Details
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="main-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <!-- Exam Overview -->
-                    <div class="content-section">
-                        <h2 class="section-title">Exam Overview</h2>
-                        <p class="overview-text">This midterm exam will cover chapters 1-8 of the textbook, focusing on process management, memory management, and file systems.</p>
-                    </div>
-
-                    <!-- Topics Covered -->
-                    <div class="content-section">
-                        <h2 class="section-title">Topics Covered</h2>
-                        <ul class="topics-list">
-                            <li>Process Management and Scheduling</li>
-                            <li>Memory Management and Virtual Memory</li>
-                            <li>File Systems and Storage</li>
-                            <li>Deadlocks and Synchronization</li>
-                            <li>Inter-process Communication</li>
-                        </ul>
-                    </div>
-
-                    <!-- Important Instructions -->
-                    <div class="content-section">
-                        <h2 class="section-title">Important Instructions</h2>
-                        
-                        <div class="instruction-item">
-                            <div class="instruction-number">1</div>
-                            <p class="instruction-text">Arrive 15 minutes early for check-in</p>
-                        </div>
-                        
-                        <div class="instruction-item">
-                            <div class="instruction-number">2</div>
-                            <p class="instruction-text">Bring your student ID and #2 pencils</p>
-                        </div>
-                        
-                        <div class="instruction-item">
-                            <div class="instruction-number">3</div>
-                            <p class="instruction-text">Electronic devices must be turned off and stored</p>
-                        </div>
-                        
-                        <div class="instruction-item">
-                            <div class="instruction-number">4</div>
-                            <p class="instruction-text">No communication with other students during the exam</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <div class="sidebar">
-                        <div class="sidebar-section">
-                            <h3 class="section-title">Exam Details</h3>
-                            
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <i class="fas fa-calendar"></i>
-                                </div>
-                                <div class="detail-content">
-                                    <h6>Tuesday, July 22, 2025</h6>
-                                    <p>10:00 AM - 12:00 PM</p>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div class="detail-content">
-                                    <h6>Location</h6>
-                                    <p>Building A - Room 202</p>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="detail-content">
-                                    <h6>Instructor</h6>
-                                    <p>Dr. Smith</p>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="detail-content">
-                                    <h6>Duration</h6>
-                                    <p>2 hours</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="sidebar-section">
-                            <h4 class="additional-info-title">Additional Information</h4>
-                            
-                            <div class="info-item">
-                                <h6>Exam Format</h6>
-                                <p>Multiple choice, short answer, and coding problems</p>
-                            </div>
-                            
-                            <div class="info-item">
-                                <h6>Allowed Materials</h6>
-                                <p>One 8.5x11 sheet of notes (handwritten, both sides) allowed</p>
-                            </div>
-                            
-                            <div class="info-item">
-                                <h6>Course Weight</h6>
-                                <p>25% of final grade</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <header>
+    <div>
+      <div class="title">My Exams</div>
+      <div class="subtitle">Spring 2024 • Computer Science</div>
     </div>
+    <div class="user-info">
+      Welcome back,<br />
+      Mohamed Ali
+    </div>
+  </header>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <main class="container">
+    <section class="filters" aria-label="Exam filters">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="search" placeholder="Search by course name or code" aria-label="Search by course name or code" />
+      </div>
+      <select class="filter-select" aria-label="Select subject">
+        <option>All Subjects</option>
+        <option>CS 301</option>
+        <option>CS 320</option>
+        <option>CS 315</option>
+        <option>MATH 301</option>
+        <option>CS 330</option>
+        <option>CS 340</option>
+      </select>
+      <select class="filter-select" aria-label="Select status">
+        <option>All Statuses</option>
+        <option>Upcoming</option>
+        <option>Completed</option>
+        <option>Cancelled</option>
+      </select>
+      <div class="date-filter" id="start-date-filter">
+        <i class="fas fa-calendar calendar-icon"></i>
+        <div class="date-display placeholder" id="start-date-display">Start Date</div>
+        <div class="calendar-dropdown" id="start-calendar">
+          <div class="calendar-header">
+            <button class="calendar-nav" id="start-prev-month" aria-label="Previous month">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="calendar-title" id="start-calendar-title"></div>
+            <button class="calendar-nav" id="start-next-month" aria-label="Next month">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="calendar-grid" id="start-calendar-days-header">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+          </div>
+          <div class="calendar-grid" id="start-calendar-grid">
+            <!-- Calendar days will be generated by JavaScript -->
+          </div>
+          <div class="calendar-actions">
+            <button class="calendar-btn" id="start-clear-btn">Clear</button>
+            <button class="calendar-btn primary" id="start-today-btn">Today</button>
+          </div>
+        </div>
+      </div>
+      <div class="date-filter" id="end-date-filter">
+        <i class="fas fa-calendar calendar-icon"></i>
+        <div class="date-display placeholder" id="end-date-display">End Date</div>
+        <div class="calendar-dropdown" id="end-calendar">
+          <div class="calendar-header">
+            <button class="calendar-nav" id="end-prev-month" aria-label="Previous month">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="calendar-title" id="end-calendar-title"></div>
+            <button class="calendar-nav" id="end-next-month" aria-label="Next month">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="calendar-grid" id="end-calendar-days-header">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+          </div>
+          <div class="calendar-grid" id="end-calendar-grid">
+            <!-- Calendar days will be generated by JavaScript -->
+          </div>
+          <div class="calendar-actions">
+            <button class="calendar-btn" id="end-clear-btn">Clear</button>
+            <button class="calendar-btn primary" id="end-today-btn">Today</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="exam-grid" aria-label="Current exams">
+      <!-- Operating Systems Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="os-title" data-date="2024-03-15">
+        <div class="exam-title" id="os-title">
+          Operating Systems
+          <span class="exam-code">CS 301</span>
+        </div>
+        <div class="exam-status status-upcoming">Upcoming</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Dr. Sarah Johnson
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 15, 2024 – 2:00 PM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          2 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Math Building, Room 301
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Operating Systems exam">
+          <i class="fas fa-eye"></i> View Exam Details
+        </button>
+      </article>
+
+      <!-- Database Systems Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="db-title" data-date="2024-03-18">
+        <div class="exam-title" id="db-title">
+          Database Systems
+          <span class="exam-code">CS 320</span>
+        </div>
+        <div class="exam-status status-upcoming">Upcoming</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Prof. Michael Chen
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 18, 2024 – 10:00 AM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          1.5 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Science Building, Room 205
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Database Systems exam">
+          <i class="fas fa-eye"></i> View Exam Details
+        </button>
+      </article>
+
+      <!-- Software Engineering Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="se-title" data-date="2024-03-10">
+        <div class="exam-title" id="se-title">
+          Software Engineering
+          <span class="exam-code">CS 315</span>
+        </div>
+        <div class="exam-status status-completed">Completed</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Dr. Emily Rodriguez
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 10, 2024 – 9:00 AM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          2 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Engineering Building, Room 102
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Software Engineering exam">
+          <i class="fas fa-eye"></i> View Results
+        </button>
+      </article>
+
+      <!-- Discrete Mathematics Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="dm-title" data-date="2024-03-05">
+        <div class="exam-title" id="dm-title">
+          Discrete Mathematics
+          <span class="exam-code">MATH 301</span>
+        </div>
+        <div class="exam-status status-completed">Completed</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Dr. James Wilson
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 5, 2024 – 1:00 PM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          1.5 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Math Building, Room 301
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Discrete Mathematics exam">
+          <i class="fas fa-eye"></i> View Results
+        </button>
+      </article>
+
+      <!-- Computer Networks Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="cn-title" data-date="2024-03-20">
+        <div class="exam-title" id="cn-title">
+          Computer Networks
+          <span class="exam-code">CS 330</span>
+        </div>
+        <div class="exam-status status-upcoming">Upcoming</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Dr. Lisa Park
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 20, 2024 – 11:00 AM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          2 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Computer Science Building, Room 401
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Computer Networks exam">
+          <i class="fas fa-eye"></i> View Exam Details
+        </button>
+      </article>
+
+      <!-- Machine Learning Exam -->
+      <article class="exam-card" tabindex="0" aria-labelledby="ml-title" data-date="2024-03-22">
+        <div class="exam-title" id="ml-title">
+          Machine Learning
+          <span class="exam-code">CS 340</span>
+        </div>
+        <div class="exam-status status-cancelled">Cancelled</div>
+        <div class="exam-detail">
+          <i class="fas fa-user icon"></i>
+          Prof. David Kim
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-calendar-alt icon"></i>
+          March 22, 2024 – 3:00 PM
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-clock icon"></i>
+          2 hours duration
+        </div>
+        <div class="exam-detail">
+          <i class="fas fa-map-marker-alt icon"></i>
+          Computer Science Building, Room 301
+        </div>
+        <button class="btn-view" type="button" aria-label="View details for Machine Learning exam">
+          <i class="fas fa-eye"></i> View Notice
+        </button>
+      </article>
+    </section>
+  </main>
+
+  <div class="calendar-overlay" id="calendar-overlay"></div>
+
+  <script src="js/extable.js"></script>
 </body>
 </html>
+

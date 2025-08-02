@@ -1,392 +1,447 @@
-  // Calendar state
-    const calendarState = {
-      start: { currentMonth: 2, currentYear: 2024, selectedDate: null }, // March 2024 (0-indexed)
-      end: { currentMonth: 2, currentYear: 2024, selectedDate: null }
+// Calendar Application JavaScript
+class ExamCalendar {
+  constructor() {
+    this.currentDates = {
+      start: new Date(),
+      end: new Date()
     };
+    this.selectedDates = {
+      start: null,
+      end: null
+    };
+    this.activeCalendar = null;
+    
+    this.init();
+  }
 
-    // Month names
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+  init() {
+    this.setupEventListeners();
+    this.setupCalendars();
+    this.setupFilters();
+    this.setupResponsiveHandlers();
+  }
 
-    // Day names
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    // Current calendar being shown
-    let currentCalendar = null;
-
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeCalendars();
-      setupEventListeners();
+  setupEventListeners() {
+    // Date filter clicks
+    document.getElementById('start-date-filter').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleCalendar('start');
     });
 
-    // Initialize calendars
-    function initializeCalendars() {
-      renderCalendar('start');
-      renderCalendar('end');
-    }
+    document.getElementById('end-date-filter').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleCalendar('end');
+    });
 
-    // Setup all event listeners
-    function setupEventListeners() {
-      // Date filter click handlers
-      document.getElementById('start-date-filter').addEventListener('click', function(e) {
+    // Calendar overlay
+    document.getElementById('calendar-overlay').addEventListener('click', () => {
+      this.closeAllCalendars();
+    });
+
+    // Prevent calendar dropdown from closing when clicked
+    document.querySelectorAll('.calendar-dropdown').forEach(dropdown => {
+      dropdown.addEventListener('click', (e) => {
         e.stopPropagation();
-        showCalendar('start', this);
       });
+    });
 
-      document.getElementById('end-date-filter').addEventListener('click', function(e) {
-        e.stopPropagation();
-        showCalendar('end', this);
-      });
+    // Close calendars when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.date-filter') && !e.target.closest('.calendar-dropdown')) {
+        this.closeAllCalendars();
+      }
+    });
 
-      // Calendar navigation
-      document.getElementById('start-prev-month').addEventListener('click', function(e) {
-        e.stopPropagation();
-        navigateMonth('start', -1);
-      });
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeAllCalendars();
+      }
+    });
+  }
 
-      document.getElementById('start-next-month').addEventListener('click', function(e) {
-        e.stopPropagation();
-        navigateMonth('start', 1);
-      });
+  setupCalendars() {
+    // Setup start calendar
+    this.setupCalendarNavigation('start');
+    this.setupCalendarActions('start');
+    this.renderCalendar('start');
 
-      document.getElementById('end-prev-month').addEventListener('click', function(e) {
-        e.stopPropagation();
-        navigateMonth('end', -1);
-      });
+    // Setup end calendar
+    this.setupCalendarNavigation('end');
+    this.setupCalendarActions('end');
+    this.renderCalendar('end');
+  }
 
-      document.getElementById('end-next-month').addEventListener('click', function(e) {
-        e.stopPropagation();
-        navigateMonth('end', 1);
-      });
+  setupCalendarNavigation(type) {
+    document.getElementById(`${type}-prev-month`).addEventListener('click', () => {
+      this.currentDates[type].setMonth(this.currentDates[type].getMonth() - 1);
+      this.renderCalendar(type);
+    });
 
-      // Calendar actions
-      document.getElementById('start-today-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        setToday('start');
-      });
+    document.getElementById(`${type}-next-month`).addEventListener('click', () => {
+      this.currentDates[type].setMonth(this.currentDates[type].getMonth() + 1);
+      this.renderCalendar(type);
+    });
+  }
 
-      document.getElementById('end-today-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        setToday('end');
-      });
+  setupCalendarActions(type) {
+    document.getElementById(`${type}-clear-btn`).addEventListener('click', () => {
+      this.selectedDates[type] = null;
+      this.updateDateDisplay(type);
+      this.renderCalendar(type);
+      this.filterExams();
+    });
 
-      document.getElementById('start-clear-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        clearDate('start');
-      });
-
-      document.getElementById('end-clear-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        clearDate('end');
-      });
-
-      // Close calendar when clicking outside
-      document.addEventListener('click', function() {
-        hideCalendar();
-      });
-
-      // Overlay click
-      document.getElementById('calendar-overlay').addEventListener('click', hideCalendar);
-
-      // Search and filter functionality
-      const searchInput = document.querySelector('.search-box input');
-      const subjectFilter = document.querySelectorAll('.filter-select')[0];
-      const statusFilter = document.querySelectorAll('.filter-select')[1];
-      
-      searchInput.addEventListener('input', debounce(applyFilters, 300));
-      subjectFilter.addEventListener('change', applyFilters);
-      statusFilter.addEventListener('change', applyFilters);
-
-      // View buttons
-      document.querySelectorAll('.btn-view').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const examTitle = this.closest('.exam-card').querySelector('.exam-title').textContent;
-          alert(`Viewing details for: ${examTitle}`);
-        });
-      });
-    }
-
-    // Render calendar for start or end date
-    function renderCalendar(type) {
-      const state = calendarState[type];
-      const calendarGrid = document.getElementById(`${type}-calendar-grid`);
-      const calendarTitle = document.getElementById(`${type}-calendar-title`);
-      
-      // Set calendar title
-      calendarTitle.textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
-      
-      // Clear previous days
-      calendarGrid.innerHTML = '';
-      
-      // Get first day of month and total days in month
-      const firstDay = new Date(state.currentYear, state.currentMonth, 1).getDay();
-      const daysInMonth = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
-      const daysInPrevMonth = new Date(state.currentYear, state.currentMonth, 0).getDate();
-      
-      // Get today's date for comparison
+    document.getElementById(`${type}-today-btn`).addEventListener('click', () => {
       const today = new Date();
-      const isToday = (day) => {
-        return state.currentYear === today.getFullYear() && 
-               state.currentMonth === today.getMonth() && 
-               day === today.getDate();
-      };
-      
-      // Add days from previous month
-      for (let i = 0; i < firstDay; i++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day other-month';
-        dayElement.textContent = daysInPrevMonth - firstDay + i + 1;
-        calendarGrid.appendChild(dayElement);
-      }
-      
-      // Add days for current month
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day';
-        dayElement.textContent = day;
-        
-        // Check if this is today
-        if (isToday(day)) {
-          dayElement.classList.add('today');
-        }
-        
-        // Check if this date is selected
-        if (state.selectedDate && 
-            state.selectedDate.getDate() === day && 
-            state.selectedDate.getMonth() === state.currentMonth && 
-            state.selectedDate.getFullYear() === state.currentYear) {
-          dayElement.classList.add('selected');
-        }
-        
-        // Add click handler
-        dayElement.addEventListener('click', function(e) {
-          e.stopPropagation();
-          selectDate(type, day);
-        });
-        
-        calendarGrid.appendChild(dayElement);
-      }
-      
-      // Calculate days needed from next month
-      const totalCells = firstDay + daysInMonth;
-      const rowsNeeded = Math.ceil(totalCells / 7);
-      const nextMonthDays = rowsNeeded * 7 - totalCells;
-      
-      // Add days from next month
-      for (let i = 1; i <= nextMonthDays; i++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day other-month';
-        dayElement.textContent = i;
-        calendarGrid.appendChild(dayElement);
-      }
-    }
+      this.selectedDates[type] = today;
+      this.updateDateDisplay(type);
+      this.renderCalendar(type);
+      this.closeAllCalendars();
+      this.filterExams();
+    });
+  }
 
-    // Navigate to previous or next month
-    function navigateMonth(type, direction) {
-      const state = calendarState[type];
-      
-      // Calculate new month and year
-      let newMonth = state.currentMonth + direction;
-      let newYear = state.currentYear;
-      
-      if (newMonth < 0) {
-        newMonth = 11;
-        newYear--;
-      } else if (newMonth > 11) {
-        newMonth = 0;
-        newYear++;
-      }
-      
-      // Update state and re-render
-      state.currentMonth = newMonth;
-      state.currentYear = newYear;
-      renderCalendar(type);
-    }
+  toggleCalendar(type) {
+    const calendar = document.getElementById(`${type}-calendar`);
+    const overlay = document.getElementById('calendar-overlay');
+    const filter = document.getElementById(`${type}-date-filter`);
 
-    // Select a date
-    function selectDate(type, day) {
-      const state = calendarState[type];
-      state.selectedDate = new Date(state.currentYear, state.currentMonth, day);
-      
-      // Update display
-      const dateDisplay = document.getElementById(`${type}-date-display`);
-      dateDisplay.textContent = formatDate(state.selectedDate);
-      dateDisplay.classList.remove('placeholder');
-      
-      // Re-render calendar to show selected date
-      renderCalendar(type);
-      
-      // Apply filters
-      applyFilters();
-      
-      // Hide calendar
-      hideCalendar();
-    }
-
-    // Set to today's date
-    function setToday(type) {
-      const today = new Date();
-      calendarState[type].currentMonth = today.getMonth();
-      calendarState[type].currentYear = today.getFullYear();
-            selectDate(type, today.getDate());
-    }
-
-    // Clear selected date
-    function clearDate(type) {
-      calendarState[type].selectedDate = null;
-      const dateDisplay = document.getElementById(`${type}-date-display`);
-      dateDisplay.textContent = type === 'start' ? 'Start Date' : 'End Date';
-      dateDisplay.classList.add('placeholder');
-      
-      // Re-render calendar
-      renderCalendar(type);
-      
-      // Apply filters
-      applyFilters();
-      
-      // Hide calendar
-      hideCalendar();
-    }
-
-    // Show calendar dropdown
-    function showCalendar(type, button) {
-      // Hide any currently shown calendar
-      hideCalendar();
-      
-      // Set current calendar
-      currentCalendar = type;
-      
-      // Show the calendar
-      const calendar = document.getElementById(`${type}-calendar`);
+    if (this.activeCalendar === type) {
+      this.closeAllCalendars();
+    } else {
+      this.closeAllCalendars();
       calendar.classList.add('show');
+      overlay.classList.add('show');
+      filter.classList.add('active');
+      this.activeCalendar = type;
       
-      // Show overlay
-      document.getElementById('calendar-overlay').classList.add('show');
-      
-      // Position the calendar
-      positionCalendar(button, calendar);
-      
-      // Highlight selected date if exists
-      // Highlight selected date if exists
-  if (calendarState[type].selectedDate) {
-    const selectedDate = calendarState[type].selectedDate;
-    if (selectedDate.getMonth() !== calendarState[type].currentMonth || 
-        selectedDate.getFullYear() !== calendarState[type].currentYear) {
-      // Navigate to selected date's month
-      calendarState[type].currentMonth = selectedDate.getMonth();
-      calendarState[type].currentYear = selectedDate.getFullYear();
-      renderCalendar(type);
+      // Focus management for accessibility
+      calendar.focus();
     }
+  }
+
+  closeAllCalendars() {
+    document.querySelectorAll('.calendar-dropdown').forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+    document.querySelectorAll('.date-filter').forEach(filter => {
+      filter.classList.remove('active');
+    });
+    document.getElementById('calendar-overlay').classList.remove('show');
+    this.activeCalendar = null;
+  }
+
+  renderCalendar(type) {
+    const currentDate = this.currentDates[type];
+    const selectedDate = this.selectedDates[type];
+    const grid = document.getElementById(`${type}-calendar-grid`);
+    const title = document.getElementById(`${type}-calendar-title`);
+
+    // Set title
+    title.textContent = currentDate.toLocaleDateString('en-US', { 
+      month: 'long', 
+      year: 'numeric' 
+    });
+
+    // Clear grid
+    grid.innerHTML = '';
+
+    // Get first day of month and number of days
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+    // Generate calendar days
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+
+      const dayElement = document.createElement('div');
+      dayElement.className = 'calendar-day';
+      dayElement.textContent = date.getDate();
+      dayElement.tabIndex = 0;
+
+      // Add classes
+      if (date.getMonth() !== currentDate.getMonth()) {
+        dayElement.classList.add('other-month');
       }
-    }
 
-    // Position calendar relative to button
-
-
-    // Hide calendar dropdown
-    function hideCalendar() {
-      if (currentCalendar) {
-        document.getElementById(`${currentCalendar}-calendar`).classList.remove('show');
-        document.getElementById('calendar-overlay').classList.remove('show');
-        currentCalendar = null;
+      if (this.isSameDay(date, new Date())) {
+        dayElement.classList.add('today');
       }
-    }
 
-    // Format date as MM/DD/YYYY
-    function formatDate(date) {
-      if (!date) return '';
-      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    }
+      if (selectedDate && this.isSameDay(date, selectedDate)) {
+        dayElement.classList.add('selected');
+      }
 
-    // Debounce function to limit how often a function is called
-    function debounce(func, wait) {
-      let timeout;
-      return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          func.apply(context, args);
-        }, wait);
-      };
-    }
+      // Add click handler
+      dayElement.addEventListener('click', () => {
+        this.selectDate(type, date);
+      });
 
-    // Apply all filters to exam cards
-    function applyFilters() {
-      const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
-      const subjectFilter = document.querySelectorAll('.filter-select')[0].value;
-      const statusFilter = document.querySelectorAll('.filter-select')[1].value;
-      const startDate = calendarState.start.selectedDate;
-      const endDate = calendarState.end.selectedDate;
-      
-      const examCards = document.querySelectorAll('.exam-card');
-      let hasVisibleCards = false;
-      
-      examCards.forEach(card => {
-        const title = card.querySelector('.exam-title').textContent.toLowerCase();
-        const code = card.querySelector('.exam-code').textContent;
-        const status = card.querySelector('.exam-status').textContent;
-        const examDateStr = card.getAttribute('data-date');
-        const examDate = new Date(examDateStr);
-        
-        // Check search term
-        const matchesSearch = !searchTerm || 
-                              title.includes(searchTerm) || 
-                              code.toLowerCase().includes(searchTerm);
-        
-        // Check subject filter
-        const matchesSubject = subjectFilter === 'All Subjects' || 
-                              code.includes(subjectFilter);
-        
-        // Check status filter
-        const matchesStatus = statusFilter === 'All Statuses' || 
-                             status === statusFilter;
-        
-        // Check date range
-        let matchesDateRange = true;
-        if (startDate && examDate < startDate) {
-          matchesDateRange = false;
-        }
-        if (endDate && examDate > endDate) {
-          matchesDateRange = false;
-        }
-        
-        // Show or hide card based on filters
-        if (matchesSearch && matchesSubject && matchesStatus && matchesDateRange) {
-          card.style.display = 'flex';
-          hasVisibleCards = true;
-        } else {
-          card.style.display = 'none';
+      // Add keyboard handler
+      dayElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.selectDate(type, date);
         }
       });
-      
-      // Show no results message if no cards are visible
-      const noResults = document.querySelector('.no-results');
-      if (!noResults) {
-        // Create no results message if it doesn't exist
-        const examGrid = document.querySelector('.exam-grid');
-        const message = document.createElement('div');
-        message.className = 'no-results';
-        message.innerHTML = `
-          <i class="fas fa-search"></i>
-          <h3>No exams found</h3>
-          <p>Try adjusting your search or filter criteria</p>
-        `;
-        examGrid.appendChild(message);
-      } else {
-        noResults.style.display = hasVisibleCards ? 'none' : 'block';
-      }
-    }
 
-    // Handle window resize
-    window.addEventListener('resize', function() {
-      if (currentCalendar) {
-        const button = document.getElementById(`${currentCalendar}-date-filter`);
-        const calendar = document.getElementById(`${currentCalendar}-calendar`);
-        positionCalendar(button, calendar);
+      grid.appendChild(dayElement);
+    }
+  }
+
+  selectDate(type, date) {
+    this.selectedDates[type] = new Date(date);
+    this.updateDateDisplay(type);
+    this.renderCalendar(type);
+    this.closeAllCalendars();
+    this.filterExams();
+  }
+
+  updateDateDisplay(type) {
+    const display = document.getElementById(`${type}-date-display`);
+    const selectedDate = this.selectedDates[type];
+
+    if (selectedDate) {
+      display.textContent = selectedDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      display.classList.remove('placeholder');
+    } else {
+      display.textContent = type === 'start' ? 'Start Date' : 'End Date';
+      display.classList.add('placeholder');
+    }
+  }
+
+  isSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  }
+
+  setupFilters() {
+    // Search filter
+    const searchInput = document.querySelector('.search-box input');
+    searchInput.addEventListener('input', () => {
+      this.filterExams();
+    });
+
+    // Subject filter
+    const subjectSelect = document.querySelector('.filter-select[aria-label="Select subject"]');
+    subjectSelect.addEventListener('change', () => {
+      this.filterExams();
+    });
+
+    // Status filter
+    const statusSelect = document.querySelector('.filter-select[aria-label="Select status"]');
+    statusSelect.addEventListener('change', () => {
+      this.filterExams();
+    });
+  }
+
+  filterExams() {
+    const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
+    const selectedSubject = document.querySelector('.filter-select[aria-label="Select subject"]').value;
+    const selectedStatus = document.querySelector('.filter-select[aria-label="Select status"]').value;
+    const startDate = this.selectedDates.start;
+    const endDate = this.selectedDates.end;
+
+    const examCards = document.querySelectorAll('.exam-card');
+    let visibleCount = 0;
+
+    examCards.forEach(card => {
+      const title = card.querySelector('.exam-title').textContent.toLowerCase();
+      const code = card.querySelector('.exam-code').textContent;
+      const status = card.querySelector('.exam-status').textContent;
+      const dateStr = card.getAttribute('data-date');
+      const examDate = new Date(dateStr);
+
+      let shouldShow = true;
+
+      // Search filter
+      if (searchTerm && !title.includes(searchTerm) && !code.toLowerCase().includes(searchTerm)) {
+        shouldShow = false;
+      }
+
+      // Subject filter
+      if (selectedSubject !== 'All Subjects' && !code.includes(selectedSubject)) {
+        shouldShow = false;
+      }
+
+      // Status filter
+      if (selectedStatus !== 'All Statuses' && !status.includes(selectedStatus)) {
+        shouldShow = false;
+      }
+
+      // Date range filter
+      if (startDate && examDate < startDate) {
+        shouldShow = false;
+      }
+      if (endDate && examDate > endDate) {
+        shouldShow = false;
+      }
+
+      if (shouldShow) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
       }
     });
-  
+
+    // Show/hide no results message
+    this.toggleNoResultsMessage(visibleCount === 0);
+  }
+
+  toggleNoResultsMessage(show) {
+    let noResultsElement = document.querySelector('.no-results');
+    
+    if (show && !noResultsElement) {
+      noResultsElement = document.createElement('div');
+      noResultsElement.className = 'no-results';
+      noResultsElement.innerHTML = `
+        <i class="fas fa-search"></i>
+        <h3>No exams found</h3>
+        <p>Try adjusting your search criteria or filters</p>
+      `;
+      document.querySelector('.exam-grid').appendChild(noResultsElement);
+    } else if (!show && noResultsElement) {
+      noResultsElement.remove();
+    }
+  }
+
+  setupResponsiveHandlers() {
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      this.handleResize();
+    });
+
+    // Handle orientation change on mobile
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        this.handleResize();
+      }, 100);
+    });
+  }
+
+  handleResize() {
+    // Close calendars on resize to prevent positioning issues
+    if (this.activeCalendar) {
+      this.closeAllCalendars();
+    }
+
+    // Adjust calendar positioning for mobile
+    this.adjustCalendarPositioning();
+  }
+
+  adjustCalendarPositioning() {
+    const isMobile = window.innerWidth <= 768;
+    const calendars = document.querySelectorAll('.calendar-dropdown');
+    
+    calendars.forEach((calendar, index) => {
+      const dateFilter = calendar.closest('.date-filter');
+      
+      if (isMobile) {
+        calendar.style.position = 'fixed';
+        calendar.style.top = '50%';
+        calendar.style.left = '50%';
+        calendar.style.transform = 'translate(-50%, -50%)';
+        calendar.style.width = 'calc(100vw - 32px)';
+        calendar.style.maxWidth = '280px';
+        calendar.style.right = 'auto';
+      } else {
+        calendar.style.position = 'absolute';
+        calendar.style.top = 'calc(100% + 8px)';
+        calendar.style.transform = 'none';
+        calendar.style.width = '280px';
+        calendar.style.maxWidth = 'calc(100vw - 32px)';
+        
+        // Position end date calendar to the right to prevent overflow
+        if (dateFilter && dateFilter.id === 'end-date-filter') {
+          calendar.style.left = 'auto';
+          calendar.style.right = '0';
+        } else {
+          calendar.style.left = '0';
+          calendar.style.right = 'auto';
+        }
+      }
+    });
+  }
+}
+
+// Initialize the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new ExamCalendar();
+});
+
+// Handle exam card interactions
+document.addEventListener('DOMContentLoaded', () => {
+  // Add click handlers to exam cards for better accessibility
+  document.querySelectorAll('.exam-card').forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const button = card.querySelector('.btn-view');
+        if (button) {
+          button.click();
+        }
+      }
+    });
+  });
+
+  // Add click handlers to view buttons
+  document.querySelectorAll('.btn-view').forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = button.closest('.exam-card');
+      const title = card.querySelector('.exam-title').textContent.trim();
+      
+      // Simple alert for demo purposes - in real app this would open a modal or navigate
+      alert(`Opening details for: ${title}`);
+    });
+  });
+});
+
+// Add smooth scrolling for better UX
+document.addEventListener('DOMContentLoaded', () => {
+  // Smooth scroll to top when clicking header
+  document.querySelector('header').addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+});
+
+// Performance optimization: Debounce search input
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Apply debouncing to search
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.querySelector('.search-box input');
+  if (searchInput) {
+    const debouncedFilter = debounce(() => {
+      // Trigger filter update
+      const event = new Event('input');
+      searchInput.dispatchEvent(event);
+    }, 300);
+    
+    searchInput.addEventListener('input', debouncedFilter);
+  }
+});
+
