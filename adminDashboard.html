@@ -245,6 +245,7 @@
                     <h1 class="total">89</h1>
                 </div>
             </div>
+
             <div class="row d-flex justify-content-between align-items-center p-4 mb-3">
                 <h2 class="fw-bold title charts">
                     over view & statistics
@@ -1199,7 +1200,7 @@
                     }))
                 },
                 options: {
-                    responsive: true,
+                    responsive: true,maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: false,
@@ -1299,7 +1300,7 @@
                             bottomLeft: 0,
                             topRight: 10,
                             bottomRight: 10
-                        }, barThickness: isMobile ? 20 : 40,
+                        }, barThickness: isMobile ? 30 : 40,
                         categoryPercentage: 0.8,
                         barPercentage: 0.8,
                         borderSkipped: false
