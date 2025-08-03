@@ -1013,16 +1013,35 @@
                     datasets: [{
                         data: [70, 60, 45, 60, 10],
                         backgroundColor: gradient,
-                        borderRadius: 6,
-                        barPercentage: 0.7,
-                        categoryPercentage: 0.8
+                        borderRadius: {
+                            topLeft: 0,
+                            bottomLeft: 0,
+                            topRight: 10,
+                            bottomRight: 10
+                        }, barPercentage: 0.7,
+                        categoryPercentage: 0.8,
+                        borderSkipped: false
+
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    indexAxis: "y",
+                    indexAxis: "y", interaction: {
+                        mode: 'nearest',
+                        axis: 'y',
+                        intersect: true
+                    }, hover: {
+                        mode: 'index',
+                        intersect: true
+                    },
                     plugins: {
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            position: 'nearest'
+                        },
                         legend: { display: false }
                     },
                     scales: {
@@ -1200,7 +1219,7 @@
                     }))
                 },
                 options: {
-                    responsive: true,maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: false,
