@@ -41,6 +41,8 @@ margin-right: 20px;
 #cards{
   width: 100%;
 border-radius: 10px;
+ margin-left: auto;
+  margin-right: auto;
 }
 #engagement{
     width: 700px;
@@ -58,6 +60,7 @@ border-radius: 10px;
     font-weight: 500;
     font-size: 22px;
 }
+
 @media screen and (max-width: 766px) {
   .card-item{
     width: 350px;
@@ -137,7 +140,7 @@ margin-right: 20px;
   
 }
  #date-filter {
-  display:none;
+  display:flex;
     gap: 8px;
     align-items: center;
     margin-bottom: 10px;

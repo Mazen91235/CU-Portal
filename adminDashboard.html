@@ -40,7 +40,6 @@
                     <span class="arrow">&#9662;</span>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <button onclick="showCustomDate()" class="custom-input">Custom</button>
                     <div id="date-filter">
                         <label>
                             From:
@@ -246,6 +245,7 @@
                     <h1 class="total">89</h1>
                 </div>
             </div>
+
             <div class="row d-flex justify-content-between align-items-center p-4 mb-3">
                 <h2 class="fw-bold title charts">
                     over view & statistics
@@ -992,12 +992,7 @@
             }
         });
         //////////
-        function showCustomDate() {
-            const filterDiv = document.getElementById("date-filter");
-            if (filterDiv) {
-                filterDiv.style.display = 'flex';
-            }
-        }
+
         ///////////
         const canvas = document.getElementById("myChart");
         const ctx = canvas.getContext("2d");
@@ -1205,7 +1200,7 @@
                     }))
                 },
                 options: {
-                    responsive: true,
+                    responsive: true,maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: false,
@@ -1220,6 +1215,9 @@
                             display: !isMobile
 
                         }
+                    }, interaction: {
+                        mode: 'nearest',
+                        intersect: false
                     },
                     scales: {
                         y: {
@@ -1297,14 +1295,38 @@
                     datasets: [{
                         data: values,
                         backgroundColor: backgroundColors,
-                        borderRadius: 10,
-                        barThickness: isMobile ? 20 : 40
+                        borderRadius: {
+                            topLeft: 0,
+                            bottomLeft: 0,
+                            topRight: 10,
+                            bottomRight: 10
+                        }, barThickness: isMobile ? 30 : 40,
+                        categoryPercentage: 0.8,
+                        barPercentage: 0.8,
+                        borderSkipped: false
+
+
                     }]
                 },
                 options: {
-                    indexAxis: 'y',
-                    responsive: true,
+                    clip: false,
+                    indexAxis: "y",
+                    maintainAspectRatio: false,
+                    responsive: true, interaction: {
+                        mode: 'nearest',
+                        axis: 'y',
+                        intersect: true
+                    }, hover: {
+                        mode: 'index',
+                        intersect: true
+                    },
                     plugins: {
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            position: 'nearest'
+                        },
                         legend: { display: false }
                     },
                     scales: {
@@ -1453,14 +1475,14 @@
                         pointBackgroundColor: gradient,
                         pointBorderColor: gradient,
                         pointBorderWidth: 2,
-                        pointHoverRadius: 6,
-                        pointHoverBorderWidth: 2,
-                        pointHoverBackgroundColor: gradient,
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, interaction: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
                     scales: {
                         x: {
                             ticks: {
@@ -1531,6 +1553,9 @@
                 },
                 tooltip: {
                     valueSuffix: '%'
+                }, interaction: {
+                    mode: 'nearest',
+                    intersect: false
                 },
                 plotOptions: {
                     pie: {

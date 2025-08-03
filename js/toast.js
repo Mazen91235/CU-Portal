@@ -18,29 +18,34 @@ function showToast(type) {
             if (!toast) return;
 
             // Hide all other toasts first
-            document.querySelectorAll(".toast").forEach(t => {
-                t.classList.add("hidden");
+            document.querySelectorAll(".custom-toast").forEach(t => {
+                t.classList.add("hidden", "tw-hidden");;
             });
 
             // Restart bar animation
             const bar = toast.querySelector(".toast-bar");
-            bar.style.animation = "none"; // reset
-            bar.offsetHeight; // trigger reflow
-            bar.style.animation = null;
+            toast.style.animation = "none";
+toast.offsetHeight;
+toast.style.animation = "fadeInto 0.5s ease forwards";
+
 
             // Show the toast
-            toast.classList.remove("hidden");
-
+            toast.classList.remove("hidden", "tw-hidden");;
+toast.classList.add("block");
             // Auto-hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.add("hidden");
-            }, 2000);
-        }
+           setTimeout(() => {
+  toast.classList.add("fade-out");
+  setTimeout(() => {
+    toast.classList.add("tw-hidden");
+    toast.classList.remove("fade-out");
+  }, 500); 
+}, 2500);
+}
         toastReady.then(() => {
   const btn = document.getElementById("showToastBtn");
   if (btn) {
     btn.addEventListener("click", () => {
-      showToast("success");
+      showToast("info");
     });
   }
 });
