@@ -60,6 +60,13 @@ border-radius: 10px;
     font-weight: 500;
     font-size: 22px;
 }
+@media screen and (max-width: 400px) {
+  .card-item{
+    width: 310px !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
 
 @media screen and (max-width: 766px) {
   .card-item{
@@ -140,7 +147,7 @@ margin-right: 20px;
   
 }
  #date-filter {
-  display:flex;
+  display:none;
     gap: 8px;
     align-items: center;
     margin-bottom: 10px;
