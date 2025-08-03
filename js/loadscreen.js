@@ -23,16 +23,12 @@ async function loadComponents() {
 
 function hideLoadingScreen() {
   const loading = document.getElementById("loadingScreen");
-  const content = document.getElementById("pageContent");
 
-  if (!loading || !content) return;
 
   loading.classList.add("fade-out");
 
   setTimeout(function () {
     loading.style.display = "none";
-    content.classList.remove("hide-content");
-    content.classList.add("show-content");
   }, 1000);
 }
 
@@ -40,10 +36,7 @@ function showInitialLoading() {
   const loading = document.getElementById("loadingScreen");
   const content = document.getElementById("pageContent");
 
-  if (!loading || !content) return;
 
-  content.classList.add("hide-content");
-  content.classList.remove("show-content");
 
   loading.style.display = "flex";
   loading.classList.remove("hidden");
