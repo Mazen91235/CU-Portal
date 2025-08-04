@@ -41,6 +41,7 @@
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-options: 0 10px 25px rgba(0, 0, 0, 0.1);
             
             /* Border Radius Values - Matching Dashboard */
             --radius-sm: 6px;
@@ -196,237 +197,163 @@
             border-color: var(--primary-purple);
             box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
         }
-       /* Enhanced Multi-select Status Filter - Single Layer Design */
-.multi-select {
-    position: relative;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    background-color: var(--background-white);
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 44px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    min-width: 180px;
-}
-
-.multi-select:hover {
-    border-color: var(--primary-purple);
-}
-
-.multi-select.open {
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
-    z-index: 1001;
-}
-
-.multi-select-display {
-    flex: 1;
-    font-size: 14px;
-    color: var(--text-medium);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 6px 0;
-    overflow: hidden;
-}
-
-.multi-select i {
-    color: var(--text-muted);
-    font-size: 12px;
-    transition: transform 0.2s;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
-.multi-select.open i {
-    transform: rotate(180deg);
-}
-
-.multi-select-dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: var(--background-white);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-    padding: 8px 0;
-    display: none;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.multi-select.open .multi-select-dropdown {
-    display: block;
-    animation: fadeInUp 0.2s ease;
-}
-
-/* Rest of your existing multi-select styles remain the same */
-.multi-select-option {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border-radius: var(--radius-sm);
-    margin: 2px 8px;
-}
-
-.multi-select-option:hover {
-    background-color: var(--background-light-gray);
-}
-
-.multi-select-option input[type="checkbox"] {
-    margin-right: 8px;
-}
-
-.multi-select-option label {
-    cursor: pointer;
-    flex: 1;
-}
-
-.multi-select-actions {
-    padding: 8px 16px;
-    border-top: 1px solid var(--border-light);
-    display: flex;
-    justify-content: space-between;
-}
-
-.multi-select-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.multi-select-btn.clear {
-    background-color: var(--background-light-gray);
-    color: var(--text-medium);
-}
-
-.multi-select-btn.clear:hover {
-    background-color: var(--border-medium);
-}
-
-.multi-select-btn.apply {
-    background-color: var(--primary-purple);
-    color: white;
-}
-
-.multi-select-btn.apply:hover {
-    background-color: var(--primary-purple-dark);
-}
-
-/* Status option colors (keep your existing styles) */
-.multi-select-option[data-value="active"] {
-    background-color: rgba(22, 163, 74, 0.05);
-    border-left: 3px solid var(--active-green);
-}
-
-.multi-select-option[data-value="submitted"] {
-    background-color: rgba(37, 99, 235, 0.05);
-    border-left: 3px solid var(--submitted-blue);
-}
-
-.multi-select-option[data-value="submitted-later"] {
-    background-color: rgba(234, 88, 12, 0.05);
-    border-left: 3px solid var(--submitted-later-orange);
-}
-
-.multi-select-option[data-value="due"] {
-    background-color: rgba(220, 38, 38, 0.05);
-    border-left: 3px solid var(--due-red);
-}
-
-.multi-select-option[data-value="finished"] {
-    background-color: rgba(107, 114, 128, 0.05);
-    border-left: 3px solid var(--finished-gray);
-}
-
-.multi-select-option input[type="checkbox"]:checked + label {
-    font-weight: 600;
-}
-
-.multi-select-option[data-value="active"] input[type="checkbox"]:checked + label {
-    color: var(--active-green);
-}
-
-.multi-select-option[data-value="submitted"] input[type="checkbox"]:checked + label {
-    color: var(--submitted-blue);
-}
-
-.multi-select-option[data-value="submitted-later"] input[type="checkbox"]:checked + label {
-    color: var(--submitted-later-orange);
-}
-
-.multi-select-option[data-value="due"] input[type="checkbox"]:checked + label {
-    color: var(--due-red);
-}
-
-.multi-select-option[data-value="finished"] input[type="checkbox"]:checked + label {
-    color: var(--finished-gray);
-}
-
-/* Status pills display */
-.selected-status-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: center;
-}
-
-.status-pill {
-    padding: 4px 8px;
-    border-radius: var(--radius-full);
-    font-size: 12px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.status-pill.active {
-    background-color: rgba(22, 163, 74, 0.1);
-    color: var(--active-green);
-}
-
-.status-pill.submitted {
-    background-color: rgba(37, 99, 235, 0.1);
-    color: var(--submitted-blue);
-}
-
-.status-pill.submitted-later {
-    background-color: rgba(234, 88, 12, 0.1);
-    color: var(--submitted-later-orange);
-}
-
-.status-pill.due {
-    background-color: rgba(220, 38, 38, 0.1);
-    color: var(--due-red);
-}
-
-.status-pill.finished {
-    background-color: rgba(107, 114, 128, 0.1);
-    color: var(--finished-gray);
-}
-
-.status-pill .remove-btn {
-    background: none;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    font-size: 10px;
-}
+        
+        /* Enhanced Multi-select Status Filter - Compact Design */
+        .multi-select {
+            position: relative;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background-color: var(--background-white);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            min-width: 180px;
+        }
+        .multi-select:hover {
+            border-color: var(--primary-purple);
+        }
+        .multi-select.open {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+            z-index: 1001;
+        }
+        .multi-select-display {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-medium);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .multi-select-display span:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .multi-select i {
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: transform 0.2s;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .multi-select.open i {
+            transform: rotate(180deg);
+        }
+        .multi-select-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--background-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            padding: 0 0;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multi-select.open .multi-select-dropdown {
+            display: block;
+            animation: fadeInUp 0.2s ease;
+        }
+        .multi-select-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: var(--radius-sm);
+            margin: 2px 8px;
+            font-size: 14px;
+        }
+        .multi-select-option:hover {
+            background-color: var(--background-light-gray);
+        }
+        .multi-select-option input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .multi-select-option label {
+            cursor: pointer;
+            flex: 1;
+        }
+        .multi-select-actions {
+            padding: 8px 16px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+        }
+        .multi-select-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .multi-select-btn.clear {
+            background-color: var(--background-light-gray);
+            color: var(--text-medium);
+        }
+        .multi-select-btn.clear:hover {
+            background-color: var(--border-medium);
+        }
+        .multi-select-btn.apply {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        .multi-select-btn.apply:hover {
+            background-color: var(--primary-purple-dark);
+        }
+        /* Status option colors */
+        .multi-select-option[data-value="active"] {
+            background-color: rgba(22, 163, 74, 0.05);
+            border-left: 3px solid var(--active-green);
+        }
+        .multi-select-option[data-value="submitted"] {
+            background-color: rgba(37, 99, 235, 0.05);
+            border-left: 3px solid var(--submitted-blue);
+        }
+        .multi-select-option[data-value="submitted-later"] {
+            background-color: rgba(234, 88, 12, 0.05);
+            border-left: 3px solid var(--submitted-later-orange);
+        }
+        .multi-select-option[data-value="due"] {
+            background-color: rgba(220, 38, 38, 0.05);
+            border-left: 3px solid var(--due-red);
+        }
+        .multi-select-option[data-value="finished"] {
+            background-color: rgba(107, 114, 128, 0.05);
+            border-left: 3px solid var(--finished-gray);
+        }
+        .multi-select-option input[type="checkbox"]:checked + label {
+            font-weight: 600;
+        }
+        .multi-select-option[data-value="active"] input[type="checkbox"]:checked + label {
+            color: var(--active-green);
+        }
+        .multi-select-option[data-value="submitted"] input[type="checkbox"]:checked + label {
+            color: var(--submitted-blue);
+        }
+        .multi-select-option[data-value="submitted-later"] input[type="checkbox"]:checked + label {
+            color: var(--submitted-later-orange);
+        }
+        .multi-select-option[data-value="due"] input[type="checkbox"]:checked + label {
+            color: var(--due-red);
+        }
+        .multi-select-option[data-value="finished"] input[type="checkbox"]:checked + label {
+            color: var(--finished-gray);
+        }
         
         /* Enhanced Date Filter with Better Mobile Support */
         .date-filter {
@@ -471,28 +398,32 @@
             pointer-events: none;
             flex-shrink: 0;
         }
-        /* Enhanced Calendar Dropdown - Better Mobile Positioning */
+        /* Enhanced Calendar Dropdown */
         .calendar-dropdown {
             position: absolute;
-            top: calc(100% + 4px);
+            top: calc(100% + 8px);
             left: 0;
-            right: 0;
-            background: var(--background-white);
-            border: 1px solid var(--border-light);
+            width: 280px;
+            max-width: calc(100vw - 32px);
+            background: white;
+            border: 1px solid var(--border-light-gray);
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
+            box-shadow: var(--shadow-options);
+            z-index: 100;
             padding: 16px;
             display: none;
-            width: 100%;
-            min-width: 280px;
         }
         .calendar-dropdown.show {
             display: block;
-            animation: fadeInUp 0.2s ease;
         }
-       
-        /* Enhanced Calendar Header with Better Touch Targets */
+        /* Ensure calendar stays within viewport */
+        .calendar-dropdown {
+            right: auto;
+        }
+        .date-filter:last-child .calendar-dropdown {
+            left: auto;
+            right: 0;
+        }
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -502,133 +433,103 @@
         .calendar-nav {
             background: none;
             border: none;
-            color: var(--primary-purple);
-            font-size: 16px;
+            padding: 6px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-md);
+            color: var(--text-medium);
+            border-radius: var(--radius-sm);
             transition: all 0.2s ease;
-            min-width: 32px;
-            min-height: 32px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .calendar-nav:hover {
-            background-color: var(--background-light-gray);
-        }
-        .calendar-nav:active {
-            transform: scale(0.95);
+            background: var(--background-light-gray);
         }
         .calendar-title {
             font-weight: 600;
-            color: var(--primary-purple);
-            font-size: 15px;
             text-align: center;
             flex: 1;
+            font-size: 14px;
         }
-        /* Enhanced Calendar Grid with Better Touch Support */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
+            gap: 2px;
             margin-bottom: 12px;
         }
         .calendar-day-header {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
-            padding: 6px 2px;
+            padding: 4px 2px;
         }
         .calendar-day {
             text-align: center;
             padding: 6px 2px;
-            font-size: 13px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            border-radius: 4px;
+            font-size: 13px;
             transition: all 0.2s ease;
-            min-height: 32px;
+            min-height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            font-weight: 500;
         }
         .calendar-day:hover {
-            background-color: rgba(90, 15, 97, 0.1);
+            background: var(--background-light-gray);
         }
-        .calendar-day:active {
-            transform: scale(0.95);
+        .calendar-day.selected {
+            background: var(--primary-purple-gradient);
+            color: white;
         }
         .calendar-day.other-month {
             color: var(--text-light);
         }
-        
         .calendar-day.today {
-            color: rgb(79, 5, 101);
-            font-size: larger;
-            border-color: #3e0846;
-            font-weight: 600;
-            background-color: #dba3e0;
+            font-weight: bold;
+            position: relative;
         }
-        
-        .calendar-day.selected {
-            background-color: var(--primary-purple);
-            color: white;
-            font-weight: 600;
+        .calendar-day.today::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--primary-purple);
+            border-radius: 50%;
         }
-        /* Enhanced Calendar Actions with Better Mobile Layout */
         .calendar-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-light);
+            margin-top: 12px;
             gap: 8px;
         }
         .calendar-btn {
-            padding: 8px 16px;
-            border: 1px solid var(--border-medium);
+            padding: 8px 14px;
+            border: none;
             border-radius: var(--radius-md);
-            background: #ffffff;
-            color: var(--text-medium);
-            font-size: 13px;
+            background: var(--background-light-gray);
             cursor: pointer;
+            font-size: 12px;
             transition: all 0.2s ease;
             flex: 1;
-            min-height: 36px;
         }
         .calendar-btn:hover {
-            border-color: var(--primary-purple);
-            color: var(--primary-purple);
-        }
-        .calendar-btn:active {
-            transform: scale(0.98);
+            background: var(--border-light);
         }
         .calendar-btn.primary {
             background: var(--primary-purple-gradient);
             color: white;
-            border-color: var(--primary-purple);
         }
         .calendar-btn.primary:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+            opacity: 0.9;
         }
-        /* Calendar overlay */
-        .calendar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 999;
-            display: none;
-        }
-        .calendar-overlay.show {
-            display: block;
-        }
+        
         /* Assignment Cards Container */
         .assignments-list {
             display: flex;
@@ -818,6 +719,120 @@
                 transform: translateY(0);
             }
         }
+        
+        /* New Subject Select Styles */
+        .subject-select-group {
+            position: relative;
+        }
+        .subject-select-input {
+            border-radius: 12px;
+            border: 1px solid #E0E0E0;
+            background: #fff;
+            font-size: 15px;
+            color: #333;
+            height: 44px;
+            box-shadow: none;
+            padding-left: 16px;
+            padding-right: 40px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .subject-select-input:focus {
+            outline: none;
+            border-color: #5a0f61;
+        }
+        .subject-dropdown {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            z-index: 10;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            min-width: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .subject-dropdown.open {
+            opacity: 1;
+            pointer-events: auto;
+            border-radius: 12px;
+            border-color: #5a0f61;
+        }
+        .subject-dropdown li {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 6px 12px;
+            margin: 0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            font-family: 'Inter', 'Roboto', Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid #f0f0f0;
+            background: transparent;
+        }
+        .subject-dropdown li:last-child {
+            border-bottom: none;
+        }
+        .subject-dropdown li:hover {
+            background: #f3f3f3;
+            color: #5a0f61;
+            border-radius: 12px;
+        }
+        .subject-dropdown li.active {
+            background: #f3f3f3;
+            color: #5a0f61;
+            border-radius: 12px;
+        }
+        .subject-select-arrow {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            transition: transform 0.2s;
+        }
+        .subject-select-arrow img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .subject-select-group.open .subject-select-arrow img {
+            transform: rotate(180deg);
+        }
+        
+        /* Calendar overlay */
+        .calendar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 99;
+            display: none;
+        }
+        .calendar-overlay.show {
+            display: block;
+        }
+        
         /* Enhanced Responsive Design */
         
         /* Large tablets and small desktops */
@@ -1175,50 +1190,59 @@
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="search-input" placeholder="Search assignments, tasks...">
             </div>
-            <select class="filter-select" id="subject-filter">
-                <option value="">All Subjects</option>
-                <option value="Data Structures">Data Structures</option>
-                <option value="Calculus III">Calculus III</option>
-                <option value="Engineering Physics">Engineering Physics</option>
-                <option value="Database Systems">Database Systems</option>
-                <option value="Web Development">Web Development</option>
-            </select>
-            <!-- Your existing HTML remains the same until the status filter -->
-    
+            
+            <!-- New Subject Select -->
+            <div class="subject-select-group" id="subject-select-group">
+                <input type="text" class="subject-select-input" id="subject_input" placeholder="All Subjects" readonly>
+                <ul class="subject-dropdown" id="subject-dropdown">
+                    <li data-value=""><span>All Subjects</span></li>
+                    <li data-value="Data Structures"><span>Data Structures</span></li>
+                    <li data-value="Calculus III"><span>Calculus III</span></li>
+                    <li data-value="Engineering Physics"><span>Engineering Physics</span></li>
+                    <li data-value="Database Systems"><span>Database Systems</span></li>
+                    <li data-value="Web Development"><span>Web Development</span></li>
+                </ul>
+                <input type="hidden" name="subject" id="subject_hidden">
+                <span class="subject-select-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </div>
+            
+            <!-- Status Filter -->
             <div class="multi-select" id="status-filter">
-    <div class="multi-select-display" id="status-display">All Statuses</div>
-    <i class="fas fa-chevron-down"></i>
-    <div class="multi-select-dropdown">
-        <div class="multi-select-option" data-value="active">
-            <input type="checkbox" id="status-active">
-            <label for="status-active">Active</label>
-        </div>
-        <div class="multi-select-option" data-value="submitted">
-            <input type="checkbox" id="status-submitted">
-            <label for="status-submitted">Submitted</label>
-        </div>
-        <div class="multi-select-option" data-value="submitted-later">
-            <input type="checkbox" id="status-submitted-later">
-            <label for="status-submitted-later">Submitted Later</label>
-        </div>
-        <div class="multi-select-option" data-value="due">
-            <input type="checkbox" id="status-due">
-            <label for="status-due">Due</label>
-        </div>
-        <div class="multi-select-option" data-value="finished">
-            <input type="checkbox" id="status-finished">
-            <label for="status-finished">Finished</label>
-        </div>
-        <div class="multi-select-actions">
-            <button class="multi-select-btn clear" id="status-clear-btn">Clear All</button>
-            <button class="multi-select-btn apply" id="status-apply-btn">Apply</button>
-        </div>
-    </div>
-</div>
+                <div class="multi-select-display" id="status-display">All Statuses</div>
+                <i class="fas fa-chevron-down"></i>
+                <div class="multi-select-dropdown">
+                    <div class="multi-select-option" data-value="active">
+                        <input type="checkbox" id="status-active">
+                        <label for="status-active">Active</label>
+                    </div>
+                    <div class="multi-select-option" data-value="submitted">
+                        <input type="checkbox" id="status-submitted">
+                        <label for="status-submitted">Submitted</label>
+                    </div>
+                    <div class="multi-select-option" data-value="submitted-later">
+                        <input type="checkbox" id="status-submitted-later">
+                        <label for="status-submitted-later">Submitted Later</label>
+                    </div>
+                    <div class="multi-select-option" data-value="due">
+                        <input type="checkbox" id="status-due">
+                        <label for="status-due">Due</label>
+                    </div>
+                    <div class="multi-select-option" data-value="finished">
+                        <input type="checkbox" id="status-finished">
+                        <label for="status-finished">Finished</label>
+                    </div>
+                    <div class="multi-select-actions">
+                        <button class="multi-select-btn clear" id="status-clear-btn">Clear All</button>
+                        <button class="multi-select-btn apply" id="status-apply-btn">Apply</button>
+                    </div>
+                </div>
+            </div>
     
             <div class="date-filter" id="start-date-filter">
                 <i class="fas fa-calendar calendar-icon"></i>
-                <div class="date-display placeholder" id="start-date-display"><span>Start Date</span></div>
+                <div class="date-display placeholder" id="start-date-display">Start Date</div>
                 <div class="calendar-dropdown" id="start-calendar">
                     <div class="calendar-header">
                         <button class="calendar-nav" id="start-prev-month" aria-label="Previous month">
@@ -1229,7 +1253,15 @@
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
-                
+                    <div class="calendar-grid" id="start-calendar-days-header">
+                        <div class="calendar-day-header">Sun</div>
+                        <div class="calendar-day-header">Mon</div>
+                        <div class="calendar-day-header">Tue</div>
+                        <div class="calendar-day-header">Wed</div>
+                        <div class="calendar-day-header">Thu</div>
+                        <div class="calendar-day-header">Fri</div>
+                        <div class="calendar-day-header">Sat</div>
+                    </div>
                     <div class="calendar-grid" id="start-calendar-grid">
                         <!-- Calendar days will be generated by JavaScript -->
                     </div>
@@ -1587,54 +1619,73 @@
         }
         
         function updateStatusDisplay() {
-            const pillsContainer = document.createElement('div');
-            pillsContainer.className = 'selected-status-pills';
-            
             if (selectedStatuses.length === 0) {
-                pillsContainer.textContent = 'All Statuses';
+                statusDisplay.textContent = 'All Statuses';
+            } else if (selectedStatuses.length === 1) {
+                // If only one status is selected, show its name
+                let displayText = selectedStatuses[0].replace('-', ' ');
+                displayText = displayText.replace(/\b\w/g, l => l.toUpperCase());
+                statusDisplay.textContent = displayText;
             } else {
-                selectedStatuses.forEach(status => {
-                    const pill = document.createElement('div');
-                    pill.className = `status-pill ${status}`;
-                    
-                    // Convert status to display text
-                    let displayText = status.replace('-', ' ');
-                    displayText = displayText.replace(/\b\w/g, l => l.toUpperCase());
-                    
-                    pill.innerHTML = `
-                        <span>${displayText}</span>
-                        <button class="remove-btn" data-value="${status}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-                    
-                    pillsContainer.appendChild(pill);
-                });
+                // If multiple statuses are selected, show a count
+                statusDisplay.innerHTML = `
+                    <span>${selectedStatuses.length} Statuses Selected</span>
+                    <span style="margin-left: auto; color: var(--primary-purple); font-size: 12px;">
+                        (${selectedStatuses.map(s => {
+                            let text = s.replace('-', ' ');
+                            return text.replace(/\b\w/g, l => l.toUpperCase());
+                        }).join(', ')})
+                    </span>
+                `;
             }
-            
-            // Clear existing display
-            statusDisplay.innerHTML = '';
-            statusDisplay.appendChild(pillsContainer);
-            
-            // Add event listeners to remove buttons
-            pillsContainer.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const value = btn.getAttribute('data-value');
-                    selectedStatuses = selectedStatuses.filter(status => status !== value);
-                    updateStatusDisplay();
-                    applyFilters();
-                });
-            });
         }
         
         // Search functionality
         const searchInput = document.getElementById('search-input');
         searchInput.addEventListener('input', applyFilters);
         
-        // Subject filter functionality
-        const subjectFilter = document.getElementById('subject-filter');
-        subjectFilter.addEventListener('change', applyFilters);
+        // New Subject Select functionality
+        const subjectInput = document.getElementById('subject_input');
+        const subjectDropdown = document.getElementById('subject-dropdown');
+        const subjectGroup = document.getElementById('subject-select-group');
+        const subjectHidden = document.getElementById('subject_hidden');
+        const subjectArrow = subjectGroup.querySelector('.subject-select-arrow i');
+        
+        function toggleSubjectDropdown() {
+            subjectGroup.classList.toggle('open');
+            subjectDropdown.classList.toggle('open');
+            if (subjectDropdown.classList.contains('open')) {
+                subjectArrow.style.transform = 'rotate(180deg)';
+            } else {
+                subjectArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        function closeSubjectDropdown(e) {
+            if (!subjectGroup.contains(e.target)) {
+                subjectGroup.classList.remove('open');
+                subjectDropdown.classList.remove('open');
+                subjectArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        subjectInput.addEventListener('click', toggleSubjectDropdown);
+        
+        subjectDropdown.querySelectorAll('li').forEach(li => {
+            li.addEventListener('click', function() {
+                subjectInput.value = li.textContent;
+                subjectHidden.value = li.getAttribute('data-value');
+                // Remove active from all, add to selected
+                subjectDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+                li.classList.add('active');
+                subjectDropdown.classList.remove('open');
+                subjectGroup.classList.remove('open');
+                subjectArrow.style.transform = 'rotate(0deg)';
+                applyFilters();
+            });
+        });
+        
+        document.addEventListener('mousedown', closeSubjectDropdown);
         
         // Calendar functionality
         class Calendar {
@@ -1850,7 +1901,7 @@
         // Apply filters function
         function applyFilters() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const selectedSubject = document.getElementById('subject-filter').value;
+            const selectedSubject = document.getElementById('subject_hidden').value;
             const startDate = startCalendar.selectedDate;
             const endDate = endCalendar.selectedDate;
             
