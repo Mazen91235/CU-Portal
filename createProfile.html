@@ -115,11 +115,12 @@
             });
             
 // Initialize on page load
-window.onload = function () {
+window.onload = async function () {
     document.querySelectorAll('.select-group ul li')[0].click();
     document.querySelector('.select-group').click();
-    if (GetUser()) {
-        window.location.href = `${domain}/dashboard`;
+    let user = await GetUser();
+    if (user) {
+        window.location.href = `/dashboard.html`;
         return;
     }
 

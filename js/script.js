@@ -93,9 +93,11 @@ let GetGoogleStoredToken = new Promise((resolve) => {
         resolve(error);
     });
 });
-let GetGoogleAccessToken = new Promise((resolve) => {
+let GetGoogleAccessToken = new Promise(async (resolve) => {
     if(!GetCookie("access_token")) {
-        return GetGoogleStoredToken;
+        let response = await GetGoogleStoredToken;
+        resolve(response);
+        return;
     }
     axios.get(`${domain}/api/v1/auth/get-google-access-token`, {
         headers: {
