@@ -44,7 +44,7 @@
 // Initialize on page load
 window.onload = function () {
     if (GetUser()) {
-        window.location.href = `${domain}/dashboard`;
+        window.location.href = `/dashboard`;
         return;
     }
 
@@ -53,6 +53,16 @@ window.onload = function () {
     }
     if (GetParams("success") == "true") {
         ShowError(GetParams("message"));
+    }
+    if(GetParams("token")) {
+        let token = GetParams("token").split("-");
+        SetCookie("google_details_token", token[0], parseInt(token[1]));
+    }else{
+        window.location.href = `/login`;
+        return;
+    }
+    if(GetParams("state")){
+        SetCookie("oauth_state", GetParams("state"), 60 * 60 * 24 * 30); // Store state for 30 days
     }
 
     if (GetParams("get_stored_token") == "true" ) {
@@ -66,7 +76,7 @@ window.onload = function () {
                 if (!newdata ||!newdata.access_token || !newdata.refresh_token) return;
                 SetCookie("access_token", newdata.access_token, newdata.expire_at);
                 SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
-                window.location.href = `${domain}/dashboard`;
+                window.location.href = `/dashboard`;
             } else {
                 ShowError(data.message);
             }

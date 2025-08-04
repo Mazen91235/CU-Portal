@@ -1,4 +1,4 @@
-const domain = "https://bfd42b02449c.ngrok-free.app"; // Update with your actual domain
+const domain = "https://c96ebfd26a8e.ngrok-free.app"; // Update with your actual domain
 
 
 //lets Understand the Code git pull
@@ -67,37 +67,41 @@ function ShowSuccess(msg) {
 
 //get google Stored token 
 //ask if there is 
-let GetStoredAccessToken = new Promise((resolve) => {
-    axios.get(`${domain}/api/v1/auth/get-google-access-token`, {
+let GetGoogleStoredToken = new Promise((resolve) => {
+    let oauthState = GetCookie("oauth_state");
+    if (!oauthState) {
+        resolve(null);
+        return;
+    }
+    axios.post(`${domain}/api/v1/auth/get-google-stored-token?state=${oauthState}`, {"google_details_token": GetCookie("google_details_token")}, {
         headers: {
             "ngrok-skip-browser-warning": "true",
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + GetCookie('user_token')
+            "OAuth-State": oauthState,
         }
     })
     .then((response) => {
         let data = response.data;
         if(data && data.data && data.data.access_token) {
-            let accessToken = data.data.access_token;
-            let expirein = data.data.expire_at;
-            let refresh_token = data.data.refresh_token;
-            let refresh_expire_in = data.data.refresh_expire_at;
-            SetCookie("access_token", accessToken, expirein);
-            SetCookie("refresh_token", refresh_token, refresh_expire_in);
             resolve(data.data.access_token);
         } else {
             resolve(null);
         }
     })
     .catch((error) => {
-        resolve(null);
+        // console.error('Error getting Google stored token:', error);
+        resolve(error);
     });
 });
-let GetGoogleStoredToken = new Promise((resolve) => {
-    axios.get(`${domain}/api/v1/auth/get-stored-user`, {
+let GetGoogleAccessToken = new Promise((resolve) => {
+    if(!GetCookie("access_token")) {
+        return GetGoogleStoredToken;
+    }
+    axios.get(`${domain}/api/v1/auth/get-google-access-token`, {
         headers: {
             "ngrok-skip-browser-warning": "true",
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + GetCookie('access_token')
         }
     })
     .then((response) => {
@@ -113,7 +117,7 @@ let GetGoogleStoredToken = new Promise((resolve) => {
     });
 });
 
-function UploadToDrive(file){
+async function UploadToDrive(file){
     if(!file) return false;
     if(!file.name || !file.type) {
         console.error('Invalid file object provided.');
@@ -131,19 +135,24 @@ function UploadToDrive(file){
     };
     formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
     formData.append('file', file);
-    return GetGoogleStoredToken.then((access_token) => {
-        if(!access_token) return false;
-        return axios.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', formData, {
+    let url = null;
+    let access_token = await GetGoogleAccessToken;
+    if(!access_token) {
+        console.error('No access token found. Please authorize Google first.');
+        return false;
+    }
+    let UploadData = await axios.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', formData, {
             headers: {
                 'Content-Type': 'multipart/related ',
                 'Authorization': `Bearer ${access_token}`
             }
-        })
-        .then((response) => {
-            // console.log('File uploaded successfully:', response.data);
-            let fileId = response.data.id;
-            // Make the file public
-            return axios.patch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
+        });
+    let fileId = UploadData.data.id;
+    if(!fileId) {
+        console.error('File upload failed. No file ID returned.');
+        return false;
+    }
+    await axios.post(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions`, {
                 'role': 'reader',
                 'type': 'anyone'
             }, {
@@ -151,25 +160,37 @@ function UploadToDrive(file){
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${access_token}`
                 }
-            })
-            .then(() => {
-                // console.log('File made public:', url);
-                let url = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                return url; // Return URL to indicate success
-                // Optionally, you can return the URL or do something with it
-            })
-            .catch((error) => {
-                console.error('Error making file public:', error);
-                return false;
             });
-        })
-        .catch((error) => {
-            console.error('Error uploading file:', error);
-            return false;
-        });
-    });
+    url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    console.log('File made public:', url);
+    return url;
 }
-
+async function RemoveFromDrive(url) {
+    let urlObj = new URLSearchParams(url);
+    let fileId = urlObj.get("id");
+    if (!fileId) {
+        console.error('Invalid URL. Unable to extract file ID.');
+        return false;
+    }
+    let access_token = await GetGoogleAccessToken;
+    if (!access_token) {
+        console.error('No access token found. Please authorize Google first.');
+        return false;
+    }
+    try {
+        await axios.delete(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        console.log('File removed successfully:', url);
+        return true;
+    } catch (error) {
+        console.error('Error removing file:', error);
+        return false;
+    }
+}
 
 // Authentication Functions
 // Signup function to handle user registration
@@ -179,21 +200,33 @@ async function Signup(form) {
     const formData = new FormData(form);
     const fileInput = document.getElementById("file");
     const file = fileInput?.files[0];
-
+    let googleDetailsToken = GetCookie("google_details_token");
+    if (!googleDetailsToken) {
+        window.location.href = `/login.html?error=true&message=You Must Authorize Google First before Proceeding to SignUp.`;
+        return;
+    }
+    formData.append("google_details_token", googleDetailsToken);
     // Upload image if selected
     if (file) {
-        UploadToDrive(file) // Replace 'file' with the actual file object you want to upload
-            .then((url) => {
-                if (url) {
-                    formData.append("url", url);
-                } else {
-                    ShowError("Image upload failed. Please try again.");
-                    return;
-                }
-            })
+        if(file.size > 10 * 1024 * 1024) { // 10 MB limit
+            ShowError("File size exceeds the limit of 10 MB.");
+            return;
+        }
+        if (!file.type.startsWith("image/")) {
+            ShowError("Please upload a valid image file.");
+            return;
+        }
+        console.log("Uploading image:", file.name);
+        let url = await UploadToDrive(file); // Replace 'file' with the actual file object you want to upload
+        if (!url) {
+            ShowError("Image upload failed. Please try again.");
+            return;
+        }
+        console.log("Image uploaded successfully:", url);
+        formData.append("url", url);
         
     }
-    
+    formData.delete("file"); // Remove file input from formData to avoid sending it twice
     // Send signup request
     try {
         const response = await axios.post(`${domain}/api/v1/auth/signup`, formData, {
@@ -205,17 +238,18 @@ async function Signup(form) {
 
         const data = response.data;
         if (data.status == "success") {
-            window.location.href = `${domain}/login.html?success=true&message=${data.message}`;
+            window.location.href = `/login.html?success=true&message=${data.message}`;
         } else {
             ShowError(data.message);
         }
     } catch (error) {
+        console.error("Signup error:", error);
         ShowError(error.response?.data?.message || "Signup failed. Please try again");
     }
 }
 
 
-function GetUser() {
+async function GetUser() {
     if (!GetCookie("access_token") || !GetCookie("refresh_token")) return null;
 
     return axios.get(`${domain}/api/v1/user/get-user-data`, {
@@ -226,7 +260,7 @@ function GetUser() {
     })
     .then(response => {
         const data = response.data;
-        if (data.status === "success") {
+        if (data.status == "success") {
             return data.data;
         } else {
             ShowError(data.message);
@@ -234,7 +268,8 @@ function GetUser() {
         }
     })
     .catch(error => {
-        if (error.response && error.response.status === 407) {
+        console.error("Error retrieving user data:", error);
+        if (error.response && error.response.status == 407) {
             return axios.post(`${domain}/api/v1/auth/refresh`, {
                 refresh_token: GetCookie("refresh_token")
             }, {
@@ -242,8 +277,10 @@ function GetUser() {
             })
             .then(response => {
                 const data = response.data;
-                if (data.status === "success") {
-                    SetCookie("access_token", JSON.stringify(data.access_token), data.expire_at);
+                if (data.status == "success") {
+                    data = data.data;
+                    SetCookie("access_token", data.access_token, data.access_expires_in);
+                    SetCookie("refresh_token", data.refresh_token, data.refresh_expires_in);
                     return GetUser();
                 } else {
                     ShowError(data.message);
@@ -264,5 +301,6 @@ function GetUser() {
 function Logout() {
     SetCookie("access_token", "", -1);
     SetCookie("refresh_token", "", -1);
-    window.location.href = "/";
+    SetCookie("google_details_token", "", -1);
+    window.location.href = "/login";
 }
