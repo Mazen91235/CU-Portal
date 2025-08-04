@@ -196,6 +196,238 @@
             border-color: var(--primary-purple);
             box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
         }
+       /* Enhanced Multi-select Status Filter - Single Layer Design */
+.multi-select {
+    position: relative;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background-color: var(--background-white);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    min-width: 180px;
+}
+
+.multi-select:hover {
+    border-color: var(--primary-purple);
+}
+
+.multi-select.open {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    z-index: 1001;
+}
+
+.multi-select-display {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 6px 0;
+    overflow: hidden;
+}
+
+.multi-select i {
+    color: var(--text-muted);
+    font-size: 12px;
+    transition: transform 0.2s;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.multi-select.open i {
+    transform: rotate(180deg);
+}
+
+.multi-select-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--background-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    padding: 8px 0;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.multi-select.open .multi-select-dropdown {
+    display: block;
+    animation: fadeInUp 0.2s ease;
+}
+
+/* Rest of your existing multi-select styles remain the same */
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: var(--radius-sm);
+    margin: 2px 8px;
+}
+
+.multi-select-option:hover {
+    background-color: var(--background-light-gray);
+}
+
+.multi-select-option input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.multi-select-option label {
+    cursor: pointer;
+    flex: 1;
+}
+
+.multi-select-actions {
+    padding: 8px 16px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+}
+
+.multi-select-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.multi-select-btn.clear {
+    background-color: var(--background-light-gray);
+    color: var(--text-medium);
+}
+
+.multi-select-btn.clear:hover {
+    background-color: var(--border-medium);
+}
+
+.multi-select-btn.apply {
+    background-color: var(--primary-purple);
+    color: white;
+}
+
+.multi-select-btn.apply:hover {
+    background-color: var(--primary-purple-dark);
+}
+
+/* Status option colors (keep your existing styles) */
+.multi-select-option[data-value="active"] {
+    background-color: rgba(22, 163, 74, 0.05);
+    border-left: 3px solid var(--active-green);
+}
+
+.multi-select-option[data-value="submitted"] {
+    background-color: rgba(37, 99, 235, 0.05);
+    border-left: 3px solid var(--submitted-blue);
+}
+
+.multi-select-option[data-value="submitted-later"] {
+    background-color: rgba(234, 88, 12, 0.05);
+    border-left: 3px solid var(--submitted-later-orange);
+}
+
+.multi-select-option[data-value="due"] {
+    background-color: rgba(220, 38, 38, 0.05);
+    border-left: 3px solid var(--due-red);
+}
+
+.multi-select-option[data-value="finished"] {
+    background-color: rgba(107, 114, 128, 0.05);
+    border-left: 3px solid var(--finished-gray);
+}
+
+.multi-select-option input[type="checkbox"]:checked + label {
+    font-weight: 600;
+}
+
+.multi-select-option[data-value="active"] input[type="checkbox"]:checked + label {
+    color: var(--active-green);
+}
+
+.multi-select-option[data-value="submitted"] input[type="checkbox"]:checked + label {
+    color: var(--submitted-blue);
+}
+
+.multi-select-option[data-value="submitted-later"] input[type="checkbox"]:checked + label {
+    color: var(--submitted-later-orange);
+}
+
+.multi-select-option[data-value="due"] input[type="checkbox"]:checked + label {
+    color: var(--due-red);
+}
+
+.multi-select-option[data-value="finished"] input[type="checkbox"]:checked + label {
+    color: var(--finished-gray);
+}
+
+/* Status pills display */
+.selected-status-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+.status-pill {
+    padding: 4px 8px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-pill.active {
+    background-color: rgba(22, 163, 74, 0.1);
+    color: var(--active-green);
+}
+
+.status-pill.submitted {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--submitted-blue);
+}
+
+.status-pill.submitted-later {
+    background-color: rgba(234, 88, 12, 0.1);
+    color: var(--submitted-later-orange);
+}
+
+.status-pill.due {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--due-red);
+}
+
+.status-pill.finished {
+    background-color: rgba(107, 114, 128, 0.1);
+    color: var(--finished-gray);
+}
+
+.status-pill .remove-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+}
+        
         /* Enhanced Date Filter with Better Mobile Support */
         .date-filter {
             position: relative;
@@ -290,7 +522,7 @@
         }
         .calendar-title {
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--primary-purple);
             font-size: 15px;
             text-align: center;
             flex: 1;
@@ -300,10 +532,11 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 1px;
+            margin-bottom: 12px;
         }
         .calendar-day-header {
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
             padding: 6px 2px;
@@ -313,16 +546,17 @@
             padding: 6px 2px;
             font-size: 13px;
             cursor: pointer;
-            border-radius: var(--radius-sm);
+            border-radius: 4px;
             transition: all 0.2s ease;
             min-height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            font-weight: 500;
         }
         .calendar-day:hover {
-            background-color: var(--background-light-gray);
+            background-color: rgba(90, 15, 97, 0.1);
         }
         .calendar-day:active {
             transform: scale(0.95);
@@ -331,21 +565,24 @@
             color: var(--text-light);
         }
         
-.calendar-day.today {
-  font-weight: bold;
-  position: relative;
-}
-
+        .calendar-day.today {
+            color: rgb(79, 5, 101);
+            font-size: larger;
+            border-color: #3e0846;
+            font-weight: 600;
+            background-color: #dba3e0;
+        }
+        
         .calendar-day.selected {
-            background: var(--primary-purple-gradient);
-            color: rgb(249, 244, 244);
+            background-color: var(--primary-purple);
+            color: white;
             font-weight: 600;
         }
         /* Enhanced Calendar Actions with Better Mobile Layout */
         .calendar-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 12px;
+            margin-top: 16px;
             padding-top: 12px;
             border-top: 1px solid var(--border-light);
             gap: 8px;
@@ -650,7 +887,7 @@
             }
             
             .filters {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 12px;
                 padding: 16px;
             }
@@ -719,8 +956,6 @@
                 font-size: 10px;
                 padding: 1px 6px;
             }
-            
-            
             
             .search-box input {
                 padding: 10px 12px 10px 40px;
@@ -898,41 +1133,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* Calendar specific styles to match screenshots */
-        .calendar-grid {
-            margin-bottom: 12px;
-        }
-        
-        .calendar-day-header {
-            font-weight: 600;
-            color: #6B7280;
-            font-size: 12px;
-        }
-        
-        .calendar-day {
-            font-weight: 500;
-            border-radius: 4px;
-        }
-        
-        .calendar-day.today {
-            background-color: var(--primary-purple);
-            color: white;
-        }
-        
-        .calendar-day.selected {
-            background-color: var(--primary-purple);
-            color: white;
-        }
-        
-        .calendar-actions {
-            margin-top: 16px;
-        }
-        
-        .calendar-btn.primary {
-            background-color: var(--primary-purple);
-            color: white;
-            border: none;
-        }
     </style>
 </head>
 <body>
@@ -983,14 +1183,39 @@
                 <option value="Database Systems">Database Systems</option>
                 <option value="Web Development">Web Development</option>
             </select>
-            <select class="filter-select" id="status-filter">
-                <option value="">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="submitted">Submitted</option>
-                <option value="submitted-later">Submitted Later</option>
-                <option value="due">Due</option>
-                <option value="finished">Finished</option>
-            </select>
+            <!-- Your existing HTML remains the same until the status filter -->
+    
+            <div class="multi-select" id="status-filter">
+    <div class="multi-select-display" id="status-display">All Statuses</div>
+    <i class="fas fa-chevron-down"></i>
+    <div class="multi-select-dropdown">
+        <div class="multi-select-option" data-value="active">
+            <input type="checkbox" id="status-active">
+            <label for="status-active">Active</label>
+        </div>
+        <div class="multi-select-option" data-value="submitted">
+            <input type="checkbox" id="status-submitted">
+            <label for="status-submitted">Submitted</label>
+        </div>
+        <div class="multi-select-option" data-value="submitted-later">
+            <input type="checkbox" id="status-submitted-later">
+            <label for="status-submitted-later">Submitted Later</label>
+        </div>
+        <div class="multi-select-option" data-value="due">
+            <input type="checkbox" id="status-due">
+            <label for="status-due">Due</label>
+        </div>
+        <div class="multi-select-option" data-value="finished">
+            <input type="checkbox" id="status-finished">
+            <label for="status-finished">Finished</label>
+        </div>
+        <div class="multi-select-actions">
+            <button class="multi-select-btn clear" id="status-clear-btn">Clear All</button>
+            <button class="multi-select-btn apply" id="status-apply-btn">Apply</button>
+        </div>
+    </div>
+</div>
+    
             <div class="date-filter" id="start-date-filter">
                 <i class="fas fa-calendar calendar-icon"></i>
                 <div class="date-display placeholder" id="start-date-display"><span>Start Date</span></div>
@@ -1241,78 +1466,185 @@
         // Tab filtering functionality
         const tabs = document.querySelectorAll('.tab');
         const assignmentCards = document.querySelectorAll('.assignment-card');
+        let activeFilters = new Set(['all']); // Track active filters
+        
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs
-                tabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                tab.classList.add('active');
                 const filter = tab.getAttribute('data-filter');
                 
-                assignmentCards.forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-status') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
+                // Toggle the filter
+                if (activeFilters.has(filter)) {
+                    // If clicking the same filter again and it's not "all", remove it
+                    if (filter !== 'all') {
+                        activeFilters.delete(filter);
+                        // If no filters are active, activate "all"
+                        if (activeFilters.size === 0) {
+                            activeFilters.add('all');
+                            document.querySelector('[data-filter="all"]').classList.add('active');
+                        } else {
+                            tab.classList.remove('active');
+                        }
                     }
+                    // If clicking "all" again, keep it active
+                } else {
+                    // If activating a new filter
+                    if (filter === 'all') {
+                        // If "all" is clicked, clear all other filters
+                        activeFilters.clear();
+                        activeFilters.add('all');
+                        tabs.forEach(t => t.classList.remove('active'));
+                    } else {
+                        // If a specific filter is clicked, remove "all" if active
+                        if (activeFilters.has('all')) {
+                            activeFilters.delete('all');
+                            document.querySelector('[data-filter="all"]').classList.remove('active');
+                        }
+                        activeFilters.add(filter);
+                    }
+                    tab.classList.add('active');
+                }
+                
+                // Apply filters
+                applyFilters();
+            });
+        });
+        
+        // Multi-select status filter functionality
+        const statusFilter = document.getElementById('status-filter');
+        const statusDisplay = document.getElementById('status-display');
+        const statusDropdown = statusFilter.querySelector('.multi-select-dropdown');
+        const statusOptions = statusFilter.querySelectorAll('.multi-select-option');
+        const statusClearBtn = document.getElementById('status-clear-btn');
+        const statusApplyBtn = document.getElementById('status-apply-btn');
+        
+        let selectedStatuses = []; // This will hold the selected status values
+        let tempSelectedStatuses = []; // Temporary selection before applying
+        
+        // Toggle dropdown
+        statusFilter.addEventListener('click', (e) => {
+            // Don't toggle if clicking on the dropdown itself
+            if (!statusDropdown.contains(e.target)) {
+                statusFilter.classList.toggle('open');
+                // When opening, sync the temporary selections with the actual selections
+                if (statusFilter.classList.contains('open')) {
+                    tempSelectedStatuses = [...selectedStatuses];
+                    updateCheckboxes();
+                }
+            }
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!statusFilter.contains(e.target)) {
+                statusFilter.classList.remove('open');
+            }
+        });
+        
+        // Handle option clicks
+        statusOptions.forEach(option => {
+            const checkbox = option.querySelector('input[type="checkbox"]');
+            const value = option.getAttribute('data-value');
+            
+            option.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent the dropdown from closing
+                
+                // Toggle the checkbox
+                checkbox.checked = !checkbox.checked;
+                
+                // Update tempSelectedStatuses array
+                if (checkbox.checked) {
+                    if (!tempSelectedStatuses.includes(value)) {
+                        tempSelectedStatuses.push(value);
+                    }
+                } else {
+                    tempSelectedStatuses = tempSelectedStatuses.filter(status => status !== value);
+                }
+            });
+        });
+        
+        // Clear button functionality
+        statusClearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            tempSelectedStatuses = [];
+            updateCheckboxes();
+        });
+        
+        // Apply button functionality
+        statusApplyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedStatuses = [...tempSelectedStatuses];
+            updateStatusDisplay();
+            statusFilter.classList.remove('open');
+            applyFilters();
+        });
+        
+        function updateCheckboxes() {
+            statusOptions.forEach(option => {
+                const checkbox = option.querySelector('input[type="checkbox"]');
+                const value = option.getAttribute('data-value');
+                checkbox.checked = tempSelectedStatuses.includes(value);
+            });
+        }
+        
+        function updateStatusDisplay() {
+            const pillsContainer = document.createElement('div');
+            pillsContainer.className = 'selected-status-pills';
+            
+            if (selectedStatuses.length === 0) {
+                pillsContainer.textContent = 'All Statuses';
+            } else {
+                selectedStatuses.forEach(status => {
+                    const pill = document.createElement('div');
+                    pill.className = `status-pill ${status}`;
+                    
+                    // Convert status to display text
+                    let displayText = status.replace('-', ' ');
+                    displayText = displayText.replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    pill.innerHTML = `
+                        <span>${displayText}</span>
+                        <button class="remove-btn" data-value="${status}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    pillsContainer.appendChild(pill);
+                });
+            }
+            
+            // Clear existing display
+            statusDisplay.innerHTML = '';
+            statusDisplay.appendChild(pillsContainer);
+            
+            // Add event listeners to remove buttons
+            pillsContainer.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const value = btn.getAttribute('data-value');
+                    selectedStatuses = selectedStatuses.filter(status => status !== value);
+                    updateStatusDisplay();
+                    applyFilters();
                 });
             });
-        });
+        }
+        
         // Search functionality
         const searchInput = document.getElementById('search-input');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            assignmentCards.forEach(card => {
-                const title = card.querySelector('.assignment-title').textContent.toLowerCase();
-                const subject = card.querySelector('.meta-item span').textContent.toLowerCase();
-                const description = card.querySelector('.assignment-description').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || subject.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+        searchInput.addEventListener('input', applyFilters);
+        
         // Subject filter functionality
         const subjectFilter = document.getElementById('subject-filter');
-        subjectFilter.addEventListener('change', (e) => {
-            const selectedSubject = e.target.value;
-            
-            assignmentCards.forEach(card => {
-                const cardSubject = card.getAttribute('data-subject');
-                
-                if (!selectedSubject || cardSubject === selectedSubject) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-        // Status filter functionality
-        const statusFilter = document.getElementById('status-filter');
-        statusFilter.addEventListener('change', (e) => {
-            const selectedStatus = e.target.value;
-            
-            assignmentCards.forEach(card => {
-                const cardStatus = card.getAttribute('data-status');
-                
-                if (!selectedStatus || cardStatus === selectedStatus) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+        subjectFilter.addEventListener('change', applyFilters);
+        
         // Calendar functionality
         class Calendar {
-            constructor(calendarId, displayId) {
+            constructor(calendarId, displayId, onChange) {
                 this.calendar = document.getElementById(calendarId);
                 this.display = document.getElementById(displayId);
                 this.currentDate = new Date();
                 this.selectedDate = null;
                 this.isOpen = false;
+                this.onChange = onChange; // Callback function
                 
                 this.init();
             }
@@ -1456,6 +1788,9 @@
                 this.updateDisplay();
                 this.render();
                 this.close();
+                if (this.onChange) {
+                    this.onChange();
+                }
             }
             
             clearDate() {
@@ -1463,6 +1798,9 @@
                 this.updateDisplay();
                 this.render();
                 this.close();
+                if (this.onChange) {
+                    this.onChange();
+                }
             }
             
             selectToday() {
@@ -1504,9 +1842,68 @@
                        date1.getFullYear() === date2.getFullYear();
             }
         }
-        // Initialize calendars
-        const startCalendar = new Calendar('start-calendar', 'start-date-display');
-        const endCalendar = new Calendar('end-calendar', 'end-date-display');
+        
+        // Initialize calendars with callback
+        const startCalendar = new Calendar('start-calendar', 'start-date-display', applyFilters);
+        const endCalendar = new Calendar('end-calendar', 'end-date-display', applyFilters);
+        
+        // Apply filters function
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const selectedSubject = document.getElementById('subject-filter').value;
+            const startDate = startCalendar.selectedDate;
+            const endDate = endCalendar.selectedDate;
+            
+            assignmentCards.forEach(card => {
+                // Check search
+                const title = card.querySelector('.assignment-title').textContent.toLowerCase();
+                const subject = card.getAttribute('data-subject').toLowerCase();
+                const description = card.querySelector('.assignment-description').textContent.toLowerCase();
+                const matchesSearch = !searchTerm || title.includes(searchTerm) || subject.includes(searchTerm) || description.includes(searchTerm);
+                
+                // Check subject
+                const cardSubject = card.getAttribute('data-subject');
+                const matchesSubject = !selectedSubject || cardSubject === selectedSubject;
+                
+                // Check status from multi-select
+                const cardStatus = card.getAttribute('data-status');
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(cardStatus);
+                
+                // Check tabs filter
+                const cardStatusForTab = card.getAttribute('data-status');
+                let matchesTab = false;
+                if (activeFilters.has('all')) {
+                    matchesTab = true;
+                } else {
+                    activeFilters.forEach(filter => {
+                        if (filter === cardStatusForTab) {
+                            matchesTab = true;
+                        }
+                    });
+                }
+                
+                // Check date range
+                const cardDueDate = new Date(card.getAttribute('data-due'));
+                let matchesDate = true;
+                if (startDate) {
+                    matchesDate = matchesDate && cardDueDate >= startDate;
+                }
+                if (endDate) {
+                    // Set end date to end of day
+                    const endOfDay = new Date(endDate);
+                    endOfDay.setHours(23, 59, 59, 999);
+                    matchesDate = matchesDate && cardDueDate <= endOfDay;
+                }
+                
+                // Show card if all conditions are met
+                if (matchesSearch && matchesSubject && matchesStatus && matchesTab && matchesDate) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
         // View button functionality
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1515,6 +1912,9 @@
                 console.log('View task clicked');
             });
         });
+        
+        // Initialize the page
+        applyFilters();
     </script>
 </body>
 </html>

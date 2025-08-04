@@ -10,6 +10,7 @@ class ExamCalendar {
       end: null
     };
     this.activeCalendar = null;
+    this.selectedStatuses = []; // Initialize selectedStatuses array
     
     this.init();
   }
@@ -18,6 +19,7 @@ class ExamCalendar {
     this.setupEventListeners();
     this.setupCalendars();
     this.setupFilters();
+    this.setupMultiSelectFilter(); // Call the multi-select setup
     this.setupResponsiveHandlers();
   }
 
@@ -47,8 +49,9 @@ class ExamCalendar {
 
     // Close calendars when clicking outside
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.date-filter') && !e.target.closest('.calendar-dropdown')) {
+      if (!e.target.closest('.date-filter') && !e.target.closest('.calendar-dropdown') && !e.target.closest('.multi-select-filter')) {
         this.closeAllCalendars();
+        this.closeMultiSelectDropdown(); // Close multi-select dropdown as well
       }
     });
 
@@ -56,6 +59,7 @@ class ExamCalendar {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeAllCalendars();
+        this.closeMultiSelectDropdown(); // Close multi-select dropdown as well
       }
     });
   }
@@ -111,6 +115,7 @@ class ExamCalendar {
       this.closeAllCalendars();
     } else {
       this.closeAllCalendars();
+      this.closeMultiSelectDropdown(); // Close multi-select dropdown when opening calendar
       calendar.classList.add('show');
       overlay.classList.add('show');
       filter.classList.add('active');
@@ -237,17 +242,12 @@ class ExamCalendar {
       this.filterExams();
     });
 
-    // Status filter
-    const statusSelect = document.querySelector('.filter-select[aria-label="Select status"]');
-    statusSelect.addEventListener('change', () => {
-      this.filterExams();
-    });
+    // The status filter is now handled by setupMultiSelectFilter
   }
 
   filterExams() {
     const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
     const selectedSubject = document.querySelector('.filter-select[aria-label="Select subject"]').value;
-    const selectedStatus = document.querySelector('.filter-select[aria-label="Select status"]').value;
     const startDate = this.selectedDates.start;
     const endDate = this.selectedDates.end;
 
@@ -273,8 +273,8 @@ class ExamCalendar {
         shouldShow = false;
       }
 
-      // Status filter
-      if (selectedStatus !== 'All Statuses' && !status.includes(selectedStatus)) {
+      // Status filter (multi-select)
+      if (this.selectedStatuses.length > 0 && !this.selectedStatuses.includes(status)) {
         shouldShow = false;
       }
 
@@ -334,6 +334,7 @@ class ExamCalendar {
     if (this.activeCalendar) {
       this.closeAllCalendars();
     }
+    this.closeMultiSelectDropdown(); // Close multi-select dropdown on resize
 
     // Adjust calendar positioning for mobile
     this.adjustCalendarPositioning();
@@ -371,6 +372,126 @@ class ExamCalendar {
         }
       }
     });
+  }
+
+  setupMultiSelectFilter() {
+    const statusFilter = document.getElementById('status-filter');
+    const trigger = statusFilter.querySelector('.multi-select-trigger');
+    const dropdown = statusFilter.querySelector('.multi-select-dropdown');
+    const applyBtn = document.getElementById('status-apply-btn');
+    const clearBtn = document.getElementById('status-clear-btn');
+    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+    const placeholder = trigger.querySelector('.multi-select-placeholder');
+    
+    // Create container for selected options display
+    const selectedContainer = document.createElement('div');
+    selectedContainer.className = 'selected-options';
+    trigger.insertBefore(selectedContainer, trigger.querySelector('i'));
+    
+    // Update selected options display
+    const updateSelectedDisplay = () => {
+      selectedContainer.innerHTML = '';
+      
+      if (this.selectedStatuses.length === 0) {
+        placeholder.textContent = 'All Statuses';
+        placeholder.style.display = 'block';
+        return;
+      }
+      
+      placeholder.style.display = 'none';
+      
+      this.selectedStatuses.forEach(option => {
+        const tag = document.createElement('span');
+        tag.className = 'selected-option';
+        tag.setAttribute('data-status', option.toLowerCase());
+        tag.textContent = option;
+        tag.innerHTML += '<i class="fas fa-times"></i>';
+        
+        tag.querySelector('i').addEventListener('click', (e) => {
+          e.stopPropagation();
+          const checkbox = dropdown.querySelector(`input[data-value="${option.toLowerCase()}"]`);
+          if (checkbox) {
+            checkbox.checked = false;
+          }
+          this.selectedStatuses = this.selectedStatuses.filter(opt => opt !== option);
+          updateSelectedDisplay();
+          this.filterExams(); // Re-filter exams when an option is removed
+        });
+        
+        selectedContainer.appendChild(tag);
+      });
+    };
+    
+    // Toggle dropdown
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeAllCalendars(); // Close calendars when opening multi-select
+      dropdown.classList.toggle('show');
+      statusFilter.classList.toggle('open');
+      
+      if (dropdown.classList.contains('show')) {
+        dropdown.style.display = 'block';
+        setTimeout(() => {
+          dropdown.style.opacity = '1';
+          dropdown.style.transform = 'translateY(0)';
+        }, 10);
+      } else {
+        dropdown.style.opacity = '0';
+        dropdown.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          dropdown.style.display = 'none';
+        }, 200);
+      }
+    });
+
+    this.closeMultiSelectDropdown = () => {
+      dropdown.classList.remove('show');
+      statusFilter.classList.remove('open');
+      dropdown.style.opacity = '0';
+      dropdown.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        dropdown.style.display = 'none';
+      }, 200);
+    };
+    
+    // Handle checkbox changes
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const value = checkbox.dataset.value;
+        const label = checkbox.nextElementSibling.textContent;
+        
+        if (checkbox.checked) {
+          if (!this.selectedStatuses.includes(label)) {
+            this.selectedStatuses.push(label);
+          }
+        } else {
+          this.selectedStatuses = this.selectedStatuses.filter(opt => opt !== label);
+        }
+        updateSelectedDisplay();
+      });
+    });
+    
+    // Apply button
+    applyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.filterExams();
+      this.closeMultiSelectDropdown();
+    });
+
+    // Clear button
+    clearBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      this.selectedStatuses = [];
+      updateSelectedDisplay();
+      this.filterExams();
+      this.closeMultiSelectDropdown();
+    });
+
+    // Initial display update
+    updateSelectedDisplay();
   }
 }
 

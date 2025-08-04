@@ -114,8 +114,10 @@
         }
 
         .status-badge {
-            background: var(--active-green);
-            color: white;
+            background: rgb(66, 177, 94);
+            color: var(--active-green);
+            border-color: var(--active-green);
+            border-width: 2%;
             padding: 4px 12px;
             border-radius: var(--radius-full);
             font-size: 12px;

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,12 +35,30 @@
         <option>CS 330</option>
         <option>CS 340</option>
       </select>
-      <select class="filter-select" aria-label="Select status">
-        <option>All Statuses</option>
-        <option>Upcoming</option>
-        <option>Completed</option>
-        <option>Cancelled</option>
-      </select>
+      <div class="multi-select-filter" id="status-filter">
+        <div class="multi-select-trigger" aria-label="Select statuses" tabindex="0">
+          <span class="multi-select-placeholder">All Statuses</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="multi-select-dropdown">
+          <div class="multi-select-option">
+            <input type="checkbox" id="status-upcoming" data-value="upcoming">
+            <label for="status-upcoming">Upcoming</label>
+          </div>
+          <div class="multi-select-option">
+            <input type="checkbox" id="status-completed" data-value="completed">
+            <label for="status-completed">Completed</label>
+          </div>
+          <div class="multi-select-option">
+            <input type="checkbox" id="status-cancelled" data-value="cancelled">
+            <label for="status-cancelled">Cancelled</label>
+          </div>
+          <div class="multi-select-actions">
+            <button class="multi-select-btn clear" id="status-clear-btn">Clear All</button>
+            <button class="multi-select-btn apply" id="status-apply-btn">Apply</button>
+          </div>
+        </div>
+      </div>
       <div class="date-filter" id="start-date-filter">
         <i class="fas fa-calendar calendar-icon"></i>
         <div class="date-display placeholder" id="start-date-display">Start Date</div>
