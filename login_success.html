@@ -43,6 +43,16 @@
         
 // Initialize on page load
 window.onload = async function () {
+    if(GetParams("token")) {
+        let token = GetParams("token").split("___");
+        SetCookie("google_details_token", token[0], parseInt(token[1]));
+    }else{
+        window.location.href = "/login";
+        return;
+    }
+    if(GetParams("state")){
+        SetCookie("oauth_state", GetParams("state"), 60 * 60 * 24 * 30); // Store state for 30 days
+    }
     let user = await GetUser();
     if (user) {
         window.location.href = "/dashboard.html";
@@ -54,16 +64,6 @@ window.onload = async function () {
     }
     if (GetParams("success") == "true") {
         ShowError(GetParams("message"));
-    }
-    if(GetParams("token")) {
-        let token = GetParams("token").split("___");
-        SetCookie("google_details_token", token[0], parseInt(token[1]));
-    }else{
-        window.location.href = "/login";
-        return;
-    }
-    if(GetParams("state")){
-        SetCookie("oauth_state", GetParams("state"), 60 * 60 * 24 * 30); // Store state for 30 days
     }
 
     if (GetParams("get_stored_token") == "true" ) {
