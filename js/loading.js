@@ -287,5 +287,90 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-   
-  
+////////////////////////////////////////
+window.addEventListener("DOMContentLoaded", () => {
+    const loginBtn = document.getElementById("loginButton");
+    const signupBtn = document.getElementById("signupButton");
+    const sidebarLoginBtn = document.getElementById("sidebarLoginButton");
+    const sidebarSignupBtn = document.getElementById("sidebarSignupButton");
+
+    function checkLoginStatus() {
+        axios.get("https://example.com/api/check-login", {
+            withCredentials: true // needed if using cookies/session
+        })
+        .then(response => {
+            if (response.data.loggedIn) {
+                // Hide both login buttons
+                if (loginBtn) loginBtn.style.display = "none";
+                if (sidebarLoginBtn) sidebarLoginBtn.style.display = "none";
+
+                // Change both signup buttons to "Go to Dashboard"
+                if (signupBtn) {
+                    signupBtn.textContent = "Go to Dashboard";
+                    signupBtn.onclick = () => window.location.href = "/dashboard";
+                }
+                if (sidebarSignupBtn) {
+                    sidebarSignupBtn.textContent = "Go to Dashboard";
+                    sidebarSignupBtn.onclick = () => window.location.href = "/dashboard";
+                }
+            } else {
+                // Show both login buttons
+                if (loginBtn) loginBtn.style.display = "inline-block";
+                if (sidebarLoginBtn) sidebarLoginBtn.style.display = "inline-block";
+
+                // Reset both signup buttons to "Sign Up"
+                if (signupBtn) {
+                    signupBtn.textContent = "Sign Up";
+                    signupBtn.onclick = () => window.location.href = "/signup";
+                }
+                if (sidebarSignupBtn) {
+                    sidebarSignupBtn.textContent = "Sign Up";
+                    sidebarSignupBtn.onclick = () => window.location.href = "/signup";
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error checking login status:", error);
+        });
+    }
+
+    checkLoginStatus();
+});
+////////////////////////////////////
+document.querySelector(".contact-form-fields").addEventListener("submit", function (e) {
+    e.preventDefault(); // Stop form from reloading page
+
+    // Get input values
+    const name = document.getElementById("contact-name").value.trim();
+    const email = document.getElementById("contact-email").value.trim();
+    const message = document.getElementById("contact-message").value.trim();
+
+    // Optional: Basic validation
+    if (!name || !email || !message) {
+        ShowError("Please fill in all fields.");
+        return;
+    }
+
+    // Create data object
+    const formData = {
+        name: name,
+        email: email,
+        message: message,
+
+    };
+
+    // Send to backend
+    axios.post("/api/v1/contact-us", formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true // if using cookies/session
+    })
+    .then(response => {
+        console.log("Success:", response.data);
+        alert("Your message has been sent successfully!");
+        this.reset(); // Clear form
+    })
+    .catch(error => {
+        console.error("Error sending message:", error);
+        alert("Something went wrong. Please try again later.");
+    });
+});
