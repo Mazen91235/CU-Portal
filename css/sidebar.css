@@ -915,5 +915,8 @@ margin-left: 10px;}
   opacity: 0;
   transition: opacity 1s ease-out;
 }
-
+#navbar-container{
+  z-index: 4;
+  
+}
 
