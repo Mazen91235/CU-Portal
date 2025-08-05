@@ -2076,7 +2076,6 @@ html body {
   transition: transform 0.35s cubic-bezier(.4,0,.2,1), color 0.2s, opacity 0.25s;
   display: inline-block;
   line-height: 1;
-  vertical-align: middle;
   will-change: transform, opacity;
 }
 

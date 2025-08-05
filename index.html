@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Portal</title>
+    <link rel="icon" type="image/x-icon" href="./assets/logo.png" />
+    <link rel="website favicon" type="image/x-icon" href="./assets/logo.png" />
     <link rel="stylesheet" href="./css/styleindex.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -250,8 +252,8 @@ background-clip: text;
             <ul>
                 <li><a href="#hero" class="sidebar-nav-link sidebar-link-active" data-section="hero">Home</a></li>
                 <li><a href="#features" class="sidebar-nav-link" data-section="features">Features</a></li>
-                <li><a href="#Snapshots" class="sidebar-nav-link" data-section="snapshots">Snapshots</a></li>
                 <li><a href="#how-it-work" class="sidebar-nav-link" data-section="how-it-work">How It Works</a></li>
+                <li><a href="#Snapshots" class="sidebar-nav-link" data-section="snapshots">Snapshots</a></li>
                 <li><a href="#beginning-card" class="sidebar-nav-link" data-section="beginning-card">How We Started</a></li>
 
                 <hr>
@@ -270,7 +272,7 @@ background-clip: text;
             <p class="hero-description">Organize your studies, track your progress, and connect with your academic
                 community.
             </p>
-            <a href="login.html" class="cta-button">Get Started Now!</a>
+            <a href="login.html" id="getStartedButton" class="cta-button">Get Started Now!</a>
         </div>
         <div class="hero-image">
             <img src="./assets/hero section photo.png" alt="Illustration of two students with books">
@@ -419,7 +421,7 @@ background-clip: text;
                 </div>
             </div>
             <div class="simple-steps-cta">
-                <button class="simple-steps-btn">Organize Your Academic Life</button>
+                <button class="simple-steps-btn" id="organize-your-life-btn">Organize Your Academic Life</button>
             </div>
         </div>
     </section>
@@ -592,7 +594,9 @@ perspective focused on what students actually need in their academic journey. Wh
                 <a href="#contact-form-section" class="footer-link" style="margin: 10px;">Contact Us</a>
             </div>
         </div>
-        <script src="./js/loading.js"></script>
+        </footer>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+        <script src="./js/script.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const menuToggle = document.getElementById('mobile-menu-toggle');
@@ -743,31 +747,76 @@ const signupButton = document.getElementById('signupButton');
 const sidebarLoginButton = document.getElementById('sidebarLoginButton');
 const sidebarSignupButton = document.getElementById('sidebarSignupButton');
 
-// Add an event listener to the Login button (header)
-if (loginButton) {
-    loginButton.addEventListener('click', function() {
-        window.location.href = 'login.html';
-    });
-}
+window.onload = async function () {
+            // Check if user is logged in
+        let user = await GetUser();
+        let organizeYourLifeBtn = document.getElementById('organize-your-life-btn');
+        let getStartedButton = document.getElementById('getStartedButton');
+        if (user){
+            organizeYourLifeBtn.addEventListener('click', function() {
+                window.location.href = './dashboard.html';
+            });
+            getStartedButton.setAttribute('href', './dashboard.html'); // Change Get Started button to Dashboard
+            // Add an event listener to the Login button (header)
+            if (loginButton) {
+                loginButton.addEventListener('click', function() {
+                    window.location.href = './dashboard.html';
+                });
+            }
+            loginButton.style.display = 'none'; // Hide login button
+            signupButton.textContent = 'Dashboard'; // Change signup button text to Dashboard
+            // Add an event listener to the Sign Up button (header)
+            if (signupButton) {
+                signupButton.addEventListener('click', function() {
+                    window.location.href = './dashboard.html';
+                });
+            }
 
-// Add an event listener to the Sign Up button (header)
-if (signupButton) {
-    signupButton.addEventListener('click', function() {
-        window.location.href = './login.html';
-    });
-}
+            // Add event listeners for sidebar buttons
+            if (sidebarLoginButton) {
+                sidebarLoginButton.addEventListener('click', function() {
+                    window.location.href = './dashboard.html';
+                });
+            }
+            sidebarLoginButton.style.display = 'none'; // Hide sidebar login button
+            sidebarSignupButton.textContent = 'Dashboard'; // Change sidebar signup button text to Dashboard
+            if (sidebarSignupButton) {
+                sidebarSignupButton.addEventListener('click', function() {
+                    window.location.href = './dashboard.html';
+                });
+            }
+        } else {
+            organizeYourLifeBtn.addEventListener('click', function() {
+                window.location.href = './index.html';
+            });
+            getStartedButton.setAttribute('href', './login.html'); // Change Get Started button to Login
+            // Add an event listener to the Login button (header)
+            if (loginButton) {
+                loginButton.addEventListener('click', function() {
+                    window.location.href = './login.html';
+                });
+            }
 
-// Add event listeners for sidebar buttons
-if (sidebarLoginButton) {
-    sidebarLoginButton.addEventListener('click', function() {
-        window.location.href = 'login.html';
-    });
-}
-if (sidebarSignupButton) {
-    sidebarSignupButton.addEventListener('click', function() {
-        window.location.href = './login.html';
-    });
-}
+            // Add an event listener to the Sign Up button (header)
+            if (signupButton) {
+                signupButton.addEventListener('click', function() {
+                    window.location.href = './login.html';
+                });
+            }
+
+            // Add event listeners for sidebar buttons
+            if (sidebarLoginButton) {
+                sidebarLoginButton.addEventListener('click', function() {
+                    window.location.href = './login.html';
+                });
+            }
+            if (sidebarSignupButton) {
+                sidebarSignupButton.addEventListener('click', function() {
+                    window.location.href = './login.html';
+                });
+            }
+        }
+    };
 
 // Smooth scroll for header nav links
             document.addEventListener('DOMContentLoaded', () => {
@@ -910,7 +959,7 @@ if (sidebarSignupButton) {
                             link.classList.remove('sidebar-link-active');
                         }
                     });
-                }
+                };
 
                 // Initial highlight
                 updateActiveLinks();
@@ -920,46 +969,41 @@ if (sidebarSignupButton) {
             });
             
         let form = document.querySelector(".contact-form-fields");
- form.addEventListener("submit", function (e) {
-       e.preventDefault(); // Stop form from reloading page
-    // Get input values
-    const name = document.getElementById("contact-name").value.trim();
-    const email = document.getElementById("contact-email").value.trim();
-    const message = document.getElementById("contact-message").value.trim();
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Stop form from reloading page
+            // Get input values
+            let name = document.getElementById("contact-name").value.trim();
+            let email = document.getElementById("contact-email").value.trim();
+            let phone = document.getElementById("contact-phone").value.trim();
+            let message = document.getElementById("contact-message").value.trim();
 
-    // Optional: Basic validation
-    if (!name || !email || !message || !phone) {
-        ShowError("Please fill in all fields.");
-        return;
-    }
+            // Optional: Basic validation
+            if (!name || !email || !message || !phone) {
+                ShowError("Please fill in all fields.");
+                return;
+            }
 
-    // Create data object
-    const formData = {
-        name: name,
-        email: email,
-        message: message,
+            // Create data object
+            let formData = new FormData(form);
 
-    };
-
-    // Send to backend
-    axios.post("/api/v1/contact-us", formData, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true // if using cookies/session
-    })
-    .then(response => {
-        console.log("Success:", response.data);
-        alert("Your message has been sent successfully!");
-        this.reset(); // Clear form
-    })
-    .catch(error => {
-        console.error("Error sending message:", error);
-        alert("Something went wrong. Please try again later.");
-    });
-});
-
-
-
+            // Send to backend
+            axios.post(`${domain}/api/v1/contact-us`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+            .then(response => {
+                let data = response.data;
+                if (data.status == "success") {
+                    ShowSuccess("Message sent successfully!");
+                    form.reset(); // Reset form fields
+                } else {
+                    ShowError(data.message || "Failed to send message.");
+                }
+            })
+            .catch(error => {
+                let errorMessage = error.response?.data?.message || "Failed to send message.";
+                ShowError(errorMessage);
+            });
+        });
         </script>
-    </footer>
   </body>
 </html>

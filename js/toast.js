@@ -13,7 +13,7 @@
       });
   });
 });
-function showToast(type) {
+        function showToast(type, headerText = "", messageText = "", redirectUrl = "") {
             const toast = document.getElementById(`toast-${type}`);
             if (!toast) return;
 
@@ -21,6 +21,15 @@ function showToast(type) {
             document.querySelectorAll(".custom-toast").forEach(t => {
                 t.classList.add("hidden", "tw-hidden");;
             });
+               if (headerText) {
+                const header = toast.querySelector(".toast-header");
+                if (header) header.textContent = headerText;
+            }
+
+            if (messageText) {
+                const text = toast.querySelector(".toast-text");
+                if (text) text.textContent = messageText;
+            }
 
             // Restart bar animation
             const bar = toast.querySelector(".toast-bar");
@@ -31,21 +40,42 @@ toast.style.animation = "fadeInto 0.5s ease forwards";
 
             // Show the toast
             toast.classList.remove("hidden", "tw-hidden");;
-toast.classList.add("block");
-            // Auto-hide after 3 seconds
+           toast.classList.add("block");
+    toast.onclick = () => hideToast(type);// hide toast when click
+
+            // Auto-hide after 2.5 seconds
            setTimeout(() => {
   toast.classList.add("fade-out");
   setTimeout(() => {
     toast.classList.add("tw-hidden");
     toast.classList.remove("fade-out");
+    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
   }, 500); 
 }, 2500);
 }
+function hideToast(type) {
+    const toast = document.getElementById(`toast-${type}`);
+    if (!toast) return;
+
+    toast.classList.add("fade-out");
+
+    setTimeout(() => {
+        toast.classList.add("tw-hidden", "hidden");
+        toast.classList.remove("fade-out", "block");
+    }, 100); 
+}
+
+
+
+//btn function
+
         toastReady.then(() => {
   const btn = document.getElementById("showToastBtn");
   if (btn) {
     btn.addEventListener("click", () => {
-      showToast("info");
+      showToast("info","New message","New message waiting for you! It might be important","check.html");
     });
   }
 });

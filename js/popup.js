@@ -49,6 +49,20 @@ function showPopup(type, heading, message, url = "", timer = 5000) {
       if (btn) {
         if (url) {
           btn.style.display = "inline-block";
+ const actionBtn = popup.querySelector("button.popup-btn");
+    if (actionBtn) {
+      const btnText = actionBtn.querySelector(".popup-btn-text");
+      const btnFill = actionBtn.querySelector(".popup-btn-fill");
+
+      if (btnFill) {
+        btnFill.style.transition = "none";
+        btnFill.style.width = "0%";
+        void btnFill.offsetWidth; // Force reflow
+        btnFill.style.transition = `width ${timer}ms linear`;
+        btnFill.style.width = "100%";
+      }
+    }
+
           btn.onclick = () => window.location.href = url;
           if (timer > 0) {
             setTimeout(() => window.location.href = url, timer);
@@ -105,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("testPopupBtn");
     if (btn) {
       btn.addEventListener("click", () => {
-        showPopup("success", "Welcome!", "This is a test popup", "", 3000);
+        showPopup("success", "Welcome!", "This is a test popup", "check.html", 3000);
       });
     }
   });
