@@ -835,48 +835,51 @@
   <script src="./js/loading.js"></script>
   <script>
     // === Circular Progress (Donut) ===
-    const circularChart = new Chart(document.getElementById("circularChart"), {
-      type: 'doughnut',
-      data: {
-        labels: ["Completed", "Remaining"],
-        datasets: [{
-          data: [18, 25 - 18],
-          backgroundColor: ["#5A0F61", "#e0e0e0"],
-          borderWidth: 0,
-          borderRadius: 3
-        }]
-      },
-      options: {
-        cutout: "80%",
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false },
-          title: {
-            display: false,
-            text: '18h of 25h',
-            position: 'center',
-            font: { size: 16 },
-            color: '#333'
-          }
-        }
-      },
-      plugins: [{
-        id: 'centerText',
-        beforeDraw: chart => {
-          const { width } = chart;
-          const ctx = chart.ctx;
-          ctx.restore();
-          ctx.font = 'bold 20px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = '#5A0F61';
-          ctx.fillText('18h', width / 2, chart.height / 2 - 10);
-          ctx.font = '14px sans-serif';
-          ctx.fillText('of 25h', width / 2, chart.height / 2 + 10);
-          ctx.save();
-        }
-      }]
-    });
+  function createCircularChart(canvasId, completedHours, totalHours) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
 
+
+
+  const remainingHours = totalHours - completedHours;
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ["Completed", "Remaining"],
+      datasets: [{
+        data: [completedHours, remainingHours],
+        backgroundColor: ["#5A0F61", "#e0e0e0"],
+        borderWidth: 0,
+        borderRadius: 3
+      }]
+    },
+    options: {
+      cutout: "80%",
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    },
+    plugins: [{
+      id: 'centerText',
+      beforeDraw: chart => {
+        const { width, height } = chart;
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillStyle = '#5A0F61';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${completedHours}h`, width / 2, height / 2 - 10);
+        ctx.font = '14px sans-serif';
+        ctx.fillText(`of ${totalHours}h`, width / 2, height / 2 + 10);
+        ctx.restore();
+      }
+    }]
+  });
+}
+//call of the chart function
+createCircularChart("circularChart",18,25);
     // === Weekly Bar Chart ===
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const hours = [3.5, 2, 4, 2.5, 3, 2, 1];

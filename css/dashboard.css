@@ -79,7 +79,7 @@ top: 5px;
   left: -300px;
 
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1445px) {
   
   #welcome-message {
     font-size: 16px;
@@ -135,13 +135,13 @@ padding-right: 10px;
   .calendar-grid {
     grid-template-columns: repeat(7, 1fr); /* ensures 7 small columns */
     gap: 1px !important; ;
-              gap: 22px !important;
+              gap: 24px !important;
 
 
   }
 
   .calendar-cell {
-    font-size: 10px;
+    font-size: 12px;
     height: 40px !important;
     width: 60px !important; 
 
@@ -251,12 +251,12 @@ padding-right: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 29px;
-  padding: 8px;
+  padding: 10px;
 
 }
 
 .calendar-cell {
-  padding-top: 15px;
+  padding-top: 13px;
   border-radius: 10px;
   text-align: center;
   cursor: pointer;
@@ -612,9 +612,9 @@ margin-left: 45px;}
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:
   height: 120px; 
   width: 36px;
+  color: #5A0F61;
 }
 .week-chart .bar {
   width: 20px;
@@ -702,6 +702,6 @@ margin-left: -15px;
   }
 @media screen and (min-width: 600px) {
     #weeklyBarChart{
-      width: 350px !important;
+      width: 300px !important;
     }
   }
