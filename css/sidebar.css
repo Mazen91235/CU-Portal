@@ -481,7 +481,7 @@ li{
   position: absolute;
   top: 0;
   width: 30%;
-  height: 80px;
+  height: 100%;
   background: radial-gradient(circle at left, transparent, white);
 }
 .custom-toast-success::before {
@@ -497,7 +497,7 @@ li{
 }
 
 .custom-toast-info::before {
-  background: radial-gradient(circle at left, rgba(132, 171, 229, 0.2), transparent);
+  background: radial-gradient(circle at left, rgba(163, 198, 250, 0.2), transparent);
 }
 
 
@@ -538,19 +538,19 @@ li{
         }
 
        .custom-toast.custom-toast-success  {
-            background: radial-gradient(circle at 30px 50%, #e6f4ea 60px, #ffffff 150px);
+            background: radial-gradient(circle at 40px 30%, #e6f4ea 30px, #ffffff 150px);
         }
 
         .custom-toast.custom-toast-warning {
-            background: radial-gradient(circle at 30px 50%, #fff9e6 60px, #ffffff 150px);
+            background: radial-gradient(circle at 40px 30%, #fff9e6 30px, #ffffff 150px);
         }
 
        .custom-toast.custom-toast-error  {
-            background: radial-gradient(circle at 30px 50%, #fbeaea 60px, #ffffff 150px);
+            background: radial-gradient(circle at 40px 30%, #fbeaea 30px, #ffffff 150px);
         }
 
        .custom-toast.custom-toast-info  {
-            background: radial-gradient(circle at 30px 50%, #e6f4f8 60px, #ffffff 150px);
+            background: radial-gradient(circle at 40px 30%, #e6f4f8 30px, #ffffff 150px);
         }
 
         .custom-toast-success .toast-bar {
