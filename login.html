@@ -39,10 +39,9 @@
         });
         
 // Initialize on page load
-window.onload = async function () {
-    let user = await GetUser();
-    if (user) {
-        window.location.href = "/dashboard.html";
+window.onload = function () {
+    if (GetUser()) {
+        window.location.href = `/dashboard.html`;
         return;
     }
 
