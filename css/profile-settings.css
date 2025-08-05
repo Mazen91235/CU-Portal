@@ -567,5 +567,28 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 2px 8px 0 rgba(90, 15, 97, 0.08) !important;
 }
 
+/* Ensure root elements fill the viewport */
+html, body {
+  height: 100% !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fixed sidebar styles */
+#sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  height: 100vh !important; /* Fill the entire screen height */
+  width: 250px; /* Adjust width as needed */
+  overflow-y: auto;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(44,44,44,0.08);
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
 
 
