@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,627 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Exam Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/extable.css">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #5a0f61;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Filters Section */
+    .filters {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .search-box {
+      position: relative;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+    
+    /* Custom Select Styles */
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+    
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+    
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+    
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+    }
+    
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    /* Multi-Select Filter Styles */
+    .multi-select-filter {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .multi-select-filter:hover {
+      border-color: #5a0f61;
+    }
+    
+    .multi-select-filter.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .multi-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+    
+    .multi-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .multi-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    
+    .multi-select-filter.open .multi-select-trigger i {
+      transform: rotate(180deg);
+    }
+    
+    .multi-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      padding: 0.5rem;
+    }
+    
+    .multi-select-filter.open .multi-select-dropdown {
+      display: block;
+    }
+    
+    .multi-select-option {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .multi-select-option:last-child {
+      margin-bottom: 0;
+    }
+    
+    .multi-select-option:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .multi-select-option input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    
+    .multi-select-option label {
+      cursor: pointer;
+      flex: 1;
+    }
+    
+    .multi-select-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #eee;
+    }
+    
+    .multi-select-btn {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .multi-select-btn.clear {
+      background-color: #f5f5f5;
+      color: #666;
+    }
+    
+    .multi-select-btn.clear:hover {
+      background-color: #eaeaea;
+    }
+    
+    .multi-select-btn.apply {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .multi-select-btn.apply:hover {
+      background-color: #4a0c51;
+    }
+    
+    /* Date Filter Styles */
+    .date-filter {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .date-filter:hover {
+      border-color: #5a0f61;
+    }
+    
+    .date-filter.active {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .calendar-icon {
+      color: #5a0f61;
+      margin-right: 0.5rem;
+    }
+    
+    .date-display {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .date-display.placeholder {
+      color: #999;
+    }
+    
+    .calendar-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 280px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      padding: 1rem;
+      display: none;
+    }
+    
+    .calendar-dropdown.show {
+      display: block;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .calendar-nav {
+      background: none;
+      border: none;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: #666;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    
+    .calendar-nav:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .calendar-title {
+      font-weight: 600;
+      text-align: center;
+      flex: 1;
+      font-size: 0.9rem;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .calendar-day-header {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #999;
+      padding: 0.25rem;
+    }
+    
+    .calendar-day {
+      text-align: center;
+      padding: 0.4rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s;
+    }
+    
+    .calendar-day:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .calendar-day.selected {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .calendar-day.other-month {
+      color: #ccc;
+    }
+    
+    .calendar-day.today {
+      font-weight: bold;
+    }
+    
+    .calendar-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+    }
+    
+    .calendar-btn {
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s;
+      flex: 1;
+      margin: 0 0.25rem;
+    }
+    
+    .calendar-btn:first-child {
+      margin-left: 0;
+    }
+    
+    .calendar-btn:last-child {
+      margin-right: 0;
+    }
+    
+    .calendar-btn:hover {
+      background-color: #eaeaea;
+    }
+    
+    .calendar-btn.primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .calendar-btn.primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    /* Exam Grid */
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    /* Exam Card Styles */
+    .exam-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #eee;
+    }
+    
+    .exam-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .exam-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .exam-code {
+      font-size: 0.8rem;
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    
+    .exam-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    
+    .status-upcoming {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+    }
+    
+    .status-completed {
+      background-color: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+    }
+    
+    .status-cancelled {
+      background-color: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+    
+    .exam-detail {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .exam-detail .icon {
+      width: 16px;
+      margin-right: 0.5rem;
+      color: #5a0f61;
+    }
+    
+    .btn-view {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      background-color: #5a0f61;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-view:hover {
+      background-color: #4a0c51;
+    }
+    
+    .btn-view i {
+      margin-right: 0.5rem;
+    }
+    
+    /* Calendar Overlay */
+    .calendar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 99;
+      display: none;
+    }
+    
+    .calendar-overlay.show {
+      display: block;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .filters {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+      }
+      
+      .date-filter:last-child {
+        grid-column: span 1;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .filters {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .search-box {
+        grid-column: span 2;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .user-info {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .filters {
+        grid-template-columns: 1fr;
+      }
+      
+      .search-box {
+        grid-column: span 1;
+      }
+      
+      .exam-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -19,22 +638,31 @@
       Mohamed Ali
     </div>
   </header>
-
   <main class="container">
     <section class="filters" aria-label="Exam filters">
       <div class="search-box">
         <i class="fas fa-search search-icon"></i>
         <input type="search" placeholder="Search by course name or code" aria-label="Search by course name or code" />
       </div>
-      <select class="filter-select" aria-label="Select subject">
-        <option>All Subjects</option>
-        <option>CS 301</option>
-        <option>CS 320</option>
-        <option>CS 315</option>
-        <option>MATH 301</option>
-        <option>CS 330</option>
-        <option>CS 340</option>
-      </select>
+      
+      <!-- Custom Subject Select -->
+      <div class="custom-select" id="subject-select">
+        <div class="custom-select-trigger">
+          <span class="custom-select-placeholder">All Subjects</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="custom-select-option" data-value="">All Subjects</div>
+          <div class="custom-select-option" data-value="CS 301">CS 301</div>
+          <div class="custom-select-option" data-value="CS 320">CS 320</div>
+          <div class="custom-select-option" data-value="CS 315">CS 315</div>
+          <div class="custom-select-option" data-value="MATH 301">MATH 301</div>
+          <div class="custom-select-option" data-value="CS 330">CS 330</div>
+          <div class="custom-select-option" data-value="CS 340">CS 340</div>
+        </div>
+      </div>
+      
+      <!-- Multi-Select Status Filter -->
       <div class="multi-select-filter" id="status-filter">
         <div class="multi-select-trigger" aria-label="Select statuses" tabindex="0">
           <span class="multi-select-placeholder">All Statuses</span>
@@ -59,6 +687,8 @@
           </div>
         </div>
       </div>
+      
+      <!-- Date Filters -->
       <div class="date-filter" id="start-date-filter">
         <i class="fas fa-calendar calendar-icon"></i>
         <div class="date-display placeholder" id="start-date-display">Start Date</div>
@@ -90,6 +720,7 @@
           </div>
         </div>
       </div>
+      
       <div class="date-filter" id="end-date-filter">
         <i class="fas fa-calendar calendar-icon"></i>
         <div class="date-display placeholder" id="end-date-display">End Date</div>
@@ -122,10 +753,10 @@
         </div>
       </div>
     </section>
-
+    
     <section class="exam-grid" aria-label="Current exams">
       <!-- Operating Systems Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="os-title" data-date="2024-03-15">
+      <article class="exam-card" tabindex="0" aria-labelledby="os-title" data-date="2024-03-15" data-subject="CS 301" data-status="upcoming">
         <div class="exam-title" id="os-title">
           Operating Systems
           <span class="exam-code">CS 301</span>
@@ -151,9 +782,9 @@
           <i class="fas fa-eye"></i> View Exam Details
         </button>
       </article>
-
+      
       <!-- Database Systems Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="db-title" data-date="2024-03-18">
+      <article class="exam-card" tabindex="0" aria-labelledby="db-title" data-date="2024-03-18" data-subject="CS 320" data-status="upcoming">
         <div class="exam-title" id="db-title">
           Database Systems
           <span class="exam-code">CS 320</span>
@@ -179,9 +810,9 @@
           <i class="fas fa-eye"></i> View Exam Details
         </button>
       </article>
-
+      
       <!-- Software Engineering Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="se-title" data-date="2024-03-10">
+      <article class="exam-card" tabindex="0" aria-labelledby="se-title" data-date="2024-03-10" data-subject="CS 315" data-status="completed">
         <div class="exam-title" id="se-title">
           Software Engineering
           <span class="exam-code">CS 315</span>
@@ -207,9 +838,9 @@
           <i class="fas fa-eye"></i> View Results
         </button>
       </article>
-
+      
       <!-- Discrete Mathematics Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="dm-title" data-date="2024-03-05">
+      <article class="exam-card" tabindex="0" aria-labelledby="dm-title" data-date="2024-03-05" data-subject="MATH 301" data-status="completed">
         <div class="exam-title" id="dm-title">
           Discrete Mathematics
           <span class="exam-code">MATH 301</span>
@@ -235,9 +866,9 @@
           <i class="fas fa-eye"></i> View Results
         </button>
       </article>
-
+      
       <!-- Computer Networks Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="cn-title" data-date="2024-03-20">
+      <article class="exam-card" tabindex="0" aria-labelledby="cn-title" data-date="2024-03-20" data-subject="CS 330" data-status="upcoming">
         <div class="exam-title" id="cn-title">
           Computer Networks
           <span class="exam-code">CS 330</span>
@@ -263,9 +894,9 @@
           <i class="fas fa-eye"></i> View Exam Details
         </button>
       </article>
-
+      
       <!-- Machine Learning Exam -->
-      <article class="exam-card" tabindex="0" aria-labelledby="ml-title" data-date="2024-03-22">
+      <article class="exam-card" tabindex="0" aria-labelledby="ml-title" data-date="2024-03-22" data-subject="CS 340" data-status="cancelled">
         <div class="exam-title" id="ml-title">
           Machine Learning
           <span class="exam-code">CS 340</span>
@@ -293,10 +924,473 @@
       </article>
     </section>
   </main>
-
+  
   <div class="calendar-overlay" id="calendar-overlay"></div>
-
-  <script src="js/extable.js"></script>
+  
+  <script>
+    // Custom Subject Select
+    class CustomSelect {
+      constructor(selectElement) {
+        this.selectElement = selectElement;
+        this.trigger = selectElement.querySelector('.custom-select-trigger');
+        this.placeholder = selectElement.querySelector('.custom-select-placeholder');
+        this.dropdown = selectElement.querySelector('.custom-select-dropdown');
+        this.options = selectElement.querySelectorAll('.custom-select-option');
+        this.selectedValue = '';
+        
+        this.init();
+      }
+      
+      init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', () => {
+          this.toggleDropdown();
+        });
+        
+        // Handle option clicks
+        this.options.forEach(option => {
+          option.addEventListener('click', () => {
+            this.selectOption(option);
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.selectElement.contains(e.target)) {
+            this.closeDropdown();
+          }
+        });
+      }
+      
+      toggleDropdown() {
+        this.selectElement.classList.toggle('open');
+      }
+      
+      closeDropdown() {
+        this.selectElement.classList.remove('open');
+      }
+      
+      selectOption(option) {
+        // Update selected value
+        this.selectedValue = option.getAttribute('data-value');
+        
+        // Update placeholder text
+        this.placeholder.textContent = option.textContent;
+        
+        // Update selected state
+        this.options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Close dropdown
+        this.closeDropdown();
+        
+        // Trigger change event
+        this.selectElement.dispatchEvent(new Event('change'));
+      }
+      
+      getValue() {
+        return this.selectedValue;
+      }
+    }
+    
+    // Multi-Select Status Filter
+    class MultiSelectFilter {
+      constructor(filterElement) {
+        this.filterElement = filterElement;
+        this.trigger = filterElement.querySelector('.multi-select-trigger');
+        this.placeholder = filterElement.querySelector('.multi-select-placeholder');
+        this.dropdown = filterElement.querySelector('.multi-select-dropdown');
+        this.options = filterElement.querySelectorAll('.multi-select-option input[type="checkbox"]');
+        this.clearBtn = filterElement.querySelector('#status-clear-btn');
+        this.applyBtn = filterElement.querySelector('#status-apply-btn');
+        
+        this.selectedValues = [];
+        this.tempSelectedValues = [];
+        
+        this.init();
+      }
+      
+      init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', () => {
+          this.toggleDropdown();
+        });
+        
+        // Handle option clicks
+        this.options.forEach(option => {
+          option.addEventListener('change', () => {
+            this.updateTempSelection();
+          });
+        });
+        
+        // Clear button
+        this.clearBtn.addEventListener('click', () => {
+          this.clearSelection();
+        });
+        
+        // Apply button
+        this.applyBtn.addEventListener('click', () => {
+          this.applySelection();
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.filterElement.contains(e.target)) {
+            this.closeDropdown();
+          }
+        });
+      }
+      
+      toggleDropdown() {
+        this.filterElement.classList.toggle('open');
+        
+        if (this.filterElement.classList.contains('open')) {
+          // Sync temporary selection with current selection
+          this.tempSelectedValues = [...this.selectedValues];
+          this.updateCheckboxes();
+        }
+      }
+      
+      closeDropdown() {
+        this.filterElement.classList.remove('open');
+      }
+      
+      updateTempSelection() {
+        this.tempSelectedValues = [];
+        
+        this.options.forEach(option => {
+          if (option.checked) {
+            this.tempSelectedValues.push(option.getAttribute('data-value'));
+          }
+        });
+      }
+      
+      updateCheckboxes() {
+        this.options.forEach(option => {
+          option.checked = this.tempSelectedValues.includes(option.getAttribute('data-value'));
+        });
+      }
+      
+      clearSelection() {
+        this.tempSelectedValues = [];
+        this.updateCheckboxes();
+      }
+      
+      applySelection() {
+        this.selectedValues = [...this.tempSelectedValues];
+        this.updatePlaceholder();
+        this.closeDropdown();
+        
+        // Trigger change event
+        this.filterElement.dispatchEvent(new Event('change'));
+      }
+      
+      updatePlaceholder() {
+        if (this.selectedValues.length === 0) {
+          this.placeholder.textContent = 'All Statuses';
+        } else if (this.selectedValues.length === 1) {
+          this.placeholder.textContent = this.selectedValues[0].charAt(0).toUpperCase() + 
+                                         this.selectedValues[0].slice(1);
+        } else {
+          this.placeholder.textContent = `${this.selectedValues.length} Statuses Selected`;
+        }
+      }
+      
+      getValues() {
+        return this.selectedValues;
+      }
+    }
+    
+    // Calendar
+    class Calendar {
+      constructor(calendarId, displayId) {
+        this.calendar = document.getElementById(calendarId);
+        this.display = document.getElementById(displayId);
+        this.currentDate = new Date();
+        this.selectedDate = null;
+        this.isOpen = false;
+        
+        this.init();
+      }
+      
+      init() {
+        this.render();
+        this.bindEvents();
+      }
+      
+      bindEvents() {
+        // Toggle calendar
+        this.display.parentElement.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.toggle();
+        });
+        
+        // Navigation
+        const prevBtn = this.calendar.querySelector('[id$="prev-month"]');
+        const nextBtn = this.calendar.querySelector('[id$="next-month"]');
+        
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.previousMonth();
+        });
+        
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.nextMonth();
+        });
+        
+        // Clear and Today buttons
+        const clearBtn = this.calendar.querySelector('[id$="clear-btn"]');
+        const todayBtn = this.calendar.querySelector('[id$="today-btn"]');
+        
+        clearBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.clearDate();
+        });
+        
+        todayBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.selectToday();
+        });
+        
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+          if (!this.calendar.contains(e.target) && !this.display.parentElement.contains(e.target)) {
+            this.close();
+          }
+        });
+        
+        // Prevent calendar from closing when clicking inside
+        this.calendar.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+      
+      toggle() {
+        if (this.isOpen) {
+          this.close();
+        } else {
+          this.open();
+        }
+      }
+      
+      open() {
+        this.calendar.classList.add('show');
+        this.display.parentElement.classList.add('active');
+        document.getElementById('calendar-overlay').classList.add('show');
+        this.isOpen = true;
+      }
+      
+      close() {
+        this.calendar.classList.remove('show');
+        this.display.parentElement.classList.remove('active');
+        document.getElementById('calendar-overlay').classList.remove('show');
+        this.isOpen = false;
+      }
+      
+      render() {
+        const title = this.calendar.querySelector('[id$="calendar-title"]');
+        const grid = this.calendar.querySelector('[id$="calendar-grid"]');
+        
+        // Set title
+        title.textContent = this.currentDate.toLocaleDateString('en-US', { 
+          month: 'long', 
+          year: 'numeric' 
+        });
+        
+        // Clear grid
+        grid.innerHTML = '';
+        
+        // Add day headers
+        const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        dayHeaders.forEach(day => {
+          const header = document.createElement('div');
+          header.className = 'calendar-day-header';
+          header.textContent = day;
+          grid.appendChild(header);
+        });
+        
+        // Get first day of month and number of days
+        const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+        const lastDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+        
+        // Generate calendar days
+        for (let i = 0; i < 42; i++) {
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + i);
+          
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day';
+          dayElement.textContent = date.getDate();
+          
+          // Add classes
+          if (date.getMonth() !== this.currentDate.getMonth()) {
+            dayElement.classList.add('other-month');
+          }
+          
+          if (this.isToday(date)) {
+            dayElement.classList.add('today');
+          }
+          
+          if (this.selectedDate && this.isSameDay(date, this.selectedDate)) {
+            dayElement.classList.add('selected');
+          }
+          
+          // Add click event
+          dayElement.addEventListener('click', () => {
+            this.selectDate(date);
+          });
+          
+          grid.appendChild(dayElement);
+        }
+      }
+      
+      selectDate(date) {
+        this.selectedDate = new Date(date);
+        this.updateDisplay();
+        this.render();
+        this.close();
+      }
+      
+      clearDate() {
+        this.selectedDate = null;
+        this.updateDisplay();
+        this.render();
+        this.close();
+      }
+      
+      selectToday() {
+        this.selectDate(new Date());
+      }
+      
+      updateDisplay() {
+        if (this.selectedDate) {
+          this.display.textContent = this.selectedDate.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          });
+          this.display.classList.remove('placeholder');
+        } else {
+          this.display.textContent = this.display.id.includes('start') ? 'Start Date' : 'End Date';
+          this.display.classList.add('placeholder');
+        }
+      }
+      
+      previousMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        this.render();
+      }
+      
+      nextMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        this.render();
+      }
+      
+      isToday(date) {
+        const today = new Date();
+        return this.isSameDay(date, today);
+      }
+      
+      isSameDay(date1, date2) {
+        return date1.getDate() === date2.getDate() &&
+               date1.getMonth() === date2.getMonth() &&
+               date1.getFullYear() === date2.getFullYear();
+      }
+      
+      getDate() {
+        return this.selectedDate;
+      }
+    }
+    
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize custom subject select
+      const subjectSelect = new CustomSelect(document.getElementById('subject-select'));
+      
+      // Initialize multi-select status filter
+      const statusFilter = new MultiSelectFilter(document.getElementById('status-filter'));
+      
+      // Initialize calendars
+      const startCalendar = new Calendar('start-calendar', 'start-date-display');
+      const endCalendar = new Calendar('end-calendar', 'end-date-display');
+      
+      // Search functionality
+      const searchInput = document.querySelector('.search-box input');
+      searchInput.addEventListener('input', applyFilters);
+      
+      // Filter change events
+      subjectSelect.selectElement.addEventListener('change', applyFilters);
+      statusFilter.filterElement.addEventListener('change', applyFilters);
+      
+      // Calendar change events
+      startCalendar.display.parentElement.addEventListener('click', applyFilters);
+      endCalendar.display.parentElement.addEventListener('click', applyFilters);
+      
+      // View button functionality
+      document.querySelectorAll('.btn-view').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          // In a real application, this would navigate to exam details
+          console.log('View exam details');
+        });
+      });
+      
+      // Initial filter application
+      applyFilters();
+    });
+    
+    // Apply filters function
+    function applyFilters() {
+      const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
+      const subjectValue = document.getElementById('subject-select').querySelector('.custom-select-option.selected')?.getAttribute('data-value') || '';
+      const statusValues = document.getElementById('status-filter').querySelector('.multi-select-placeholder').textContent === 'All Statuses' 
+        ? [] 
+        : Array.from(document.querySelectorAll('#status-filter input[type="checkbox"]:checked')).map(cb => cb.getAttribute('data-value'));
+      const startDate = document.getElementById('start-calendar').getDate();
+      const endDate = document.getElementById('end-calendar').getDate();
+      
+      const examCards = document.querySelectorAll('.exam-card');
+      
+      examCards.forEach(card => {
+        // Check search
+        const title = card.querySelector('.exam-title').textContent.toLowerCase();
+        const code = card.querySelector('.exam-code').textContent.toLowerCase();
+        const matchesSearch = !searchTerm || title.includes(searchTerm) || code.includes(searchTerm);
+        
+        // Check subject
+        const cardSubject = card.getAttribute('data-subject');
+        const matchesSubject = !subjectValue || cardSubject === subjectValue;
+        
+        // Check status
+        const cardStatus = card.getAttribute('data-status');
+        const matchesStatus = statusValues.length === 0 || statusValues.includes(cardStatus);
+        
+        // Check date range
+        const cardDate = new Date(card.getAttribute('data-date'));
+        let matchesDate = true;
+        
+        if (startDate) {
+          matchesDate = matchesDate && cardDate >= startDate;
+        }
+        
+        if (endDate) {
+          // Set end date to end of day
+          const endOfDay = new Date(endDate);
+          endOfDay.setHours(23, 59, 59, 999);
+          matchesDate = matchesDate && cardDate <= endOfDay;
+        }
+        
+        // Show card if all conditions are met
+        if (matchesSearch && matchesSubject && matchesStatus && matchesDate) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>
-
