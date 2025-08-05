@@ -584,7 +584,6 @@ html, body {
   width: 250px; /* Adjust width as needed */
   overflow-y: auto;
   background: #fff;
-  box-shadow: 2px 0 8px rgba(44,44,44,0.08);
   margin: 0 !important;
   padding: 0 !important;
 }
