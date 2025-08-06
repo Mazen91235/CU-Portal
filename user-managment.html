@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="./css/user-management.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/toasts.css">
+    <link rel="stylesheet" href="./components/navbar.html">
+    <link rel="stylesheet" href="./components/sidebar.html">
+    <link rel="stylesheet" href="./components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: rgba(248, 250, 252, 1);">
+<div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Title Section -->
+        <section class="um-title-section">
+            <h1 class="um-title">Users Management</h1>
+            <p class="um-subtitle">Search, Filter, Approve, And Update Users All In One Place</p>
+        </section>
+
+        <!-- Info Cards Section -->
+        <section class="um-info-cards-container">
+            <div class="um-info-cards-row">
+                <!-- Card 1: Total Users -->
+                <div class="um-info-card">
+                    <div class="um-info-card-icon">
+                        <img src="./assets/profile-2user.png" alt="Users" />
+                    </div>
+                    <div class="um-info-card-content">
+                        <div class="um-info-card-title">Total Users</div>
+                        <div class="um-info-card-value">5,423</div>
+                        <div class="um-info-card-growth">
+                            <img src="./assets/arrow-up 1.png" alt="Up" />
+                            <span class="um-info-card-growth-text">16% This Month</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2: Active Now -->
+                <div class="um-info-card">
+                    <div class="um-info-card-icon">
+                        <img src="./assets/monitor.png" alt="Active Now" />
+                    </div>
+                    <div class="um-info-card-content">
+                        <div class="um-info-card-title">Active Now</div>
+                        <div class="um-info-card-value">189</div>
+                        <div class="um-info-card-avatars">
+                            <!-- Example avatars -->
+                            <img src="./assets/Group 14.png" >
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3: Pending Requests -->
+                <div class="um-info-card">
+                    <div class="um-info-card-icon">
+                        <img src="./assets/iconsax-clock.png" alt="Pending Requests" />
+                    </div>
+                    <div class="um-info-card-content">
+                        <div class="um-info-card-title">Pending Requests</div>
+                        <div class="um-info-card-value">15</div>
+                        <div class="um-info-card-action">
+                            <span class="um-info-card-review">Review Now</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="um-filters-section">
+            <div class="um-filters-bg"></div>
+            <div class="um-filters-row">
+                <!-- Search Field -->
+                <div class="um-filter-search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search by name , email or phone number..." />
+                </div>
+                <!-- Filters Wrapper -->
+                <div class="um-filters-group">
+                    <!-- Faculty Dropdown -->
+                    <div id="faculty-select-group" class="um-filter-dropdown">
+                      <input type="text" class="form-control um-filter-input faculty-bg"
+                        id="faculty_input" name="faculty_input"
+                        placeholder="Faculty Name" readonly>
+                      <ul id="faculty-dropdown" class="gender-dropdown-list">
+                        <li data-value=""><span>All Faculties</span></li>
+                        <!-- Faculty names will be injected here -->
+                      </ul>
+                      <input type="hidden" name="faculty" id="faculty_hidden">
+                      <span id="faculty-arrow" class="um-filter-arrow">
+                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
+                      </span>
+                    </div>
+                    <!-- Department Dropdown -->
+                    <div id="department-select-group" class="um-filter-dropdown">
+                      <input type="text" class="form-control um-filter-input department-bg"
+                        id="department_input" name="department_input"
+                        placeholder="Department" readonly>
+                      <ul id="department-dropdown" class="gender-dropdown-list">
+                        <li data-value=""><span>All Departments</span></li>
+                        <li data-value="cs"><span>Computer Science</span></li>
+                        <li data-value="math"><span>Mathematics</span></li>
+                        <li data-value="phy"><span>Physics</span></li>
+                      </ul>
+                      <input type="hidden" name="department" id="department_hidden">
+                      <span id="department-arrow" class="um-filter-arrow">
+                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
+                      </span>
+                    </div>
+                    <!-- Academic Year Dropdown -->
+                    <div id="year-select-group" class="um-filter-dropdown">
+                      <input type="text" class="form-control um-filter-input year-bg"
+                        id="year_input" name="year_input"
+                        placeholder="Academic Year" readonly>
+                      <ul id="year-dropdown" class="gender-dropdown-list">
+                        <li data-value=""><span>All Years</span></li>
+                        <li data-value="2021"><span>2021/2022</span></li>
+                        <li data-value="2022"><span>2022/2023</span></li>
+                        <li data-value="2023"><span>2023/2024</span></li>
+                      </ul>
+                      <input type="hidden" name="year" id="year_hidden">
+                      <span id="year-arrow" class="um-filter-arrow">
+                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
+                      </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table Section -->
+        <section class="um-table-section">
+            <div class="um-table-wrapper">
+                <table class="um-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>E-Mail</th>
+                            <th>Faculty</th>
+                            <th>Department</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-admin">Admin</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-student">Student</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-student">Student</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-student">Student</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-student">Student</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td>Mohamed Ali Rady</td>
+                            <td>01289468799</td>
+                            <td class="um-table-email">Mohamedali@gmail.com</td>
+                            <td>Engineering</td>
+                            <td>Computer</td>
+                            <td><span class="um-role-student">Student</span></td>
+                            <td><span class="um-table-action"><i class="fa fa-ellipsis-v"></i></span></td>
+                        </tr>
+                        <!-- ...repeat rows as needed... -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+
+        
+    </div>
+    <script src="./js/loading.js"></script>
+    <script>
+      // Faculty Dropdown: fetch names from faculties.html
+      fetch('./faculties.html')
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const facultyCards = doc.querySelectorAll('.faculty-name');
+          const facultyDropdown = document.getElementById('faculty-dropdown');
+          // Keep "All Faculties" as the first item
+          while (facultyDropdown.children.length > 1) {
+            facultyDropdown.removeChild(facultyDropdown.lastChild);
+          }
+          facultyCards.forEach(card => {
+            const name = card.textContent.trim();
+            if (name.toLowerCase() !== "all faculties") {
+              const li = document.createElement('li');
+              li.setAttribute('data-value', name.toLowerCase());
+              li.innerHTML = `<span>${name}</span>`;
+              facultyDropdown.appendChild(li);
+            }
+          });
+          setupDropdown('faculty_input', 'faculty-dropdown', 'faculty-select-group', 'faculty_hidden', 'faculty-arrow');
+        });
+
+      // Generic dropdown logic for all filters
+      function setupDropdown(inputId, dropdownId, groupId, hiddenId, arrowId) {
+        const input = document.getElementById(inputId);
+        const dropdown = document.getElementById(dropdownId);
+        const group = document.getElementById(groupId);
+        const hidden = document.getElementById(hiddenId);
+        const arrow = document.getElementById(arrowId).querySelector('img');
+
+        input.addEventListener('click', function() {
+          if (!dropdown.classList.contains('open')) {
+            const rect = input.getBoundingClientRect();
+            dropdown.style.setProperty('--dropdown-top', `${rect.bottom}px`);
+            dropdown.style.setProperty('--dropdown-left', `${rect.left}px`);
+            dropdown.style.setProperty('--dropdown-width', `${rect.width}px`);
+          }
+          dropdown.classList.toggle('open');
+          arrow.style.transform = dropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // Always re-bind click events to li items (for dynamic dropdowns)
+        dropdown.querySelectorAll('li').forEach(li => {
+          li.onclick = function() {
+            input.value = li.textContent;
+            hidden.value = li.getAttribute('data-value');
+            // Trigger change event for filterTable
+            hidden.dispatchEvent(new Event('change'));
+            dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+            li.classList.add('active');
+            dropdown.classList.remove('open');
+            arrow.style.transform = 'rotate(0deg)';
+          };
+        });
+
+        document.addEventListener('mousedown', function(e) {
+          if (!group.contains(e.target)) {
+            dropdown.classList.remove('open');
+            arrow.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      setupDropdown('department_input', 'department-dropdown', 'department-select-group', 'department_hidden', 'department-arrow');
+      setupDropdown('year_input', 'year-dropdown', 'year-select-group', 'year_hidden', 'year-arrow');
+
+      // Filter table rows based on search and dropdown filters
+      function filterTable() {
+        const searchValue = document.querySelector('.um-filter-search input').value.trim().toLowerCase();
+        const facultyValue = document.getElementById('faculty_hidden').value;
+        const departmentValue = document.getElementById('department_hidden').value;
+        const yearValue = document.getElementById('year_hidden').value;
+
+        document.querySelectorAll('.um-table tbody tr').forEach(row => {
+          let show = true;
+          const cells = row.querySelectorAll('td');
+          const name = cells[0]?.textContent.toLowerCase() || '';
+          const phone = cells[1]?.textContent.toLowerCase() || '';
+          const email = cells[2]?.textContent.toLowerCase() || '';
+          const faculty = cells[3]?.textContent.toLowerCase() || '';
+          const department = cells[4]?.textContent.toLowerCase() || '';
+          // For year, add logic if you have a year column
+
+          // Search filter
+          if (
+            searchValue &&
+            !(
+              name.includes(searchValue) ||
+              phone.includes(searchValue) ||
+              email.includes(searchValue)
+            )
+          ) {
+            show = false;
+          }
+          // Faculty filter
+          if (facultyValue && facultyValue !== "" && faculty !== facultyValue) {
+            show = false;
+          }
+          // Department filter
+          if (departmentValue && departmentValue !== "" && department !== departmentValue) {
+            show = false;
+          }
+          // Year filter (if you have year column, add here)
+          // Example: if you add year column, compare yearValue with the cell value
+
+          row.style.display = show ? '' : 'none';
+        });
+      }
+
+      // Attach filterTable to filter inputs
+      document.querySelector('.um-filter-search input').addEventListener('input', filterTable);
+      document.getElementById('faculty_hidden').addEventListener('change', filterTable);
+      document.getElementById('department_hidden').addEventListener('change', filterTable);
+      document.getElementById('year_hidden').addEventListener('change', filterTable);
+
+      // Initial filter on page load
+      filterTable();
+    </script>
+</body>
+</html>
