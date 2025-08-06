@@ -550,4 +550,29 @@
     .um-filter-input {
         width: 100%;
     }
+    .um-filter-search {
+        height: 48px;
+    }
+    .um-table {
+        min-width: 700px;
+    }
+    .um-table-wrapper {
+        overflow-x: auto;
+    }
+}
+
+/* Responsive: stack mini card content vertically if text overlaps */
+@media (max-width: 900px) {
+    .um-info-card {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 40%;
+        padding: 20px 16px;
+    }
+    .um-info-card-icon {
+        margin-bottom: 8px;
+    }
+    .um-info-card-content {
+        width: 100%;
+    }
 }
