@@ -90,120 +90,122 @@
 
         <!-- Pending Requests Section -->
         <section class="pending-requests-section">
-            <div class="pending-requests-header">
-                <span class="pending-requests-title">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" id="pending-select-all" />
-                    Pending Requests
-                </span>
-                <div class="pending-requests-actions">
-                    <button class="pending-approve-btn pending-header-approve">Approve</button>
-                    <button class="pending-reject-btn pending-header-reject">Reject</button>
-                </div>
-            </div>
-            <div class="pending-requests-list" id="pending-requests-list">
-                <!-- Example rows, add data-page attribute for pagination -->
-                <div class="pending-request-row" data-page="1" style="gap:4px;">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                    <span class="pending-user-name">Mohamed Ali Rady</span>
-                    <span class="pending-user-email">Mohamedali@Gmail.Com</span>
-                    <span class="pending-user-phone">01289468799</span>
-                    <span class="pending-user-faculty">
-                        <span class="pending-faculty-badge">
-                            <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
-                        </span>
+            <div class="pending-requests-scroll-wrapper">
+                <div class="pending-requests-header">
+                    <span class="pending-requests-title">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" id="pending-select-all" />
+                        Pending Requests
                     </span>
-                    <span class="pending-user-department">
-                        <span class="pending-department-badge">
-                            <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
-                        </span>
-                    </span>
-                    <div class="pending-row-actions">
-                        <button class="pending-approve-btn">Approve</button>
-                        <button class="pending-reject-btn">Reject</button>
+                    <div class="pending-requests-actions">
+                        <button class="pending-approve-btn pending-header-approve">Approve</button>
+                        <button class="pending-reject-btn pending-header-reject">Reject</button>
                     </div>
                 </div>
-                <div class="pending-request-row" data-page="1" style="gap:4px;">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                    <span class="pending-user-name">John Doe</span>
-                    <span class="pending-user-email">John@example.com</span>
-                    <span class="pending-user-phone">01234567890</span>
-                    <span class="pending-user-faculty">
-                        <span class="pending-faculty-badge">
-                            <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
+                <div class="pending-requests-list" id="pending-requests-list">
+                    <!-- Example rows, add data-page attribute for pagination -->
+                    <div class="pending-request-row" data-page="1" style="gap:4px;">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
+                        <span class="pending-user-name">Mohamed Ali Rady</span>
+                        <span class="pending-user-email">Mohamedali@Gmail.Com</span>
+                        <span class="pending-user-phone">01289468799</span>
+                        <span class="pending-user-faculty">
+                            <span class="pending-faculty-badge">
+                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
+                            </span>
                         </span>
-                    </span>
-                    <span class="pending-user-department">
-                        <span class="pending-department-badge">
-                            <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
+                        <span class="pending-user-department">
+                            <span class="pending-department-badge">
+                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
+                            </span>
                         </span>
-                    </span>
-                    <div class="pending-row-actions">
-                        <button class="pending-approve-btn">Approve</button>
-                        <button class="pending-reject-btn">Reject</button>
+                        <div class="pending-row-actions">
+                            <button class="pending-approve-btn">Approve</button>
+                            <button class="pending-reject-btn">Reject</button>
+                        </div>
                     </div>
-                </div>
-                <div class="pending-request-row" data-page="2" style="gap:4px;">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                    <span class="pending-user-name">Jane Smith</span>
-                    <span class="pending-user-email">Jane@example.com</span>
-                    <span class="pending-user-phone">09876543210</span>
-                    <span class="pending-user-faculty">
-                        <span class="pending-faculty-badge">
-                            <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
+                    <div class="pending-request-row" data-page="1" style="gap:4px;">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
+                        <span class="pending-user-name">John Doe</span>
+                        <span class="pending-user-email">John@example.com</span>
+                        <span class="pending-user-phone">01234567890</span>
+                        <span class="pending-user-faculty">
+                            <span class="pending-faculty-badge">
+                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
+                            </span>
                         </span>
-                    </span>
-                    <span class="pending-user-department">
-                        <span class="pending-department-badge">
-                            <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
+                        <span class="pending-user-department">
+                            <span class="pending-department-badge">
+                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
+                            </span>
                         </span>
-                    </span>
-                    <div class="pending-row-actions">
-                        <button class="pending-approve-btn">Approve</button>
-                        <button class="pending-reject-btn">Reject</button>
+                        <div class="pending-row-actions">
+                            <button class="pending-approve-btn">Approve</button>
+                            <button class="pending-reject-btn">Reject</button>
+                        </div>
                     </div>
-                </div>
-                <!-- Demo records for testing -->
-                <div class="pending-request-row" data-page="1" style="gap:4px;">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                    <span class="pending-user-name">Sara Ahmed</span>
-                    <span class="pending-user-email">sara.ahmed@demo.com</span>
-                    <span class="pending-user-phone">01122334455</span>
-                    <span class="pending-user-faculty">
-                        <span class="pending-faculty-badge">
-                            <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Science
+                    <div class="pending-request-row" data-page="2" style="gap:4px;">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
+                        <span class="pending-user-name">Jane Smith</span>
+                        <span class="pending-user-email">Jane@example.com</span>
+                        <span class="pending-user-phone">09876543210</span>
+                        <span class="pending-user-faculty">
+                            <span class="pending-faculty-badge">
+                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
+                            </span>
                         </span>
-                    </span>
-                    <span class="pending-user-department">
-                        <span class="pending-department-badge">
-                            <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Biology
+                        <span class="pending-user-department">
+                            <span class="pending-department-badge">
+                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
+                            </span>
                         </span>
-                    </span>
-                    <div class="pending-row-actions">
-                        <button class="pending-approve-btn">Approve</button>
-                        <button class="pending-reject-btn">Reject</button>
+                        <div class="pending-row-actions">
+                            <button class="pending-approve-btn">Approve</button>
+                            <button class="pending-reject-btn">Reject</button>
+                        </div>
                     </div>
-                </div>
-                <div class="pending-request-row" data-page="2" style="gap:4px;">
-                    <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                    <span class="pending-user-name">Ali Hassan</span>
-                    <span class="pending-user-email">ali.hassan@demo.com</span>
-                    <span class="pending-user-phone">01099887766</span>
-                    <span class="pending-user-faculty">
-                        <span class="pending-faculty-badge">
-                            <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Arts
+                    <!-- Demo records for testing -->
+                    <div class="pending-request-row" data-page="1" style="gap:4px;">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
+                        <span class="pending-user-name">Sara Ahmed</span>
+                        <span class="pending-user-email">sara.ahmed@demo.com</span>
+                        <span class="pending-user-phone">01122334455</span>
+                        <span class="pending-user-faculty">
+                            <span class="pending-faculty-badge">
+                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Science
+                            </span>
                         </span>
-                    </span>
-                    <span class="pending-user-department">
-                        <span class="pending-department-badge">
-                            <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> History
+                        <span class="pending-user-department">
+                            <span class="pending-department-badge">
+                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Biology
+                            </span>
                         </span>
-                    </span>
-                    <div class="pending-row-actions">
-                        <button class="pending-approve-btn">Approve</button>
-                        <button class="pending-reject-btn">Reject</button>
+                        <div class="pending-row-actions">
+                            <button class="pending-approve-btn">Approve</button>
+                            <button class="pending-reject-btn">Reject</button>
+                        </div>
                     </div>
+                    <div class="pending-request-row" data-page="2" style="gap:4px;">
+                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
+                        <span class="pending-user-name">Ali Hassan</span>
+                        <span class="pending-user-email">ali.hassan@demo.com</span>
+                        <span class="pending-user-phone">01099887766</span>
+                        <span class="pending-user-faculty">
+                            <span class="pending-faculty-badge">
+                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Arts
+                            </span>
+                        </span>
+                        <span class="pending-user-department">
+                            <span class="pending-department-badge">
+                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> History
+                            </span>
+                        </span>
+                        <div class="pending-row-actions">
+                            <button class="pending-approve-btn">Approve</button>
+                            <button class="pending-reject-btn">Reject</button>
+                        </div>
+                    </div>
+                    <!-- ...repeat rows, set data-page accordingly... -->
                 </div>
-                <!-- ...repeat rows, set data-page accordingly... -->
             </div>
             <!-- Pagination box at bottom right -->
             <div class="pending-requests-pagination-box">

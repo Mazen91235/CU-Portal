@@ -257,6 +257,8 @@
 }
 
 .pending-requests-header {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -568,6 +570,7 @@
     .pending-user-name {
         padding-right: 200px;
     }
+    
     .pending-user-email{
         padding-right: 200px;
     }
@@ -575,10 +578,19 @@
         padding-right: 100px;
     }
     .pending-faculty-badge{
-        margin-right: 80vw; /* huge space between faculty and department badge */
+        margin-left: 50px ; 
     }
     .pending-department-badge{
-        margin-right: 80vm;
+        margin-left: 250px ;
+    }
+    .pending-approve-btn{
+        margin-left: 450px;
+        
+    }
+    .pending-reject-btn{
+        margin-right: 20px;
+        margin-left: 20px;
+
     }
     .pending-requests-pagination-box {
         justify-content: center;
@@ -589,3 +601,20 @@
         gap: 20px;
     }
 }
+
+/* Scrollable wrapper for pending requests */
+.pending-requests-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Table styles */
+.pending-requests-table {
+    min-width: 900px; /* or 700px, match your column needs */
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Remove overflow-x from .pending-requests-header if present */

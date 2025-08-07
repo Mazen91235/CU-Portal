@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link rel="stylesheet" href="./css/user-details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/toasts.css">
+    <link rel="stylesheet" href="./components/navbar.html">
+    <link rel="stylesheet" href="./components/sidebar.html">
+    <link rel="stylesheet" href="./components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: rgba(248, 250, 252, 1);">
+<div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Title Section -->
+        <section class="um-title-section">
+            <h1 class="um-title">Users Management</h1>
+            <p class="um-subtitle">Search, Filter, Approve, And Update Users All In One Place</p>
+        </section>
+
+        <!-- User Details Card Section -->
+        <div class="user-details-card">
+            <div class="user-details-card-header">
+                <span class="user-badge">Student</span>
+                <span class="user-menu">
+                    <i class="fa fa-ellipsis-v" style="color: #7B1684;"></i>
+                </span>
+            </div>
+            <div class="user-details-avatar-wrapper">
+                <img class="user-details-avatar" src="./assets/ellipse 64.png" alt="Profile Avatar">
+            </div>
+            <div class="user-details-info">
+                <table class="user-details-table">
+                    <tbody>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/usericon.png" alt="User" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">Name:</td>
+                            <td class="user-details-value">Mohamed Ali Rady</td>
+                        </tr>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/mailicon.png" alt="Mail" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">E-Mail</td>
+                            <td class="user-details-value">Mohamedali@Gmail.Com</td>
+                        </tr>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/callicon.png" alt="Call" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">Phone</td>
+                            <td class="user-details-value">01289468799</td>
+                        </tr>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/building.png" alt="Faculty" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">Faculty</td>
+                            <td class="user-details-value">Engineering</td>
+                        </tr>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/building2.png" alt="Department" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">Department</td>
+                            <td class="user-details-value">Computer</td>
+                        </tr>
+                        <tr>
+                            <td class="user-details-icon">
+                                <img src="./assets/certificateicon.png" alt="Academic Year" style="width:22px;height:22px;">
+                            </td>
+                            <td class="user-details-label" style="font-size: 18px;">Academic Year</td>
+                            <td class="user-details-value">2028</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Exams & Tasks Row -->
+<div class="sections-row">
+    <!-- Exams Section -->
+    <section>
+        <div class="exams-section">
+    <div class="exams-header">
+        <span class="exams-header-icon">
+            <img src="./assets/bookicon.png" alt="Exams">
+        </span>
+        <span class="exams-header-title">Exams</span>
+    </div>
+    <div class="exams-list exams-list-published">
+        <div class="exam-card exam-card-white-bg">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Midterm Project Submission</div>
+                <div class="exam-card-subject exam-card-link">Programming</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-publisher">Publisher</span>
+                <span class="exam-badge exam-badge-pending">Pending</span>
+            </div>
+        </div>
+        <div class="exam-card exam-card-white-bg">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Database Quiz</div>
+                <div class="exam-card-subject exam-card-link">Database</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-publisher">Publisher</span>
+                <span class="exam-badge exam-badge-complete">Complete</span>
+            </div>
+        </div>
+        <div class="exam-card exam-card-white-bg">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Final Exam- Algorithms</div>
+                <div class="exam-card-subject exam-card-link">Programming</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-publisher">Publisher</span>
+                <span class="exam-badge exam-badge-upcoming">Up Coming</span>
+            </div>
+        </div>
+        <a href="#" class="exams-link" style="padding-left: 20px;">View All Exams Published By User <i class="fa fa-chevron-right"></i></a>
+    </div>
+    <div class="exams-list exams-list-gray">
+        <div class="exam-card">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Midterm Project Submission</div>
+                <div class="exam-card-subject exam-card-link">Programming</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-pending">Pending</span>
+            </div>
+        </div>
+        <div class="exam-card">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Database Quiz</div>
+                <div class="exam-card-subject exam-card-link">Database</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-complete">Complete</span>
+            </div>
+        </div>
+        <div class="exam-card">
+            <div class="exam-card-icon">
+                <img src="./assets/bookicon.png" alt="Exam" class="exam-circle-icon" />
+            </div>
+            <div class="exam-card-info">
+                <div class="exam-card-title">Final Exam- Algorithms</div>
+                <div class="exam-card-subject exam-card-link">Programming</div>
+                <div class="exam-card-date">Due: Oct12, 2023</div>
+            </div>
+            <div class="exam-card-badges">
+                <span class="exam-badge exam-badge-upcoming">Up Coming</span>
+            </div>
+        </div>
+        <a href="#" class="exams-link" style="padding-left: 20px;">View All Exams Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+</div>
+    </section>
+    <!-- Tasks Section -->
+    <section>
+        <div class="tasks-section">
+        <div class="tasks-header">
+            <img src="./assets/tasksicon.png" alt="Tasks" class="tasks-header-icon">
+            <span class="tasks-header-title">Tasks</span>
+        </div>
+        <div class="tasks-list tasks-list-published" style="background: #FEF6EE;">
+            <div class="task-card task-card-white-bg">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">Database Design</div>
+                    <div class="task-card-subject task-card-link">Database</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-publisher">Publisher</span>
+                    <span class="task-badge task-badge-pending">Pending</span>
+                </div>
+            </div>
+            <div class="task-card task-card-white-bg">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">C++ Task</div>
+                    <div class="task-card-subject task-card-link">Programming</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-publisher">Publisher</span>
+                    <span class="task-badge task-badge-complete">Complete</span>
+                </div>
+            </div>
+            <div class="task-card task-card-white-bg">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">Data Structure Task</div>
+                    <div class="task-card-subject task-card-link">Database</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-publisher">Publisher</span>
+                    <span class="task-badge task-badge-upcoming">Up Coming</span>
+                </div>
+            </div>
+            <a href="#" class="tasks-link" style="padding-left: 20px;">View All Tasks Published By User <i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div class="tasks-list tasks-list-gray">
+            <div class="task-card">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">Database Design</div>
+                    <div class="task-card-subject task-card-link">Database</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-pending">Pending</span>
+                </div>
+            </div>
+            <div class="task-card">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">C++ Task</div>
+                    <div class="task-card-subject task-card-link">Programming</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-complete">Complete</span>
+                </div>
+            </div>
+            <div class="task-card">
+                <div class="task-card-icon">
+                    <img src="./assets/tasksicon.png" alt="Task" class="task-circle-icon" />
+                </div>
+                <div class="task-card-info">
+                    <div class="task-card-title">Data Structure Task</div>
+                    <div class="task-card-subject task-card-link">Database</div>
+                    <div class="task-card-date">Due: Oct12, 2023</div>
+                </div>
+                <div class="task-card-badges">
+                    <span class="task-badge task-badge-upcoming">Up Coming</span>
+                </div>
+            </div>
+            <a href="#" class="tasks-link" style="padding-left: 20px;">View All Tasks Related To This User <i class="fa fa-chevron-right"></i></a>
+        </div>
+    </div>
+</section>
+</div>
+<!-- Announcement & Materials Row -->
+<div class="sections-row">
+    <!-- Announcement Section -->
+    <section>
+        <div class="announcement-section">
+        <div class="announcement-header">
+            <img src="./assets/speakericon.png" alt="Announcement" class="announcement-header-icon">
+            <span class="announcement-header-title">Announcement</span>
+        </div>
+        <div class="announcement-list">
+            <div class="announcement-card">
+                <div class="announcement-card-border announcement-border-blue"></div>
+                <div class="announcement-card-content">
+                    <div class="announcement-card-title-row">
+                        <span class="announcement-card-title">New Course Materials Available</span>
+                        <span class="announcement-badge">Publisher</span>
+                    </div>
+                    <div class="announcement-card-desc">
+                        Updated Materials For CS301 Have Been Uploaded To The Course Module
+                    </div>
+                    <div class="announcement-card-date">Posted 5 Days Ago</div>
+                </div>
+            </div>
+            <div class="announcement-card">
+                <div class="announcement-card-border announcement-border-red"></div>
+                <div class="announcement-card-content">
+                    <div class="announcement-card-title-row">
+                        <span class="announcement-card-title">System Maintenance</span>
+                        <span class="announcement-badge">Publisher</span>
+                    </div>
+                    <div class="announcement-card-desc">
+                        The Portal Will Be Down For Maintenance On Oct 12 From 2-4 AM EST.
+                    </div>
+                    <div class="announcement-card-date">Posted 2 Days Ago</div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="announcement-link" style="padding-left: 20px;">View All Announcement Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+    </section>
+    <!-- Materials Section -->
+    <section>
+        <div class="materials-section">
+        <div class="materials-header">
+            <img src="./assets/openbookicon.png" alt="Materials" class="materials-header-icon">
+            <span class="materials-header-title">Materials</span>
+        </div>
+        <div class="materials-list">
+            <div class="materials-card">
+                <div class="materials-card-icon">
+                    <img src="./assets/openbookicon.png" alt="Material" class="materials-circle-icon" />
+                </div>
+                <div class="materials-card-info">
+                    <div class="materials-card-title">Calculus I</div>
+                    <div class="materials-card-subject materials-card-link">Programming</div>
+                    <div class="materials-card-date-row">
+                        <span class="materials-card-date">Uploaded On: Oct12, 2023</span>
+                        <span class="materials-card-type">PDF</span>
+                    </div>
+                </div>
+                <div class="materials-card-badges">
+                    <span class="materials-badge materials-badge-publisher">Publisher</span>
+                </div>
+            </div>
+            <div class="materials-card">
+                <div class="materials-card-icon">
+                    <img src="./assets/openbookicon.png" alt="Material" class="materials-circle-icon" />
+                </div>
+                <div class="materials-card-info">
+                    <div class="materials-card-title">Computer Science</div>
+                    <div class="materials-card-subject materials-card-link">Programming</div>
+                    <div class="materials-card-date-row">
+                        <span class="materials-card-date">Uploaded On: Oct12, 2023</span>
+                        <span class="materials-card-type">PDF</span>
+                    </div>
+                </div>
+                <div class="materials-card-badges">
+                    <span class="materials-badge materials-badge-publisher">Publisher</span>
+                </div>
+            </div>
+            <div class="materials-card">
+                <div class="materials-card-icon">
+                    <img src="./assets/openbookicon.png" alt="Material" class="materials-circle-icon" />
+                </div>
+                <div class="materials-card-info">
+                    <div class="materials-card-title">Physics</div>
+                    <div class="materials-card-subject materials-card-link">Physics</div>
+                    <div class="materials-card-date-row">
+                        <span class="materials-card-date">Uploaded On: Oct12, 2023</span>
+                        <span class="materials-card-type">Video</span>
+                    </div>
+                </div>
+                <div class="materials-card-badges">
+                    <span class="materials-badge materials-badge-publisher">Publisher</span>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="materials-link" style="padding-left: 20px;">View All Materials Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+    </section>
+</div>
+<!-- Grades & Subjects Row -->
+<div class="sections-row">
+    <!-- Grades Section -->
+    <section>
+        <div class="grades-section">
+        <div class="grades-header">
+            <img src="./assets/attachicon.png" alt="Grades" class="grades-header-icon">
+            <span class="grades-header-title">Grades</span>
+        </div>
+        <div class="grades-list">
+            <div class="grades-card">
+                <div class="grades-card-icon">
+                    <img src="./assets/attachicon.png" alt="Grade" class="grades-circle-icon" />
+                </div>
+                <div class="grades-card-info">
+                    <div class="grades-card-title">File1</div>
+                    <div class="grades-card-subject grades-card-link">Programming</div>
+                    <div class="grades-card-date-row">
+                        <span class="grades-card-date">Uploaded On: Oct12, 2023</span>
+                    </div>
+                </div>
+                <div class="grades-card-badges">
+                    <span class="grades-badge grades-badge-publisher">Publisher</span>
+                </div>
+            </div>
+            <div class="grades-card">
+                <div class="grades-card-icon">
+                    <img src="./assets/attachicon.png" alt="Grade" class="grades-circle-icon" />
+                </div>
+                <div class="grades-card-info">
+                    <div class="grades-card-title">File2</div>
+                    <div class="grades-card-subject grades-card-link">Programming</div>
+                    <div class="grades-card-date-row">
+                        <span class="grades-card-date">Uploaded On: Oct12, 2023</span>
+                    </div>
+                </div>
+                <div class="grades-card-badges">
+                    <span class="grades-badge grades-badge-publisher">Publisher</span>
+                </div>
+            </div>
+            <div class="grades-card">
+                <div class="grades-card-icon">
+                    <img src="./assets/attachicon.png" alt="Grade" class="grades-circle-icon" />
+                </div>
+                <div class="grades-card-info">
+                    <div class="grades-card-title">File3</div>
+                    <div class="grades-card-subject grades-card-link">Physics</div>
+                    <div class="grades-card-date-row">
+                        <span class="grades-card-date">Uploaded On: Oct12, 2023</span>
+                    </div>
+                </div>
+                <div class="grades-card-badges">
+                    <span class="grades-badge grades-badge-publisher">Publisher</span>
+                </div>
+            </div>
+        </div>
+            <a href="#" class="grades-link" style="padding-left: 20px;">View All Grades Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+    </section>
+    <!-- Subjects Section -->
+    <section>
+        <div class="subjects-section">
+        <div class="subjects-header">
+            <img src="./assets/bookcover.png" alt="Subjects" class="subjects-header-icon">
+            <span class="subjects-header-title">Subjects</span>
+        </div>
+        <div class="subjects-list">
+            <div class="subjects-card">
+                <div class="subjects-card-icon">
+                    <img src="./assets/bookcover.png" alt="Subject" class="subjects-circle-icon" />
+                </div>
+                <div class="subjects-card-info">
+                    <div class="subjects-card-title">Data Structures & Algorithms</div>
+                    <div class="subjects-card-code">CS301</div>
+                    <div class="subjects-card-credit">Credit Hour :4</div>
+                </div>
+            </div>
+            <div class="subjects-card">
+                <div class="subjects-card-icon">
+                    <img src="./assets/bookcover.png" alt="Subject" class="subjects-circle-icon" />
+                </div>
+                <div class="subjects-card-info">
+                    <div class="subjects-card-title">Database Systems</div>
+                    <div class="subjects-card-code">CS245</div>
+                    <div class="subjects-card-credit">Credit Hour :3</div>
+                </div>
+            </div>
+            <div class="subjects-card">
+                <div class="subjects-card-icon">
+                    <img src="./assets/bookcover.png" alt="Subject" class="subjects-circle-icon" />
+                </div>
+                <div class="subjects-card-info">
+                    <div class="subjects-card-title">Software Engineering</div>
+                    <div class="subjects-card-code">CS350</div>
+                    <div class="subjects-card-credit">Credit Hour :4</div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="subjects-link" style="padding-left: 20px;">View All Subject Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+    </section>
+</div>
+<!-- Activity Logs Full Width -->
+<section>
+    <div class="activity-logs-section">
+        <div class="activity-logs-header">
+            <img src="./assets/blog.png" alt="Activity Logs" class="activity-logs-header-icon">
+            <span class="activity-logs-header-title">Activity Logs</span>
+        </div>
+        <div class="activity-logs-list">
+            <div class="activity-log-card">
+                <div class="activity-log-card-icon">
+                    <img src="./assets/login.png" alt="Login" class="activity-log-circle-icon" />
+                </div>
+                <div class="activity-log-card-info">
+                    <div class="activity-log-card-title">Logged In To The Portal</div>
+                    <div class="activity-log-card-date">Today, 9:32 AM</div>
+                </div>
+            </div>
+            <div class="activity-log-card">
+                <div class="activity-log-card-icon">
+                    <img src="./assets/docupload.png" alt="Assignment" class="activity-log-circle-icon" />
+                </div>
+                <div class="activity-log-card-info">
+                    <div class="activity-log-card-title">Submitted Assignment: "Database Normalization"</div>
+                    <div class="activity-log-card-date">Yesterday, 4:15 PM</div>
+                </div>
+            </div>
+            <div class="activity-log-card">
+                <div class="activity-log-card-icon">
+                    <img src="./assets/clipboard.png" alt="Quiz" class="activity-log-circle-icon" />
+                </div>
+                <div class="activity-log-card-info">
+                    <div class="activity-log-card-title">Completed Quiz: "SQL Basics"</div>
+                    <div class="activity-log-card-date">Oct 5, 2023, 2:45 PM</div>
+                </div>
+            </div>
+            <div class="activity-log-card">
+                <div class="activity-log-card-icon">
+                    <img src="./assets/login-2.png" alt="Material" class="activity-log-circle-icon" />
+                </div>
+                <div class="activity-log-card-info">
+                    <div class="activity-log-card-title">Accessed Course Material: "Introduction To APIs"</div>
+                    <div class="activity-log-card-date">Oct 3, 2023, 10:20 AM</div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="activity-logs-link" style="padding-left: 20px;">View All Activity Logs Related To This User <i class="fa fa-chevron-right"></i></a>
+    </div>
+</section>
+    <script src="./js/loading.js"></script>
+    </div>
+</body>
+</html>

@@ -1,37 +1,9 @@
 /* Title Section Gradient Background */
-.um-title-section {
-    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
-    padding: 32px 32px 24px 32px; /* Increased left/right padding */
-    border-radius: 8px;
-    margin: 72px 24px 24px 24px; /* Top, right, bottom, left margins */
-    text-align: left;
-}
-
-/* Title Styles */
-.um-title {
-    color: var(--slate-50, #F8FAFC);
-    font-family: 'Roboto', sans-serif;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: 0.96px;
-    text-transform: capitalize;
-    margin-bottom: 8px;
-}
-
-/* Subtitle Styles */
-.um-subtitle {
-    color: var(--slate-50, #F8FAFC);
-    font-family: 'Roboto', sans-serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 159%;
-    letter-spacing: 0.72px;
-    text-transform: capitalize;
-    margin-bottom: 0;
-}
+<!-- Title Section -->
+        <section class="um-title-section">
+            <h1 class="um-title">Users Management</h1>
+            <p class="um-subtitle">Search, Filter, Approve, And Update Users All In One Place</p>
+        </section>
 
 /* Info Card Border Radius */
 .info-card, .card, .um-info-card {
