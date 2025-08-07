@@ -3,7 +3,13 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@600&display=swap');
-
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 .main-card-container {
     min-height: 100vh;
     margin-top: 80px;

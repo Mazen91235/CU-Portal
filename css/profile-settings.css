@@ -1,5 +1,12 @@
 /* Responsive profile image and button group */
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 .personal-details-btn-group {
   display: flex;
   flex-wrap: wrap;

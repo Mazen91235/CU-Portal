@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("testPopupBtn");
     if (btn) {
       btn.addEventListener("click", () => {
-        showPopup("success", "Welcome!", "This is a test popup", "check.html", 3000);
+        showPopup("loading", "Welcome!", "This is a test popup", "check.html", 3000);
       });
     }
   });
