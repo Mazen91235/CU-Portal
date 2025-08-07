@@ -49,9 +49,10 @@
 /* Info Cards Row */
 .um-info-cards-row {
     display: flex;
-    gap: 24px;
+    gap: 200px;
     flex-wrap: wrap;
-    justify-content: space-between; /* ensures equal spacing */
+    justify-content: center; /* center the cards horizontally */
+    align-items: flex-start;
 }
 
 /* Individual Info Card (mini card) */
@@ -60,53 +61,85 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
     display: flex;
-    align-items: center;
-    padding: 20px 24px;
-    gap:40%;
-    flex: 1 1 0; /* flexible width, fills row equally */
-    min-width: 0; /* allows shrinking for responsiveness */
-    max-width: 100%; /* prevents overflow */
+    align-items: flex-start;
+    width: 320px; /* increased width */
+    height: 127px;
+    padding: 20px 20px;
+    gap: 48px;
+    min-width: 320px;
+    max-width: 320px;
+    min-height: 127px;
+    max-height: 127px;
+    overflow: hidden;
+    flex-direction: row; /* icon left, text right */
 }
 
-/* Card Icon */
+/* Card Icon - always 84x84px */
 .um-info-card-icon {
     width: 84px;
     height: 84px;
+    min-width: 84px;
+    min-height: 84px;
+    max-width: 84px;
+    max-height: 84px;
     background: rgba(140, 13, 171, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    /* remove margin-right: auto */
 }
 .um-info-card-icon img {
-    width: 60px;
-    height: 60px;
+    width: 60%;
+    height: 60%;
     object-fit: contain;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 60px;
+    max-height: 60px;
 }
 
-/* Card Content */
+/* Card Content - fill remaining space, left aligned, no wrapping */
 .um-info-card-content {
-    flex: 1;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start; /* right align content */
+    text-align: right;      /* keep left-to-right text direction */
+ 
+    overflow: hidden;
 }
 
-/* Card Title */
+/* Card Title (e.g. "Total Users") */
 .um-info-card-title {
-    font-size: 16px;
-    color: rgba(172, 172, 172, 1);
-    font-weight: 500;
+    color: #ACACAC;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.14px;
     margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Card Value */
+/* Card Value (e.g. "5423", "189") */
 .um-info-card-value {
+    color: #333;
+    font-family: 'Poppins', sans-serif;
     font-size: 32px;
-    color: #222;
-    font-weight: 700;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%; /* 32px */
+    letter-spacing: -0.32px;
     margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Growth Section */
@@ -116,33 +149,56 @@
     gap: 4px;
 }
 .um-info-card-growth img {
-    width: 16px;
-    height: 16px;
+    width: 21.67px;
+    height: 20px;
 }
 .um-info-card-growth-text {
-    color: #16A34A;
-    font-size: 14px;
-    font-weight: 500;
+    color: var(--slate-600, #00AC4F);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.12px;
+    text-transform: capitalize;
 }
 
-/* Avatars */
-.um-info-card-avatars img {
-    width: auto;
-    height: auto;
-    
-    margin-right: -8px;
-    border: 2px solid #fff;
+/* This Month Text */
+.um-info-card-month {
+    color: var(--slate-600, #475569);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.12px;
+    text-transform: capitalize;
 }
 
 /* Pending Requests Action */
 .um-info-card-action {
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 .um-info-card-review {
     color: #7B1684;
     font-size: 14px;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.um-info-card-review-eye {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+    background: none;
 }
 
 /* Filters Section */
@@ -520,11 +576,11 @@
         gap: 16px;
     }
     .um-info-card {
-        width: 100%;
+        width: 50%;
         max-width: 100%;
     }
 }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .um-filters-row {
         flex-direction: column;
         align-items: stretch;
@@ -559,20 +615,59 @@
     .um-table-wrapper {
         overflow-x: auto;
     }
-}
 
-/* Responsive: stack mini card content vertically if text overlaps */
-@media (max-width: 900px) {
+    /* Responsive: stack cards vertically and center them */
+    .um-info-cards-row {
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center !important;
+        align-items: center !important;
+    }
     .um-info-card {
+        width: 90%;
+        max-width: 100%;
+        min-width: 0;
         flex-direction: row;
-        align-items: flex-start;
-        gap: 40%;
+        align-items: center;
+        
         padding: 20px 16px;
+        margin-left: auto;
+        text-align: right;
+        margin-right: auto;
     }
     .um-info-card-icon {
         margin-bottom: 8px;
     }
     .um-info-card-content {
+        align-items: flex-end; /* right align content */
+        text-align: left;      /* keep left-to-right text direction */
+        width: 100%;
+    }
+
+}
+
+/* Info Cards Row: always one row on large screens */
+@media (min-width: 1025px) {
+    .um-info-cards-row {
+        flex-direction: row;
+        gap: 90px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .um-info-card {
+        width: 320px;
+        max-width: 320px;
+        min-width: 260px;
+        margin-left: 0;
+        margin-right: 0;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px 20px;
+        height: 127px;
+    }
+    .um-info-card-content {
+        align-items: flex-start;
+        text-align: left;
         width: 100%;
     }
 }

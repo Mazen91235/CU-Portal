@@ -1,0 +1,591 @@
+/* Title Section Gradient Background */
+.um-title-section {
+    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px; /* Increased left/right padding */
+    border-radius: 8px;
+    margin: 72px 24px 24px 24px; /* Top, right, bottom, left margins */
+    text-align: left;
+}
+
+/* Title Styles */
+.um-title {
+    color: var(--slate-50, #F8FAFC);
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.96px;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+/* Subtitle Styles */
+.um-subtitle {
+    color: var(--slate-50, #F8FAFC);
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 159%;
+    letter-spacing: 0.72px;
+    text-transform: capitalize;
+    margin-bottom: 0;
+}
+
+/* Filters Section */
+.um-filters-section {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    margin: 0 24px 24px 24px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    overflow: hidden;
+    border: 1px solid #E2E8F0; /* 1px gray border */
+}
+
+/* Background image placeholder */
+.um-filters-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 72px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: contain;
+     background-image: url('./assets/iconsax-building.png'); 
+    z-index: 1;
+}
+
+/* Filters Row */
+.um-filters-row {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+}
+
+/* Filters Group (push filters to right) */
+.um-filters-group {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+}
+
+/* Filter Dropdown Container */
+.um-filter-dropdown {
+  position: relative;
+  min-width: 180px;
+  flex: 1 1 0;
+}
+
+/* Search Input */
+.um-filter-search {
+    display: flex;
+    align-items: center;
+    background: #F8FAFC;
+    border-radius: 6px;
+    padding: 0 16px;
+    height: 48px;
+    min-width: 260px;
+    flex: 1 1 0;
+    border: 1px solid #E2E8F0;
+    gap: 8px;
+}
+.um-filter-search i {
+    color: #94A3B8;
+    font-size: 18px;
+}
+.um-filter-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: #64748B;
+}
+
+/* Filter Input */
+.um-filter-input {
+    background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #64748B;
+  height: 48px;
+  padding: 0 40px 0 40px;
+  box-shadow: none;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  background-repeat: no-repeat;
+}
+
+/* Filter Input: left and right icon backgrounds with spacing */
+.um-filter-input.faculty-bg {
+  background-image: url('../assets/table.svg'), url('../assets/iconsax-building.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px; /* space between left icon and text */
+}
+
+.um-filter-input.department-bg {
+  background-image: url('../assets/iconsax-building-4.png'), url('../assets/iconsax-building-4.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px;
+}
+
+.um-filter-input.year-bg {
+  background-image: url('../assets/iconsax-calendar.png'), url('../assets/iconsax-calendar.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px;
+}
+
+/* Arrow Icon */
+.um-filter-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Dropdown styles from personal-details.css */
+/* Dropdown List */
+.gender-dropdown-list {
+  position: fixed;
+  top: var(--dropdown-top, 0px);
+  left: var(--dropdown-left, 0px);
+  width: var(--dropdown-width, 180px);
+  max-width: 320px;
+  min-width: 120px;
+  background: #fff;
+  border: 1px solid #7B1684;
+  border-radius: 12px;
+  box-shadow: none;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+  margin: 0;
+  padding: 0;  overflow: hidden;
+  list-style: none;
+  transition: opacity 0.2s;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+}
+
+/* Show dropdown when open */
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;  overflow: hidden;
+  display: block;
+}
+
+/* Dropdown List Items */
+.gender-dropdown-list li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  margin: 0; /* Ensure no margin */
+  cursor: pointer;
+  font-size: 16px;
+  color: #374151;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+  transition: background 0.15s, color 0.15s;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+.gender-dropdown-list li span {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+    overflow: hidden;
+  box-sizing: border-box;
+}
+
+.gender-dropdown-list li.active,
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;  overflow: hidden;
+  color: #7B1684;
+  font-weight: 500;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+/* Faculty Select Group Focus/Hover */
+#faculty-select-group .form-control.um-filter-focus,
+#faculty-select-group .form-control:hover {
+  border-color: #7B1684 !important;
+  box-shadow: 0 0 0 2px rgba(123, 22, 132, 0.15);
+}
+
+/* Pending Requests Section */
+.pending-requests-section {
+    background: #fff;
+    border-radius: 8px;
+    margin: 24px;
+    padding: 0 0 24px 0;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    overflow: hidden;
+}
+
+.pending-requests-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
+    padding: 18px 24px;
+    border-radius: 8px 8px 0 0;
+}
+
+.pending-requests-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pending-requests-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.pending-approve-btn {
+    background: #7B1684;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.pending-approve-btn:hover {
+    background: #520E58;
+}
+
+.pending-reject-btn {
+    background: #fff;
+    color: rgba(100, 116, 139, 1);
+    border: 1px solid rgba(100, 116, 139, 1);
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.pending-reject-btn:hover {
+    background: #F3E8FF;
+    color: #520E58;
+}
+
+.pending-header-approve {
+    background: #fff;
+    color: #7B1684;
+    border: 1px solid #7B1684;
+}
+.pending-header-reject {
+    background: #7B1684;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+/* Pending Requests List: column layout for results */
+.pending-requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 24px;
+}
+
+/* Each row: grid for column alignment */
+.pending-request-row {
+    display: grid;
+    grid-template-columns: 40px 1.5fr 2fr 1.2fr 1.2fr 1.2fr auto;
+    align-items: center;
+    gap: 2px;
+    padding: 24px 24px; /* increase horizontal padding for desktop */
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 16px;
+    color: #374151;
+    position: relative;
+    flex-wrap: unset;
+    /* Prevent vertical writing for badges and cells */
+    writing-mode: initial;
+}
+
+/* Fix wrapping and vertical text for table cells */
+.pending-user-name,
+.pending-user-email,
+.pending-user-phone,
+.pending-user-faculty,
+.pending-user-department {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    word-break: break-word;
+    white-space: nowrap; /* Prevent wrapping */
+    writing-mode: initial; /* Ensure horizontal text */
+    font-size: 16px;
+}
+
+/* Faculty and department badge: horizontal text */
+.pending-faculty-badge,
+.pending-department-badge {
+    writing-mode: initial;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    gap: 6px;
+    border: none;
+}
+
+/* Actions always on the right */
+.pending-row-actions {
+    justify-self: end;
+    display: flex;
+    gap: 4px;
+    margin-left: 0;
+}
+
+/* Larger checkbox */
+.pending-checkbox-lg {
+    width: 22px;
+    height: 22px;
+    accent-color: #7B1684;
+    margin-right: 8px;
+}
+
+/* Badge icons */
+.pending-badge-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* Faculty badge */
+.pending-faculty-badge {
+    background: rgba(140, 13, 171, 0.20);
+    color: #7B1684;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+}
+
+/* Department badge */
+.pending-department-badge {
+    background: #fff;
+    color: #7B1684;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #a1a1a1;
+}
+
+/* Pagination box at bottom right */
+.pending-requests-pagination-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    margin-bottom: 0;
+    
+}
+
+/* Pagination container styles */
+.pending-requests-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 6px 10px;
+    margin-right: 10px;
+}
+
+/* Pagination button styles */
+.pending-page-btn {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0 6px;
+    font-size: 16px;
+    font-family: 'Rubik', Arial, sans-serif;
+    font-weight: 700;
+    color: var(--primary-600, #A41BB1);
+    letter-spacing: 0.1px;
+    line-height: 100%;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    outline: none;
+    box-shadow: none;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Active page: purple dot under number, not for arrows */
+.pending-page-btn.active {
+    color: var(--primary-600, #A41BB1);
+}
+.pending-page-btn.active:not([data-page="left"]):not([data-page="right"])::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary-600, #A41BB1);
+}
+
+/* Arrow buttons: use images instead of text */
+.pending-page-btn[data-page="left"],
+.pending-page-btn[data-page="right"] {
+    padding: 0 6px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    box-shadow: none;
+}
+.pending-page-btn[data-page="left"]::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url('../assets/left-page.png') no-repeat center center;
+    background-size: contain;
+}
+.pending-page-btn[data-page="right"]::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url('../assets/right-page.png') no-repeat center center;
+    background-size: contain;
+}
+
+/* Remove default button outline */
+.pending-page-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Responsive: filters and table */
+@media (max-width: 900px) {
+    .um-filters-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .um-filters-group {
+        flex-direction: column;
+        margin-left: 0;
+        gap: 12px;
+    }
+    .um-filter-search,
+    .um-filter-btn {
+        width: 100%;
+        min-width: 0;
+    }
+    .um-filters-section {
+        padding: 16px 12px;
+    }
+    .um-filter-dropdown {
+        width: 100%;
+        min-width: 0;
+    }
+    .um-filter-input {
+        width: 100%;
+    }
+    .um-filter-search {
+        height: 48px;
+    }
+
+    /* Pending Requests Table: horizontal scroll */
+    .pending-requests-list {
+        overflow-x: auto;
+        width: 100%;
+        padding: 0 16px; /* further increase horizontal padding for mobile */
+    }
+    .pending-request-row {
+        min-width: 700px;
+        writing-mode: initial;
+        padding: 20px 16px; /* increase padding for mobile */
+        
+    }
+
+    .pending-user-name {
+        padding-right: 200px;
+    }
+    .pending-user-email{
+        padding-right: 200px;
+    }
+    .pending-user-phone{
+        padding-right: 100px;
+    }
+    .pending-faculty-badge{
+        margin-right: 80vw; /* huge space between faculty and department badge */
+    }
+    .pending-department-badge{
+        margin-right: 80vm;
+    }
+    .pending-requests-pagination-box {
+        justify-content: center;
+        margin-top: 12px;
+    }
+    .pending-requests-pagination {
+        padding: 8px 16px;
+        gap: 20px;
+    }
+}
