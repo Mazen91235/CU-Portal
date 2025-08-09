@@ -34,56 +34,34 @@
                     <i class="fa fa-ellipsis-v" style="color: #7B1684;"></i>
                 </span>
             </div>
-            <div class="user-details-avatar-wrapper">
-                <img class="user-details-avatar" src="./assets/ellipse 64.png" alt="Profile Avatar">
-            </div>
-            <div class="user-details-info">
-                <table class="user-details-table">
-                    <tbody>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/usericon.png" alt="User" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">Name:</td>
-                            <td class="user-details-value">Mohamed Ali Rady</td>
-                        </tr>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/mailicon.png" alt="Mail" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">E-Mail</td>
-                            <td class="user-details-value">Mohamedali@Gmail.Com</td>
-                        </tr>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/callicon.png" alt="Call" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">Phone</td>
-                            <td class="user-details-value">01289468799</td>
-                        </tr>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/building.png" alt="Faculty" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">Faculty</td>
-                            <td class="user-details-value">Engineering</td>
-                        </tr>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/building2.png" alt="Department" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">Department</td>
-                            <td class="user-details-value">Computer</td>
-                        </tr>
-                        <tr>
-                            <td class="user-details-icon">
-                                <img src="./assets/certificateicon.png" alt="Academic Year" style="width:22px;height:22px;">
-                            </td>
-                            <td class="user-details-label" style="font-size: 18px;">Academic Year</td>
-                            <td class="user-details-value">2028</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="user-details-main-row">
+                <div class="user-details-avatar-wrapper">
+                    <img class="user-details-avatar" src="./assets/ellipse 64.png" alt="Profile Avatar">
+                </div>
+                <div class="user-details-info-table-wrapper">
+                    <table class="user-details-info-table">
+                        <tbody>
+                            <tr>
+                                <td class="user-details-label"><img src="./assets/usericon.png" alt="User Icon"> Name:</td>
+                                <td class="user-details-value">Mohamed Ali Rady</td>
+                                <td class="user-details-label"><img src="./assets/mailicon.png" alt="Mail Icon"> E-Mail:</td>
+                                <td class="user-details-value">Mohamedali@Gmail.Com</td>
+                            </tr>
+                            <tr>
+                                <td class="user-details-label"><img src="./assets/callicon.png" alt="Call Icon"> Phone:</td>
+                                <td class="user-details-value">01289468799</td>
+                                <td class="user-details-label"><img src="./assets/building.png" alt="Faculty Icon"> Faculty:</td>
+                                <td class="user-details-value">Engineering</td>
+                            </tr>
+                            <tr>
+                                <td class="user-details-label"><img src="./assets/building2.png" alt="Department Icon"> Department:</td>
+                                <td class="user-details-value">Computer</td>
+                                <td class="user-details-label"><img src="./assets/certificateicon.png" alt="Year Icon"> Academic Year:</td>
+                                <td class="user-details-value">2028</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -536,6 +514,61 @@
     </div>
 </section>
     <script src="./js/loading.js"></script>
+    <script>
+function transformUserDetailsTable() {
+    const table = document.querySelector('.user-details-info-table');
+    if (!table) return;
+
+    // Only transform if mobile view
+    if (window.innerWidth <= 1200) {
+        // If already transformed, skip
+        if (table.dataset.mobileTransformed === "true") return;
+
+        // Gather all icons and labels/values
+        const rows = Array.from(table.querySelectorAll('tr'));
+        const items = [];
+        rows.forEach(row => {
+            for (let i = 0; i < row.children.length; i += 2) {
+                const labelTd = row.children[i];
+                const valueTd = row.children[i+1];
+                if (labelTd && valueTd) {
+                    items.push({
+                        icon: labelTd.querySelector('img') ? labelTd.querySelector('img').outerHTML : '',
+                        label: labelTd.textContent.replace(/^\s*|\s*$/g, ''),
+                        value: valueTd.textContent.replace(/^\s*|\s*$/g, '')
+                    });
+                }
+            }
+        });
+
+        // Clear table and rebuild as 2 columns
+        table.innerHTML = '';
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            const iconLabelTd = document.createElement('td');
+            iconLabelTd.className = 'user-details-label';
+            iconLabelTd.innerHTML = item.icon + ' ' + item.label;
+            const valueTd = document.createElement('td');
+            valueTd.className = 'user-details-value';
+            valueTd.textContent = item.value;
+            tr.appendChild(iconLabelTd);
+            tr.appendChild(valueTd);
+            table.appendChild(tr);
+        });
+        table.dataset.mobileTransformed = "true";
+    } else {
+        // Restore desktop table if needed
+        if (table.dataset.mobileTransformed === "true") {
+            // You can reload the page or reconstruct the original table if needed.
+            location.reload();
+        }
+    }
+}
+
+// Run on load and resize
+window.addEventListener('DOMContentLoaded', transformUserDetailsTable);
+window.addEventListener('resize', transformUserDetailsTable);
+</script>
     </div>
 </body>
 </html>

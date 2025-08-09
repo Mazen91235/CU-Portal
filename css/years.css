@@ -1,0 +1,313 @@
+.um-title-section {
+    background: linear-gradient(90deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px;
+    border-radius: 8px;
+    margin: 72px 24px 24px 24px;
+    text-align: left;
+    min-height: 110px;
+}
+.um-title {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.96px;
+    margin-bottom: 8px;
+}
+.um-subtitle {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.add-years-btn {
+    background: #fff;
+    color: #7B1684;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 18px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    transition: background 0.2s, color 0.2s;
+    width: 132px;
+    height: 52px;
+    min-width: 132px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.add-years-btn:hover {
+    background: #7B1684;
+    color: #fff;
+}
+
+/* Filter Section */
+.years-filter-dropdown {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 32px; /* space between filter and right edge */
+}
+.filter-btn {
+    background: #fff;
+    color: #7B1684;
+    font-weight: 500;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    padding: 8px 48px 8px 40px; /* more right padding for arrow, less left for icon */
+    /* Add background image for building icon */
+    background-image: url('../assets/building.png');
+    background-repeat: no-repeat;
+    background-size: 20px 20px; /* smaller icon */
+    background-position: 14px center;
+    min-width: 220px;
+}
+.filter-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #7B1684;
+}
+.dropdown-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.dropdown-arrow i {
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+.rotate-arrow {
+    transform: rotate(180deg);
+}
+.filter-dropdown-menu {
+    min-width: 180px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    margin-top: 8px;
+    background: #fff;
+    color: #374151;
+    font-size: 20px; /* increased by 2px */
+    padding: 0;
+    max-height: 240px; /* 5 items * ~48px/item */
+    overflow-y: auto;
+}
+.filter-dropdown-menu .dropdown-item {
+    padding: 4px 12px;
+    color: #7B1684;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    border-bottom: 1px solid #F1F5F9;
+}
+.filter-dropdown-menu .dropdown-item:last-child {
+    border-bottom: none;
+}
+.filter-dropdown-menu .dropdown-item:hover {
+    background: #F3E8FF;
+    color: #520E58;
+}
+.filter-dropdown-menu .dropdown-item.active {
+    background: #E6D6F3;
+    color: #7B1684;
+}
+
+/* Cards Section */
+.year-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 32px 18px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 220px;
+    transition: box-shadow 0.2s;
+}
+.year-card:hover {
+    box-shadow: 0 4px 16px rgba(123, 22, 132, 0.12);
+}
+.year-card-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #F3E8FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.year-card-avatar img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+.year-card-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.year-card-actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 24px;
+}
+.year-edit-btn,
+.year-delete-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 8px;
+    padding: 8px 0;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    background: #7B1684;
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: none;
+    text-align: center;
+    /* Remove horizontal padding so both buttons are equal width */
+}
+
+/* Custom Card Styles */
+.custom-year-card {
+    border: 2px solid #F9E6EF; /* light pink border */
+    box-shadow: none;
+    background: #fff;
+}
+
+.custom-year-card-avatar {
+    background: #FDECF3 !important; /* light pink circle */
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.custom-year-card-avatar img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: invert(17%) sepia(77%) saturate(747%) hue-rotate(265deg) brightness(90%) contrast(90%);
+    /* This filter gives a purple-like color to black SVGs/icons */
+}
+
+/* Cards grid margin */
+#yearsCardsGrid {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Orange theme for first card */
+.orange-year-card {
+    border: 2px solid #FFE6C7;
+    background: #FFF7ED;
+    box-shadow: none;
+}
+.orange-year-card-avatar {
+    background: #FFE6C7 !important;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.orange-year-card-avatar img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: none;
+}
+
+/* Gray theme for other cards */
+.gray-year-card {
+    border: 2px solid #E2E8F0;
+    background: #F8FAFC;
+    box-shadow: none;
+}
+.gray-year-card-avatar {
+    background: #E2E8F0 !important;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.gray-year-card-avatar img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: none;
+}
+
+/* Responsive grid for cards */
+@media (max-width: 991px) {
+    .year-card {
+        min-height: 200px;
+    }
+}
+@media (max-width: 767px) {
+    .year-card {
+        min-height: 180px;
+    }
+    .year-card-title {
+        font-size: 22px;
+    }
+    .year-card-avatar {
+        width: 48px;
+        height: 48px;
+    }
+    .year-card-avatar img {
+        width: 28px;
+        height: 28px;
+    }
+    .year-edit-btn, .year-delete-btn {
+        padding: 8px 18px;
+        font-size: 15px;
+    }
+}
+
+/* Add Years Button - Mobile and Desktop */
+.um-title-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.add-years-btn-desktop {
+    display: flex;
+}
+
+.add-years-btn-mobile {
+    display: none;
+    margin-top: 18px;
+    align-self: flex-start;
+}
+
+@media (max-width: 756px) {
+    .add-years-btn-desktop {
+        display: none !important;
+    }
+    .add-years-btn-mobile {
+        display: flex !important;
+    }
+}
+
