@@ -648,7 +648,7 @@ max-width: 430px;
 .dropdown-menu {
   padding: 0 !important;
   border-radius: 8px;
- 
+  z-index: 1050;
 
 }
 

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="./components/navbar.html" />
+    <link rel="stylesheet" href="./components/sidebar.html" />
+    <link rel="stylesheet" href="./components/toasts.html" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/departments.css" />
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Content wrapper: navbar + main content -->
+    <div id="content-wrapper" class="sidebar-hidden">
+
+        <div id="navbar-container" class="fixed-top"></div>
+        <div id="main-content" class="p-4 mt-5">
+            <div id="header" class="d-flex justify-content-between align-items-center ">
+                <div id="r-header" class="d-flex flex-column align-items-start gap-3">
+                    <h2 class="m-0"> Course Maps Management</h2>
+                    <h3 class="m-0">Manage and organize your courses content efficiently </h3>
+                </div>
+
+                <div id="f-header" class="d-flex  align-items-center ">
+                    <button id="add" class="  font-semibold px-4 py-2 shadow "> <img src="./assets/iconsax-add.svg"
+                            alt="Add Icon" class="me-2" />
+                        Add Department</button>
+                </div>
+            </div>
+
+
+            <!-- Search and Filters -->
+            <div class="row g-2 mb-4 mt-4 justify-content-between align-items-center rounded  pt-2 pb-3 " style=" border: var(--bs-border-width) solid var(--bs-border-color); padding-left: 5px; padding-right: 5px;">
+                <div class="col-md-4 " style="margin-right:auto;" >
+                    <div class="input-group " style=" border-radius: 6px; height: 50px;  border: var(--bs-border-width) solid var(--bs-border-color);
+">
+                        <span class="input-group-text border-0 bg-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 " placeholder="Search ... ">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected >faculty name</option>
+                        <option value="1">FCIS</option>
+                    </select>
+                </div>
+                <div class="col-md-3" >
+                    <select class="form-select ">
+                        <option selected>Study type</option>
+                        <option value="DEP1">DEP1</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="row gap-5 justify-content-center align-items-center mt-5 deps">
+
+               <div class="card col-md-4 shadow">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span class="facultyname">Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span class="studytype">Mainstream</span>
+    </div>
+
+    <a href="./dpartmentDetails.html" class="button">View Department</a>
+</div>
+               <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+               <div class="card col-md-4 shadow">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+   <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+   <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+   <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+   <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+   <div class="card col-md-4 shadow ">
+    <span class="badge dep">CMP</span>
+    <span class="menu-dots"><i class="fas fa-ellipsis-v"></i></span>
+
+
+    <div class="title"><img class="me-1" src="./assets/Group (1) copy 2.svg"> Computer</div>
+
+    <div class="info">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (9).svg"> Faculty</span>
+        <span>Engineering</span>
+    </div>
+
+    <div class="info" style="background-color: #f0fcfa;">
+        <span><img class="me-1 mb-1" src="./assets/Clip path group (4) copy.svg">Study Type</span>
+        <span>Mainstream</span>
+    </div>
+
+    <a href="#" class="button">View Department</a>
+</div>
+
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./js/loading.js"></script>
+
+</body>
+
+</html>
