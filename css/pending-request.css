@@ -257,7 +257,7 @@
 }
 
 .pending-requests-header {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     -webkit-overflow-scrolling: touch;
     display: flex;
     align-items: center;
