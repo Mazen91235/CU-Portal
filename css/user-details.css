@@ -189,8 +189,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    object-fit: contain;
+    padding: 8px;
+    overflow: visible; /* Allow image to be fully visible */
 }
 
 .exams-header-icon img,
@@ -200,11 +200,15 @@
 .grades-header-icon img,
 .subjects-header-icon img,
 .activity-logs-header-icon img {
-    width: 45px;
-    height: 45px;
+    width: 80%;
+    height: 80%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     display: block;
     margin: auto;
+    /* Remove background if present on image itself */
+    background: none !important;
 }
 
 .exams-header-title {
@@ -265,6 +269,7 @@
     padding: 7px;
     object-fit: contain;
     margin-right: 12px;
+    
 }
 
 .exam-card-icon .exam-circle-icon {
@@ -717,6 +722,7 @@ width:90%;
     object-fit: contain;
     margin-right: 12px;
     display: block;
+    overflow: visible;
 }
 
 .materials-card-info {
@@ -866,6 +872,7 @@ width:90%;
     object-fit: contain;
     margin-right: 12px;
     display: block;
+    overflow: visible;
 }
 
 .grades-card-info {
@@ -1006,6 +1013,7 @@ width:90%;
     object-fit: contain;
     margin-right: 12px;
     display: block;
+    overflow: visible;
 }
 
 .subjects-card-info {
@@ -1183,6 +1191,13 @@ width:90%;
     .user-details-label {
         min-width: 70px;
     }
+    .user-details-info-table {
+        border-spacing: 0 2px !important; /* Even less space between rows */
+        margin-left: 10px !important;     /* Add space from left edge of card */
+    }
+    .user-details-info-table td {
+        padding: 6px 8px 6px 0 !important; /* Less space between columns */
+    }
 }
 
 .sections-row {
@@ -1263,10 +1278,25 @@ width:90%;
         max-width: 98vw;
         justify-content: center;
         align-items: center;
+        padding-left: 32px; /* Add space between table and avatar/left edge */
     }
     .user-details-info-table {
         margin: 0 auto;
         width: 100%;
         max-width: 350px;
+        margin-left: auto !important;
+    margin-right: auto !important;
+    display: table !important;
+    float: none !important;
+    border-spacing: 0 4px !important; /* Reduce vertical space between rows */
+    }
+}
+
+@media (max-width: 600px) {
+    .user-details-info-table {
+        border-spacing: 0 2px !important; /* Even less space on small screens */
+    }
+    .user-details-info-table-wrapper {
+        padding-left: 16px; /* Ensure space on mobile too */
     }
 }

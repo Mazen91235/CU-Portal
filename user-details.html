@@ -519,6 +519,23 @@ function transformUserDetailsTable() {
     const table = document.querySelector('.user-details-info-table');
     if (!table) return;
 
+    // Center the table in its wrapper
+    table.style.margin = "auto"; // Add left margin
+    table.style.display = "table";
+    table.style.width = "100%";
+    table.style.maxWidth = "600px";
+    table.style.fontFamily = "Poppins, Arial, sans-serif";
+    table.style.fontSize = window.innerWidth <= 600 ? "13px" : window.innerWidth <= 500 ? "15px" : "16px";
+    table.style.transition = "font-size 0.2s, width 0.2s";
+
+    // Set minimum padding and margin for all table cells
+    Array.from(table.querySelectorAll('td')).forEach(td => {
+        td.style.padding = "2px 2px";
+        td.style.margin = "0";
+        td.style.fontFamily = "inherit";
+        td.style.fontSize = "inherit";
+    });
+
     // Only transform if mobile view
     if (window.innerWidth <= 1200) {
         // If already transformed, skip
@@ -548,9 +565,17 @@ function transformUserDetailsTable() {
             const iconLabelTd = document.createElement('td');
             iconLabelTd.className = 'user-details-label';
             iconLabelTd.innerHTML = item.icon + ' ' + item.label;
+            iconLabelTd.style.padding = "2px 4px";
+            iconLabelTd.style.margin = "0";
+            iconLabelTd.style.fontFamily = "inherit";
+            iconLabelTd.style.fontSize = "inherit";
             const valueTd = document.createElement('td');
             valueTd.className = 'user-details-value';
             valueTd.textContent = item.value;
+            valueTd.style.padding = "2px 4px";
+            valueTd.style.margin = "0";
+            valueTd.style.fontFamily = "inherit";
+            valueTd.style.fontSize = "inherit";
             tr.appendChild(iconLabelTd);
             tr.appendChild(valueTd);
             table.appendChild(tr);
@@ -559,7 +584,6 @@ function transformUserDetailsTable() {
     } else {
         // Restore desktop table if needed
         if (table.dataset.mobileTransformed === "true") {
-            // You can reload the page or reconstruct the original table if needed.
             location.reload();
         }
     }
