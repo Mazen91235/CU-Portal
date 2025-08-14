@@ -88,135 +88,107 @@
             </div>
         </section>
 
-        <!-- Pending Requests Section -->
-        <section class="pending-requests-section"><div style="overflow-x:auto;">
-            <div class="pending-requests-scroll-wrapper">
-                <div class="pending-requests-header">
-                    <span class="pending-requests-title">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" id="pending-select-all" />
-                        Pending Requests
-                    </span>
-                    <div class="pending-requests-actions">
-                        <button class="pending-approve-btn pending-header-approve">Approve</button>
-                        <button class="pending-reject-btn pending-header-reject">Reject</button>
-                    </div>
-                </div>
-                <div class="pending-requests-list" id="pending-requests-list">
-                    <!-- Example rows, add data-page attribute for pagination -->
-                    <div class="pending-request-row" data-page="1" style="gap:4px;">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                        <span class="pending-user-name">Mohamed Ali Rady</span>
-                        <span class="pending-user-email">Mohamedali@Gmail.Com</span>
-                        <span class="pending-user-phone">01289468799</span>
-                        <span class="pending-user-faculty">
-                            <span class="pending-faculty-badge">
-                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
-                            </span>
-                        </span>
-                        <span class="pending-user-department">
-                            <span class="pending-department-badge">
-                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
-                            </span>
-                        </span>
-                        <div class="pending-row-actions">
-                            <button class="pending-approve-btn">Approve</button>
-                            <button class="pending-reject-btn">Reject</button>
-                        </div>
-                    </div>
-                    <div class="pending-request-row" data-page="1" style="gap:4px;">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                        <span class="pending-user-name">John Doe</span>
-                        <span class="pending-user-email">John@example.com</span>
-                        <span class="pending-user-phone">01234567890</span>
-                        <span class="pending-user-faculty">
-                            <span class="pending-faculty-badge">
-                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
-                            </span>
-                        </span>
-                        <span class="pending-user-department">
-                            <span class="pending-department-badge">
-                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
-                            </span>
-                        </span>
-                        <div class="pending-row-actions">
-                            <button class="pending-approve-btn">Approve</button>
-                            <button class="pending-reject-btn">Reject</button>
-                        </div>
-                    </div>
-                    <div class="pending-request-row" data-page="2" style="gap:4px;">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                        <span class="pending-user-name">Jane Smith</span>
-                        <span class="pending-user-email">Jane@example.com</span>
-                        <span class="pending-user-phone">09876543210</span>
-                        <span class="pending-user-faculty">
-                            <span class="pending-faculty-badge">
-                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Engineering
-                            </span>
-                        </span>
-                        <span class="pending-user-department">
-                            <span class="pending-department-badge">
-                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Computer
-                            </span>
-                        </span>
-                        <div class="pending-row-actions">
-                            <button class="pending-approve-btn">Approve</button>
-                            <button class="pending-reject-btn">Reject</button>
-                        </div>
-                    </div>
-                    <!-- Demo records for testing -->
-                    <div class="pending-request-row" data-page="1" style="gap:4px;">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                        <span class="pending-user-name">Sara Ahmed</span>
-                        <span class="pending-user-email">sara.ahmed@demo.com</span>
-                        <span class="pending-user-phone">01122334455</span>
-                        <span class="pending-user-faculty">
-                            <span class="pending-faculty-badge">
-                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Science
-                            </span>
-                        </span>
-                        <span class="pending-user-department">
-                            <span class="pending-department-badge">
-                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> Biology
-                            </span>
-                        </span>
-                        <div class="pending-row-actions">
-                            <button class="pending-approve-btn">Approve</button>
-                            <button class="pending-reject-btn">Reject</button>
-                        </div>
-                    </div>
-                    <div class="pending-request-row" data-page="2" style="gap:4px;">
-                        <input type="checkbox" class="pending-checkbox pending-checkbox-lg" />
-                        <span class="pending-user-name">Ali Hassan</span>
-                        <span class="pending-user-email">ali.hassan@demo.com</span>
-                        <span class="pending-user-phone">01099887766</span>
-                        <span class="pending-user-faculty">
-                            <span class="pending-faculty-badge">
-                                <img src="./assets/iconsax-building-5.png" alt="faculty" class="pending-badge-icon" /> Arts
-                            </span>
-                        </span>
-                        <span class="pending-user-department">
-                            <span class="pending-department-badge">
-                                <img src="./assets/iconsax-building-4.png" alt="department" class="pending-badge-icon" /> History
-                            </span>
-                        </span>
-                        <div class="pending-row-actions">
-                            <button class="pending-approve-btn">Approve</button>
-                            <button class="pending-reject-btn">Reject</button>
-                        </div>
-                    </div>
-                    <!-- ...repeat rows, set data-page accordingly... -->
-                </div>
-            </div></div>
-            <!-- Pagination box at bottom right -->
-            <div class="pending-requests-pagination-box">
-                <div class="pending-requests-pagination">
-                    <button class="pending-page-btn" data-page="<">&lt;</button>
-                    <button class="pending-page-btn active" data-page="1">1</button>
-                    <button class="pending-page-btn" data-page="2">2</button>
-                    <button class="pending-page-btn" data-page="next">&gt;</button>
-                </div>
-            </div>
+        <!-- Pending Requests Header Section -->
+        <section class="pending-requests-header-section">
+          <div class="pending-requests-header-left">
+            <input type="checkbox" id="pending-select-all" class="pending-checkbox" />
+            <span class="pending-requests-title">Pending Requests</span>
+          </div>
+          <div class="pending-requests-header-right">
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
         </section>
+
+        <!-- Pending Requests List (make sure this is inside #content-wrapper) -->
+        <div class="pending-requests-list">
+          <div class="pending-request-row" data-page="1">
+            <input type="checkbox" class="pending-checkbox" />
+            <span class="pending-user-name">Mohamed Ali Rady</span>
+            <span class="pending-user-email">mohamedali@gmail.com</span>
+            <span class="pending-user-phone">01289468799</span>
+            <span class="pending-faculty-badge">
+              <!-- icon replaced by CSS background -->
+              Engineering
+            </span>
+            <span class="pending-department-badge">
+              <!-- icon replaced by CSS background -->
+              Computer
+            </span>
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
+          <div class="pending-request-separator"></div>
+          <div class="pending-request-row" data-page="1">
+            <input type="checkbox" class="pending-checkbox" />
+            <span class="pending-user-name">Sara Ahmed</span>
+            <span class="pending-user-email">sara.ahmed@cu.edu.eg</span>
+            <span class="pending-user-phone">01012345678</span>
+            <span class="pending-faculty-badge">
+              Science
+            </span>
+            <span class="pending-department-badge">
+              Mathematics
+            </span>
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
+          <div class="pending-request-separator"></div>
+          <div class="pending-request-row" data-page="1">
+            <input type="checkbox" class="pending-checkbox" />
+            <span class="pending-user-name">Omar Khaled</span>
+            <span class="pending-user-email">omar.khaled@cu.edu.eg</span>
+            <span class="pending-user-phone">01122334455</span>
+            <span class="pending-faculty-badge">
+              Medicine
+            </span>
+            <span class="pending-department-badge">
+              Surgery
+            </span>
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
+          <div class="pending-request-separator"></div>
+          <div class="pending-request-row" data-page="1">
+            <input type="checkbox" class="pending-checkbox" />
+            <span class="pending-user-name">Laila Samir</span>
+            <span class="pending-user-email">laila.samir@cu.edu.eg</span>
+            <span class="pending-user-phone">01234567890</span>
+            <span class="pending-faculty-badge">
+              Pharmacy
+            </span>
+            <span class="pending-department-badge">
+              Clinical
+            </span>
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
+          <div class="pending-request-separator"></div>
+          <div class="pending-request-row" data-page="1">
+            <input type="checkbox" class="pending-checkbox" />
+            <span class="pending-user-name">Youssef Hassan</span>
+            <span class="pending-user-email">youssef.hassan@cu.edu.eg</span>
+            <span class="pending-user-phone">01555667788</span>
+            <span class="pending-faculty-badge">
+              Engineering
+            </span>
+            <span class="pending-department-badge">
+              Electrical
+            </span>
+            <button class="pending-approve-btn">Approve</button>
+            <button class="pending-reject-btn">Reject</button>
+          </div>
+          <div class="pending-request-separator"></div>
+        </div>
+        <div class="pending-pagination-container" style="margin-bottom: 30px;">
+          <button class="pending-page-btn" data-page="<">&lt;</button>
+          <button class="pending-page-btn active" data-page="1">1</button>
+          <button class="pending-page-btn" data-page="2">2</button>
+          <button class="pending-page-btn" data-page=">">&gt;</button>
+        </div>
+
+        <!-- Pagination Section -->
+
     </div>
     <script src="./js/loading.js"></script>
     <script>
@@ -346,8 +318,6 @@
           const phone = row.querySelector('.pending-user-phone')?.textContent.toLowerCase() || '';
           const faculty = row.querySelector('.pending-faculty-badge')?.textContent.toLowerCase() || '';
           const department = row.querySelector('.pending-department-badge')?.textContent.toLowerCase() || '';
-          // For year, add logic if you have a year field
-
           // Search filter
           if (
             searchValue &&
@@ -372,6 +342,28 @@
           row.style.display = show ? '' : 'none';
         });
       }
+
+      // Select all checkboxes (check or uncheck all, regardless of current state)
+      document.getElementById('pending-select-all').addEventListener('change', function(e) {
+        const checked = e.target.checked;
+        document.querySelectorAll('.pending-requests-list .pending-checkbox').forEach(cb => {
+          cb.checked = checked;
+        });
+      });
+
+      // When any row checkbox is changed, update the select-all checkbox state
+      function updateSelectAllCheckbox() {
+        const allCheckboxes = Array.from(document.querySelectorAll('.pending-requests-list .pending-checkbox'));
+        // Exclude the select-all checkbox itself
+        const rowCheckboxes = allCheckboxes.filter(cb => cb.id !== 'pending-select-all');
+        const allChecked = rowCheckboxes.length > 0 && rowCheckboxes.every(cb => cb.checked);
+        document.getElementById('pending-select-all').checked = allChecked;
+      }
+      document.querySelectorAll('.pending-requests-list .pending-checkbox').forEach(cb => {
+        if (cb.id !== 'pending-select-all') {
+          cb.addEventListener('change', updateSelectAllCheckbox);
+        }
+      });
 
       // Attach filterTable to filter inputs
       document.querySelector('.um-filter-search input').addEventListener('input', filterTable);
@@ -425,16 +417,127 @@
         });
       });
 
-      // Initial page
-      showPendingPage('1');
+      // PAGINATION LOGIC FOR FILTERED RESULTS
+      function paginatePendingRequests() {
+        const rows = Array.from(document.querySelectorAll('.pending-request-row'));
+        // Only visible rows (after filter)
+        const visibleRows = rows.filter(row => row.style.display !== 'none');
+        const perPage = 5;
+        const totalPages = Math.ceil(visibleRows.length / perPage) || 1;
 
-      // Select all checkboxes when header checkbox is clicked
-      document.getElementById('pending-select-all').addEventListener('change', function(e) {
-        const checked = e.target.checked;
-        document.querySelectorAll('.pending-requests-list .pending-checkbox').forEach(cb => {
-          cb.checked = checked;
+        // Update pagination buttons
+        const pagination = document.querySelector('.pending-pagination-container');
+        if (pagination) {
+          pagination.innerHTML = '';
+          // Prev
+          const prevBtn = document.createElement('button');
+          prevBtn.className = 'pending-page-btn';
+          prevBtn.setAttribute('data-page', '<');
+          prevBtn.innerHTML = '&lt;';
+          pagination.appendChild(prevBtn);
+
+          // Page numbers
+          for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'pending-page-btn' + (i === 1 ? ' active' : '');
+            btn.setAttribute('data-page', i);
+            btn.textContent = i;
+            pagination.appendChild(btn);
+          }
+
+          // Next
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'pending-page-btn';
+          nextBtn.setAttribute('data-page', '>');
+          nextBtn.innerHTML = '&gt;';
+          pagination.appendChild(nextBtn);
+
+          // Add event listeners
+          pagination.querySelectorAll('.pending-page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              let page = btn.getAttribute('data-page');
+              let current = Number(pagination.querySelector('.pending-page-btn.active')?.getAttribute('data-page')) || 1;
+              if (page === '>') {
+                if (current < totalPages) page = current + 1;
+                else return;
+              } else if (page === '<') {
+                if (current > 1) page = current - 1;
+                else return;
+              } else {
+                page = Number(page);
+              }
+              showPendingPage(page, visibleRows, perPage, pagination);
+            });
+          });
+        }
+
+        // Show first page by default
+        showPendingPage(1, visibleRows, perPage, pagination);
+      }
+
+      function showPendingPage(page, visibleRows, perPage, pagination) {
+        page = Number(page);
+        visibleRows.forEach((row, idx) => {
+          row.style.display = (idx >= (page - 1) * perPage && idx < page * perPage) ? '' : 'none';
+          // Also hide/show separator after each row
+          const sep = row.nextElementSibling;
+          if (sep && sep.classList.contains('pending-request-separator')) {
+            sep.style.display = (idx >= (page - 1) * perPage && idx < page * perPage - 1) ? '' : 'none';
+          }
         });
-      });
+        // Update active button
+        if (pagination) {
+          pagination.querySelectorAll('.pending-page-btn').forEach(btn => {
+            btn.classList.toggle('active', Number(btn.getAttribute('data-page')) === page);
+          });
+        }
+      }
+
+      // Modify filterPendingRequests to support pagination
+      function filterPendingRequests() {
+        const searchValue = document.querySelector('.um-filter-search input').value.trim().toLowerCase();
+        const facultyValue = document.getElementById('faculty_hidden').value;
+        const departmentValue = document.getElementById('department_hidden').value;
+        const yearValue = document.getElementById('year_hidden').value;
+
+        document.querySelectorAll('.pending-request-row').forEach(row => {
+          let show = true;
+          const name = row.querySelector('.pending-user-name')?.textContent.toLowerCase() || '';
+          const email = row.querySelector('.pending-user-email')?.textContent.toLowerCase() || '';
+          const phone = row.querySelector('.pending-user-phone')?.textContent.toLowerCase() || '';
+          const faculty = row.querySelector('.pending-faculty-badge')?.textContent.toLowerCase() || '';
+          const department = row.querySelector('.pending-department-badge')?.textContent.toLowerCase() || '';
+          // Search filter
+          if (
+            searchValue &&
+            !(
+              name.includes(searchValue) ||
+              email.includes(searchValue) ||
+              phone.includes(searchValue)
+            )
+          ) {
+            show = false;
+          }
+          if (facultyValue && facultyValue !== "" && !faculty.includes(facultyValue)) {
+            show = false;
+          }
+          if (departmentValue && departmentValue !== "" && !department.includes(departmentValue)) {
+            show = false;
+          }
+          // Year filter (add if you have a year field)
+          row.style.display = show ? '' : 'none';
+        });
+        paginatePendingRequests();
+      }
+
+      // Attach filterPendingRequests to filter inputs
+      document.querySelector('.um-filter-search input').addEventListener('input', filterPendingRequests);
+      document.getElementById('faculty_hidden').addEventListener('change', filterPendingRequests);
+      document.getElementById('department_hidden').addEventListener('change', filterPendingRequests);
+      document.getElementById('year_hidden').addEventListener('change', filterPendingRequests);
+
+      // Initial filter and pagination on page load
+      filterPendingRequests();
     </script>
 </body>
 </html>

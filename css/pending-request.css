@@ -246,378 +246,374 @@
   box-shadow: 0 0 0 2px rgba(123, 22, 132, 0.15);
 }
 
-/* Pending Requests Section */
-.pending-requests-section {
-    background: #fff;
-    border-radius: 8px;
-    margin: 24px;
-    padding: 0 0 24px 0;
-    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
-    overflow: hidden;
+/* Pending Requests Header Section */
+.pending-requests-header-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #7B1684;
+  border-radius: 8px 8px 0 0;
+  padding: 16px 24px;
+  margin: 24px 24px 0 24px;
 }
 
-.pending-requests-header {
-    /*overflow-x: auto;*/
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
-    padding: 18px 24px;
-    border-radius: 8px 8px 0 0;
+.pending-requests-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .pending-requests-title {
-    color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  color: #F8FAFC;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.pending-requests-actions {
-    display: flex;
-    gap: 12px;
+.pending-requests-header-right {
+  display: flex;
+  gap: 12px;
 }
 
+/* Approve Button */
 .pending-approve-btn {
-    background: #7B1684;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.pending-approve-btn:hover {
-    background: #520E58;
+  border-radius: 8px;
+  border: 1px solid var(--slate-50, #F8FAFC);
+  background: var(--slate-50, #F8FAFC);
+  color: var(--primary-500, #5A0F61);
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
+  padding: 6px 24px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
 }
 
+/* Reject Button */
 .pending-reject-btn {
-    background: #fff;
-    color: rgba(100, 116, 139, 1);
-    border: 1px solid rgba(100, 116, 139, 1);
-    border-radius: 8px;
-    padding: 8px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-.pending-reject-btn:hover {
-    background: #F3E8FF;
-    color: #520E58;
-}
-
-.pending-header-approve {
-    background: #fff;
-    color: #7B1684;
-    border: 1px solid #7B1684;
-}
-.pending-header-reject {
-    background: #7B1684;
-    color: #fff;
-    border: 1px solid #fff;
+  border-radius: 8px;
+  border: 1px solid #FFF;
+  background: transparent;
+  color: var(--slate-50, #F8FAFC);
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
+  padding: 6px 24px;
+  cursor: pointer;
+ 
+  transition: background 0.15s, color 0.15s;
 }
 
-/* Pending Requests List: column layout for results */
 .pending-requests-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: 0 24px;
+  margin: 0 24px;
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+  border: 1px solid #E2E8F0;
+  border-top: none;
+  overflow-x: auto;
+  /* Prevent vertical scrollbars from appearing */
+  overflow-y: hidden;
 }
 
-/* Each row: grid for column alignment */
 .pending-request-row {
-    display: grid;
-    grid-template-columns: 40px 1.5fr 2fr 1.2fr 1.2fr 1.2fr auto;
-    align-items: center;
-    gap: 2px;
-    padding: 24px 24px; /* increase horizontal padding for desktop */
-    border-bottom: 1px solid #F1F5F9;
-    font-size: 16px;
-    color: #374151;
-    position: relative;
-    flex-wrap: unset;
-    /* Prevent vertical writing for badges and cells */
-    writing-mode: initial;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 24px;
+  background: #fff;
+  flex-wrap: nowrap; /* Prevent wrapping to new lines */
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-width: 900px; /* Ensures horizontal scroll on small screens */
 }
 
-/* Fix wrapping and vertical text for table cells */
+.pending-request-row > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pending-request-row .pending-checkbox {
+  margin-right: 8px;
+  accent-color: #7B1684;
+  width: 18px;
+  height: 18px;
+  min-width: 18px !important;
+  min-height: 18px !important;
+}
+
 .pending-user-name,
 .pending-user-email,
-.pending-user-phone,
-.pending-user-faculty,
-.pending-user-department {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    word-break: break-word;
-    white-space: nowrap; /* Prevent wrapping */
-    writing-mode: initial; /* Ensure horizontal text */
-    font-size: 16px;
+.pending-user-phone {
+  color: #475569;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 8px;
+  min-width: 140px;
+  max-width: 200px;
+  flex: 1 1 0;
 }
 
-/* Faculty and department badge: horizontal text */
+.pending-user-email {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  max-width: 200px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  text-overflow: initial; /* Allow scrolling to reveal full text */
+  display: inline-block; /* Needed for horizontal scroll to work properly */
+}
+
+.pending-user-email::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .pending-faculty-badge,
 .pending-department-badge {
-    writing-mode: initial;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    font-size: 15px;
-    font-weight: 500;
-    gap: 6px;
-    border: none;
+  min-width: 160px;
+  width: auto;
+  flex: 0 0 130px;
+  /* Ensures fixed width for badge in all screen sizes */
 }
 
-/* Actions always on the right */
-.pending-row-actions {
-    justify-self: end;
-    display: flex;
-    gap: 4px;
-    margin-left: 0;
-}
-
-/* Larger checkbox */
-.pending-checkbox-lg {
-    width: 22px;
-    height: 22px;
-    accent-color: #7B1684;
-    margin-right: 8px;
-}
-
-/* Badge icons */
-.pending-badge-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 6px;
-    vertical-align: middle;
-}
-
-/* Faculty badge */
 .pending-faculty-badge {
-    background: rgba(140, 13, 171, 0.20);
-    color: #7B1684;
-    border-radius: 8px;
-    padding: 6px 18px;
-    font-size: 15px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F3D1F7;
+  color: #7B1684;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 6px 18px;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
 }
 
-/* Department badge */
+.pending-faculty-badge i {
+  display: none;
+}
+
+.pending-faculty-badge::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('../assets/iconsax-building-5.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 6px;
+  vertical-align: middle;
+  /* Ensure image is always visible */
+  background-color: transparent;
+  /* Fix for some browsers */
+}
+
 .pending-department-badge {
-    background: #fff;
-    color: #7B1684;
-    border-radius: 8px;
-    padding: 6px 18px;
-    font-size: 15px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid #a1a1a1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  background: #fff;
+  color: gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid  gray;
+  padding: 6px 18px;
+  margin-right: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
 }
 
-/* Pagination box at bottom right */
-.pending-requests-pagination-box {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 100%;
-    margin-top: 16px;
-    margin-bottom: 0;
-    
+.pending-department-badge i {
+  display: none;
 }
 
-/* Pagination container styles */
-.pending-requests-pagination {
-    display: flex;
-    align-items: center;
-    gap: 0px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
-    padding: 6px 10px;
-    margin-right: 10px;
+.pending-department-badge::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('../assets/iconsax-building-4.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 6px;
+  vertical-align: middle;
+  background-color: transparent;
 }
 
-/* Pagination button styles */
+/* ...existing code... */
+
+.pending-request-row .pending-approve-btn {
+  border-radius: 8px;
+  background: var(--primary-700, #7B1584);
+  color: var(--slate-50, #F8FAFC);
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
+  padding: 6px 24px;
+  min-width: 100px;
+  max-width: 120px;
+  margin-right: 8px;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04), 0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+  transition: background 0.15s, color 0.15s;
+}
+
+.pending-request-row .pending-approve-btn:hover {
+  background: #5A0F61;
+}
+
+.pending-request-row .pending-reject-btn {
+  border-radius: 8px;
+  border: 1px solid var(--slate-500, #64748B);
+  background: transparent;
+  color: var(--slate-500, #64748B);
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
+  padding: 6px 24px;
+  min-width: 100px;
+  max-width: 120px;
+  margin-right: 8px ;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.pending-request-row .pending-reject-btn:hover {
+  background: #f1f5f9;
+  color: #7B1584;
+  border-color: #7B1584;
+}
+
+.pending-request-row .pending-reject-btn:hover {
+  background: #f1f5f9;
+  color: #7B1584;
+  border-color: #7B1584;
+}
+
+/* Faculty dropdown specific styles */
+#faculty-dropdown.gender-dropdown-list {
+  max-width: 220px;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Pagination Styling */
+.pending-pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  margin: 24px 24px 0 auto;
+  padding: 4px 12px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(80, 14, 88, 0.06);
+  max-width: fit-content;
+}
+
 .pending-page-btn {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 0 6px;
-    font-size: 16px;
-    font-family: 'Rubik', Arial, sans-serif;
-    font-weight: 700;
-    color: var(--primary-600, #A41BB1);
-    letter-spacing: 0.1px;
-    line-height: 100%;
-    cursor: pointer;
-    position: relative;
-    transition: color 0.2s;
-    outline: none;
-    box-shadow: none;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  border: none;
+  background: #fff;
+  color: #A020B6;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  outline: none;
+  cursor: pointer;
+  margin: 0 1px;
+  position: relative;
+  box-shadow: none;
 }
 
-/* Active page: purple dot under number, not for arrows */
 .pending-page-btn.active {
-    color: var(--primary-600, #A41BB1);
-}
-.pending-page-btn.active:not([data-page="left"]):not([data-page="right"])::after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 50%;
-    bottom: -1px;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--primary-600, #A41BB1);
+  background: #fff;
+  color: #A020B6;
+  font-weight: 700;
 }
 
-/* Arrow buttons: use images instead of text */
-.pending-page-btn[data-page="left"],
-.pending-page-btn[data-page="right"] {
-    padding: 0 6px;
-    width: 32px;
-    height: 32px;
-    background: transparent;
-    box-shadow: none;
-}
-.pending-page-btn[data-page="left"]::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background: url('../assets/left-page.png') no-repeat center center;
-    background-size: contain;
-}
-.pending-page-btn[data-page="right"]::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background: url('../assets/right-page.png') no-repeat center center;
-    background-size: contain;
+.pending-page-btn.active:not([data-page="<"]):not([data-page=">"])::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #A020B6;
 }
 
-/* Remove default button outline */
 .pending-page-btn:focus {
-    outline: none;
-    box-shadow: none;
+  outline: none;
+  box-shadow: 0 0 0 2px #A020B633;
 }
 
-/* Responsive: filters and table */
-@media (max-width: 1500px) {
-    .um-filters-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-    .um-filters-group {
-        flex-direction: column;
-        margin-left: 0;
-        gap: 12px;
-    }
-    .um-filter-search,
-    .um-filter-btn {
-        width: 100%;
-        min-width: 0;
-    }
-    .um-filters-section {
-        padding: 16px 12px;
-    }
-    .um-filter-dropdown {
-        width: 100%;
-        min-width: 0;
-    }
-    .um-filter-input {
-        width: 100%;
-    }
-    .um-filter-search {
-        height: 48px;
-    }
-
-    /* Pending Requests Table: horizontal scroll */
-    .pending-requests-list {
-        overflow-x: auto;
-        width: 100%;
-        padding: 0 16px; /* further increase horizontal padding for mobile */
-    }
-    .pending-request-row {
-        min-width: 700px;
-        writing-mode: initial;
-        padding: 20px 16px; /* increase padding for mobile */
-        
-    }
-
-    .pending-user-name {
-        padding-right: 200px;
-    }
-    
-    .pending-user-email{
-        padding-right: 200px;
-    }
-    .pending-user-phone{
-        padding-right: 100px;
-    }
-    .pending-faculty-badge{
-        margin-left: 20px ; 
-    }
-    .pending-department-badge{
-        margin-left: 170px ;
-    }
-    .pending-approve-btn{
-        margin-left: 450px;
-        
-    }
-    .pending-reject-btn{
-        margin-right: 20px;
-        margin-left: 20px;
-
-    }
-    .pending-requests-pagination-box {
-        justify-content: center;
-        margin-top: 12px;
-    }
-    .pending-requests-pagination {
-        padding: 8px 16px;
-        gap: 20px;
-    }
-    
-   
-
-}    
-
-/* Scrollable wrapper for pending requests */
-.pending-requests-scroll-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+/* Results row separator */
+.pending-request-separator {
+  height: 1px;
+  background: #E2E8F0;
+  margin: 0 0;
+  border: none;
+  width: 100%;
+  display: block;
 }
 
-/* Table styles */
-.pending-requests-table {
-    min-width: 900px; /* or 700px, match your column needs */
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+#pending-select-all.pending-checkbox {
+  width: 18px;
+  height: 18px;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  accent-color: #7B1684;
 }
 
-/* Remove overflow-x from .pending-requests-header if present */
+/* Responsive: Filters in column on small screens */
+@media (max-width: 900px) {
+  .um-filters-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .um-filters-group {
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 0;
+  }
+}
+
