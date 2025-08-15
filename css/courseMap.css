@@ -31,7 +31,6 @@ display:flex;
 }
 #add:hover{
   border-radius: 99999px;
-    background-color: #fcf8fc82;
 }
 #f-header{
     display: flex;
