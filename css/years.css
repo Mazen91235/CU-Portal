@@ -1,3 +1,7 @@
+body{
+    background: var(--slate-50, #F8FAFC) !important;
+}
+
 .um-title-section {
     background: linear-gradient(90deg, #520E58 0%, #7B1684 100%);
     padding: 32px 32px 24px 32px;
@@ -50,6 +54,9 @@
     align-items: center;
     position: relative;
     margin-right: 32px; /* space between filter and right edge */
+    width: 50%;
+    min-width: 50%;
+    max-width: 50%;
 }
 .filter-btn {
     background: #fff;
@@ -62,12 +69,13 @@
     transition: background 0.2s, color 0.2s;
     position: relative;
     padding: 8px 48px 8px 40px; /* more right padding for arrow, less left for icon */
-    /* Add background image for building icon */
     background-image: url('../assets/building.png');
     background-repeat: no-repeat;
-    background-size: 20px 20px; /* smaller icon */
+    background-size: 20px 20px;
     background-position: 14px center;
-    min-width: 220px;
+    min-width: 50%;
+    max-width: 50%;
+    width: 50%;
 }
 .filter-btn:focus {
     outline: none;
@@ -88,25 +96,30 @@
     transform: rotate(180deg);
 }
 .filter-dropdown-menu {
-    min-width: 180px;
+    min-width: 50%;
+    max-width: 50%;
+    width: 50%;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
     margin-top: 8px;
     background: #fff;
     color: #374151;
-    font-size: 20px; /* increased by 2px */
+    font-size: 20px;
     padding: 0;
-    max-height: 240px; /* 5 items * ~48px/item */
+    max-height: 240px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 .filter-dropdown-menu .dropdown-item {
-    padding: 4px 12px;
+    
     color: #7B1684;
     font-weight: 500;
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
     border-bottom: 1px solid #F1F5F9;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
 }
 .filter-dropdown-menu .dropdown-item:last-child {
     border-bottom: none;
@@ -118,11 +131,14 @@
 .filter-dropdown-menu .dropdown-item.active {
     background: #E6D6F3;
     color: #7B1684;
+   
+    border-radius: 6px;
+    display: block;
 }
 
 /* Cards Section */
 .year-card {
-    background: #fff;
+    background: #fff !important;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
     padding: 32px 18px 18px 18px;

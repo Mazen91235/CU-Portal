@@ -573,6 +573,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-right: 0;
+    }
     .um-info-cards-row {
         flex-direction: column;
         gap: 16px;
@@ -633,7 +638,7 @@
         align-items: center !important;
     }
     .um-info-card {
-        width: 90%;
+        width: 97%;
         max-width: 100%;
         min-width: 0;
         flex-direction: row;

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Filter Dropdown</title>
+  <style>
+    .custom-filter-container {
+      position: relative;
+      width: 320px;
+      margin: 80px auto;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #fff; /* white background */
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      height: 48px;
+      cursor: pointer;
+      padding: 0 12px 0 0;
+      min-width: 220px;
+      /* Remove box-shadow for flat look */
+      position: relative;
+      z-index: 2;
+      transition: border-color 0.2s;
+    }
+    .custom-filter:hover, .custom-filter.open {
+      border-color: #7B1684;
+    }
+    .custom-filter-icon {
+      width: 24px;
+      height: 24px;
+      margin-left: 16px;
+      margin-right: 10px;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url('./assets/table.svg');
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex-shrink: 0;
+      filter: grayscale(1) brightness(0.7);
+    }
+    .custom-filter-label-value {
+      display: flex;
+      align-items: center;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: left;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-filter-arrow {
+      margin-left: 12px;
+      margin-right: 4px;
+      transition: transform 0.2s;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .custom-filter-arrow img {
+      width: 20px;
+      height: 20px;
+      display: block;
+      filter: grayscale(1) brightness(0.7);
+    }
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 10;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 16px;
+    }
+    .custom-filter.open + .custom-dropdown-list {
+      display: block;
+    }
+    .custom-dropdown-list li {
+      padding: 14px 22px;
+      cursor: pointer;
+      color: #374151;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="custom-filter-container">
+    <div class="custom-filter" id="customFilter">
+      <div class="custom-filter-icon"></div>
+      <div class="custom-filter-label-value">
+        <span class="custom-filter-label">Faculty Name</span>
+      </div>
+      <span class="custom-filter-arrow">
+        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
+      </span>
+    </div>
+    <ul class="custom-dropdown-list" id="customDropdown">
+      <li class="active">All Faculties</li>
+      <li>Engineering</li>
+      <li>Science</li>
+      <li>Business</li>
+      <li>Medicine</li>
+      <li>Pharmacy</li>
+      <li>Law</li>
+    </ul>
+  </div>
+  <!-- Add scrollable content -->
+  <div style="height: 1200px; background: linear-gradient(to bottom, #fff 0%, #f3e8ff 100%);">
+    <div style="padding: 40px; color: #7B1684; font-size: 22px;">
+      Scroll down to test the dropdown anchoring.<br>
+      <br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque. 
+      <br><br>
+      <!-- Repeat for more scroll -->
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</p>
+    </div>
+  </div>
+  <script>
+    const filter = document.getElementById('customFilter');
+    const dropdown = document.getElementById('customDropdown');
+    // Toggle dropdown
+    filter.addEventListener('click', function(e) {
+      filter.classList.toggle('open');
+      e.stopPropagation();
+    });
+    // Select value
+    dropdown.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', function(e) {
+        dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+        li.classList.add('active');
+        filter.classList.remove('open');
+        e.stopPropagation();
+      });
+    });
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+      filter.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
+    // No extra JS needed for scroll anchoring
+  </script>
+</body>
+</html>

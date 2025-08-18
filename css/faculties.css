@@ -16,6 +16,70 @@ body {
     font-family: 'Poppins', Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
+.um-title-section {
+    background: linear-gradient(90deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px;
+    border-radius: 8px;
+    margin: 32px 18px 18px 24px;
+    text-align: left;
+    min-height: 110px;
+}
+.um-title {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.96px;
+    margin-bottom: 8px;
+}
+.um-subtitle {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.add-years-btn {
+    background: #fff;
+    color: #7B1684;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 18px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    transition: background 0.2s, color 0.2s;
+    width: 132px;
+    height: 52px;
+    min-width: 132px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.add-years-btn:hover {
+    background: #7B1684;
+    color: #fff;
+}
+
+.add-years-btn-desktop {
+    display: flex;
+}
+
+.add-years-btn-mobile {
+    display: none;
+    margin-top: 18px;
+    align-self: flex-start;
+}
+
+@media (max-width: 756px) {
+    .add-years-btn-desktop {
+        display: none !important;
+    }
+    .add-years-btn-mobile {
+        display: flex !important;
+    }
+}
 
 /* Container spacing */
 .faculties-container {
