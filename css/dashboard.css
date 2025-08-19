@@ -474,32 +474,11 @@ td.tTask{
   background-color: #fff;
 }
 
-.emoji-tag.care {
-  background-color: #EFF6FF;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 20px;
-  display: inline-block;
-  line-height: 1;
-}
-.emoji-tag.compt {
-  background-color: #F0FDF4;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 20px;
-  display: inline-block;
-  line-height: 1;
-}
-.emoji-tag.trav {
-  background-color: #FFF7ED;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 20px;
-  display: inline-block;
-  line-height: 1;
-}
+
 .event-data{
-margin-left: 45px;}
+  width: 100%!important;
+  justify-content: space-around!important;
+}
 #event-location {
   white-space: nowrap;
 }
@@ -551,6 +530,9 @@ margin-left: 45px;}
 }
 .btn-purple:hover {
   background-color: #3e0846;
+  transform: scale(1.05);
+    color: white;
+
 }
 .study-tracker {
   max-width: 430px;
@@ -649,6 +631,8 @@ max-width: 430px;
   padding: 0 !important;
   border-radius: 8px;
   z-index: 1050;
+    overflow: hidden!important;
+
 
 }
 
@@ -657,6 +641,7 @@ max-width: 430px;
   margin: 0 !important;  
   font-size: 14px;        
   border-bottom: 1px solid #eee; 
+
 }
 
 .dropdown-item:last-child {
@@ -705,3 +690,118 @@ margin-left: -15px;
       width: 300px !important;
     }
   }
+   @media (min-width: 768px) and (max-width: 1050px) {
+            #calendar-main {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .calendar-title,
+            .calendar-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .calendar-card {
+                max-width: 100%;
+            }
+
+            .event-details-card.card,
+            .card.calendar-card {
+                padding: 2rem 1rem;
+            }
+             .calendar-day-btn {
+        width: 44px;
+        height: 36px;
+        font-size: 0.85rem;
+        border-radius: 7px;
+    }
+    .calendar-day-number{
+        font-size: 18px !important;
+    }
+        }
+        @media (max-width: 400px) {
+    #calendar-main {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        padding-left: 1px!important;
+        padding-right: 1px;
+    }
+    .calendar-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.3rem;
+    }
+    .calendar-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+    .calendar-card {
+        padding: 5px !important;
+        border-radius: 10px !important;
+        box-shadow: 0px 2px 6px -4px rgba(0,0,0,0.08), 0px 4px 8px -3px rgba(0,0,0,0.08) !important;
+    }
+    .calendar-section-wrapper {
+        min-height: 280px;
+    }
+    .calendar-table th, .calendar-table td {
+        font-size: 0.60rem;
+        padding: 0.03rem;
+    }
+    .calendar-day-btn {
+        width: 44px;
+        height: 36px;
+        font-size: 0.65rem;
+        border-radius: 7px;
+    }
+    .calendar-day-number{
+        font-size: 10px !important;
+    }
+    .calendar-day-btn.selected .calendar-day-number {
+    font-size: 12px !important;
+    font-weight: 200;
+    width: 100%;
+    
+}
+    .calendar-day-btn.selected 
+    .calendar-day-btn  {
+        font-size: 0.3rem!important;
+        font-weight: 200!important;
+    }
+    .calendar-day-btn .calendar-day-dots {
+        bottom: 2px;
+        min-height: 10px;
+        gap: 1px;
+    }
+    .event-dot {
+        width: 5px;
+        height: 5px;
+    }
+    .event-details-card,
+    .event-detail_card {
+        padding: 10px !important;
+        border-radius: 10px !important;
+        margin-bottom: 16px;
+    }
+    .details-img {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    .badge-event,
+    .badge-assignment,
+    .badge-active,
+    .badge-exam,
+    .badge-due {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        height: 18px;
+    }
+    .d-flex.gap-4 {
+        gap: 10px !important;
+        font-size: 0.85rem;
+    }
+    .btn-view {
+        font-size: 0.85rem;
+        margin-top: 32px !important; /* Increased space above button */
+        border-radius: 7px;
+        gap: 2px;
+    }
+}

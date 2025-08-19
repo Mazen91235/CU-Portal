@@ -50,6 +50,11 @@ background-color: #FFFFFF;}
       color: #626484;
       font-size: 16px;
     }
+    .quick-cards {
+  display: flex;
+  flex-wrap: wrap;      
+  gap: 20px;            
+}
     .quick-card {
       background: #fff;
       border-radius: 12px;
@@ -57,6 +62,8 @@ background-color: #FFFFFF;}
       text-align: center;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
       transition: all 0.3s ease-in-out;
+width: 310px;         
+  flex: 0 0 auto;     
     }
     .quick-card h4 {
       font-size: 45px;
@@ -73,7 +80,7 @@ background-color: #FFFFFF;}
       margin-top: 10px;
      width: 100%;
      max-width: 180px;  
-      height: 100%;
+     padding: 10px;
      max-height: 180px;  
      font-size: 14px
     }

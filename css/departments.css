@@ -28,8 +28,7 @@ border-radius: 6px;
 
 }
 #add:hover{
-  border-radius: 99999px;
-}
+background-color: #fff5f5;}
 #f-header{
     display: flex;
   padding-right: 30px;
@@ -57,10 +56,29 @@ select{
     height: 50px;
     border-radius: 6px;
     padding-left: 10px;
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px, rgba(0, 0, 0, 0.06) 0px 1px 2px;
+     border: var(--bs-border-width) solid var(--bs-border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
   
+.custom-input-group {
+  border-radius: 6px;
+  height: 50px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-input-group:focus-within {
+  border-color: #6f42c1; 
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+.form-select:focus{
+  border-color: #6f42c1; 
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+.custom-input-group .form-control:focus {
+  box-shadow: none;
+  outline: none;
+}
 
 
   .form-select {

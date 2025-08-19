@@ -17,7 +17,9 @@ background-color: #FFFFFF;}
 #content-wrapper.sidebar-hidden {
   margin-left: -20px !important;
 }
-
+#term-buttons{
+margin-left: 50px; margin-right: 50px;
+}
 #header{
   height: 140px;
   width: 100%;
@@ -154,6 +156,10 @@ align-items: end;}
   .bo{
     width: 30px;
   }
+  #term-buttons{
+margin-left: 5px!important;
+ margin-right: 5px!important;
+}
 }
  @media (max-width: 420px) {
   #r-header p{
@@ -173,4 +179,8 @@ font-size: 16px;
   .bo{
     width:25px;
   }
+  #term-buttons{
+margin-left: 5px!important;
+ margin-right: 5px!important;
+}
  }

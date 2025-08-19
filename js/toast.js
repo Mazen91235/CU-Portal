@@ -53,7 +53,7 @@ toast.style.animation = "fadeInto 0.5s ease forwards";
                         window.location.href = redirectUrl;
                     }
   }, 500); 
-}, 2500);
+}, 1000);
 }
 function hideToast(type) {
     const toast = document.getElementById(`toast-${type}`);
