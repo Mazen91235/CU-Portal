@@ -14,6 +14,118 @@
     <link rel="stylesheet" href="./components/sidebar.html">
     <link rel="stylesheet" href="./components/toasts.html">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+    .custom-filter-container {
+      position: relative;
+      width: 220px;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin-right: 16px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      height: 48px;
+      cursor: pointer;
+      padding: 0 16px 0 0;
+      min-width: 180px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      position: relative;
+      z-index: 999;
+    }
+    .custom-filter-label-value {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30px;
+      margin-top: 4px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 13px; /* decreased font size */
+      font-weight: 400;
+      margin-bottom: 0.5px;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+    .custom-filter-value {
+      color: #22223B;
+      font-size: 13px; /* decreased font size */
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .custom-filter-arrow {
+      margin-left: 16px;
+      margin-right: 8px;
+      transition: transform 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+    /* Fix: prevent dropdown from being clipped by parent section */
+    .um-filters-section {
+      overflow: visible !important;
+    }
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 99999;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+      /* Add this to ensure dropdown is rendered above other elements */
+      /* No change needed here for clipping, just ensure parent is not overflow:hidden */
+    }
+    .custom-filter.open + .custom-dropdown-list {
+      display: block;
+    }
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 0; /* Remove left/right padding */
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+      padding-left: 22px; /* Only left padding for text alignment */
+    }
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+      /* Ensure full width highlight */
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+    </style>
 </head>
 <body style="background-color: rgba(248, 250, 252, 1);">
 <div id="sidebar-container"></div>
@@ -38,51 +150,74 @@
                 </div>
                 <!-- Filters Wrapper -->
                 <div class="um-filters-group">
-                    <!-- Faculty Dropdown -->
-                    <div id="faculty-select-group" class="um-filter-dropdown">
-                      <input type="text" class="form-control um-filter-input faculty-bg"
-                        id="faculty_input" name="faculty_input"
-                        placeholder="Faculty Name" readonly>
-                      <ul id="faculty-dropdown" class="gender-dropdown-list">
-                        <li data-value=""><span>All Faculties</span></li>
-                        <!-- Faculty names will be injected here -->
+                    <!-- Custom Faculty Dropdown -->
+                    <div class="custom-filter-container">
+                      <div class="custom-filter" id="customFacultyFilter">
+                        <div class="custom-filter-label-value">
+                          <span class="custom-filter-label">Faculty</span>
+                          <span class="custom-filter-value" id="customFacultyValue">All Faculties</span>
+                        </div>
+                        <span class="custom-filter-arrow">
+                          <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                            <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <ul class="custom-dropdown-list" id="customFacultyDropdown">
+                        <li class="active" data-value="">All Faculties</li>
+                        <li data-value="engineering">Engineering</li>
+                        <li data-value="science">Science</li>
+                        <li data-value="business">Business</li>
+                        <li data-value="medicine">Medicine</li>
+                        <li data-value="pharmacy">Pharmacy</li>
+                        <li data-value="law">Law</li>
                       </ul>
-                      <input type="hidden" name="faculty" id="faculty_hidden">
-                      <span id="faculty-arrow" class="um-filter-arrow">
-                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
-                      </span>
+                      <input type="hidden" name="faculty" id="faculty_hidden" value="">
                     </div>
-                    <!-- Department Dropdown -->
-                    <div id="department-select-group" class="um-filter-dropdown">
-                      <input type="text" class="form-control um-filter-input department-bg"
-                        id="department_input" name="department_input"
-                        placeholder="Department" readonly>
-                      <ul id="department-dropdown" class="gender-dropdown-list">
-                        <li data-value=""><span>All Departments</span></li>
-                        <li data-value="cs"><span>Computer Science</span></li>
-                        <li data-value="math"><span>Mathematics</span></li>
-                        <li data-value="phy"><span>Physics</span></li>
+                    <!-- Custom Department Dropdown -->
+                    <div class="custom-filter-container">
+                      <div class="custom-filter" id="customDepartmentFilter">
+                        <div class="custom-filter-label-value">
+                          <span class="custom-filter-label">Department</span>
+                          <span class="custom-filter-value" id="customDepartmentValue">All Departments</span>
+                        </div>
+                        <span class="custom-filter-arrow">
+                          <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                            <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <ul class="custom-dropdown-list" id="customDepartmentDropdown">
+                        <li class="active" data-value="">All Departments</li>
+                        <li data-value="cs">Computer </li>
+                        <li data-value="math">Mathematics</li>
+                        <li data-value="phy">Physics</li>
+                        <li data-value="surgery">Surgery</li>
+                        <li data-value="clinical">Clinical</li>
+                        <li data-value="electrical">Electrical</li>
                       </ul>
-                      <input type="hidden" name="department" id="department_hidden">
-                      <span id="department-arrow" class="um-filter-arrow">
-                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
-                      </span>
+                      <input type="hidden" name="department" id="department_hidden" value="">
                     </div>
-                    <!-- Academic Year Dropdown -->
-                    <div id="year-select-group" class="um-filter-dropdown">
-                      <input type="text" class="form-control um-filter-input year-bg"
-                        id="year_input" name="year_input"
-                        placeholder="Academic Year" readonly>
-                      <ul id="year-dropdown" class="gender-dropdown-list">
-                        <li data-value=""><span>All Years</span></li>
-                        <li data-value="2021"><span>2021/2022</span></li>
-                        <li data-value="2022"><span>2022/2023</span></li>
-                        <li data-value="2023"><span>2023/2024</span></li>
+                    <!-- Custom Academic Year Dropdown -->
+                    <div class="custom-filter-container">
+                      <div class="custom-filter" id="customYearFilter">
+                        <div class="custom-filter-label-value">
+                          <span class="custom-filter-label">Academic Year</span>
+                          <span class="custom-filter-value" id="customYearValue">All Years</span>
+                        </div>
+                        <span class="custom-filter-arrow">
+                          <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                            <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <ul class="custom-dropdown-list" id="customYearDropdown">
+                        <li class="active" data-value="">All Years</li>
+                        <li data-value="2021">2021/2022</li>
+                        <li data-value="2022">2022/2023</li>
+                        <li data-value="2023">2023/2024</li>
                       </ul>
-                      <input type="hidden" name="year" id="year_hidden">
-                      <span id="year-arrow" class="um-filter-arrow">
-                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
-                      </span>
+                      <input type="hidden" name="year" id="year_hidden" value="">
                     </div>
                 </div>
             </div>
@@ -192,15 +327,15 @@
     </div>
     <script src="./js/loading.js"></script>
     <script>
-      // Faculty Dropdown: fetch names from faculties.html
+      // Fetch faculty names from faculties.html and populate the custom faculty dropdown
       fetch('./faculties.html')
         .then(response => response.text())
         .then(html => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
           const facultyCards = doc.querySelectorAll('.faculty-name');
-          const facultyDropdown = document.getElementById('faculty-dropdown');
-          // Keep "All Faculties" as the first item
+          const facultyDropdown = document.getElementById('customFacultyDropdown');
+          // Remove all except the first "All Faculties"
           while (facultyDropdown.children.length > 1) {
             facultyDropdown.removeChild(facultyDropdown.lastChild);
           }
@@ -209,101 +344,50 @@
             if (name.toLowerCase() !== "all faculties") {
               const li = document.createElement('li');
               li.setAttribute('data-value', name.toLowerCase());
-              li.innerHTML = `<span>${name}</span>`;
+              li.textContent = name;
               facultyDropdown.appendChild(li);
             }
           });
-          setupDropdown('faculty_input', 'faculty-dropdown', 'faculty-select-group', 'faculty_hidden', 'faculty-arrow');
+          // Re-setup dropdown events after dynamic population
+          setupCustomDropdown('customFacultyFilter', 'customFacultyDropdown', 'customFacultyValue', 'faculty_hidden');
         });
 
-      // Generic dropdown logic for all filters
-      function setupDropdown(inputId, dropdownId, groupId, hiddenId, arrowId) {
-        const input = document.getElementById(inputId);
+      // Setup custom dropdowns and filtering
+      function setupCustomDropdown(filterId, dropdownId, valueId, hiddenId) {
+        const filter = document.getElementById(filterId);
         const dropdown = document.getElementById(dropdownId);
-        const group = document.getElementById(groupId);
-        const hidden = document.getElementById(hiddenId);
-        const arrow = document.getElementById(arrowId).querySelector('img');
+        const valueSpan = document.getElementById(valueId);
+        const hiddenInput = document.getElementById(hiddenId);
 
-        input.addEventListener('click', function() {
-          if (!dropdown.classList.contains('open')) {
-            const rect = input.getBoundingClientRect();
-            dropdown.style.setProperty('--dropdown-top', `${rect.bottom}px`);
-            dropdown.style.setProperty('--dropdown-left', `${rect.left}px`);
-            dropdown.style.setProperty('--dropdown-width', `${rect.width}px`);
-          }
-          dropdown.classList.toggle('open');
-          arrow.style.transform = dropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        });
+        // Remove previous listeners to avoid duplicates
+        const newDropdown = dropdown.cloneNode(true);
+        dropdown.parentNode.replaceChild(newDropdown, dropdown);
 
-        // Always re-bind click events to li items (for dynamic dropdowns)
-        dropdown.querySelectorAll('li').forEach(li => {
-          li.onclick = function() {
-            input.value = li.textContent;
-            hidden.value = li.getAttribute('data-value');
-            // Trigger change event for filterTable
-            hidden.dispatchEvent(new Event('change'));
-            dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+        filter.onclick = function(e) {
+          filter.classList.toggle('open');
+          e.stopPropagation();
+        };
+        newDropdown.querySelectorAll('li').forEach(li => {
+          li.onclick = function(e) {
+            newDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
             li.classList.add('active');
-            dropdown.classList.remove('open');
-            arrow.style.transform = 'rotate(0deg)';
+            valueSpan.textContent = li.textContent;
+            hiddenInput.value = li.getAttribute('data-value');
+            filter.classList.remove('open');
+            // Trigger change for filtering
+            hiddenInput.dispatchEvent(new Event('change'));
+            e.stopPropagation();
           };
         });
-
-        document.addEventListener('mousedown', function(e) {
-          if (!group.contains(e.target)) {
-            dropdown.classList.remove('open');
-            arrow.style.transform = 'rotate(0deg)';
-          }
-        });
+        document.addEventListener('click', function closeDropdown(e) {
+          filter.classList.remove('open');
+        }, { once: true });
       }
+      setupCustomDropdown('customFacultyFilter', 'customFacultyDropdown', 'customFacultyValue', 'faculty_hidden');
+      setupCustomDropdown('customDepartmentFilter', 'customDepartmentDropdown', 'customDepartmentValue', 'department_hidden');
+      setupCustomDropdown('customYearFilter', 'customYearDropdown', 'customYearValue', 'year_hidden');
 
-      setupDropdown('department_input', 'department-dropdown', 'department-select-group', 'department_hidden', 'department-arrow');
-      setupDropdown('year_input', 'year-dropdown', 'year-select-group', 'year_hidden', 'year-arrow');
-
-      // Filter table rows based on search and dropdown filters
-      function filterTable() {
-        const searchValue = document.querySelector('.um-filter-search input').value.trim().toLowerCase();
-        const facultyValue = document.getElementById('faculty_hidden').value;
-        const departmentValue = document.getElementById('department_hidden').value;
-        const yearValue = document.getElementById('year_hidden').value;
-
-        document.querySelectorAll('.um-table tbody tr').forEach(row => {
-          let show = true;
-          const cells = row.querySelectorAll('td');
-          const name = cells[0]?.textContent.toLowerCase() || '';
-          const phone = cells[1]?.textContent.toLowerCase() || '';
-          const email = cells[2]?.textContent.toLowerCase() || '';
-          const faculty = cells[3]?.textContent.toLowerCase() || '';
-          const department = cells[4]?.textContent.toLowerCase() || '';
-          // For year, add logic if you have a year column
-
-          // Search filter
-          if (
-            searchValue &&
-            !(
-              name.includes(searchValue) ||
-              phone.includes(searchValue) ||
-              email.includes(searchValue)
-            )
-          ) {
-            show = false;
-          }
-          // Faculty filter
-          if (facultyValue && facultyValue !== "" && faculty !== facultyValue) {
-            show = false;
-          }
-          // Department filter
-          if (departmentValue && departmentValue !== "" && department !== departmentValue) {
-            show = false;
-          }
-          // Year filter (if you have year column, add here)
-          // Example: if you add year column, compare yearValue with the cell value
-
-          row.style.display = show ? '' : 'none';
-        });
-      }
-
-      // Filter pending requests table rows based on search and dropdown filters
+      // Filtering logic for pending requests table
       function filterPendingRequests() {
         const searchValue = document.querySelector('.um-filter-search input').value.trim().toLowerCase();
         const facultyValue = document.getElementById('faculty_hidden').value;
@@ -312,13 +396,19 @@
 
         document.querySelectorAll('.pending-request-row').forEach(row => {
           let show = true;
-          // Get cell values
           const name = row.querySelector('.pending-user-name')?.textContent.toLowerCase() || '';
           const email = row.querySelector('.pending-user-email')?.textContent.toLowerCase() || '';
           const phone = row.querySelector('.pending-user-phone')?.textContent.toLowerCase() || '';
           const faculty = row.querySelector('.pending-faculty-badge')?.textContent.toLowerCase() || '';
           const department = row.querySelector('.pending-department-badge')?.textContent.toLowerCase() || '';
-          // Search filter
+
+          // Helper: check if all words in filterValue exist in targetText (in any order)
+          function wordsMatch(filterValue, targetText) {
+            if (!filterValue) return true;
+            return filterValue.split(/\s+/).every(word => targetText.includes(word));
+          }
+
+          // Search input: search in name, email, phone (substring match)
           if (
             searchValue &&
             !(
@@ -329,47 +419,18 @@
           ) {
             show = false;
           }
-          // Faculty filter
-          if (facultyValue && facultyValue !== "" && !faculty.includes(facultyValue)) {
+          // Faculty filter: search by words in faculty badge
+          if (facultyValue && facultyValue !== "" && !wordsMatch(facultyValue, faculty)) {
             show = false;
           }
-          // Department filter
-          if (departmentValue && departmentValue !== "" && !department.includes(departmentValue)) {
+          // Department filter: search by words in department badge
+          if (departmentValue && departmentValue !== "" && !wordsMatch(departmentValue, department)) {
             show = false;
           }
-          // Year filter (add if you have a year field)
-
+          // Year filter (if you have a year field, add logic here)
           row.style.display = show ? '' : 'none';
         });
       }
-
-      // Select all checkboxes (check or uncheck all, regardless of current state)
-      document.getElementById('pending-select-all').addEventListener('change', function(e) {
-        const checked = e.target.checked;
-        document.querySelectorAll('.pending-requests-list .pending-checkbox').forEach(cb => {
-          cb.checked = checked;
-        });
-      });
-
-      // When any row checkbox is changed, update the select-all checkbox state
-      function updateSelectAllCheckbox() {
-        const allCheckboxes = Array.from(document.querySelectorAll('.pending-requests-list .pending-checkbox'));
-        // Exclude the select-all checkbox itself
-        const rowCheckboxes = allCheckboxes.filter(cb => cb.id !== 'pending-select-all');
-        const allChecked = rowCheckboxes.length > 0 && rowCheckboxes.every(cb => cb.checked);
-        document.getElementById('pending-select-all').checked = allChecked;
-      }
-      document.querySelectorAll('.pending-requests-list .pending-checkbox').forEach(cb => {
-        if (cb.id !== 'pending-select-all') {
-          cb.addEventListener('change', updateSelectAllCheckbox);
-        }
-      });
-
-      // Attach filterTable to filter inputs
-      document.querySelector('.um-filter-search input').addEventListener('input', filterTable);
-      document.getElementById('faculty_hidden').addEventListener('change', filterTable);
-      document.getElementById('department_hidden').addEventListener('change', filterTable);
-      document.getElementById('year_hidden').addEventListener('change', filterTable);
 
       // Attach filterPendingRequests to filter inputs
       document.querySelector('.um-filter-search input').addEventListener('input', filterPendingRequests);
@@ -378,165 +439,6 @@
       document.getElementById('year_hidden').addEventListener('change', filterPendingRequests);
 
       // Initial filter on page load
-      filterTable();
-      filterPendingRequests();
-
-      // Pagination logic for pending requests
-      function showPendingPage(page) {
-        document.querySelectorAll('.pending-request-row').forEach(row => {
-            row.style.display = (row.getAttribute('data-page') == page) ? '' : 'none';
-        });
-        document.querySelectorAll('.pending-page-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.getAttribute('data-page') == page);
-        });
-      }
-
-      document.querySelectorAll('.pending-page-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            let page = btn.getAttribute('data-page');
-            if (page === 'next') {
-                // Find current active page and go to next
-                let activeBtn = document.querySelector('.pending-page-btn.active');
-                let nextBtn = activeBtn.nextElementSibling;
-                if (nextBtn && nextBtn.classList.contains('pending-page-btn')) {
-                    page = nextBtn.getAttribute('data-page');
-                } else {
-                    return;
-                }
-            } else if (page === '<') {
-                // Find current active page and go to previous
-                let activeBtn = document.querySelector('.pending-page-btn.active');
-                let prevBtn = activeBtn.previousElementSibling;
-                if (prevBtn && prevBtn.classList.contains('pending-page-btn')) {
-                    page = prevBtn.getAttribute('data-page');
-                } else {
-                    return;
-                }
-            }
-            showPendingPage(page);
-        });
-      });
-
-      // PAGINATION LOGIC FOR FILTERED RESULTS
-      function paginatePendingRequests() {
-        const rows = Array.from(document.querySelectorAll('.pending-request-row'));
-        // Only visible rows (after filter)
-        const visibleRows = rows.filter(row => row.style.display !== 'none');
-        const perPage = 5;
-        const totalPages = Math.ceil(visibleRows.length / perPage) || 1;
-
-        // Update pagination buttons
-        const pagination = document.querySelector('.pending-pagination-container');
-        if (pagination) {
-          pagination.innerHTML = '';
-          // Prev
-          const prevBtn = document.createElement('button');
-          prevBtn.className = 'pending-page-btn';
-          prevBtn.setAttribute('data-page', '<');
-          prevBtn.innerHTML = '&lt;';
-          pagination.appendChild(prevBtn);
-
-          // Page numbers
-          for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'pending-page-btn' + (i === 1 ? ' active' : '');
-            btn.setAttribute('data-page', i);
-            btn.textContent = i;
-            pagination.appendChild(btn);
-          }
-
-          // Next
-          const nextBtn = document.createElement('button');
-          nextBtn.className = 'pending-page-btn';
-          nextBtn.setAttribute('data-page', '>');
-          nextBtn.innerHTML = '&gt;';
-          pagination.appendChild(nextBtn);
-
-          // Add event listeners
-          pagination.querySelectorAll('.pending-page-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-              let page = btn.getAttribute('data-page');
-              let current = Number(pagination.querySelector('.pending-page-btn.active')?.getAttribute('data-page')) || 1;
-              if (page === '>') {
-                if (current < totalPages) page = current + 1;
-                else return;
-              } else if (page === '<') {
-                if (current > 1) page = current - 1;
-                else return;
-              } else {
-                page = Number(page);
-              }
-              showPendingPage(page, visibleRows, perPage, pagination);
-            });
-          });
-        }
-
-        // Show first page by default
-        showPendingPage(1, visibleRows, perPage, pagination);
-      }
-
-      function showPendingPage(page, visibleRows, perPage, pagination) {
-        page = Number(page);
-        visibleRows.forEach((row, idx) => {
-          row.style.display = (idx >= (page - 1) * perPage && idx < page * perPage) ? '' : 'none';
-          // Also hide/show separator after each row
-          const sep = row.nextElementSibling;
-          if (sep && sep.classList.contains('pending-request-separator')) {
-            sep.style.display = (idx >= (page - 1) * perPage && idx < page * perPage - 1) ? '' : 'none';
-          }
-        });
-        // Update active button
-        if (pagination) {
-          pagination.querySelectorAll('.pending-page-btn').forEach(btn => {
-            btn.classList.toggle('active', Number(btn.getAttribute('data-page')) === page);
-          });
-        }
-      }
-
-      // Modify filterPendingRequests to support pagination
-      function filterPendingRequests() {
-        const searchValue = document.querySelector('.um-filter-search input').value.trim().toLowerCase();
-        const facultyValue = document.getElementById('faculty_hidden').value;
-        const departmentValue = document.getElementById('department_hidden').value;
-        const yearValue = document.getElementById('year_hidden').value;
-
-        document.querySelectorAll('.pending-request-row').forEach(row => {
-          let show = true;
-          const name = row.querySelector('.pending-user-name')?.textContent.toLowerCase() || '';
-          const email = row.querySelector('.pending-user-email')?.textContent.toLowerCase() || '';
-          const phone = row.querySelector('.pending-user-phone')?.textContent.toLowerCase() || '';
-          const faculty = row.querySelector('.pending-faculty-badge')?.textContent.toLowerCase() || '';
-          const department = row.querySelector('.pending-department-badge')?.textContent.toLowerCase() || '';
-          // Search filter
-          if (
-            searchValue &&
-            !(
-              name.includes(searchValue) ||
-              email.includes(searchValue) ||
-              phone.includes(searchValue)
-            )
-          ) {
-            show = false;
-          }
-          if (facultyValue && facultyValue !== "" && !faculty.includes(facultyValue)) {
-            show = false;
-          }
-          if (departmentValue && departmentValue !== "" && !department.includes(departmentValue)) {
-            show = false;
-          }
-          // Year filter (add if you have a year field)
-          row.style.display = show ? '' : 'none';
-        });
-        paginatePendingRequests();
-      }
-
-      // Attach filterPendingRequests to filter inputs
-      document.querySelector('.um-filter-search input').addEventListener('input', filterPendingRequests);
-      document.getElementById('faculty_hidden').addEventListener('change', filterPendingRequests);
-      document.getElementById('department_hidden').addEventListener('change', filterPendingRequests);
-      document.getElementById('year_hidden').addEventListener('change', filterPendingRequests);
-
-      // Initial filter and pagination on page load
       filterPendingRequests();
     </script>
 </body>

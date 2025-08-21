@@ -42,8 +42,10 @@
 .um-info-cards-container {
     background: #fff; /* big card is white */
     border-radius: 8px;
-    padding: 24px;
-    margin: 0 24px 24px 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    width: 100%;
 }
 
 /* Info Cards Row */
@@ -62,7 +64,7 @@
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
     display: flex;
     align-items: flex-start;
-    width: 320px; /* increased width */
+    width: 95%; /* increased width */
     height: 127px;
     padding: 20px 20px;
     gap: 48px;
@@ -576,7 +578,9 @@
     .um-title-section{
         width: 100%;
         margin-left: 0 ;
+        margin-top: 120px;
         margin-right: 0;
+        border-radius:0 ;
     }
     .um-info-cards-row {
         flex-direction: column;

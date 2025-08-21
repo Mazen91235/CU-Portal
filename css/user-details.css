@@ -1299,4 +1299,11 @@ width:90%;
     .user-details-info-table-wrapper {
         padding-left: 16px; /* Ensure space on mobile too */
     }
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-top: 80px;
+        margin-right: 0;
+        border-radius:0 ;
+    }
 }

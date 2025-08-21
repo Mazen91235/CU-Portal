@@ -3,78 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <title>Custom Filter Dropdown</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .custom-filter-container {
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    .filter-bar-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      border: 1px solid #E2E8F0;
+      padding: 18px 18px;
+      margin: 24px auto 0 auto;
+      max-width: 98vw;
+      width: 98vw;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    .filter-bar-search {
+      flex: 1 1 45%;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      background: #F8FAFC;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      height: 56px;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #64748B;
+      margin-right: 0;
       position: relative;
-      width: 320px;
-      margin: 80px auto;
+    }
+    .filter-bar-search i {
+      color: #94A3B8;
+      font-size: 20px;
+      margin-right: 10px;
+      margin-left: 2px;
+    }
+    .filter-bar-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 16px;
+      color: #64748B;
+      height: 100%;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    .filter-bar-filters {
+      flex: 0 0 55%;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .custom-filter-container {
+      width: 220px;
+      min-width: 180px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      background: transparent;
+      box-shadow: none;
+      position: relative;
       font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-filter {
       display: flex;
       align-items: center;
-      background: #fff; /* white background */
+      background: #F8FAFC;
       border: 1px solid #E2E8F0;
       border-radius: 8px;
-      height: 48px;
+      height: 56px;
       cursor: pointer;
-      padding: 0 12px 0 0;
-      min-width: 220px;
-      /* Remove box-shadow for flat look */
-      position: relative;
-      z-index: 2;
-      transition: border-color 0.2s;
-    }
-    .custom-filter:hover, .custom-filter.open {
-      border-color: #7B1684;
-    }
-    .custom-filter-icon {
-      width: 24px;
-      height: 24px;
-      margin-left: 16px;
-      margin-right: 10px;
-      background: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-image: url('./assets/table.svg');
-      background-size: 20px 20px;
-      background-repeat: no-repeat;
-      background-position: center;
-      flex-shrink: 0;
-      filter: grayscale(1) brightness(0.7);
+      padding: 0 16px 0 0;
+      width: 100%;
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-filter-label-value {
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      padding-left: 30px;
       flex: 1 1 0;
       min-width: 0;
+      font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-filter-label {
       color: #64748B;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 2px;
+      text-align: left;
+      letter-spacing: 0.01em;
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    .custom-filter-value {
+      color: #22223B;
       font-size: 16px;
       font-weight: 500;
       text-align: left;
-      letter-spacing: 0.01em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-filter-arrow {
-      margin-left: 12px;
-      margin-right: 4px;
+      margin-left: 16px;
+      margin-right: 8px;
       transition: transform 0.2s;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .custom-filter-arrow img {
-      width: 20px;
-      height: 20px;
-      display: block;
-      filter: grayscale(1) brightness(0.7);
     }
     .custom-filter.open .custom-filter-arrow {
       transform: rotate(180deg);
@@ -96,6 +142,7 @@
       max-height: 220px;
       overflow-y: auto;
       font-size: 16px;
+      font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-filter.open + .custom-dropdown-list {
       display: block;
@@ -106,6 +153,7 @@
       color: #374151;
       transition: background 0.15s, color 0.15s;
       white-space: nowrap;
+      font-family: 'Roboto', Arial, sans-serif;
     }
     .custom-dropdown-list li:hover,
     .custom-dropdown-list li.active {
@@ -113,30 +161,107 @@
       color: #7B1684;
       font-weight: 500;
     }
+    @media (max-width: 1100px) {
+      .filter-bar-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        width: 100%;
+      }
+      .filter-bar-search,
+      .filter-bar-filters {
+        width: 100%;
+        min-width: 0;
+      }
+      .filter-bar-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .custom-filter-container {
+        width: 100%;
+        min-width: 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="custom-filter-container">
-    <div class="custom-filter" id="customFilter">
-      <div class="custom-filter-icon"></div>
-      <div class="custom-filter-label-value">
-        <span class="custom-filter-label">Faculty Name</span>
-      </div>
-      <span class="custom-filter-arrow">
-        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow">
-      </span>
+  <div class="filter-bar-container">
+    <div class="filter-bar-search">
+      <i class="fa fa-search"></i>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by name , email or phone number..."
+      />
     </div>
-    <ul class="custom-dropdown-list" id="customDropdown">
-      <li class="active">All Faculties</li>
-      <li>Engineering</li>
-      <li>Science</li>
-      <li>Business</li>
-      <li>Medicine</li>
-      <li>Pharmacy</li>
-      <li>Law</li>
-    </ul>
+    <div class="filter-bar-filters">
+      <div class="custom-filter-container">
+        <div class="custom-filter" id="customFilter">
+          <div class="custom-filter-label-value">
+            <span class="custom-filter-label">Faculty</span>
+            <span class="custom-filter-value" id="customFilterValue">All Faculties</span>
+          </div>
+          <span class="custom-filter-arrow">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+              <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <ul class="custom-dropdown-list" id="customDropdown">
+          <li class="active">All Faculties</li>
+          <li>Engineering</li>
+          <li>Science</li>
+          <li>Business</li>
+          <li>Medicine</li>
+          <li>Pharmacy</li>
+          <li>Law</li>
+        </ul>
+      </div>
+      <div class="custom-filter-container">
+        <div class="custom-filter" id="customDepartmentFilter">
+          <div class="custom-filter-label-value">
+            <span class="custom-filter-label">Department</span>
+            <span class="custom-filter-value" id="customDepartmentValue">All Departments</span>
+          </div>
+          <span class="custom-filter-arrow">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+              <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <ul class="custom-dropdown-list" id="customDepartmentDropdown">
+          <li class="active">All Departments</li>
+          <li>Computer Science</li>
+          <li>Mathematics</li>
+          <li>Physics</li>
+          <li>Surgery</li>
+          <li>Clinical</li>
+          <li>Electrical</li>
+        </ul>
+      </div>
+      <div class="custom-filter-container">
+        <div class="custom-filter" id="customYearFilter">
+          <div class="custom-filter-label-value">
+            <span class="custom-filter-label">Academic Year</span>
+            <span class="custom-filter-value" id="customYearValue">All Years</span>
+          </div>
+          <span class="custom-filter-arrow">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+              <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <ul class="custom-dropdown-list" id="customYearDropdown">
+          <li class="active">All Years</li>
+          <li>2021/2022</li>
+          <li>2022/2023</li>
+          <li>2023/2024</li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <!-- Add scrollable content -->
+  <!-- ...existing scrollable content... -->
   <div style="height: 1200px; background: linear-gradient(to bottom, #fff 0%, #f3e8ff 100%);">
     <div style="padding: 40px; color: #7B1684; font-size: 22px;">
       Scroll down to test the dropdown anchoring.<br>
@@ -154,30 +279,68 @@
     </div>
   </div>
   <script>
+    // Faculty filter logic
     const filter = document.getElementById('customFilter');
     const dropdown = document.getElementById('customDropdown');
-    // Toggle dropdown
+    const valueSpan = document.getElementById('customFilterValue');
     filter.addEventListener('click', function(e) {
       filter.classList.toggle('open');
       e.stopPropagation();
     });
-    // Select value
     dropdown.querySelectorAll('li').forEach(li => {
       li.addEventListener('click', function(e) {
         dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
         li.classList.add('active');
+        valueSpan.textContent = li.textContent;
         filter.classList.remove('open');
         e.stopPropagation();
       });
     });
-    // Close dropdown when clicking outside
+    // Department filter logic
+    const depFilter = document.getElementById('customDepartmentFilter');
+    const depDropdown = document.getElementById('customDepartmentDropdown');
+    const depValueSpan = document.getElementById('customDepartmentValue');
+    depFilter.addEventListener('click', function(e) {
+      depFilter.classList.toggle('open');
+      e.stopPropagation();
+    });
+    depDropdown.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', function(e) {
+        depDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+        li.classList.add('active');
+        depValueSpan.textContent = li.textContent;
+        depFilter.classList.remove('open');
+        e.stopPropagation();
+      });
+    });
+    // Academic year filter logic
+    const yearFilter = document.getElementById('customYearFilter');
+    const yearDropdown = document.getElementById('customYearDropdown');
+    const yearValueSpan = document.getElementById('customYearValue');
+    yearFilter.addEventListener('click', function(e) {
+      yearFilter.classList.toggle('open');
+      e.stopPropagation();
+    });
+    yearDropdown.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', function(e) {
+        yearDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+        li.classList.add('active');
+        yearValueSpan.textContent = li.textContent;
+        yearFilter.classList.remove('open');
+        e.stopPropagation();
+      });
+    });
+    // Close all dropdowns when clicking outside
     document.addEventListener('click', function() {
       filter.classList.remove('open');
+      depFilter.classList.remove('open');
+      yearFilter.classList.remove('open');
     });
-  </script>
-</body>
-</html>
-    // No extra JS needed for scroll anchoring
+    // Search input logic placeholder (implement as needed)
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      // Implement search logic here if needed
+      // e.target.value contains the search text
+    });
   </script>
 </body>
 </html>

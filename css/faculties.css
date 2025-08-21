@@ -76,6 +76,13 @@ body {
     .add-years-btn-desktop {
         display: none !important;
     }
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-top: 60px;
+        margin-right: 0;
+        border-radius:0 ;
+    }
     .add-years-btn-mobile {
         display: flex !important;
     }
@@ -283,6 +290,7 @@ body {
         justify-content: center; /* Center on mobile */
         gap: 16px;
     }
+    
     .col-lg-4 {
         flex: 0 0 100%;
         max-width: 100%;
