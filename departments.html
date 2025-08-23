@@ -33,8 +33,8 @@
                 </div>
 
                 <div id="f-header" class="d-flex  align-items-center ">
-                    <button id="add" class="  font-semibold px-4 py-2 shadow "> <img src="./assets/iconsax-add.svg"
-                            alt="Add Icon" class="me-2" />
+                    <button id="add" onclick="openModal()" class="  font-semibold px-4 py-2 shadow "> <img
+                            src="./assets/iconsax-add.svg" alt="Add Icon" class="me-2" />
                         Add Department</button>
                 </div>
             </div>
@@ -43,14 +43,14 @@
             <!-- Search and Filters -->
             <div class="row g-2 mb-4 mt-4 justify-content-between align-items-center rounded  pt-2 pb-3 "
                 style=" border: var(--bs-border-width) solid var(--bs-border-color); padding-left: 5px; padding-right: 5px;">
-            <div class="col-md-4" style="margin-right:auto;">
-  <div class="input-group custom-input-group">
-    <span class="input-group-text border-0 bg-white">
-      <i class="fas fa-search"></i>
-    </span>
-    <input type="text" class="form-control border-0" placeholder="Search ...">
-  </div>
-</div>
+                <div class="col-md-4" style="margin-right:auto;">
+                    <div class="input-group custom-input-group">
+                        <span class="input-group-text border-0 bg-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-0" placeholder="Search ...">
+                    </div>
+                </div>
 
 
                 <div class="col-md-3">
@@ -230,7 +230,35 @@
 
 
 
+            <div id="depModal" class="modal-overlay">
 
+                <div class="modal-card">
+                    <h2 class="modal-title">Let’s Add a New Department</h2>
+                    <label for="DepartmentName" class=" text-gray-600  mt-2 text-left">Department Name</label>
+                    <input type="text" class="department-input " placeholder="Name..">
+
+                    <label for="DepartmentCode" class=" text-gray-600  mt-2 text-left">Department Code</label>
+                    <input type="text" class="department-input" placeholder="Code..">
+
+                    <label for="studytype" class="block text-gray-600 mb-2 mt-2">Study Type</label>
+                    <select id="studytype" name="studytype"
+                        class="department-input w-full border border-gray-300 rounded-md p-2 bg-gray-100">
+                        <option selected>Mainstream</option>
+                        <option>Crdit</option>
+
+                    </select>
+
+                    <label for="faculty" class=" text-gray-600 mb-2 mt-2 text-left">Faculty</label>
+                    <select id="faculty" name="faculty"
+                        class="department-input w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-purple-300">
+                        <option disabled selected>Faculty</option>
+                    </select>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-save">Save Department</button>
+                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
 
 
         </div>
@@ -244,7 +272,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="./js/loading.js"></script>
+    <script>
+        function openModal() {
+            document.getElementById("depModal").style.display = "flex";
+        }
 
+        function closeModal() {
+            document.getElementById("depModal").style.display = "none";
+        }
+    </script>
 </body>
 
 </html>

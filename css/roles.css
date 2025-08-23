@@ -49,6 +49,20 @@ background-color: #fff5f5;}
 .search-role::-webkit-input-placeholder { color: #94A3B8; opacity: 1; }
 .search-role:-ms-input-placeholder     { color: #94A3B8; opacity: 1; }
 .search-role::placeholder              { color: #94A3B8; opacity: 1; }
+.custom-input-group {
+  border-radius: 6px;
+  height: 50px;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.custom-input-group:focus-within {
+  border-color: #6f42c1; 
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+.custom-input-group .form-control:focus {
+  box-shadow: none;
+  outline: none;
+}
 .input-group {
     width: 380px;
 }

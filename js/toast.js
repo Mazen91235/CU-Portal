@@ -1,4 +1,7 @@
-  
+   let toastDuration = 2000; // Default duration in milliseconds
+        window.onload = () => {
+            document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
+        }
   const toastReady = new Promise((resolve, reject) => {
   document.addEventListener("DOMContentLoaded", () => {
     fetch("./components/toasts.html")
@@ -35,7 +38,6 @@
             const bar = toast.querySelector(".toast-bar");
             toast.style.animation = "none";
 toast.offsetHeight;
-toast.style.animation = "fadeInto 0.5s ease forwards";
 
 
             // Show the toast
@@ -52,8 +54,8 @@ toast.style.animation = "fadeInto 0.5s ease forwards";
     if (redirectUrl) {
                         window.location.href = redirectUrl;
                     }
-  }, 500); 
-}, 1000);
+  }, 100); 
+}, toastDuration);
 }
 function hideToast(type) {
     const toast = document.getElementById(`toast-${type}`);
@@ -64,7 +66,7 @@ function hideToast(type) {
     setTimeout(() => {
         toast.classList.add("tw-hidden", "hidden");
         toast.classList.remove("fade-out", "block");
-    }, 100); 
+    }, 10); 
 }
 
 
