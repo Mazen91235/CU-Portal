@@ -36,6 +36,37 @@
       box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
       position: relative;
       z-index: 999;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .custom-filter:hover,
+    .custom-filter.open {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+    /* Add violet border to search input container on hover/focus-within */
+    .um-filter-search {
+      transition: box-shadow 0.15s, border-color 0.15s;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      height: 48px;
+    }
+    .um-filter-search:hover,
+    .um-filter-search:focus-within {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+    .um-filter-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      height: 100%;
+      padding-left: 8px;
+      font-size: 15px;
     }
     .custom-filter-label-value {
       display: flex;
@@ -125,6 +156,42 @@
       width: 100% !important;
       box-sizing: border-box;
     }
+
+    /* Responsive filters: column layout for < 1340px */
+@media (max-width: 1340px) {
+  .um-filters-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    width: 100%;
+    display: flex;
+  }
+  .um-filter-search {
+    width: 100% !important;
+    margin-bottom: 16px !important; /* Equal vertical space */
+    height: 48px !important;
+    min-height: 48px !important;
+    box-sizing: border-box;
+  }
+  .um-filters-group {
+    flex-direction: column !important;
+    width: 100% !important;
+    display: flex;
+    gap: 16px !important; /* Equal vertical space between filters */
+  }
+  .custom-filter-container {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-right: 0 !important;
+  }
+  .custom-filter {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    box-sizing: border-box;
+  }
+}
     </style>
 </head>
 <body style="background-color: rgba(248, 250, 252, 1);">
@@ -189,9 +256,9 @@
                       </div>
                       <ul class="custom-dropdown-list" id="customDepartmentDropdown">
                         <li class="active" data-value="">All Departments</li>
-                        <li data-value="cs">Computer </li>
-                        <li data-value="math">Mathematics</li>
-                        <li data-value="phy">Physics</li>
+                        <li data-value="computer">Computer </li>
+                        <li data-value="mathematics">Mathematics</li>
+                        <li data-value="physics">Physics</li>
                         <li data-value="surgery">Surgery</li>
                         <li data-value="clinical">Clinical</li>
                         <li data-value="electrical">Electrical</li>
@@ -327,33 +394,79 @@
     </div>
     <script src="./js/loading.js"></script>
     <script>
-      // Fetch faculty names from faculties.html and populate the custom faculty dropdown
-      fetch('./faculties.html')
-        .then(response => response.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const facultyCards = doc.querySelectorAll('.faculty-name');
-          const facultyDropdown = document.getElementById('customFacultyDropdown');
-          // Remove all except the first "All Faculties"
-          while (facultyDropdown.children.length > 1) {
-            facultyDropdown.removeChild(facultyDropdown.lastChild);
-          }
-          facultyCards.forEach(card => {
-            const name = card.textContent.trim();
-            if (name.toLowerCase() !== "all faculties") {
-              const li = document.createElement('li');
-              li.setAttribute('data-value', name.toLowerCase());
-              li.textContent = name;
-              facultyDropdown.appendChild(li);
+      // --- Faculty Dropdown: Fetch, Populate, and Filter ---
+      document.addEventListener('DOMContentLoaded', function() {
+        const facultyDropdown = document.getElementById('customFacultyDropdown');
+        const facultyValueSpan = document.getElementById('customFacultyValue');
+        const facultyFilter = document.getElementById('customFacultyFilter');
+        const facultyHidden = document.getElementById('faculty_hidden');
+
+        // Helper: filter table rows by faculty
+        function filterByFaculty(facultyName) {
+          document.querySelectorAll('.pending-request-row').forEach(row => {
+            const badge = row.querySelector('.pending-faculty-badge');
+            if (!facultyName || facultyName === 'All Faculties') {
+              row.style.display = '';
+            } else {
+              row.style.display = badge && badge.textContent.trim().toLowerCase() === facultyName.trim().toLowerCase() ? '' : 'none';
             }
           });
-          // Re-setup dropdown events after dynamic population
-          setupCustomDropdown('customFacultyFilter', 'customFacultyDropdown', 'customFacultyValue', 'faculty_hidden');
+        }
+
+        // Fetch faculties and populate dropdown
+        fetch('./faculties.html')
+          .then(response => response.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const facultyCards = doc.querySelectorAll('.faculty-name');
+            // Remove all except the first "All Faculties"
+            while (facultyDropdown.children.length > 1) {
+              facultyDropdown.removeChild(facultyDropdown.lastChild);
+            }
+            facultyCards.forEach(card => {
+              const name = card.textContent.trim();
+              if (name.toLowerCase() !== "all faculties") {
+                const li = document.createElement('li');
+                li.setAttribute('data-value', name);
+                li.textContent = name;
+                facultyDropdown.appendChild(li);
+              }
+            });
+          });
+
+        // Dropdown open/close logic
+        facultyFilter.addEventListener('click', function(e) {
+          facultyFilter.classList.toggle('open');
+          facultyDropdown.style.display = facultyFilter.classList.contains('open') ? 'block' : 'none';
+          e.stopPropagation();
         });
 
-      // Setup custom dropdowns and filtering
+        // Dropdown close on blur/click outside
+        document.addEventListener('click', function(e) {
+          if (!facultyFilter.contains(e.target) && !facultyDropdown.contains(e.target)) {
+            facultyFilter.classList.remove('open');
+            facultyDropdown.style.display = 'none';
+          }
+        });
+
+        // Delegate click for dropdown items (including dynamically added)
+        facultyDropdown.addEventListener('click', function(e) {
+          if (e.target.tagName === 'LI') {
+            facultyDropdown.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+            e.target.classList.add('active');
+            facultyValueSpan.textContent = e.target.textContent;
+            facultyHidden.value = e.target.getAttribute('data-value') || '';
+            facultyFilter.classList.remove('open');
+            facultyDropdown.style.display = 'none';
+            filterByFaculty(e.target.textContent);
+          }
+        });
+      });
+
+      // --- Keep other dropdowns and filtering logic as is, but REMOVE setupCustomDropdown for Faculty ---
       function setupCustomDropdown(filterId, dropdownId, valueId, hiddenId) {
+        if (filterId === 'customFacultyFilter') return; // skip faculty, handled above
         const filter = document.getElementById(filterId);
         const dropdown = document.getElementById(dropdownId);
         const valueSpan = document.getElementById(valueId);
@@ -383,7 +496,7 @@
           filter.classList.remove('open');
         }, { once: true });
       }
-      setupCustomDropdown('customFacultyFilter', 'customFacultyDropdown', 'customFacultyValue', 'faculty_hidden');
+      // Only setup for department and year
       setupCustomDropdown('customDepartmentFilter', 'customDepartmentDropdown', 'customDepartmentValue', 'department_hidden');
       setupCustomDropdown('customYearFilter', 'customYearDropdown', 'customYearValue', 'year_hidden');
 
@@ -420,11 +533,11 @@
             show = false;
           }
           // Faculty filter: search by words in faculty badge
-          if (facultyValue && facultyValue !== "" && !wordsMatch(facultyValue, faculty)) {
+          if (facultyValue && facultyValue !== "" && !wordsMatch(facultyValue.toLowerCase(), faculty)) {
             show = false;
           }
           // Department filter: search by words in department badge
-          if (departmentValue && departmentValue !== "" && !wordsMatch(departmentValue, department)) {
+          if (departmentValue && departmentValue !== "" && !wordsMatch(departmentValue.toLowerCase(), department)) {
             show = false;
           }
           // Year filter (if you have a year field, add logic here)
@@ -440,6 +553,18 @@
 
       // Initial filter on page load
       filterPendingRequests();
+
+      // Select all checkboxes logic
+      document.addEventListener('DOMContentLoaded', function() {
+        const selectAll = document.getElementById('pending-select-all');
+        const checkboxes = document.querySelectorAll('.pending-requests-list .pending-checkbox');
+
+        selectAll.addEventListener('change', function() {
+          checkboxes.forEach(cb => {
+            if (cb !== selectAll) cb.checked = selectAll.checked;
+          });
+        });
+      });
     </script>
 </body>
 </html>

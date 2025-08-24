@@ -168,83 +168,6 @@
 
 /* Dropdown styles from personal-details.css */
 /* Dropdown List */
-.gender-dropdown-list {
-  position: fixed;
-  top: var(--dropdown-top, 0px);
-  left: var(--dropdown-left, 0px);
-  width: var(--dropdown-width, 180px);
-  max-width: 320px;
-  min-width: 120px;
-  background: #fff;
-  border: 1px solid #7B1684;
-  border-radius: 12px;
-  box-shadow: none;
-  z-index: 999999;
-  margin: 0;
-  padding: 0;  
-  overflow: hidden;
-  list-style: none;
-  transition: opacity 0.2s;
-  font-family: 'Roboto', Arial, sans-serif;
-  font-size: 16px;
-}
-
-/* Show dropdown when open */
-.gender-dropdown-list.open {
-  opacity: 1;
-  pointer-events: auto;  
-  overflow: hidden;
-  display: block;
-}
-
-/* Hide when not open */
-.gender-dropdown-list:not(.open) {
-  opacity: 0;
-  pointer-events: none;
-  display: none;
-}
-
-/* Dropdown List Items */
-.gender-dropdown-list li {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  padding: 16px 18px;
-  margin: 0; /* Ensure no margin */
-  cursor: pointer;
-  font-size: 16px;
-  color: #374151;
-  border-bottom: 1px solid #f0f0f0;
-  background: #fff;
-  transition: background 0.15s, color 0.15s;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  overflow: hidden;
-}
-
-.gender-dropdown-list li span {
-  width: 100%;
-  display: block;
-  margin: 0;
-  padding: 0;
-    overflow: hidden;
-  box-sizing: border-box;
-}
-
-.gender-dropdown-list li.active,
-.gender-dropdown-list li:hover {
-  background: #f3f3f3;  overflow: hidden;
-  color: #7B1684;
-  font-weight: 500;
-}
-
-.gender-dropdown-list li:last-child {
-  border-bottom: none;
-}
-
 /* Faculty Select Group Focus/Hover */
 #faculty-select-group .form-control.um-filter-focus,
 #faculty-select-group .form-control:hover {
@@ -522,13 +445,6 @@
   white-space: nowrap;
 }
 
-/* Faculty dropdown specific styles */
-#faculty-dropdown.gender-dropdown-list {
-  max-width: 220px;
-  max-height: 220px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
 
 /* Pagination Styling */
 .pending-pagination-container {

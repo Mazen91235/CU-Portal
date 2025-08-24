@@ -16,12 +16,11 @@
       border: 1px solid #E2E8F0;
       padding: 18px 18px;
       margin: 24px auto 0 auto;
-      max-width: 98vw;
-      width: 98vw;
+      width: 500pxpx;
       display: flex;
       align-items: center;
       gap: 18px;
-      font-family: 'Roboto', Arial, sans-serif;
+      flex-direction: row; /* Ensure horizontal layout */
     }
     .filter-bar-search {
       flex: 1 1 45%;
@@ -60,6 +59,7 @@
       gap: 18px;
       align-items: center;
       justify-content: flex-end;
+      flex-direction: row; /* Ensure filters are beside each other */
     }
     .custom-filter-container {
       width: 220px;
@@ -67,6 +67,7 @@
       margin: 0;
       display: flex;
       align-items: center;
+      flex-direction: row;
       background: transparent;
       box-shadow: none;
       position: relative;
@@ -84,6 +85,12 @@
       width: 100%;
       margin: 0;
       font-family: 'Roboto', Arial, sans-serif;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .custom-filter:active,
+    .custom-filter.open {
+      box-shadow: 0 0 0 2px #7B168433;
+      border-color: #7B1684;
     }
     .custom-filter-label-value {
       display: flex;
@@ -186,6 +193,7 @@
   </style>
 </head>
 <body>
+  <section class="filter-section">
   <div class="filter-bar-container">
     <div class="filter-bar-search">
       <i class="fa fa-search"></i>
@@ -260,7 +268,7 @@
         </ul>
       </div>
     </div>
-  </div>
+  </div></section> 
   <!-- ...existing scrollable content... -->
   <div style="height: 1200px; background: linear-gradient(to bottom, #fff 0%, #f3e8ff 100%);">
     <div style="padding: 40px; color: #7B1684; font-size: 22px;">
@@ -279,63 +287,106 @@
     </div>
   </div>
   <script>
+    // Utility to close all dropdowns
+    function closeAllDropdowns() {
+      document.querySelectorAll('.custom-filter').forEach(f => f.classList.remove('open'));
+    }
+
     // Faculty filter logic
     const filter = document.getElementById('customFilter');
     const dropdown = document.getElementById('customDropdown');
     const valueSpan = document.getElementById('customFilterValue');
-    filter.addEventListener('click', function(e) {
+    filter.addEventListener('mousedown', function(e) {
+      // Close others first
+      closeAllDropdowns();
       filter.classList.toggle('open');
+      e.preventDefault();
       e.stopPropagation();
     });
     dropdown.querySelectorAll('li').forEach(li => {
-      li.addEventListener('click', function(e) {
+      li.addEventListener('mousedown', function(e) {
         dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
         li.classList.add('active');
         valueSpan.textContent = li.textContent;
         filter.classList.remove('open');
+        e.preventDefault();
         e.stopPropagation();
       });
     });
+
     // Department filter logic
     const depFilter = document.getElementById('customDepartmentFilter');
     const depDropdown = document.getElementById('customDepartmentDropdown');
     const depValueSpan = document.getElementById('customDepartmentValue');
-    depFilter.addEventListener('click', function(e) {
+    depFilter.addEventListener('mousedown', function(e) {
+      closeAllDropdowns();
       depFilter.classList.toggle('open');
+      e.preventDefault();
       e.stopPropagation();
     });
     depDropdown.querySelectorAll('li').forEach(li => {
-      li.addEventListener('click', function(e) {
+      li.addEventListener('mousedown', function(e) {
         depDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
         li.classList.add('active');
         depValueSpan.textContent = li.textContent;
         depFilter.classList.remove('open');
+        e.preventDefault();
         e.stopPropagation();
       });
     });
+
     // Academic year filter logic
     const yearFilter = document.getElementById('customYearFilter');
     const yearDropdown = document.getElementById('customYearDropdown');
     const yearValueSpan = document.getElementById('customYearValue');
-    yearFilter.addEventListener('click', function(e) {
+    yearFilter.addEventListener('mousedown', function(e) {
+      closeAllDropdowns();
       yearFilter.classList.toggle('open');
+      e.preventDefault();
       e.stopPropagation();
     });
     yearDropdown.querySelectorAll('li').forEach(li => {
-      li.addEventListener('click', function(e) {
+      li.addEventListener('mousedown', function(e) {
         yearDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
         li.classList.add('active');
         yearValueSpan.textContent = li.textContent;
         yearFilter.classList.remove('open');
+        e.preventDefault();
         e.stopPropagation();
       });
     });
-    // Close all dropdowns when clicking outside
-    document.addEventListener('click', function() {
+
+    // Make filters focusable for blur event
+    filter.tabIndex = 0;
+    depFilter.tabIndex = 0;
+    yearFilter.tabIndex = 0;
+
+    // Close dropdowns on blur (lost focus)
+    filter.addEventListener('blur', function() {
       filter.classList.remove('open');
+    });
+    depFilter.addEventListener('blur', function() {
       depFilter.classList.remove('open');
+    });
+    yearFilter.addEventListener('blur', function() {
       yearFilter.classList.remove('open');
     });
+
+    // Also close all dropdowns when clicking outside
+    document.addEventListener('mousedown', function(e) {
+      // Only close if click is outside any filter or dropdown
+      if (
+        !filter.contains(e.target) &&
+        !dropdown.contains(e.target) &&
+        !depFilter.contains(e.target) &&
+        !depDropdown.contains(e.target) &&
+        !yearFilter.contains(e.target) &&
+        !yearDropdown.contains(e.target)
+      ) {
+        closeAllDropdowns();
+      }
+    });
+
     // Search input logic placeholder (implement as needed)
     document.getElementById('searchInput').addEventListener('input', function(e) {
       // Implement search logic here if needed
