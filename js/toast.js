@@ -1,4 +1,4 @@
-   let toastDuration = 2000; // Default duration in milliseconds
+   let toastDuration = 3000; // Default duration in milliseconds
         window.onload = () => {
             document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
         }
@@ -77,7 +77,7 @@ function hideToast(type) {
   const btn = document.getElementById("showToastBtn");
   if (btn) {
     btn.addEventListener("click", () => {
-      showToast("info","New message","New message waiting for you! It might be important","check.html");
+      showToast("warning","New message","New message waiting for you! It might be important","check.html");
     });
   }
 });

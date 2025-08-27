@@ -1,167 +1,366 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./css/profile-settings.css" />
-    <title>Profile Settings</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
-    <link rel="stylesheet" href="./components/navbar.html" />
-    <link rel="stylesheet" href="./components/sidebar.html" />
-    <link rel="stylesheet" href="./components/toasts.html" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
-  </head>
-  <body style="overflow-x:hidden;">
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./css/profile-settings.css" />
+  <title>Profile Settings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./css/sidebar.css" />
+  <link rel="stylesheet" href="./components/navbar.html" />
+  <link rel="stylesheet" href="./components/sidebar.html" />
+  <link rel="stylesheet" href="./components/toasts.html" />
+  <link rel="stylesheet" href="./css/sidebar.css" />
+
+
+<body style="overflow-x:hidden;">
   <div id="sidebar-container"></div>
   <div id="content-wrapper" class="sidebar-hidden">
     <div id="navbar-container" class="fixed-top"></div>
 
-      <!-- Personal Details Section -->
-      <div class="container mt-5">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-12 col-lg-11">
-            <div class="card personal-details-card w-100" style="margin: 2rem;">
-              <div class="personal-details-header mb-4">
-                <h4 class="fw-bold personal-details-title mb-0">Profile Settings</h4>
-                <div class="personal-details-underline"></div>
-              </div>
-              <div class="personal-details-btn-group mb-4">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="rounded-circle personal-details-avatar">
-                <button class="btn btn-purple">Upload New</button>
-                <button class="btn personal-details-remove">Remove Profile Photo</button>
-              </div>
-              <form>
-                <div class="row g-3 mb-3">
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">Full Name</label>
-                    <input type="text" class="form-control input-icon-right icon-user w-100" placeholder="somia ali mohmad" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">Email</label>
-                    <input type="email" class="form-control input-icon-right icon-envelope w-100" placeholder="aliahmed@gimal.com" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">Phone Number</label>
-                    <input type="text" class="form-control phone-code phone-icon-right w-100" placeholder="01016424526" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">National ID</label>
-                    <input type="number" class="no-spinner form-control input-icon-right icon-idcard w-100" placeholder="Enter Your National ID" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">Gender</label>
-                    <div id="gender-select-group" style="position:relative;">
-                      <input type="text" class="form-control input-icon-right icon-venus-mars w-100" id="gender_input" name="gender_input" placeholder="Select your gender" readonly style="background-color:#fff; cursor:pointer;">
-                      <ul id="gender-dropdown" class="gender-dropdown-list">
-                        <li data-value="male"><span>Male</span></li>
-                        <li data-value="female"><span>Female</span></li>
-                      </ul>
-                      <input type="hidden" name="gender" id="gender_hidden">
-                      <span id="gender-arrow" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; pointer-events:none; transition:transform 0.2s;">
-                        <img src="./assets/iconsax-arrow-down-02.png" alt="arrow" style="width:100%;height:100%;display:block;transition:transform 0.2s;">
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label fw-semibold personal-details-label">Google Account</label>
-                    <input type="text" class="form-control input-icon-right icon-google w-100" placeholder="Enter Your Google Account" />
-                  </div>
-                </div>
-                <div class="d-flex flex-column align-items-center mt-4 gap-3">
-                  <button type="submit" class="btn btn-purple personal-details-save" style="font-size: 17px;">Save Changes</button>
-                  <button type="button" class="btn btn-light d-flex align-items-center icon-google justify-content-center personal-details-google" style="margin-bottom: 20px; font-size: 17px;">
-                    <img src="./assets/Group 4.png" alt="Google" class="me-2 personal-details-google-img" >
-                    Change Google account
-                  </button>
-                </div>
-              </form>
+    <!-- Personal Details Section -->
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-12 col-lg-11">
+          <div class="card personal-details-card w-100" style="margin: 2rem;">
+            <div class="personal-details-header mb-4">
+              <h4 class="fw-bold personal-details-title mb-0">Profile Settings</h4>
+              <div class="personal-details-underline"></div>
             </div>
+            <div class="personal-details-btn-group mb-4">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile"
+                class="rounded-circle personal-details-avatar">
+              <input type="file" id="photoInput" accept="image/*" style="display: none;">
+
+              <!-- Your custom button -->
+              <button class="btn btn-purple" onclick="document.getElementById('photoInput').click()">
+                Upload New
+              </button> <button class="btn personal-details-remove" onclick="RemoveProfileAvatar()">Remove Profile
+                Photo</button>
+            </div>
+            <form id="profileForm">
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">Full Name</label>
+                  <input type="text" id="fullName" class="form-control input-icon-right icon-user w-100"
+                    placeholder="somia ali mohmad" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">Email</label>
+                  <input type="email" class="form-control input-icon-right icon-envelope w-100" disabled
+                    placeholder="aliahmed@gimal.com" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">Phone Number</label>
+                  <input type="text" class="form-control phone-code phone-icon-right w-100" disabled
+                    placeholder="01016424526" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">National ID</label>
+                  <input type="number" class="no-spinner form-control input-icon-right icon-idcard w-100" disabled
+                    placeholder="Enter Your National ID" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">Gender</label>
+                  <div id="gender-select-group" style="position:relative;">
+                    <input type="text" class="form-control input-icon-right icon-venus-mars w-100" id="gender_input"
+                      name="gender_input" disabled placeholder="Select your gender" readonly
+                      style="background-color:#fff; cursor:pointer;">
+                    <ul id="gender-dropdown" class="gender-dropdown-list">
+                      <li data-value="male"><span>Male</span></li>
+                      <li data-value="female"><span>Female</span></li>
+                    </ul>
+                    <input type="hidden" name="gender" id="gender_hidden">
+                    <span id="gender-arrow"
+                      style="position:absolute; right:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; pointer-events:none; transition:transform 0.2s;">
+                      <img src="./assets/iconsax-arrow-down-02.png" alt="arrow"
+                        style="width:100%;height:100%;display:block;transition:transform 0.2s;">
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold personal-details-label">Google Account</label>
+                  <input type="text" class="form-control input-icon-right icon-google w-100" disabled
+                    placeholder="Enter Your Google Account" />
+                </div>
+              </div>
+              <div class="d-flex flex-column align-items-center mt-4 gap-3">
+                <button type="submit" class="btn btn-purple personal-details-save" style="font-size: 17px;">Save
+                  Changes</button>
+                <button type="button"
+                  class="btn btn-light d-flex align-items-center icon-google justify-content-center personal-details-google"
+                  style="margin-bottom: 20px; font-size: 17px;">
+                  <img src="./assets/Group 4.png" alt="Google" class="me-2 personal-details-google-img">
+                  Change Google account
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <!-- End Personal Details Section -->
     </div>
-    <script>
-      // Fetch and inject sidebar
-      fetch('./components/sidebar.html')
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('sidebar-container').innerHTML = html;
-        });
-      // Fetch and inject navbar
-      fetch('./components/navbar.html')
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('navbar-container').innerHTML = html;
-        });
-      // Sidebar toggle logic (example, adjust as needed)
-      function toggleSidebar(active) {
-        const contentWrapper = document.getElementById('content-wrapper');
-        if (active) {
-          contentWrapper.style.marginLeft = '250px'; // Adjust to your sidebar width
+    <!-- End Personal Details Section -->
+
+    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+      style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 50;"></div>
+    <div id="popup-container"></div>
+    <div id="toast-container"></div>
+  </div>
+  <script>
+    // Fetch and inject sidebar
+    fetch('./components/sidebar.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('sidebar-container').innerHTML = html;
+      });
+    // Fetch and inject navbar
+    fetch('./components/navbar.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('navbar-container').innerHTML = html;
+      });
+    // Sidebar toggle logic (example, adjust as needed)
+    function toggleSidebar(active) {
+      const contentWrapper = document.getElementById('content-wrapper');
+      if (active) {
+        contentWrapper.style.marginLeft = '250px'; // Adjust to your sidebar width
+      } else {
+        contentWrapper.style.marginLeft = '0';
+      }
+    }
+    // Optionally, call toggleSidebar(true/false) based on sidebar state
+
+    // Custom gender dropdown logic
+    (function () {
+      const genderInput = document.getElementById('gender_input');
+      const genderDropdown = document.getElementById('gender-dropdown');
+      const genderGroup = document.getElementById('gender-select-group');
+      const genderHidden = document.getElementById('gender_hidden');
+      const genderArrow = document.getElementById('gender-arrow').querySelector('img');
+
+      function toggleDropdown() {
+        genderDropdown.classList.toggle('open');
+        if (genderDropdown.classList.contains('open')) {
+          genderArrow.style.transform = 'rotate(180deg)';
         } else {
-          contentWrapper.style.marginLeft = '0';
+          genderArrow.style.transform = 'rotate(0deg)';
         }
       }
-      // Optionally, call toggleSidebar(true/false) based on sidebar state
 
-      // Custom gender dropdown logic
-      (function() {
-        const genderInput = document.getElementById('gender_input');
-        const genderDropdown = document.getElementById('gender-dropdown');
-        const genderGroup = document.getElementById('gender-select-group');
-        const genderHidden = document.getElementById('gender_hidden');
-        const genderArrow = document.getElementById('gender-arrow').querySelector('img');
-
-        function toggleDropdown() {
-          genderDropdown.classList.toggle('open');
-          if (genderDropdown.classList.contains('open')) {
-            genderArrow.style.transform = 'rotate(180deg)';
-          } else {
-            genderArrow.style.transform = 'rotate(0deg)';
-          }
+      function closeDropdown(e) {
+        if (!genderGroup.contains(e.target)) {
+          genderDropdown.classList.remove('open');
+          genderArrow.style.transform = 'rotate(0deg)';
         }
+      }
 
-        function closeDropdown(e) {
-          if (!genderGroup.contains(e.target)) {
-            genderDropdown.classList.remove('open');
-            genderArrow.style.transform = 'rotate(0deg)';
-          }
-        }
+      genderInput.addEventListener('click', toggleDropdown);
 
-        genderInput.addEventListener('click', toggleDropdown);
-
-        genderDropdown.querySelectorAll('li').forEach(li => {
-          li.addEventListener('click', function() {
-            genderInput.value = li.textContent;
-            genderHidden.value = li.getAttribute('data-value');
-            // Remove active from all, add to selected
-            genderDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
-            li.classList.add('active');
-            genderDropdown.classList.remove('open');
-            genderArrow.style.transform = 'rotate(0deg)';
-          });
+      genderDropdown.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', function () {
+          genderInput.value = li.textContent;
+          genderHidden.value = li.getAttribute('data-value');
+          // Remove active from all, add to selected
+          genderDropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+          li.classList.add('active');
+          genderDropdown.classList.remove('open');
+          genderArrow.style.transform = 'rotate(0deg)';
         });
+      });
 
-        document.addEventListener('mousedown', closeDropdown);
-      })();
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      document.addEventListener('mousedown', closeDropdown);
+    })();
+
+    let uploadedfile = null;
+    let default_avatar = "";
+    const avatar = document.querySelector(".personal-details-avatar");
+    async function FillUserProfile() {
+      const user = await GetUser();
+
+      if (!user) {
+        showToast("error", "Error", "No user logged in.", "");
+        return;
+      }
+
+      document.querySelector('input[placeholder="somia ali mohmad"]').value = user.name || "";
+      document.querySelector('input[placeholder="aliahmed@gimal.com"]').value = user.email || "";
+      document.querySelector('input[placeholder="01016424526"]').value = user.phone || "";
+      document.querySelector('input[placeholder="Enter Your National ID"]').value = user.national_id || "";
+      document.querySelector('input[placeholder="Enter Your Google Account"]').value = user.google_email
+        || "";
+
+      if (user.gender) {
+        document.getElementById("gender_input").value = user.gender;
+        document.getElementById("gender_hidden").value = user.gender.toLowerCase();
+      }
 
 
-    <script src="./js/loading.js"></script>
+      try {
+        if ("avatar" in user.details) {
+          if (user.details.avatar.includes("drive")) {
+            avatar.src = `https://drive.google.com/thumbnail?id=${await GetFileId(user.details.avatar)}&sz=w1000`;
+          }
+          else {
+            avatar.src = user.details.avatar;
+
+          }
+          default_avatar = user.details.avatar;
+        } else {
+          avatar.src = user.google_avatar;
+          default_avatar = user.google_avatar;
+        }
+
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Error", "Failed to load avatar.", "");
+        avatar.src = "./assets/user-default-avatar.png";
+        default_avatar = "";
+      }
+    }
 
 
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    const input = document.querySelector("#photoInput");
+    input.addEventListener("change", async (e) => {
+      const user = await GetUser();
+
+      if (!user) {
+        showToast("error", "Error", "No user logged in.", "");
+        return;
+      }
+
+      const files = e.target.files; // Get the FileList object
+      const reader = new FileReader(); // Create a new FileReader instance
+      reader.onload = function (e) {
+        // This function is called when the file is read successfully
+        const fileContent = e.target.result; // Get the file content
+        const avatar = document.querySelector(".personal-details-avatar");
+        avatar.src = fileContent;
+        uploadedfile = files[0];
+        // document.getElementById('fileContent').textContent = fileContent; // Display the content
+
+      };
+      // Read the first file as text
+      if (files.length > 0) {
+        reader.readAsDataURL(files[0]); // You can also use readAsDataURL for images, etc.
+      }
 
 
-    <script src="./js/loading.js"></script>
-  </div>
-  </body>
-  </html>
+    }
+    );
+
+    document.getElementById("profileForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      showLoading();
+
+      const fullName = document.getElementById("fullName").value;
+
+      if (!fullName) {
+        hideLoading();
+
+        showToast("error", "Error", "Please enter your full name", "");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", fullName);
+      let url = default_avatar;
+      if (uploadedfile) {
+
+        if (uploadedfile.size > 10 * 1024 * 1024) { // 10 MB limit
+          hideLoading();
+
+          showToast("error", "Error", "File size exceeds the limit of 10 MB.", "");
+          return;
+        }
+        if (!uploadedfile.type.startsWith("image/")) {
+          hideLoading();
+
+          showToast("error", "Error", "Please upload a valid image file.", "");
+          return;
+        }
+        console.log("Uploading image:", uploadedfile.name);
+        url = await UploadToDrive(uploadedfile); // Replace 'file' with the actual file object you want to upload
+        if (!url) {
+          hideLoading();
+
+          showToast("error", "Error", "Image upload failed. Please try again.", "");
+
+          return;
+        }
+        hideLoading();
+
+        showToast("success", "Success", "Image uploaded successfully!", "");
+      }
+      formData.append("url", url);
 
 
+      try {
+        const response = await axios.patch(`${domain}/api/v1/user/update-user-data`, formData, {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${GetCookie("access_token")}`
+
+          }
+        });
+        const data = response.data;
+        if (data.status == "success") {
+          hideLoading();
+          showToast("success", "Success", "Profile updated successfully!", "");
+
+        } else {
+          hideLoading();
+          showToast("error", "Error", data.message, "");
+        }
+      } catch (err) {
+        console.error(err);
+        hideLoading();
+        showToast("error", "Error", "Failed to save profile.", "");
+      }
+    });
+
+    async function RemoveProfileAvatar() {
+      const avatar = document.querySelector(".personal-details-avatar");
+      const user = await GetUser();
+      if (!user) {
+        showToast("error", "Error", "No user logged in.", "");
+        return;
+      }
+
+      try {
+        uploadedfile = null;
+        default_avatar = "";
+        avatar.src = "./assets/user-default-avatar.png";
+
+      } catch (err) {
+
+        showToast("error", "Error", "Failed to remove profile.", "");
+      }
+    }
+    document.addEventListener("DOMContentLoaded", FillUserProfile);
+
+
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+
+  <script src="./js/loading.js"></script>
+
+  <script src="./js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script src="./js/loading.js"></script>
+  <script src="./js/toast.js"></script>
+
+  <script src="./js/loadscreen.js"></script>
+  <script src="./js/popup.js"></script>
+</body>
+
+</html>

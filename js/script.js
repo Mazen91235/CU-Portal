@@ -1,4 +1,4 @@
-const domain = "https://c96ebfd26a8e.ngrok-free.app"; // Update with your actual domain
+const domain = "https://766f0a3c6660.ngrok-free.app"; // Update with your actual domain
 
 
 //lets Understand the Code git pull
@@ -176,7 +176,7 @@ async function RemoveFromDrive(url) {
     }
     let access_token = await GetGoogleAccessToken;
     if (!access_token) {
-        console.error('No access token found. Please authorize Google first.');
+      showToast("error","No access token found.","Please authorize Google first.","");
         return false;
     }
     try {
@@ -211,17 +211,17 @@ async function Signup(form) {
     // Upload image if selected
     if (file) {
         if(file.size > 10 * 1024 * 1024) { // 10 MB limit
-            ShowError("File size exceeds the limit of 10 MB.");
+            showToast("error","File Size Error","File size exceeds the limit of 10 MB.","");
             return;
         }
         if (!file.type.startsWith("image/")) {
-            ShowError("Please upload a valid image file.");
+            showToast("error","Invalid File Type","Please upload a valid image file.","");
             return;
         }
         console.log("Uploading image:", file.name);
         let url = await UploadToDrive(file); // Replace 'file' with the actual file object you want to upload
         if (!url) {
-            ShowError("Image upload failed. Please try again.");
+            showToast("error","Image Upload Failed","Image upload failed. Please try again.","");
             return;
         }
         console.log("Image uploaded successfully:", url);
@@ -242,17 +242,17 @@ async function Signup(form) {
         if (data.status == "success") {
             window.location.href = `/login.html?success=true&message=${data.message}`;
         } else {
-            ShowError(data.message);
+            showToast("error","Signup Failed",data.message,"");
         }
     } catch (error) {
         console.error("Signup error:", error);
-        ShowError(error.response?.data?.message || "Signup failed. Please try again");
+        showToast("error","Signup Failed",error.response?.data?.message || "Signup failed. Please try again","");
     }
 }
 
 
 async function GetUser() {
-    if (!GetCookie("access_token") || !GetCookie("refresh_token")) return null;
+    if (!GetCookie("refresh_token")) return null;
 
     return axios.get(`${domain}/api/v1/user/get-user-data`, {
         headers: {
@@ -265,36 +265,39 @@ async function GetUser() {
         if (data.status == "success") {
             return data.data;
         } else {
-            ShowError(data.message);
+            showToast("error","Error",data.message,"");
+
             return null;
         }
     })
     .catch(error => {
         console.error("Error retrieving user data:", error);
-        if (error.response && error.response.status == 407) {
+        if (error.response) {
             return axios.post(`${domain}/api/v1/auth/refresh`, {
                 refresh_token: GetCookie("refresh_token")
             }, {
                 headers: { "ngrok-skip-browser-warning": "true" }
             })
             .then(response => {
-                const data = response.data;
+                let data = response.data;
                 if (data.status == "success") {
                     data = data.data;
                     SetCookie("access_token", data.access_token, data.access_expires_in);
                     SetCookie("refresh_token", data.refresh_token, data.refresh_expires_in);
                     return GetUser();
                 } else {
-                    ShowError(data.message);
+                     showToast("error","Error",data.message,"");
+
                     return null;
                 }
             })
             .catch(error => {
-                ShowError(error.response?.data?.message || "Session expired. Please login again");
+                console.log( error);
+                showToast("error","Session expired.",error.response?.data?.message || "Session expired. Please login again","");
                 return null;
             });
         } else {
-            ShowError(error.response?.data?.message || "Error retrieving user data");
+            showToast("error","Error",error.response?.data?.message || "Error retrieving user data","");
             return null;
         }
     });
@@ -305,4 +308,13 @@ function Logout() {
     SetCookie("refresh_token", "", -1);
     SetCookie("google_details_token", "", -1);
     window.location.href = "/login";
+}
+async function GetFileId(url){
+    let urlObj = new URLSearchParams(url);
+    let fileId = urlObj.get("id");
+    if (!fileId) {
+        console.error('Invalid URL. Unable to extract file ID.');
+        return false;
+    }
+    return fileId;
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,21 @@
     <link rel="stylesheet" href="./css/loginstyle.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 </head>
+
 <body style="background-color: #F8FAFC;">
     <div class="container">
-        <img src="./assets/freepik--background-simple--inject-251.png" alt="Decorative background element" class="corner-image-top-right">
-        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decorative background element" class="corner-image-bottom-left">
+        <img src="./assets/freepik--background-simple--inject-251.png" alt="Decorative background element"
+            class="corner-image-top-right">
+        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decorative background element"
+            class="corner-image-bottom-left">
         <header class="header">
-           <h1 class="logo">St<span class="highlight" aria-hidden="true">u</span>dent P<span class="highlight" aria-hidden="true">o</span>rtal</h1>
+            <h1 class="logo">St<span class="highlight" aria-hidden="true">u</span>dent P<span class="highlight"
+                    aria-hidden="true">o</span>rtal</h1>
         </header>
 
-        <main class="content-wrapper welcome-page">  <!-- Changed to main for semantic HTML -->
+        <main class="content-wrapper welcome-page"> <!-- Changed to main for semantic HTML -->
             <div class="illustration">
                 <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" alt="Happy student illustration">
             </div>
@@ -29,36 +35,42 @@
                 </button>
             </div>
         </main>
+       
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
     <script src="/js/script.js"></script>
+    <script src="./js/toast.js"></script>
+
+    <script src="./js/loadscreen.js"></script>
+    <script src="./js/popup.js"></script>
     <script>
-        document.querySelector('.google-signin-btn').addEventListener('click', function() {
+        document.querySelector('.google-signin-btn').addEventListener('click', function () {
             // Simulate Google Sign-In process
             window.location.href = `${domain}/login-with-google`;
         });
-        
-// Initialize on page load
-window.onload = async function () {
-    if(GetParams("token")) {
-        let token = GetParams("token").split("___");
-        SetCookie("access_token", token[0], parseInt(token[1]));
-        SetCookie("refresh_token", token[2], parseInt(token[3]));
-    }
-    let user = await GetUser();
-    if (user) {
-        window.location.href = "/dashboard.html";
-        return;
-    }
 
-    if (GetParams("error") == "true") {
-        ShowError(GetParams("message"));
-    }
-    if (GetParams("success") == "true") {
-        ShowError(GetParams("message"));
-    }
-    
-};
+        // Initialize on page load
+        window.onload = async function () {
+            if (GetParams("token")) {
+                let token = GetParams("token").split("___");
+                SetCookie("access_token", token[0], parseInt(token[1]));
+                SetCookie("refresh_token", token[2], parseInt(token[3]));
+            }
+            let user = await GetUser();
+            if (user) {
+                window.location.href = "/dashboard.html";
+                return;
+            }
+
+            if (GetParams("error") == "true") {
+                showToast("error", "Error", GetParams("message"), "");
+            }
+            if (GetParams("success") == "true") {
+                showToast("success", "Success", GetParams("message"), "");
+            }
+
+        };
     </script>
 </body>
+
 </html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal - Create Profile</title>
+    
     <link rel="stylesheet" href="./css/creatprofilestyle.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -80,10 +81,14 @@
             </div>
         </div>
 
+
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
         <script src="/js/script.js"></script>
+          <script src="./js/toast.js"></script>
+    <script src="./js/loadscreen.js"></script>
+
         <script>
             document.querySelector('.file-input-group #university_id').onclick = () => {
                 document.getElementById('file').click();
@@ -126,10 +131,10 @@ window.onload =  async function () {
     }
 
     if (GetParams("error") == "true") {
-        ShowError(GetParams("message"));
+        ShowToast("error", "Error", GetParams("message"), "");
     }
     if (GetParams("success") == "true") {
-        ShowSuccess(GetParams("message"));
+        ShowToast("success", "Success", GetParams("message"), "");
     }
 
     if (GetParams("get_stored_token") == "true" ) {
@@ -145,11 +150,11 @@ window.onload =  async function () {
                 SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
                 window.location.href = `${domain}/dashboard`;
             } else {
-                ShowError(data.message);
+                ShowToast("error", "Error", data.message, "");
             }
         })
         .catch(error => {
-            ShowError(error.response?.data?.message || "Error retrieving login session");
+            ShowToast("error", "Error", error.response?.data?.message || "Error retrieving login session", "");
         });
     }
 };
