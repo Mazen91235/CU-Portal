@@ -182,7 +182,6 @@
         });
         // Popup logic
         function showPopup(overlayId, inputId, initialValue = '') {
-          // Blur content
           document.getElementById('content-wrapper').classList.add('blurred');
           document.getElementById(overlayId).style.display = 'flex';
           const input = document.getElementById(inputId);
@@ -195,6 +194,9 @@
           document.getElementById('editFacultyOverlay').style.display = 'none';
         }
 
+        // Track the card being edited
+        let editingCard = null;
+
         // Show Add Faculty popup
         document.querySelectorAll('.add-years-btn').forEach(btn => {
           btn.addEventListener('click', function() {
@@ -205,8 +207,18 @@
         // Show Edit Faculty popup
         document.querySelectorAll('.faculty-card .edit-btn').forEach(btn => {
           btn.addEventListener('click', function() {
-            const facultyName = btn.closest('.faculty-card').querySelector('.faculty-name').textContent.trim();
+            const card = btn.closest('.faculty-card');
+            const facultyName = card.querySelector('.faculty-name').textContent.trim();
+            editingCard = card;
             showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
+          });
+        });
+
+        // Delete Faculty logic for initial cards
+        document.querySelectorAll('.faculty-card .delete-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const cardCol = btn.closest('.col-lg-4, .col-md-6, .col-12');
+            if (cardCol) cardCol.remove();
           });
         });
 
@@ -220,9 +232,50 @@
           if (e.key === 'Escape') hidePopups();
         });
 
-        // Prevent form submission (demo only)
-        document.getElementById('addFacultyBtn').onclick = function(e) { e.preventDefault(); hidePopups(); };
-        document.getElementById('editFacultyBtn').onclick = function(e) { e.preventDefault(); hidePopups(); };
+        // Add faculty card logic
+        document.getElementById('addFacultyBtn').onclick = function(e) {
+          e.preventDefault();
+          const name = document.getElementById('addFacultyInput').value.trim();
+          if (name) {
+            // Create card HTML
+            const card = document.createElement('div');
+            card.className = 'col-lg-4 col-md-6 col-12';
+            card.innerHTML = `
+              <div class="faculty-card">
+                <div class="faculty-logo-circle default-bg">
+                  <img src="./assets/university.png" alt="University Logo">
+                </div>
+                <h2 class="faculty-name">${name}</h2>
+                <div class="faculty-actions">
+                  <button class="btn edit-btn">Edit</button>
+                  <button class="btn delete-btn">Delete</button>
+                </div>
+              </div>
+            `;
+            document.querySelector('.row.g-4').appendChild(card);
+            // Add edit event for new card
+            card.querySelector('.edit-btn').addEventListener('click', function() {
+              editingCard = card.querySelector('.faculty-card');
+              const facultyName = editingCard.querySelector('.faculty-name').textContent.trim();
+              showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
+            });
+            // Add delete event for new card
+            card.querySelector('.delete-btn').addEventListener('click', function() {
+              card.remove();
+            });
+          }
+          hidePopups();
+        };
+
+        // Edit faculty card logic
+        document.getElementById('editFacultyBtn').onclick = function(e) {
+          e.preventDefault();
+          const newName = document.getElementById('editFacultyInput').value.trim();
+          if (editingCard && newName) {
+            editingCard.querySelector('.faculty-name').textContent = newName;
+          }
+          hidePopups();
+        };
     </script>
 </body>
 </html>
