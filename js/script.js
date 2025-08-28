@@ -1,4 +1,4 @@
-const domain = "https://766f0a3c6660.ngrok-free.app"; // Update with your actual domain
+const domain = "https://f5e23c67fc47.ngrok-free.app"; // Update with your actual domain
 
 
 //lets Understand the Code git pull
@@ -96,6 +96,8 @@ let GetGoogleStoredToken = new Promise((resolve) => {
 let GetGoogleAccessToken = new Promise(async (resolve) => {
     if(!GetCookie("access_token")) {
         let response = await GetGoogleStoredToken;
+                console.log("a2");
+                console.log(response);
         resolve(response);
         return;
     }
@@ -198,12 +200,14 @@ async function RemoveFromDrive(url) {
 // Signup function to handle user registration
 //
 async function Signup(form) {
+    showLoading();
     event.preventDefault();
     const formData = new FormData(form);
     const fileInput = document.getElementById("file");
     const file = fileInput?.files[0];
     let googleDetailsToken = GetCookie("google_details_token");
     if (!googleDetailsToken) {
+        console.log("a1");
         window.location.href = `/login.html?error=true&message=You Must Authorize Google First before Proceeding to SignUp.`;
         return;
     }
@@ -211,16 +215,19 @@ async function Signup(form) {
     // Upload image if selected
     if (file) {
         if(file.size > 10 * 1024 * 1024) { // 10 MB limit
+            hideLoading();
             showToast("error","File Size Error","File size exceeds the limit of 10 MB.","");
             return;
         }
         if (!file.type.startsWith("image/")) {
+            hideLoading();
             showToast("error","Invalid File Type","Please upload a valid image file.","");
             return;
         }
         console.log("Uploading image:", file.name);
         let url = await UploadToDrive(file); // Replace 'file' with the actual file object you want to upload
         if (!url) {
+            hideLoading();
             showToast("error","Image Upload Failed","Image upload failed. Please try again.","");
             return;
         }
@@ -240,11 +247,15 @@ async function Signup(form) {
 
         const data = response.data;
         if (data.status == "success") {
+            hideLoading();
             window.location.href = `/login.html?success=true&message=${data.message}`;
         } else {
+            hideLoading();
             showToast("error","Signup Failed",data.message,"");
         }
     } catch (error) {
+            hideLoading();
+
         console.error("Signup error:", error);
         showToast("error","Signup Failed",error.response?.data?.message || "Signup failed. Please try again","");
     }
@@ -307,7 +318,8 @@ function Logout() {
     SetCookie("access_token", "", -1);
     SetCookie("refresh_token", "", -1);
     SetCookie("google_details_token", "", -1);
-    window.location.href = "/login";
+            window.location.href = `/login.html?success=true&message=Successfully logged out`;
+
 }
 async function GetFileId(url){
     let urlObj = new URLSearchParams(url);

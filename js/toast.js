@@ -1,7 +1,7 @@
-   let toastDuration = 3000; // Default duration in milliseconds
-        window.onload = () => {
+   let toastDuration = 6000; // Default duration in milliseconds
+        document.addEventListener("DOMContentLoaded", () => {
             document.body.style.setProperty('--toast-duration', `${toastDuration / 1000}s`);
-        }
+        });
   const toastReady = new Promise((resolve, reject) => {
   document.addEventListener("DOMContentLoaded", () => {
     fetch("./components/toasts.html")
@@ -13,6 +13,9 @@
       .catch(err => {
         console.error("Failed to load toast component:", err);
         reject(err);
+      }).finally(async () => {
+        if(handleAfterFetching)
+          await handleAfterFetching();
       });
   });
 });

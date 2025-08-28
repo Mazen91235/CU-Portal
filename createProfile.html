@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal - Create Profile</title>
-    
+
     <link rel="stylesheet" href="./css/creatprofilestyle.css">
+      <link rel="stylesheet" href="./css/sidebar.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="./css/all.min-new.css">
+
 </head>
 <body>
     <div class="container">
@@ -80,14 +83,15 @@
                 </form>
             </div>
         </div>
-
-
+      <div id="toast-container"></div>
+ <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 50;"></div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
         <script src="/js/script.js"></script>
-          <script src="./js/toast.js"></script>
-    <script src="./js/loadscreen.js"></script>
+            <script src="/js/toast.js"></script>
+              <script src="./js/loadscreen.js"></script>
 
         <script>
             document.querySelector('.file-input-group #university_id').onclick = () => {
@@ -131,10 +135,10 @@ window.onload =  async function () {
     }
 
     if (GetParams("error") == "true") {
-        ShowToast("error", "Error", GetParams("message"), "");
+        showToast("error", GetParams("message"));
     }
     if (GetParams("success") == "true") {
-        ShowToast("success", "Success", GetParams("message"), "");
+        showToast("success", GetParams("message"));
     }
 
     if (GetParams("get_stored_token") == "true" ) {
@@ -150,11 +154,11 @@ window.onload =  async function () {
                 SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
                 window.location.href = `${domain}/dashboard`;
             } else {
-                ShowToast("error", "Error", data.message, "");
+                showToast("error", data.message);
             }
         })
         .catch(error => {
-            ShowToast("error", "Error", error.response?.data?.message || "Error retrieving login session", "");
+            showToast("error", error.response?.data?.message || "Error retrieving login session");
         });
     }
 };
