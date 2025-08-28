@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./components/sidebar.html">
     <link rel="stylesheet" href="./components/toasts.html">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+   
 </head>
 <body style="background: rgb(248, 250, 252); overflow-x: hidden;">
     <div id="sidebar-container"></div>
@@ -153,6 +154,22 @@
             </div>
         </div>
     </div>
+    <!-- Add Faculty Popup -->
+    <div class="popup-overlay" id="addFacultyOverlay" style="display:none;">
+      <div class="popup-modal">
+        <h2 class="popup-title">Add A New Faculty</h2>
+        <input type="text" class="popup-input" id="addFacultyInput" placeholder="Faculty name..." />
+        <button class="popup-btn" id="addFacultyBtn">Add faculty</button>
+      </div>
+    </div>
+    <!-- Edit Faculty Popup -->
+    <div class="popup-overlay" id="editFacultyOverlay" style="display:none;">
+      <div class="popup-modal">
+        <h2 class="popup-title">Edit Faculty</h2>
+        <input type="text" class="popup-input" id="editFacultyInput" placeholder="Faculty name..." />
+        <button class="popup-btn" id="editFacultyBtn">Edit faculty</button>
+      </div>
+    </div>
     <script src="./js/loading.js"></script>
     <script>
         // Simple search filter for faculty cards
@@ -163,6 +180,49 @@
                 card.parentElement.style.display = name.includes(query) ? '' : 'none';
             });
         });
+        // Popup logic
+        function showPopup(overlayId, inputId, initialValue = '') {
+          // Blur content
+          document.getElementById('content-wrapper').classList.add('blurred');
+          document.getElementById(overlayId).style.display = 'flex';
+          const input = document.getElementById(inputId);
+          input.value = initialValue;
+          setTimeout(() => input.focus(), 100);
+        }
+        function hidePopups() {
+          document.getElementById('content-wrapper').classList.remove('blurred');
+          document.getElementById('addFacultyOverlay').style.display = 'none';
+          document.getElementById('editFacultyOverlay').style.display = 'none';
+        }
+
+        // Show Add Faculty popup
+        document.querySelectorAll('.add-years-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            showPopup('addFacultyOverlay', 'addFacultyInput');
+          });
+        });
+
+        // Show Edit Faculty popup
+        document.querySelectorAll('.faculty-card .edit-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const facultyName = btn.closest('.faculty-card').querySelector('.faculty-name').textContent.trim();
+            showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
+          });
+        });
+
+        // Hide popup when clicking outside modal or pressing Escape
+        document.querySelectorAll('.popup-overlay').forEach(overlay => {
+          overlay.addEventListener('mousedown', function(e) {
+            if (e.target === overlay) hidePopups();
+          });
+        });
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') hidePopups();
+        });
+
+        // Prevent form submission (demo only)
+        document.getElementById('addFacultyBtn').onclick = function(e) { e.preventDefault(); hidePopups(); };
+        document.getElementById('editFacultyBtn').onclick = function(e) { e.preventDefault(); hidePopups(); };
     </script>
 </body>
 </html>

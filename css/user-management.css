@@ -59,6 +59,8 @@
 
 /* Individual Info Card (mini card) */
 .um-info-card {
+    margin-top: 20px;
+    margin-bottom:20px;
     background: #F8FAFC;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
@@ -578,7 +580,7 @@
     .um-title-section{
         width: 100%;
         margin-left: 0 ;
-        margin-top: 120px;
+        margin-top: 80px;
         margin-right: 0;
         border-radius:0 ;
     }
