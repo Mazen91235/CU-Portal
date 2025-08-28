@@ -15,92 +15,31 @@
     <link rel="stylesheet" href="./components/toasts.html">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
-      /* Responsive popup overlay/modal */
-      .popup-overlay {
-        position: fixed;
-        z-index: 2000;
-        left: 0; top: 0; right: 0; bottom: 0;
-        background: rgba(60,60,60,0.6);
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-      .popup-modal {
-        background: #fff;
-        border-radius: 22px;
-        padding: 32px 28px 28px 28px;
-        min-width: 320px;
-        max-width: 95vw;
-        width: 100%;
-        max-height: 90vh;
-        box-shadow: 0 4px 32px rgba(0,0,0,0.12);
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-      .popup-title {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        font-size: 2rem;
-        margin-bottom: 10px;
-        background: linear-gradient(90deg, #ff7ecb 0%, #7d26c9 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-      .popup-input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #d09adf;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        outline: none;
-        transition: border 0.2s;
-        margin-bottom: 0;
-      }
-      .popup-input:focus {
-        border-color: #7d26c9;
-      }
-      .popup-btn {
-        width: 100%;
-        background: #7d26c9;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        margin-bottom: 0;
-        transition: background 0.2s;
-      }
-      .popup-btn:hover {
-        background: #a14fdc;
-      }
-      @media (max-width: 600px) {
-        .popup-modal {
-          min-width: 0;
-          width: 95vw;
-          padding: 18px 8px 18px 8px;
-          border-radius: 14px;
-        }
-        .popup-title {
-          font-size: 1.3rem;
-        }
-        .popup-input, .popup-btn {
-          font-size: 1rem;
-          padding: 10px 8px;
-        }
-      }
-      /* Optional: allow scrolling if popup content is too tall */
-      .popup-overlay {
-        overflow-y: auto;
-      }
-      .popup-modal {
-        margin: 32px 0;
-      }
-    </style>
+/* ...existing styles... */
+
+/* Fix: Ensure sidebar does not overlap add button on mobile when open */
+@media (max-width: 991.98px) {
+  #sidebar-container {
+    z-index: 1040 !important;
+    position: fixed;
+    pointer-events: auto;
+  }
+  .um-title-section {
+    position: relative;
+    z-index: 1;
+  }
+  .add-years-btn-mobile {
+    position: relative;
+    z-index: 1100 !important;
+    pointer-events: auto;
+  }
+}
+/* Extra: ensure popup overlays are always on top */
+.popup-overlay {
+  z-index: 2000 !important;
+}
+   
+</style>
 </head>
 <body style="background: rgb(248, 250, 252); overflow-x: hidden;">
     <div id="sidebar-container"></div>
@@ -258,103 +197,125 @@
     </div>
     <script src="./js/loading.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Simple search filter for faculty cards
-  document.querySelector('.search-input').addEventListener('input', function(e) {
-    const query = e.target.value.toLowerCase();
-    document.querySelectorAll('.faculty-card').forEach(card => {
-      const name = card.querySelector('.faculty-name').textContent.toLowerCase();
-      card.parentElement.style.display = name.includes(query) ? '' : 'none';
-    });
-  });
+        // Simple search filter for faculty cards
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.faculty-card').forEach(card => {
+                const name = card.querySelector('.faculty-name').textContent.toLowerCase();
+                card.parentElement.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+        // Popup logic
+        function showPopup(overlayId, inputId, initialValue = '') {
+          // Removed blur effect
+          document.getElementById(overlayId).style.display = 'flex';
+          const input = document.getElementById(inputId);
+          input.value = initialValue;
+          setTimeout(() => input.focus(), 100);
+        }
+        function hidePopups() {
+          // Removed blur effect
+          document.getElementById('addFacultyOverlay').style.display = 'none';
+          document.getElementById('editFacultyOverlay').style.display = 'none';
+        }
 
-  // Popup logic
-  function showPopup(overlayId, inputId, initialValue = '') {
-    document.getElementById('content-wrapper').classList.add('blurred');
-    const overlay = document.getElementById(overlayId);
-    overlay.style.display = 'flex';
-    const input = document.getElementById(inputId);
-    input.value = initialValue;
-    setTimeout(() => input.focus(), 100);
-  }
-  function hidePopups() {
-    document.getElementById('content-wrapper').classList.remove('blurred');
-    document.getElementById('addFacultyOverlay').style.display = 'none';
-    document.getElementById('editFacultyOverlay').style.display = 'none';
-  }
+        // Track the card being edited
+        let editingCard = null;
 
-  // Track the card being edited
-  let editingCard = null;
-
-  // Show Add Faculty popup (ensure both desktop and mobile buttons work)
+        // Show Add Faculty popup
   document.querySelectorAll('.add-years-btn, .add-years-btn-mobile, .add-years-btn-desktop').forEach(btn => {
-    btn.addEventListener('click', function() {
-      showPopup('addFacultyOverlay', 'addFacultyInput');
-    });
-  });
+          btn.addEventListener('click', function() {
+            showPopup('addFacultyOverlay', 'addFacultyInput');
+          });
+        });
 
-  // Show Edit Faculty popup (event delegation for dynamic support)
-  document.querySelector('.row.g-4').addEventListener('click', function(e) {
-    const editBtn = e.target.closest('.edit-btn');
-    if (editBtn) {
-      const card = editBtn.closest('.faculty-card');
-      const facultyName = card.querySelector('.faculty-name').textContent.trim();
-      editingCard = card;
-      showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
-    }
-    const deleteBtn = e.target.closest('.delete-btn');
-    if (deleteBtn) {
-      const cardCol = deleteBtn.closest('.col-lg-4, .col-md-6, .col-12');
-      if (cardCol) cardCol.remove();
-    }
-  });
+        // Show Edit Faculty popup
+        document.querySelectorAll('.faculty-card .edit-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const card = btn.closest('.faculty-card');
+            const facultyName = card.querySelector('.faculty-name').textContent.trim();
+            editingCard = card;
+            showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
+          });
+        });
 
-  // Hide popup when clicking outside modal or pressing Escape
-  document.querySelectorAll('.popup-overlay').forEach(overlay => {
-    overlay.addEventListener('mousedown', function(e) {
-      if (e.target === overlay) hidePopups();
-    });
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') hidePopups();
-  });
+        // Delete Faculty logic for initial cards
+        document.querySelectorAll('.faculty-card .delete-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const cardCol = btn.closest('.col-lg-4, .col-md-6, .col-12');
+            const facultyName = btn.closest('.faculty-card').querySelector('.faculty-name').textContent.trim();
+            if (cardCol && confirm(`Are you sure you want to delete "${facultyName}"?`)) cardCol.remove();
+          });
+        });
 
-  // Add faculty card logic
-  document.getElementById('addFacultyBtn').onclick = function(e) {
-    e.preventDefault();
-    const name = document.getElementById('addFacultyInput').value.trim();
-    if (name) {
-      // Create card HTML
-      const card = document.createElement('div');
-      card.className = 'col-lg-4 col-md-6 col-12';
-      card.innerHTML = `
-        <div class="faculty-card">
-          <div class="faculty-logo-circle default-bg">
-            <img src="./assets/university.png" alt="University Logo">
-          </div>
-          <h2 class="faculty-name">${name}</h2>
-          <div class="faculty-actions">
-            <button class="btn edit-btn">Edit</button>
-            <button class="btn delete-btn">Delete</button>
-          </div>
-        </div>
-      `;
-      document.querySelector('.row.g-4').appendChild(card);
-      // No need to add event listeners, event delegation handles it
-    }
-    hidePopups();
-  };
+        // Hide popup when clicking outside modal or pressing Escape
+        document.querySelectorAll('.popup-overlay').forEach(overlay => {
+          overlay.addEventListener('mousedown', function(e) {
+            if (e.target === overlay) hidePopups();
+          });
+        });
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') hidePopups();
+        });
 
-  // Edit faculty card logic
-  document.getElementById('editFacultyBtn').onclick = function(e) {
-    e.preventDefault();
-    const newName = document.getElementById('editFacultyInput').value.trim();
-    if (editingCard && newName) {
-      editingCard.querySelector('.faculty-name').textContent = newName;
+        // Add faculty card logic
+        document.getElementById('addFacultyBtn').onclick = function(e) {
+          e.preventDefault();
+          const name = document.getElementById('addFacultyInput').value.trim();
+          if (name) {
+            // Create card HTML
+            const card = document.createElement('div');
+            card.className = 'col-lg-4 col-md-6 col-12';
+            card.innerHTML = `
+              <div class="faculty-card">
+                <div class="faculty-logo-circle default-bg">
+                  <img src="./assets/university.png" alt="University Logo">
+                </div>
+                <h2 class="faculty-name">${name}</h2>
+                <div class="faculty-actions">
+                  <button class="btn edit-btn">Edit</button>
+                  <button class="btn delete-btn">Delete</button>
+                </div>
+              </div>
+            `;
+            document.querySelector('.row.g-4').appendChild(card);
+            // Add edit event for new card
+            card.querySelector('.edit-btn').addEventListener('click', function() {
+              editingCard = card.querySelector('.faculty-card');
+              const facultyName = editingCard.querySelector('.faculty-name').textContent.trim();
+              showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
+            });
+            // Add delete event for new card (with confirmation)
+            card.querySelector('.delete-btn').addEventListener('click', function() {
+              const facultyName = card.querySelector('.faculty-name').textContent.trim();
+              if (confirm(`Are you sure you want to delete "${facultyName}"?`)) card.remove();
+            });
+          }
+          hidePopups();
+        };
+
+        // Edit faculty card logic
+        document.getElementById('editFacultyBtn').onclick = function(e) {
+          e.preventDefault();
+          const newName = document.getElementById('editFacultyInput').value.trim();
+          if (editingCard && newName) {
+            editingCard.querySelector('.faculty-name').textContent = newName;
+          }
+          hidePopups();
+        };
+
+        // Fix: force sidebar to not block pointer events for add button
+    function bringAddButtonToFront() {
+      var btn = document.querySelector('.add-years-btn-mobile');
+      if (btn) {
+        btn.style.position = 'relative';
+        btn.style.zIndex = '1100';
+        btn.style.pointerEvents = 'auto';
+      }
     }
-    hidePopups();
-  };
-});
-</script>
+    // Call on load and on sidebar toggle (if you have sidebar toggling)
+    document.addEventListener('DOMContentLoaded', bringAddButtonToFront);
+    // If you have a sidebar toggle, call bringAddButtonToFront() after toggling
+    </script>
 </body>
 </html>
