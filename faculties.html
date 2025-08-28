@@ -286,8 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Track the card being edited
   let editingCard = null;
 
-  // Show Add Faculty popup
-  document.querySelectorAll('.add-years-btn').forEach(btn => {
+  // Show Add Faculty popup (ensure both desktop and mobile buttons work)
+  document.querySelectorAll('.add-years-btn, .add-years-btn-mobile, .add-years-btn-desktop').forEach(btn => {
     btn.addEventListener('click', function() {
       showPopup('addFacultyOverlay', 'addFacultyInput');
     });
