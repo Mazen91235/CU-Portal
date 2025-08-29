@@ -361,7 +361,7 @@ async function getYears() {
     if (error.response?.status === 401) {
       try {
         await refreshToken();
-        return getYears(year); // retry
+        return getYears(); // retry
       } catch {
         showToast("error", "Session expired", "Please login again", "");
         return null;

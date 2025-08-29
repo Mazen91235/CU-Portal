@@ -1,321 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculties</title>
-    <link rel="stylesheet" href="./css/faculties.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/sidebar.css">
-    <link rel="stylesheet" href="./css/navbar.css">
-    <link rel="stylesheet" href="./css/toasts.css">
-    <link rel="stylesheet" href="./components/navbar.html">
-    <link rel="stylesheet" href="./components/sidebar.html">
-    <link rel="stylesheet" href="./components/toasts.html">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-/* ...existing styles... */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculties</title>
+  <link rel="stylesheet" href="./css/faculties.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ...existing styles... */
 
-/* Fix: Ensure sidebar does not overlap add button on mobile when open */
-@media (max-width: 991.98px) {
-  #sidebar-container {
-    
-    position: fixed;
-    pointer-events: auto;
-  }
-  .um-title-section {
-    position: relative;
-    z-index: 1;
-  }
-  .add-years-btn-mobile {
-    position: relative;
-    z-index: 1100 !important;
-    pointer-events: auto;
-  }
-}
-/* Extra: ensure popup overlays are always on top */
-.popup-overlay {
-  z-index: 2000 !important;
-}
-   
-</style>
-</head>
-<body style="background: rgb(248, 250, 252); overflow-x: hidden;">
-    <div id="sidebar-container"></div>
-    <div id="content-wrapper" class="sidebar-hidden">
-        <div id="navbar-container" class="fixed-top"></div>
-        <section class="um-title-section d-flex align-items-center justify-content-between flex-wrap">
-            <div class="um-title-content">
-                <h1 class="um-title">Academic years <span style="font-weight:400;">Management</span></h1>
-                <p class="um-subtitle">Manage And Organize Your Academic Years Efficiently</p>
-                <button class="add-years-btn add-years-btn-mobile">
-                    + Add Years
-                </button>
-            </div>
-            <button class="add-years-btn add-years-btn-desktop">
-                + Add Years
-            </button>
-        </section>
-        <div class="container faculties-container">
-                   <!-- Title Section -->
+    /* Fix: Ensure sidebar does not overlap add button on mobile when open */
+    @media (max-width: 991.98px) {
+      #sidebar-container {
 
-            <div class="search-add-bar">
-                <div class="search-wrapper">
-                    <span class="search-icon"><i class="fa fa-search"></i></span>
-                    <input type="text" class="search-input" placeholder="Search ..." />
-                </div>
-                
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Computers and Information</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Engineering</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Medicine</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Law</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Kindergarten</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Geography</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Business</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Music</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="faculty-card">
-                        <div class="faculty-logo-circle default-bg">
-                            <img src="./assets/university.png" alt="University Logo">
-                        </div>
-                        <h2 class="faculty-name">Sciences</h2>
-                        <div class="faculty-actions">
-                            <button class="btn edit-btn">Edit</button>
-                            <button class="btn delete-btn">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Add Faculty Popup -->
-    <div class="popup-overlay" id="addFacultyOverlay" style="display:none;">
-      <div class="popup-modal">
-        <h2 class="popup-title">Add A New Faculty</h2>
-        <input type="text" class="popup-input" id="addFacultyInput" placeholder="Faculty name..." />
-        <button class="popup-btn" id="addFacultyBtn">Add faculty</button>
-      </div>
-    </div>
-    <!-- Edit Faculty Popup -->
-    <div class="popup-overlay" id="editFacultyOverlay" style="display:none;">
-      <div class="popup-modal">
-        <h2 class="popup-title">Edit Faculty</h2>
-        <input type="text" class="popup-input" id="editFacultyInput" placeholder="Faculty name..." />
-        <button class="popup-btn" id="editFacultyBtn">Edit faculty</button>
-      </div>
-    </div>
-    <script src="./js/loading.js"></script>
-    <script>
-        // Simple search filter for faculty cards
-        document.querySelector('.search-input').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            document.querySelectorAll('.faculty-card').forEach(card => {
-                const name = card.querySelector('.faculty-name').textContent.toLowerCase();
-                card.parentElement.style.display = name.includes(query) ? '' : 'none';
-            });
-        });
-        // Popup logic
-        function showPopup(overlayId, inputId, initialValue = '') {
-          // Removed blur effect
-          document.getElementById(overlayId).style.display = 'flex';
-          const input = document.getElementById(inputId);
-          input.value = initialValue;
-          setTimeout(() => input.focus(), 100);
-        }
-        function hidePopups() {
-          // Removed blur effect
-          document.getElementById('addFacultyOverlay').style.display = 'none';
-          document.getElementById('editFacultyOverlay').style.display = 'none';
-        }
+        position: fixed;
+        pointer-events: auto;
+      }
 
-        // Track the card being edited
-        let editingCard = null;
+      .um-title-section {
+        position: relative;
+        z-index: 1;
+      }
 
-        // Show Add Faculty popup
-  document.querySelectorAll('.add-years-btn, .add-years-btn-mobile, .add-years-btn-desktop').forEach(btn => {
-          btn.addEventListener('click', function() {
-            showPopup('addFacultyOverlay', 'addFacultyInput');
-          });
-        });
-
-        // Show Edit Faculty popup
-        document.querySelectorAll('.faculty-card .edit-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const card = btn.closest('.faculty-card');
-            const facultyName = card.querySelector('.faculty-name').textContent.trim();
-            editingCard = card;
-            showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
-          });
-        });
-
-        // Delete Faculty logic for initial cards
-        document.querySelectorAll('.faculty-card .delete-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const cardCol = btn.closest('.col-lg-4, .col-md-6, .col-12');
-            const facultyName = btn.closest('.faculty-card').querySelector('.faculty-name').textContent.trim();
-            if (cardCol && confirm(`Are you sure you want to delete "${facultyName}"?`)) cardCol.remove();
-          });
-        });
-
-        // Hide popup when clicking outside modal or pressing Escape
-        document.querySelectorAll('.popup-overlay').forEach(overlay => {
-          overlay.addEventListener('mousedown', function(e) {
-            if (e.target === overlay) hidePopups();
-          });
-        });
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape') hidePopups();
-        });
-
-        // Add faculty card logic
-        document.getElementById('addFacultyBtn').onclick = function(e) {
-          e.preventDefault();
-          const name = document.getElementById('addFacultyInput').value.trim();
-          if (name) {
-            // Create card HTML
-            const card = document.createElement('div');
-            card.className = 'col-lg-4 col-md-6 col-12';
-            card.innerHTML = `
-              <div class="faculty-card">
-                <div class="faculty-logo-circle default-bg">
-                  <img src="./assets/university.png" alt="University Logo">
-                </div>
-                <h2 class="faculty-name">${name}</h2>
-                <div class="faculty-actions">
-                  <button class="btn edit-btn">Edit</button>
-                  <button class="btn delete-btn">Delete</button>
-                </div>
-              </div>
-            `;
-            document.querySelector('.row.g-4').appendChild(card);
-            // Add edit event for new card
-            card.querySelector('.edit-btn').addEventListener('click', function() {
-              editingCard = card.querySelector('.faculty-card');
-              const facultyName = editingCard.querySelector('.faculty-name').textContent.trim();
-              showPopup('editFacultyOverlay', 'editFacultyInput', facultyName);
-            });
-            // Add delete event for new card (with confirmation)
-            card.querySelector('.delete-btn').addEventListener('click', function() {
-              const facultyName = card.querySelector('.faculty-name').textContent.trim();
-              if (confirm(`Are you sure you want to delete "${facultyName}"?`)) card.remove();
-            });
-          }
-          hidePopups();
-        };
-
-        // Edit faculty card logic
-        document.getElementById('editFacultyBtn').onclick = function(e) {
-          e.preventDefault();
-          const newName = document.getElementById('editFacultyInput').value.trim();
-          if (editingCard && newName) {
-            editingCard.querySelector('.faculty-name').textContent = newName;
-          }
-          hidePopups();
-        };
-
-        // Fix: force sidebar to not block pointer events for add button
-    function bringAddButtonToFront() {
-      var btn = document.querySelector('.add-years-btn-mobile');
-      if (btn) {
-        btn.style.position = 'relative';
-        btn.style.zIndex = '1100';
-        btn.style.pointerEvents = 'auto';
+      .add-years-btn-mobile {
+        position: relative;
+        z-index: 1100 !important;
+        pointer-events: auto;
       }
     }
-    // Call on load and on sidebar toggle (if you have sidebar toggling)
-    document.addEventListener('DOMContentLoaded', bringAddButtonToFront);
-    // If you have a sidebar toggle, call bringAddButtonToFront() after toggling
-    </script>
+
+    /* Extra: ensure popup overlays are always on top */
+    .popup-overlay {
+      z-index: 2000 !important;
+    }
+  </style>
+</head>
+
+<body style="background: rgb(248, 250, 252); overflow-x: hidden;">
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+    <section class="um-title-section d-flex align-items-center justify-content-between flex-wrap">
+      <div class="um-title-content">
+        <h1 class="um-title">Academic years <span style="font-weight:400;">Management</span></h1>
+        <p class="um-subtitle">Manage And Organize Your Academic Years Efficiently</p>
+        <button class="add-years-btn add-years-btn-mobile">
+          + Add Years
+        </button>
+      </div>
+      <button class="add-years-btn add-years-btn-desktop">
+        + Add Years
+      </button>
+    </section>
+    <div class="container faculties-container">
+      <!-- Title Section -->
+
+      <div class="search-add-bar">
+        <div class="search-wrapper">
+          <span class="search-icon"><i class="fa fa-search"></i></span>
+          <input type="text" class="search-input" placeholder="Search ..." />
+        </div>
+
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Computers and Information</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Engineering</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Medicine</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Law</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Kindergarten</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Geography</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Business</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Music</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="faculty-card">
+            <div class="faculty-logo-circle default-bg">
+              <img src="./assets/university.png" alt="University Logo">
+            </div>
+            <h2 class="faculty-name">Sciences</h2>
+            <div class="faculty-actions">
+              <button class="btn edit-btn">Edit</button>
+              <button class="btn delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Faculty Popup -->
+  <div class="popup-overlay" id="addFacultyOverlay" style="display:none;">
+    <div class="popup-modal">
+      <h2 class="popup-title">Add A New Faculty</h2>
+      <input type="text" class="popup-input" id="addFacultyInput" placeholder="Faculty name..." />
+      <button class="popup-btn" id="addFacultyBtn">Add faculty</button>
+    </div>
+  </div>
+  <!-- Edit Faculty Popup -->
+  <div class="popup-overlay" id="editFacultyOverlay" style="display:none;">
+    <div class="popup-modal">
+      <h2 class="popup-title">Edit Faculty</h2>
+      <input type="text" class="popup-input" id="editFacultyInput" placeholder="Faculty name..." />
+      <button class="popup-btn" id="editFacultyBtn">Edit faculty</button>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <div id="loadingOverlayContainer" class="d-none w-full h-full"
+    style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 50;"></div>
+  <script src="./js/loading.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="./js/toast.js"></script>
+  <script src="./js/loadscreen.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+
+      const facultiesGrid = document.querySelector('.row.g-4');
+      let faculties = [];
+      let editingCard = null;
+      const API_BASE = `${domain}/api/v1/admin/faculties`;
+
+      // --- Fetch and render faculties from backend ---
+      async function fetchFaculties() {
+        showLoading();
+        const res = await getFaculties();
+        if (res?.status === 'success') {
+          faculties = res.data;
+          renderFaculties();
+        }
+      }
+
+      function renderFaculties() {
+        facultiesGrid.innerHTML = '';
+        faculties.forEach((faculty, idx) => {
+          const col = document.createElement('div');
+          col.className = 'col-lg-4 col-md-6 col-12';
+          col.innerHTML = `
+        <div class="faculty-card">
+          <div class="faculty-logo-circle default-bg">
+            <img src="./assets/university.png" alt="University Logo">
+          </div>
+          <h2 class="faculty-name">${faculty.name}</h2>
+          <div class="faculty-actions">
+            <button class="btn edit-btn" data-idx="${idx}">Edit</button>
+            <button class="btn delete-btn" data-idx="${idx}">Delete</button>
+          </div>
+        </div>
+      `;
+          facultiesGrid.appendChild(col);
+          hideLoading();
+        });
+      }
+
+      // --- Search filter ---
+      document.querySelector('.search-input').addEventListener('input', e => {
+        const query = e.target.value.toLowerCase();
+        document.querySelectorAll('.faculty-card').forEach(card => {
+          const name = card.querySelector('.faculty-name').textContent.toLowerCase();
+          card.parentElement.style.display = name.includes(query) ? '' : 'none';
+        });
+      });
+
+      // --- Show/Hide Popups ---
+      function showPopup(overlayId, inputId, initialValue = '') {
+        document.getElementById(overlayId).style.display = 'flex';
+        const input = document.getElementById(inputId);
+        input.value = initialValue;
+        setTimeout(() => input.focus(), 100);
+      }
+      function hidePopups() {
+        document.querySelectorAll('.popup-overlay').forEach(overlay => overlay.style.display = 'none');
+      }
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePopups(); });
+
+      // --- Add Faculty ---
+      document.getElementById('addFacultyBtn').onclick = async e => {
+        e.preventDefault();
+        showLoading();
+        const name = document.getElementById('addFacultyInput').value.trim();
+        if (!name) return;
+
+        const res = await addFaculty(name);
+        if (res?.status === 'success') {
+          faculties.push(res.data);
+          renderFaculties();
+          hidePopups();
+        }
+        hideLoading();
+      };
+      // --- Show Add Faculty popup ---
+      document.querySelectorAll('.add-years-btn, .add-years-btn-mobile, .add-years-btn-desktop').forEach(btn => {
+        btn.addEventListener('click', function () {
+          // Clear input field when opening
+          document.getElementById('addFacultyInput').value = '';
+          showPopup('addFacultyOverlay', 'addFacultyInput');
+        });
+      });
+
+      // --- Edit/Delete Faculty via Event Delegation ---
+      facultiesGrid.addEventListener('click', async e => {
+        const editBtn = e.target.closest('.edit-btn');
+        const deleteBtn = e.target.closest('.delete-btn');
+
+        if (editBtn) {
+          const idx = parseInt(editBtn.getAttribute('data-idx'));
+          editingCard = faculties[idx];
+          showPopup('editFacultyOverlay', 'editFacultyInput', faculties[idx].name);
+          return;
+        }
+
+        if (deleteBtn) {
+          const idx = parseInt(deleteBtn.getAttribute('data-idx'));
+          const faculty = faculties[idx];
+          if (confirm(`Are you sure you want to delete "${faculty.name}"?`)) {
+            showLoading();
+            const res = await deleteFaculty(faculty.id || faculty._id);
+            if (res?.status === 'success') {
+              faculties.splice(idx, 1);
+              renderFaculties();
+            }
+            hideLoading();
+          }
+          return;
+        }
+      });
+
+      // --- Edit Faculty Form Submit ---
+      document.getElementById('editFacultyBtn').onclick = async e => {
+        e.preventDefault();
+        showLoading();
+
+        const newName = document.getElementById('editFacultyInput').value.trim();
+        if (!editingCard || !newName) return;
+
+        const res = await editFaculty(editingCard.id || editingCard._id, newName);
+        if (res?.status === 'success') {
+          const idx = faculties.findIndex(f => (f.id || f._id) === (editingCard.id || editingCard._id));
+          faculties[idx].name = newName;
+          renderFaculties();
+          hidePopups();
+
+        }
+        hideLoading();
+      };
+
+      // --- Initial fetch ---
+      await fetchFaculties();
+
+    });
+
+  </script>
 </body>
+
 </html>

@@ -318,100 +318,20 @@
       </div>
     </div>
     <div id="toast-container"></div>
-
+    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+      style="width: 100vw; height: 100vh; top: 0; left: 0; z-index: 50;"></div>
     <br><br>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
     <script src="./js/script.js"></script>
     <script src="./js/toast.js"></script>
+    <script src="./js/loadscreen.js"></script>
+
 
 
     <script>
       // --- Custom Dropdown Logic for Year Filter ---
-      function setupCustomDropdown(filterId, dropdownId, valueId, hiddenId) {
-        const filter = document.getElementById(filterId);
-        const dropdown = document.getElementById(dropdownId);
-        const valueSpan = document.getElementById(valueId);
-        const hiddenInput = document.getElementById(hiddenId);
-
-        // Toggle dropdown open/close
-        filter.addEventListener('click', function (e) {
-          e.stopPropagation();
-          // Close other dropdowns
-          document.querySelectorAll('.custom-filter.open').forEach(f => {
-            if (f !== filter) f.classList.remove('open');
-          });
-          filter.classList.toggle('open');
-          // Show/hide dropdown
-          if (filter.classList.contains('open')) {
-            dropdown.classList.add('open');
-          } else {
-            dropdown.classList.remove('open');
-          }
-        });
-
-        // Select dropdown item
-        dropdown.addEventListener('click', function (e) {
-          const li = e.target.closest('li');
-          if (!li) return;
-          dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
-          li.classList.add('active');
-          valueSpan.textContent = li.textContent;
-          hiddenInput.value = li.getAttribute('data-value');
-          filter.classList.remove('open');
-          dropdown.classList.remove('open');
-          hiddenInput.dispatchEvent(new Event('change'));
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('mousedown', function (e) {
-          if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
-            filter.classList.remove('open');
-            dropdown.classList.remove('open');
-          }
-        });
-      }
-
-      // Filtering logic
-      function filterYearCards(selectedYear) {
-        const cards = document.querySelectorAll('#yearsCardsGrid .year-card');
-        cards.forEach(card => {
-          const year = card.querySelector('.year-card-title')?.textContent.trim();
-          if (!selectedYear || year === selectedYear) {
-            card.parentElement.style.display = '';
-          } else {
-            card.parentElement.style.display = 'none';
-          }
-        });
-      }
-
-      // Populate custom dropdown with years from cards
-      function populateYearsDropdown() {
-        const cards = document.querySelectorAll('#yearsCardsGrid .year-card-title');
-        const years = Array.from(cards).map(card => card.textContent.trim());
-        const uniqueYears = Array.from(new Set(years));
-        const dropdown = document.getElementById('customYearDropdown');
-        // Remove all except "All Years"
-        dropdown.innerHTML = '<li class="active" data-value="">All Years</li>';
-        uniqueYears.forEach(year => {
-          const li = document.createElement('li');
-          li.setAttribute('data-value', year);
-          li.textContent = year;
-          dropdown.appendChild(li);
-        });
-      }
-
-      document.addEventListener('DOMContentLoaded', function () {
-        populateYearsDropdown();
-        setupCustomDropdown('customYearFilter', 'customYearDropdown', 'customYearValue', 'year_hidden');
-        // Initial filter (show all)
-        filterYearCards('');
-        // Attach filter to hidden input
-        document.getElementById('year_hidden').addEventListener('change', function () {
-          filterYearCards(this.value);
-        });
-
-        // --- Custom Year Popup Modal Logic ---
+      document.addEventListener('DOMContentLoaded', async function () {
         const yearPopupOverlay = document.getElementById('yearPopupOverlay');
         const yearPopupTitle = document.getElementById('yearPopupTitle');
         const yearPopupInput = document.getElementById('yearPopupInput');
@@ -419,47 +339,107 @@
         const yearPopupForm = document.getElementById('yearPopupForm');
         const yearsCardsGrid = document.getElementById('yearsCardsGrid');
 
-        // Store years in memory for demo (replace with backend in real app)
-        let years = Array.from(document.querySelectorAll('#yearsCardsGrid .year-card-title')).map(e => e.textContent.trim());
-
-        let editingYearCard = null;
+        let years = []; // fetched from API
         let editingYearIndex = null;
 
-        const API_BASE = "{{baseURL}}/api/v1/admin/years?year"; // adjust to your backend
+        // --- Custom Dropdown Logic ---
+        function setupCustomDropdown(filterId, dropdownId, valueId, hiddenId) {
+          const filter = document.getElementById(filterId);
+          const dropdown = document.getElementById(dropdownId);
+          const valueSpan = document.getElementById(valueId);
+          const hiddenInput = document.getElementById(hiddenId);
 
-        async function fetchYears() {
-          try {
-            const res = await fetch(API_BASE);
-            const data = await res.json();
-            years = data;
-            renderYears();
-          } catch (err) {
-            console.error("Error fetching years", err);
-          }
+          filter.addEventListener('click', e => {
+            e.stopPropagation();
+            document.querySelectorAll('.custom-filter.open').forEach(f => {
+              if (f !== filter) f.classList.remove('open');
+            });
+            filter.classList.toggle('open');
+            dropdown.classList.toggle('open', filter.classList.contains('open'));
+          });
+
+          dropdown.addEventListener('click', e => {
+            const li = e.target.closest('li');
+            if (!li) return;
+            dropdown.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+            li.classList.add('active');
+            valueSpan.textContent = li.textContent;
+            hiddenInput.value = li.getAttribute('data-value');
+            filter.classList.remove('open');
+            dropdown.classList.remove('open');
+            hiddenInput.dispatchEvent(new Event('change'));
+          });
+
+          document.addEventListener('mousedown', e => {
+            if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
+              filter.classList.remove('open');
+              dropdown.classList.remove('open');
+            }
+          });
         }
+
+        // --- Populate Dropdown ---
+        function populateYearsDropdown() {
+          const dropdown = document.getElementById('customYearDropdown');
+          dropdown.innerHTML = '<li class="active" data-value="">All Years</li>';
+          const uniqueYears = Array.from(new Set(years.map(y => y.year || y)));
+          uniqueYears.forEach(year => {
+            const li = document.createElement('li');
+            li.setAttribute('data-value', year);
+            li.textContent = year;
+            dropdown.appendChild(li);
+          });
+        }
+
+        // --- Filter Cards ---
+        function filterYearCards(selectedYear) {
+          const cards = document.querySelectorAll('#yearsCardsGrid .year-card');
+          cards.forEach(card => {
+            const year = card.querySelector('.year-card-title')?.textContent.trim();
+            card.parentElement.style.display = (!selectedYear || year === selectedYear) ? '' : 'none';
+          });
+        }
+
+        // --- Render Years ---
         function renderYears() {
+          showLoading();
           yearsCardsGrid.innerHTML = '';
-          years.forEach((year, idx) => {
+          years.forEach((yearObj, idx) => {
+            const yearValue = yearObj.year || yearObj;
             const col = document.createElement('div');
             col.className = 'col-lg-4 col-md-6 col-12';
             col.innerHTML = `
-            <div class="year-card gray-year-card">
-              <div class="year-card-avatar gray-year-card-avatar">
-                <img src="./assets/haticon.png" alt="Year Icon">
-              </div>
-              <div class="year-card-title">${year}</div>
-              <div class="year-card-actions">
-                <button class="year-edit-btn" data-idx="${idx}">Edit</button>
-                <button class="year-delete-btn" data-idx="${idx}">Delete</button>
-              </div>
-            </div>
-          `;
+        <div class="year-card gray-year-card">
+          <div class="year-card-avatar gray-year-card-avatar">
+            <img src="./assets/haticon.png" alt="Year Icon">
+          </div>
+          <div class="year-card-title">${yearValue}</div>
+          <div class="year-card-actions">
+            <button class="year-edit-btn" data-idx="${idx}">Edit</button>
+            <button class="year-delete-btn" data-idx="${idx}">Delete</button>
+          </div>
+        </div>
+      `;
             yearsCardsGrid.appendChild(col);
           });
-          // Refresh dropdown/filter
-          populateYearsDropdown && populateYearsDropdown();
+          hideLoading();
+
+          populateYearsDropdown();
         }
 
+        // --- Fetch Years from API ---
+        async function loadYears() {
+          showLoading();
+
+          const res = await getYears();
+          if (res?.status === "success") {
+            years = res.data;
+            renderYears();
+          }
+
+        }
+
+        // --- Open/Close Popup ---
         function openYearPopup({ mode, value, index }) {
           yearPopupOverlay.style.display = 'block';
           yearPopupTitle.textContent = mode === 'edit' ? 'Edit Year' : 'Add A New Year';
@@ -473,58 +453,73 @@
           yearPopupInput.value = '';
           editingYearIndex = null;
         }
-        yearPopupOverlay.onclick = function (e) {
-          if (e.target === yearPopupOverlay) closeYearPopup();
-        };
-        document.addEventListener('keydown', function (e) {
-          if (yearPopupOverlay.style.display === 'block' && e.key === 'Escape') closeYearPopup();
-        });
+        yearPopupOverlay.onclick = e => { if (e.target === yearPopupOverlay) closeYearPopup(); };
+        document.addEventListener('keydown', e => { if (yearPopupOverlay.style.display === 'block' && e.key === 'Escape') closeYearPopup(); });
 
-        // Add Years button (both mobile and desktop)
-        document.querySelectorAll('.add-years-btn').forEach(btn => {
-          btn.addEventListener('click', function () {
-            openYearPopup({ mode: 'add' });
-          });
-        });
+        // --- Add Years Button ---
+        document.querySelectorAll('.add-years-btn').forEach(btn => btn.addEventListener('click', () => openYearPopup({ mode: 'add' })));
 
-        // Edit/Delete buttons on year cards (event delegation for dynamic support)
-        yearsCardsGrid.addEventListener('click', function (e) {
+        // --- Edit/Delete Event Delegation ---
+        yearsCardsGrid.addEventListener('click', async e => {
           const editBtn = e.target.closest('.year-edit-btn');
           if (editBtn) {
             const idx = parseInt(editBtn.getAttribute('data-idx'));
-            openYearPopup({ mode: 'edit', value: years[idx], index: idx });
+            openYearPopup({ mode: 'edit', value: years[idx].year || years[idx], index: idx });
             return;
           }
           const deleteBtn = e.target.closest('.year-delete-btn');
           if (deleteBtn) {
             const idx = parseInt(deleteBtn.getAttribute('data-idx'));
-            if (confirm(`Are you sure you want to delete year "${years[idx]}"?`)) {
-              years.splice(idx, 1);
-              renderYears();
+            const id = years[idx].id || years[idx]._id || idx + 1;
+            if (confirm(`Are you sure you want to delete year "${years[idx].year || years[idx]}"?`)) {
+              const res = await deleteYear(id);
+              if (res?.status === "success") {
+                years.splice(idx, 1);
+                renderYears();
+              }
             }
             return;
           }
         });
 
-        // Handle form submit (Add/Edit)
-        yearPopupForm.onsubmit = function (e) {
+        // --- Handle Add/Edit Form Submission ---
+        yearPopupForm.onsubmit = async e => {
+          showLoading();
           e.preventDefault();
           const yearValue = yearPopupInput.value.trim();
           if (!yearValue) return;
+          hideLoading();
+
           if (editingYearIndex !== null) {
-            // Edit mode
-            years[editingYearIndex] = yearValue;
+            const yearObj = years[editingYearIndex];
+            const id = yearObj.id || yearObj._id || editingYearIndex + 1;
+            const res = await editYear(id, yearValue);
+            if (res?.status === "success") {
+              years[editingYearIndex] = { ...yearObj, year: yearValue };
+              renderYears();
+              closeYearPopup();
+              hideLoading();
+
+            }
           } else {
-            // Add mode
-            years.push(yearValue);
+            const res = await addYear(yearValue);
+            if (res?.status === "success") {
+              years.push(res.data);
+              renderYears();
+              closeYearPopup();
+              hideLoading();
+            }
           }
-          renderYears();
-          closeYearPopup();
         };
 
-        // Initial render (if needed)
-        renderYears();
+        // --- Setup Custom Dropdown ---
+        setupCustomDropdown('customYearFilter', 'customYearDropdown', 'customYearValue', 'year_hidden');
+        document.getElementById('year_hidden').addEventListener('change', function () { filterYearCards(this.value); });
+
+        // --- Initial Load ---
+        await loadYears();
       });
+
       // ...existing code...
 
       // Bootstrap 5 modal instance
