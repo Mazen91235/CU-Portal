@@ -791,6 +791,8 @@ async function getUser(id) {
 
     return res.data; 
   } catch (error) {
+      console.error("Error in getUser:", error);
+
     if (error.response?.status === 401) {
       await refreshToken();
       return getUser(id); // retry
@@ -803,30 +805,33 @@ async function getUser(id) {
     return null;
   }
 }
-// async function updateUsers(dataToUpdate) {
-//   try {
-//     const res = await axios.put(`${domain}/api/v1/admin/users/update`, {
-//       data_to_update: dataToUpdate
-//     }, {
-//       headers: {
-//         "Authorization": `Bearer ${GetCookie("access_token")}`,
-//         "ngrok-skip-browser-warning": "true",
-//         "Content-Type": "application/json"
-//       }
-//     });
+async function updateUsers(dataToUpdate) {
+  try {
+    const res = await axios.patch(`${domain}/api/v1/admin/users/update`, {
+      data_to_update: dataToUpdate
+    }, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true",
+        "Content-Type": "application/json"
+      }
+    });
 
-//     return res.data; 
-//   } catch (error) {
-//     if (error.response?.status === 401) {
-//       await refreshToken();
-//       return updateUsers(dataToUpdate); 
-//     }
-//     if (error.response?.status === 403) {
-//       showToast("error", "Forbidden", "You don’t have permission to update users.", "");
-//       return null;
-//     }
-//     showToast("error", "Error", error.response?.data?.message || "Failed to update users", "");
-//     return null;
-//   }
-// }
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return updateUsers(dataToUpdate); 
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to update users.", "");
+      return null;
+    }
+    console.error("Error in updateUsers:", error.response?.data || error.message);
+    showToast("error", "Error", error.response?.data?.message || "Failed to update users", "");
+    return null;
+  }
+}
+
+
 
