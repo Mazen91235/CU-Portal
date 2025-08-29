@@ -330,3 +330,503 @@ async function GetFileId(url){
     }
     return fileId;
 }
+async function refreshToken() {
+  return axios.post(`${domain}/api/v1/auth/refresh`, {
+    refresh_token: GetCookie("refresh_token")
+  }, {
+    headers: { "ngrok-skip-browser-warning": "true" }
+  })
+  .then(response => {
+    const data = response.data.data;
+    SetCookie("access_token", data.access_token, data.access_expires_in);
+    SetCookie("refresh_token", data.refresh_token, data.refresh_expires_in);
+  })
+  .catch(err => {
+    showToast("error", "Session expired", "Please login again", "");
+    throw err;
+  });
+}
+// years
+async function getYears() {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/years`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      try {
+        await refreshToken();
+        return getYears(year); // retry
+      } catch {
+        showToast("error", "Session expired", "Please login again", "");
+        return null;
+      }
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access years.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load years", "");
+    return null;
+  }
+}
+
+async function getYear(id) {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/years/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return getYear(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to retrieve year", "");
+  }
+}
+
+
+async function addYear(year) {
+  const formData = new FormData();
+  formData.append("year", year);
+
+  try {
+    const res = await axios.post(
+      `${domain}/api/v1/admin/years`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return addYear(year);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to add year", "");
+  }
+}
+async function editYear(id, year) {
+  const formData = new FormData();
+  formData.append("year", year);
+
+  try {
+    const res = await axios.patch(
+      `${domain}/api/v1/admin/years/${id}`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return editYear(id, year);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to edit year", "");
+  }
+}
+async function deleteYear(id) {
+  try {
+    const res = await axios.delete(
+      `${domain}/api/v1/admin/years/${id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return deleteYear(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to delete year", "");
+  }
+}
+// Department
+
+async function getDepartments() {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/departments?name&faculty_id&study_type`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      try {
+        await refreshToken();
+        return getDepartments(); // retry
+      } catch {
+        showToast("error", "Session expired", "Please login again", "");
+        return null;
+      }
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access departments.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load departments", "");
+    return null;
+  }
+}
+
+async function getDepartment(id) {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/departments/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return getDepartment(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to retrieve department", "");
+  }
+}
+
+
+async function addDepartment(name, faculty_id, study_type, code) {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("faculty_id", faculty_id);
+  formData.append("study_type", study_type);
+  formData.append("code", code);
+
+  try {
+    const res = await axios.post(
+      `${domain}/api/v1/admin/departments`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return addDepartment(name, faculty_id, study_type, code);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to add department", "");
+  }
+}
+async function editDepartment(id, name, faculty_id, study_type, code) {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("faculty_id", faculty_id);
+  formData.append("study_type", study_type);
+  formData.append("code", code);
+
+  try {
+    const res = await axios.patch(
+      `${domain}/api/v1/admin/departments/${id}`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return editDepartment(id, name, faculty_id, study_type, code);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to edit department", "");
+  }
+}
+async function deleteDepartment(id) {
+  try {
+    const res = await axios.delete(
+      `${domain}/api/v1/admin/departments/${id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return deleteDepartment(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to delete department", "");
+  }
+}
+
+// Faculty
+
+async function getFaculties(name = "") {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/faculties`, { params: { name },
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      try {
+        await refreshToken();
+        return getFaculties(name); // retry
+      } catch {
+        showToast("error", "Session expired", "Please login again", "");
+        return null;
+      }
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access faculties.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load faculties", "");
+    return null;
+  }
+}
+
+async function getFaculty(id) {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/faculties/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return getFaculty(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to retrieve faculty", "");
+  }
+}
+
+
+async function addFaculty(name) {
+  const formData = new FormData();
+  formData.append("name", name);
+
+  try {
+    const res = await axios.post(
+      `${domain}/api/v1/admin/faculties`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return addFaculty(name);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to add faculty", "");
+  }
+}
+async function editFaculty(id, name) {
+  const formData = new FormData();
+  formData.append("name", name);
+
+  try {
+    const res = await axios.patch(
+      `${domain}/api/v1/admin/faculties/${id}`,
+      formData,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return editFaculty(id, name);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to edit faculty", "");
+  }
+}
+async function deleteFaculty(id) {
+  try {
+    const res = await axios.delete(
+      `${domain}/api/v1/admin/faculties/${id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${GetCookie("access_token")}`,
+          "ngrok-skip-browser-warning": "true"
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return deleteFaculty(id);
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to delete faculty", "");
+  }
+}
+//user
+async function getUsersData() {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/get-users-data`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+    return res.data; 
+  } catch (error) {
+    if (error.response?.status === 401) {
+      try {
+        await refreshToken();
+        return getUsersData(); // retry
+      } catch {
+        showToast("error", "Session expired", "Please login again", "");
+        return null;
+      }
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access users data.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load users data", "");
+    return null;
+  }
+}
+async function getUsers({
+  search_query = "",
+  faculty_id = "",
+  department_id = "",
+  year_id = "",
+  is_active = "",
+  page = 1,
+  limit = 10
+} = {}) {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/users`, {
+      params: {
+        search_query,
+        faculty_id,
+        department_id,
+        year_id,
+        is_active,
+        page,
+        limit
+      },
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    return res.data;  
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return getUsers({ search_query, faculty_id, department_id, year_id, is_active, page, limit });
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access users.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load users", "");
+    return null;
+  }
+}
+async function getUser(id) {
+  try {
+    const res = await axios.get(`${domain}/api/v1/admin/users/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${GetCookie("access_token")}`,
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    return res.data; 
+  } catch (error) {
+    if (error.response?.status === 401) {
+      await refreshToken();
+      return getUser(id); // retry
+    }
+    if (error.response?.status === 403) {
+      showToast("error", "Forbidden", "You don’t have permission to access this user.", "");
+      return null;
+    }
+    showToast("error", "Error", error.response?.data?.message || "Failed to load user", "");
+    return null;
+  }
+}
+// async function updateUsers(dataToUpdate) {
+//   try {
+//     const res = await axios.put(`${domain}/api/v1/admin/users/update`, {
+//       data_to_update: dataToUpdate
+//     }, {
+//       headers: {
+//         "Authorization": `Bearer ${GetCookie("access_token")}`,
+//         "ngrok-skip-browser-warning": "true",
+//         "Content-Type": "application/json"
+//       }
+//     });
+
+//     return res.data; 
+//   } catch (error) {
+//     if (error.response?.status === 401) {
+//       await refreshToken();
+//       return updateUsers(dataToUpdate); 
+//     }
+//     if (error.response?.status === 403) {
+//       showToast("error", "Forbidden", "You don’t have permission to update users.", "");
+//       return null;
+//     }
+//     showToast("error", "Error", error.response?.data?.message || "Failed to update users", "");
+//     return null;
+//   }
+// }
+

@@ -14,8 +14,10 @@
         console.error("Failed to load toast component:", err);
         reject(err);
       }).finally(async () => {
-        if(handleAfterFetching)
-          await handleAfterFetching();
+       if (typeof handleAfterFetching === "function") {
+  await handleAfterFetching();
+}
+
       });
   });
 });
