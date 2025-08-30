@@ -32,6 +32,13 @@
       <div id="popup-container"></div>
       <div id="toast-container"></div>
 
+  <div class="menu-dots">
+  <i class="fas fa-ellipsis-v dep-menu" data-idx="${idx}"></i>
+  <div class="dep-dropdown hidden">
+    <div class="dep-dropdown-item edit-dep" data-idx="${idx}">Edit</div>
+    <div class="dep-dropdown-item delete-dep" data-idx="${idx}">Delete</div>
+  </div>
+</div>
 
       <h1>Welcome</h1>
       <button onclick="showLoading()">Show Spinner</button>

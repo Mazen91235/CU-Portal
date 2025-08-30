@@ -534,7 +534,9 @@ async function addDepartment(name, faculty_id, study_type, code) {
         }
       }
     );
+    showToast("success", "Success", "Department added successfully", "");
     return res.data;
+    
   } catch (error) {
     if (error.response?.status === 401) {
       await refreshToken();
@@ -562,6 +564,8 @@ async function editDepartment(id, name, faculty_id, study_type, code) {
         }
       }
     );
+                        showToast("success", "Success", "Department updated successfully", "");
+
     return res.data;
   } catch (error) {
     if (error.response?.status === 401) {
@@ -624,6 +628,10 @@ async function getFaculties(name = "") {
 }
 
 async function getFaculty(id) {
+  if (!id) {
+    console.error("❌ No faculty id provided");
+    return null;
+  }
   try {
     const res = await axios.get(`${domain}/api/v1/admin/faculties/${id}`, {
       headers: {
