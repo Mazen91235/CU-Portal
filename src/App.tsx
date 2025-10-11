@@ -1,12 +1,10 @@
 import { Route, Routes } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute";
-import useRefreshToken from "./hooks/useRefreshToken";
 import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import "./App.css";
 
 function App() {
-    useRefreshToken();
     useGetUser();
     useRouteMessages();
     return (

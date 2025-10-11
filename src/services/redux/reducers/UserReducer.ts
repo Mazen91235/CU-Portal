@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { GetUserDataAPIResponse } from "../../../types/UserAPITypes";
+import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
+import type {
+    LogoutAPIResponse,
+    RefreshAPIResponse,
+} from "../../../types/AuthenticateAPITypes";
+import { UserAPI } from "../../apis/UserAPIs";
 
 const initialState = {
     user: null as GetUserDataAPIResponse["data"] | null,
@@ -8,29 +14,46 @@ const initialState = {
     permissions: [] as string[],
 };
 
-const userSlice = createSlice({
+const UserSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setUser: (state, action) => {
-            state.user = action.payload;
+        setAccessToken: (state, { payload }: { payload: string }) => {
+            state.access_token = payload;
         },
-        setLoading: (state, action) => {
-            state.isLoading = action.payload;
+        setPermissions: (state, { payload }: { payload: string[] }) => {
+            state.permissions = payload;
         },
-        setPermissions: (state, action) => {
-            state.permissions = action.payload;
-        },
-        setAccessToken: (state, action) => {
-            state.access_token = action.payload;
-        },
-        logout: (state) => {
-            state.user = null;
-            state.access_token = null;
-        },
+    },
+    extraReducers: (builder) => {
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.logout.matchFulfilled,
+            (state, { payload }: { payload: LogoutAPIResponse }) => {
+                if (payload.status == "success") {
+                    state.user = null;
+                    state.access_token = null;
+                }
+            }
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.refreshToken.matchFulfilled,
+            (state, { payload }: { payload: RefreshAPIResponse }) => {
+                if (payload.status == "success") {
+                    state.access_token = payload.data.access_token;
+                }
+            }
+        );
+        builder.addMatcher(
+            UserAPI.endpoints.getUserData.matchFulfilled,
+            (state, { payload }: { payload: GetUserDataAPIResponse }) => {
+                if (payload.status == "success") {
+                    state.user = payload.data;
+                }
+            }
+        );
     },
 });
 
-export const { setUser, setLoading, setPermissions, setAccessToken, logout } = userSlice.actions;
+export const { setAccessToken, setPermissions } = UserSlice.actions;
 
-export default userSlice.reducer;
+export default UserSlice.reducer;

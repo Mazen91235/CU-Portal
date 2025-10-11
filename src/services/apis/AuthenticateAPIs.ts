@@ -35,6 +35,16 @@ export const AuthenticateAPI = createApi({
                 body: { refresh_token: refreshToken },
                 credentials: "include",
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const data: RefreshAPIResponse = (await queryFulfilled).data;
+                    if (data.status == "success") {
+                        SetCookie("access_token", data.data.access_token, data.data.access_expires_in);
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
     }),
 });
