@@ -1,0 +1,32 @@
+import type { Department } from "./Department";
+import type { Faculty } from "./Faculty";
+import type { PendingUser } from "./PendingUser";
+import type { Role } from "./Role";
+import type { Year } from "./Year";
+
+export type User = {
+    id?: number;
+    name?: string;
+    email?: string;
+    phone?: string;
+    national_id?: string;
+    gender?: string;
+    type?: string;
+    year?: Year | null;
+    department?: Department | null;
+    faculty?: Faculty | null;
+    section?: number | null;
+    status?: boolean;
+    is_early_access?: boolean;
+    role?: Role | null;
+    manages?: object;
+    details?: object;
+    pending_user?: PendingUser | null;
+    google_name?: string | null;
+    google_email?: string | null;
+    google_avatar?: string | null;
+    ips?: string[];
+    notifications_count?: number;
+    created_at?: string | null;
+    modified_at?: string | null;
+};

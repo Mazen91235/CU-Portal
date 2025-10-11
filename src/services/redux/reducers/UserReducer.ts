@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { GetUserDataAPIResponse } from "../../../types/UserAPITypes";
 import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
 import type {
     LogoutAPIResponse,
     RefreshAPIResponse,
-} from "../../../types/AuthenticateAPITypes";
+} from "../../../types/responses/AuthenticateAPIResponses";
 import { UserAPI } from "../../apis/UserAPIs";
+import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import type { User } from "../../../types/entities/User";
 
 const initialState = {
-    user: null as GetUserDataAPIResponse["data"] | null,
+    user: null as User | null,
     access_token: null as string | null,
-    isLoading: false as boolean,
     permissions: [] as string[],
 };
 
@@ -45,9 +45,9 @@ const UserSlice = createSlice({
         );
         builder.addMatcher(
             UserAPI.endpoints.getUserData.matchFulfilled,
-            (state, { payload }: { payload: GetUserDataAPIResponse }) => {
+            (state, { payload }: { payload: GenericAPIResponse<User> }) => {
                 if (payload.status == "success") {
-                    state.user = payload.data;
+                    state.user = payload.data || null;
                 }
             }
         );

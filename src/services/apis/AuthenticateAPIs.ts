@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SetCookie } from "../../utils/CookiesManager";
-import type { LogoutAPIResponse, RefreshAPIResponse } from "../../types/AuthenticateAPITypes";
+import type { LogoutAPIResponse, RefreshAPIResponse } from "../../types/responses/AuthenticateAPIResponses";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/auth" }),
