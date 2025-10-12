@@ -51,6 +51,14 @@ const UserSlice = createSlice({
                 }
             }
         );
+        builder.addMatcher(
+            UserAPI.endpoints.getUserPermissions.matchFulfilled,
+            (state, { payload }: { payload: GenericAPIResponse<string[]> }) => {
+                if (payload.status == "success") {
+                    state.permissions = payload.data || [];
+                }
+            }
+        );
     },
 });
 

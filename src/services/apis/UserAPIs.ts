@@ -22,7 +22,14 @@ export const UserAPI = createApi({
                 credentials: "include",
             }),
         }),
+        getUserPermissions: builder.query<GenericAPIResponse<string[]>, void>({
+            query: () => ({
+                url: "/get-user-permissions",
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
-export const { useLazyGetUserDataQuery } = UserAPI;
+export const { useLazyGetUserDataQuery, useLazyGetUserPermissionsQuery } = UserAPI;

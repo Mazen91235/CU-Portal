@@ -4,9 +4,11 @@ import { setAccessToken } from "../services/redux/reducers/UserReducer";
 import { SetCookie } from "../utils/CookiesManager";
 import { useAppDispatch } from "../services/redux/Hooks";
 import useAuth from "./useAuth";
+import { useLazyGetUserPermissionsQuery } from "../services/apis/UserAPIs";
 export default function useLogin() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [getUserPermissions] = useLazyGetUserPermissionsQuery();
     const [ searchParams ] = useSearchParams();
     useAuth(false);
     useEffect(() => {
@@ -32,7 +34,8 @@ export default function useLogin() {
         SetCookie("access_token", access_token, parseInt(access_expires_in));
         SetCookie("refresh_token", refresh_token, parseInt(refresh_expires_in));
         dispatch(setAccessToken(access_token));
+        getUserPermissions();
         navigate("/", { state: { success: "Logged in successfully" } });
-    }, [navigate, dispatch, searchParams]);
+    }, [navigate, dispatch, getUserPermissions, searchParams]);
     return null;
 }
