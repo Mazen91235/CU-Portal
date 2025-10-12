@@ -1,16 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type { User } from "../../types/entities/User";
+import type { RootState } from "../redux/Store";
 export const UserAPI = createApi({
     reducerPath: "userAPI",
-    baseQuery: fetchBaseQuery({ baseUrl: "/api/user" }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: "/api/user",
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as RootState).user.access_token;
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            return headers;
+        },
+    }),
     endpoints: (builder) => ({
-        getUserData: builder.query<GenericAPIResponse<User>, string>({
-            query: (access_token: string) => ({
+        getUserData: builder.query<GenericAPIResponse<User>, void>({
+            query: () => ({
                 url: "/get-user-data",
-                headers: {
-                    "Authorization": `Bearer ${access_token}`
-                },
                 method: "GET",
                 credentials: "include",
             }),
@@ -18,4 +25,4 @@ export const UserAPI = createApi({
     }),
 });
 
-export const { useGetUserDataQuery } = UserAPI;
+export const { useLazyGetUserDataQuery } = UserAPI;

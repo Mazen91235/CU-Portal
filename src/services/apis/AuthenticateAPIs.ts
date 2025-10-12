@@ -5,7 +5,7 @@ export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/auth" }),
     endpoints: (builder) => ({
-        logout: builder.mutation<LogoutAPIResponse, void>({
+        logout: builder.mutation<LogoutAPIResponse, string>({
             query: (access_token) => ({
                 url: "/logout",
                 method: "POST",

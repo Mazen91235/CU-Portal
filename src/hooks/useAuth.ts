@@ -25,7 +25,7 @@ export default function useAuth(shouldBeLoggedIn = true) {
                     });
                 }
                 if (!GetCookie("refresh_token") && shouldBeLoggedIn) {
-                    if (user || access_token) await logoutMutation();
+                    if (user || access_token) await logoutMutation(access_token!);
                     navigate("/login", {
                         state: {
                             error: "You must be logged in to access this resource.",
