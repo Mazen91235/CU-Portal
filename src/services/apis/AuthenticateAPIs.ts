@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SetCookie } from "../../utils/CookiesManager";
-import type { LogoutAPIResponse, RefreshAPIResponse } from "../../types/responses/AuthenticateAPIResponses";
+import type { GoogleAccessTokenResponse, LogoutAPIResponse, RefreshAPIResponse } from "../../types/responses/AuthenticateAPIResponses";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/auth" }),
@@ -46,7 +46,25 @@ export const AuthenticateAPI = createApi({
                 }
             },
         }),
+        getGoogleStoredToken: builder.mutation<GoogleAccessTokenResponse, {oauth_state: string, google_details_token: string}>({
+            query: ({ oauth_state, google_details_token }) => ({
+                url: "/get-google-stored-token",
+                method: "POST",
+                body: { oauth_state, google_details_token },
+                credentials: "include",
+            }),
+        }),
+        getGoogleAccessToken: builder.query<GoogleAccessTokenResponse, string>({
+            query: (access_token) => ({
+                url: "/get-google-access-token",
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${access_token}`
+                },
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
-export const { useRefreshTokenMutation, useLogoutMutation } = AuthenticateAPI;
+export const { useRefreshTokenMutation, useLogoutMutation, useGetGoogleStoredTokenMutation, useLazyGetGoogleAccessTokenQuery } = AuthenticateAPI;

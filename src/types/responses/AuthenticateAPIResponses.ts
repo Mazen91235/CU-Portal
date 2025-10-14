@@ -12,3 +12,11 @@ export type RefreshAPIResponse = {
         refresh_expires_in: number
     }
 };
+export type GoogleAccessTokenResponse = {
+    status: "success" | "error",
+    message: string,
+    data?: {
+        access_token?: string,
+        expires_in?: number,
+    }
+};

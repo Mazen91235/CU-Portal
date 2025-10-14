@@ -2,10 +2,12 @@ import { Route, Routes } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
+import useGetNotifications from "./hooks/useGetNotifications";
 import "./App.css";
 
 function App() {
     useGetUser();
+    useGetNotifications();
     useRouteMessages();
     return (
         <Routes>

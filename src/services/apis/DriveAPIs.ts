@@ -1,0 +1,119 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { RootState } from "../redux/Store";
+export const DriveAPI = createApi({
+    reducerPath: "driveAPI",
+    baseQuery: fetchBaseQuery({
+        baseUrl: "https://www.googleapis.com/upload/drive/v3",
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as RootState).user.google_access_token;
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            return headers;
+        },
+    }),
+    endpoints: (builder) => ({
+        uploadFileToDrive: builder.mutation<string, FormData>(
+            {
+                query: (fileData) => ({
+                    url: "/files?uploadType=multipart",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "multipart/related",
+                    },
+                    body: fileData,
+                }),
+                transformResponse: (response: { data: { id: string } }) => response.data.id,
+            }
+        ),
+        makeFilePublic: builder.mutation<boolean, string>({
+            query: (fileId) => ({
+                url: `/files/${fileId}/permissions`,
+                method: "POST",
+                body: {
+                    role: "reader",
+                    type: "anyone",
+                },
+            }),
+            transformResponse: () => true,
+        }),
+        getResumableSession: builder.mutation<
+            string,
+            {
+                metadata: { name: string; mimeType: string; parents: [] };
+                file: File;
+            }
+        >({
+            query: ({ metadata, file }) => ({
+                url: `/files?uploadType=resumable`,
+                method: "POST",
+                body: metadata,
+                headers: {
+                    "X-Upload-Content-Type": file.type,
+                    "X-Upload-Content-Length": file.size.toString() || "0",
+                },
+            }),
+            transformResponse: (_, meta) => {
+                return meta?.response?.headers.get("location") || "";
+            },
+        }),
+        uploadChunk: builder.mutation<
+            { status?: number; range?: string },
+            {
+                sessionUrl: string;
+                chunk: Blob;
+                start: number;
+                end: number;
+                total: number;
+            }
+        >({
+            query: ({ sessionUrl, chunk, start, end, total }) => ({
+                url: sessionUrl,
+                method: "PUT",
+                body: chunk,
+                headers: {
+                    "Content-Range": `bytes ${start}-${end}/${total}`,
+                    "Content-Type": "application/octet-stream"
+                },
+            }),
+            transformResponse: (_, meta) => ({
+                status: meta?.response?.status || 0,
+                range: meta?.response?.headers.get("Range") || "",
+            }),
+        }),
+        finalizeUpload: builder.mutation<
+            string,
+            {
+                sessionUrl: string;
+                total: number;
+            }
+        >({
+            query: ({ sessionUrl, total }) => ({
+                url: sessionUrl,
+                method: "PUT",
+                body: null,
+                headers: {
+                    "Content-Range": `bytes */${total}`,
+                },
+            }),
+            transformResponse: (response: { data: { id: string } }) => response.data.id,
+        }),
+        removeFileFromDrive: builder.mutation<
+            boolean, string
+        >({
+            query: (fileId) => ({
+                url: `/files/${fileId}`,
+                method: "DELETE",
+            }),
+            transformResponse: () => true,
+        }),
+    }),
+});
+export const {
+    useUploadFileToDriveMutation,
+    useMakeFilePublicMutation,
+    useGetResumableSessionMutation,
+    useUploadChunkMutation,
+    useFinalizeUploadMutation,
+    useRemoveFileFromDriveMutation
+} = DriveAPI;

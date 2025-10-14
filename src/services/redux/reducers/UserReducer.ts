@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
 import type {
+    GoogleAccessTokenResponse,
     LogoutAPIResponse,
     RefreshAPIResponse,
 } from "../../../types/responses/AuthenticateAPIResponses";
@@ -11,6 +12,7 @@ import type { User } from "../../../types/entities/User";
 const initialState = {
     user: null as User | null,
     access_token: null as string | null,
+    google_access_token: null as string | null,
     permissions: [] as string[],
 };
 
@@ -40,6 +42,22 @@ const UserSlice = createSlice({
             (state, { payload }: { payload: RefreshAPIResponse }) => {
                 if (payload.status == "success") {
                     state.access_token = payload.data.access_token;
+                }
+            }
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
+            (state, { payload }: { payload: GoogleAccessTokenResponse }) => {
+                if (payload.status == "success") {
+                    state.google_access_token = payload.data?.access_token || null;
+                }
+            }
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.getGoogleAccessToken.matchFulfilled,
+            (state, { payload }: { payload: GoogleAccessTokenResponse }) => {
+                if (payload.status == "success") {
+                    state.google_access_token = payload.data?.access_token || null;
                 }
             }
         );

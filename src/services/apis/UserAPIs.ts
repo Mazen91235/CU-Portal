@@ -32,4 +32,5 @@ export const UserAPI = createApi({
     }),
 });
 
-export const { useLazyGetUserDataQuery, useLazyGetUserPermissionsQuery } = UserAPI;
+export const { useLazyGetUserDataQuery, useLazyGetUserPermissionsQuery } =
+    UserAPI;
