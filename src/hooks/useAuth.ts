@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
+    useGetGoogleStoredTokenMutation,
+    useLazyGetGoogleAccessTokenQuery,
     useLogoutMutation,
     useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
@@ -25,7 +27,8 @@ export default function useAuth(shouldBeLoggedIn = true) {
                     });
                 }
                 if (!GetCookie("refresh_token") && shouldBeLoggedIn) {
-                    if (user || access_token) await logoutMutation(access_token!);
+                    if (user || access_token)
+                        await logoutMutation(access_token!);
                     navigate("/login", {
                         state: {
                             error: "You must be logged in to access this resource.",
@@ -54,4 +57,19 @@ export default function useAuth(shouldBeLoggedIn = true) {
         shouldBeLoggedIn,
     ]);
     return null;
+}
+
+export function useGetGoogleAccessToken() {
+    useAuth();
+    const access_token = useAppSelector((state) => state.user.access_token);
+    const [getGoogleStoredToken] = useGetGoogleStoredTokenMutation();
+    const [getGoogleAccessToken] = useLazyGetGoogleAccessTokenQuery();
+    useEffect(() => {
+        if (GetCookie("oauth_state") && GetCookie("google_details_token"))
+            getGoogleStoredToken({
+                oauth_state: GetCookie("oauth_state")!,
+                google_details_token: GetCookie("google_details_token")!,
+            });
+        getGoogleAccessToken(access_token!);
+    }, [access_token, getGoogleAccessToken, getGoogleStoredToken]);
 }

@@ -40,7 +40,7 @@ export const DriveAPI = createApi({
         getResumableSession: builder.mutation<
             string,
             {
-                metadata: { name: string; mimeType: string; parents: [] };
+                metadata: { name: string; mimeType: string; parents: string[] };
                 file: File;
             }
         >({
