@@ -1,11 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
-import type { Notification } from "../../types/entities/Notification";
-import type { RootState } from "../redux/Store";
+import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import type { Notification } from "../../../types/entities/Notification";
+import type { RootState } from "../../redux/Store";
+import { GetUserApiLink } from "../../../utils/LinkHandler";
+import type { NotificationSearchDto } from "../../../types/dtos/NotificationDTOs"
+
 export const NotificationAPI = createApi({
     reducerPath: "notificationAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: "/api/user",
+        baseUrl: GetUserApiLink("/notifications"),
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.access_token;
             if (token) {
@@ -17,21 +20,21 @@ export const NotificationAPI = createApi({
     endpoints: (builder) => ({
         getNotifications: builder.query<
             GenericAPIResponse<Notification[]>,
-            { seen?: boolean; page?: number; limit?: number }
+            NotificationSearchDto
         >({
-            query: ({ seen = false, page = 1, limit = 50 }) => ({
-                url: "/notifications",
+            query: (query) => ({
+                url: "/",
                 method: "GET",
                 credentials: "include",
-                params: { seen, page, limit },
+                params: query,
             }),
         }),
         markNotificationAsSeen: builder.mutation<
             GenericAPIResponse<Notification>,
-            number
+            { notification_id: number }
         >({
-            query: (id) => ({
-                url: `/notifications/${id}`,
+            query: ({ notification_id }) => ({
+                url: `/${notification_id}`,
                 method: "PATCH",
                 credentials: "include",
             }),
@@ -39,4 +42,7 @@ export const NotificationAPI = createApi({
     }),
 });
 
-export const { useLazyGetNotificationsQuery, useMarkNotificationAsSeenMutation } = NotificationAPI;
+export const {
+    useLazyGetNotificationsQuery,
+    useMarkNotificationAsSeenMutation,
+} = NotificationAPI;

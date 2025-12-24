@@ -4,12 +4,12 @@ import { setAccessToken } from "../services/redux/reducers/UserReducer";
 import { SetCookie } from "../utils/CookiesManager";
 import { useAppDispatch } from "../services/redux/Hooks";
 import useAuth from "./useAuth";
-import { useLazyGetUserPermissionsQuery } from "../services/apis/UserAPIs";
+import { useLazyGetUserPermissionsQuery } from "../services/apis/user/UserAPIs";
 export default function useLogin() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [getUserPermissions] = useLazyGetUserPermissionsQuery();
-    const [ searchParams ] = useSearchParams();
+    const [searchParams] = useSearchParams();
     useAuth(false);
     useEffect(() => {
         const token = searchParams.get("token");

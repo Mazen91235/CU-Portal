@@ -1,12 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
-import type {
-    GoogleAccessTokenResponse,
-    LogoutAPIResponse,
-    RefreshAPIResponse,
-} from "../../../types/responses/AuthenticateAPIResponses";
-import { UserAPI } from "../../apis/UserAPIs";
-import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { UserAPI } from "../../apis/user/UserAPIs";
 import type { User } from "../../../types/entities/User";
 
 const initialState = {
@@ -30,7 +24,7 @@ const UserSlice = createSlice({
     extraReducers: (builder) => {
         builder.addMatcher(
             AuthenticateAPI.endpoints.logout.matchFulfilled,
-            (state, { payload }: { payload: LogoutAPIResponse }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
                     state.user = null;
                     state.access_token = null;
@@ -39,31 +33,33 @@ const UserSlice = createSlice({
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.refreshToken.matchFulfilled,
-            (state, { payload }: { payload: RefreshAPIResponse }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
-                    state.access_token = payload.data.access_token;
+                    state.access_token = payload.data?.access_token || null;
                 }
             }
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
-            (state, { payload }: { payload: GoogleAccessTokenResponse }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
-                    state.google_access_token = payload.data?.access_token || null;
+                    state.google_access_token =
+                        payload.data?.access_token || null;
                 }
             }
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleAccessToken.matchFulfilled,
-            (state, { payload }: { payload: GoogleAccessTokenResponse }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
-                    state.google_access_token = payload.data?.access_token || null;
+                    state.google_access_token =
+                        payload.data?.access_token || null;
                 }
             }
         );
         builder.addMatcher(
             UserAPI.endpoints.getUserData.matchFulfilled,
-            (state, { payload }: { payload: GenericAPIResponse<User> }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
                     state.user = payload.data || null;
                 }
@@ -71,7 +67,7 @@ const UserSlice = createSlice({
         );
         builder.addMatcher(
             UserAPI.endpoints.getUserPermissions.matchFulfilled,
-            (state, { payload }: { payload: GenericAPIResponse<string[]> }) => {
+            (state, { payload }) => {
                 if (payload.status == "success") {
                     state.permissions = payload.data || [];
                 }

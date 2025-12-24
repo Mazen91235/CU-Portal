@@ -7,4 +7,5 @@ export type Department = {
     code?: string;
     details?: object;
     faculty?: Faculty | null;
+    faculty_id?: number | null;
 };

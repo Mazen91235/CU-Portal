@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
     useGetResumableSessionMutation,
     useUploadChunkMutation,
@@ -14,12 +14,17 @@ import type { Process } from "../types/Process";
 import { GenerateRandomString } from "../utils/RandomGenerators";
 import { setProcess } from "../services/redux/reducers/ProcessReducer";
 
-export default function useUploadFileToDriveChunked(
-    file: File,
-    processName: string,
-    resolve?: (url: string) => void,
-    reject?: (error: string) => void
-) {
+export default function useUploadFileToDriveChunked({
+    file,
+    processName,
+    resolve,
+    reject,
+}: {
+    file: File;
+    processName: string;
+    resolve?: (url: string) => void;
+    reject?: (error: string) => void;
+}) {
     useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
         (state) => state.user.google_access_token
@@ -46,21 +51,14 @@ export default function useUploadFileToDriveChunked(
         }),
         [processName]
     );
-    useEffect(() => {
-        if (!google_access_token) return;
-        (async () => {
+    const uploadFileToDriveChunked = useCallback(async () => {
+        try {
+            if (!google_access_token) return;
             dispatch(setProcess(process));
-            const { data: resumableSessionURL, error: resumableSessionError } =
-                await getResumableSession({ metadata, file });
-            if (resumableSessionError) {
-                process.status = "failed";
-                process.reason = resumableSessionError
-                    ? JSON.stringify(resumableSessionError)
-                    : "Failed to Upload File";
-                dispatch(setProcess(process));
-                if (reject) reject("Failed to Upload File");
-                return;
-            }
+            const resumableSessionURL = await getResumableSession({
+                metadata,
+                file,
+            }).unwrap();
             process.status = "in_progress";
             dispatch(setProcess(process));
             const chunkSize = 5 * 1024 * 1024; // 5MB
@@ -68,23 +66,13 @@ export default function useUploadFileToDriveChunked(
             let end = Math.min(start + chunkSize, file.size);
             while (start < file.size) {
                 const chunk = file.slice(start, end);
-                const { data: uploadChunkResponse, error: uploadChunkError } =
-                    await uploadChunk({
-                        sessionUrl: resumableSessionURL!,
-                        chunk,
-                        start,
-                        end: end - 1,
-                        total: file.size,
-                    });
-                if (uploadChunkError) {
-                    process.status = "failed";
-                    process.reason = uploadChunkError
-                        ? JSON.stringify(uploadChunkError)
-                        : "Failed to Upload File";
-                    dispatch(setProcess(process));
-                    if (reject) reject("Failed to Upload File");
-                    return;
-                }
+                const uploadChunkResponse = await uploadChunk({
+                    sessionUrl: resumableSessionURL!,
+                    chunk,
+                    start,
+                    end: end - 1,
+                    total: file.size,
+                }).unwrap();
                 const range = uploadChunkResponse?.range;
                 if (uploadChunkResponse?.status == 308 && range) {
                     const bytesUploaded = parseInt(range.split("-")[1]) + 1;
@@ -96,41 +84,26 @@ export default function useUploadFileToDriveChunked(
                 process.progress = Math.round((start / file.size) * 100);
                 dispatch(setProcess(process));
             }
-            const { data: uploadedFileId, error: finalizeUploadError } =
-                await finalizeUpload({
-                    sessionUrl: resumableSessionURL!,
-                    total: file.size,
-                });
-            if (finalizeUploadError) {
-                process.status = "failed";
-                process.reason = finalizeUploadError
-                    ? JSON.stringify(finalizeUploadError)
-                    : "Failed to Upload File";
-                dispatch(setProcess(process));
-                if (reject) reject("Failed to Upload File");
-                return;
-            }
+            const uploadedFileId = await finalizeUpload({
+                sessionUrl: resumableSessionURL!,
+                total: file.size,
+            }).unwrap();
             process.progress = 100;
             process.status = "pending";
             dispatch(setProcess(process));
-            const { error: makeFilePublicError } = await makeFilePublic(
-                uploadedFileId!
-            );
-            if (makeFilePublicError) {
-                process.status = "failed";
-                process.reason = makeFilePublicError
-                    ? JSON.stringify(makeFilePublicError)
-                    : "Failed to Upload File";
-                dispatch(setProcess(process));
-                if (reject) reject("Failed to Upload File");
-                return;
-            }
+            await makeFilePublic(uploadedFileId!).unwrap();
             const url = GetDriveUrl(uploadedFileId!);
             process.status = "completed";
             process.url = url;
             dispatch(setProcess(process));
             if (resolve) resolve(url);
-        })();
+        } catch {
+            process.status = "failed";
+            process.reason = "Failed to Upload File";
+            dispatch(setProcess(process));
+            if (reject) reject("Failed to Upload File");
+            return;
+        }
     }, [
         file,
         google_access_token,
@@ -144,18 +117,23 @@ export default function useUploadFileToDriveChunked(
         makeFilePublic,
         dispatch,
     ]);
+    return uploadFileToDriveChunked;
 }
 
-export function useUploadFileToDrive(
-    file: File,
-    resolve?: (url: string) => void,
-    reject?: (error: string) => void
-) {
+export function useUploadFileToDrive({
+    file,
+    resolve,
+    reject,
+}: {
+    file: File;
+    resolve?: (url: string) => void;
+    reject?: (error: string) => void;
+}) {
     useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
         (state) => state.user.google_access_token
     );
-    const [uploadFileToDrive] = useUploadFileToDriveMutation();
+    const [uploadFileToDriveMutation] = useUploadFileToDriveMutation();
     const [makeFilePublic] = useMakeFilePublicMutation();
     const metadata = useMemo(
         () => ({
@@ -174,56 +152,60 @@ export function useUploadFileToDrive(
         formData.append("file", file);
         return formData;
     }, [file, metadata]);
-    useEffect(() => {
-        if (!google_access_token) return;
-        (async () => {
-            const { data: uploadedFileId, error: uploadError } =
-                await uploadFileToDrive(formData);
-            if (uploadError) {
-                if (reject) reject("Failed to Upload File");
-                return;
-            }
-            const { error: makeFilePublicError } = await makeFilePublic(
-                uploadedFileId!
-            );
-            if (makeFilePublicError) {
-                if (reject) reject("Failed to Upload File");
-                return;
-            }
+    const uploadFileToDrive = useCallback(async () => {
+        try {
+            if (!google_access_token) return;
+            const uploadedFileId = await uploadFileToDriveMutation(
+                formData
+            ).unwrap();
+            await makeFilePublic(uploadedFileId!).unwrap();
             const url = GetDriveUrl(uploadedFileId!);
             if (resolve) resolve(url);
-        })();
+        } catch {
+            if (reject) reject("Failed to Upload File");
+            return;
+        }
     }, [
-        file,
         google_access_token,
         formData,
         resolve,
         reject,
-        uploadFileToDrive,
+        uploadFileToDriveMutation,
         makeFilePublic,
     ]);
+    return uploadFileToDrive;
 }
 
-export function useRemoveFileFromDrive(
-    fileId: string,
-    resolve?: () => void,
-    reject?: (error: string) => void
-) {
+export function useRemoveFileFromDrive({
+    fileId,
+    resolve,
+    reject,
+}: {
+    fileId: string;
+    resolve?: () => void;
+    reject?: (error: string) => void;
+}) {
     useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
         (state) => state.user.google_access_token
     );
-    const [removeFileFromDrive] = useRemoveFileFromDriveMutation();
+    const [removeFileFromDriveMutation] = useRemoveFileFromDriveMutation();
 
-    useEffect(() => {
-        if (!google_access_token) return;
-        (async () => {
-            const { error: removeError } = await removeFileFromDrive(fileId);
-            if (removeError) {
-                if (reject) reject("Failed to Remove File");
-                return;
-            }
+    const removeFileFromDrive = useCallback(async () => {
+        try {
+            if (!google_access_token) return;
+            await removeFileFromDriveMutation(fileId).unwrap();
             if (resolve) resolve();
-        })();
-    }, [fileId, google_access_token, resolve, reject, removeFileFromDrive]);
+        } catch {
+            if (reject) reject("Failed to Remove File");
+            return;
+        }
+    }, [
+        fileId,
+        google_access_token,
+        resolve,
+        reject,
+        removeFileFromDriveMutation,
+    ]);
+    return removeFileFromDrive;
 }

@@ -3,6 +3,6 @@ export type Notification = {
     content?: string;
     type?: string;
     parent_id?: number | null;
-    url?: string;
-    created_at?: string;
+    url?: string | null;
+    created_at?: string | null;
 };

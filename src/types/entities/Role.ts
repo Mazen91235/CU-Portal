@@ -7,5 +7,6 @@ export type Role = {
     permissions?: string[];
     permissions_count?: number;
     users?: User[] | null;
+    user_id?: number | null;
     users_count?: number;
 };

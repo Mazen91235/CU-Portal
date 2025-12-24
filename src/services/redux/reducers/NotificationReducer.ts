@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { NotificationAPI } from "../../apis/NotificationAPIs";
+import { NotificationAPI } from "../../apis/user/NotificationAPIs";
 import type { Notification } from "../../../types/entities/Notification";
 
 const initialState = {
@@ -12,11 +12,17 @@ const NotificationSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addMatcher(NotificationAPI.endpoints.getNotifications.matchFulfilled, (state, { payload }: { payload: GenericAPIResponse<Notification[]> }) => {
-            if (payload.status == "success") {
-                state.notifications = payload.data || [];
+        builder.addMatcher(
+            NotificationAPI.endpoints.getNotifications.matchFulfilled,
+            (
+                state,
+                { payload }: { payload: GenericAPIResponse<Notification[]> }
+            ) => {
+                if (payload.status == "success") {
+                    state.notifications = payload.data || [];
+                }
             }
-        });
+        );
     },
 });
 
