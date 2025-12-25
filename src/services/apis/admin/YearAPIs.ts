@@ -2,12 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Year } from "../../../types/entities/Year";
 import type { RootState } from "../../redux/Store";
-import { GetUserApiLink } from "../../../utils/LinkHandler";
- import type { MaterialSearchDto } from "../../../types/dtos/MaterialDTOs";
+import { GetAdminApiLink } from "../../../utils/LinkHandler";
+import type { YearSearchDto } from "../../../types/dtos/YearDTOs";
 export const AdminYearAPI = createApi({
     reducerPath: "adminYearAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink("/years"),
+        baseUrl: GetAdminApiLink("/years"),
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.access_token;
             if (token) {
@@ -17,10 +17,7 @@ export const AdminYearAPI = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getYears: builder.query<
-            GenericAPIResponse<Year[]>,
-            MaterialSearchDto
-        >({
+        getYears: builder.query<GenericAPIResponse<Year[]>, YearSearchDto>({
             query: (query) => ({
                 url: "/",
                 method: "GET",
@@ -35,7 +32,7 @@ export const AdminYearAPI = createApi({
                 credentials: "include",
             }),
         }),
-        searchYears: builder.query<GenericAPIResponse<Year[]>, MaterialSearchDto>({
+        searchYears: builder.query<GenericAPIResponse<Year[]>, YearSearchDto>({
             query: (query) => ({
                 url: `/search`,
                 method: "GET",

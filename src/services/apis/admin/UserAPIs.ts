@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { User } from "../../../types/entities/User";
 import type { RootState } from "../../redux/Store";
-import { GetUserApiLink } from "../../../utils/LinkHandler";
+import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     UsersDataResponseDto,
     UsersUpdateDto,
@@ -11,7 +11,7 @@ import type { UserSearchDto } from "../../../types/dtos/UserDTOs";
 export const AdminUserAPI = createApi({
     reducerPath: "adminUserAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink("/users"),
+        baseUrl: GetAdminApiLink("/users"),
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.access_token;
             if (token) {

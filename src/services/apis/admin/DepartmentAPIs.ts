@@ -2,12 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Department } from "../../../types/entities/Department";
 import type { RootState } from "../../redux/Store";
-import { GetUserApiLink } from "../../../utils/LinkHandler";
+import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { DepartmentSearchDto } from "../../../types/dtos/DepartmentDTOs";
 export const AdminDepartmentAPI = createApi({
     reducerPath: "adminDepartmentAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink("/departments"),
+        baseUrl: GetAdminApiLink("/departments"),
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.access_token;
             if (token) {

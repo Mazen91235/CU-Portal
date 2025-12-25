@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Grade } from "../../../types/entities/Grade";
 import type { RootState } from "../../redux/Store";
-import { GetUserApiLink } from "../../../utils/LinkHandler";
+import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     GradeRegisterDto,
     GradeSearchDto,
@@ -10,7 +10,7 @@ import type {
 export const AdminGradeAPI = createApi({
     reducerPath: "adminGradeAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink("/grades"),
+        baseUrl: GetAdminApiLink("/grades"),
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.access_token;
             if (token) {

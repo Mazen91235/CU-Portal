@@ -3,7 +3,7 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Announcement } from "../../../types/entities/Announcement";
 import type { RootState } from "../../redux/Store";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { AnnouncementsSearchDto } from "../../../types/dtos/AnnouncementsDTOs";
+import type { AnnouncementSearchDto } from "../../../types/dtos/AnnouncementDTOs";
 
 export const AnnouncementAPI = createApi({
     reducerPath: "announcementAPI",
@@ -20,7 +20,7 @@ export const AnnouncementAPI = createApi({
     endpoints: (builder) => ({
         getAnnouncements: builder.query<
             GenericAPIResponse<Announcement[]>,
-            AnnouncementsSearchDto
+            AnnouncementSearchDto
         >({
             query: (query) => ({
                 url: "/",

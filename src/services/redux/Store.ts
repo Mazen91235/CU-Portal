@@ -23,12 +23,19 @@ import { AdminMaterialAPI } from "../apis/admin/MaterialAPIs";
 import { AdminRoleAPI } from "../apis/admin/RoleAPIs";
 import { AdminUserAPI } from "../apis/admin/UserAPIs";
 import { AdminYearAPI } from "../apis/admin/YearAPIs";
+import { AdminAnnouncementAPI } from "../apis/admin/AnnouncementAPIs";
+import { AdminExamAPI } from "../apis/admin/ExamAPIs";
+import { AdminLogAPI } from "../apis/admin/LogAPIs";
+import { AdminMessageAPI } from "../apis/admin/MessageAPIs";
+import { AdminTaskAPI } from "../apis/admin/TaskAPIs";
+import { MessageAPI } from "../apis/MessageAPIs";
 
 const store = configureStore({
     reducer: {
         user: userReducer,
         [AuthenticateAPI.reducerPath]: AuthenticateAPI.reducer,
         [DriveAPI.reducerPath]: DriveAPI.reducer,
+        [MessageAPI.reducerPath]: MessageAPI.reducer,
         [AnnouncementAPI.reducerPath]: AnnouncementAPI.reducer,
         [CalendarAPI.reducerPath]: CalendarAPI.reducer,
         [CourseAPI.reducerPath]: CourseAPI.reducer,
@@ -40,13 +47,18 @@ const store = configureStore({
         [NotificationAPI.reducerPath]: NotificationAPI.reducer,
         [TaskAPI.reducerPath]: TaskAPI.reducer,
         [UserAPI.reducerPath]: UserAPI.reducer,
+        [AdminAnnouncementAPI.reducerPath]: AdminAnnouncementAPI.reducer,
         [AdminCourseAPI.reducerPath]: AdminCourseAPI.reducer,
         [AdminCourseMapAPI.reducerPath]: AdminCourseMapAPI.reducer,
         [AdminDepartmentAPI.reducerPath]: AdminDepartmentAPI.reducer,
+        [AdminExamAPI.reducerPath]: AdminExamAPI.reducer,
         [AdminFacultyAPI.reducerPath]: AdminFacultyAPI.reducer,
         [AdminGradeAPI.reducerPath]: AdminGradeAPI.reducer,
+        [AdminLogAPI.reducerPath]: AdminLogAPI.reducer,
         [AdminMaterialAPI.reducerPath]: AdminMaterialAPI.reducer,
+        [AdminMessageAPI.reducerPath]: AdminMessageAPI.reducer,
         [AdminRoleAPI.reducerPath]: AdminRoleAPI.reducer,
+        [AdminTaskAPI.reducerPath]: AdminTaskAPI.reducer,
         [AdminUserAPI.reducerPath]: AdminUserAPI.reducer,
         [AdminYearAPI.reducerPath]: AdminYearAPI.reducer,
     },
@@ -54,6 +66,7 @@ const store = configureStore({
         getDefaultMiddleware().concat(
             AuthenticateAPI.middleware,
             DriveAPI.middleware,
+            MessageAPI.middleware,
             AnnouncementAPI.middleware,
             CalendarAPI.middleware,
             CourseAPI.middleware,
@@ -65,13 +78,18 @@ const store = configureStore({
             NotificationAPI.middleware,
             TaskAPI.middleware,
             UserAPI.middleware,
+            AdminAnnouncementAPI.middleware,
             AdminCourseAPI.middleware,
             AdminCourseMapAPI.middleware,
             AdminDepartmentAPI.middleware,
+            AdminExamAPI.middleware,
             AdminFacultyAPI.middleware,
             AdminGradeAPI.middleware,
+            AdminLogAPI.middleware,
             AdminMaterialAPI.middleware,
+            AdminMessageAPI.middleware,
             AdminRoleAPI.middleware,
+            AdminTaskAPI.middleware,
             AdminUserAPI.middleware,
             AdminYearAPI.middleware
         ),
