@@ -1,0 +1,130 @@
+.screenshotSection {
+    width: 100%;
+    padding: 3rem 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.screenshotsGalleryOverlap {
+    position: relative;
+    width: 920px;
+    height: 670px;
+    margin: 0 auto 1.5rem auto;
+    display: block;
+}
+
+.screenshotImgBack,
+.screenshotImgFront {
+    position: absolute;
+    width: 700px;
+    height: auto;
+    border-radius: var(--primary-border-radius);
+    box-shadow: var(--dark-box-shadow);
+    border: 1px solid var(--light-grey);
+    object-fit: cover;
+}
+
+.screenshotImgBack {
+    left: -15%;
+    top: 0;
+    z-index: 1;
+}
+
+.screenshotImgFront {
+    left: 40%;
+    top: 40%;
+    z-index: 2;
+    box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
+}
+
+@media (max-width: 1280px) {
+    .screenshotSection {
+        padding: 2rem 0 1.5rem 0;
+    }
+
+    .screenshotsGalleryOverlap {
+        width: 700px;
+        height: 480px;
+        max-width: 98vw;
+    }
+
+    .screenshotImgBack,
+    .screenshotImgFront {
+        width: 500px;
+        max-width: 90vw;
+    }
+
+    .screenshotImgBack {
+        left: 0;
+        top: 0;
+    }
+
+    .screenshotImgFront {
+        left: 260px;
+        top: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .screenshotSection {
+        padding: 1.2rem 0 1rem 0;
+        margin-top: 2rem;
+        width: 100vw;
+        max-width: 100vw;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: transparent;
+        position: relative;
+        min-height: 400px;
+        margin: 20px 0;
+    }
+
+    .screenshotsGalleryOverlap {
+        width: 100vw;
+        max-width: 100vw;
+        min-width: 0;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+        height: auto;
+        left: 0;
+        right: 0;
+    }
+
+    .screenshotImgBack {
+        display: block;
+        position: static;
+        width: 90vw;
+        max-width: 350px;
+        min-width: 160px;
+        height: auto;
+        margin-bottom: 24px;
+        margin-left: 15px;
+        margin-right: auto;
+        border-radius: var(--primary-border-radius);
+        z-index: 1;
+        box-shadow: var(--dark-box-shadow);
+        object-fit: contain;
+    }
+
+    .screenshotImgFront {
+        display: block;
+        position: static;
+        width: 90vw;
+        max-width: 350px;
+        min-width: 160px;
+        height: auto;
+        margin-left: auto;
+        margin-right: 15px;
+        border-radius: var(--primary-border-radius);
+        z-index: 2;
+        box-shadow: 0 16px 48px rgba(126, 34, 206, 0.18);
+        object-fit: contain;
+    }
+}

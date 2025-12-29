@@ -1,0 +1,13 @@
+.logoImage {
+    cursor: pointer;
+    user-select: none;
+    transition: transform var(--transition-duration) ease;
+}
+
+.logoImage:hover {
+    transform: scale(1.05);
+}
+
+.logoImage:active {
+    transform: scale(0.95);
+}
