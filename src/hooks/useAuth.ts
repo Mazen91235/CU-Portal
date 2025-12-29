@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppSelector } from "../services/redux/Hooks";
 import {
@@ -7,7 +7,7 @@ import {
     useLogoutMutation,
     useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
-import { GetCookie } from "../utils/CookiesManager";
+import { GetCookie, SetCookie } from "../utils/CookiesManager";
 export default function useAuth({
     permission,
     reverse = false,
@@ -22,6 +22,28 @@ export default function useAuth({
     const user = useAppSelector((state) => state.user.user);
     const access_token = useAppSelector((state) => state.user.access_token);
     const permissions = useAppSelector((state) => state.user.permissions);
+    const refreshToken = useCallback(
+        async (retries: number = 3) => {
+            try {
+                await refreshTokenMutation(
+                    GetCookie("refresh_token")!
+                ).unwrap();
+            } catch {
+                if (retries > 0) {
+                    await refreshToken(retries - 1);
+                    return;
+                }
+                SetCookie("refresh_token", "", -1);
+                navigate("/auth/login", {
+                    state: {
+                        error: "Session expired. Please log in again.",
+                    },
+                });
+                return;
+            }
+        },
+        [refreshTokenMutation, navigate]
+    );
     useEffect(() => {
         (async () => {
             try {
@@ -39,9 +61,7 @@ export default function useAuth({
                     });
                 }
                 if (!GetCookie("access_token") && GetCookie("refresh_token")) {
-                    await refreshTokenMutation(
-                        GetCookie("refresh_token")!
-                    ).unwrap();
+                    await refreshToken();
                 }
                 if (user && permission) {
                     const hasPermission = permissions.includes(permission);
@@ -70,7 +90,7 @@ export default function useAuth({
         permissions,
         navigate,
         logoutMutation,
-        refreshTokenMutation,
+        refreshToken,
         permission,
         reverse,
     ]);

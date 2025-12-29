@@ -6,12 +6,14 @@ import { LoadingProvider } from "./contexts/providers/LoadingProvider.tsx";
 import App from "./App.tsx";
 import store from "./services/redux/Store.ts";
 import "./index.css";
+import { Toasts } from "./components/toast/Toast.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <BrowserRouter>
             <Provider store={store}>
                 <LoadingProvider>
+                    <Toasts />
                     <App />
                 </LoadingProvider>
             </Provider>

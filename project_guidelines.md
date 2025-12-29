@@ -94,12 +94,20 @@ If you needed a color or something not in a variable either create a variable an
     --dark-text: #424242;
     --light-text: #ffffff;
     --gradient: linear-gradient(90deg, #ffa8a7, #881792);
-    --main-border-radius: 8px;
-    --main-padding: 16px;
-    --main-margin: 16px;
+    --primary-border-radius: 8px;
+    --primary-padding: 16px;
+    --primary-margin: 16px;
     --light-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     --dark-box-shadow: 0 2px 8px rgba(60, 60, 60, 0.06);
     --overlay-bg: rgba(0, 0, 0, 0.5);
+    --primary-font-family: "Roboto", sans-serif;
+    --secondary-font-family: "Paytone One", sans-serif;
+    --primary-font-weight: 500;
+    --primary-font-weight-heavy: 700;
+    --secondary-font-weight: 400;
+    --primary-font-size: 16px;
+    --secondary-font-size: 14px;
+    --transition-duration: 0.3s;
 }
 ```
 
