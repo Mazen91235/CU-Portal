@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials Explorer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
+  <link rel="stylesheet" href="./css/navbar.css">
+  <link rel="stylesheet" href="./css/toasts.css">
+  <link rel="stylesheet" href="./components/navbar.html">
+  <link rel="stylesheet" href="./components/sidebar.html">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Content Wrapper */
+    #content-wrapper {
+      transition: all 0.3s ease;
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-hidden {
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-visible {
+      padding-left: 250px;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 100px; /* Account for fixed navbar */
+    }
+    
+    /* Header Styles */
+    .header {
+      margin-bottom: 2rem;
+    }
+    
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #5A0F61;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      color: #666;
+    }
+    
+    /* Filters Section */
+    .filters-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .filters-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    /* Custom Select Styles */
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+    
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+    
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+    
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+    }
+    
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    /* Navigation Section */
+    .navigation-section {
+      margin-bottom: 2rem;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb-item {
+      color: #666;
+    }
+    
+    .breadcrumb-item:not(:last-child)::after {
+      content: ">";
+      margin: 0 0.5rem;
+      color: #999;
+    }
+    
+    .breadcrumb-item.active {
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.9rem;
+    }
+    
+    .search-input::placeholder {
+      color: #999;
+    }
+    
+    .search-icon {
+      color: #999;
+      margin-right: 0.5rem;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-secondary {
+      background-color: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #eaeaea;
+    }
+    
+    .btn-primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    /* Materials Section */
+    .materials-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    /* Updated Card Design */
+    .material-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    
+    .material-card:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      border-color: #5a0f61;
+    }
+    
+    .material-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      font-size: 1.8rem;
+    }
+    
+    .pdf-icon {
+      color: #dc3545;
+    }
+    
+    .image-icon {
+      color: #198754;
+    }
+    
+    .doc-icon {
+      color: #0d6efd;
+    }
+    
+    .video-icon {
+      color: #ffc107;
+    }
+    
+    .material-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .material-date {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 1rem;
+    }
+    
+    .material-description {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.5;
+      width: 100%;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background-color: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    
+    .path-navigation {
+      margin-bottom: 1.5rem;
+    }
+    
+    .path-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    
+    .path-value {
+      background-color: #f5f5f5;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .optional {
+      font-size: 0.8rem;
+      color: #999;
+      font-weight: normal;
+    }
+    
+    .folder-preview {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #f5f5f5;
+      border-radius: 6px;
+    }
+    
+    .folder-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .folder-name {
+      font-weight: 500;
+      color: #333;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+        padding-top: 80px;
+      }
+      
+      .filters-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .materials-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal {
+        width: 95%;
+      }
+      
+      #content-wrapper.sidebar-visible {
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+    
+    <div class="container">
+      <header class="header">
+        <h1 class="title">Materials Explorer</h1>
+        <p class="subtitle">Navigate through your course materials with ease</p>
+      </header>
+      
+      <section class="filters-section">
+        <div class="filters-container">
+          <div class="custom-select" id="faculty-select">
+            <div class="custom-select-trigger">
+              <span class="custom-select-placeholder">Faculty</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="custom-select-option" data-value="cs">Computer Science</div>
+              <div class="custom-select-option" data-value="math">Mathematics</div>
+              <div class="custom-select-option" data-value="eng">Engineering</div>
+              <div class="custom-select-option" data-value="sci">Science</div>
+              <div class="custom-select-option" data-value="bus">Business</div>
+            </div>
+          </div>
+          
+          <div class="custom-select" id="department-select">
+            <div class="custom-select-trigger">
+              <span class="custom-select-placeholder">Department</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="custom-select-option" data-value="web">Web Development</div>
+              <div class="custom-select-option" data-value="ai">Artificial Intelligence</div>
+              <div class="custom-select-option" data-value="db">Database Systems</div>
+              <div class="custom-select-option" data-value="os">Operating Systems</div>
+              <div class="custom-select-option" data-value="net">Networking</div>
+            </div>
+          </div>
+          
+          <div class="custom-select" id="year-select">
+            <div class="custom-select-trigger">
+              <span class="custom-select-placeholder">Academic Year</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="custom-select-option" data-value="2024">2023-2024</div>
+              <div class="custom-select-option" data-value="2023">2022-2023</div>
+              <div class="custom-select-option" data-value="2022">2021-2022</div>
+              <div class="custom-select-option" data-value="2021">2020-2021</div>
+            </div>
+          </div>
+          
+          <div class="custom-select" id="subject-select">
+            <div class="custom-select-trigger">
+              <span class="custom-select-placeholder">Subject</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="custom-select-option" data-value="html">HTML</div>
+              <div class="custom-select-option" data-value="css">CSS</div>
+              <div class="custom-select-option" data-value="js">JavaScript</div>
+              <div class="custom-select-option" data-value="react">React</div>
+              <div class="custom-select-option" data-value="node">Node.js</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="navigation-section">
+        <div class="breadcrumb">
+          <span class="breadcrumb-item">Materials</span>
+          <span class="breadcrumb-item">Computer Science</span>
+          <span class="breadcrumb-item">Web Development</span>
+          <span class="breadcrumb-item active">HTML</span>
+        </div>
+        
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search files and folders...">
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="add-folder-btn">
+            <i class="fas fa-folder-plus"></i> Add Folder
+          </button>
+          <button class="btn btn-primary" id="add-file-btn">
+            <i class="fas fa-file-plus"></i> Add File
+          </button>
+        </div>
+      </section>
+      
+      <section class="materials-section">
+        <div class="materials-grid">
+          <div class="material-card" data-material="overview">
+            <div class="material-icon pdf-icon">
+              <img src="assets/pdf.svg" alt="PDF Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">Overview.pdf</div>
+            <div class="material-date">Oct 12, 2023</div>
+            <div class="material-description">
+              Course introduction and syllabus overview for HTML fundamentals.
+            </div>
+          </div>
+          
+          <div class="material-card" data-material="cheatsheet">
+            <div class="material-icon image-icon">
+              <img src="assets/image.svg" alt="Image Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">HTML Cheat Sheet.png</div>
+            <div class="material-date">Sep 28, 2023</div>
+            <div class="material-description">
+              Quick reference guide for HTML tags and attributes with examples.
+            </div>
+          </div>
+          
+          <div class="material-card" data-material="assignment">
+            <div class="material-icon doc-icon">
+              <img src="assets/word.svg" alt="Word Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">Assignment1.docx</div>
+            <div class="material-date">Oct 5, 2023</div>
+            <div class="material-description">
+              First assignment covering basic HTML structure and elements.
+            </div>
+          </div>
+          
+          <div class="material-card" data-material="tutorial">
+            <div class="material-icon video-icon">
+              <img src="assets/record.svg" alt="Video Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">Forms Tutorial.mp4</div>
+            <div class="material-date">Oct 15, 2023</div>
+            <div class="material-description">
+              Video tutorial on creating and styling HTML forms with validation.
+            </div>
+          </div>
+          
+          <div class="material-card" data-material="examples">
+            <div class="material-icon image-icon">
+              <img src="assets/image.svg" alt="Image Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">Layout Examples.jpg</div>
+            <div class="material-date">Oct 8, 2023</div>
+            <div class="material-description">
+              Visual examples of different HTML layout techniques and structures.
+            </div>
+          </div>
+          
+          <div class="material-card" data-material="resources">
+            <div class="material-icon pdf-icon">
+              <img src="assets/pdf.svg" alt="PDF Icon" style="width: 32px; height: 32px;">
+            </div>
+            <div class="material-name">Additional Resources.pdf</div>
+            <div class="material-date">Oct 18, 2023</div>
+            <div class="material-description">
+              Collection of external resources and references for further learning.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- Add File Modal -->
+    <div class="modal-overlay" id="add-file-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Add Files</h3>
+        </div>
+        <div class="modal-body">
+          <div class="path-navigation">
+            <div class="path-label">Add to:</div>
+            <div class="path-value">Faculty > Computer Science > Web Development > HTML</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="file-name">File Name</label>
+            <input type="text" class="form-input" id="file-name" placeholder="Enter file name">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="file-type">File Type</label>
+            <input type="text" class="form-input" id="file-type" placeholder="Select file type">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="file-description">Description <span class="optional">(Optional)</span></label>
+            <textarea class="form-input form-textarea" id="file-description" placeholder="Enter file description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-file-btn">Close</button>
+          <button class="btn btn-primary" id="confirm-file-btn">Add Files</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Folder Modal -->
+    <div class="modal-overlay" id="add-folder-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Create New Folder</h3>
+        </div>
+        <div class="modal-body">
+          <div class="path-navigation">
+            <div class="path-label">Add to:</div>
+            <div class="path-value">Faculty > Computer Science > Web Development > HTML</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="folder-name">Folder Name</label>
+            <input type="text" class="form-input" id="folder-name" placeholder="Enter folder name">
+          </div>
+          
+          <div class="folder-preview">
+            <div class="folder-icon">
+              <i class="fas fa-folder"></i>
+            </div>
+            <div class="folder-name" id="folder-preview-name">New Folder</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-folder-btn">Close</button>
+          <button class="btn btn-primary" id="confirm-folder-btn">Create Folder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Custom Select Class
+    class CustomSelect {
+      constructor(selectElement) {
+        this.selectElement = selectElement;
+        this.trigger = selectElement.querySelector('.custom-select-trigger');
+        this.placeholder = selectElement.querySelector('.custom-select-placeholder');
+        this.dropdown = selectElement.querySelector('.custom-select-dropdown');
+        this.options = selectElement.querySelectorAll('.custom-select-option');
+        this.selectedValue = '';
+        
+        this.init();
+      }
+      
+      init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', () => {
+          this.toggleDropdown();
+        });
+        
+        // Handle option clicks
+        this.options.forEach(option => {
+          option.addEventListener('click', () => {
+            this.selectOption(option);
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.selectElement.contains(e.target)) {
+            this.closeDropdown();
+          }
+        });
+      }
+      
+      toggleDropdown() {
+        this.selectElement.classList.toggle('open');
+      }
+      
+      closeDropdown() {
+        this.selectElement.classList.remove('open');
+      }
+      
+      selectOption(option) {
+        // Update selected value
+        this.selectedValue = option.getAttribute('data-value');
+        
+        // Update placeholder text
+        this.placeholder.textContent = option.textContent;
+        
+        // Update selected state
+        this.options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Close dropdown
+        this.closeDropdown();
+        
+        // Trigger change event
+        this.selectElement.dispatchEvent(new Event('change'));
+      }
+      
+      getValue() {
+        return this.selectedValue;
+      }
+    }
+    
+    // Modal functionality
+    class Modal {
+      constructor(modalElement) {
+        this.modal = modalElement;
+        this.closeButtons = this.modal.querySelectorAll('.btn-secondary');
+        this.confirmButtons = this.modal.querySelectorAll('.btn-primary');
+        this.overlay = this.modal;
+        
+        this.init();
+      }
+      
+      init() {
+        // Close modal when clicking on close button
+        this.closeButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            this.close();
+          });
+        });
+        
+        // Close modal when clicking on overlay
+        this.overlay.addEventListener('click', (e) => {
+          if (e.target === this.overlay) {
+            this.close();
+          }
+        });
+        
+        // Handle confirm button clicks
+        this.confirmButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            this.handleConfirm();
+          });
+        });
+      }
+      
+      open() {
+        this.modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      }
+      
+      close() {
+        this.modal.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+      }
+      
+      handleConfirm() {
+        // This will be overridden by specific modals
+        console.log('Confirm action');
+        this.close();
+      }
+    }
+    
+    // Add File Modal
+    class AddFileModal extends Modal {
+      constructor(modalElement) {
+        super(modalElement);
+        this.fileNameInput = document.getElementById('file-name');
+        this.fileTypeInput = document.getElementById('file-type');
+        this.fileDescriptionInput = document.getElementById('file-description');
+      }
+      
+      handleConfirm() {
+        const fileName = this.fileNameInput.value;
+        const fileType = this.fileTypeInput.value;
+        const fileDescription = this.fileDescriptionInput.value;
+        
+        if (!fileName || !fileType) {
+          alert('Please fill in all required fields');
+          return;
+        }
+        
+        console.log('Adding file:', {
+          name: fileName,
+          type: fileType,
+          description: fileDescription
+        });
+        
+        // Reset form
+        this.fileNameInput.value = '';
+        this.fileTypeInput.value = '';
+        this.fileDescriptionInput.value = '';
+        
+        this.close();
+      }
+    }
+    
+    // Add Folder Modal
+    class AddFolderModal extends Modal {
+      constructor(modalElement) {
+        super(modalElement);
+        this.folderNameInput = document.getElementById('folder-name');
+        this.folderPreviewName = document.getElementById('folder-preview-name');
+        
+        // Update preview when typing
+        this.folderNameInput.addEventListener('input', (e) => {
+          const folderName = e.target.value || 'New Folder';
+          this.folderPreviewName.textContent = folderName;
+        });
+      }
+      
+      handleConfirm() {
+        const folderName = this.folderNameInput.value;
+        
+        if (!folderName) {
+          alert('Please enter a folder name');
+          return;
+        }
+        
+        console.log('Creating folder:', {
+          name: folderName
+        });
+        
+        // Reset form
+        this.folderNameInput.value = '';
+        this.folderPreviewName.textContent = 'New Folder';
+        
+        this.close();
+      }
+    }
+    
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize custom selects
+      const facultySelect = new CustomSelect(document.getElementById('faculty-select'));
+      const departmentSelect = new CustomSelect(document.getElementById('department-select'));
+      const yearSelect = new CustomSelect(document.getElementById('year-select'));
+      const subjectSelect = new CustomSelect(document.getElementById('subject-select'));
+      
+      // Initialize modals
+      const addFileModal = new AddFileModal(document.getElementById('add-file-modal'));
+      const addFolderModal = new AddFolderModal(document.getElementById('add-folder-modal'));
+      
+      // Material card click handler
+      const materialCards = document.querySelectorAll('.material-card');
+      materialCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const materialName = card.querySelector('.material-name').textContent;
+          // In a real application, this would open the file
+          console.log(`Opening ${materialName}...`);
+          
+          // Add visual feedback
+          card.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            card.style.transform = '';
+          }, 150);
+        });
+      });
+      
+      // Add folder button
+      document.getElementById('add-folder-btn').addEventListener('click', () => {
+        addFolderModal.open();
+      });
+      
+      // Add file button
+      document.getElementById('add-file-btn').addEventListener('click', () => {
+        addFileModal.open();
+      });
+      
+      // Search functionality
+      const searchInput = document.querySelector('.search-input');
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        // Filter materials based on search term
+        materialCards.forEach(card => {
+          const materialName = card.querySelector('.material-name').textContent.toLowerCase();
+          const materialDesc = card.querySelector('.material-description').textContent.toLowerCase();
+          
+          if (materialName.includes(searchTerm) || materialDesc.includes(searchTerm)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/loading.js"></script>
+</body>
+</html>

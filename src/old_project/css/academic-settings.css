@@ -1,0 +1,263 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+body{
+    background-color: rgb(248, 250, 252);
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  /* overflow-x: hidden; */
+  margin: 0;
+  padding: 0;
+}
+/* Card styling */
+.personal-details-card {
+  border-radius: 24px;
+  background: #fff;
+  border-style: none;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 2rem;
+  padding: 2rem;
+  box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08);
+}
+
+/* Title and underline */
+.personal-details-header {
+  margin-bottom: 0.5rem;
+}
+.personal-details-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+  font-weight: 400 !important;
+}
+.personal-details-underline {
+  width: 120px;
+  height: 2px;
+  background: rgba(90, 15, 97, 1);
+  margin-left: 30px;
+  margin-top: 4px;
+  border-radius: 2px;
+}
+
+/* Field label styling */
+.form-label,
+.personal-details-label {
+  color: #9E9E9E;
+  text-align: left;
+  margin-left: 10px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+
+
+/* Select dropdown styling */
+.personal-details-card .form-select {
+  border-radius: 16px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #E0E0E0;
+  /* You can change border-color, width, style as needed */
+  background: #fff;
+  font-size: 17px;
+  color: #BDBDBD; /* Placeholder color */
+  height: 52px;
+  box-shadow: none;
+  padding-left: 18px;
+  padding-right: 38px;
+  margin-bottom: 1rem;
+  background-image: url('../assets/iconsax-arrow-down-02.png');
+  background-repeat: no-repeat;
+  background-position: right 1.2rem center;
+  background-size: 18px 18px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* When a real option is selected (not the placeholder), show black */
+.personal-details-card .form-select:valid {
+  color: #222;
+}
+
+/* All options in dropdown are black */
+.personal-details-card .form-select option {
+  color: #222 !important;
+  font-size: 17px;
+  border: #5a0f61;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Placeholder option (disabled/hidden) in gray */
+.personal-details-card .form-select option[disabled][hidden] {
+  color: #BDBDBD !important;
+}
+
+/* Button styles */
+.btn-purple {
+  background: rgba(90, 15, 97, 1);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 12px;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem;
+  height: 44px;
+  border: none;
+}
+
+.personal-details-save {
+  background: rgba(90, 15, 97, 1) !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  border-radius: 12px !important;
+  min-width: 140px;
+  padding: 0.7rem 1.5rem !important;
+  height: 44px !important;
+  border: none !important;
+  font-size: 16px !important;
+  margin-top: 4rem;
+  box-shadow: none !important;
+  display: inline-block;
+}
+
+/* Focus states */
+.personal-details-card .form-select:focus {
+  border-color: #5a0f61;
+  box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1);
+  outline: none;
+}
+
+/* Input with icon */
+.input-icon-right {
+  background-position: right 1rem center;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}
+
+/* Bootstrap Select custom styles */
+.bootstrap-select .dropdown-toggle {
+  border-radius: 16px !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: #E0E0E0 !important;
+  background: #fff !important;
+  font-size: 17px !important;
+  color: #BDBDBD !important;
+  height: 52px !important;
+  box-shadow: none !important;
+  padding-left: 18px !important;
+  padding-right: 38px !important;
+  margin-bottom: 1rem !important;
+  background-image: url('../assets/iconsax-arrow-down-02.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1.2rem center !important;
+  background-size: 18px 18px !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+  display: flex;
+  align-items: center;
+}
+
+.bootstrap-select .dropdown-toggle:focus,
+.bootstrap-select .dropdown-toggle:active,
+.bootstrap-select .dropdown-toggle.show {
+  border-color: #5a0f61 !important;
+  box-shadow: 0 0 0 2px rgba(90, 15, 97, 0.1) !important;
+  outline: none !important;
+  color: #222 !important;
+}
+
+.bootstrap-select .dropdown-menu {
+  border-radius: 16px !important;
+  border: 2px solid #E0E0E0 !important;
+  box-shadow: 0 2px 16px 0 rgba(44,44,44,0.08) !important;
+  background: #fff !important;
+  padding: 0.5rem 0;
+}
+
+.bootstrap-select .dropdown-item {
+  color: #222 !important;
+  font-size: 17px !important;
+  font-family: 'Inter', sans-serif !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+}
+
+.bootstrap-select .dropdown-item.active,
+.bootstrap-select .dropdown-item:active,
+.bootstrap-select .dropdown-item:hover {
+  background-color: #f3e6f6 !important;
+  color: #5a0f61 !important;
+}
+
+/* Placeholder style for Bootstrap Select */
+.bootstrap-select .dropdown-toggle.bs-placeholder,
+.bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+  color: #BDBDBD !important;
+}
+
+/* Responsive styles */
+@media (max-width: 991.98px) {
+  .personal-details-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem;
+    margin-top: 5rem;
+  }
+  
+  .personal-details-card .form-select {
+    width: 100%;
+    font-size: 15px;
+    height: 44px;
+    padding-left: 16px;
+    padding-right: 40px;
+  }
+  
+  .container.mt-5 {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .personal-details-save {
+    width: 290px;
+    font-size: 15px;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .personal-details-card {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    width: 100vh;
+  }
+  
+  .personal-details-title {
+    font-size: 22px;
+  }
+  
+  .personal-details-underline {
+    margin-left: 15px;
+    width:150px;
+  }
+}
+
+.disabled{
+  background-color: #e9ecef !important;
+}
+.disabled-btn{
+  background-color:   rgb(53, 7, 57) !important;
+}

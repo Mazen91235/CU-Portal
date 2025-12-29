@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs View</title>
+    <link rel="stylesheet" href="../css/announcement_details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../components/navbar.html">
+    <link rel="stylesheet" href="../components/sidebar.html">
+    <link rel="stylesheet" href="../components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <script src="https://pfau-software.de/json-viewer/dist/iife/index.js"></script>
+    <style>
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr;
+  gap: 24px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1200px;
+  margin-bottom:15px;
+}
+.parent .div1 { grid-column: 1; grid-row: 1; }
+.parent .div2 { grid-column: 2; grid-row: 1; }
+.parent .div3 { grid-column: 3; grid-row: 1; }
+.parent .div4 { grid-column: 4; grid-row:1; }
+.parent .div5 { grid-column: 5; grid-row: 1; }
+@media (max-width: 1170px) {
+  .parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 24px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 900px;
+}
+.parent .div1 { grid-column: 1; grid-row: 1; }
+.parent .div2 { grid-column: 2; grid-row: 1; }
+.parent .div3 { grid-column: 3; grid-row: 1; }
+.parent .div4 { grid-column: 2; grid-row: 2; }
+.parent .div5 { grid-column: 3; grid-row: 2; }}
+
+@media (max-width: 400px) {
+  .parent {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 16px;
+    max-width: 100%;
+  }
+  .parent .div1 { grid-column: 1; grid-row: 1; }
+  .parent .div2 { grid-column: 2; grid-row: 1; }
+  .parent .div3 { grid-column: 1; grid-row: 2; }
+  .parent .div4 { grid-column: 2; grid-row: 2; }
+  .parent .div5 { grid-column: 1 / span 2; grid-row: 3; justify-self: center; }
+}
+
+.log-cards-row {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+@media (max-width: 1200px) {
+  .log-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 24px;
+  }
+}
+@media (max-width: 700px) {
+  .log-cards-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 16px;
+  }
+}
+.log-card {
+  flex: 1;
+  min-width: 0;
+  border: 2px solid rgba(123, 22, 132, 1);
+  border-radius: 12px;
+  padding: 18px 0 18px 24px;
+  background: #fff;
+  text-align: left;
+}
+.log-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.log-card-header .icon {
+  font-size: 22px;
+  color: rgba(123, 22, 132, 1);
+}
+.log-card-header .title {
+  font-weight: 500;
+  color: #6B7280;
+  font-size: 16px;
+}
+.log-card-value {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 6px;
+  color: #020817;
+  text-align: left;
+}
+.log-details-row {
+  display: flex;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .log-details-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .user-info-card,
+  .log-message-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+    </style>
+</head>
+<body style="background-color: white">
+<div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Task Details Section -->
+        <section class="task-details-section container" style="margin-top: 90px;">
+            <div class="task-details-header-row">
+                <div class="task-details-back-link-row">
+                    <a href="../admin/logs.html" class="task-details-back-link">
+                        <i class="fa fa-arrow-left"></i> Back to logs
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6 Cards Section -->
+            <div class="log-cards-row">
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t8.svg" class="icon" style="width:22px;height:22px;" alt="Id" />
+      <span class="title">Id</span>
+    </div>
+    <div class="log-card-value" id="log_id_value">1554</div>
+  </div>
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t1.svg" class="icon" style="width:22px;height:22px;" alt="Date" />
+      <span class="title">Date</span>
+    </div>
+    <div class="log-card-value" id="log_date_value">10-11-2025</div>
+  </div>
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t2.svg" class="icon" style="width:22px;height:22px;" alt="Type" />
+      <span class="title">Type</span>
+    </div>
+    <div class="log-card-value" id="log_type_value">Info</div>
+  </div>
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t9.svg" class="icon" style="width:22px;height:22px;" alt="Action" />
+      <span class="title">Action</span>
+    </div>
+    <div class="log-card-value" id="log_action_value">Login</div>
+  </div>
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t3.svg" class="icon" style="width:22px;height:22px;" alt="Entity" />
+      <span class="title">Entity</span>
+    </div>
+    <div class="log-card-value" id="log_entity_value">Course</div>
+  </div>
+  <div class="log-card">
+    <div class="log-card-header">
+      <img src="../assets/t6.svg" class="icon" style="width:22px;height:22px;" alt="Code" />
+      <span class="title">Code</span>
+    </div>
+    <div class="log-card-value" id="log_code_value">150</div>
+  </div>
+</div>
+
+            <!-- 2 Cards Section -->
+            <div class="log-details-row" style="display: flex; gap: 24px;">
+              <!-- User Info Card -->
+              <div class="user-info-card" style="flex: 1; border: 2px solid rgba(123, 22, 132, 1); border-radius: 12px; padding: 24px; background: #fff;">
+                <div style="text-align: center;">
+                  <img src="../assets/user-default-avatar.png" alt="Profile" id="user_avatar_value" style="border-radius: 50%; margin-bottom: 12px;max-width: 100px;">
+                  <div style="font-size: 20px; font-weight: 600; margin-bottom: 6px;" id="user_name_value">Mohamed ali mostafa</div>
+                  <span style="background: #E8CFEE; color: #5A0F61; border-radius: 8px; padding: 4px 16px; font-size: 15px; font-weight: 500; margin-bottom: 12px; display: inline-block;" id="user_role_value">Student</span>
+                </div>
+                <div style="margin-top: 18px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Faculty:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_faculty_value">Engineering</div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Department:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_department_value">Electric</div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Year:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_year_value">2028</div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Phone number:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_phone_value">01016424254</div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Email:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_email_value">Mohamedali22@gmail.com</div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="color: #6B7280; font-family: 'Roboto', Arial, sans-serif; font-size: 20px; font-weight: 400; text-align: left;">Joined:</div>
+                    <div style="color: #7B1684; font-family: 'Roboto', Arial, sans-serif; font-size: 16px; font-weight: 500; text-align: right;" id="user_joined_value">09-16-2025</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Log Details Card -->
+              <div class="log-message-card" style="flex: 2; border: 2px solid rgba(123, 22, 132, 1); border-radius: 12px; padding: 24px; background: #fff;">
+                <!-- Route -->
+                <div style="margin-bottom: 24px; padding-bottom: 8px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <img src="../assets/t7.svg" style="width:18px;height:18px;" alt="Route" />
+                    <span style="font-family: 'Roboto', Arial, sans-serif; font-size: 18px; font-weight: 600; color: #6B7280;">Route</span>
+                  </div>
+                  <div style="margin-left: 28px; color: #020817; font-size: 18px; font-family: 'Roboto', Arial, sans-serif; font-weight: 500; text-align: left; padding-bottom: 8px;" id="log_route_value">
+                    /Admin/Faculties/Department
+                  </div>
+                </div>
+                <!-- Message -->
+                <div style="margin-bottom: 24px; padding-bottom: 8px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <img src="../assets/t4.svg" style="width:18px;height:18px;" alt="Message" />
+                    <span style="font-family: 'Roboto', Arial, sans-serif; font-size: 18px; font-weight: 600; color: #6B7280;">Message</span>
+                  </div>
+                  <div style="margin-left: 28px; color: #020817; font-size: 18px; font-family: 'Roboto', Arial, sans-serif; font-weight: 500; text-align: left; padding-bottom: 8px;" id="log_message_value">
+                    You Have Successfully Logged In However, There Is Already An Active Session Associated With Your Account. This Means You Are Logged In From Another Device Or Browser At The Same Time. For Your Account's Security, You Can Choose To Continue With This Session Or Terminate The Other One. If You Did Not Initiate The Previous Session, We Highly Recommend Changing Your Password Immediately To Protect Your Data.
+                  </div>
+                </div>
+                <!-- Details -->
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <img src="../assets/t5.svg" style="width:18px;height:18px;" alt="Details" />
+                  <span style="font-family: 'Roboto', Arial, sans-serif; font-size: 18px; font-weight: 600; color: #6B7280;">Details</span>
+                </div>
+                  <div style="margin-left: 28px; color: #020817; font-size: 18px; font-family: 'Roboto', Arial, sans-serif; font-weight: 500; text-align: left; padding-bottom: 8px;" id="log_details_value">
+                  </div>
+              </div>
+                     <div id="toast-container"></div>
+ <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+            </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/logs.js"></script>
+</body>
+</html>

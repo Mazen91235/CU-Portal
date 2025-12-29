@@ -1,0 +1,35 @@
+body {
+    background-color: #F8FAFC;
+}
+.stat{
+    height: 100px!important;
+    width: 320px!important;
+}
+.dep-dropdown {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+  z-index: 1050; /* higher than Bootstrap */
+  overflow: hidden;
+}
+
+.dep-dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.dep-dropdown-item:hover {
+  background: #f8f9fa;
+}
+.hidden {
+  display: none;
+}
+.menu-dots {
+  position: relative;
+}

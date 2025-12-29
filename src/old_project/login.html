@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Welcome</title>
+    <link rel="stylesheet" href="./css/loginstyle.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/sidebar.css" />
+
+</head>
+
+<body style="background-color: #F8FAFC;">
+    <div class="container">
+        <img src="./assets/freepik--background-simple--inject-251.png" alt="Decorative background element"
+            class="corner-image-top-right">
+        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decorative background element"
+            class="corner-image-bottom-left">
+        <header class="header">
+            <h1 class="logo">St<span class="highlight" aria-hidden="true">u</span>dent P<span class="highlight"
+                    aria-hidden="true">o</span>rtal</h1>
+        </header>
+
+        <main class="content-wrapper welcome-page"> <!-- Changed to main for semantic HTML -->
+            <div class="illustration">
+                <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" alt="Happy student illustration">
+            </div>
+            <div class="card welcome-card">
+                <h2 class="gradient-text-h2">Hello,<br>welcome back</h2>
+                <p>You need to sign in with Google to continue</p>
+                <button class="google-signin-btn" aria-label="Sign in with Google">
+                    <img src="./assets/icons8-google 1.svg" alt="" class="google-icon" aria-hidden="true">
+                    Sign up / in with Google
+                </button>
+            </div>
+        </main>
+        <div id="toast-container"></div>
+<div id="loadingOverlayContainer" class=" w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="./js/loadscreen.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/script.js"></script>
+
+    <script>
+        document.querySelector('.google-signin-btn').addEventListener('click', function () {
+            // Simulate Google Sign-In process
+            window.location.href = `${domain.replace("/api/v1","")}/login-with-google`;
+        });
+
+        // Initialize on page load
+        async function handleAfterFetching() {
+            hideLoading();  
+            if (GetParams("token")) {
+                let token = GetParams("token").split("___");
+                SetCookie("access_token", token[0], parseInt(token[1]));
+                SetCookie("refresh_token", token[2], parseInt(token[3]));
+            }
+
+            if (GetParams("error") == "true") {
+                showToast("error", "Error", GetParams("message"), "");
+            }
+            if (GetParams("success") == "true") {
+                showToast("success", "Success", GetParams("message"), "");
+            }
+            if (await IsLoggedIn()) {
+                window.location.href = "/user/index.html";
+                return;
+            }
+        }
+        document.addEventListener("DOMContentLoaded", async function () {
+            await handleAfterFetching();
+        });
+    </script>
+</body>
+
+</html>

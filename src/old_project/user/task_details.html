@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2 - Operating Systems</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/assignment.css">
+  <link rel="stylesheet" href="../css/sidebar.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <style>
+  /* ...existing code... */
+  .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .title-section {
+    flex: 1;
+    min-width: 0;
+  }
+  .title-section h1 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 12px;
+  }
+  .meta-info {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 1.08rem;
+    color: #374151;
+    align-items: center;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 500;
+  }
+  .meta-item img, .meta-item i {
+    font-size: 1.1em;
+    width: 20px;
+    height: 20px;
+    color: #64748B;
+  }
+  .points-section {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    min-width: 140px;
+    margin-left: 32px;
+    margin-top: 8px;
+  }
+  .badge-box {
+    margin-top: 30px;
+  }
+  .status-badge {
+    background: #BCF6D1;
+    color: #16A249;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 4px 18px;
+    margin-right: 0;
+    display: inline-block;
+    border: none;
+    box-shadow: none;
+  }
+  /* .points-box {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+    min-height: 54px;
+    box-shadow: 0 2px 8px rgba(22,162,73,0.04);
+  } */
+  .points {
+    color: #6D217F;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    display: block;
+    text-align: center;
+  }
+  .points-label {
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 0;
+    text-align: center;
+    display: block;
+  }
+  @media (max-width: 768px) {
+    .main-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .points-section {
+      margin-left: 0;
+      margin-top: 16px;
+      gap: 12px;
+    }
+    .points-label {
+      text-align: center;
+    }
+  }
+  .card-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #5A0F61;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0; /* Remove space for separator */
+  }
+  .card-header {
+    border-bottom: none !important; /* Remove separator */
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    background-color: transparent!important;
+  }
+  pre {
+    background-color: transparent !important;
+    border: none !important;
+
+}
+  .card-content {
+    padding: 20px 18px 18px 18px;
+    background: #fff;
+    border-radius: 12px;
+  }
+  .attachments-section {
+    margin-top: 0;
+    padding: 0 12px; /* left and right spacing */
+  }
+  .attachments-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E293B;
+    margin-bottom: 18px;
+  }
+  .attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .attachment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F8FAFC;
+    border-radius: 10px;
+    padding: 16px 24px; /* left and right spacing */
+    margin-bottom: 10px;
+    min-height: 62px;
+    border: none;
+  }
+  .attachment-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .attachment-icon-box {
+    background: #F8F5F7;
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0;
+  }
+  .attachment-icon-box i {
+    font-size: 1.3rem;
+    color: #22223B; /* dark gray */
+  }
+  .attachment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .attachment-details h4 {
+    font-size: 1.08rem;
+    font-weight: 600;
+    color: #334155;
+    margin: 0;
+  }
+  .attachment-size {
+    font-size: 0.97rem;
+    color: #64748B;
+    font-weight: 400;
+    margin: 0;
+  }
+  .attachment-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .preview-button, .download-button {
+    background: #fff;
+    color: #22223B;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .preview-button{
+    color: white;
+    background-color: #5A0F61;
+    cursor: pointer;
+  }
+  .preview-button i, .download-button i {
+    font-size: 1.1rem;
+    color: #22223B; /* dark gray */
+  }
+
+  .download-button:hover {
+    color: #22223B !important;
+    background-color: white;
+    border-color: #E2E8F0;
+    transform: translateY(0px);
+  }
+  .attachments-separator {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 18px 0 18px 0;
+  }
+  .links-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #64748B;
+    margin-bottom: 10px;
+    margin-top: 0;
+    letter-spacing: 1px;
+  }
+  .links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .link-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F8F5F7;
+    border-radius: 10px;
+    padding: 16px 24px; /* left and right spacing */
+    margin-bottom: 0;
+    min-height: 48px;
+    border: none;
+  }
+  .link-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.08rem;
+    font-weight: 500;
+    color: #334155 !important;
+  }
+  .link-icon-box {
+    background: #F8F5F7;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .link-icon-box i {
+    font-size: 1.1rem;
+    color: #22223B; /* dark gray */
+  }
+  .link-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .open-link-btn {
+    background: #5A0F61;
+    color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+  }
+  .open-link-btn i {
+    font-size: 1.1rem;
+    color: #22223B; /* dark gray */
+  }
+  .open-link-btn:hover {
+  }
+  .link-info:focus, .link-info:hover{
+    color: #334155 !important;
+  }
+  .quick-info-card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 22px 24px 18px 24px;
+    margin-top: 22px;
+    box-shadow: 0 2px 8px rgba(90,15,97,0.04);
+    width: 100%; /* match submission-content width */
+    max-width: none;
+  }
+  .quick-info-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #6D217F;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .quick-info-title i {
+    color: #6D217F;
+    font-size: 1.2em;
+  }
+  .quick-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.07rem;
+    padding: 7px 0;
+    color: #374151;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .quick-info-row:last-child {
+    border-bottom: none;
+  }
+  .quick-info-label {
+    font-weight: 500;
+    color: #64748B;
+  }
+  .quick-info-value {
+    font-weight: 600;
+    color: #22223B;
+  }
+  .quick-info-status {
+    background: #BCF6D1;
+    color: #16A249;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 999px;
+    padding: 2px 16px;
+    display: inline-block;
+  }
+  
+.previewer{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 2000;
+}
+.previewer .previewer-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    height: 10vh;
+    width: 100%;
+    color: white;
+    background: rgba(163, 0, 0, 0.4);
+}
+.previewer .previewer-header .close-previewer-btn{
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+}
+.previewer .previewer-content{
+    height: 90vh;
+    width: 100%;
+}
+.previewer .previewer-content iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.file-actions {
+margin-top: 20px; /* Add space above buttons */
+    margin-left: 0;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1rem;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    width: calc(100% - 3rem);
+    justify-content: space-between;
+}
+.file-action-btn {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    color: #374151;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    border-radius: 8px;
+    padding: 8px 0;
+    flex: 1 1 0;
+    justify-content: center;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+.file-action-btn:hover {
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+    color: #5A0F61;
+}
+
+.preview-button:hover {
+    color: white !important;
+    background-color: #5A0F61 !important;
+    transform: translateY(0px);
+    scale: 0 !important;
+  }
+
+  /* ...existing code... */
+</style>
+</head>
+<body style="background-color: white;">
+    
+    <div id="sidebar-container"></div>
+
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+<div class="previewer d-none" id="previewer">
+                        <div class="previewer-header">
+                            <div>
+                                <button class="close-previewer-btn" id="closePreviewerBtn"
+                                    onclick="closePreviewer();"><i class="far fa-times"></i></button>
+                                <h2 class="previewer-title">File Preview</h2>
+                            </div>
+                            <button class="file-action-btn" onclick="downloadFileFromPreviewer();">
+                                <i class="far fa-download"></i> Download
+                            </button>
+                        </div>
+                        <div class="previewer-content">
+                            <iframe id="filePreviewFrame" class="file-preview-frame" src="" frameborder="0"
+                                allowfullscreen="true"></iframe>
+                        </div>
+                    </div>
+    <div class="container">
+        <div class="header" style="margin-top: 72px;">
+            <a href="/user/tasks.html" class="back-button">
+                <i class="far fa-arrow-left"></i>
+                Back to Tasks
+            </a>
+        </div>
+        <div class="main-header">
+  <div class="title-section">
+    <h1>Assignment 2 - Operating Systems</h1>
+    <div class="meta-info">
+      <div class="meta-item">
+        <img src="../assets/m110.svg" alt="Subject icon" />
+        
+      </div>
+      <div class="meta-item">
+        <i class="far fa-calendar"></i>
+        
+      </div>
+    </div>
+  </div>
+  <!-- <div class="points-section">
+    
+    <div class="points-box">
+      <div class="points">100 pts</div>
+      <div class="points-label">15% of grade</div>
+    </div>
+  </div> -->
+</div>
+
+        <div class="content-grid">
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="far fa-file-text"></i>
+                            Assignment Description
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <pre style="white-space: pre-wrap; font-family: inherit; font-size: 14px; line-height: 1.6; color: var(--text-medium); background: var(--background-light-gray); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+## Assignment Overview
+In this assignment, you will implement a basic file system that supports:
+
+### Requirements:
+1. **Directory Structure**: Implement a hierarchical directory structure
+2. **File Operations**: Create, read, write, and delete operations
+3. **Inode Management**: Proper inode allocation and deallocation
+4. **Free Space Management**: Implement free block management
+5. **Error Handling**: Proper error handling for all operations
+
+### Deliverables:
+- Source code files (.c, .h)
+- Makefile for compilation
+- README with compilation and usage instructions
+- Test cases demonstrating functionality
+
+### Grading Criteria:
+- Correctness (40%)
+- Code quality and documentation (30%)
+- Test coverage (20%)
+- Performance optimization (10%)
+
+### Submission Guidelines:
+- Submit as a ZIP file
+- Include all source files and documentation
+- Ensure code compiles without errors
+- Include sample test cases
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+  <div class="card-header">
+    <h2 class="card-title" style="color: #1E293B;">
+      Attachments & Links
+    </h2>
+  </div>
+  <div class="card-content attachments-section">
+    <div class="links-title" style="margin-top: 20px;">FILES</div>
+    <div class="attachments-list">
+        
+      <div class="attachment-row" style="margin-top: 30px;">
+        <div class="attachment-info" >
+          <div class="attachment-icon-box">
+            <img src="../assets/y2.svg" width="30px">
+          </div>
+          <div class="attachment-details">
+            <h4>Workshop Materials.zip</h4>
+            <div class="attachment-size">15.2 MB</div>
+          </div>
+        </div>
+        <div class="attachment-actions">
+          <button class="download-button">
+<img src="../assets/y5.svg" width="20px">            Download
+          </button>
+          <button class="preview-button">
+            <img src="../assets/y4.svg" width="20px">
+            Preview
+          </button>
+        </div>
+      </div>
+      <div class="attachment-row">
+        <div class="attachment-info">
+          <div class="attachment-icon-box">
+            <img src="../assets/y2.svg" width="30px">
+          </div>
+          <div class="attachment-details">
+            <h4>Workshop Materials.zip</h4>
+            <div class="attachment-size">15.2 MB</div>
+          </div>
+        </div>
+        <div class="attachment-actions">
+          <button class="download-button">
+            <img src="../assets/y5.svg" width="20px">
+            Download
+          </button>
+          <button class="preview-button">
+            <img src="../assets/y4.svg" width="20px">
+            Preview
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="attachments-separator"></div>
+    <div class="links-title">LINKS</div>
+    <div class="links-list">
+      <div class="link-row " style="margin-bottom: 10px;">
+        <div class="link-info" style="color: black;">
+          <div class="link-icon-box">
+            <img src="../assets/y3.svg" width="25px">
+          </div>
+          Code Repository
+        </div>
+        <div class="link-actions">
+          <a href="#" class="open-link-btn" target="_blank">
+            <i class="far fa-arrow-up-right_from_square"></i>
+            Open
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+            </div>
+
+            <div class="sidebar">
+                <div class="submission-card">
+                <div class="submission-header">
+                    <h2 class="card-title">
+                        <img src="../assets/y1.svg" alt="Submission icon" style="width: 24px; height: 24px;"/>
+                        <span style="font-weight: 600; font-size: 24px;">Submission </span>
+                    </h2>
+                </div>
+        <div class="submission-content">
+            <a href="#" class="submission-button submission-link">
+                Go To Submission URL
+            </a>
+        </div>
+    </div>
+    <!-- Quick Info Card -->
+    <!-- <div class="quick-info-card">
+      <div class="quick-info-title">
+        <i class="far fa-info-circle"></i>
+        Quick Info
+      </div>
+      <div class="quick-info-row">
+        <span class="quick-info-label">Type:</span>
+        <span class="quick-info-value">Assignment</span>
+      </div>
+      <div class="quick-info-row">
+        <span class="quick-info-label">Points:</span>
+        <span class="quick-info-value">100 pts</span>
+      </div>
+      <div class="quick-info-row">
+        <span class="quick-info-label">Weight:</span>
+        <span class="quick-info-value">15%</span>
+      </div>
+      <div class="quick-info-row">
+        <span class="quick-info-label">Status:</span>
+        <span class="quick-info-status">Active</span>
+      </div>
+    </div>
+        </div>
+    </div> -->
+                     <div id="toast-container"></div>
+ <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+            </div>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+  <script src="../js/loading.js"></script>
+  <script src="../js/loadscreen.js"></script>
+  <script src="../js/toast.js"></script>
+  <script src="../js/script.js"></script>
+  <script src="../js/user_tasks.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', fetchAndRenderTaskDetails);
+  </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Video Player</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #a9a9a9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .player-container {
+      background: #f5f5f5;
+      width: 1000px;
+      max-width: 95%;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Header */
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #e0e0e0;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .close-btn {
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Video */
+    .video-wrapper {
+      position: relative;
+      background: black;
+    }
+    video {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Volume slider (right side) */
+    .volume-control {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(0,0,0,0.5);
+      border-radius: 20px;
+      padding: 10px 5px;
+    }
+    .volume-control input {
+      writing-mode: bt-lr; /* vertical slider */
+      -webkit-appearance: slider-vertical;
+      width: 8px;
+      height: 150px;
+    }
+    .volume-btn {
+      margin-top: 8px;
+      width: 44px;
+      height: 54px;
+      position: relative;
+      cursor: pointer;
+    }
+    .volume-btn svg.container {
+      width: 100%;
+      height: 100%;
+    }
+    .volume-btn svg.icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      fill: black;
+    }
+
+    /* Controls bottom */
+    .controls {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      padding: 8px 12px;
+    }
+    .time {
+      color: white;
+      font-size: 14px;
+      margin-right: 10px;
+      min-width: 60px;
+      text-align: center;
+    }
+    #progress {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+    .buttons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .control-btn {
+      width: 44px;
+      height: 54px;
+      position: relative;
+      cursor: pointer;
+    }
+    .control-btn svg.container {
+      width: 100%;
+      height: 100%;
+    }
+    .control-btn svg.icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-50%, -50%);
+      fill: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <!-- Header -->
+    <div class="player-header">
+      <span>Lecture 1 - Introduction.mp4</span>
+      <button class="close-btn">✖</button>
+    </div>
+
+    <!-- Video + Volume -->
+    <div class="video-wrapper">
+      <video id="video" src="sample.mp4"></video>
+
+      <!-- Volume -->
+      <div class="volume-control">
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1">
+        <div class="volume-btn" id="volumeBtn">
+          <svg class="container" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg">
+            <ellipse opacity="0.9" cx="22.1815" cy="27.0903" rx="21.7488" ry="26.1636" fill="white"/>
+          </svg>
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Bottom controls -->
+      <div class="controls">
+        <div class="time" id="time">00:00</div>
+        <input type="range" id="progress" min="0" value="0" step="0.1">
+        <div class="buttons">
+          <!-- Backward -->
+          <div class="control-btn" id="backward">
+            <svg class="container" viewBox="0 0 44 54"><ellipse opacity="0.9" cx="22.18" cy="27.09" rx="21.75" ry="26.16" fill="white"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M11 19V5l-7 7 7 7zm9-14l-7 7 7 7V5z"/></svg>
+          </div>
+          <!-- Play/Pause -->
+          <div class="control-btn" id="playPause">
+            <svg class="container" viewBox="0 0 44 54"><ellipse opacity="0.9" cx="22.18" cy="27.09" rx="21.75" ry="26.16" fill="white"/></svg>
+            <svg id="playIcon" class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <!-- Forward -->
+          <div class="control-btn" id="forward">
+            <svg class="container" viewBox="0 0 44 54"><ellipse opacity="0.9" cx="22.18" cy="27.09" rx="21.75" ry="26.16" fill="white"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M13 5v14l7-7-7-7zm-9 0v14l7-7-7-7z"/></svg>
+          </div>
+          <!-- Settings -->
+          <div class="control-btn" id="settings">
+            <svg class="container" viewBox="0 0 44 54"><ellipse opacity="0.9" cx="22.18" cy="27.09" rx="21.75" ry="26.16" fill="white"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.11-.21-.36-.3-.58-.22l-2.39.96a7.03 7.03 0 0 0-1.64-.94l-.5-2.53a.45.45 0 0 0-.44-.37h-4.12c-.22 0-.41.16-.44.37l-.5 2.53c-.6.24-1.14.56-1.64.94l-2.39-.96a.45.45 0 0 0-.58.22L3 8.86c-.11.21-.06.48.12.62l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L3.12 14.5c-.18.14-.23.41-.12.62l1.92 3.32c.11.21.36.3.58.22l2.39-.96c.5.38 1.04.7 1.64.94l.5 2.53c.03.21.22.37.44.37h4.12c.22 0 .41-.16.44-.37l.5-2.53c.6-.24 1.14-.56 1.64-.94l2.39.96c.22.09.47-.01.58-.22l1.92-3.32c.11-.21.06-.48-.12-.62l-2.03-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("video");
+    const playPauseBtn = document.getElementById("playPause");
+    const playIcon = document.getElementById("playIcon");
+    const progress = document.getElementById("progress");
+    const timeDisplay = document.getElementById("time");
+    const backwardBtn = document.getElementById("backward");
+    const forwardBtn = document.getElementById("forward");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const volumeBtn = document.getElementById("volumeBtn");
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    }
+
+    playPauseBtn.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // pause
+      } else {
+        video.pause();
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; // play
+      }
+    });
+
+    video.addEventListener("timeupdate", () => {
+      progress.value = (video.currentTime / video.duration) * 100 || 0;
+      timeDisplay.textContent = formatTime(video.currentTime);
+    });
+
+    progress.addEventListener("input", () => {
+      video.currentTime = (progress.value / 100) * video.duration;
+    });
+
+    backwardBtn.addEventListener("click", () => {
+      video.currentTime -= 10;
+    });
+
+    forwardBtn.addEventListener("click", () => {
+      video.currentTime += 10;
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      video.volume = volumeSlider.value;
+    });
+
+    volumeBtn.addEventListener("click", () => {
+      video.muted = !video.muted;
+      volumeBtn.querySelector("path").setAttribute("d", 
+        video.muted 
+        ? "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-4.5-7L7 9H3v6h4l5 5V5z"
+        : "M3 9v6h4l5 5V4L7 9H3z"
+      );
+    });
+  </script>
+</body>
+</html>

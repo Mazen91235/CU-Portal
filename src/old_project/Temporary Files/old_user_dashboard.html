@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/calendar.css" />
+  <link rel="stylesheet" href="../css/sidebar.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+
+
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div id="sidebar-container"></div>
+
+  <!-- Content wrapper: navbar + main content -->
+  <div id="content-wrapper" class="sidebar-hidden">
+
+    <div id="navbar-container" class="fixed-top"></div>
+    <div id="main-content" class="p-4 mt-5">
+      <div class="row mt-3">
+        <div class=" col-xl-8 col-lg-12 col-md-12 mb-3">
+          <div class="coming-soon-container">
+            <img src="../assets/coming-soon-img.png" alt="Coming Soon" class="coming-soon-image img-fluid mb-4 user-select-none user-drag-none pointer-events-none" />
+          </div>
+          <div class="container-fluid pt-0 px-0" id="calendar-main">
+            <div class="card calendar-card p-4 mb-4 order-sm-1">
+              <h4 class="fw-bold">Calendar</h4>
+                <!-- Calendar Section -->
+                <div id="calendar-section-wrapper" class="calendar-section-wrapper">
+                    <div id="calendar-section"></div>
+                </div>
+                <!-- Legend -->
+                <div class="d-flex justify-content-left gap-4 mt-3">
+                    <span><span class="event-dot event-dot-exam"></span> Exams</span>
+                    <span><span class="event-dot event-dot-assignment"></span> Assignments</span>
+                    <span><span class="event-dot event-dot-event"></span> Events</span>
+                </div>
+            </div>
+          </div>
+          <div class="calendar-day-popup" onclick="if(event.target.id === 'calendar-day-popup' || event.target.id === 'closeCalendarDayPopup'){ document.getElementById('calendar-day-popup').style.display = 'none'; }">
+            <div id="calendar-day-popup" style="display: none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; backdrop-filter:blur(6px); background:rgba(60,20,80,0.12); align-items:center; justify-content:center;">
+              <div id="calendar-day-popup-content" style="background:#fff; box-shadow:0 4px 24px rgba(80,14,88,0.18);  border-top-right-radius: 10px; border-top-left-radius: 10px; max-width:650px; width:90vw; text-align:center; position:relative;">
+                <div class="d-flex justify-content-between popup-header" style="padding: 18px 24px; border-top-right-radius: 10px; border-top-left-radius: 10px;">
+                  <h2 class="card-title text-white d-flex align-items-center">
+                    <img src="../assets/ann3.png" alt="Submission icon" style="width: 24px; height: 24px;"/>
+                    <span style="font-weight: 600; font-size: 24px;" class="ms-2"> </span>
+                  </h2>
+                  <div>
+                    <button id="closeCalendarDayPopup" onclick="document.getElementById('calendar-day-popup').style.display = 'none';" style=" background:none; border:none; font-size:1.8rem; color:white; cursor:pointer;">&times;</button>
+                  </div>
+                </div>
+                <!--make this scrollable-->
+                <div class="calendar-day-popup-content text-start border-0 mb-0"   style="padding: 32px 24px; overflow-y: auto; max-height: 500px;">
+                  <div class="event-detail-card mb-3">
+                    <div class="d-flex  gap-2">
+                      <div>
+                        <img src="../assets/openbookicon.png" alt="Submission icon" style="width: 24px; height: 24px;"/>
+                      </div>
+                      <div>
+                        <div class="fw-semibold">hmmm 
+                        </div>
+                        <span class="badge badge-exam mt-1">Exam</span>
+                        <div class="small text-muted mt-3"><i class="far fa-clock me-1"></i>Due: Sep 24, 2025 9:27 AM</div>
+                        <div class="small text-muted mt-1"><i class="fa-solid fa-location-dot me-1"></i>Location: 123 Main St, New York, NY 10001</div>
+                      </div>
+                    </div>
+                </div>
+                  <div class="event-detail-card mb-3">
+                    <div class="d-flex  gap-2">
+                      <div>
+                        <img src="../assets/exam12.png" alt="Submission icon" style="width: 24px; height: 24px;"/>
+                      </div>
+                      <div>
+                        <div class="fw-semibold">hmmm 
+                        </div>
+                        <span class="badge badge-exam mt-1">Exam</span>
+                        <div class="small text-muted mt-3"><i class="far fa-clock me-1"></i>Due: Sep 24, 2025 9:27 AM</div>
+                        <div class="small text-muted mt-1"><i class="fa-solid fa-location-dot me-1"></i>Location: 123 Main St, New York, NY 10001</div>
+                      </div>
+                    </div>
+                </div>
+                  <div class="event-detail-card mb-3">
+                    <div class="d-flex  gap-2">
+                      <div>
+                        <img src="../assets/t11.png" alt="Submission icon" style="width: 24px; height: 24px;"/>
+                      </div>
+                      <div>
+                        <div class="fw-semibold">hmmm 
+                        </div>
+                        <span class="badge badge-exam mt-1">Exam</span>
+                        <div class="small text-muted mt-3"><i class="far fa-clock me-1"></i>Due: Sep 24, 2025 9:27 AM</div>
+                        <div class="small text-muted mt-1"><i class="fa-solid fa-location-dot me-1"></i>Location: 123 Main St, New York, NY 10001</div>
+                      </div>
+                    </div>
+                </div>
+                </div>  
+              </div>
+            </div>
+          </div>
+
+
+          <div class="exam-overview   rounded-4 p-3 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold">
+                <img src="../assets/exm.svg" alt="exam"
+                  style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
+                Exam Overview
+              </h5>
+            </div>
+
+            <div class="table-responsive exam-table-scroll rounded-4 ">
+              <table class="table align-middle text-center" id="exam-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Exam Name</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td>10:00 AM - 11:00 AM</td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="action-btn" style="padding: 5px !important;">
+                      <!-- <button class="btn-view-course" style="width: 100%;
+                      background: #6d217f;
+                      color: #fff;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      padding: 0.85rem 0;
+                      border: none;
+                      display: flex
+                  ;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;">
+                        Go To
+                      </button> -->
+                      <a href="" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td>10:00 AM - 11:00 AM</td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="action-btn" style="padding: 5px !important;">
+                      <!-- <button class="btn-view-course" style="width: 100%;
+                      background: #6d217f;
+                      color: #fff;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      padding: 0.85rem 0;
+                      border: none;
+                      display: flex
+                  ;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;">
+                        Go To
+                      </button> -->
+                      <a href="" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td>10:00 AM - 11:00 AM</td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="action-btn" style="padding: 5px !important;">
+                      <!-- <button class="btn-view-course" style="width: 100%;
+                      background: #6d217f;
+                      color: #fff;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      padding: 0.85rem 0;
+                      border: none;
+                      display: flex
+                  ;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;">
+                        Go To
+                      </button> -->
+                      <a href="" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td>10:00 AM - 11:00 AM</td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="action-btn" style="padding: 5px !important;">
+                      <!-- <button class="btn-view-course" style="width: 100%;
+                      background: #6d217f;
+                      color: #fff;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      padding: 0.85rem 0;
+                      border: none;
+                      display: flex
+                  ;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;">
+                        Go To
+                      </button> -->
+                      <a href="" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <!-- <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus completed">Completed</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row ">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row ">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus completed ">Completed</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="eName">Midterm Exam</td>
+                    <td><span class="eCourse">CS201</span></td>
+                    <td class="eDate">Jan 15, 2023</td>
+                    <td><span class="eStatus">Upcoming</span></td>
+                    <td class="eLocation">123 Main St, New York, NY 10001</td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+          <div class="tasks-assignments   rounded-4 p-4 mt-1">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold">
+                <img src="../assets/exm.svg" alt="exam"
+                  style="width: 40px; background-color: #5A0F611A; border-radius: 6px; padding: 8px;" class="me-2">
+                Tasks & Assignments
+              </h5>
+            </div>
+
+            <div class="table-responsive exam-table-scroll rounded-4 ">
+              <table class="table align-middle text-center" id="task-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Task</th>
+                    <th>Course</th>
+                    <th>Deadline</th>
+                    <th>Submission</th>
+                    <th>Actions</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn">Subimission URL</a></td>
+                    <td class="Actbtn">
+                      <a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn">Subimission URL</a></td>
+                    <td class="Actbtn">
+                      <a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn">Subimission URL</a></td>
+                    <td class="Actbtn">
+                      <a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn" style="padding: 8px 8px;">Go To</a>
+                    </td>
+                  </tr>
+                  <!-- <tr class="exam-row">
+                    <td class="tTask">Problem Set 4</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Problem Set 4</td>
+                    <td><span class="tCourse">Mathematics</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus subm">Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="exam-row e ">
+                    <td class="tTask">Homework 3</td>
+                    <td><span class="tCourse">Physics Lab</span></td>
+                    <td class="tDate">Jan 15, 2023</td>
+                    <td><span class="tStatus">Not Submitted</span></td>
+                    <td class="Actbtn">
+                      <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropbtn" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="far fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-start shadow-sm">
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-eye me-2"></i>Go To</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-edit me-2"></i>Edit</a>
+                          <a class="dropdown-item text-muted" href="#"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 justify-content-center mb-3">
+          <div class="user-home-card order-sm-2 shadow rounded-4 p-4 mb-4">
+            <div class="user-home-card-heading">
+              <span class="user-role">User</span>
+              <a href="/user/notification.html"><img src="../assets/notif-primary.svg" alt="notification-icon"> </a>
+            </div>
+            <img src="../assets/user-default-avatar.png" width="100" height="100" alt="">
+            <h3>Mazen Mohsen</h3>
+            <div class="user-academic-details">
+              <div>
+                <span>Faculty</span>
+                <span>Engineering</span>
+              </div>
+              <div class="separator"></div>
+              <div>
+                <span>Department</span>
+                <span>Computer</span>
+              </div>
+              <div class="separator"></div>
+              <div>
+                <span>Year</span>
+                <span>2028</span>
+              </div>
+            </div>
+            <div class="user-details">
+              <h5><img src="../assets/email.svg" alt="Email"> <span>mazen.mohsen@example.com</span></h5>
+              <h5><img src="../assets/phone.svg" alt="Phone"> <span>+1 234 567 890</span></h5>
+            </div>
+          </div>
+          <div class="my-courses order-sm-2 shadow rounded-4 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3" style="background: #7B1584;border-radius: 8px;">
+              <h5 class="fw-bold" style="color: #5A0F61; "><img src="../assets/book.svg" alt="book"> My Courses</h5>
+              <a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn">View All</a>
+            </div>
+          </div>
+          <div class="my-courses order-sm-2 shadow rounded-4 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3" style="background: #7B1584;border-radius: 8px;">
+              <h5 class="fw-bold" style="color: #5A0F61; "><img src="../assets/book.svg" alt="book"> My Courses</h5>
+              <a href="./enrolled_courses.html" class="btn btn-outline-purple responsive-btn">View All</a>
+            </div>
+          </div>
+          <div class="upcoming-events bg-white shadow rounded-4 p-4 mt-4">
+            <div class="d-flex  justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-purple">
+                <img src="../assets/SVG_margin (1).svg" alt="event"> Upcoming Events
+              </h5>
+              <button class="btn btn-outline-purple btn-sm disabled" disabled>View All</button>
+            </div>
+<!-- 
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                Tech Career Fair
+              </h6>
+              <div class="event-data  d-flex  justify-content-between w-100 text-muted small ">
+                <div class=" d-flex flex-wrap align-items-start mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Student Center</span>
+                  </p>
+                </div>
+                <div class=" d-flex flex-wrap align-items-end mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category career" class="badge bg-primary">Career</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
+              </div>
+            </div>
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                Spring Break Trip
+              </h6>
+              <div class="event-data  d-flex justify-content-between text-muted small ">
+                <div class=" d-flex flex-wrap align-items-start mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Beach Resort</span>
+                  </p>
+                </div>
+                <div class=" d-flex flex-wrap align-items-end  mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category travel" class="badge bg-primary">Travel</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin ">Going</button>
+              </div>
+            </div>
+
+            <div class="event-item rounded-4 p-3 mb-3 shadow-sm">
+              <h6 id="event-name" class="fw-bold d-flex align-items-center mb-3">
+                Coding Competition
+              </h6>
+              <div class="event-data  d-flex justify-content-between text-muted small ">
+                <div class=" d-flex flex-wrap align-items-center mb-3">
+                  <p class=" me-4 mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (9).svg" alt="calendar" width="18" class="me-1" />
+                    <span id="event-date">March 15</span>
+                  </p>
+                  <p class="me-4  d-flex align-items-center">
+                    <img src="../assets/SVG (8).svg" alt="location" width="18" class="me-1" />
+                    <span id="event-location">Beach Resort</span>
+                  </p>
+                </div>
+                <div class=" d-flex flex-wrap align-items-center mb-3 ">
+                  <p class="mb-3 d-flex align-items-center">
+                    <img src="../assets/SVG (7).svg" alt="clock" width="18" class="me-1" />
+                    <span id="event-time">10:00 AM</span>
+                  </p>
+                  <p class="d-flex align-items-center">
+                    <img src="../assets/SVG (6).svg" alt="attendees" width="18" class="me-1" />
+                    <span id="event-attendees">150 attending</span>
+                  </p>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between  ">
+                <span class="event-category compet" class="badge bg-primary">Competition</span>
+                <button id="event-status" class="btn btn-outline-purple btn-sm ms-auto goin">Going</button>
+              </div>
+            </div>
+
+
+            -->
+            <p>Coming Soon...</p>
+          </div>
+          
+
+
+          <div class="study-tracker bg-white shadow rounded-4 p-4 mt-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-purple ">
+                <img src="../assets/SVG_margin (2).svg" alt="tracker"> Study Tracker
+              </h5>
+              <button class="btn btn-outline-purple btn-sm disabled" disabled>Full View</button>
+            </div>
+
+<!--
+            <div class="d-flex justify-content-center mb-3">
+              <div class="circle-progress">
+                <canvas id="circularChart" width="200" height="200"></canvas>
+              </div>
+            </div>
+
+
+            <div class="week-chart mb-3">
+              <p class="text-muted mt-3" style="font-weight: 600; ">This Week</p>
+              <canvas id="weeklyBarChart" max-width="400" height="200"></canvas>
+
+            </div>
+
+
+            <div class="d-flex justify-content-between mb-3">
+              <div class="bg-success-subtle rounded-3 p-2 flex-fill me-2">
+                <div class=" w-semibold" style="color: #166534;"> <img src="../assets/SVG (11).svg" alt="target">
+                  Goal
+                </div>
+                <div class="  fw-bold" style="color: #16A34A;">72%</div>
+              </div>
+              <div class="bg-primary-subtle rounded-3 p-2  flex-fill ms-2">
+                <div class="w-semibold" style="color: #1E40AF;"> <img src="../assets/SVG (10).svg" alt="cloc"> Today
+                </div>
+                <div class="fw-bold" style="color: #2563EB;">2.5h</div>
+              </div>
+            -->
+          <p>Coming Soon...</p>  
+          </div>
+
+            <!-- Motivation -->
+            <!-- <div class="bg-gradient-light-purple p-3 rounded-3 text-center fw-semibold text-purple">
+              <img src="../assets/arr.svg" alt="arrow"> Keep it up!
+            </div> -->
+            <div class="text-center mt-3 p-3 rounded-4 text-dark" id="fot-quoot"
+            style="background: linear-gradient(90deg, #F3E8FF, #FCE7F3);">
+            <div class="mb-1"><span style="font-size: 36px;">🌟</span> </div>
+            <div class="mb-1"> <strong>You're doing great!</strong></div>
+            <small>Keep up the momentum</small>
+          </div>
+          </div>
+
+          <!--  Footer Message -->
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+                     <div id="toast-container"></div>
+ <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+  <script src="../js/loading.js"></script>
+  <script src="../js/loadscreen.js"></script>
+  <script src="../js/toast.js"></script>
+  <script src="../js/script.js"></script>
+  <script src="../js/courses.js"></script>
+  <script src="../js/calendar.js"></script>
+  <script src="../js/dashboard.js"></script>
+
+  <script>
+    // // === Circular Progress (Donut) ===
+    // function createCircularChart(canvasId, completedHours, totalHours) {
+    //   const ctx = document.getElementById(canvasId)?.getContext('2d');
+
+
+
+    //   const remainingHours = totalHours - completedHours;
+
+    //   new Chart(ctx, {
+    //     type: 'doughnut',
+    //     data: {
+    //       labels: ["Completed", "Remaining"],
+    //       datasets: [{
+    //         data: [completedHours, remainingHours],
+    //         backgroundColor: ["#5A0F61", "#e0e0e0"],
+    //         borderWidth: 0,
+    //         borderRadius: 3
+    //       }]
+    //     },
+    //     options: {
+    //       cutout: "80%",
+    //       plugins: {
+    //         legend: { display: false },
+    //         tooltip: { enabled: false }
+    //       }
+    //     },
+    //     plugins: [{
+    //       id: 'centerText',
+    //       beforeDraw: chart => {
+    //         const { width, height } = chart;
+    //         const ctx = chart.ctx;
+    //         ctx.save();
+    //         ctx.font = 'bold 20px sans-serif';
+    //         ctx.fillStyle = '#5A0F61';
+    //         ctx.textAlign = 'center';
+    //         ctx.textBaseline = 'middle';
+    //         ctx.fillText(`${completedHours}h`, width / 2, height / 2 - 10);
+    //         ctx.font = '14px sans-serif';
+    //         ctx.fillText(`of ${totalHours}h`, width / 2, height / 2 + 10);
+    //         ctx.restore();
+    //       }
+    //     }]
+    //   });
+    // }
+    // //call of the chart function
+    // createCircularChart("circularChart", 18, 25);
+    // // === Weekly Bar Chart ===
+    // const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    // const hours = [3.5, 2, 4, 2.5, 3, 2, 1];
+    // const barCanvas = document.getElementById("weeklyBarChart");
+    // const barCtx = barCanvas?.getContext("2d");
+    // const gradient = barCtx?.createLinearGradient(0, 0, 0, 250);
+    // gradient?.addColorStop(0, "#7B1FA2");
+    // gradient?.addColorStop(1, "#5A0F61");
+    // new Chart(barCanvas, {
+    //   type: 'bar',
+    //   data: {
+    //     labels: days,
+    //     datasets: [{
+    //       label: 'Study Time (h)',
+    //       data: hours,
+    //       backgroundColor: gradient,
+    //       borderRadius: 6,
+    //       barThickness: 30
+    //     }]
+    //   },
+    //   options: {
+    //     plugins: {
+    //       legend: { display: false },
+    //       tooltip: {
+    //         callbacks: {
+    //           label: context => `${context.parsed.y}h`
+    //         }
+    //       }
+    //     },
+    //     scales: {
+    //       y: {
+    //         grid: {
+    //           display: false
+    //         },
+    //         beginAtZero: true,
+    //         display: false,
+    //         max: 5,
+    //         ticks: {
+    //           stepSize: 1,
+    //           callback: value => `${value}h`
+    //         }
+    //       }, x: {
+    //         grid: {
+    //           display: false
+    //         },
+    //         ticks: {
+    //           stepSize: 1,
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
+
+  </script>
+
+</body>
+
+</html>
+<style>
+/* ...existing code... */
+.calendar-card {
+  /* Remove overflow-x: auto; */
+  width: 100%;
+}
+.calendar-section-wrapper {
+  min-width: 0;
+  width: 100%;
+}
+.calendar-table-outer {
+  min-width: 0;
+  width: 100%;
+  overflow-x: unset;
+}
+.calendar-table {
+  min-width: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+.calendar-table th, .calendar-table td {
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  /* Responsive gap between columns */
+}
+@media (max-width: 700px) {
+  .calendar-table th, .calendar-table td {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+}
+/* ...existing code... */
+</style>

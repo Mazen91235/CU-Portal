@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials Explorer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/toasts.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Content Wrapper */
+    #content-wrapper {
+      transition: all 0.3s ease;
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-hidden {
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-visible {
+      padding-left: 250px;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #5a0f61;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 60px; /* Account for fixed navbar */
+    }
+    
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb a {
+      color: #5a0f61;
+      text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    
+    .breadcrumb .separator {
+      margin: 0 0.5rem;
+      color: #999;
+    }
+    
+    .breadcrumb .current {
+      color: #666;
+    }
+    
+    /* Filters Section */
+    .filters {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    /* Custom Select Styles */
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+    
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+    
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+    
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+    }
+    
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    /* Content Section */
+    .content-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 3rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .illustration {
+      margin: 2rem 0;
+    }
+    
+    .illustration img {
+      max-width: 300px;
+      height: auto;
+    }
+    
+    .content-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #5a0f61;
+      margin-bottom: 1rem;
+    }
+    
+    .content-description {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Materials Grid */
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    /* Material Card */
+    .material-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .material-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .material-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .material-icon i {
+      font-size: 1.5rem;
+    }
+    
+    .material-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .material-description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    
+    .material-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      color: #999;
+    }
+    
+    .material-date {
+      display: flex;
+      align-items: center;
+    }
+    
+    .material-date i {
+      margin-right: 0.5rem;
+    }
+    
+    .material-downloads {
+      display: flex;
+      align-items: center;
+    }
+    
+    .material-downloads i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    .btn-block {
+      width: 100%;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        margin-top: 60px;
+      }
+      
+      .user-info {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .filters {
+        grid-template-columns: 1fr;
+      }
+      
+      .content-section {
+        padding: 2rem 1rem;
+      }
+      
+      .materials-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      #content-wrapper.sidebar-visible {
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+    
+    <header>
+      <div>
+        <div class="title">Materials Explorer</div>
+        <div class="subtitle">Browse and access course materials</div>
+      </div>
+      <div class="user-info">
+        Welcome back,<br />
+        Mohamed Ali
+      </div>
+    </header>
+    
+    <main class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="courses-management.html">Courses Management</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Materials Explorer</span>
+      </div>
+      
+      <!-- Filters Section -->
+      <section class="filters">
+        <!-- Custom Faculty Select -->
+        <div class="custom-select" id="faculty-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Select Faculty</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Faculties</div>
+            <div class="custom-select-option" data-value="cs">Computer Science</div>
+            <div class="custom-select-option" data-value="math">Mathematics</div>
+            <div class="custom-select-option" data-value="eng">Engineering</div>
+            <div class="custom-select-option" data-value="sci">Science</div>
+            <div class="custom-select-option" data-value="bus">Business</div>
+          </div>
+        </div>
+
+        <!-- Custom Department Select -->
+        <div class="custom-select" id="department-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Select Department</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Departments</div>
+            <div class="custom-select-option" data-value="cs">Computer Science</div>
+            <div class="custom-select-option" data-value="math">Mathematics</div>
+            <div class="custom-select-option" data-value="physics">Physics</div>
+            <div class="custom-select-option" data-value="chemistry">Chemistry</div>
+            <div class="custom-select-option" data-value="biology">Biology</div>
+          </div>
+        </div>
+
+        <!-- Custom Academic Year Select -->
+        <div class="custom-select" id="year-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Academic Year</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Years</div>
+            <div class="custom-select-option" data-value="2024">2023-2024</div>
+            <div class="custom-select-option" data-value="2023">2022-2023</div>
+            <div class="custom-select-option" data-value="2022">2021-2022</div>
+          </div>
+        </div>
+
+        <!-- Custom Subject Select -->
+        <div class="custom-select" id="subject-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Subject</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Subjects</div>
+            <div class="custom-select-option" data-value="os">Operating Systems</div>
+            <div class="custom-select-option" data-value="db">Database Systems</div>
+            <div class="custom-select-option" data-value="ai">Artificial Intelligence</div>
+            <div class="custom-select-option" data-value="networks">Computer Networks</div>
+            <div class="custom-select-option" data-value="algorithms">Algorithms</div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Content Section -->
+      <section class="content-section">
+        <div class="illustration">
+          <img src="../assets/photo_2025-08-30_22-53-50 (2).jpg" alt="Materials Explorer Illustration">
+        </div>
+        <h2 class="content-title">Ready to explore your materials?</h2>
+        <p class="content-description">Start by selecting filters above to explore your materials!</p>
+      </section>
+      
+      
+    </main>
+  </div>
+  
+  <script>
+    // Custom Select Class
+    class CustomSelect {
+      constructor(selectElement) {
+        this.selectElement = selectElement;
+        this.trigger = selectElement.querySelector('.custom-select-trigger');
+        this.placeholder = selectElement.querySelector('.custom-select-placeholder');
+        this.dropdown = selectElement.querySelector('.custom-select-dropdown');
+        this.options = selectElement.querySelectorAll('.custom-select-option');
+        this.selectedValue = '';
+        
+        this.init();
+      }
+      
+      init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', () => {
+          this.toggleDropdown();
+        });
+        
+        // Handle option clicks
+        this.options.forEach(option => {
+          option.addEventListener('click', () => {
+            this.selectOption(option);
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.selectElement.contains(e.target)) {
+            this.closeDropdown();
+          }
+        });
+      }
+      
+      toggleDropdown() {
+        this.selectElement.classList.toggle('open');
+      }
+      
+      closeDropdown() {
+        this.selectElement.classList.remove('open');
+      }
+      
+      selectOption(option) {
+        // Update selected value
+        this.selectedValue = option.getAttribute('data-value');
+        
+        // Update placeholder text
+        this.placeholder.textContent = option.textContent;
+        
+        // Update selected state
+        this.options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Close dropdown
+        this.closeDropdown();
+        
+        // Trigger change event
+        this.selectElement.dispatchEvent(new Event('change'));
+        
+        // Show materials grid if any filter is selected
+        this.checkFilters();
+      }
+      
+      getValue() {
+        return this.selectedValue;
+      }
+      
+      checkFilters() {
+        const facultySelect = document.getElementById('faculty-select');
+        const departmentSelect = document.getElementById('department-select');
+        const yearSelect = document.getElementById('year-select');
+        const subjectSelect = document.getElementById('subject-select');
+        
+        const facultyValue = facultySelect.querySelector('.custom-select-option.selected')?.getAttribute('data-value') || '';
+        const departmentValue = departmentSelect.querySelector('.custom-select-option.selected')?.getAttribute('data-value') || '';
+        const yearValue = yearSelect.querySelector('.custom-select-option.selected')?.getAttribute('data-value') || '';
+        const subjectValue = subjectSelect.querySelector('.custom-select-option.selected')?.getAttribute('data-value') || '';
+        
+        const materialsGrid = document.getElementById('materials-grid');
+        const contentSection = document.querySelector('.content-section');
+        
+        if (facultyValue || departmentValue || yearValue || subjectValue) {
+          materialsGrid.style.display = 'grid';
+          contentSection.style.display = 'none';
+        } else {
+          materialsGrid.style.display = 'none';
+          contentSection.style.display = 'block';
+        }
+      }
+    }
+    
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize custom selects
+      const facultySelect = new CustomSelect(document.getElementById('faculty-select'));
+      const departmentSelect = new CustomSelect(document.getElementById('department-select'));
+      const yearSelect = new CustomSelect(document.getElementById('year-select'));
+      const subjectSelect = new CustomSelect(document.getElementById('subject-select'));
+      
+      // Download buttons
+      document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('click', () => {
+          // In a real application, this would download the material
+          console.log('Download material');
+        });
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/loading.js"></script>
+</body>
+</html>

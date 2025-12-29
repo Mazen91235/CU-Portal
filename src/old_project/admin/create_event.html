@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Event</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #5a0f61;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .header-icon i {
+      font-size: 1.5rem;
+    }
+    
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb a {
+      color: #5a0f61;
+      text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    
+    .breadcrumb .separator {
+      margin: 0 0.5rem;
+      color: #999;
+    }
+    
+    .breadcrumb .current {
+      color: #666;
+    }
+    
+    /* Form Container */
+    .form-container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+    
+    .form-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-body {
+      padding: 2rem;
+    }
+    
+    /* Form Sections */
+    .form-section {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .form-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #5a0f61;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title i {
+      margin-right: 0.75rem;
+    }
+    
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .form-text {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+    
+    /* Image Upload */
+    .image-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .image-upload:hover {
+      border-color: #5a0f61;
+      background-color: rgba(90, 15, 97, 0.05);
+    }
+    
+    .image-upload-icon {
+      font-size: 2rem;
+      color: #5a0f61;
+      margin-bottom: 1rem;
+    }
+    
+    .image-upload-text {
+      color: #666;
+    }
+    
+    .image-preview {
+      display: none;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .image-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+    }
+    
+    /* Date & Time Inputs */
+    .datetime-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    /* Pricing */
+    .pricing-options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .pricing-option {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .pricing-option:hover {
+      border-color: #5a0f61;
+    }
+    
+    .pricing-option.selected {
+      border-color: #5a0f61;
+      background-color: rgba(90, 15, 97, 0.1);
+    }
+    
+    .pricing-option-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .pricing-option-desc {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    /* Attachments */
+    .attachments-list {
+      margin-top: 1rem;
+    }
+    
+    .attachment-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .attachment-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      color: #5a0f61;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .attachment-info {
+      flex: 1;
+    }
+    
+    .attachment-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .attachment-size {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    
+    .attachment-remove {
+      color: #dc3545;
+      cursor: pointer;
+    }
+    
+    /* Access Permissions */
+    .permission-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .permission-option {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .permission-option:hover {
+      border-color: #5a0f61;
+    }
+    
+    .permission-option.selected {
+      border-color: #5a0f61;
+      background-color: rgba(90, 15, 97, 0.1);
+    }
+    
+    .permission-option input {
+      margin-right: 0.75rem;
+    }
+    
+    .permission-option-title {
+      font-weight: 500;
+    }
+    
+    .permission-option-desc {
+      font-size: 0.8rem;
+      color: #666;
+      margin-left: auto;
+    }
+    
+    /* Form Actions */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background-color: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    
+    /* Button Styles */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f8f9fa;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .header-left {
+        margin-bottom: 1rem;
+      }
+      
+      .user-info {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .form-body {
+        padding: 1.5rem;
+      }
+      
+      .datetime-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .pricing-options {
+        flex-direction: column;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <div>
+        <div class="title">Campus Activities</div>
+        <div class="subtitle">Discover and join exciting events</div>
+      </div>
+    </div>
+    <div class="user-info">
+      Welcome back,<br />
+      Mohamed Ali
+    </div>
+  </header>
+  
+  <main class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <a href="campus-activities.html">Campus Activities</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">Create New Event</span>
+    </div>
+    
+    <!-- Form Container -->
+    <div class="form-container">
+      <div class="form-header">
+        <h2 class="form-title">Create New Event</h2>
+      </div>
+      
+      <form class="form-body">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-info-circle"></i> Basic Information
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label" for="event-title">Event Title</label>
+            <input type="text" class="form-control" id="event-title" placeholder="Enter event title">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="event-description">Description</label>
+            <textarea class="form-control" id="event-description" placeholder="Enter event description"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Event Image</label>
+            <div class="image-upload" id="image-upload">
+              <div class="image-upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <div class="image-upload-text">
+                Click to upload or drag and drop
+              </div>
+              <input type="file" id="event-image" style="display: none;" accept="image/*">
+            </div>
+            <div class="image-preview" id="image-preview">
+              <img src="" alt="Event preview">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Date & Time Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-clock"></i> Date & Time
+          </h3>
+          
+          <div class="datetime-group">
+            <div class="form-group">
+              <label class="form-label" for="start-date">Start Date</label>
+              <input type="date" class="form-control" id="start-date">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="start-time">Start Time</label>
+              <input type="time" class="form-control" id="start-time">
+            </div>
+          </div>
+          
+          <div class="datetime-group">
+            <div class="form-group">
+              <label class="form-label" for="end-date">End Date</label>
+              <input type="date" class="form-control" id="end-date">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="end-time">End Time</label>
+              <input type="time" class="form-control" id="end-time">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Location Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-map-marker-alt"></i> Location
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label" for="event-venue">Venue</label>
+            <input type="text" class="form-control" id="event-venue" placeholder="Enter event venue">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="event-address">Address</label>
+            <textarea class="form-control" id="event-address" placeholder="Enter event address" rows="3"></textarea>
+          </div>
+        </div>
+        
+        <!-- Pricing Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-tag"></i> Pricing
+          </h3>
+          
+          <div class="pricing-options">
+            <div class="pricing-option selected" data-pricing="free">
+              <div class="pricing-option-title">Free</div>
+              <div class="pricing-option-desc">No registration fee</div>
+            </div>
+            
+            <div class="pricing-option" data-pricing="paid">
+              <div class="pricing-option-title">Paid</div>
+              <div class="pricing-option-desc">Requires payment</div>
+            </div>
+            
+            <div class="pricing-option" data-pricing="donation">
+              <div class="pricing-option-title">Donation</div>
+              <div class="pricing-option-desc">Optional contribution</div>
+            </div>
+          </div>
+          
+          <div class="form-group" id="price-group" style="display: none;">
+            <label class="form-label" for="event-price">Price ($)</label>
+            <input type="number" class="form-control" id="event-price" placeholder="Enter price" min="0" step="0.01">
+          </div>
+        </div>
+        
+        <!-- Attachments & Links Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-paperclip"></i> Attachments & Links
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label">Add Files</label>
+            <div class="image-upload" id="file-upload">
+              <div class="image-upload-icon">
+                <i class="fas fa-file-upload"></i>
+              </div>
+              <div class="image-upload-text">
+                Click to upload or drag and drop
+              </div>
+              <input type="file" id="event-files" style="display: none;" multiple>
+            </div>
+            
+            <div class="attachments-list" id="attachments-list">
+              <!-- Attachment items will be added here dynamically -->
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="event-links">External Links</label>
+            <input type="text" class="form-control" id="event-links" placeholder="Add external links (comma separated)">
+          </div>
+        </div>
+        
+        <!-- Access Permissions Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="fas fa-lock"></i> Access Permissions
+          </h3>
+          
+          <div class="permission-options">
+            <div class="permission-option selected" data-permission="public">
+              <input type="radio" name="permission" value="public" checked>
+              <div>
+                <div class="permission-option-title">Public</div>
+              </div>
+              <div class="permission-option-desc">Anyone can view</div>
+            </div>
+            
+            <div class="permission-option" data-permission="students">
+              <input type="radio" name="permission" value="students">
+              <div>
+                <div class="permission-option-title">Students Only</div>
+              </div>
+              <div class="permission-option-desc">Only students can view</div>
+            </div>
+            
+            <div class="permission-option" data-permission="faculty">
+              <input type="radio" name="permission" value="faculty">
+              <div>
+                <div class="permission-option-title">Faculty & Staff</div>
+              </div>
+              <div class="permission-option-desc">Faculty and staff can view</div>
+            </div>
+            
+            <div class="permission-option" data-permission="private">
+              <input type="radio" name="permission" value="private">
+              <div>
+                <div class="permission-option-title">Private</div>
+              </div>
+              <div class="permission-option-desc">Invite only</div>
+            </div>
+          </div>
+        </div>
+      </form>
+      
+      <div class="form-actions">
+        <button class="btn btn-secondary" id="cancel-btn">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-primary" id="create-event-btn">
+          <i class="fas fa-check"></i> Create Event
+        </button>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Image upload
+      const imageUpload = document.getElementById('image-upload');
+      const eventImage = document.getElementById('event-image');
+      const imagePreview = document.getElementById('image-preview');
+      
+      imageUpload.addEventListener('click', () => {
+        eventImage.click();
+      });
+      
+      eventImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            imagePreview.querySelector('img').src = e.target.result;
+            imagePreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      
+      // File upload
+      const fileUpload = document.getElementById('file-upload');
+      const eventFiles = document.getElementById('event-files');
+      const attachmentsList = document.getElementById('attachments-list');
+      
+      fileUpload.addEventListener('click', () => {
+        eventFiles.click();
+      });
+      
+      eventFiles.addEventListener('change', (e) => {
+        const files = e.target.files;
+        attachmentsList.innerHTML = '';
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const attachmentItem = document.createElement('div');
+          attachmentItem.className = 'attachment-item';
+          
+          const fileIcon = getFileIcon(file.type);
+          
+          attachmentItem.innerHTML = `
+            <div class="attachment-icon">
+              <i class="${fileIcon}"></i>
+            </div>
+            <div class="attachment-info">
+              <div class="attachment-name">${file.name}</div>
+              <div class="attachment-size">${formatFileSize(file.size)}</div>
+            </div>
+            <div class="attachment-remove">
+              <i class="fas fa-trash-alt"></i>
+            </div>
+          `;
+          
+          attachmentItem.querySelector('.attachment-remove').addEventListener('click', () => {
+            attachmentItem.remove();
+          });
+          
+          attachmentsList.appendChild(attachmentItem);
+        }
+      });
+      
+      // Pricing options
+      const pricingOptions = document.querySelectorAll('.pricing-option');
+      const priceGroup = document.getElementById('price-group');
+      
+      pricingOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          pricingOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          const pricing = option.getAttribute('data-pricing');
+          if (pricing === 'paid') {
+            priceGroup.style.display = 'block';
+          } else {
+            priceGroup.style.display = 'none';
+          }
+        });
+      });
+      
+      // Permission options
+      const permissionOptions = document.querySelectorAll('.permission-option');
+      
+      permissionOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const radio = option.querySelector('input[type="radio"]');
+          radio.checked = true;
+          
+          permissionOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+        });
+      });
+      
+      // Form actions
+      const cancelBtn = document.getElementById('cancel-btn');
+      const createEventBtn = document.getElementById('create-event-btn');
+      
+      cancelBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+          window.location.href = 'campus-activities.html';
+        }
+      });
+      
+      createEventBtn.addEventListener('click', () => {
+        // In a real application, this would submit the form data to a server
+        console.log('Creating event...');
+        
+        // For demo purposes, show a success message
+        alert('Event created successfully!');
+        window.location.href = 'campus-activities.html';
+      });
+    });
+    
+    // Helper functions
+    function getFileIcon(fileType) {
+      if (fileType.startsWith('image/')) {
+        return 'fas fa-file-image';
+      } else if (fileType === 'application/pdf') {
+        return 'fas fa-file-pdf';
+      } else if (fileType.includes('word')) {
+        return 'fas fa-file-word';
+      } else if (fileType.includes('excel') || fileType.includes('spreadsheet')) {
+        return 'fas fa-file-excel';
+      } else if (fileType.includes('powerpoint') || fileType.includes('presentation')) {
+        return 'fas fa-file-powerpoint';
+      } else {
+        return 'fas fa-file';
+      }
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+  </script>
+</body>
+</html>

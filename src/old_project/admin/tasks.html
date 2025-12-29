@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasks management</title>
+  <link rel="stylesheet" href="../css/task.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!-- Small CSS to reproduce the requested look (search full-width gray, filters row gray, date buttons with left calendar icon) -->
+  <style>
+    /* container adjustments */
+    .tasks-filters-container {
+      background: transparent;
+    }
+
+    /* Search wrapper (row 1) */
+    .tasks-search-wrapper {
+      position: relative;
+    }
+    .tasks-search-wrapper input {
+      background-color: white !important;
+    }
+    .tasks-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      /* gray-500 */
+      font-size: 14px;
+      /* pointer-events: none; */
+    }
+
+    .tasks-search-input {
+      background: #f3f4f6;
+      /* gray-100 */
+      border: 1px solid #e6e9ee;
+      /* subtle border */
+      border-radius: 10px;
+      height: 44px;
+      padding-left: 40px;
+      padding-right: 12px;
+      color: #374151;
+      /* gray-700 */
+      box-shadow: 0 0 0 0 transparent;
+    }
+
+    .tasks-search-input:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+      /* subtle blue focus */
+      outline: none;
+      border-color: #dbeafe;
+    }
+
+    /* Filters row */
+    .tasks-filter-dropdown {
+      height: 38px;
+      background: #f3f4f6;
+      /* gray-100 */
+      border: 1px solid #e6e9ee;
+      border-radius: 10px;
+      color: #111827;
+      /* dark text */
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .tasks-filter-dropdown {
+      /* bootstrap form-select resets, so override */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: none;
+    }
+
+    .tasks-filter-dropdown:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.06);
+    }
+
+    /* Date Filter Styles */
+    .date-filter {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.6rem .8rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 48px !important;
+      min-height: 48px !important;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-left: .5rem;
+    }
+    
+    .date-filter:hover {
+      border-color: #5a0f61;
+    }
+    
+    .date-filter.active {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .calendar-icon {
+      color: #5a0f61;
+      margin-right: 0.5rem;
+    }
+    
+    .date-display {
+      font-size: 0.9rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      height: 48px;
+    }
+    
+    .date-display.placeholder {
+      color: #999;
+    }
+    .placeholder{
+      background-color: transparent!important;
+      cursor: pointer!important;
+    }
+
+    .calendar-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: transparent; /* make sure it’s see-through */
+      display: none;
+      z-index: 90; /* lower than the calendar (100) */
+    }
+
+    .calendar-overlay.show {
+      display: block;
+    }
+    .calendar-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 280px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      padding: 1rem;
+      display: none;
+    }
+    
+    .calendar-dropdown.show {
+      display: block;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .calendar-nav {
+      background: none;
+      border: none;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: #666;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    
+    .calendar-nav:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .calendar-title {
+      font-weight: 600;
+      text-align: center;
+      flex: 1;
+      font-size: 0.9rem;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .calendar-day-header {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #999;
+      padding: 0.25rem;
+    }
+    
+    .calendar-day {
+      text-align: center;
+      padding: 0.4rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s;
+    }
+    
+    .calendar-day:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .calendar-day.selected {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .calendar-day.other-month {
+      color: #ccc;
+    }
+    
+    .calendar-day.today {
+      font-weight: bold;
+    }
+    
+    .calendar-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+    }
+    
+    .calendar-btn {
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s;
+      flex: 1;
+      margin: 0 0.25rem;
+    }
+    
+    .calendar-btn:first-child {
+      margin-left: 0;
+    }
+    
+    .calendar-btn:last-child {
+      margin-right: 0;
+    }
+    
+    .calendar-btn:hover {
+      background-color: #eaeaea;
+    }
+    
+    .calendar-btn.primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .calendar-btn.primary:hover {
+      background-color: #4a0c51;
+    }
+
+    @media (max-width: 1200px) {
+      .filters {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+      }
+      
+      .date-filter:last-child {
+        grid-column: span 1;
+      }
+    }
+    /* Dropdown arrow rotation */
+    .dropdown-arrow-wrapper {
+      position: relative;
+    }
+
+    .dropdown-arrow {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-size: 14px;
+      /* pointer-events: none; */
+      transition: transform 0.2s;
+    }
+
+    .dropdown-arrow.rotated {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 767.98px) {
+
+      .tasks-filter-dropdown,
+      .date-field {
+        min-width: 100%;
+      }
+    }
+
+    /* Task card badge icon size */
+    .task-card-badge-icon {
+      width: 12px !important;
+      height: 12px !important;
+      object-fit: contain;
+    }
+
+    /* Custom dropdown styles for search demo (match pending-request.html) */
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 10000;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    /* Faculty Filter CSS */
+    .custom-filter-container {
+      position: relative;
+      width: 100%;
+      /* flexible width for grid */
+      font-family: 'Roboto', Arial, sans-serif;
+      margin-right: 0;
+      display: block;
+      /* vertical-align: top; */
+    }
+
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #f3f4f6;
+      /* match date picker bg */
+      border: 1px solid #e6e9ee;
+      border-radius: 10px;
+      /* match date picker radius */
+      height: 38px;
+      /* match date picker height */
+      cursor: pointer;
+      padding: 0 16px 0 0;
+      min-width: 0;
+      /* allow shrink/grow */
+      box-shadow: none;
+      /* remove shadow for consistency */
+      position: relative;
+      /*z-index: 999;*/
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .custom-filter-label-value {
+      display: flex;
+      flex-direction: column;
+      margin-left: 12px;
+      /* decreased from 30px */
+      margin-top: 4px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 0.5px;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+
+    .custom-filter-value {
+      color: #22223B;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-filter-arrow {
+      margin-left: 8px;
+      margin-right: 0 !important;
+      /* force no right margin */
+      transition: transform 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-filter-arrow svg {
+      margin-right: 0 !important;
+      /* ensure SVG is flush right */
+    }
+
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 99999;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-filter.open+.custom-dropdown-list {
+      display: block;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+    }
+
+    /* Responsive: let filters and date pickers fill row equally */
+    @media (min-width: 768px) {
+      .tasks-filters-section .row>[class*="col-md-2"] {
+        flex: 1 1 0;
+        max-width: none;
+      }
+    }
+
+    /* Stack filters vertically below 995px */
+    @media (max-width: 995px) {
+      .tasks-filters-section .row.g-2>[class*="col-"] {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+      }
+      .date-filter {
+        margin-left: auto;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: rgb(248, 250, 252);">
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+
+    <section class="tasks-banner" style="margin-top: 72px;">
+      <div class="tasks-banner-content container">
+        <div class="tasks-banner-icon">
+          <img src="../assets/task-icon.png" alt="Tasks Icon" class="tasks-banner-img">
+        </div>
+        <div class="tasks-banner-text">
+          <h2>Tasks& Assignments</h2>
+          <p>Create, manage, and track coursework tasks for all students.</p>
+        </div>
+        <button class="add-task-btn" onclick="window.location.href='/admin/create_task.html'">
+          <i class="fa fa-plus"></i> Add New Task
+        </button>
+      </div>
+    </section>
+
+    <!-- Filters Section (REPLACED) -->
+    <section class="tasks-filters-section">
+      <div class="tasks-filters-container container py-3">
+        <!-- Row 1: full-width search -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="tasks-search-wrapper" style="position:relative;">
+              <span class="tasks-search-icon me-2"><i class="fa fa-search"></i></span>
+              <input type="text" class="form-control tasks-search-input" placeholder="Search assignment , tasks"
+                id="searchInput" />
+              <!-- Demo dropdown for search -->
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: 4 custom filters + Start Date + End Date -->
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-2">
+            <!-- Faculty Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customFacultyFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Faculty</span>-->
+                  <span class="custom-filter-value" id="customFacultyValue">All Faculties</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customFacultyDropdown">
+                <li class="active" data-value="">All Faculties</li>
+              </ul>
+              <input type="hidden" name="faculty" id="faculty_hidden" value="">
+            </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <!-- Department Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customDepartmentFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Department</span>-->
+                  <span class="custom-filter-value" id="customDepartmentValue">All Departments</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customDepartmentDropdown">
+                <li class="active" data-value="">All Departments</li>
+              </ul>
+              <input type="hidden" name="department" id="department_hidden" value="">
+            </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <!-- Subject Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customSubjectFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Subject</span>-->
+                  <span class="custom-filter-value" id="customSubjectValue">All Subjects</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customSubjectDropdown">
+                <li class="active" data-value="">All Subjects</li>
+              </ul>
+              <input type="hidden" name="subject" id="subject_hidden" value="">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-2">
+            <!-- year Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customYearFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">year</span>-->
+                  <span class="custom-filter-value" id="customYearValue">All years</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customYearDropdown">
+                <li class="active" data-value="">All years</li>
+              </ul>
+              <input type="hidden" name="year" id="year_hidden" value="">
+            </div>
+          </div>
+
+          <!-- End Date custom field -->
+          <div class="date-filter col-12 col-md-2" id="start-date-filter">
+            <i class="fas fa-calendar calendar-icon"></i>
+            <div class="date-display placeholder" id="start-date-display">Start Date</div>
+            <div class="calendar-dropdown" id="start-calendar">
+              <div class="calendar-header">
+                <button class="calendar-nav" id="start-prev-month" aria-label="Previous month">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="calendar-title" id="start-calendar-title"></div>
+                <button class="calendar-nav" id="start-next-month" aria-label="Next month">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="calendar-grid" id="start-calendar-grid">
+                <!-- Calendar days will be generated by JavaScript -->
+              </div>
+              <div class="calendar-actions">
+                <button class="calendar-btn" id="start-clear-btn">Clear</button>
+                <button class="calendar-btn primary" id="start-today-btn">Today</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="date-filter col-12 col-md-2" id="end-date-filter">
+            <i class="fas fa-calendar calendar-icon"></i>
+            <div class="date-display placeholder" id="end-date-display">End Date</div>
+            <div class="calendar-dropdown" id="end-calendar">
+              <div class="calendar-header">
+                <button class="calendar-nav" id="end-prev-month" aria-label="Previous month">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="calendar-title" id="end-calendar-title"></div>
+                <button class="calendar-nav" id="end-next-month" aria-label="Next month">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="calendar-grid" id="end-calendar-grid">
+                <!-- Calendar days will be generated by JavaScript -->
+              </div>
+              <div class="calendar-actions">
+                <button class="calendar-btn" id="end-clear-btn">Clear</button>
+                <button class="calendar-btn primary" id="end-today-btn">Today</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Filters Section -->
+
+    <!-- Tasks Cards Section -->
+    <section class="tasks-cards-section">
+      <div class="container">
+        <div class="row g-4 tasks">
+          <!-- Card 1 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Data Structures Assignment #3</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Data Structures</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Jan 30, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">45</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">12</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">5</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+          <!-- Card 2 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Web Development Project</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Web Development</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Feb 15, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">38</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">18</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">8</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+          <!-- Card 3 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Algorithm Analysis Report</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Algorithms</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Jan 20, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">42</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">15</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">12</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+          <!-- Card 4 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Database Design Project</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Database Systems</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Feb 28, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">35</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">22</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">3</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+          <!-- Card 5 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Final Exam Preparation</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Data Structures</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Jan 15, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">32</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">20
+                  </div>
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">20</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">7</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+          <!-- Card 6 -->
+          <!-- <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">Web Development Project</span>
+                <span class="task-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">Web Development</span>
+                </div>
+                <div class="task-card-meta-row">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">Feb 15, 2025 – 11:59 PM</span>
+                </div>
+              </div> -->
+          <!--<div class="task-card-badges">
+                <div class="task-card-badge submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/submitted.png" alt="submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">38</span>
+                  </div>
+                  <span class="task-card-badge-label">Submitted</span>
+                </div>
+                <div class="task-card-badge not-submitted">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/not-submitted.png" alt="not-submitted" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">18</span>
+                  </div>
+                  <span class="task-card-badge-label">Not Submitted</span>
+                </div>
+                <div class="task-card-badge late">
+                  <div class="task-card-badge-top">
+                    <img src="../assets/late-submitted.png" alt="late" class="task-card-badge-icon" />
+                    <span class="task-card-badge-value">8</span>
+                  </div>
+                  <span class="task-card-badge-label">Late</span>
+                </div>
+              </div>-->
+          <!-- <button class="task-card-btn">View Details</button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </section>
+    <!-- End Tasks Cards Section -->
+
+    <!-- ...other sections can go here... -->
+    <!-- Pagination -->
+    <div class="pending-pagination-container" style="margin-bottom: 30px; text-align: right;">
+      <button class="pending-page-btn" data-page="<" id="prevPage">
+        <
+          <button disabled class="pending-page-btn active" data-page="1" id="pageInput">1</button>
+          <button class="pending-page-btn" data-page=">" id="nextPage">></button>
+    </div>
+    <br><br>
+  </div>
+  <div id="loadingOverlayContainer" class="w-full h-full"
+    style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+  <div id="toast-container"></div>
+  <div class="calendar-overlay" id="calendar-overlay"></div>
+  <!-- small JS: make sure entire custom date-field opens the native picker (showPicker when available) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+  <script src="../js/loading.js"></script>
+  <script src="../js/script.js"></script>
+  <script src="../js/toast.js"></script>
+  <script src="../js/loadscreen.js"></script>
+  <script src="../js/admin-tasks.js"></script>
+  <script>
+    const dateFilters = {
+      start_date : "",
+      end_date : "",
+    }
+    let tasks = [];
+    // document.querySelectorAll('.date-field').forEach(container => {
+    //   const input = container.querySelector('input[type="date"].native-date');
+
+      // If input exists, try to open the picker when clicking the container
+      // container.addEventListener('click', (e) => {
+      //   // prevent double focus if click actually landed on the input itself
+      //   if (!input) return;
+      //   if (typeof input.showPicker === 'function') {
+      //     // modern browsers (Chromium)
+      //     try {
+      //       input.showPicker();
+      //     } catch (err) {
+      //       // fallback
+      //       input.focus();
+      //       input.click();
+      //     }
+      //   } else {
+      //     // fallback for other browsers
+      //     input.focus();
+      //     input.click();
+      //   }
+      // });
+
+      // keyboard accessibility: Enter or Space should open picker
+      // container.addEventListener('keydown', (e) => {
+      //   if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      //     e.preventDefault();
+      //     if (input) {
+      //       if (typeof input.showPicker === 'function') input.showPicker();
+      //       else { input.focus(); input.click(); }
+      //     }
+      //   }
+      // });
+
+      // Optional: when a date is selected, you can update the label text.
+      // If you want that behavior, uncomment below:
+      /*
+      input.addEventListener('change', () => {
+        const val = input.value; // format: yyyy-mm-dd
+        if (val) {
+          const d = new Date(val);
+          const opts = { year: 'numeric', month: 'short', day: 'numeric' };
+          container.querySelector('.date-label').textContent = d.toLocaleDateString(undefined, opts);
+        } else {
+          // reset label if cleared
+          // container.querySelector('.date-label').textContent = container.getAttribute('aria-label');
+        }
+      });
+      */
+    // });
+
+    // Dropdown arrow rotation
+    // document.querySelectorAll('.dropdown-arrow-wrapper').forEach(wrapper => {
+    //   const select = wrapper.querySelector('select');
+    //   const arrow = wrapper.querySelector('.dropdown-arrow');
+    //   select.addEventListener('focus', () => {
+    //     arrow.classList.add('rotated');
+    //   });
+    //   select.addEventListener('blur', () => {
+    //     arrow.classList.remove('rotated');
+    //   });
+    // });
+    // (function () {
+    //   const url = new URL(window.location.href);
+    //   const cacheBuster = `cb=${new Date().getTime()}`;
+
+    //   // If URL already has a cache-buster, don't repeat
+    //   if (!url.searchParams.has('cb')) {
+    //     url.searchParams.set('cb', cacheBuster);
+    //     window.location.replace(url.toString());
+    //   }
+    // })();
+
+    // Search input dropdown demo logic
+    // const searchInput = document.getElementById('searchInput');
+    // const searchDemoDropdown = document.getElementById('searchDemoDropdown');
+    // searchInput.addEventListener('focus', function () {
+    //   searchDemoDropdown.style.display = 'block';
+    // });
+    // searchInput.addEventListener('blur', function () {
+    //   setTimeout(() => { searchDemoDropdown.style.display = 'none'; }, 120);
+    // });
+    // searchDemoDropdown.addEventListener('mousedown', function (e) {
+    //   if (e.target.tagName === 'LI') {
+    //     searchInput.value = e.target.textContent;
+    //     searchDemoDropdown.style.display = 'none';
+    //     searchInput.blur();
+    //   }
+    // });
+
+    // Department filter
+    async function getDepartments(faculty_id) {
+      console.log('getting departments');
+      
+      await setupCustomFilter(
+        "customDepartmentFilter",
+        "customDepartmentDropdown",
+        "customDepartmentValue",
+        "department_hidden",
+        searchDepartments,
+        "All Departments"
+      );
+    }
+    
+    async function setupCustomFilter(
+      filterId,
+      dropdownId,
+      valueId,
+      hiddenId,
+      fetchFn,
+      defaultLabel = "All"
+    ) {
+      showLoading();
+      const filter = document.getElementById(filterId);
+      const dropdown = document.getElementById(dropdownId);
+      const valueSpan = document.getElementById(valueId);
+      const hiddenInput = document.getElementById(hiddenId);
+      
+      try {
+        const res = await fetchFn(); // Expected: { data: [{ id, name }, ...] }
+        
+        if (res?.data && Array.isArray(res.data)) {
+          // Reset dropdown
+          dropdown.innerHTML = `<li class="active" data-value="">${defaultLabel}</li>`;
+          
+          // Append dynamic items
+          if (defaultLabel === "All Faculties") {
+            res.data.forEach(item => {
+              dropdown.innerHTML += `
+              <li data-value="${item.year || item.id}" class="faculties">${item.name || item.year}</li>
+              `;
+            });
+          }else {
+            res.data.forEach(item => {
+              dropdown.innerHTML += `
+              <li data-value="${item.year || item.id}">${item.name || item.year}</li>
+              `;
+            });
+          }
+        }
+        
+        // ---- Dropdown toggle logic ----
+        filter.addEventListener("click", function (e) {
+          filter.classList.toggle("open");
+          dropdown.style.display = filter.classList.contains("open") ? "block" : "none";
+          e.stopPropagation();
+        });
+
+        dropdown.addEventListener("mousedown", function (e) {
+          if (e.target.tagName === "LI") {
+            // Remove active from all
+            dropdown.querySelectorAll("li").forEach(li => li.classList.remove("active"));
+            e.target.classList.add("active");
+            
+            // Update label + hidden input
+            valueSpan.textContent = e.target.textContent;
+            hiddenInput.value = e.target.getAttribute("data-value");
+            
+            // Close dropdown
+            filter.classList.remove("open");
+            dropdown.style.display = "none";
+            
+            if (typeof filterTasks === "function") {
+              filterTasks();
+            }
+          }
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
+            filter.classList.remove("open");
+            dropdown.style.display = "none";
+          }
+        });
+      } catch (error) {
+        showToast("error", "Error", `Could not load ${defaultLabel.toLowerCase()}s`, "");
+      }
+    }
+    
+    // Custom filter dropdown logic for all 4 filters
+    // function setupCustomFilter(filterId, dropdownId, valueId, hiddenId) {
+      //   const filter = document.getElementById(filterId);
+      //   const dropdown = document.getElementById(dropdownId);
+      //   const valueSpan = document.getElementById(valueId);
+      //   const hiddenInput = document.getElementById(hiddenId);
+      
+      //   filter.addEventListener('click', function (e) {
+        //     filter.classList.toggle('open');
+        //     dropdown.style.display = filter.classList.contains('open') ? 'block' : 'none';
+        //     e.stopPropagation();
+        //   });
+        
+        //   dropdown.addEventListener('mousedown', function (e) {
+          //     if (e.target.tagName === 'LI') {
+            //       // Remove active from all
+            //       dropdown.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+            //       e.target.classList.add('active');
+            //       valueSpan.textContent = e.target.textContent;
+            //       hiddenInput.value = e.target.getAttribute('data-value');
+            //       filter.classList.remove('open');
+            //       dropdown.style.display = 'none';
+            //     }
+            //   });
+            
+            //   document.addEventListener('click', function (e) {
+              //     if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
+                //       filter.classList.remove('open');
+                //       dropdown.style.display = 'none';
+                //     }
+                //   });
+    // }
+
+    // setupCustomFilter('customFacultyFilter', 'customFacultyDropdown', 'customFacultyValue', 'faculty_hidden');
+    // setupCustomFilter('customDepartmentFilter', 'customDepartmentDropdown', 'customDepartmentValue', 'department_hidden');
+    // setupCustomFilter('customSubjectFilter', 'customSubjectDropdown', 'customSubjectValue', 'subject_hidden');
+    // setupCustomFilter('customStatusFilter', 'customStatusDropdown', 'customStatusValue', 'status_hidden');
+    let Tasks = [];
+    let currentPage = 1;
+    let totalPages = 1;
+    const limit = 40;
+    async function fetchTasks(page = 1) {
+      
+      showLoading();
+      // Faculty filter
+      await setupCustomFilter(
+        "customFacultyFilter",
+        "customFacultyDropdown",
+        "customFacultyValue",
+        "faculty_hidden",
+        searchFaculties,
+        "All Faculties"
+      );
+      document.querySelectorAll(".faculties").forEach(faculty=> { console.log(faculty);
+        
+        faculty.addEventListener("mouseup", async()=> {
+          await getDepartments(1);
+        })
+      })
+      
+      // Subject filter
+      await setupCustomFilter(
+        "customSubjectFilter",
+        "customSubjectDropdown",
+        "customSubjectValue",
+        "subject_hidden",
+        searchCourses,
+        "All Subjects"
+      );
+      
+      // Year filter
+      await setupCustomFilter(
+        "customYearFilter",
+        "customYearDropdown",
+        "customYearValue",
+        "year_hidden",
+        searchYears,
+        "All Years"
+      );      
+      await setupCustomFilter(
+        "customDepartmentFilter",
+        "customDepartmentDropdown",
+        "customDepartmentValue",
+        "department_hidden",
+        searchDepartments,
+        "All Departments"
+      );
+      
+      const res = await getTasks({start_date: dateFilters.start_date, end_date: dateFilters.end_date, page: page});
+      if (res?.status === "success") {
+        Tasks = res.data;
+        
+        // update page state
+        currentPage = page;
+        
+        // if backend says "next = false", this is last page
+        totalPages = res.next ? page + 1 : page;
+
+
+        renderTasks(Tasks);
+        updatePaginationUI();
+      }
+      else {
+        showToast("error", "Error", "Failed to fetch Tasks", "");
+        hideLoading();
+      }
+    }
+    
+    
+    
+    function updatePaginationUI() {
+      const prevBtn = document.getElementById("prevPage");
+      const nextBtn = document.getElementById("nextPage");
+      const pageInput = document.getElementById("pageInput");
+      
+      pageInput.textContent = currentPage;
+      
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = !Tasks.length || currentPage === totalPages;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+      if (currentPage > 1) fetchTasks(currentPage - 1);
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+      if (currentPage < totalPages) fetchTasks(currentPage + 1);
+    });
+    async function renderTasks(list = Tasks) {
+      showLoading();
+      const container = document.querySelector(".tasks");
+      container.innerHTML = "";
+      for (let t of list) {
+
+
+        container.innerHTML += `
+      
+   <div class="col-12 col-md-6 col-lg-4">
+            <div class="task-card">
+              <div class="task-card-header">
+                <span class="task-card-title">${t.name}</span>
+ <span class="menu-dots"><i class="fas fa-ellipsis-v t-menu" data-idx="${t.id}"></i>  <div class="t-dropdown hidden">
+    <div class="t-dropdown-item edit-t" data-idx="${t.id}"> <i class="fas fa-edit me-2" ></i>Edit</div>
+    <div class="t-dropdown-item delete-t" data-idx="${t.id}"><i class="fas fa-trash-alt me-2"></i>Delete</div>
+  </div></span>               
+              </div>
+              <div class="task-card-meta">
+                <div class="task-card-meta-row">
+                  <img src="../assets/subject-icon.png" alt="subject" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Subject:</span>
+                  <span class="task-card-meta-value">${t.subject.name}</span>
+                </div>
+                <div class="task-card-meta-row task-row-deadline">
+                  <img src="../assets/deadline-icon.png" alt="calendar" class="task-card-meta-icon" />
+                  <span class="task-card-meta-label">Deadline:</span>
+                  <span class="task-card-meta-value">${t.
+            due_date
+
+          } </span>
+                </div>
+              </div>
+             
+<button class="task-card-btn" onclick="window.location.href='/admin/task_details.html?id=${t.id}'">
+  <i class="far fa-eye"></i>
+  View Details
+</button>
+              
+            </div>
+          </div>
+      `;
+      }
+
+      document.querySelectorAll(".t-menu").forEach(icon => {
+        icon.onclick = e => {
+          e.stopPropagation();
+          const dropdown = e.currentTarget.nextElementSibling;
+          if (!dropdown) return;
+
+          // Close other dropdowns
+          document.querySelectorAll(".t-dropdown").forEach(menu => {
+            if (menu !== dropdown) menu.classList.add("hidden");
+          });
+
+          // Toggle current
+          dropdown.classList.toggle("hidden");
+        };
+      });
+
+
+      // Close when clicking outside
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".t-dropdown").forEach(menu => menu.classList.add("hidden"));
+      });
+
+
+
+      document.querySelectorAll(".edit-t").forEach(btn => {
+        btn.onclick = async e => {
+          const idx = e.target.getAttribute("data-idx");
+          window.location.href = `/admin/edit_task.html?id=${idx}`;
+        };
+      });
+
+      document.querySelectorAll(".delete-t").forEach(btn => {
+        btn.onclick = async e => {
+          const idx = e.target.getAttribute("data-idx");
+showPopup(
+    'confirm',
+    'Delete Task',
+    `Are you sure you want to delete this task?`,
+    async () => {
+        await deleteTask(idx);
+        closePopup();
+                  fetchTasks();
+
+    }
+);
+          fetchTasks();
+        };
+      });
+
+      hideLoading();
+
+    }
+
+
+
+
+    async function filterTasks() {
+      showLoading();
+
+      const searchVal = document.getElementById("searchInput").value.toLowerCase();
+
+      // Use hidden inputs from custom filters
+      const facultyVal = document.getElementById("faculty_hidden").value;
+      const departmentVal = document.getElementById("department_hidden").value;
+      const subjectVal = document.getElementById("subject_hidden")?.value || "";
+      const yearVal = document.getElementById("year_hidden")?.value || "";
+
+      let filtered = Tasks;
+
+      // ---- Apply filters ----
+      if (facultyVal) {
+        filtered = filtered.filter(e => e.faculty.id == facultyVal);
+      }
+
+      if (searchVal) {
+        filtered = filtered.filter(e =>
+          e.faculty.name.toLowerCase().includes(searchVal) ||
+          (e.name || "").toLowerCase().includes(searchVal) ||
+          e.department.name.toLowerCase().includes(searchVal) ||
+          e.subject.code.toLowerCase().includes(searchVal)
+        );
+      }
+
+      if (departmentVal) {
+        filtered = filtered.filter(e => e.department.id == departmentVal);
+      }
+
+
+
+      if (subjectVal) {
+        filtered = filtered.filter(e => e.subject.id == subjectVal);
+      }
+      if (yearVal) {
+        filtered = filtered.filter(e => e.year.year == yearVal);
+      }
+
+      // Render results
+      renderTasks(filtered);
+    }
+
+     // Calendar
+  class Calendar {
+    constructor(calendarId, displayId) {
+      this.calendar = document.getElementById(calendarId);
+      this.display = document.getElementById(displayId);
+      this.currentDate = new Date();
+      this.selectedDate = null;
+      this.isOpen = false;
+      this.init();
+    }
+
+    init() {
+      this.render();
+      this.bindEvents();
+    }
+
+    bindEvents() {
+      this.display.parentElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.open();
+      });
+
+      const prevBtn = this.calendar.querySelector('[id$="prev-month"]');
+      const nextBtn = this.calendar.querySelector('[id$="next-month"]');
+
+      prevBtn.addEventListener('click', (e) => { e.stopPropagation(); this.previousMonth(); });
+      nextBtn.addEventListener('click', (e) => { e.stopPropagation(); this.nextMonth(); });
+
+      const clearBtn = this.calendar.querySelector('[id$="clear-btn"]');
+      const todayBtn = this.calendar.querySelector('[id$="today-btn"]');
+
+      clearBtn.addEventListener('click', async (e) => { e.stopPropagation(); await this.clearDate(); });
+      todayBtn.addEventListener('click', async (e) => { e.stopPropagation(); await this.selectToday(); });
+
+      document.addEventListener('click', (e) => {
+        if (!this.calendar.contains(e.target) && !this.display.parentElement.contains(e.target)) {
+          this.close();
+        }
+      });
+
+      this.calendar.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    toggle() { this.isOpen ? this.close() : this.open(); }
+    open() {
+      this.calendar.classList.add('show');
+      this.display.parentElement.classList.add('active');
+      document.getElementById('calendar-overlay').classList.add('show');
+      this.isOpen = true;
+    }
+    close() {
+      this.calendar.classList.remove('show');
+      this.display.parentElement.classList.remove('active');
+      document.getElementById('calendar-overlay').classList.remove('show');
+      this.isOpen = false;
+    }
+
+    render() {
+      const title = this.calendar.querySelector('[id$="calendar-title"]');
+      const grid = this.calendar.querySelector('[id$="calendar-grid"]');
+      title.textContent = this.currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      grid.innerHTML = '';
+
+      const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      dayHeaders.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'calendar-day-header';
+        header.textContent = day;
+        grid.appendChild(header);
+      });
+
+      const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+      for (let i = 0; i < 42; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = date.getDate();
+
+        if (date.getMonth() !== this.currentDate.getMonth()) dayElement.classList.add('other-month');
+        if (this.isToday(date)) dayElement.classList.add('today');
+        if (this.selectedDate && this.isSameDay(date, this.selectedDate)) dayElement.classList.add('selected');
+
+        dayElement.addEventListener('click', async () => await this.selectDate(date));
+        grid.appendChild(dayElement);
+      }
+    }
+
+    async selectDate(date) {
+      this.selectedDate = new Date(date);
+      let nextDay = new Date(this.selectedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      dateFilters[ this.display.id.includes('start') ? 'start_date' : 'end_date' ] = nextDay.toISOString().split('T')[0];
+      tasks = [];
+      this.updateDisplay();
+      this.render();
+      this.close();
+      await fetchTasks();
+    }
+
+    async clearDate() {
+      dateFilters[ this.display.id.includes('start') ? 'start_date' : 'end_date' ] = null;
+      tasks = [];
+      this.selectedDate = null;
+      this.updateDisplay();
+      this.render();
+      this.close();
+      await fetchTasks();
+    }
+
+    async selectToday() { await this.selectDate(new Date()); }
+    updateDisplay() {
+      if (this.selectedDate) {
+        this.display.textContent = this.selectedDate.toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric'
+        });
+        this.display.classList.remove('placeholder');
+      } else {
+        this.display.textContent = this.display.id.includes('start') ? 'Start Date' : 'End Date';
+        this.display.classList.add('placeholder');
+      }
+    }
+
+    previousMonth() { this.currentDate.setMonth(this.currentDate.getMonth() - 1); this.render(); }
+    nextMonth() { this.currentDate.setMonth(this.currentDate.getMonth() + 1); this.render(); }
+    isToday(date) { return this.isSameDay(date, new Date()); }
+    isSameDay(d1, d2) { return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear(); }
+    getDate() { return this.selectedDate; }
+  }
+
+    // document.getElementById("DateFilter").addEventListener("change", filterTasks);
+
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      filterTasks();
+    });
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      startCalendar = new Calendar('start-calendar', 'start-date-display');
+      endCalendar   = new Calendar('end-calendar', 'end-date-display');
+      
+      showLoading();
+      await fetchTasks();
+
+    });
+
+
+
+  </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials Explorer - CS101 Grades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../components/navbar.html">
+    <link rel="stylesheet" href="../components/sidebar.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a202c;
+        }
+        
+        /* Content Wrapper */
+        #content-wrapper {
+            transition: all 0.3s ease;
+            padding-left: 0;
+        }
+        
+        #content-wrapper.sidebar-hidden {
+            padding-left: 0;
+        }
+        
+        #content-wrapper.sidebar-visible {
+            padding-left: 250px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px; /* Account for fixed navbar */
+        }
+        
+        /* Materials Explorer Header */
+        .explorer-header {
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        h1{
+            background: linear-gradient(120deg, #5A0F61 0%, #d472fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+
+        }
+        
+        .explorer-title {
+            font-size: 35px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .explorer-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-nav a {
+            color: #6B7280;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumb-nav a:hover {
+            color: #4B5563;
+        }
+        
+        .breadcrumb-nav .separator {
+            margin: 0 0.5rem;
+            color: #9CA3AF;
+        }
+        
+        .breadcrumb-nav .current {
+            color: #4B5563;
+            font-weight: 500;
+        }
+        
+        /* Filters Section */
+        .filters-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-dropdown {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4B5563;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 14px;
+            color: #1F2937;
+            transition: border-color 0.2s ease;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #661666;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        /* Search and Actions Section */
+        .search-actions-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #5a1474;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+        }
+        
+        .actions-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        /* Content Section */
+        .content-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #371f36;
+        }
+        
+        /* Folder and File Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* Folder Card */
+        .folder-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .folder-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .folder-tag {
+            background-color: rgba(107, 33, 168, 0.1);
+            color: #6B21A8;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        
+        .folder-date {
+            font-size: 12px;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .folder-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .folder-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 1rem;
+        }
+        
+        .folder-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+        
+        .folder-info {
+            font-size: 14px;
+            color: #6B7280;
+        }
+        
+        /* File Card */
+        .file-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .file-tag {
+            background-color: rgba(107, 33, 168, 0.1);
+            color: #6B21A8;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        
+        .file-date {
+            font-size: 12px;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .file-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F2937;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .file-action-btn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4B5563;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .file-action-btn:hover {
+            background-color: #F9FAFB;
+            border-color: #9CA3AF;
+        }
+        
+        /* File type icons */
+        .file-pdf {
+            color: #EF4444;
+        }
+        
+        .file-excel {
+            color: #10B981;
+        }
+        
+        .file-word {
+            color: #3B82F6;
+        }
+        
+        .file-powerpoint {
+            color: #F97316;
+        }
+        
+        /* Modal Styles */
+        .card-details {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-details.active {
+            display: flex;
+        }
+        
+        .card-details .bg-white {
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalFadeIn 0.3s ease-out;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Page Navigation */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filters-section {
+                flex-direction: column;
+            }
+            
+            .filter-dropdown {
+                width: 100%;
+            }
+            
+            .search-actions-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #content-wrapper.sidebar-visible {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+        
+        <div class="container">
+            <!-- Main Grades Page -->
+            <div id="mainPage" class="page active">
+                <!-- Materials Explorer Header -->
+                <div class="explorer-header">
+                    <h1 class="explorer-title">Materials Explorer</h1>
+                    <p class="explorer-subtitle">Navigate through your course materials with ease</p>
+                </div>
+                
+                <!-- Breadcrumb Navigation -->
+                <div class="breadcrumb-nav">
+                    <a href="#">Materials</a>
+                    <span class="separator">></span>
+                    <a href="#">Computer Science</a>
+                    <span class="separator">></span>
+                    <span class="current">CS101 Grades</span>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Faculty</label>
+                        <select class="filter-select">
+                            <option>Computers and Information</option>
+                            <option>Engineering</option>
+                            <option>Business</option>
+                            <option>Arts</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Department</label>
+                        <select class="filter-select">
+                            <option>Computer Science</option>
+                            <option>Information Technology</option>
+                            <option>Software Engineering</option>
+                            <option>Data Science</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Academic Year</label>
+                        <select class="filter-select">
+                            <option>2024-2025</option>
+                            <option>2023-2024</option>
+                            <option>2022-2023</option>
+                            <option>2021-2022</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Subject</label>
+                        <select class="filter-select">
+                            <option>CS101</option>
+                            <option>CS102</option>
+                            <option>CS201</option>
+                            <option>CS202</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Search Section -->
+                <div class="search-actions-section">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search by grade file name..." class="search-input">
+                    </div>
+                </div>
+                
+                <!-- Folders Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Folders</h2>
+                    <div class="content-grid">
+                        <!-- Folder Cards -->
+                        <div class="folder-card" onclick="showFinalPage('Assignments')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-01-15</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Assignments</span>
+                            </div>
+                            <div class="folder-info">6 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Quizzes')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-02-10</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Quizzes</span>
+                            </div>
+                            <div class="folder-info">4 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Midterm')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-03-05</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Midterm</span>
+                            </div>
+                            <div class="folder-info">3 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Final')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-04-01</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Final</span>
+                            </div>
+                            <div class="folder-info">6 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Exam')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-04-15</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Exam</span>
+                            </div>
+                            <div class="folder-info">2 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Projects')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-05-01</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Projects</span>
+                            </div>
+                            <div class="folder-info">5 files</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Files Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Recent Files</h2>
+                    <div class="content-grid">
+                        <!-- File Cards -->
+                        <div class="file-card" data-filename="Assignment 1 - Variables.pdf" data-date="2024-01-22">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-01-22</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Assignment 1 - Variables.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Assignment 2 - Functions.xlsx" data-date="2024-02-05">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-02-05</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Assignment 2 - Functions.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Final Page -->
+            <div id="finalPage" class="page">
+                <!-- Materials Explorer Header -->
+                <div class="explorer-header">
+                    <h1 class="explorer-title">Materials Explorer</h1>
+                    <p class="explorer-subtitle">Navigate through your course materials with ease</p>
+                </div>
+                
+                <!-- Breadcrumb Navigation -->
+                <div class="breadcrumb-nav">
+                    <a href="#" onclick="showMainPage()">Materials</a>
+                    <span class="separator">></span>
+                    <a href="#" onclick="showMainPage()">Computer Science</a>
+                    <span class="separator">></span>
+                    <a href="#" onclick="showMainPage()">CS101 Grades</a>
+                    <span class="separator">></span>
+                    <span class="current" id="finalPageBreadcrumb">Final</span>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Faculty</label>
+                        <select class="filter-select">
+                            <option>Computers and Information</option>
+                            <option>Engineering</option>
+                            <option>Business</option>
+                            <option>Arts</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Department</label>
+                        <select class="filter-select">
+                            <option>Computer Science</option>
+                            <option>Information Technology</option>
+                            <option>Software Engineering</option>
+                            <option>Data Science</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Academic Year</label>
+                        <select class="filter-select">
+                            <option>2024-2025</option>
+                            <option>2023-2024</option>
+                            <option>2022-2023</option>
+                            <option>2021-2022</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Subject</label>
+                        <select class="filter-select">
+                            <option>CS101</option>
+                            <option>CS102</option>
+                            <option>CS201</option>
+                            <option>CS202</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Search Section -->
+                <div class="search-actions-section">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search by grade file name..." class="search-input">
+                    </div>
+                </div>
+                
+                <!-- Files Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Files</h2>
+                    <div class="content-grid">
+                        <!-- File Cards -->
+                        <div class="file-card" data-filename="Assignment 1 - Variables.pdf" data-date="2024-01-22">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-01-22</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Assignment 1 - Variables.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Assignment 2 - Functions.xlsx" data-date="2024-02-05">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-02-05</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Assignment 2 - Functions.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Scores.pdf" data-date="2024-03-10">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-10</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Final Exam Scores.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Grade Report.xlsx" data-date="2024-03-15">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-15</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Final Grade Report.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Feedback.docx" data-date="2024-03-20">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-20</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-word file-word"></i>
+                                </div>
+                                <span class="file-name">Final Exam Feedback.docx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Review.pptx" data-date="2024-04-01">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-04-01</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-powerpoint file-powerpoint"></i>
+                                </div>
+                                <span class="file-name">Final Exam Review.pptx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="far fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="far fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card Details Modal -->
+        <div id="cardDetailsModal" class="card-details">
+            <div class="bg-white p-8 rounded-2xl shadow-xl">
+                <div class="flex items-center mb-8">
+                    <a href="#" id="closeModal" class="flex items-center text-gray-700 hover:text-gray-900">
+                        <i class="far fa-arrow-left text-xl mr-3"></i>
+                        <div>
+                            <div class="final-title" id="modalTitle">Final</div>
+                            <div class="text-sm text-gray-500">View grades for final</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="cs101-tag text-xs font-semibold px-2 py-1 rounded-full">CS101</span>
+                        <span class="text-gray-600 text-sm" id="modalDate"><i class="far fa-calendar-alt mr-1"></i>2024-01-22</span>
+                    </div>
+                    <div class="flex items-center mb-6">
+                        <i class="far fa-file-pdf text-red-500 text-2xl mr-3" id="modalFileIcon"></i>
+                        <span class="file-name font-medium text-gray-900" id="modalFileName">Assignment 1 - Variables.pdf</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between space-x-4">
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="far fa-eye mr-2"></i> Preview
+                    </button>
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="far fa-download mr-2"></i> Download
+                    </button>
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="far fa-external-link-alt mr-2"></i> Open
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show main page
+        function showMainPage() {
+            document.getElementById('mainPage').classList.add('active');
+            document.getElementById('finalPage').classList.remove('active');
+        }
+        
+        // Show final page
+        function showFinalPage(folderName) {
+            // Update title and breadcrumb
+            document.getElementById('finalPageBreadcrumb').textContent = folderName;
+            document.getElementById('modalTitle').textContent = folderName;
+            
+            // Show final page and hide main page
+            document.getElementById('mainPage').classList.remove('active');
+            document.getElementById('finalPage').classList.add('active');
+        }
+        
+        // Get DOM elements
+        const modal = document.getElementById('cardDetailsModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalFileName = document.getElementById('modalFileName');
+        const modalDate = document.getElementById('modalDate');
+        const modalFileIcon = document.getElementById('modalFileIcon');
+        
+        // Add event listeners to all file cards
+        document.querySelectorAll('.file-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Get file data
+                const fileName = this.getAttribute('data-filename');
+                const fileDate = this.getAttribute('data-date');
+                
+                // Determine file type and icon
+                let fileIcon = '';
+                if (fileName.endsWith('.pdf')) {
+                    fileIcon = 'far fa-file-pdf text-red-500';
+                } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                    fileIcon = 'far fa-file-excel text-green-500';
+                } else if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
+                    fileIcon = 'far fa-file-word text-blue-500';
+                } else if (fileName.endsWith('.pptx') || fileName.endsWith('.ppt')) {
+                    fileIcon = 'far fa-file-powerpoint text-orange-500';
+                }
+                
+                // Update modal content
+                modalFileName.textContent = fileName;
+                modalDate.innerHTML = `<i class="far fa-calendar-alt mr-1"></i>${fileDate}`;
+                modalFileIcon.className = `${fileIcon} text-2xl mr-3`;
+                
+                // Show modal
+                modal.classList.add('active');
+            });
+        });
+        
+        // Close modal when clicking close button
+        closeModalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.classList.remove('active');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/loading.js"></script>
+</body>
+</html>

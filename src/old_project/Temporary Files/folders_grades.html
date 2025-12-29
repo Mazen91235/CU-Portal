@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grades Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
+  <link rel="stylesheet" href="./css/navbar.css">
+  <link rel="stylesheet" href="./css/toasts.css">
+  <link rel="stylesheet" href="./components/navbar.html">
+  <link rel="stylesheet" href="./components/sidebar.html">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Content Wrapper */
+    #content-wrapper {
+      transition: all 0.3s ease;
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-hidden {
+      padding-left: 0;
+    }
+    
+    #content-wrapper.sidebar-visible {
+      padding-left: 250px;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #5a0f61;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 60px; /* Account for fixed navbar */
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .header-icon i {
+      font-size: 1.5rem;
+    }
+    
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Filters Section */
+    .filters {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    /* Custom Select Styles */
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+    
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+    
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+    
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+    
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+    
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+    }
+    
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    /* Content Section */
+    .content-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 3rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .illustration {
+      margin: 2rem 0;
+    }
+    
+    .illustration img {
+      max-width: 300px;
+      height: auto;
+    }
+    
+    .content-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #5a0f61;
+      margin-bottom: 1rem;
+    }
+    
+    .content-description {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Grades Section */
+    .grades-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .selected-filters {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .selected-filters-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #5a0f61;
+    }
+    
+    .selected-filters-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .selected-filter {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+    }
+    
+    .selected-filter-label {
+      font-weight: 500;
+      margin-right: 0.5rem;
+      color: #666;
+    }
+    
+    .selected-filter-value {
+      color: #5a0f61;
+      font-weight: 500;
+    }
+    
+    /* Admin Actions */
+    .admin-actions {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .admin-actions-info {
+      flex: 1;
+    }
+    
+    .admin-actions-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .admin-actions-description {
+      color: #666;
+    }
+    
+    .admin-actions-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    /* Folders Grid */
+    .folders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .folder-card {
+      background-color: white;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .folder-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-color: #5a0f61;
+    }
+    
+    .folder-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background-color: rgba(166, 115, 242, 0.1);
+      color: #A673F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    
+    .folder-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .folder-description {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    /* Button Styles */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    .btn-secondary {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e9ecef;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background-color: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+    
+    .form-text {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: center;
+    }
+    
+    .radio-option input {
+      margin-right: 0.5rem;
+    }
+    
+    .radio-option label {
+      cursor: pointer;
+    }
+    
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .file-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .file-input-label {
+      display: block;
+      padding: 0.75rem 1rem;
+      border: 1px dashed #ddd;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .file-input-label:hover {
+      border-color: #5a0f61;
+      background-color: rgba(90, 15, 97, 0.05);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        margin-top: 60px;
+      }
+      
+      .header-left {
+        margin-bottom: 1rem;
+      }
+      
+      .user-info {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .filters {
+        grid-template-columns: 1fr;
+      }
+      
+      .content-section {
+        padding: 2rem 1rem;
+      }
+      
+      .admin-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .admin-actions-buttons {
+        margin-top: 1rem;
+        width: 100%;
+      }
+      
+      .folders-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal {
+        width: 95%;
+      }
+      
+      #content-wrapper.sidebar-visible {
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+    
+    <header>
+      <div class="header-left">
+        <div class="header-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div>
+          <div class="title">Grades Portal</div>
+          <div class="subtitle">Access and manage your academic grades</div>
+        </div>
+      </div>
+      <div class="user-info">
+        Welcome back,<br />
+        Mohamed Ali
+      </div>
+    </header>
+    
+    <main class="container">
+      <!-- Filters Section -->
+      <section class="filters">
+        <!-- Custom Faculty Select -->
+        <div class="custom-select" id="faculty-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Faculty (Computer Science)</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Faculties</div>
+            <div class="custom-select-option selected" data-value="cs">Computer Science</div>
+            <div class="custom-select-option" data-value="math">Mathematics</div>
+            <div class="custom-select-option" data-value="eng">Engineering</div>
+            <div class="custom-select-option" data-value="sci">Science</div>
+            <div class="custom-select-option" data-value="bus">Business</div>
+          </div>
+        </div>
+        
+        <!-- Custom Department Select -->
+        <div class="custom-select" id="department-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Department (Software Engineering)</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Departments</div>
+            <div class="custom-select-option" data-value="cs">Computer Science</div>
+            <div class="custom-select-option selected" data-value="se">Software Engineering</div>
+            <div class="custom-select-option" data-value="math">Mathematics</div>
+            <div class="custom-select-option" data-value="physics">Physics</div>
+            <div class="custom-select-option" data-value="chemistry">Chemistry</div>
+          </div>
+        </div>
+        
+        <!-- Custom Academic Year Select -->
+        <div class="custom-select" id="year-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Academic Year (2023 - 2024)</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Years</div>
+            <div class="custom-select-option selected" data-value="2024">2023-2024</div>
+            <div class="custom-select-option" data-value="2023">2022-2023</div>
+            <div class="custom-select-option" data-value="2022">2021-2022</div>
+          </div>
+        </div>
+        
+        <!-- Custom Subject Select -->
+        <div class="custom-select" id="subject-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">Subject (Operating Systems)</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="">All Subjects</div>
+            <div class="custom-select-option selected" data-value="os">Operating Systems</div>
+            <div class="custom-select-option" data-value="db">Database Systems</div>
+            <div class="custom-select-option" data-value="ai">Artificial Intelligence</div>
+            <div class="custom-select-option" data-value="networks">Computer Networks</div>
+            <div class="custom-select-option" data-value="algorithms">Algorithms</div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Grades Section -->
+      <section class="grades-section" id="grades-section">
+        <div class="admin-actions">
+      <div class="admin-actions-info">
+        <h3 class="admin-actions-title">Admin Actions</h3>
+        <p class="admin-actions-description">Manage folders and upload grade files</p>
+      </div>
+      <div class="admin-actions-buttons">
+        <button class="btn btn-primary" id="add-folder-btn">
+          <i class="fas fa-folder-plus"></i> Add Folder
+        </button>
+        <button class="btn btn-secondary" id="add-file-btn">
+          <i class="fas fa-file-upload"></i> Add File
+        </button>
+      </div>
+    </div>
+
+    <div class="selection-toolbar" style="display:none; margin-bottom: 1rem; background: #f8f9fa; padding: 10px; border-radius: 8px; box-shadow: 0 0 5px rgba(90, 15, 97, 0.1);">
+      <span id="selected-count">0 Files Selected</span>
+      <button class="btn btn-secondary" id="move-btn" style="margin-left: 1rem;">
+        <i class="fas fa-folder"></i> Move to...
+      </button>
+      <button class="btn btn-secondary" id="download-btn" style="margin-left: 1rem;">
+        <i class="fas fa-download"></i> Download
+      </button>
+      <button class="btn btn-danger" id="delete-btn" style="margin-left: 1rem;">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+    </div>
+
+    <div class="folders-grid" id="folders-grid">
+      <div class="folder-card" data-folder="midterm" draggable="true">
+        <input type="checkbox" class="select-item" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        <div class="folder-icon">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.3286 30.3333C33.2127 30.3333 34.0605 29.9821 34.6856 29.357C35.3108 28.7319 35.6619 27.8841 35.6619 27V10.3333C35.6619 9.44928 35.3108 8.60143 34.6856 7.97631C34.0605 7.35119 33.2127 7 32.3286 7H19.1619C18.6045 7.00547 18.0545 6.87102 17.5624 6.60897C17.0704 6.34691 16.6519 5.96563 16.3453 5.5L14.9953 3.5C14.6918 3.03912 14.2786 2.6608 13.7928 2.39899C13.307 2.13719 12.7638 2.00009 12.2119 2H5.66195C4.77789 2 3.93005 2.35119 3.30492 2.97631C2.6798 3.60143 2.32861 4.44928 2.32861 5.33333V27C2.32861 27.8841 2.6798 28.7319 3.30492 29.357C3.93005 29.9821 4.77789 30.3333 5.66195 30.3333H32.3286Z" stroke="#A673F2" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="folder-title">Midterm Grades</h3>
+        <p class="folder-description">View midterm examination results</p>
+      </div>
+      
+      <div class="folder-card" data-folder="final" draggable="true">
+        <input type="checkbox" class="select-item" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        <div class="folder-icon">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.3286 30.3333C33.2127 30.3333 34.0605 29.9821 34.6856 29.357C35.3108 28.7319 35.6619 27.8841 35.6619 27V10.3333C35.6619 9.44928 35.3108 8.60143 34.6856 7.97631C34.0605 7.35119 33.2127 7 32.3286 7H19.1619C18.6045 7.00547 18.0545 6.87102 17.5624 6.60897C17.0704 6.34691 16.6519 5.96563 16.3453 5.5L14.9953 3.5C14.6918 3.03912 14.2786 2.6608 13.7928 2.39899C13.307 2.13719 12.7638 2.00009 12.2119 2H5.66195C4.77789 2 3.93005 2.35119 3.30492 2.97631C2.6798 3.60143 2.32861 4.44928 2.32861 5.33333V27C2.32861 27.8841 2.6798 28.7319 3.30492 29.357C3.93005 29.9821 4.77789 30.3333 5.66195 30.3333H32.3286Z" stroke="#A673F2" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="folder-title">Final Grades</h3>
+        <p class="folder-description">View final examination results</p>
+      </div>
+      
+      <div class="folder-card" data-folder="assignments" draggable="true">
+        <input type="checkbox" class="select-item" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        <div class="folder-icon">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.3286 30.3333C33.2127 30.3333 34.0605 29.9821 34.6856 29.357C35.3108 28.7319 35.6619 27.8841 35.6619 27V10.3333C35.6619 9.44928 35.3108 8.60143 34.6856 7.97631C34.0605 7.35119 33.2127 7 32.3286 7H19.1619C18.6045 7.00547 18.0545 6.87102 17.5624 6.60897C17.0704 6.34691 16.6519 5.96563 16.3453 5.5L14.9953 3.5C14.6918 3.03912 14.2786 2.6608 13.7928 2.39899C13.307 2.13719 12.7638 2.00009 12.2119 2H5.66195C4.77789 2 3.93005 2.35119 3.30492 2.97631C2.6798 3.60143 2.32861 4.44928 2.32861 5.33333V27C2.32861 27.8841 2.6798 28.7319 3.30492 29.357C3.93005 29.9821 4.77789 30.3333 5.66195 30.3333H32.3286Z" stroke="#A673F2" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="folder-title">Assignments</h3>
+        <p class="folder-description">View assignment grades and feedback</p>
+      </div>
+      
+      <div class="folder-card" data-folder="quizzes" draggable="true">
+        <input type="checkbox" class="select-item" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        <div class="folder-icon">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.3286 30.3333C33.2127 30.3333 34.0605 29.9821 34.6856 29.357C35.3108 28.7319 35.6619 27.8841 35.6619 27V10.3333C35.6619 9.44928 35.3108 8.60143 34.6856 7.97631C34.0605 7.35119 33.2127 7 32.3286 7H19.1619C18.6045 7.00547 18.0545 6.87102 17.5624 6.60897C17.0704 6.34691 16.6519 5.96563 16.3453 5.5L14.9953 3.5C14.6918 3.03912 14.2786 2.6608 13.7928 2.39899C13.307 2.13719 12.7638 2.00009 12.2119 2H5.66195C4.77789 2 3.93005 2.35119 3.30492 2.97631C2.6798 3.60143 2.32861 4.44928 2.32861 5.33333V27C2.32861 27.8841 2.6798 28.7319 3.30492 29.357C3.93005 29.9821 4.77789 30.3333 5.66195 30.3333H32.3286Z" stroke="#A673F2" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="folder-title">Quizzes</h3>
+        <p class="folder-description">View quiz results and performance</p>
+      </div>
+    </div>
+      </section>
+    </main>
+    
+    <!-- Add Folder Modal -->
+    <div class="modal-overlay" id="add-folder-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Add New Folder</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="folder-name">Folder Name</label>
+            <input type="text" class="form-control" id="folder-name" placeholder="Enter folder name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-folder-btn">Cancel</button>
+          <button class="btn btn-primary" id="create-folder-btn">Create Folder</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add File Modal -->
+    <div class="modal-overlay" id="add-file-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Add New File</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Choose Method</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="upload-file" name="file-method" value="upload" checked>
+                <label for="upload-file">Upload File</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="from-url" name="file-method" value="url">
+                <label for="from-url">From URL</label>
+              </div>
+            </div>
+          </div>
+          
+          <div id="upload-section">
+            <div class="form-group">
+              <label class="form-label" for="file-upload">Select File</label>
+              <div class="file-input-wrapper">
+                <input type="file" class="file-input" id="file-upload">
+                <label for="file-upload" class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i> Click to upload or drag and drop
+                </label>
+              </div>
+              <p class="form-text">Supported formats: PDF, DOC, DOCX, XLS, XLSX</p>
+            </div>
+          </div>
+          
+          <div id="url-section" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="file-url">File URL</label>
+              <input type="text" class="form-control" id="file-url" placeholder="Paste file URL here">
+              </div>
+            </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="file-name">File Name</label>
+            <input type="text" class="form-control" id="file-name" placeholder="Enter file name">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="file-description">Description (optional)</label>
+            <textarea class="form-control" id="file-description" rows="3" placeholder="Enter file description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-file-btn">Cancel</button>
+          <button class="btn btn-primary" id="create-file-btn">Create File</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/loading.js"></script>
+  <script>
+    // Custom Select Class
+    class CustomSelect {
+      constructor(selectElement) {
+        this.selectElement = selectElement;
+        this.trigger = selectElement.querySelector('.custom-select-trigger');
+        this.placeholder = selectElement.querySelector('.custom-select-placeholder');
+        this.dropdown = selectElement.querySelector('.custom-select-dropdown');
+        this.options = selectElement.querySelectorAll('.custom-select-option');
+        this.selectedValue = this.options[selectElement.querySelector('.selected') ? Array.from(this.options).indexOf(selectElement.querySelector('.selected')) : 0];
+        
+        this.init();
+      }
+      
+      init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', () => {
+          this.toggleDropdown();
+        });
+        
+        // Handle option clicks
+        this.options.forEach(option => {
+          option.addEventListener('click', () => {
+            this.selectOption(option);
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.selectElement.contains(e.target)) {
+            this.closeDropdown();
+          }
+        });
+      }
+      
+      toggleDropdown() {
+        this.selectElement.classList.toggle('open');
+      }
+      
+      closeDropdown() {
+        this.selectElement.classList.remove('open');
+      }
+      
+      selectOption(option) {
+        // Update selected value
+        this.selectedValue = option.getAttribute('data-value');
+        
+        // Update placeholder text
+        this.placeholder.textContent = option.textContent;
+        
+        // Update selected state
+        this.options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Close dropdown
+        this.closeDropdown();
+        
+        // Trigger change event
+        this.selectElement.dispatchEvent(new Event('change'));
+      }
+      
+      getValue() {
+        return this.selectedValue;
+      }
+    }
+    
+    // Modal functionality
+    function initModals() {
+      // Add Folder Modal
+      const addFolderBtn = document.getElementById('add-folder-btn');
+      const addFolderModal = document.getElementById('add-folder-modal');
+      const cancelFolderBtn = document.getElementById('cancel-folder-btn');
+      const createFolderBtn = document.getElementById('create-folder-btn');
+      const folderNameInput = document.getElementById('folder-name');
+      
+      addFolderBtn.addEventListener('click', () => {
+        addFolderModal.classList.add('active');
+        folderNameInput.focus();
+      });
+      
+      cancelFolderBtn.addEventListener('click', () => {
+        addFolderModal.classList.remove('active');
+        folderNameInput.value = '';
+      });
+      
+      createFolderBtn.addEventListener('click', () => {
+        const folderName = folderNameInput.value.trim();
+        if (folderName) {
+          console.log('Creating folder:', folderName);
+          // In a real application, this would create the folder
+          addFolderModal.classList.remove('active');
+          folderNameInput.value = '';
+        }
+      });
+      
+      // Add File Modal
+      const addFileBtn = document.getElementById('add-file-btn');
+      const addFileModal = document.getElementById('add-file-modal');
+      const cancelFileBtn = document.getElementById('cancel-file-btn');
+      const createFileBtn = document.getElementById('create-file-btn');
+      const uploadFileRadio = document.getElementById('upload-file');
+      const fromUrlRadio = document.getElementById('from-url');
+      const uploadSection = document.getElementById('upload-section');
+      const urlSection = document.getElementById('url-section');
+      const fileUploadInput = document.getElementById('file-upload');
+      const fileUrlInput = document.getElementById('file-url');
+      const fileNameInput = document.getElementById('file-name');
+      const fileDescriptionInput = document.getElementById('file-description');
+      
+      addFileBtn.addEventListener('click', () => {
+        addFileModal.classList.add('active');
+        fileNameInput.focus();
+      });
+      
+      cancelFileBtn.addEventListener('click', () => {
+        addFileModal.classList.remove('active');
+        resetFileForm();
+      });
+      
+      createFileBtn.addEventListener('click', () => {
+        const fileName = fileNameInput.value.trim();
+        if (!fileName) {
+          fileNameInput.focus();
+          return;
+        }
+        
+        if (uploadFileRadio.checked) {
+          const file = fileUploadInput.files[0];
+          if (file) {
+            console.log('Uploading file:', fileName, file);
+            // In a real application, this would upload the file
+          } else {
+            console.log('No file selected');
+            return;
+          }
+        } else {
+          const url = fileUrlInput.value.trim();
+          if (url) {
+            console.log('Adding file from URL:', fileName, url);
+            // In a real application, this would add the file from URL
+          } else {
+            fileUrlInput.focus();
+            return;
+          }
+        }
+        
+        const description = fileDescriptionInput.value.trim();
+        console.log('File description:', description);
+        
+        addFileModal.classList.remove('active');
+        resetFileForm();
+      });
+      
+      // Toggle between upload and URL sections
+      uploadFileRadio.addEventListener('change', () => {
+        if (uploadFileRadio.checked) {
+          uploadSection.style.display = 'block';
+          urlSection.style.display = 'none';
+        }
+      });
+      
+      fromUrlRadio.addEventListener('change', () => {
+        if (fromUrlRadio.checked) {
+          uploadSection.style.display = 'none';
+          urlSection.style.display = 'block';
+        }
+      });
+      
+      // Reset file form
+      function resetFileForm() {
+        uploadFileRadio.checked = true;
+        fromUrlRadio.checked = false;
+        uploadSection.style.display = 'block';
+        urlSection.style.display = 'none';
+        fileUploadInput.value = '';
+        fileUrlInput.value = '';
+        fileNameInput.value = '';
+        fileDescriptionInput.value = '';
+      }
+      
+      // Close modals when clicking outside
+      document.addEventListener('click', (e) => {
+        if (e.target === addFolderModal) {
+          addFolderModal.classList.remove('active');
+          folderNameInput.value = '';
+        }
+        
+        if (e.target === addFileModal) {
+          addFileModal.classList.remove('active');
+          resetFileForm();
+        }
+      });
+    }
+    
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize custom selects
+      const facultySelect = new CustomSelect(document.getElementById('faculty-select'));
+      const departmentSelect = new CustomSelect(document.getElementById('department-select'));
+      const yearSelect = new CustomSelect(document.getElementById('year-select'));
+      const subjectSelect = new CustomSelect(document.getElementById('subject-select'));
+      
+      // Initialize modals
+      initModals();
+      
+      // Folder card clicks
+      document.querySelectorAll('.folder-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          // Prevent click if checkbox is clicked
+          if (e.target.classList.contains('select-item')) return;
+          const folderType = card.getAttribute('data-folder');
+          console.log(`Opening ${folderType} folder`);
+          // In a real application, this would navigate to the folder contents
+        });
+      });
+
+      // Selection logic
+      const selectItems = document.querySelectorAll('.select-item');
+      const selectionToolbar = document.querySelector('.selection-toolbar');
+      const selectedCountSpan = document.getElementById('selected-count');
+      const moveBtn = document.getElementById('move-btn');
+      const downloadBtn = document.getElementById('download-btn');
+      const deleteBtn = document.getElementById('delete-btn');
+
+      function updateSelection() {
+        const selectedItems = Array.from(selectItems).filter(item => item.checked);
+        if (selectedItems.length > 0) {
+          selectionToolbar.style.display = 'flex';
+          selectedCountSpan.textContent = `${selectedItems.length} Item${selectedItems.length > 1 ? 's' : ''} Selected`;
+        } else {
+          selectionToolbar.style.display = 'none';
+          selectedCountSpan.textContent = '0 Files Selected';
+        }
+      }
+
+      selectItems.forEach(item => {
+        item.addEventListener('change', updateSelection);
+      });
+
+      // Drag and drop logic
+      let draggedItems = [];
+
+      selectItems.forEach(item => {
+        const folderCard = item.closest('.folder-card');
+        folderCard.setAttribute('draggable', 'true');
+
+        folderCard.addEventListener('dragstart', (e) => {
+          draggedItems = Array.from(selectItems).filter(i => i.checked).map(i => i.closest('.folder-card'));
+          if (!draggedItems.includes(folderCard)) {
+            draggedItems = [folderCard];
+          }
+          e.dataTransfer.setData('text/plain', 'dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          draggedItems.forEach(card => card.classList.add('dragging'));
+        });
+
+        folderCard.addEventListener('dragend', () => {
+          draggedItems.forEach(card => card.classList.remove('dragging'));
+          draggedItems = [];
+        });
+
+        folderCard.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          folderCard.classList.add('drag-over');
+        });
+
+        folderCard.addEventListener('dragleave', () => {
+          folderCard.classList.remove('drag-over');
+        });
+
+        folderCard.addEventListener('drop', (e) => {
+          e.preventDefault();
+          folderCard.classList.remove('drag-over');
+          if (draggedItems.length === 0) return;
+          const targetFolder = folderCard.getAttribute('data-folder');
+          // Prevent dropping on self or selected items
+          if (draggedItems.some(card => card === folderCard)) return;
+          // Here you would implement the move logic, e.g., API call
+          alert(`Moved ${draggedItems.length} item(s) to folder: ${targetFolder}`);
+          // After move, clear selection
+          draggedItems.forEach(card => {
+            const checkbox = card.querySelector('.select-item');
+            checkbox.checked = false;
+          });
+          updateSelection();
+        });
+      });
+
+      // Action buttons (move, download, delete) - placeholders
+      moveBtn.addEventListener('click', () => {
+        alert('Move action triggered for selected items.');
+      });
+      downloadBtn.addEventListener('click', () => {
+        alert('Download action triggered for selected items.');
+      });
+      deleteBtn.addEventListener('click', () => {
+        alert('Delete action triggered for selected items.');
+      });
+    });
+  </script>
+</body>
+</html>

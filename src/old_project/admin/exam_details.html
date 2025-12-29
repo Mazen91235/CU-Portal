@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Details</title>
+    <link rel="stylesheet" href="../css/exam-details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../components/navbar.html">
+    <link rel="stylesheet" href="../components/sidebar.html">
+    <link rel="stylesheet" href="../components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+
+<body style="background-color: #F8FAFC;">
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Exam Details Page Content -->
+        <div class="exam-header-row">
+            <div class="exam-header-left">
+                <a href="exams.html" class="exam-header-back">
+                    <i class="fa fa-arrow-left"></i> Back to Exams
+                </a>
+                <div class="exam-header-title-row">
+                    <div class="exam-header-title">Advanced Computer Networks</div>
+                    <div class="exam-header-actions exam-header-actions-desktop">
+                        <button id="editExamBtn" class="btn exam-header-btn"  style="background:#fff; border-radius:8px;">
+                            <img src="../assets/exam10.png" alt="Edit" class="exam-header-btn-icon" />
+                            Edit
+                        </button>
+                    </div>
+                </div>
+                <div class="exam-header-code">CS 4800</div>
+                <div class="exam-header-actions exam-header-actions-mobile">
+                    <button class="btn exam-header-btn" style="background:#fff; border-radius:8px;">
+                        <img src="../assets/exam10.png" alt="Edit" class="exam-header-btn-icon" />
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="exam-details-main">
+            <div class="exam-details-row">
+                <!-- Left Column -->
+                <div class="exam-details-left">
+                    <div class="exam-card exam-info-card"
+                        style="background: #fff; box-shadow: 0 2px 8px rgba(80,14,88,0.08);">
+                        <div class="exam-card-title">
+                            <i class="bi bi-calendar-week exam-info-main-icon"></i>
+                            Exam Information
+                        </div>
+                        <div class="exam-info-grid">
+                            <div class="exam-info-item">
+                                <i class="bi bi-calendar-week exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Date</div>
+                                    <div class="exam-info-value date">May 15, 2024</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-clock exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Duration</div>
+                                    <div class="exam-info-value duration">2 hours</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-clock exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Time</div>
+                                    <div class="exam-info-value time">10:00 AM - 12:00 PM</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-geo-alt exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Location</div>
+                                    <div class="exam-info-value location">Engineering Building - Room 301</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exam-card exam-instructions-card"
+                        style="background: #fff; box-shadow: 0 2px 8px rgba(80,14,88,0.08);">
+                        <div class="exam-card-title">
+                            <i class="bi bi-file-earmark-text exam-instructions-icon"></i>
+                            <span style="color: #5A0F61;">Exam Instructions</span>
+                        </div>
+                        <div class="exam-instructions-list">
+                            <div style="font-family: 'Poppins', sans-serif;font-size: 0.9rem; font-weight: 600;">
+                                <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Bring a valid student
+                                ID and calculator (non-programmable only)<br>
+                                <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>No electronic devices
+                                except approved calculators are permitted<br>
+                                <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>All answers must be
+                                written in pen (blue or black ink only)<br>
+                                <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Read all questions
+                                carefully before beginning<br>
+                                <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Time management is
+                                crucial - allocate time wisely across all sections
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exam-card" style="background: #fff; box-shadow: 0 2px 8px rgba(80,14,88,0.08);">
+                        <div class="exam-card-title">Description</div>
+                        <div class="exam-description-body">
+                            Comprehensive final examination covering network protocols, security, and distributed
+                            systems architecture.
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="exam-details-right">
+                    <div class="exam-card"
+                        style="padding: 1.5rem 1.25rem; background: #fff; box-shadow: 0 2px 8px rgba(80,14,88,0.08);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                            <i class="bi bi-person" style="color: #881792; font-size: 1.5rem;"></i>
+                            <span
+                                style="font-family: 'Poppins', sans-serif; font-size: 1.25rem; font-weight: 700; color: #881792;">Course
+                                Details</span>
+                        </div>
+
+                        <hr style="border: none; border-top: 3px solid #CBD5E1; margin: 8px 0 14px 0;">
+                        <div style="color: #8A8A9E; font-size: 0.95rem; font-weight: 500; margin-bottom: 2px;">Faculty
+                        </div>
+                        <div style="font-weight: 700; font-size: 1.05rem; color: #22223B; margin-bottom: 14px;"
+                            class=" exam-faculty">Faculty of Engineering</div>
+                        <div style="color: #8A8A9E; font-size: 0.95rem; font-weight: 500; margin-bottom: 2px;">
+                            Department</div>
+                        <div style="font-weight: 700; font-size: 1.05rem; color: #22223B; margin-bottom: 14px;"
+                            class="exam-department">Computer Science</div>
+                        <div style="color: #8A8A9E; font-size: 0.95rem; font-weight: 500; margin-bottom: 2px;">Academic
+                            Year</div>
+                        <div style="font-weight: 700; font-size: 1.05rem; color: #22223B;" class="exam-year">2023-2024
+                        </div>
+                    </div>
+                    <div class="exam-card">
+                        <div class="exam-card-title"><img src="../assets/exam12.png"></img> Exam Details</div>
+                        <div class="exam-info-label">Format</div>
+                        <span class="fw-light exam-format">Written</span>
+                        <div class="exam-info-label" style="margin-top:12px;">Type</div>
+                        <span class="fw-light exam-type">Written</span>
+                        <div class="exam-info-label" style="margin-top:12px;">Course Weight</div>
+                        <span class="exam-weight">35%</span><br>
+                        <span class="exam-weight-label">of total grade</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Exam Details Page Content -->
+    </div><br><br>
+    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+    <div id="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+    <script src="../js/loading.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/admin-exams.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const examId = urlParams.get("id");
+        let exam;
+        async function fetchExam() {
+            showLoading();
+            const res = await getExam(examId);
+            if (res?.status === 'success') {
+                exam = res.data;
+                renderExam(exam);
+            }
+            else {
+                showToast("error", "Error", "Failed to fetch exam", "");
+
+            }
+        }
+        function extractTime(dateTimeStr) {
+            if (!dateTimeStr) return "";
+            return dateTimeStr.split(" ")[1].slice(0, 5);
+        }
+        async function renderExam(exam = exam) {
+            document.querySelector(".exam-header-title").textContent = exam.name;
+            document.querySelector(".exam-header-code").textContent = exam.subject.code;
+            // Exam Info
+            document.querySelector(".exam-info-value.date").textContent = exam.due_date;
+            document.querySelector(".exam-info-value.duration").textContent = exam.details.duration;
+            document.querySelector(".exam-info-value.time").textContent = extractTime(exam.deadline);
+            document.querySelector(".exam-info-value.location").textContent = exam.details.location;
+
+            // Instructor, Faculty, Dept, Year
+            //   document.querySelector(".exam-instructor").textContent = exam.instructor;
+            document.querySelector(".exam-faculty").textContent = exam.faculty.name;
+            document.querySelector(".exam-department").textContent = exam.department.name;
+            document.querySelector(".exam-year").textContent = exam.year.year;
+
+            // Description
+            document.querySelector(".exam-description-body").textContent = exam.details.description;
+            document.querySelector(".exam-instructions-list").textContent = exam.details.instructions;
+
+            // Exam Details
+            document.querySelector(".exam-weight").textContent = exam.details.exam_weight + "%";
+            document.querySelector(".exam-format").textContent = exam.details.exam_format;
+            document.querySelector(".exam-type").textContent = exam.details.exam_type;
+            // Access Restrictions
+            document.querySelector(".resfaculty").textContent = exam.faculty.name;
+            document.querySelector(".resdepartment").textContent = exam.department.name;
+            document.querySelector(".resyear").textContent = "Year " + exam.year.year;
+            hideLoading();
+
+        }
+
+const editBtn = document.getElementById("editExamBtn");
+
+editBtn.onclick = () => {
+  window.location.href = `/admin/edit_exam.html?id=${examId}`;
+};
+        async function deleteExambutton() {
+            await deleteExam(examId);
+            showToast("success", "Deleted", "The exam was deleted successfully!");
+            setTimeout(() => {
+                window.location.href = "/admin/exams.html";
+            }, 1500);
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            showLoading();
+            await fetchExam();
+        });
+    </script>
+</body>
+
+</html>

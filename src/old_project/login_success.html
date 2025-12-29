@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Welcome</title>
+    <link rel="stylesheet" href="./css/loginsuccessstyle.css">
+    <link rel="stylesheet" href="./css/all.min-new.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body style="background-color: #F8FAFC;">
+    <div class="container">
+        <img src="./assets/freepik--background-simple--inject-251.png" alt="Decorative background element"
+            class="corner-image-top-right">
+        <img src="./assets/freepik--background-simple--inject-251 (1).png" alt="Decorative background element"
+            class="corner-image-bottom-left">
+        <header class="header">
+            <h1 class="logo">St<span class="highlight" aria-hidden="true">u</span>dent P<span class="highlight"
+                    aria-hidden="true">o</span>rtal</h1>
+        </header>
+
+        <main class="content-wrapper welcome-page"> <!-- Changed to main for semantic HTML -->
+            <div class="illustration">
+                <img src="./assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png" alt="Happy student illustration">
+            </div>
+            <div class="card welcome-card">
+                <div class="icon-circle success">
+                    <span class="material-icons">check</span>
+                </div>
+                <h2 class="gradient-text-h2">Google Account Linked Successfully</h2>
+                <p>Now Let's Finish Setting Up Your Profile. <br> Just a Few Quick Steps to Personlaize Your Experience.
+                </p>
+                <button class="google-signin-btn" aria-label="Sign in with Google">
+                    Create Profile Now
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </main>
+        <!--<div id="loadingOverlayContainer" class="d-none w-full h-full"
+            style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+        <div id="popup-container"></div>
+        <div id="toast-container"></div>-->
+    </div>
+    <script src="/js/script.js"></script>
+    <script src="./js/toast.js"></script>
+
+    <script src="./js/loadscreen.js"></script>
+    <script src="./js/popup.js"></script>
+   <script>
+        document.querySelector('.google-signin-btn').addEventListener('click', function () {
+            // Simulate Google Sign-In process
+            window.location.href = `/createProfile.html`;
+        });
+
+        // Initialize on page load
+        window.onload = async function () {
+            if (GetParams("token")) {
+                let token = GetParams("token").split("___");
+                SetCookie("google_details_token", token[0], parseInt(token[1]));
+            } else {
+                window.location.href = `/login.html`;
+                return;
+            }
+            if (GetParams("state")) {
+                SetCookie("oauth_state", GetParams("state"), 60 * 60 * 24 * 30); // Store state for 30 days
+            }
+            if (await IsLoggedIn()) {
+                window.location.href = "/user/index.html";
+                return;
+            }
+
+            if (GetParams("error") == "true") {
+                ShowToast("error", "Error", GetParams("message"), "");
+            }
+            if (GetParams("success") == "true") {
+                ShowToast("success", "Success", GetParams("message"), "");
+            }
+
+            if (GetParams("get_stored_token") == "true") {
+                axios.get(`${domain}/api/v1/auth/get-stored-user`, {
+                    headers: { "ngrok-skip-browser-warning": "true" }
+                })
+                    .then(response => {
+                        const data = response.data;
+                        if (data.status == "success") {
+                            let newdata = data.data;
+                            if (!newdata || !newdata.access_token || !newdata.refresh_token) return;
+                            SetCookie("access_token", newdata.access_token, newdata.expire_at);
+                            SetCookie("refresh_token", newdata.refresh_token, newdata.refresh_expire_at);
+                            window.location.href = `/dashboard`;
+                        } else {
+                            ShowToast("error", "Error", data.message, "");
+                        }
+                    })
+                    .catch(error => {
+                        ShowToast("error", "Error", error.response?.data?.message || "Error retrieving login session", "");
+                    });
+            }
+        };
+
+    </script>
+</body>
+
+</html>

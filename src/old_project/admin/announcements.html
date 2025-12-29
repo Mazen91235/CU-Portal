@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcements</title>
+  <link rel="stylesheet" href="../css/announcements.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    .custom-filter-container {
+      position: relative;
+      width: 220px;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin-right: 0;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      height: 48px;
+      cursor: pointer;
+      padding: 0 16px 0 0;
+      min-width: 180px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      position: relative;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .custom-filter:hover,
+    .custom-filter.open {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+
+    .um-filter-search {
+      transition: box-shadow 0.15s, border-color 0.15s;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      height: 48px;
+      min-width: 220px;
+      flex: 1 1 320px;
+      margin-right: 0;
+      margin-bottom: 0;
+      box-sizing: border-box;
+    }
+
+    .um-filter-search:hover,
+    .um-filter-search:focus-within {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+
+    .um-filter-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      height: 100%;
+      padding-left: 8px;
+      font-size: 15px;
+    }
+
+    .custom-filter-label-value {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30px;
+      margin-top: 4px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 0.5px;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+
+    .custom-filter-value {
+      color: #22223B;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-filter-arrow {
+      margin-left: 16px;
+      margin-right: 8px;
+      transition: transform 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+
+    .um-filters-section {
+      overflow: visible !important;
+    }
+
+    .um-filters-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .um-filters-group {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      min-width: 0;
+      flex: 2 1 0;
+    }
+
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 99999;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-filter.open+.custom-dropdown-list {
+      display: block;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 1340px) {
+      .um-filters-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        width: 100%;
+        display: flex;
+      }
+
+      .um-filter-search {
+        width: 100% !important;
+        margin-bottom: 16px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        box-sizing: border-box;
+      }
+
+      .um-filters-group {
+        flex-direction: column !important;
+        width: 100% !important;
+        display: flex;
+        gap: 16px !important;
+      }
+
+      .custom-filter-container {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      .custom-filter {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .um-title-section {
+        border-radius: 0 !important;
+      }
+    }
+
+    .um-filter-search .fa-search {
+      color: #7B1684;
+    }
+
+    #announcementsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .announcement-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 18px 18px 18px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      position: relative;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+      overflow: hidden;
+    }
+
+    .announcement-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .announcement-card .announcement-top-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: #7B1684;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      z-index: 3;
+    }
+
+    .announcement-card .announcement-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: #DFFFE7;
+      color: #1EB672;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 4px 16px;
+      letter-spacing: 0.01em;
+      box-shadow: 0 1px 4px rgba(30, 182, 114, 0.08);
+      z-index: 2;
+    }
+
+    .announcement-card .announcement-menu {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      color: #7B1684;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 2;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .announcement-title {
+      text-align: center;
+      color: #7B1684;
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 38px;
+      margin-bottom: 10px;
+      font-family: "Roboto",sans-serif;
+    }
+
+    .announcement-desc {
+      text-align: center;
+      color: #6B7280;
+      font-size: 15px;
+      font-weight: 400;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .announcement-meta {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .announcement-creator {
+      color: #7B1684;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .announcement-creator i {
+      color: #7B1684;
+      font-size: 18px;
+      margin-right: 2px;
+    }
+
+    .announcement-faculty,
+    .announcement-department {
+      color: #7B1684;
+      font-weight: 500;
+      font-size: 14px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .announcement-view-btn {
+      width: 100%;
+      background: #7B1684;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 0;
+      font-size: 1.08rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      transition: background 0.2s;
+    }
+
+    .announcement-view-btn:hover {
+      background: #6f1478;
+    }
+
+    /* --- Import filter CSS from courses.html --- */
+    .filters {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+      border: 1px solid #5a0f61;
+    }
+
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+
+    .multi-select-filter {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+
+    .multi-select-filter:hover {
+      border-color: #5a0f61;
+    }
+
+    .multi-select-filter.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .multi-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+
+    .multi-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .multi-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .multi-select-filter.open .multi-select-trigger i {
+      transform: rotate(180deg);
+    }
+
+    .multi-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      padding: 0.5rem;
+    }
+
+    .multi-select-filter.open .multi-select-dropdown {
+      display: block;
+    }
+
+    .multi-select-option {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .multi-select-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .multi-select-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .multi-select-option input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    .multi-select-option label {
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .multi-select-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #eee;
+    }
+
+    .multi-select-btn {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .multi-select-btn.clear {
+      background-color: #f5f5f5;
+      color: #666;
+    }
+
+    .multi-select-btn.clear:hover {
+      background-color: #eaeaea;
+    }
+
+    .multi-select-btn.apply {
+      background-color: #5a0f61;
+      color: white;
+    }
+
+    .multi-select-btn.apply:hover {
+      background-color: #4a0c51;
+    }
+  </style>
+</head>
+
+<body style="background-color: rgba(248, 250, 252, 1);">
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+
+    <!-- Banner Section -->
+    <section class="um-title-section d-flex align-items-center justify-content-between flex-wrap "
+      style="background: linear-gradient(90deg, #7B1684 0%, #4B206C 100%); border-radius: 14px; padding: 32px 32px 24px 32px; margin-bottom: 32px;margin-top:72px; color: #fff;">
+      <div class="um-title-content">
+        <h1 class="um-title" style="color: #fff; font-weight: 600; margin-bottom: 8px;">Announcements</h1>
+        <p class="um-subtitle" style="color: #f3f3f3; font-weight: 400; margin-bottom: 0;">Manage And Organize Your
+          Announcements Content Efficiently</p>
+      </div>
+      <button class="add-announcement-btn"
+        style="background: #fff; color: #7B1684; border-radius: 8px; border: none; padding: 10px 28px; font-weight: 600; font-size: 1rem;margin-top: 10px; box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04); display: flex; align-items: center; gap: 8px;"
+        id="addAnnouncementBtn" onclick="window.location.href='/admin/create_announcement.html'">
+        <span style="font-size: 1.2em; font-weight: bold;">+</span> Add
+      </button>
+    </section>
+
+    <!-- Filters Section (imported from courses.html) -->
+    <div class="filters" aria-label="Announcement filters">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="search" placeholder="Search by announcement title" id="searchInput"
+          aria-label="Search by announcement title" />
+      </div>
+      <!-- Custom Faculty Select -->
+      <div class="custom-select" id="faculty-select">
+        <div class="custom-select-trigger">
+          <span class="custom-select-placeholder">All Faculties</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="custom-select-option" data-value="">All Faculties</div>
+          <div class="custom-select-option" data-value="engineering">Engineering</div>
+          <div class="custom-select-option" data-value="science">Science</div>
+          <div class="custom-select-option" data-value="arts">Arts</div>
+          <div class="custom-select-option" data-value="business">Business</div>
+          <div class="custom-select-option" data-value="medicine">Medicine</div>
+        </div>
+        <input type="hidden" id="faculty_hidden" />
+
+      </div>
+      <!-- Custom Department Select -->
+      <div class="custom-select" id="department-select">
+        <div class="custom-select-trigger">
+          <span class="custom-select-placeholder">All Departments</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="custom-select-option" data-value="">All Departments</div>
+          <div class="custom-select-option" data-value="computer-science">Computer Science</div>
+          <div class="custom-select-option" data-value="electrical">Electrical Engineering</div>
+          <div class="custom-select-option" data-value="mechanical">Mechanical Engineering</div>
+          <div class="custom-select-option" data-value="civil">Civil Engineering</div>
+          <div class="custom-select-option" data-value="chemistry">Chemistry</div>
+        </div>
+        <input type="hidden" id="department_hidden" />
+
+
+      </div>
+      <!-- Custom Year Select -->
+      <div class="custom-select" id="year-select">
+        <div class="custom-select-trigger">
+          <span class="custom-select-placeholder">All Years</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="custom-select-option" data-value="">All Years</div>
+          <div class="custom-select-option" data-value="1">Year 1</div>
+          <div class="custom-select-option" data-value="2">Year 2</div>
+          <div class="custom-select-option" data-value="3">Year 3</div>
+          <div class="custom-select-option" data-value="4">Year 4</div>
+          <div class="custom-select-option" data-value="5">Year 5</div>
+        </div>
+        <input type="hidden" id="year_hidden" />
+
+      </div>
+      <!-- Custom Subject Select -->
+      <div class="custom-select" id="subject-select">
+        <div class="custom-select-trigger">
+          <span class="custom-select-placeholder">All Subjects</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="custom-select-option" data-value="">All Subjects</div>
+          <div class="custom-select-option" data-value="math">Math</div>
+          <div class="custom-select-option" data-value="physics">Physics</div>
+          <div class="custom-select-option" data-value="chemistry">Chemistry</div>
+          <div class="custom-select-option" data-value="biology">Biology</div>
+          <div class="custom-select-option" data-value="english">English</div>
+          <div class="custom-select-option" data-value="history">History</div>
+        </div>
+        <input type="hidden" id="subject_hidden" />
+
+      </div>
+
+    </div>
+
+    <!-- Announcements Grid Section -->
+    <div class="container-fluid px-0">
+      <!-- <div id="loadingIndicator" style="display:none; text-align:center; color:#7B1684; font-weight:600; font-size:1.2rem; margin: 20px 0;">Loading announcements...</div> -->
+      <div class="row g-4 px-3" id="announcementsGrid">
+      </div>
+      <br>
+      <div id="toast-container"></div>
+            <div id="popup-container"></div>
+
+      <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+      <!-- Pagination -->
+      <div class="pending-pagination-container" style="margin-bottom: 30px; text-align: right;">
+        <button class="pending-page-btn" data-page="<" id="prevPage">
+          <</button>
+            <button disabled class="pending-page-btn active" data-page="1" id="pageInput">1</button>
+            <button class="pending-page-btn" data-page=">" id="nextPage">></button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/popup.js"></script>
+    <script src="../js/admin_announcements.js"></script>
+    <!-- --- Dropdown JS from courses.html --- -->
+    <script>
+      async function setupCustomFilter(
+        filterId,
+        hiddenId,
+        fetchFn,
+        defaultLabel = "All",
+        labelKey = "name"
+
+      ) {
+        showLoading();
+
+        const filter = document.getElementById(filterId);
+        const dropdown = filter.querySelector(".custom-select-dropdown");
+        const valueSpan = filter.querySelector(".custom-select-placeholder");
+        const hiddenInput = document.getElementById(hiddenId);
+
+        try {
+          const res = await fetchFn(); // Expected: { data: [{ id, name }, ...] }
+
+          if (res?.data && Array.isArray(res.data)) {
+            // Reset dropdown
+            dropdown.innerHTML = `<div class="custom-select-option active" data-value="">${defaultLabel}</div>`;
+
+            // Append dynamic items
+            res.data.forEach(item => {
+              const label = item[labelKey];
+              dropdown.innerHTML += `
+          <div class="custom-select-option" data-value="${item.id}">${label}</div>
+        `;
+            });
+          }
+
+          // ---- Dropdown toggle logic ----
+          const trigger = filter.querySelector(".custom-select-trigger");
+          trigger.addEventListener("click", function (e) {
+            filter.classList.toggle("open");
+            dropdown.style.display = filter.classList.contains("open") ? "block" : "none";
+            e.stopPropagation();
+          });
+
+          // ---- Option selection ----
+          dropdown.addEventListener("mousedown", function (e) {
+            if (e.target.classList.contains("custom-select-option")) {
+              dropdown.querySelectorAll(".custom-select-option").forEach(opt => opt.classList.remove("active"));
+              e.target.classList.add("active");
+
+              // Update label + hidden input
+              valueSpan.textContent = e.target.textContent;
+              hiddenInput.value = e.target.getAttribute("data-value");
+
+              filter.classList.remove("open");
+              dropdown.style.display = "none";
+
+              if (typeof filterAnnouncements === "function") {
+                filterAnnouncements();
+              }
+            }
+          });
+
+          // ---- Close on outside click ----
+          document.addEventListener("click", function (e) {
+            if (!filter.contains(e.target)) {
+              filter.classList.remove("open");
+              dropdown.style.display = "none";
+            }
+          });
+        } catch (error) {
+          showToast("error", "Error", `Could not load ${defaultLabel.toLowerCase()}s`, "");
+        }
+      }
+
+      let Announcements = [];
+      let currentPage = 1;
+      let totalPages = 1;
+      const limit = 40;
+
+      async function fetchAnnoucements(page = 1) {
+
+        showLoading();
+       await setupCustomFilter("faculty-select", "faculty_hidden", searchFaculties, "All Faculties");
+await setupCustomFilter("department-select", "department_hidden", searchDepartments, "All Departments");
+await setupCustomFilter("year-select", "year_hidden", searchYears, "All Years","year");
+await setupCustomFilter("subject-select", "subject_hidden", searchCourses, "All Subjects");
+
+        const res = await getAnnouncements({ page, limit });
+
+        if (res?.status === "success") {
+          Announcements = res.data;
+
+          // update page state
+          currentPage = page;
+
+          // if backend says "next = false", this is last page
+          totalPages = res.next ? page + 1 : page;
+
+
+          renderAnnouncements(Announcements);
+          updatePaginationUI();
+          hideLoading();
+        } else {
+          showToast("error", "Error", "Failed to fetch Announcements", "");
+        }
+      }
+
+      function updatePaginationUI() {
+        const prevBtn = document.getElementById("prevPage");
+        const nextBtn = document.getElementById("nextPage");
+        const pageInput = document.getElementById("pageInput");
+
+        pageInput.textContent = currentPage;
+
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = !Announcements.length || currentPage === totalPages;
+      }
+
+      document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) fetchAnnoucements(currentPage - 1);
+      });
+
+      document.getElementById("nextPage").addEventListener("click", () => {
+        if (currentPage < totalPages) fetchAnnoucements(currentPage + 1);
+      });
+
+
+
+
+
+
+
+
+
+      function renderAnnouncements(Announcements) {
+        const grid = document.getElementById('announcementsGrid');
+        if (!grid) return;
+
+        grid.innerHTML = ''; // Clear existing cards
+
+        Announcements.forEach(announcement => {
+
+    grid.innerHTML += `
+    <article class="announcement-card">
+      <div class="announcement-top-line"></div>
+      <span class="announcement-badge">${new Date(announcement.created_at).toLocaleDateString()}</span>
+      <span class="menu-dots announcement-menu"><i class="fas fa-ellipsis-v a-menu" data-idx="${announcement.id}"></i>  <div class="a-dropdown hidden">
+    <div class="a-dropdown-item edit-a" data-idx="${announcement.id}"> <i class="fas fa-edit me-2" ></i>Edit</div>
+    <div class="a-dropdown-item delete-a" data-idx="${announcement.id}"><i class="fas fa-trash-alt me-2"></i>Delete</div>
+  </div></span>  
+      <div class="announcement-title">${announcement.title}</div>
+      <div class="announcement-desc">${announcement.content ? announcement.content.substring(0, 100) + '...' : 'No description'}</div>
+      <div class="announcement-meta">
+        <div class="announcement-creator">
+          <img src="../assets/ann1.png" style="width:22px;height:22px;margin-right:6px;vertical-align:middle;"> Created By: ${announcement.author.name || 'Unknown'}
+        </div>
+        <div class="announcement-faculty">${announcement.faculty.name || 'N/A'}</div>
+        <div class="announcement-department">${announcement.department.name || 'N/A'}</div>
+      </div>
+      <button class="announcement-view-btn" data-id="${announcement.id}"><img src="../assets/ann2.png" style="width:22px;height:22px;margin-right:8px;vertical-align:middle;"> View Announcement</button>
+      </article>
+    `;
+        });
+        document.querySelectorAll(".a-menu").forEach(icon => {
+          icon.onclick = e => {
+            e.stopPropagation();
+            const dropdown = e.currentTarget.nextElementSibling;
+            if (!dropdown) return;
+
+            // Close other dropdowns
+            document.querySelectorAll(".a-dropdown").forEach(menu => {
+              if (menu !== dropdown) menu.classList.add("hidden");
+            });
+
+            // Toggle current
+            dropdown.classList.toggle("hidden");
+          };
+        });
+
+
+        // Close when clicking outside
+        document.addEventListener("click", () => {
+          document.querySelectorAll(".a-dropdown").forEach(menu => menu.classList.add("hidden"));
+        });
+
+
+
+        document.querySelectorAll(".edit-a").forEach(btn => {
+          btn.onclick = async e => {
+            const idx = e.target.getAttribute("data-idx");
+            window.location.href = `/admin/edit_announcement.html?id=${idx}`;
+          };
+        });
+
+        document.querySelectorAll(".delete-a").forEach(btn => {
+          btn.onclick = async e => {
+            const idx = e.target.getAttribute("data-idx");
+showPopup(
+    'confirm',
+    'Delete Announcement',
+    `Are you sure you want to delete this announcement?`,
+    async () => {
+        await deleteAnnouncement(idx);
+        closePopup();
+                    fetchAnnoucements();
+
+    }
+);
+            
+
+            fetchAnnoucements();
+          };
+        });
+        // Attach event listeners for view buttons
+        document.querySelectorAll('.announcement-view-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            if (id) {
+              window.location.href = `announcement_details.html?id=${id}`;
+            }
+          });
+        });
+        hideLoading();
+      }
+
+
+
+
+      async function filterAnnouncements() {
+        showLoading();
+
+        const searchVal = document.getElementById("searchInput").value.toLowerCase();
+
+        // Use hidden inputs from custom filters
+        const facultyVal = document.getElementById("faculty_hidden").value;
+        const departmentVal = document.getElementById("department_hidden").value;
+        const subjectVal = document.getElementById("subject_hidden")?.value || "";
+        const yearVal = document.getElementById("year_hidden")?.value || "";
+        let filtered = Announcements;
+
+        // ---- Apply filters ----
+        if (facultyVal) {
+          filtered = filtered.filter(e => e.faculty.id == facultyVal);
+        }
+
+        if (searchVal) {
+          filtered = filtered.filter(e =>
+            e.author.name.toLowerCase().includes(searchVal) ||
+            e.title.toLowerCase().includes(searchVal) ||
+            e.faculty.name.toLowerCase().includes(searchVal) ||
+            (e.title || "").toLowerCase().includes(searchVal) ||
+            e.department.name.toLowerCase().includes(searchVal) ||
+            e.subject.code.toLowerCase().includes(searchVal)
+          );
+        }
+
+        if (departmentVal) {
+          filtered = filtered.filter(e => e.department.id == departmentVal);
+        }
+
+
+
+        if (subjectVal) {
+          filtered = filtered.filter(e => e.subject.id == subjectVal);
+        }
+        if (yearVal) {
+          filtered = filtered.filter(e => e.year.id == yearVal);
+        }
+
+
+        // Render results
+        renderAnnouncements(filtered);
+      }
+
+
+
+
+
+      document.getElementById("searchInput").addEventListener("input", function () {
+        filterAnnouncements();
+      });
+
+
+
+
+
+
+
+
+
+
+      // class CustomSelect {
+      //   constructor(selectElement) {
+      //     this.selectElement = selectElement;
+      //     this.trigger = selectElement.querySelector('.custom-select-trigger');
+      //     this.placeholder = selectElement.querySelector('.custom-select-placeholder');
+      //     this.dropdown = selectElement.querySelector('.custom-select-dropdown');
+      //     this.options = selectElement.querySelectorAll('.custom-select-option');
+      //     this.selectedValue = '';
+
+      //     this.init();
+      //   }
+      //   init() {
+      //     this.trigger.addEventListener('click', () => {
+      //       this.toggleDropdown();
+      //     });
+      //     this.options.forEach(option => {
+      //       option.addEventListener('click', () => {
+      //         this.selectOption(option);
+      //       });
+      //     });
+      //     document.addEventListener('click', (e) => {
+      //       if (!this.selectElement.contains(e.target)) {
+      //         this.closeDropdown();
+      //       }
+      //     });
+      //   }
+      //   toggleDropdown() {
+      //     this.selectElement.classList.toggle('open');
+      //   }
+      //   closeDropdown() {
+      //     this.selectElement.classList.remove('open');
+      //   }
+      //   selectOption(option) {
+      //     this.selectedValue = option.getAttribute('data-value');
+      //     this.placeholder.textContent = option.textContent;
+      //     this.options.forEach(opt => opt.classList.remove('selected'));
+      //     option.classList.add('selected');
+      //     this.closeDropdown();
+      //     this.selectElement.dispatchEvent(new Event('change'));
+      //   }
+      //   getValue() {
+      //     return this.selectedValue;
+      //   }
+      // }
+      // class MultiSelectFilter {
+      //   constructor(filterElement) {
+      //     this.filterElement = filterElement;
+      //     this.trigger = filterElement.querySelector('.multi-select-trigger');
+      //     this.placeholder = filterElement.querySelector('.multi-select-placeholder');
+      //     this.dropdown = filterElement.querySelector('.multi-select-dropdown');
+      //     this.options = filterElement.querySelectorAll('.multi-select-option input[type="checkbox"]');
+      //     this.clearBtn = filterElement.querySelector('#status-clear-btn');
+      //     this.applyBtn = filterElement.querySelector('#status-apply-btn');
+      //     this.selectedValues = [];
+      //     this.tempSelectedValues = [];
+      //     this.init();
+      //   }
+      //   init() {
+      //     this.trigger.addEventListener('click', () => {
+      //       this.toggleDropdown();
+      //     });
+      //     this.options.forEach(option => {
+      //       option.addEventListener('change', () => {
+      //         this.updateTempSelection();
+      //       });
+      //     });
+      //     this.clearBtn.addEventListener('click', () => {
+      //       this.clearSelection();
+      //     });
+      //     this.applyBtn.addEventListener('click', () => {
+      //       this.applySelection();
+      //     });
+      //     document.addEventListener('click', (e) => {
+      //       if (!this.filterElement.contains(e.target)) {
+      //         this.closeDropdown();
+      //       }
+      //     });
+      //   }
+      //   toggleDropdown() {
+      //     this.filterElement.classList.toggle('open');
+      //     if (this.filterElement.classList.contains('open')) {
+      //       this.tempSelectedValues = [...this.selectedValues];
+      //       this.updateCheckboxes();
+      //     }
+      //   }
+      //   closeDropdown() {
+      //     this.filterElement.classList.remove('open');
+      //   }
+      //   updateTempSelection() {
+      //     this.tempSelectedValues = [];
+      //     this.options.forEach(option => {
+      //       if (option.checked) {
+      //         this.tempSelectedValues.push(option.getAttribute('data-value'));
+      //       }
+      //     });
+      //   }
+      //   updateCheckboxes() {
+      //     this.options.forEach(option => {
+      //       option.checked = this.tempSelectedValues.includes(option.getAttribute('data-value'));
+      //     });
+      //   }
+      //   clearSelection() {
+      //     this.tempSelectedValues = [];
+      //     this.updateCheckboxes();
+      //   }
+      //   applySelection() {
+      //     this.selectedValues = [...this.tempSelectedValues];
+      //     this.updatePlaceholder();
+      //     this.closeDropdown();
+      //     this.filterElement.dispatchEvent(new Event('change'));
+      //   }
+      //   updatePlaceholder() {
+      //     if (this.selectedValues.length === 0) {
+      //       this.placeholder.textContent = 'All Statuses';
+      //     } else if (this.selectedValues.length === 1) {
+      //       this.placeholder.textContent = this.selectedValues[0].charAt(0).toUpperCase() +
+      //         this.selectedValues[0].slice(1);
+      //     } else {
+      //       this.placeholder.textContent = `${this.selectedValues.length} Statuses Selected`;
+      //     }
+      //   }
+      //   getValues() {
+      //     return this.selectedValues;
+      //   }
+      // }
+      // document.addEventListener('DOMContentLoaded', async function() {
+      //   // Initialize dropdowns
+      //   const facultySelect = new CustomSelect(document.getElementById('faculty-select'));
+      //   const departmentSelect = new CustomSelect(document.getElementById('department-select'));
+      //   const yearSelect = new CustomSelect(document.getElementById('year-select'));
+      //   const subjectSelect = new CustomSelect(document.getElementById('subject-select'));
+
+      //   // Initial load
+      //   const announcements = await getAnnouncements();
+      //   // populateAnnouncements(announcements.data || announcements);
+
+      //   // Set up filter listeners
+      //   const searchInput = document.getElementById('searchInput');
+      //   facultySelect.selectElement.addEventListener('change', applyFilters);
+      //   departmentSelect.selectElement.addEventListener('change', applyFilters);
+      //   yearSelect.selectElement.addEventListener('change', applyFilters);
+      //   subjectSelect.selectElement.addEventListener('change', applyFilters);
+      //   // statusFilter.filterElement.addEventListener('change', applyFilters);
+      //   searchInput.addEventListener('input', applyFilters);
+
+      //   async function applyFilters() {
+      //     const filters = {};
+      //     filters['query'] = searchInput.value;
+      //     filters['faculty_id'] = facultySelect.getValue();
+      //     filters['department_id'] = departmentSelect.getValue();
+      //     filters['year_id'] = yearSelect.getValue();
+      //     filters['subject_id'] = subjectSelect.getValue();
+      //     filters['status'] = statusFilter.getValues();
+      //     const announcements = await fetchAnnouncements(filters);
+      //     populateAnnouncements(announcements.data || announcements);
+      //   }
+      // });
+
+      // document.addEventListener("DOMContentLoaded", async function() {
+      //       // Initial load
+      // const announcements = await getAnnouncements();
+      // // populateAnnouncements(announcements.data || announcements);
+
+      // // Set up filter listeners
+      // const searchInput = document.getElementById('searchInput');
+      // const facultyHidden = document.getElementById('faculty_hidden');
+      // const departmentHidden = document.getElementById('department_hidden');
+      // const yearHidden = document.getElementById('year_hidden');
+      // const subjectHidden = document.getElementById('subject_hidden');
+
+      // async function applyFilters() {
+      //   filters['query'] = searchInput.value;
+      //   filters['faculty_id'] = facultyHidden.value;
+      //   filters['department_id'] = departmentHidden.value;
+      //   filters['year_id'] = yearHidden.value;
+      //   filters['subject_id'] = subjectHidden.value;
+      //   const announcements = await getAnnouncements(filters);
+      //   populateAnnouncements(announcements.data || announcements);
+      // }
+
+      // searchInput.addEventListener('input', applyFilters);
+      // facultyHidden.addEventListener('change', applyFilters);
+      // departmentHidden.addEventListener('change', applyFilters);
+      // yearHidden.addEventListener('change', applyFilters);
+      // subjectHidden.addEventListener('change', applyFilters);
+
+      // await fetchFaculties();
+      // await fetchDepartments();
+      // await fetchYears();
+      // await fetchSubjects();
+      // });
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        showLoading();
+        await fetchAnnoucements(1);
+
+      });
+
+    </script>
+</body>
+
+</html>

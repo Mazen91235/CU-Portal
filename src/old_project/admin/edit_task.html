@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="../css/tasks-add.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+
+</head>
+
+<body style="background-color: rgb(248, 250, 252);">
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Banner Section -->
+        <section class="banner-section" style="margin-top:72px;">
+            <div>
+                <a href="tasks.html" class="banner-back-link mb-3"
+                    style="color: #fff; text-decoration: none; display: flex; align-items: center; font-size: 1rem; margin-left: 32px; margin-right: 24px;">
+                    <i class="fa fa-arrow-left" style="margin-right: 8px; font-size: 1.1rem;"></i>
+                    Back to Tasks
+                </a>
+                <div>
+                    <div class="banner-title" style="display: flex; align-items: center;">
+                        <img src="../assets/task-icon.png" alt="Task Icon"
+                            style="margin-right: 12px; width: 32px; height: 32px;">
+                        Edit Task
+                    </div>
+                    <div class="banner-desc">
+                        Update the details of this task
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Banner Section -->
+
+        <!-- Main Form Section -->
+        <section class="form-section">
+            <form class="form-card">
+                <!-- Task Title -->
+                <div class="mb-3">
+                    <label for="taskTitle" class="form-label">Task Title</label>
+                    <input type="text" class="form-control" id="taskTitle"
+                        placeholder="e.g., Data Structures Assignment #3">
+                </div>
+                <!-- Subject Dropdown (replace this block) -->
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <div class="custom-filter-container">
+                        <div class="custom-filter" id="customSubjectFilter">
+                            <div class="custom-filter-label-value">
+                                <span class="custom-filter-value" id="customSubjectValue">All Subjects</span>
+                            </div>
+                            <span class="custom-filter-arrow">
+                                <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </span>
+                        </div>
+                        <ul class="custom-dropdown-list" id="customSubjectDropdown" style="padding-top: 0;">
+                            <input type="text" id="subjectSearchInput" value="" placeholder="Search..."
+                                style="width:100%;box-sizing:border-box;padding:8px 12px;border:none;outline:none;border-bottom:1px solid #e5e7eb;">
+                            <li class="active" data-value="">All Subjects</li>
+                            <li data-value="ds">Data Structures</li>
+                            <li data-value="algo">Algorithms</li>
+                            <li data-value="db">Database Systems</li>
+                            <li data-value="web">Web Development</li>
+                            <li data-value="ai">Artificial Intelligence</li>
+                        </ul>
+                        <script>
+                            // Subject dropdown search filter
+                            document.getElementById('subjectSearchInput').addEventListener('input', function () {
+                                const query = this.value.trim().toLowerCase();
+                                const dropdown = document.getElementById('customSubjectDropdown');
+                                dropdown.querySelectorAll('li').forEach(li => {
+                                    if (!query || li.textContent.toLowerCase().includes(query)) {
+                                        li.style.display = '';
+                                    } else {
+                                        li.style.display = 'none';
+                                    }
+                                });
+                            });
+                        </script>
+                        <input type="hidden" name="subject" id="subject_hidden" value="">
+                    </div>
+                </div>
+                <!-- Deadline -->
+                <div class="mb-3">
+                    <label for="deadline" class="form-label">Deadline</label>
+                    <div class="deadline-date-field" style="display: flex; gap: 16px; align-items: center;">
+                        <div style="flex:1; position:relative;">
+                            <input type="date" class="form-control" id="deadline"
+                                style="width:100%; min-width:0; cursor:pointer;">
+                            <!-- You can add an icon here if needed -->
+                        </div>
+                        <div style="flex:1; position:relative;">
+                            <input type="time" class="form-control" id="deadlineTime"
+                                style="width:100%; min-width:0; cursor:pointer;">
+                            <!-- You can add an icon here if needed -->
+                        </div>
+                        <span class="deadline-placeholder" id="deadlinePlaceholder"
+                            style="position:absolute;left:13px;top:40%;transform:translateY(-50%);color:#000000;pointer-events:none;
+                            background:#f8fafc;padding:0 8px;border-radius:0px;transition:background 0.18s, color 0.18s;">
+                            Pick a date
+                        </span>
+                    </div>
+                </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description"
+                        placeholder="Provide detailed instructions for the assignment..."></textarea>
+                </div>
+                <!-- Attachments & Links -->
+                <div class="attachments-section mb-3">
+                    <h3><i class="fa fa-paperclip" style="margin-right:8px;"></i>Attachments & Links</h3>
+                    <label class="form-label">Attached Files</label>
+                    <div class="file-drop mb-2" id="fileDropArea">
+                        <i class="fa fa-upload" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>
+                        <span>Drag &amp; drop files here, or click to browse</span><br>
+                        <input type="file" multiple style="display:none;" id="fileInput">
+                        <button type="button" class="btn btn-outline-secondary btn-sm mt-2"
+                            onclick="document.getElementById('fileInput').click();">Choose Files</button>
+                    </div>
+                    <div class="uploaded-files-list" id="uploadedFilesList"></div>
+                    <!-- Attached Links Section -->
+                    <div class="attached-links-header-row">
+                        <label class="form-label mb-0">Attached Links</label>
+                        <button type="button" class="add-link-btn" id="addLinkBtn">
+                            <i class="fa fa-plus" style="margin-right:4px;"></i>Add Link
+                        </button>
+                    </div>
+                    <div class="attached-links-list" id="attachedLinksList">
+                        <div class="attached-links-row submission-links-row mb-2">
+                            <input type="text" class="form-control attached-link-title submission-link-title"
+                                placeholder="Link title" style="background-color: white;">
+                            <input type="url" class="form-control attached-link-url submission-link-url"
+                                placeholder="https://" style="background-color: white;">
+                            <button type="button" class="remove-link-btn" tabindex="-1">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Submission Links Section -->
+                    <div class="form-label" style="margin-top: 18px; font-size: 16px; color: #000000;">Submission Links:
+                    </div>
+                    <div style="margin-top:8px;">
+                        <div style="
+                            display: flex;
+                            gap: 18px;
+                            background: #f6f4f8;
+                            border-radius: 10px;
+                            padding: 14px 18px;
+                            min-height: 44px;
+                            margin-bottom: 8px;
+                            ">
+                            <input type="text" class="submission-url-input" placeholder="https://"
+                                style="flex:2; background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:16px; color:#374151;">
+                        </div>
+                    </div>
+                </div>
+                <!-- Access Permissions -->
+                <!--<div class="access-section mb-3">
+                    <h3><i class="fa fa-users" style="margin-right:8px;"></i>Access Permissions</h3>
+                    <div class="row">
+                        <div>
+                            <label class="form-label">Faculty</label>
+                            <input type="text" class="form-control" placeholder="e.g., Computer Science" style="background-color: white;">
+                        </div>
+                        <div>
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" placeholder="e.g., Software Engineering" style="background-color: white;">
+                        </div>
+                        <div>
+                            <label class="form-label">Year Level</label>
+                            <input type="text" class="form-control" placeholder="e.g., 3rd Year" style="background-color: white;">
+                        </div>
+                    </div>
+                </div>-->
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='tasks.html'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">update Task</button>
+                </div>
+            </form>
+        </section>
+        <!-- End Main Form Section -->
+
+    </div>
+
+
+    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+    <div id="toast-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+    <script src="../js/loading.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/admin-tasks.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskId = urlParams.get("id");
+        let task;
+
+        async function fetchTask() {
+            showLoading();
+            const res = await getTask(taskId);
+            if (res?.status === 'success') {
+                task = res.data;
+                loadTaskData(task);
+            }
+            else {
+                showToast("error", "Error", "Failed to fetch task", "");
+
+            }
+        }
+        function formatDate(dateStr) {
+            const [day, month, year] = dateStr.split("-");
+            const dd = day.padStart(2, "0");
+            const mm = month.padStart(2, "0");
+            return `${year}-${mm}-${dd}`;
+        }
+
+        function loadTaskData(task) {
+            document.getElementById("taskTitle").value = task.name || "";
+            document.getElementById("description").value = task.details.description || "";
+
+            // deadline
+            if (task.deadline) {
+                const [date, time] = task.deadline.split(" ");
+                // convert date from "dd-MM-yyyy" to "yyyy-MM-dd"
+                document.getElementById("deadline").value = formatDate(date);
+                document.getElementById("deadlineTime").value = time?.slice(0, 5) || ""; // HH:mm
+
+            }
+
+            // subject
+            const valueSpan = document.getElementById("customSubjectValue");
+            const hiddenInput = document.getElementById("subject_hidden");
+            if (task.subject) {
+                valueSpan.textContent = task.subject.name;
+                hiddenInput.value = task.subject.id;
+            }
+
+            // submission URL
+            document.querySelector(".submission-url-input").value = task.url || "";
+
+            // attached links
+            const attachedLinksList = document.getElementById("attachedLinksList");
+            attachedLinksList.innerHTML = ""; // clear existing row
+            if (task.links) {
+                task.links.forEach(link => {
+                    const newRow = createLinkRow(link.title, link.url);
+                    attachedLinksList.appendChild(newRow);
+                });
+            }
+
+            // uploaded files (existing)
+            uploadedFiles = [];
+            const uploadedFilesList = document.getElementById("uploadedFilesList");
+            uploadedFilesList.innerHTML = "";
+
+            // files_data is already an array of objects
+            if (Array.isArray(task.details.files_data)) {
+                task.details.files_data.forEach((file, idx) => {
+                    const item = document.createElement("div");
+                    item.className = "uploaded-file-item mb-2";
+                    item.innerHTML = `
+    
+      <span class="uploaded-file-name" title="${file.name}"><a href="${file.webViewLink}" target="_blank" style="text-decoration:none; color:inherit;" >${file.name}</a></span>      
+
+            <button type="button" class="remove-upload-btn btn btn-sm btn-danger ms-2" 
+                    aria-label="Remove file" onclick="removeUploadedFile(${idx})">
+                <i class="fa fa-times"></i>
+            </button>
+    `;
+                    uploadedFilesList.appendChild(item);
+
+                    // keep track of them if needed
+                    uploadedFiles.push(file);
+                });
+            }
+
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            showLoading();
+
+            await fetchTask();
+
+            await loadCourses();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // File upload preview and remove logic
+        const fileInput = document.getElementById('fileInput');
+        const uploadedFilesList = document.getElementById('uploadedFilesList');
+        let uploadedFiles = [];
+
+        fileInput.addEventListener('change', function () {
+            for (const file of fileInput.files) {
+                if (!uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    uploadedFiles.push(file);
+                }
+            }
+            renderUploadedFiles();
+            // Reset input so same file can be re-added if removed
+            fileInput.value = '';
+        });
+
+        function renderUploadedFiles() {
+            uploadedFilesList.innerHTML = '';
+            uploadedFiles.forEach((file, idx) => {
+                const item = document.createElement('div');
+                item.className = 'uploaded-file-item mb-2';
+                item.innerHTML = `
+           
+            <span class="uploaded-file-name" title="${file.name}">${file.name}</span>
+            <button type="button" class="remove-upload-btn btn btn-sm btn-danger ms-2" 
+                    aria-label="Remove file" onclick="removeUploadedFile(${idx})">
+                <i class="fa fa-times"></i>
+            </button>
+        `;
+                uploadedFilesList.appendChild(item);
+            });
+        }
+
+
+        window.removeUploadedFile = function (idx) {
+            uploadedFiles.splice(idx, 1);
+            renderUploadedFiles();
+        };
+
+        // Optional: Drag & drop support
+        const fileDropArea = document.getElementById('fileDropArea');
+        fileDropArea.addEventListener('dragover', e => {
+            e.preventDefault();
+            fileDropArea.style.borderColor = '#7b2ff2';
+        });
+        fileDropArea.addEventListener('dragleave', e => {
+            fileDropArea.style.borderColor = '#d1c4e9';
+        });
+        fileDropArea.addEventListener('drop', e => {
+            e.preventDefault();
+            fileDropArea.style.borderColor = '#d1c4e9';
+            const files = Array.from(e.dataTransfer.files);
+            for (const file of files) {
+                if (!uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    uploadedFiles.push(file);
+                }
+            }
+            renderUploadedFiles();
+        });
+
+        // Link add/remove logic
+        const attachedLinksList = document.getElementById('attachedLinksList');
+        const addLinkBtn = document.getElementById('addLinkBtn');
+
+        function createLinkRow(title = '', url = '') {
+            const row = document.createElement('div');
+            row.className = 'attached-links-row submission-links-row mb-2';
+            row.innerHTML = `
+                <input type="text" class="form-control attached-link-title submission-link-title" placeholder="Link title" value="${title}">
+                <input type="url" class="form-control attached-link-url submission-link-url" placeholder="https://" value="${url}">
+                <button type="button" class="remove-link-btn" tabindex="-1">
+                    <i class="fa fa-times"></i>
+                </button>
+            `;
+            // Remove button logic
+            row.querySelector('.remove-link-btn').onclick = function () {
+                row.remove();
+            };
+            return row;
+        }
+
+        addLinkBtn.onclick = function () {
+            const newRow = createLinkRow();
+            attachedLinksList.appendChild(newRow);
+        };
+
+        // Subject filter dropdown logic (identical to tasks.html)
+        (function () {
+            const filter = document.getElementById('customSubjectFilter');
+            const dropdown = document.getElementById('customSubjectDropdown');
+            const valueSpan = document.getElementById('customSubjectValue');
+            const hiddenInput = document.getElementById('subject_hidden');
+
+            filter.addEventListener('click', function (e) {
+                filter.classList.toggle('open');
+                dropdown.style.display = filter.classList.contains('open') ? 'block' : 'none';
+                e.stopPropagation();
+            });
+
+            dropdown.addEventListener('mousedown', function (e) {
+                if (e.target.tagName === 'LI') {
+                    dropdown.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+                    e.target.classList.add('active');
+                    valueSpan.textContent = e.target.textContent;
+                    hiddenInput.value = e.target.getAttribute('data-value');
+                    filter.classList.remove('open');
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
+                    filter.classList.remove('open');
+                    dropdown.style.display = 'none';
+                }
+            });
+        })();
+
+
+
+        async function loadCourses() {
+            const courseDropdown = document.getElementById("customSubjectDropdown");
+            const searchInput = document.getElementById("subjectSearchInput");
+            const valueSpan = document.getElementById("customSubjectValue");
+            const hiddenInput = document.getElementById("subject_hidden");
+
+            try {
+                const res = await searchCourses();
+
+                // keep only the search input, remove old <li>
+                courseDropdown.querySelectorAll("li").forEach(li => li.remove());
+
+                // Add "All Courses" first
+                const allLi = document.createElement("li");
+                allLi.classList.add("active");
+                allLi.dataset.value = "";
+                allLi.textContent = "All Courses";
+                courseDropdown.appendChild(allLi);
+
+                // Add courses dynamically
+                if (res?.data) {
+                    res.data.forEach(course => {
+                        const li = document.createElement("li");
+                        li.dataset.value = course.id;
+                        li.textContent = course.name;
+                        courseDropdown.appendChild(li);
+                    });
+                }
+
+                // Attach click events
+                courseDropdown.querySelectorAll("li").forEach(li => {
+                    li.addEventListener("click", () => {
+                        valueSpan.textContent = li.textContent;
+                        hiddenInput.value = li.dataset.value;
+                        courseDropdown.classList.remove("show");
+                    });
+                });
+
+                // search filter (reuse existing input)
+                searchInput.addEventListener("input", function () {
+                    const query = this.value.trim().toLowerCase();
+                    courseDropdown.querySelectorAll("li").forEach(li => {
+                        if (!query || li.textContent.toLowerCase().includes(query)) {
+                            li.style.display = "";
+                        } else {
+                            li.style.display = "none";
+                        }
+                    });
+                });
+                hideLoading();
+
+            } catch (error) {
+                hideLoading();
+                showToast("error", "Error", "Could not load courses", "");
+            }
+        }
+
+
+
+
+
+
+
+
+
+        // Deadline date & time field: show placeholder and open picker on click, update value as date/time picked
+        (function () {
+            const deadlineInput = document.getElementById('deadline');
+
+            const timeInput = document.getElementById('deadlineTime');
+            const placeholder = document.getElementById('deadlinePlaceholder');
+
+            function formatDateTime(dateVal, timeVal) {
+                if (!dateVal && !timeVal) return "Pick a date & time";
+                let result = "";
+                if (dateVal) {
+                    const d = new Date(dateVal);
+                    result += isNaN(d) ? "" : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                }
+                if (timeVal) {
+                    result += (result ? " " : "") + timeVal;
+                }
+                return result || "Pick a date & time";
+            }
+
+            function updatePlaceholder() {
+                placeholder.textContent = formatDateTime(deadlineInput.value);
+                placeholder.style.display = "none";
+                placeholder.style.color = (deadlineInput.value || timeInput.value) ? "#22223b" : "#b0b0b0";
+            }
+
+            deadlineInput.addEventListener('input', updatePlaceholder);
+            timeInput.addEventListener('input', updatePlaceholder);
+            updatePlaceholder();
+
+            // Change placeholder background on focus/blur
+            deadlineInput.addEventListener('focus', function () {
+                placeholder.style.background = "#fff";
+            });
+            deadlineInput.addEventListener('blur', function () {
+                placeholder.style.background = "#f8fafc";
+            });
+            timeInput.addEventListener('focus', function () {
+                placeholder.style.background = "#fff";
+            });
+            timeInput.addEventListener('blur', function () {
+                placeholder.style.background = "#f8fafc";
+            });
+
+            // Always open picker when clicking the input
+            deadlineInput.addEventListener('click', function (e) {
+                if (typeof deadlineInput.showPicker === 'function') {
+                    deadlineInput.showPicker();
+                }
+            });
+            timeInput.addEventListener('click', function (e) {
+                if (typeof timeInput.showPicker === 'function') {
+                    timeInput.showPicker();
+                }
+            });
+        })();
+
+
+        document.querySelector(".form-card").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            showLoading();
+            const title = document.getElementById("taskTitle").value.trim();
+            const description = document.getElementById("description").value.trim();
+
+            // deadline: combine date + time into yyyy-MM-dd HH:mm:ss
+            const date = document.getElementById("deadline").value;
+            const time = document.getElementById("deadlineTime").value;
+            const deadline = (date && time) ? `${date} ${time}:00` : date;
+
+            const subject_id = document.getElementById("subject_hidden").value;
+
+            // collect links as "title|url, title|url"
+            const linksArr = [];
+            let links = "";
+            document.querySelectorAll(".submission-links-row").forEach(row => {
+                const t = row.querySelector(".submission-link-title").value.trim();
+                const u = row.querySelector(".submission-link-url").value.trim();
+                if (t && u) linksArr.push(`${t}|${u}`);
+                links = linksArr.join(", ");
+
+            });
+
+            const submission_url = document.querySelector(".submission-url-input").value.trim();
+
+            const urlsArr = [];
+
+            for (let idx = 0; idx < uploadedFiles.length; idx++) {
+                const row = document.querySelectorAll('#uploadedFilesList .uploaded-file-item')[idx];
+                const file = uploadedFiles[idx];
+
+                try {
+                    const url = await UploadToDrive(file); // wait for upload
+                    if (!url) {
+                        hideLoading();
+                        showToast("error", "File Upload Failed", "File upload failed. Please try again.", "");
+                        continue; // skip this file
+                    }
+
+                    if (title && file) {
+                        urlsArr.push(`${url}`);
+                    }
+                } catch (err) {
+                    hideLoading();
+                    showToast("error", "Error", `Failed to upload ${file.name}`, "");
+                }
+            }
+
+            const urls = urlsArr.join(", ");
+
+            console.log({ title, description, deadline, subject_id, urls, links, submission_url });
+            await editTask(taskId, title, description, deadline, subject_id, urls, links, submission_url);
+            hideLoading();
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>

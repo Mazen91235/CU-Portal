@@ -1,0 +1,431 @@
+
+:root{
+    --bs-btn-active-bg : #b02a37;
+    --bs-btn-active-border-color: #b02a37;
+
+}
+
+/* University title */
+.university-title {
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #222;
+    text-align: left;
+    margin-bottom: 32px;
+}
+
+/* Use Poppins for body */
+body {
+    background: rgb(248, 250, 252);
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+.um-title-section {
+    background: linear-gradient(90deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px;
+    border-radius: 8px;
+    margin: 72px 18px 18px 24px;
+    text-align: left;
+    min-height: 110px;
+    font-weight: 600 !important;
+}
+.um-title {
+    color: #F8FAFC;
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.96px;
+    margin-bottom: 8px;
+}
+.um-subtitle {
+    color: #F8FAFC;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+.add-faculties-btn {
+    background: #fff;
+    color: #7B1684;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 18px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    transition: background 0.2s, color 0.2s;
+    height: 52px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: all 0.2s;
+}
+.add-faculties-btn > svg {
+    color: #7B1684;
+}
+.add-faculties-btn:hover {
+    scale: 1.03;
+}
+
+.add-faculties-btn-desktop {
+    display: flex;
+}
+
+.add-faculties-btn-mobile {
+    display: none;
+    margin-top: 18px;
+    align-self: flex-start;
+}
+
+@media (max-width: 756px) {
+    .add-faculties-btn-desktop {
+        display: none !important;
+    }
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-top: 60px;
+        margin-right: 0;
+        border-radius:0 ;
+    }
+    .add-faculties-btn-mobile {
+        display: flex !important;
+        width: 100%;
+    }
+}
+
+/* Container spacing */
+.faculties-container {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Search and Add bar */
+.search-add-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end; /* Left align on desktop */
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 400px;
+    max-width: 100%;
+    height: 48px;
+}
+
+.search-input {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    padding-left: 44px;
+    background: #fff;
+    font-size: 1.15rem;
+    color: #6c7a89;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+
+.search-input::placeholder {
+    color: #8ca0b3;
+    font-size: 1.15rem;
+    opacity: 1;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8ca0b3;
+    font-size: 1.3rem;
+    pointer-events: none;
+}
+
+.add-btn {
+    width: 75px;
+    height: 48px;
+    background: #800080;
+    color: #fff;
+    border-radius: 16px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    transition: background 0.2s, transform 0.15s, filter 0.15s;
+}
+
+.add-btn:hover,
+.add-btn:active {
+    background: #800080;
+    color: #fff;
+    transform: scale(1.08);
+    filter: brightness(0.8);
+}
+
+.add-btn i {
+    font-size: 1.2rem;
+}
+
+.add-btn:hover {
+    background: #5a005a;
+}
+
+/* Card grid spacing */
+.row.g-4 {
+    --bs-gutter-x: 32px;
+    --bs-gutter-y: 32px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Faculty card */
+.faculty-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid #f0f0f0;
+    min-width: 0;
+    width: 100%;
+    aspect-ratio: 316/248;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 32px 16px 16px 16px;
+}
+
+/* Circle backgrounds */
+.faculty-logo-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.faculty-logo-circle.default-bg {
+    background: #F0F0F0;
+}
+
+.faculty-logo-circle.engineering-bg {
+    background: #FEF1E8;
+}
+
+/* Logo image */
+.faculty-logo-circle img {
+    width: 36px;
+    height: 36px;
+}
+
+/* Faculty name */
+.faculty-name {
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 100px;
+   
+    text-align: center;
+    letter-spacing: 0;
+    text-transform: none;
+    /* Center between logo and buttons */
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Faculty card actions */
+.faculty-actions {
+    position: absolute;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+ /* .faculty-actions > button:hover.btn:hover:not(.btn-danger), .popup-btn:hover {
+    background: linear-gradient(90deg, #520E58,  #7B1684) !important;
+}  */
+.btn-danger:active{
+    background: var(--bs-btn-active-bg) !important;
+    border-color: var(--bs-btn-active-border-color) !important;
+    color:#fff !important;
+    
+}
+.btn-danger{
+    flex: 1 1 0;
+    border-radius: 8px !important;
+    border: 1px solid #DC2626 !important;
+    background: transparent !important;
+    color: red !important;
+    font-family: Roboto, sans-serif !important;
+    transition: background 0.2s, color 0.2s;
+    text-transform: capitalize;
+    box-shadow: none;
+    text-align: center;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+      width: 131px !important;
+      max-width: 131px !important;
+    height: 36px !important;
+}
+.faculty-card .btn, .faculty-actions >button:hover.btn:hover {
+    width: 131px;
+    height: 36px;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: none;
+    transition: background 0.2s, transform 0.15s, filter 0.15s;
+    padding: 0;
+    text-align: center;
+}
+.faculty-card .edit-btn {
+    background: #800080 !important;
+}
+.edit-btn:active{
+    color: #fff !important;
+}
+/* .faculty-card .btn:hover:not(.btn-danger) {
+    background: #5a005a;
+    color: #fff;
+    transform: scale(1.08);
+    filter: brightness(0.8);
+} */
+
+/* Responsive grid */
+@media (max-width: 991px) {
+    .search-add-bar {
+        justify-content: center; /* Center on tablet */
+    }
+    .col-lg-4 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (max-width: 767px) {
+    .search-add-bar {
+        justify-content: center; /* Center on mobile */
+        gap: 16px;
+    }
+    
+    .col-lg-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .search-wrapper {
+        width: 400px;
+        max-width: 100%;
+        height: 48px;
+    }
+    .add-btn {
+        width: 75px;
+        height: 48px;
+        margin-top: 0;
+    }
+}
+#sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh !important; /* Fill the entire screen height */
+  width: 250px; /* Adjust width as needed */
+  overflow-y: auto;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Popup overlay and modal */
+.popup-overlay {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.popup-modal {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(80, 14, 88, 0.18);
+  padding: 38px 32px 32px 32px;
+  min-width: 320px;
+  max-width: 95vw;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.popup-title {
+  font-family: 'Poppins', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  text-align: center;
+  background: linear-gradient(90deg,#520E58,  #7B1684);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.popup-input {
+  width: 100%;
+  max-width: 320px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid #d1c4e9;
+  font-size: 1.1rem;
+  padding: 0 16px;
+  margin-bottom: 24px; /* Increased space between input and button */
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.popup-input:focus,
+.popup-input:hover {
+  border: 1.5px solid #7B1684;
+  box-shadow: 0 0 0 2px #7B168433;
+}
+.popup-btn {
+  width: 100%;
+  max-width: 220px;
+  height: 44px;
+  background: #7B1684;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+  margin-top: 0;
+}
+.popup-btn:hover {
+  background: linear-gradient(90deg,#520E58,  #7B1684);
+}
+
+/* Blur effect for background */
+.blurred {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}

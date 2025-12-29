@@ -1,0 +1,92 @@
+<!-- Trigger -->
+
+<!-- Popup Overlay (Shared) -->
+<div id="popupOverlay" class="popup-overlay"  >
+    <!-- SUCCESS POPUP -->
+    <div class="popup-box success" id="popup-success" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25);">
+        <!-- <img src="../assets/20250715_1015_فرحة النجاح القفزية_remix_01k06evmrjedrbtwg0f42qx01s.png" class="popup-img" /> -->
+        <div class="popup-content justify-content-center align-items-center">
+            <img class="popup-icon" src="../assets/Icon (2).svg" />
+
+            <h2 class="justify-content-center popup-heading" style="color: #22C55E;">Task Submitted Successfully!
+            </h2>
+            <p class="popup-message text-muted">Great job! We wish you the best in evaluation.</p>
+            <button class="popup-btn redirect-button" style="display: none;">
+                <span class="popup-btn-text">Back to Your Profile</span>
+                <div class="popup-btn-fill"></div>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ERORR POPUP -->
+    <div class="popup-box error" id="popup-error" style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <!-- <img src="../assets/20250715_1020_طالبة محبطة_remix_01k06f4xsmf929x5kdfgpk6709.png" style=" margin-right: -75px;
+" class="popup-img" /> -->
+        <div class="popup-content justify-content-center align-items-center">
+
+            <img class="popup-icon" src="../assets/Icon.svg" />
+
+            <h2 class="justify-content-center popup-heading" style="color: #DC2626;">Oops, we couldn't submit your
+                task</h2>
+            <p class="popup-message text-muted">Please check your internet connection and try again.</p>
+            <button class="popup-btn error redirect-button" style="display: none;">
+                <span class="popup-btn-text">try again later</span>
+                <div class="popup-btn-fill"></div>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Confirm POPUP -->
+    <div class="popup-box confirm" id="popup-confirm" style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <!-- <img src="./assets/20250715_1031_تحذير خطأ الموقع_remix_01k06fsfkkftcv79nhhjkj7f1e.png" class="popup-img" /> -->
+        <div class="popup-content justify-content-center align-items-center">
+            <span style="
+  background-color: #FFF7ED;
+  border-radius: 999999px;
+  width: 60px;
+  height: 60px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+">
+                <img src="../assets/warning-circle-svgrepo-com 1.svg" style="width: 25px; height: 25px;" />
+            </span>
+
+
+            <h2 class="justify-content-center popup-heading" style="background: linear-gradient(90deg, #F97316, #fa6115);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+margin-top: 40px;"> Are you sure?</h2>
+            <p class="popup-message text-muted" style="margin-bottom: 0px; font-size: 16px;
+">This action might affect other data.</p>
+            <!-- <p class="popup-message text-muted" style="  font-size: 16px;
+"> You won’t be able to undo it later</p> -->
+            <div class="button-row">
+                <button class="confirm no">No, Go Back</button>
+                <button class="confirm yes">Yes, I'm Sure</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="popup-box loading" id="popup-loading" style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <img src="../assets/20250715_1131_فتاة مبتسمة تنتظر_remix_01k06k8ngeee8bbrg8m0y9f32s.png" class="popup-img" />
+        <div class="popup-content justify-content-center align-items-center">
+            <div class="gradient-spinner"></div>
+
+            <h2 class="justify-content-center popup-heading" style=" background: linear-gradient(90deg, #520E58, #7B1684);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+""> Just a sec…</h2>
+ <p class=" popup-message text-muted" style="margin-bottom: 0px; font-size: 16px;
+">We’re processing your request. </p>
+                <p class="popup-message text-muted" style="  font-size: 16px;
+"> This won’t take long</p>
+        </div>
+    </div>
+
+</div>

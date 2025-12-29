@@ -1,0 +1,215 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  /* overflow-x: hidden; */
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF;
+}
+
+/* Content wrapper shifts right when sidebar is visible */
+#content-wrapper {
+  margin-left: 256px; /* Sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+#content-wrapper.sidebar-hidden {
+  margin-left: -20px !important;
+}
+
+/* --------------------
+   COURSE HEADER CARD
+----------------------- */
+.course-header {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.course-header:hover {
+  border-color: #3b82f6; /* blue highlight */
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.2);
+}
+
+.course-code {
+  background: #f3e8ff;
+  color: #6b21a8;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+/* --------------------
+   INFO BOXES
+----------------------- */
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 14px;
+  height: 100%;
+}
+
+.info-box img {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-box strong {
+  font-size: 15px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.info-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* --------------------
+   BACK TO COURSES LINK
+----------------------- */
+.back-to-courses-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 20px;
+  color: #020817;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.back-to-courses-link img {
+  margin-right: 10px;
+}
+
+/* --------------------
+   QUICK LINKS SECTION
+----------------------- */
+.quick-links h3 {
+  color: #5A0F61;
+  font-weight: 300;
+}
+
+.quick-links p {
+  color: #626484;
+  font-size: 16px;
+}
+
+.quick-cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.quick-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  transition: all 0.3s ease-in-out;
+  width: 310px;
+  flex: 0 0 auto;
+}
+
+.quick-card h4 {
+  font-size: 45px;
+  margin: 20px;
+}
+
+.quick-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.quick-card button {
+  background-color: #5A0F61;
+  color: white;
+  border: none;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 180px;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.quick-card button:hover {
+  background-color: rgb(79, 7, 86);
+  color: white;
+}
+
+/* --------------------
+   RESPONSIVE TWEAKS
+----------------------- */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .quick-card button {
+    font-size: 8px;
+  }
+  .quick-card p {
+    font-size: 10px;
+  }
+  .quick-card h4 {
+    font-size: 30px;
+  }
+  .quick-card {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 760px) {
+  .course-header {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.quick-cards {
+  display: flex;
+  flex-wrap: wrap;          /* تخليهم ينزلوا تحت بعض لو الشاشة صغيرة */
+  justify-content: center;  /* في المنتصف */
+  gap: 24px;
+}
+
+.quick-card {
+  width: 230px;                   /* أصغر من 310px */
+  text-align: center;
+  padding: 25px 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.quick-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.quick-card img.card-icon {
+  width: 50px;          /* أيقونة واضحة وثابتة الحجم */
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.quick-card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+

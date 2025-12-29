@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials Explorer - CS101 Materials</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../css/materials-user.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* ...existing code... */
+        .explorer-header {
+            font-family: "Roboto", sans-serif;
+        }
+
+        .selection-btn {
+            min-width: 120px;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 992px) {
+            .selection-btn {
+                min-width: 0;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .selection-btn {
+                min-width: 0;
+                margin-bottom: 0;
+            }
+        }
+        /* ...existing code... */
+    </style>
+</head>
+
+<body>
+
+    <body style="background-color: white">
+        <div id="sidebar-container"></div>
+        <div id="content-wrapper" class="sidebar-hidden">
+            <div id="navbar-container" class="fixed-top"></div>
+            <div class="upload-box-container d-none">
+                <div class="upload-box" id="drop-area" tabindex="0" role="button" aria-label="File upload area">
+                    <div class="plus-button">+</div>
+                    <p class="main-text">Drop files Here to Upload</p>
+                    <p class="sub-text">Release to add file to material</p>
+                    <input type="file" id="fileInputMain" hidden multiple />
+                </div>
+            </div>
+            <div class="draggedFilesIcon">
+                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4" />
+                    <path
+                        d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z"
+                        stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span id="draggedFilesCount">0</span>
+            </div>
+            <div class="container">
+                <!-- Main Materials Page -->
+                <div id="mainPage" class="page active">
+                    <!-- Materials Explorer Header -->
+                    <div class="explorer-header">
+                        <h1 class="explorer-title">
+                            Materials Explorer
+                        </h1>
+                        <p class="explorer-subtitle">Navigate through your course materials with ease</p>
+                    </div>
+
+
+                    <!-- Filters Section -->
+                    <div class="filters-section" style="border: 2px solid #E5E7EB; border-radius: 12px; padding: 1rem;">
+                        <div class="search-actions-section">
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" placeholder="Search Materials..." class="search-input"
+                                    onkeyup="filters.name = this.value; fetchMaterials();">
+                            </div>
+                        </div>
+                        <div class="filter-dropdown">
+                            <!-- <select class="filter-select">
+                                <option value="">Select Course</option>
+                            </select> -->
+                            <div class="custom-filter-container" style="flex: 1 1 0; min-width: 0; margin-top: 5px;">
+                                <div class="custom-filter" id="customCourseFilter">
+                                    <div class="custom-filter-label-value">
+                                        <!-- <span class="custom-filter-label">Course</span> -->
+                                        <span class="custom-filter-value" id="customCourseValue"
+                                            style="margin-top: auto;">All Courses</span>
+                                    </div>
+                                    <span class="custom-filter-arrow">
+                                        <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                                            <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <ul class="custom-dropdown-list" id="customCourseDropdown">
+                                    <li class="active" data-value="">All Courses</li>
+                                </ul>
+                                <input type="hidden" name="subject" id="subject_hidden" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="filteredPage" class="d-none">
+                        <div class="selection-btns d-none align-items-center my-5"
+                            style="border: 1px solid #eee; border-radius: 8px; padding: 16px; background: #fff; display: flex; gap: 16px;">
+                            <span class="selected-count" id="selectedCount"
+                                style="font-weight: 500; color: #374151;">
+                                <!-- JS will update this -->
+                            </span>
+                            <button class="selection-btn copy-btn" onclick="selectAllMaterials()">
+                                <i class="fa-regular fa-circle-check me-2"></i> Select All
+                            </button>
+                            <button class="selection-btn delete-btn" onclick="deleteMaterials()">
+                                <i class="fa fa-trash me-2"></i> Delete
+                            </button>
+                            <button class="selection-btn cancel-btn" onclick="cancelSelectionMode();">
+                                <i class="fa fa-times me-2"></i> Cancel
+                            </button>
+                        </div>
+                        <!-- Breadcrumb Navigation -->
+                        <div class="breadcrumb-nav">
+
+                        </div>
+                        <!-- Folders Section -->
+                        <div class="content-section">
+                            <!-- <h2 class="section-title">Folders</h2> -->
+                            <div class="content-grid">
+                                <!-- Folder Cards will be dynamically inserted here -->
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-page" id="filterPage"
+                        style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px;">
+                        <img src="../assets/m10.svg" alt="JJ"
+                            style="display: block; margin: 2rem auto 2rem auto; max-width: 300px;">
+                        <div
+                            style="font-size: 1.8rem; font-weight: 600; color: #5a0f61; margin-bottom: 1rem; text-align: center;">
+                            Welcome to Materials Explorer
+                        </div>
+                        <div
+                            style="font-size: 1.1rem; color: #666; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
+                            Easily browse, search, and find your course materials. Please Select Course to show its materials.
+                        </div>
+                    </div>
+                    <div id="emptyPage" class="d-none empty-page"
+                        style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px;">
+                        <img src="../assets/folderempty.jpg" alt="Empty Folder"
+                            style="display: block; margin: 2rem auto 2rem auto; max-width: 300px;">
+                        <div
+                            style="font-size: 1.8rem; font-weight: 600; color: #5a0f61; margin-bottom: 1rem; text-align: center;">
+                            No Files Available
+                        </div>
+                        <div
+                            style="font-size: 1.1rem; color: #666; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
+                            There are currently no files in this folder. Upload or add new materials to get started.
+                        </div>
+                    </div>
+
+                    <div class="previewer d-none" id="previewer">
+                        <div class="previewer-header">
+                            <div>
+                                <button class="close-previewer-btn" id="closePreviewerBtn"
+                                    onclick="closePreviewer();"><i class="fas fa-times"></i></button>
+                                <h2 class="previewer-title">File Preview</h2>
+                            </div>
+                            <button class="file-action-btn" onclick="downloadFileFromPreviewer();"><img src="../assets/previewer-download-icon.svg" alt="Download"></button>
+                        </div>
+                        <div class="previewer-content">
+                            <iframe id="filePreviewFrame" class="file-preview-frame" src="" frameborder="0"
+                                allowfullscreen="true"></iframe>
+                        </div>
+                    </div>
+
+                    <!-- Card Details Modal -->
+                    <div id="cardDetailsModal" class="card-details">
+                        <div class="bg-white p-8 rounded-2xl shadow-xl">
+                            <div class="flex items-center mb-8">
+                                <a href="#" id="closeModal" class="flex items-center text-gray-700 hover:text-gray-900">
+                                    <i class="fas fa-arrow-left text-xl mr-3"></i>
+                                    <div>
+                                        <div class="final-title" id="modalTitle">Final</div>
+                                        <div class="text-sm text-gray-500">View materials for final</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="cs101-tag text-xs font-semibold px-2 py-1 rounded-full">CS101</span>
+                                    <span class="text-gray-600 text-sm" id="modalDate"><i
+                                            class="far fa-calendar-alt mr-1"></i>2024-01-22</span>
+                                </div>
+                                <div class="flex items-center mb-6">
+                                    <i class="far fa-file-pdf text-red-500 text-2xl mr-3" id="modalFileIcon"></i>
+                                    <span class="file-name font-medium text-gray-900" id="modalFileName">Assignment 1 -
+                                        Variables.pdf</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between space-x-4">
+                                <button
+                                    class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                                    <i class="fas fa-eye mr-2"></i> Preview
+                                </button>
+                                <button
+                                    class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                                    <i class="fas fa-download mr-2"></i> Download
+                                </button>
+                                <button
+                                    class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                                    <i class="fas fa-external-link-alt mr-2"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Folder Modal -->
+                    <div id="addFolderModal" class="add-folder-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Add New Folder</h2>
+                                <button class="close-btn" id="closeAddFolderModal">&times;</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="folderName" class="form-label">Folder Name</label>
+                                <input type="text" id="folderName" class="form-input" placeholder="Enter folder name">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-cancel" id="cancelAddFolder">Cancel</button>
+                                <button class="btn btn-primary" id="confirmAddFolder">Add Folder</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fetch From Drive Modal -->
+                    <div id="fetchFromDriveModal" class="add-folder-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Fetch From Drive</h2>
+                                <button class="close-btn" id="closeFetchFromDriveModal">&times;</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="folderName" class="form-label">Drive URL</label>
+                                <input type="text" id="driveUrl" class="form-input" placeholder="Enter Drive URL...">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-cancel" id="cancelFetchFromDrive">Cancel</button>
+                                <button class="btn btn-primary" id="confirmFetchFromDrive">Fetch Files</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add File Modal -->
+                    <div id="addFileModal" class="add-file-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Add files to your course materials</h2>
+                                <button class="close-btn" id="closeAddFileModal">&times;</button>
+                            </div>
+<!-- 
+                            <div class="file-path">
+                                @ Faculty > Computer Science > Artificial Intelligence > Materials
+                            </div> -->
+
+                            <div class="file-input-row">
+                                <div class="file-input-group">
+                                    <label for="fileName" class="form-label">Name</label>
+                                    <input type="text" id="fileName" class="form-input"
+                                        placeholder="e.g. Week 5 Lecture">
+                                </div>
+                                <div class="file-type-group">
+                                    <label for="fileType" class="form-label">Type</label>
+                                    <div class="custom-filter-container" style="flex: 1 1 0; min-width: 0;">
+                                        <div class="custom-filter" id="customFileTypeFilter">
+                                            <div class="custom-filter-label-value">
+                                                <span class="custom-filter-value" id="customFileTypeValue"
+                                                    style="margin-top: auto;">File</span>
+                                            </div>
+                                            <span class="custom-filter-arrow">
+                                                <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                                                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <ul class="custom-dropdown-list" id="customFileTypeDropdown">
+                                            <li class="active" data-value="file">File</li>
+                                            <li data-value="youtube">Youtube Link</li>
+                                            <li data-value="drive">Drive Link</li>
+                                            <li data-value="external">External Link</li>
+                                        </ul>
+                                        <input type="hidden" name="file_type" id="file_type_hidden" value="file">
+                                    </div>
+                                </div>
+                                <div class="file-link-group d-none" id="fileLinkGroup">
+                                    <label for="fileLink" class="form-label">Link</label>
+                                    <input type="text" id="fileLink" class="form-input" placeholder="Paste URL here..."
+                                        onkeyup="checkToActivateBtn();">
+                                </div>
+                            </div>
+
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <p class="file-upload-text">No file selected</p>
+                                <button class="file-upload-btn" id="browseBtn">Browse</button>
+                                <input type="file" id="fileInput" style="display: none;" multiple>
+                            </div>
+
+                            <div class="file-list" id="fileList"></div>
+
+                            <div class="add-files-footer">
+                                <div class="add-files-count" id="fileCount">+ Add 0 Files</div>
+                                <div class="add-files-actions">
+                                    <button class="btn btn-cancel" id="cancelAddFile">Close</button>
+                                    <button class="btn btn-add-files" id="confirmAddFile" disabled>+ Add 0
+                                        Files</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="toast-container"></div>
+                    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+                        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+                <script src="../js/loading.js"></script>
+                <script src="../js/loadscreen.js"></script>
+                <script src="../js/script.js"></script>
+                <script src="../js/toast.js"></script>
+                <script src="../js/courses.js"></script>
+                <script src="../js/materials-user.js"></script>
+                <script>
+                    
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // File Type Filter JS
+                        const fileTypeFilter = document.getElementById('customFileTypeFilter');
+                        const fileTypeDropdown = document.getElementById('customFileTypeDropdown');
+                        const fileTypeValue = document.getElementById('customFileTypeValue');
+                        const fileTypeHidden = document.getElementById('file_type_hidden');
+                        const fileLinkGroup = document.getElementById('fileLinkGroup');
+                        const fileUploadArea = document.getElementById('fileUploadArea');
+
+                        // Toggle dropdown
+                        fileTypeFilter.addEventListener('click', function (e) {
+                            fileTypeFilter.classList.toggle('open');
+                            e.stopPropagation();
+                        });
+
+                        // Select file type
+                        fileTypeDropdown.addEventListener('mousedown', function (e) {
+                            if (e.target.tagName === 'LI') {
+                                // Remove active from all
+                                Array.from(fileTypeDropdown.children).forEach(li => li.classList.remove('active'));
+                                e.target.classList.add('active');
+                                fileTypeValue.textContent = e.target.textContent;
+                                fileTypeHidden.value = e.target.getAttribute('data-value');
+                                fileTypeFilter.classList.remove('open');
+                                fileLinkGroup.querySelector('input').value = '';
+                                fileType = fileTypeSelect.value.toLowerCase();
+                                if (fileType == 'file') {
+                                    fileUploadArea.classList.remove('d-none');
+                                    fileLinkGroup.classList.add('d-none');
+                                    fileIcon = 'fa-file-file text-blue-500';
+                                    if(isEdited && materialBeingEdited && materialBeingEdited.type.toLowerCase() == 'file'){
+                                        selectedFiles = [null];
+                                        fileList.innerHTML = '';
+                                        const fileItem = document.createElement('div');
+                                        fileItem.className = 'file-item';
+                                        fileItem.innerHTML = `
+                                            <i class="far ${fileIcon} file-item-icon"></i>
+                                            <span class="file-item-name">${materialBeingEdited.name}</span>
+                                            <button class="file-item-remove" data-index="0">Remove</button>
+                                        `;
+                                        fileList.appendChild(fileItem);
+                                    }
+                                } else{
+                                    fileInput.value = '';
+                                    selectedFiles = [];
+                                    fileUploadArea.classList.add('d-none');
+                                    fileLinkGroup.classList.remove('d-none');
+                                    if(isEdited && materialBeingEdited && materialBeingEdited.type.toLowerCase() == fileTypeSelect.value.toLowerCase()){
+                                        fileLinkGroup.querySelector('input').value = materialBeingEdited.url;
+                                    }
+                                }
+                                handleFileSelection(null);
+                            }
+                        });
+
+                        // Close dropdown on outside click
+                        document.addEventListener('click', function (e) {
+                            fileTypeFilter.classList.remove('open');
+                        });
+                    });
+                    document.addEventListener('click', function (e) {
+                        if(e.target.closest('.custom-filter')) return;
+                    document.querySelectorAll('.custom-filter').forEach(f => {
+                        f.classList.remove('open');
+                        const arrow = f.querySelector('.custom-filter-arrow svg');
+                        if (arrow) arrow.style.transform = '';
+                    });
+                    document.querySelectorAll('.custom-dropdown-list').forEach(d => d.style.display = 'none');
+                    });
+                </script>
+    </body>
+
+</html>

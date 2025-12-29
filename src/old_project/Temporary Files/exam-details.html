@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Details</title>
+    <link rel="stylesheet" href="./css/exam-details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/toasts.css">
+    <link rel="stylesheet" href="./components/navbar.html">
+    <link rel="stylesheet" href="./components/sidebar.html">
+    <link rel="stylesheet" href="./components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body style="background-color: #F8FAFC;">
+<div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Exam Details Page Content -->
+        <div class="exam-header-row">
+            <div class="exam-header-left">
+                <a href="exams.html" class="exam-header-back">
+                    <i class="fa fa-arrow-left"></i> Back to Exams
+                </a>
+                <div class="exam-header-title-row">
+                    <div class="exam-header-title">Advanced Computer Networks</div>
+                    <div class="exam-header-actions exam-header-actions-desktop">
+                        <button class="btn exam-header-btn" style="background:#fff; border-radius:8px;">
+                            <img src="./assets/exam10.png" alt="Edit" class="exam-header-btn-icon" />
+                            Edit
+                        </button>
+                        <button class="btn exam-header-btn" style="background:#fff; border-radius:8px;">
+                            <img src="./assets/exam11.png" alt="Delete" class="exam-header-btn-icon" />
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <div class="exam-header-code">CS 4800</div>
+                <div class="exam-header-actions exam-header-actions-mobile">
+                    <button class="btn exam-header-btn" style="background:#fff; border-radius:8px;">
+                        <img src="./assets/exam10.png" alt="Edit" class="exam-header-btn-icon" />
+                        Edit
+                    </button>
+                    <button class="btn exam-header-btn" style="background:#fff; border-radius:8px;">
+                        <img src="./assets/exam11.png" alt="Delete" class="exam-header-btn-icon" />
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="exam-details-main">
+            <div class="exam-details-row">
+                <!-- Left Column -->
+                <div class="exam-details-left">
+                    <div class="exam-card exam-info-card">
+                        <div class="exam-card-title">
+                            <i class="bi bi-calendar-week exam-info-main-icon"></i>
+                            Exam Information
+                        </div>
+                        <div class="exam-info-grid">
+                            <div class="exam-info-item">
+                                <i class="bi bi-calendar-week exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Date</div>
+                                    <div class="exam-info-value">May 15, 2024</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-clock exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Duration</div>
+                                    <div class="exam-info-value">2 hours</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-clock exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Time</div>
+                                    <div class="exam-info-value">10:00 AM - 12:00 PM</div>
+                                </div>
+                            </div>
+                            <div class="exam-info-item">
+                                <i class="bi bi-geo-alt exam-info-icon"></i>
+                                <div>
+                                    <div class="exam-info-label">Location</div>
+                                    <div class="exam-info-value">Engineering Building - Room 301</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exam-card exam-instructions-card">
+                        <div class="exam-card-title">
+                            <i class="bi bi-file-earmark-text exam-instructions-icon"></i>
+                            <span style="color: #5A0F61;">Exam Instructions</span>
+                        </div>
+                        <div class="exam-instructions-list">
+<div style="font-family: 'Poppins', sans-serif;font-size: 0.9rem; font-weight: 600;">
+                            <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Bring a valid student ID and calculator (non-programmable only)<br>
+                            <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>No electronic devices except approved calculators are permitted<br>
+                            <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>All answers must be written in pen (blue or black ink only)<br>
+                            <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Read all questions carefully before beginning<br>
+                            <i class="bi bi-dot" style="font-size:1.5rem; color: #881792;"></i>Time management is crucial - allocate time wisely across all sections
+</div>
+                        </div>
+                    </div>
+                    <div class="exam-card">
+                        <div class="exam-card-title">Description</div>
+                        <div class="exam-description-body">
+                            Comprehensive final examination covering network protocols, security, and distributed systems architecture.
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="exam-details-right">
+                    <div class="exam-card">
+                        <div class="exam-card-title"><i class="bi bi-person"></i> Course Details</div>
+                        <div class="exam-info-label">Instructor</div>
+                        <div class="exam-info-value">Dr. Sarah Johnson</div>
+                        <div class="exam-info-label">Faculty</div>
+                        <div class="exam-info-value">Faculty of Engineering</div>
+                        <div class="exam-info-label">Department</div>
+                        <div class="exam-info-value">Computer Science</div>
+                        <div class="exam-info-label">Academic Year</div>
+                        <div class="exam-info-value">2023-2024</div>
+                    </div>
+                    <div class="exam-card">
+                        <div class="exam-card-title"><i class="bi bi-mortarboard-fill"></i> Exam Details</div>
+                        <div class="exam-info-label">Format</div>
+                        <span class="badge bg-purple">Written</span>
+                        <div class="exam-info-label" style="margin-top:12px;">Course Weight</div>
+                        <span class="exam-weight">35%</span>
+                        <span class="exam-weight-label">of total grade</span>
+                    </div>
+                    <div class="exam-card">
+                        <div class="exam-access-title"><i class="fa fa-lock"></i> Access Restrictions</div>
+                        <div class="exam-access-label">Restricted to:</div>
+                        <ul class="exam-access-list">
+                            <li>Faculty of Engineering</li>
+                            <li>Computer Science &amp; Software Engineering</li>
+                            <li>Year 4</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Exam Details Page Content -->
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/loading.js"></script>
+    
+</body>
+</html>

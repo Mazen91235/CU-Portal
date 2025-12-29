@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcements</title>
+  <link rel="stylesheet" href="../css/announcements.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    .custom-filter-container {
+      position: relative;
+      width: 220px;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin-right: 0;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      height: 48px;
+      cursor: pointer;
+      padding: 0 16px 0 0;
+      min-width: 180px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+      position: relative;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .custom-filter:hover,
+    .custom-filter.open {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+
+    .um-filter-search {
+      transition: box-shadow 0.15s, border-color 0.15s;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      height: 48px;
+      min-width: 220px;
+      flex: 1 1 320px;
+      margin-right: 0;
+      margin-bottom: 0;
+      box-sizing: border-box;
+    }
+
+    .um-filter-search:hover,
+    .um-filter-search:focus-within {
+      border-color: #7B1684 !important;
+      box-shadow: 0 0 0 2px #7B168433;
+    }
+
+    .um-filter-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      height: 100%;
+      padding-left: 8px;
+      font-size: 15px;
+    }
+
+    .custom-filter-label-value {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30px;
+      margin-top: 4px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 0.5px;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+
+    .custom-filter-value {
+      color: #22223B;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-filter-arrow {
+      margin-left: 16px;
+      margin-right: 8px;
+      transition: transform 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+
+    .um-filters-section {
+      overflow: visible !important;
+    }
+
+    .um-filters-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .um-filters-group {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      min-width: 0;
+      flex: 2 1 0;
+    }
+
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 99999;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-filter.open+.custom-dropdown-list {
+      display: block;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 1340px) {
+      .um-filters-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        width: 100%;
+        display: flex;
+      }
+
+      .um-filter-search {
+        width: 100% !important;
+        margin-bottom: 16px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        box-sizing: border-box;
+      }
+
+      .um-filters-group {
+        flex-direction: column !important;
+        width: 100% !important;
+        display: flex;
+        gap: 16px !important;
+      }
+
+      .custom-filter-container {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      .custom-filter {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .um-title-section {
+        border-radius: 0 !important;
+      }
+    }
+
+    .um-filter-search .fa-search {
+      color: #7B1684;
+    }
+
+    /* --- Import filter CSS from courses.html --- */
+    .filters {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+
+    .custom-select {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+
+    .custom-select:hover {
+      border-color: #5a0f61;
+    }
+
+    .custom-select.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .custom-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+
+    .custom-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .custom-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .custom-select.open .custom-select-trigger i {
+      transform: rotate(180deg);
+    }
+
+    .custom-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .custom-select.open .custom-select-dropdown {
+      display: block;
+    }
+
+    .custom-select-option {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .custom-select-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .custom-select-option.selected {
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      font-weight: 500;
+    }
+
+    .multi-select-filter {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 44px;
+    }
+
+    .multi-select-filter:hover {
+      border-color: #5a0f61;
+    }
+
+    .multi-select-filter.open {
+      border-color: #5a0f61;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+    }
+
+    .multi-select-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      height: 100%;
+    }
+
+    .multi-select-placeholder {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .multi-select-trigger i {
+      color: #999;
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .multi-select-filter.open .multi-select-trigger i {
+      transform: rotate(180deg);
+    }
+
+    .multi-select-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      display: none;
+      padding: 0.5rem;
+    }
+
+    .multi-select-filter.open .multi-select-dropdown {
+      display: block;
+    }
+
+    .multi-select-option {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .multi-select-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .multi-select-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .multi-select-option input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    .multi-select-option label {
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .multi-select-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #eee;
+    }
+
+    .multi-select-btn {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .multi-select-btn.clear {
+      background-color: #f5f5f5;
+      color: #666;
+    }
+
+    .multi-select-btn.clear:hover {
+      background-color: #eaeaea;
+    }
+
+    .multi-select-btn.apply {
+      background-color: #5a0f61;
+      color: white;
+    }
+
+    .multi-select-btn.apply:hover {
+      background-color: #4a0c51;
+    }
+  </style>
+</head>
+
+<body style="background-color: rgba(248, 250, 252, 1);">
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+
+    <!-- Banner Section -->
+    <section class="um-title-section d-flex align-items-center justify-content-between flex-wrap "
+      style="background: linear-gradient(90deg, #7B1684 0%, #4B206C 100%); border-radius: 14px; padding: 32px 32px 24px 32px; margin-bottom: 32px;margin-top:72px; color: #fff;">
+      <div class="um-title-content">
+        <h1 class="um-title" style="color: #fff; font-weight: 600; margin-bottom: 8px;">Announcements</h1>
+        <p class="um-subtitle" style="color: #f3f3f3; font-weight: 400; margin-bottom: 0;">Manage And Organize Your
+          Announcements Content Efficiently</p>
+      </div>
+    </section>
+    <div class="container w-80">
+      <!-- Filters Section (imported from courses.html) -->
+      <div class="filters" aria-label="Announcement filters">
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input type="search" placeholder="Search by announcement title" id="searchInput"
+            aria-label="Search by announcement title" />
+        </div>
+        <!-- Custom Subject Select -->
+        <div class="custom-select" id="subject-select">
+          <div class="custom-select-trigger">
+            <span class="custom-select-placeholder">All Subjects</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option" data-value="" onclick="resetSearchInput()">All Subjects</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Announcements Grid Section -->
+      <div class="container-fluid px-0">
+        <!-- <div id="loadingIndicator" style="display:none; text-align:center; color:#7B1684; font-weight:600; font-size:1.2rem; margin: 20px 0;">Loading announcements...</div> -->
+        <div id="announcementsGrid"></div>
+        <div class="announcements-hidden"></div>
+        <br>
+        <div id="toast-container"></div>
+        <div id="loadingOverlayContainer" class="d-none w-full h-full"
+          style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/user_announcements.js"></script>
+    <script src="../js/courses.js"></script>
+</body>
+
+</html>

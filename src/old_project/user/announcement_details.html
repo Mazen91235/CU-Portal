@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcement Details</title>
+    <link rel="stylesheet" href="../css/announcement_details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/assignment.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../components/navbar.html">
+    <link rel="stylesheet" href="../components/sidebar.html">
+    <link rel="stylesheet" href="../components/toasts.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        .card-content {
+            padding: 20px 18px 18px 18px;
+            background: #fff;
+            border-radius: 12px;
+        }
+        .links-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #64748B;
+            margin-bottom: 10px;
+            margin-top: 0;
+            letter-spacing: 1px;
+        }
+        .attachments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .attachment-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8F5F7;
+            border-radius: 10px;
+            padding: 16px 24px;
+            margin-bottom: 10px;
+            min-height: 62px;
+            border: none;
+        }
+        .attachment-details {
+            word-break: break-all;
+        }
+        .attachment-details h4 {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: #22223B;
+            margin: 0;
+        }
+        .attachment-size {
+            font-size: 0.97rem;
+            color: #64748B;
+            font-weight: 400;
+            margin: 0;
+        }
+        .attachments-separator {
+            border: none;
+            border-top: 1px solid #E2E8F0;
+            margin: 18px 0 18px 0;
+        }
+        .links {
+            padding: 20px 18px 18px 18px;
+        }
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8F5F7;
+            border-radius: 10px;
+            padding: 16px 24px;
+            margin-bottom: 0;
+            min-height: 48px;
+            border: none;
+        }
+        .link-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            color: #22223B !important;
+            margin-bottom: 10px !important;
+        }
+        .open-link-btn {
+            background: #fff;
+            color: #22223B;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 7px 18px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            text-decoration: none;
+        }
+
+        @media (width < 785px) {
+            .attachment-row {
+                flex-direction: column;
+            }
+        }
+
+        .preview-button, .download-button {
+            background: #fff;
+            color: #22223B;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 7px 18px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .preview-button i, .download-button i {
+            font-size: 1.1rem;
+            color: #22223B; /* dark gray */
+        }
+        .preview-button:hover, .download-button:hover {
+            background: #F3F4F6;
+            color: #5A0F61;
+            border-color: #C7D2FE;
+        }
+        .previewer{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.3);
+            z-index: 2000;
+        }
+        .previewer .previewer-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            height: 10vh;
+            width: 100%;
+            color: white;
+            background: rgba(163, 0, 0, 0.4);
+        }
+        .previewer .previewer-header .close-previewer-btn{
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+        }
+        .previewer .previewer-content{
+            height: 90vh;
+            width: 100%;
+        }
+        .previewer .previewer-content iframe{
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .file-action-btn {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            color: #374151;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+            border-radius: 8px;
+            padding: 8px 0;
+            flex: 1 1 0;
+            justify-content: center;
+            font-weight: 500;
+            box-shadow: none;
+        }
+        .file-action-btn:hover {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+            color: #5A0F61;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Task Details Section -->
+        <section class="task-details-section container" style="margin-top: 72px;">
+            <div class="task-details-header-row">
+                <div class="task-details-back-link-row">
+                    <a href="announcements.html" class="task-details-back-link">
+                        <i class="fa fa-arrow-left"></i> Back to announcements
+                    </a>
+                </div>
+                <span class="announcement-details-header-separator">|</span>
+                <div class="announcement-details-title-row">
+                    <h2 class="announcement-details-title" id="announcementTitle">Loading...</h2>
+                </div>
+            </div>
+<div class="parent-user">
+    <div class="div1-user"><div class="card1">
+            <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                <img src="../assets/book.svg" alt="Title Icon" style="width:24px;height:24px;margin-right:8px;">
+                <div class="card1-label" style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Subject</div>
+            </div>
+            <div class="card1-content" style="margin-top:8px;">
+                <div class="card1-value" id="announcementSubject" style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;">Loading...</div>
+            </div>
+        </div></div>
+    <div class="div2-user"><div class="card1">
+            <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                <img src="../assets/ann4.png" alt="Title Icon" style="width:24px;height:24px;margin-right:8px;">
+                <div class="card1-label" style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Author</div>
+            </div>
+            <div class="card1-content" style="margin-top:8px;">
+                <div class="card1-value" id="announcementAuthor" style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;">Loading...</div>
+            </div>
+        </div></div>
+</div>
+
+    <!-- announcement Details Description Section -->
+    <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="far fa-file-text"></i>
+                        Announcement content
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <pre style="white-space: pre-wrap; font-family: inherit; font-size: 14px; line-height: 1.6; color: var(--text-medium); background: var(--background-light-gray); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">No content
+                    </pre>
+                </div>
+            </div>
+
+            <div class="card">
+        <div class="card-header">
+            <h2 class="card-title" style="color: #1E293B;">
+            Attachments &amp; Links
+            </h2>
+        </div>
+        <div class="card-content attachments-section">
+            <div class="links-title" style="margin-top: 20px;">FILES</div>
+                <div class="attachments-list">
+                   <p>No files</p>
+                </div>
+            </div>
+            <div class="attachments-separator"></div>
+            <div class="links">
+                <div class="links-title">LINKS</div>
+                <div class="links-list">No links</div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="previewer d-none" id="previewer">
+        <div class="previewer-header">
+            <div>
+                <button class="close-previewer-btn" id="closePreviewerBtn"
+                    onclick="closePreviewer();"><i class="far fa-times"></i></button>
+                <h2 class="previewer-title">File Preview</h2>
+            </div>
+            <button class="file-action-btn" onclick="downloadFileFromPreviewer();">
+                <i class="far fa-download"></i> Download
+            </button>
+        </div>
+        <div class="previewer-content">
+            <iframe id="filePreviewFrame" class="file-preview-frame" src="" frameborder="0"
+                allowfullscreen="true">
+            </iframe>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/user_announcement_details.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+/* Faculty filter styles */
+.custom-filter-container {
+  position: relative;
+  width: 100%;
+  font-family: 'Roboto', Arial, sans-serif;
+  margin-right: 0;
+  display: block;
+  vertical-align: top;
+}
+.custom-filter {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border: 1px solid #e6e9ee;
+  border-radius: 10px;
+  height: 43px;
+  cursor: pointer;
+  padding: 0 16px 0 0;
+  min-width: 0;
+  box-shadow: none;
+  position: relative;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  
+}
+.custom-filter-label-value {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+  margin-top: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.custom-filter-label {
+  color: #7B1684;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top:10px;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+.custom-filter-value {
+  color: #22223B;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+.custom-filter-arrow {
+  margin-left: 8px;
+  margin-right: 0 !important;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-filter-arrow svg {
+  margin-right: 0 !important;
+}
+.custom-dropdown-list {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #7B1684;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+  z-index: 99999;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+  display: none;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 16px;
+}
+.custom-filter.open + .custom-dropdown-list {
+  display: block;
+}
+.custom-dropdown-list li {
+  padding: 14px 0 14px 14px;
+  margin: 0;
+  cursor: pointer;
+  color: #374151;
+  overflow: hidden;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+.custom-dropdown-list li:hover,
+.custom-dropdown-list li.active {
+  background: #f3f3f3;
+  color: #7B1684;
+  font-weight: 500;
+}

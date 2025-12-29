@@ -1,0 +1,214 @@
+
+/* --- Responsive Adjustments (Media Queries) --- */
+
+/* For screens smaller than 992px (e.g., tablets and smaller desktops) */
+    @media (max-width: 1024px) {
+        .content-wrapper {
+            flex-direction: column; /* Stack illustration and card vertically */
+            gap: 20px; /* Reduced gap */
+            padding: 20px;
+        }
+        body{
+            overflow-y: visible;
+        }
+        .container {
+            overflow: hidden;
+            height: auto; /* Allow container to adjust height based on content */
+            padding-bottom: 100px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 25;
+        }
+        .logo{
+            text-align: center;
+        }
+        .profile-form .select-group ul{
+            top: 40px;
+        }
+        .illustration {
+            margin-right: 0; /* Remove right margin */
+            margin-bottom: 20px; /* Add bottom margin */
+            margin-top: 0;
+        }
+
+        .create-profile-page .illustration {
+            margin: 0;
+            padding: 0  ;
+            align-self: center; /* Center illustration on smaller screens */
+            margin-bottom: 20px; /* Consistent bottom margin */
+        }
+
+        .illustration img {
+            width: calc(445px * 0.5);
+            height: calc(667px * 0.5);
+            margin-left: 0; /* Remove negative margin */
+            transform: rotateY(180deg);
+            position: absolute;
+            top: -100px;
+            right: 0px;
+            bottom: unset;
+            left: unset;
+            display: none;
+        }
+
+        .card {
+            max-width: 90%; /* Allow card to take more width */
+            padding: 30px; /* Adjusted padding */
+        }
+
+        .profile-form-card {
+            padding: 40px 30px; /* Adjusted padding to match image for smaller screens */
+            max-width: 90%; /* Narrower card for smaller screens */
+            margin: 0px auto;
+            margin-top: 200px; 
+        }
+
+        .profile-form-card h2 {
+            font-size: 32px; /* Adjusted font size for heading on smaller screens */
+            margin-bottom: 5px; /* Reduced margin */
+        }
+
+        .profile-form-card .subtitle {
+            font-size: 14px; /* Adjusted font size for subtitle on smaller screens */
+            margin-bottom: 30px; /* Adjusted margin */
+        }
+
+        .profile-form .input-row {
+            flex-direction: column; /* Stack input groups vertically within a row */
+            gap: 15px; /* Adjusted gap between input groups in a row */
+        }
+        .profile-form .input-row .input-group {
+            margin-bottom: 0; /* Remove redundant margin */
+            width: 100%;
+            margin: 5px 0px 0px 0px;
+        }
+
+        .profile-form .input-group {
+            margin-bottom: 15px; /* Adjusted margin between input groups */
+            padding: 0px 15px 0px 0px; /* Adjusted padding */
+            height: 45px; /* Adjusted height */
+        }
+
+        .profile-form .input-group .material-icons.icon-prefix {
+            font-size: 22px; /* Adjusted icon size */
+        }
+
+        .profile-form input[type="text"],
+        .profile-form input[type="email"],
+        .profile-form input[type="tel"],
+        .profile-form select,
+        .profile-form .file-label {
+            font-size: 15px; /* Adjusted font size */
+        }
+
+        .file-upload-container {
+            margin-bottom: 0;
+            gap: 5px;
+            margin-top: 5px; /* Slightly more space for the file upload */
+        }
+        .attachment-info-text {
+            width: auto;
+            max-width: none;
+            text-align: left;
+            font-size: 10px; /* Smaller font size for info text */
+        }
+
+        .file-input-group {
+            padding: 10px 15px; /* Adjusted padding */
+            height: 45px; /* Adjusted height */
+        }
+
+        .file-input-group .material-icons.icon-prefix {
+            font-size: 22px;
+        }
+
+        .checkbox-group {
+            margin-top: 15px; /* Adjusted margin */
+            margin-bottom: 25px; /* Adjusted margin */
+            font-size: 13px; /* Smaller font size for checkbox label */
+            padding-left: 5px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px; /* Adjusted margin */
+            width: 16px; /* Smaller checkbox */
+            height: 16px; /* Smaller checkbox */
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            font-size: 12px; /* Adjusted checkmark size */
+        }
+
+        .profile-form .btn {
+            margin-top: 0px; /* Adjusted margin */
+            padding: 14px 30px; /* Adjusted button padding */
+            font-size: 17px; /* Adjusted button font size */
+        }
+        .corner-image-top-right{
+            top: -150px;
+        }
+        .corner-image-bottom-left {
+            bottom: -200px;
+        }
+    }
+
+
+    .content-wrapper{
+            gap: 0px;
+            align-items: center;
+            justify-content: center;
+            padding: 0px;
+            margin: 0px;
+            flex-direction: row;
+            display: flex;
+        }
+        body{
+            overflow-y: visible;
+        }
+        .container{
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .create-profile-page{
+            padding: 0px;
+            margin: 100px 0px;
+            gap: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+        }
+        .illustration img{
+            position: absolute;
+            bottom: unset;
+            left: unset;
+            top: 0px;
+            right: 0px;
+            transform: rotateY(180deg);
+        }
+        .profile-form-card{
+            margin: 0px auto;
+
+        }
+        .profile-form-card .input-row{
+            flex-direction: column;
+            width: 100%;
+        }
+        .profile-form-card .input-group {
+            width: 100%!important;
+            margin-bottom: 5px;
+            padding: 0px 15px 0px 0px;
+        }
+        .profile-form-card .input-group span{
+            padding: 12px 0px 12px 15px;
+        }
+        .corner-image-top-right{
+            top: -150px;
+        }
+        .corner-image-bottom-left {
+            bottom: -200px;
+        }

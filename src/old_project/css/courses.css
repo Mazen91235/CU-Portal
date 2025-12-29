@@ -1,0 +1,371 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  /* overflow-x: hidden; */
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF;
+}
+
+/* Content wrapper shifts right when sidebar is visible */
+#content-wrapper {
+  margin-left: 256px; /* Sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+#content-wrapper.sidebar-hidden {
+  margin-left: -20px !important;
+}
+
+#term-buttons {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+#header {
+  height: 140px;
+  width: 100%;
+  color: #FFFFFF;
+  background: linear-gradient(100deg, #5A0F61 60%, #980DA5 100%);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+#r-header {
+  display: flex;
+  padding-left: 20px;
+  flex-direction: column;
+}
+
+#r-header p {
+  color: #FFFFFFCC;
+  font-size: 16px;
+}
+
+#f-header p {
+  font-size: 14px;
+  color: #FFFFFFCC;
+}
+
+#f-header {
+  display: flex;
+  padding-right: 20px;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+#f-header p,
+#f-header h3 {
+  margin: 0;
+  line-height: 1;
+}
+
+.row {
+  margin-left: 10px;
+}
+
+.course {
+  width: 340px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.courses {
+  margin-top: -10px;
+}
+
+.eCourse {
+  color: #5A0F61 !important;
+  font-size: 12px;
+  border-radius: 9999px;
+  padding: 5px;
+  width: fit-content;
+  border: 1px solid #5E0B6633;
+  align-items: end;
+}
+
+.term-btn.active {
+  background-color: #5e0b6a;
+  color: white;
+}
+
+.term-btn {
+  margin: 10px;
+}
+
+.course-badge {
+  background-color: #ffffff;
+  color: #5e0b6a;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 11px;
+  border: 1.5px solid #5e0b6a;
+  align-items: center;
+  display: inline-flex;
+  height: 24px;
+  line-height: 1;
+}
+
+.view-course {
+  background-color: #5e0b6a;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.card-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.form-select {
+  color: #242428;
+  border: 1px #EAEAEC;
+  background-color: #F4F4F5;
+  border-radius: 6px;
+}
+
+.form-select:focus {
+  border-color: #F4F4F5;
+  box-shadow: none;
+  outline: none;
+}
+
+.input-group {
+  background-color: #F4F4F5;
+}
+
+.input-group-text:focus {
+  background-color: #F4F4F5;
+  box-shadow: none;
+  outline: none;
+}
+
+.form-control:focus {
+  background-color: #F4F4F5;
+  box-shadow: none;
+  outline: none;
+}
+
+/* New styles for course cards */
+.course-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(94, 11, 102, 0.15);
+  padding: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(94, 11, 102, 0.3);
+}
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4a4a4a;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+}
+
+.course-meta img {
+  width: 16px;
+  height: 16px;
+}
+
+.remove-btn {
+  background-color: #5e0b6a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: auto;
+}
+
+.remove-btn:hover {
+  background-color: #5e0b6a;
+  color: white;
+}
+.remove-btn:active {
+  background-color: #4a0851;
+  color: #fff;
+}
+
+.btn-purple {
+  background-color: #5e0b6a;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-purple:hover {
+  background-color: #5e0b6a;
+  color: white;
+}
+
+.icon-wrapper img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .row {
+    margin-left: 0 !important;
+    white-space: nowrap;
+  }
+  h5,
+  p,
+  span,
+  button {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  #c-num {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: -5px;
+  }
+  h4 {
+    font-size: 20px;
+  }
+  .bo {
+    width: 30px;
+  }
+  #term-buttons {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+  }
+}
+
+/* New styles for course card badges and info rows */
+.course-code-badge {
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-active {
+  background-color: #d1f7d1;
+  color: #2d7a2d;
+  border: 1.5px solid #2d7a2d;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1.5px solid #856404;
+}
+
+.status-default {
+  background-color: #e2e3e5;
+  color: #6c757d;
+  border: 1.5px solid #6c757d;
+}
+
+.status-badge {
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  display: inline-block;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.course-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.info-item {
+  background-color: #f0f8ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.info-item img {
+  width: 20px;
+  height: 20px;
+}
+
+.info-item span {
+  display: block;
+}
+
+.info-item .info-value {
+  font-weight: 700;
+  margin-left: auto;
+  color: #000;
+}
+
+/* Specific colors for info items */
+.info-item.year {
+  background-color: #e6f4ea;
+  color: #2d7a2d;
+}
+
+.info-item.credit-hour {
+  background-color: #fce8e6;
+  color: #a94442;
+}
+
+.info-item.rank {
+  background-color: #e6f0f8;
+  color: #31708f;
+}
+
+@media (max-width: 420px) {
+  #r-header p {
+    font-size: 16px;
+  }
+  #f-header p {
+    font-size: 12px;
+  }
+  #c-num {
+    font-size: 10px !important;
+    padding: 2px 4px !important;
+    margin-left: -2px;
+  }
+  h4 {
+    font-size: 18px;
+  }
+  .bo {
+    width: 25px;
+  }
+  #term-buttons {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+  }
+}

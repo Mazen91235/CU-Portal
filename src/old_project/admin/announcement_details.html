@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcement Details</title>
+    <link rel="stylesheet" href="../css/announcement_details.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: 1fr;
+            gap: 24px;
+            justify-content: center;
+            margin: 0 auto;
+            max-width: 1200px;
+            margin-bottom: 15px;
+        }
+
+        .parent .div1 {
+            grid-column: 1;
+            grid-row: 1;
+            border-color: #E5E7EB;
+            background: #fff;
+            width: 174px;
+            height: 126px;
+            padding: 22px;
+        }
+
+        .parent .div2 {
+            grid-column: 2;
+            grid-row: 1;
+            border-color: #E5E7EB;
+            background: #fff;
+            width: 174px;
+            height: 126px;
+            padding: 22px;
+        }
+
+        .parent .div3 {
+            grid-column: 3;
+            grid-row: 1;
+            border-color: #E5E7EB;
+            background: #fff;
+            width: 174px;
+            height: 126px;
+            padding: 22px;
+        }
+
+        .parent .div4 {
+            grid-column: 4;
+            grid-row: 1;
+            border-color: #E5E7EB;
+            background: #fff;
+            width: 174px;
+            height: 126px;
+            padding: 22px;
+        }
+
+        .parent .div5 {
+            grid-column: 5;
+            grid-row: 1;
+            border-color: #E5E7EB;
+            background: #fff;
+            width: 174px;
+            height: 126px;
+            padding: 22px;
+        }
+
+        @media (max-width: 1170px) {
+            .parent {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, auto);
+                gap: 24px;
+                justify-content: center;
+                margin: 0 auto;
+                max-width: 900px;
+            }
+
+            .parent .div1 {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .parent .div2 {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .parent .div3 {
+                grid-column: 3;
+                grid-row: 1;
+            }
+
+            .parent .div4 {
+                grid-column: 2;
+                grid-row: 2;
+            }
+
+            .parent .div5 {
+                grid-column: 3;
+                grid-row: 2;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .parent {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, auto);
+                gap: 16px;
+                max-width: 100%;
+            }
+
+            .parent .div1 {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .parent .div2 {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .parent .div3 {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .parent .div4 {
+                grid-column: 2;
+                grid-row: 2;
+            }
+
+            .parent .div5 {
+                grid-column: 1 / span 2;
+                grid-row: 3;
+                justify-self: center;
+            }
+        }
+    </style>
+</head>
+
+<body style="background-color: white">
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+
+        <!-- Task Details Section -->
+        <section class="task-details-section container" style="margin-top: 96px;">
+            <div class="task-details-header-row">
+                <div class="task-details-back-link-row">
+                    <a href="announcements.html" class="task-details-back-link">
+                        <i class="fa fa-arrow-left"></i> Back to announcements
+                    </a>
+                </div>
+                <span class="task-details-header-separator">|</span>
+                <div class="task-details-title-row">
+                    <h2 class="task-details-title"></h2>
+
+                </div>
+            </div>
+            <div class="parent">
+                <div class="div1">
+                    <div class="card1">
+                        <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                            <img src="../assets/book.svg" alt="Title Icon"
+                                style="width:24px;height:24px;margin-right:8px;">
+                            <div class="card1-label"
+                                style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Subject
+                            </div>
+                        </div>
+                        <div class="card1-content" style="margin-top:8px;">
+                            <div class="card1-value sub"
+                                style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div2">
+                    <div class="card1">
+                        <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                            <img src="../assets/ann4.png" alt="Title Icon"
+                                style="width:24px;height:24px;margin-right:8px;">
+                            <div class="card1-label"
+                                style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Author</div>
+                        </div>
+                        <div class="card1-content" style="margin-top:8px;">
+                            <div class="card1-value auth"
+                                style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div3">
+                    <div class="card1">
+                        <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                            <img src="../assets/ann5.png" alt="Title Icon"
+                                style="width:20px;height:20px;margin-right:8px;">
+                            <div class="card1-label"
+                                style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Faculty
+                            </div>
+                        </div>
+                        <div class="card1-content" style="margin-top:8px;">
+                            <div class="card1-value fac"
+                                style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div4">
+                    <div class="card1">
+                        <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                            <img src="../assets/ann5.png" alt="Title Icon"
+                                style="width:20px;height:20px;margin-right:8px;">
+                            <div class="card1-label"
+                                style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Department
+                            </div>
+                        </div>
+                        <div class="card1-content" style="margin-top:8px;">
+                            <div class="card1-value dep"
+                                style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div5">
+                    <div class="card1">
+                        <div class="card1-icon-label-row" style="display: flex; align-items: center;">
+                            <img src="../assets/ann5.png" alt="Title Icon"
+                                style="width:20px;height:20px;margin-right:8px;">
+                            <div class="card1-label"
+                                style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6B7280;">Year</div>
+                        </div>
+                        <div class="card1-content" style="margin-top:8px;">
+                            <div class="card1-value year"
+                                style="font-size: 18px; color: #020817; font-family: 'Roboto', sans-serif;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Details Description Section -->
+            <section class="task-details-desc-section container" style="background: #fff;">
+                <div class="task-details-desc-card" style="background: #fff;">
+                    <div class="task-details-desc-header" style="color: #6B7280;">
+                        <img src="../assets/task9.png" alt="Task Details Icon" class="task-details-desc-header-icon"
+                            style="width:22px;height:22px;">
+                        <span>Announcement Details</span>
+                    </div>
+                    <div class="task-details-desc-content">
+                        <div class="task-details-desc-title">Content</div>
+                        <div class="task-details-desc-body">
+                        </div>
+                        <div class="task-details-desc-title-row"
+                            style="display: flex; align-items: center; justify-content: space-between; margin-top:32px;">
+                            <div class="task-details-desc-title" style="margin: 0;">Attachments</div>
+                            <!--<button class="task-details-attachments-downloadall" style="color: #000000; border-color: #e5e7eb;">
+        <i class="fa fa-download"></i> Download All
+    </button>-->
+                        </div>
+                        <div class="files"></div>
+
+                        <div class="task-details-attachment-row"
+                            style="background-color: #F3F4F6; border: none;margin-bottom: 10px; margin-top: 10px;">
+                            <div class="attachment-icon" style="color: #000000;">
+                                <img src="../assets/task9.png" alt="Attachment" style="width:20px;height:20px;">
+                            </div>
+                            <div class="attachment-info">
+                                <div class="attachment-name" style="color: #000000;">assignment-template.zip</div>
+                                <div class="attachment-size" style="color: #6B7280;">1.2 MB</div>
+                            </div>
+                            <a href="#" class="attachment-download-btn" title="Download" style="color: #000;"><i
+                                    class="fa fa-download"></i></a>
+                        </div>
+                        <div class="task-details-attachment-row"
+                            style="background-color: #F3F4F6; border: none;margin-bottom: 10px; margin-top: 10px;">
+                            <div class="attachment-icon" style="color: #000;">
+                                <img src="../assets/task9.png" alt="Attachment" style="width:20px;height:20px;">
+                            </div>
+                            <div class="attachment-info">
+                                <div class="attachment-name" style="color: #000;">test-cases.txt</div>
+                                <div class="attachment-size" style="color: #6B7280;">45 KB</div>
+                            </div>
+                            <a href="#" class="attachment-download-btn" title="Download" style="color: #000;"><i
+                                    class="fa fa-download"></i></a>
+                        </div>
+                        <div class="task-details-desc-title" style="margin-top: 32px;">Attached links</div>
+                        <div class="task-details-desc-body"
+                            style="border: #E5E7EB 1px solid; border-radius: 8px; padding: 8px;background-color: #F3F4F6;">
+                            <div class="links"></div>
+                        </div>
+                    </div>
+            </section>
+            <!-- End Task Details Description Section -->
+
+    </div>
+
+
+    <div id="loadingOverlayContainer" class="d-none w-full h-full"
+        style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+    <div id="toast-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+    <script src="../js/loading.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/loadscreen.js"></script>
+    <script src="../js/admin_announcements.js"></script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const announcementId = urlParams.get("id");
+        let announcement;
+        async function fetchAnnouncement() {
+            showLoading();
+            const res = await getAnnouncement(announcementId);
+            if (res?.status === 'success') {
+                announcement = res.data;
+                renderAnnouncement(announcement);
+            }
+            else {
+                showToast("error", "Error", "Failed to fetch Announcement", "");
+
+            }
+        }
+
+
+        async function renderAnnouncement(announcement) {
+
+            // Title
+            document.querySelector(".task-details-title").textContent = announcement.title;
+
+            // Subject
+            document.querySelector(".sub").textContent = announcement.subject?.name || "N/A";
+            // Author
+            document.querySelector(".auth").textContent = announcement.author?.name || "N/A";
+            // Faculty
+            document.querySelector(".fac").textContent = announcement.faculty?.name || "N/A";
+            // Department
+            document.querySelector(".dep").textContent = announcement.department?.name || "N/A";
+            // Year
+            document.querySelector(".year").textContent = announcement.year.year || "N/A";
+            // Content
+            document.querySelector(".task-details-desc-body").innerHTML = announcement.content || "N/A";
+
+
+            // Attachments
+            const attachmentsContainer = document.querySelector(
+                ".task-details-desc-content"
+
+            );
+            const links = document.querySelector(".links");
+            announcement.links?.forEach(link => {
+                const linkRow = document.createElement("div");
+                linkRow.innerHTML = `
+    
+      <div style="
+    background: #f6f4f8;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    margin-bottom: 8px;
+    ">
+    <i class="fa fa-arrow-up-right-from-square" style="color: #7D677E; font-size: 1.1rem;"></i>
+    <a href="${link.url}" target="_blank" style="
+      color: #2B212C;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      ">
+${link.title}    </a>
+    
+  </div>
+    `;
+                links.appendChild(linkRow);
+            });
+
+            const files = document.querySelector(".files");
+            announcement.details.files_data?.forEach(file => {
+                const fileRow = document.createElement("div");
+                fileRow.className = "task-details-attachment-row";
+                fileRow.style.backgroundColor = "#F3F4F6";
+                fileRow.innerHTML = `
+    
+       <a href="${file.webViewLink ? file.webViewLink : ''}" 
+     target="_blank"  class="attachment-download-btn" title="Download">
+  <div class="attachment-icon">
+        <img src="../assets/task9.png" alt="Attachment" style="width:20px;height:20px;">
+      </div>
+      <div class="attachment-info">
+        <div class="attachment-name">${file.type}</div>
+        <div class="attachment-size">${file.size || ""}</div>
+      </div>
+      </a>
+    `;
+                files.appendChild(fileRow);
+            });
+
+
+
+
+
+
+
+
+            hideLoading();
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            showLoading();
+            await fetchAnnouncement();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,461 @@
+:root{
+    --bs-btn-hover-bg : #b02a37;
+    --bs-btn-hover-border-color: #b02a37;
+}
+body{
+   background-color: rgb(248, 250, 252);
+}
+
+.um-title-section {
+    background: linear-gradient(90deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px;
+    border-radius: 8px;
+    margin: 72px 24px 24px 24px;
+    text-align: left;
+    min-height: 110px;
+}
+.um-title {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.96px;
+    margin-bottom: 8px;
+}
+.um-subtitle {
+    color: #F8FAFC;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.add-years-btn {
+    background: #fff;
+    color: #7B1684;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 18px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    transition: background 0.2s, color 0.2s;
+    width: 132px;
+    height: 52px;
+    min-width: 132px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+/* .add-years-btn:hover, .year-card-actions > button:hover:not(.year-delete-btn), #yearPopupSaveBtn:hover { */
+    /* background: linear-gradient(90deg, #520E58,  #7B1684); */
+    /* color: #fff; */
+/* } */
+
+.year-delete-btn:active {
+           background: var(--bs-btn-hover-bg) !important;
+    border-color: var(--bs-btn-hover-border-color) !important;
+    color:#fff;
+}
+/* Filter Section */
+.years-filter-dropdown {
+    min-width: 220px;
+    width: 220px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin-left: auto;
+    margin-right: 32px;
+    background: none;
+    box-shadow: none;
+    justify-content: flex-end;
+}
+@media (max-width: 991px) {
+    .years-filter-dropdown {
+        margin: 0 auto 24px auto;
+        justify-content: center;
+        width: 100%;
+        max-width: 95vw;
+        min-width: 0;
+        display: flex;
+    }
+}
+
+/* Custom filter styles (like faculties/pending-page) */
+.custom-filter-container {
+    position: relative;
+    width: 340px;
+    font-family: 'Roboto', Arial, sans-serif;
+    margin-right: 0;
+    display: inline-block;
+    vertical-align: top;
+}
+.custom-filter {
+    display: flex;
+    align-items: center;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    height: 53px;
+    cursor: pointer;
+    padding: 0 16px 0 0;
+    min-width: 300px;
+    width: 340px;
+    font-size: 18px; /* decreased by 2px */
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    position: relative;
+    z-index: 999;
+    transition: box-shadow 0.15s, border-color 0.15s;
+}
+.custom-filter:hover,
+.custom-filter.open {
+    border-color: #7B1684 !important;
+    box-shadow: 0 0 0 2px #7B168433;
+}
+.custom-filter-label-value {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-top: 4px;
+    flex: 1 1 0;
+    min-width: 0;
+}
+.custom-filter-label {
+    color: #64748B;
+    font-size: 14px; /* decreased by 2px */
+    font-weight: 400;
+    margin-bottom: 0.5px;
+    text-align: left;
+    letter-spacing: 0.01em;
+}
+.custom-filter-value {
+    color: #22223B;
+    font-size: 16px; /* decreased by 2px */
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.custom-filter-arrow {
+    margin-left: 16px;
+    margin-right: 8px;
+    transition: transform 0.2s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.custom-filter.open .custom-filter-arrow {
+    transform: rotate(180deg);
+}
+.custom-dropdown-list {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #7B1684 !important;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    z-index: 99999;
+    margin-top: 4px;
+    padding: 0;
+    list-style: none;
+    display: none;
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 16px; /* decreased by 2px */
+    min-width: 340px;
+    width: 340px;
+}
+.custom-filter.open + .custom-dropdown-list {
+    display: block;
+}
+.custom-dropdown-list li {
+    padding: 14px 0 14px 14px;
+    margin: 0;
+    cursor: pointer;
+    color: #374151;
+    overflow: hidden;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+.custom-dropdown-list li:hover,
+.custom-dropdown-list li.active {
+    background: #f3f3f3;
+    color: #7B1684;
+    font-weight: 500;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* Cards Section */
+.year-card {
+    background: #fff !important;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 32px 18px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 220px;
+    transition: box-shadow 0.2s;
+}
+.year-card:hover {
+    box-shadow: 0 4px 16px rgba(123, 22, 132, 0.12);
+}
+.year-card-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.year-card-avatar img {
+    object-fit: contain;
+}
+.year-card-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+}
+.year-card-actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 24px;
+}
+.year-delete-btn {
+        flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #DC2626;
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-style:normal;
+    background: transparent;
+    color: red;
+    font-family: Roboto, sans-serif;
+    transition: background 0.2s, color 0.2s;
+    text-transform: capitalize;
+    box-shadow: none;
+    text-align: center;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+}
+.year-edit-btn{
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 8px;
+    padding: 8px 0;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    background: #7B1684;
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: none;
+    text-align: center;
+    /* Remove horizontal padding so both buttons are equal width */
+}
+
+/* Custom Card Styles */
+.custom-year-card {
+    border: 2px solid #F9E6EF; /* light pink border */
+    box-shadow: none;
+    background: #fff;
+}
+
+.custom-year-card-avatar {
+    background: #FDECF3 !important; /* light pink circle */
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.custom-year-card-avatar img {
+    object-fit: contain;
+    filter: invert(17%) sepia(77%) saturate(747%) hue-rotate(265deg) brightness(90%) contrast(90%);
+    /* This filter gives a purple-like color to black SVGs/icons */
+}
+
+/* Cards grid margin */
+#yearsCardsGrid {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Orange theme for first card */
+.orange-year-card {
+    border: 2px solid #FFE6C7;
+    background: #FFF7ED;
+    box-shadow: none;
+}
+.orange-year-card-avatar {
+    background: #FFE6C7 !important;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.orange-year-card-avatar img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: none;
+}
+
+/* Gray theme for other cards */
+.gray-year-card {
+    border: 2px solid #E2E8F0;
+    background: #F8FAFC;
+    box-shadow: none;
+}
+.gray-year-card-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.gray-year-card-avatar img {
+    object-fit: contain;
+    filter: none;
+}
+
+/* Responsive grid for cards */
+@media (max-width: 991px) {
+    .year-card {
+        min-height: 200px;
+    }
+}
+@media (max-width: 767px) {
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-top: 48px; /* changed from 120px to 48px */
+        margin-right: 0;
+        border-radius:0 ;
+    }
+    .year-card {
+        min-height: 180px;
+    }
+    .year-card-title {
+        font-size: 22px;
+    }
+    .year-card-avatar {
+        width: 48px;
+        height: 48px;
+    }
+    .year-card-avatar img {
+        width: 28px;
+        height: 28px;
+    }
+    .year-edit-btn, .year-delete-btn {
+        padding: 8px 18px;
+        font-size: 15px;
+    }
+}
+
+/* Add Years Button - Mobile and Desktop */
+.um-title-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.add-years-btn-desktop {
+    display: flex;
+}
+
+.add-years-btn-mobile {
+    display: none;
+    margin-top: 18px;
+    align-self: flex-start;
+}
+
+@media (max-width: 756px) {
+    .add-years-btn-desktop {
+        display: none !important;
+    }
+    .add-years-btn-mobile {
+        display: flex !important;
+    }
+}
+
+/* Filter dropdown container */
+.years-filter-dropdown {
+    min-width: 320px;
+    width: 420px;
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+/* Filter button wider */
+.filter-btn {
+    width: 100%;
+    min-width: 320px;
+    max-width: 420px;
+}
+
+/* Responsive: center filter on small screens */
+@media (max-width: 991px) {
+    .years-filter-dropdown {
+        margin: 0 auto 24px auto !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 95vw !important;
+        min-width: 0 !important;
+        display: flex !important;
+    }
+    .filter-btn {
+        width: 100%;
+        min-width: 0;
+        max-width: 95vw;
+    }
+}
+
+/* Responsive: center and full width on small screens */
+@media (max-width: 991px) {
+    .years-filter-dropdown,
+    .custom-filter-container,
+    .custom-filter,
+    .custom-dropdown-list {
+        width: 95vw !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+    }
+    .custom-filter {
+        font-size: 16px;
+    }
+    .custom-dropdown-list {
+        font-size: 16px;
+    }
+}
+
+
+

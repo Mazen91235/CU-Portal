@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exams management</title>
+  <link rel="stylesheet" href="../css/exam.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/toasts.css">
+  <link rel="stylesheet" href="../components/navbar.html">
+  <link rel="stylesheet" href="../components/sidebar.html">
+  <link rel="stylesheet" href="../components/toasts.html">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!-- Small CSS to reproduce the requested look (search full-width gray, filters row gray, date buttons with left calendar icon) -->
+  <style>
+    /* container adjustments */
+    .tasks-filters-container {
+      background: transparent;
+    }
+
+    /* Search wrapper (row 1) */
+    .tasks-search-wrapper {
+      position: relative;
+    }
+    .tasks-search-wrapper input:focus {
+      outline: none;
+      border-color: #5a0f61 !important ;
+      box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1) !important;
+    }
+    .tasks-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      /* gray-500 */
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .tasks-search-input {
+      /* gray-100 */
+      border: 1px solid #e6e9ee;
+      /* subtle border */
+      border-radius: 10px;
+      height: 44px;
+      padding-left: 40px;
+      padding-right: 12px;
+      color: #374151;
+      /* gray-700 */
+      box-shadow: 0 0 0 0 transparent;
+    }
+
+    .tasks-search-input:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+      /* subtle blue focus */
+      outline: none;
+      border-color: #dbeafe;
+    }
+
+    /* Filters row */
+    .tasks-filter-dropdown,
+    .date-field {
+      height: 38px;
+      background: #f3f4f6;
+      /* gray-100 */
+      border: 1px solid #e6e9ee;
+      border-radius: 10px;
+      color: #111827;
+      /* dark text */
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .tasks-filter-dropdown {
+      /* bootstrap form-select resets, so override */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: none;
+    }
+
+    .tasks-filter-dropdown:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.06);
+    }
+
+    /* Date field visuals: icon left + label */
+    .date-field {
+      position: relative;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .date-field i {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .date-field .date-label {
+      color: #4b5563;
+      /* gray-600 */
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    /* Native date input sits on top but invisible (clicks will hit it) */
+    .date-field input[type="date"].native-date {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    /* Dropdown arrow rotation */
+    .dropdown-arrow-wrapper {
+      position: relative;
+    }
+
+    .dropdown-arrow {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-size: 14px;
+      pointer-events: none;
+      transition: transform 0.2s;
+    }
+
+    .dropdown-arrow.rotated {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 767.98px) {
+
+      .tasks-filter-dropdown,
+      .date-field {
+        min-width: 100%;
+      }
+    }
+
+    /* Task card badge icon size */
+    .task-card-badge-icon {
+      width: 12px !important;
+      height: 12px !important;
+      object-fit: contain;
+    }
+
+    /* Custom dropdown styles for search demo (match pending-request.html) */
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      z-index: 5;
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    /* Faculty Filter CSS */
+    .custom-filter-container {
+      position: relative;
+      width: 100%;
+      /* flexible width for grid */
+      font-family: 'Roboto', Arial, sans-serif;
+      margin-right: 0;
+      display: block;
+      vertical-align: top;
+    }
+
+    .custom-filter {
+      display: flex;
+      align-items: center;
+      background: #f3f4f6;
+      /* match date picker bg */
+      border: 1px solid #e6e9ee;
+      border-radius: 10px;
+      /* match date picker radius */
+      height: 38px;
+      /* match date picker height */
+      cursor: pointer;
+      padding: 0 16px 0 0;
+      min-width: 0;
+      /* allow shrink/grow */
+      box-shadow: none;
+      /* remove shadow for consistency */
+      position: relative;
+
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .custom-filter-label-value {
+      display: flex;
+      flex-direction: column;
+      margin-left: 12px;
+      /* decreased from 30px */
+      margin-top: 4px;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .custom-filter-label {
+      color: #64748B;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 0.5px;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+
+    .custom-filter-value {
+      color: #22223B;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-filter-arrow {
+      margin-left: 8px;
+      margin-right: 0 !important;
+      /* force no right margin */
+      transition: transform 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-filter-arrow svg {
+      margin-right: 0 !important;
+      /* ensure SVG is flush right */
+    }
+
+    .custom-filter.open .custom-filter-arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown-list {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #7B1684;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+      /*z-index: 99999;*/
+      margin-top: 4px;
+      padding: 0;
+      list-style: none;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    .custom-filter.open+.custom-dropdown-list {
+      display: block;
+    }
+
+    .custom-dropdown-list li {
+      padding: 14px 0 14px 14px;
+      margin: 0;
+      cursor: pointer;
+      color: #374151;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .custom-dropdown-list li:hover,
+    .custom-dropdown-list li.active {
+      background: #f3f3f3;
+      color: #7B1684;
+      font-weight: 500;
+    }
+
+    /* Responsive: let filters and date pickers fill row equally */
+    @media (min-width: 768px) {
+      .tasks-filters-section .row>[class*="col-md-2"] {
+        flex: 1 1 0;
+        max-width: none;
+      }
+    }
+
+    /* Stack filters vertically below 995px */
+    @media (max-width: 995px) {
+      .tasks-filters-section .row.g-2>[class*="col-"] {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: rgb(248, 250, 252);">
+  <div id="sidebar-container"></div>
+  <div id="content-wrapper" class="sidebar-hidden">
+    <div id="navbar-container" class="fixed-top"></div>
+
+    <section class="tasks-banner" style="margin-top: 72px;">
+      <div class="tasks-banner-content container">
+        <div class="tasks-banner-icon">
+          <img src="../assets/exam1.png" alt="Tasks Icon" class="tasks-banner-img">
+        </div>
+        <div class="tasks-banner-text">
+          <h2>Manage Exams</h2>
+          <p>Organise and track all examination schedules</p>
+        </div>
+        <button class="add-task-btn" onclick="window.location.href='/admin/create_exam.html'">
+          <i class="fa fa-plus"></i> Add New Exam
+        </button>
+      </div>
+    </section>
+
+    <!-- Filters Section (REPLACED) -->
+    <section class="tasks-filters-section">
+      <div class="tasks-filters-container container py-3">
+        <!-- Row 1: full-width search -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="tasks-search-wrapper" style="position:relative;">
+              <span class="tasks-search-icon"><i class="fa fa-search"></i></span>
+              <input type="text" class="form-control tasks-search-input" placeholder="Search Exams " id="searchInput" />
+              <!-- Demo dropdown for search -->
+              <!-- <ul class="custom-dropdown-list" id="searchDemoDropdown"
+                style="position:absolute; left:0; top:100%; width:100%; z-index:10000; display:none;">
+                <li data-value="demo1">Demo 1</li>
+                <li data-value="demo2">Demo 2</li>
+                <li data-value="demo3">Demo 3</li>
+                <li data-value="demo4">Demo 4</li>
+                <li data-value="demo5">Demo 5</li>
+              </ul> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: 4 custom filters + Start Date + End Date -->
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-2">
+            <!-- Faculty Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customFacultyFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Faculty</span>-->
+                  <span class="custom-filter-value" id="customFacultyValue">All Faculties</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customFacultyDropdown">
+                <li class="active" data-value="">All Faculties</li>
+                <li data-value="engineering">Engineering</li>
+                <li data-value="science">Science</li>
+                <li data-value="business">Business</li>
+                <li data-value="medicine">Medicine</li>
+                <li data-value="pharmacy">Pharmacy</li>
+                <li data-value="law">Law</li>
+              </ul>
+              <input type="hidden" name="faculty" id="faculty_hidden" value="">
+            </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <!-- Department Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customDepartmentFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Department</span>-->
+                  <span class="custom-filter-value" id="customDepartmentValue">All Departments</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customDepartmentDropdown">
+                <li class="active" data-value="">All Departments</li>
+                <li data-value="cs">Computer Science</li>
+                <li data-value="ee">Electrical Engineering</li>
+                <li data-value="me">Mechanical Engineering</li>
+                <li data-value="bio">Biology</li>
+                <li data-value="chem">Chemistry</li>
+                <li data-value="math">Mathematics</li>
+              </ul>
+              <input type="hidden" name="department" id="department_hidden" value="">
+            </div>
+          </div>
+          <div class="col-12 col-md-2">
+            <!-- Subject Filter -->
+            <div class="custom-filter-container">
+              <div class="custom-filter" id="customSubjectFilter">
+                <div class="custom-filter-label-value">
+                  <!--<span class="custom-filter-label">Subject</span>-->
+                  <span class="custom-filter-value" id="customSubjectValue">All Subjects</span>
+                </div>
+                <span class="custom-filter-arrow">
+                  <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M9 13L16 20L23 13" stroke="rgb(173, 173, 173)" stroke-width="3" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <ul class="custom-dropdown-list" id="customSubjectDropdown">
+                <li class="active" data-value="">All Subjects</li>
+                <li data-value="ds">Data Structures</li>
+                <li data-value="algo">Algorithms</li>
+                <li data-value="db">Database Systems</li>
+                <li data-value="web">Web Development</li>
+                <li data-value="ai">Artificial Intelligence</li>
+              </ul>
+              <input type="hidden" name="subject" id="subject_hidden" value="">
+            </div>
+          </div>
+
+          <!-- Start Date custom field -->
+
+
+          <!-- End Date custom field -->
+          <div class="col-12 col-md-2">
+            <div class="date-field" role="button" tabindex="0" aria-label="Date">
+              <i class="fa fa-calendar"></i>
+              <span class="date-label">Date</span>
+              <input type="date" id="DateFilter" class="native-date" name="date" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Filters Section -->
+
+    <!-- Tasks Cards Section -->
+    <section class="tasks-cards-section">
+      <div class="container">
+        <div class="row g-4 exams">
+          <!-- Card 1 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Operating Systems</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 301</span>
+                <span class="exam-badge">Multiple Choice</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Mon 2:00 PM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn"><i class="far fa-eye"></i>View Details</button>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Database Systems</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 320</span>
+                <span class="exam-badge">MCQs</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Tue 10:00 AM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn"><i class="far fa-eye"></i>View Details</button>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Software Engineering</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 315</span>
+                <span class="exam-badge">Oral</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Mon 9:00 AM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn">View Details</button>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Operating Systems</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 301</span>
+                <span class="exam-badge">Multiple Choice</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Mon 2:00 PM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn">View Details</button>
+            </div>
+          </div>
+          <!-- Card 5 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Database Systems</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 320</span>
+                <span class="exam-badge">MCQs</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Tue, 10:00 AM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn">View Details</button>
+            </div>
+          </div>
+          <!-- Card 6 -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="exam-card">
+              <div class="exam-card-header">
+                <span class="exam-card-title">Software Engineering</span>
+                <span class="exam-card-menu">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
+              </div>
+              <div class="exam-card-badges-row">
+                <span class="exam-badge">CS 315</span>
+                <span class="exam-badge">Oral</span>
+              </div>
+              <div class="exam-card-details">
+                <div class="exam-card-detail">
+                  <i class="fa fa-calendar"></i>
+                  <span>Mon, 9:00 AM</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-location-dot"></i>
+                  <span>Math Building, Room 301</span>
+                </div>
+                <div class="exam-card-detail">
+                  <i class="fa fa-clock"></i>
+                  <span>2 hours</span>
+                </div>
+              </div>
+              <button class="exam-card-btn">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Tasks Cards Section -->
+
+    <!-- ...other sections can go here... -->
+    <br><br>
+    <!-- Pagination -->
+    <div class="pending-pagination-container" style="margin-bottom: 30px; text-align: right;">
+      <button class="pending-page-btn" data-page="<" id="prevPage">
+        <</button>
+          <button disabled class="pending-page-btn active" data-page="1" id="pageInput">1</button>
+          <button class="pending-page-btn" data-page=">" id="nextPage">></button>
+    </div>
+  </div>
+  <div id="loadingOverlayContainer" class="d-none w-full h-full"
+    style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed;z-index: 999999999999;"></div>
+  <div id="toast-container"></div>
+  <!-- small JS: make sure entire custom date-field opens the native picker (showPicker when available) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+
+  <script src="../js/loading.js"></script>
+  <script src="../js/script.js"></script>
+  <script src="../js/toast.js"></script>
+  <script src="../js/loadscreen.js"></script>
+  <script src="../js/admin-exams.js"></script>
+  <!-- small JS: make sure entire custom date-field opens the native picker (showPicker when available) -->
+  <script>
+    document.querySelectorAll('.date-field').forEach(container => {
+      const input = container.querySelector('input[type="date"].native-date');
+
+      // If input exists, try to open the picker when clicking the container
+      container.addEventListener('click', (e) => {
+        // prevent double focus if click actually landed on the input itself
+        if (!input) return;
+        if (typeof input.showPicker === 'function') {
+          // modern browsers (Chromium)
+          try {
+            input.showPicker();
+          } catch (err) {
+            // fallback
+            input.focus();
+            input.click();
+          }
+        } else {
+          // fallback for other browsers
+          input.focus();
+          input.click();
+        }
+      });
+
+      // keyboard accessibility: Enter or Space should open picker
+      container.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          if (input) {
+            if (typeof input.showPicker === 'function') input.showPicker();
+            else { input.focus(); input.click(); }
+          }
+        }
+      });
+
+      // Optional: when a date is selected, you can update the label text.
+      // If you want that behavior, uncomment below:
+
+      input.addEventListener('change', () => {
+        const val = input.value; // format: yyyy-mm-dd
+        if (val) {
+          const d = new Date(val);
+          const opts = { year: 'numeric', month: 'short', day: 'numeric' };
+          container.querySelector('.date-label').textContent = d.toLocaleDateString(undefined, opts);
+        } else {
+          // reset label if cleared
+          // container.querySelector('.date-label').textContent = container.getAttribute('aria-label');
+        }
+      });
+
+    });
+
+    // Dropdown arrow rotation
+    document.querySelectorAll('.dropdown-arrow-wrapper').forEach(wrapper => {
+      const select = wrapper.querySelector('select');
+      const arrow = wrapper.querySelector('.dropdown-arrow');
+      select.addEventListener('focus', () => {
+        arrow.classList.add('rotated');
+      });
+      select.addEventListener('blur', () => {
+        arrow.classList.remove('rotated');
+      });
+    });
+    (function () {
+      const url = new URL(window.location.href);
+      const cacheBuster = `cb=${new Date().getTime()}`;
+
+      // If URL already has a cache-buster, don't repeat
+      if (!url.searchParams.has('cb')) {
+        url.searchParams.set('cb', cacheBuster);
+        window.location.replace(url.toString());
+      }
+    })();
+
+    // Search input dropdown demo logic
+    // const searchInput = document.getElementById('searchInput');
+    // const searchDemoDropdown = document.getElementById('searchDemoDropdown');
+    // searchInput.addEventListener('focus', function () {
+    // searchDemoDropdown.style.display = 'block';
+    // });
+    // searchInput.addEventListener('blur', function () {
+    //   setTimeout(() => { searchDemoDropdown.style.display = 'none'; }, 120);
+    // });
+    // searchDemoDropdown.addEventListener('mousedown', function (e) {
+    //   if (e.target.tagName === 'LI') {
+    //     searchInput.value = e.target.textContent;
+    //     searchDemoDropdown.style.display = 'none';
+    //     searchInput.blur();
+    //   }
+    // });
+
+
+    async function setupCustomFilter(
+      filterId,
+      dropdownId,
+      valueId,
+      hiddenId,
+      fetchFn,
+      defaultLabel = "All"
+    ) {
+      const filter = document.getElementById(filterId);
+      const dropdown = document.getElementById(dropdownId);
+      const valueSpan = document.getElementById(valueId);
+      const hiddenInput = document.getElementById(hiddenId);
+
+      try {
+        const res = await fetchFn(); // Expected: { data: [{ id, name }, ...] }
+
+        if (res?.data && Array.isArray(res.data)) {
+          // Reset dropdown
+          dropdown.innerHTML = `<li class="active" data-value="">${defaultLabel}</li>`;
+
+          // Append dynamic items
+          res.data.forEach(item => {
+            dropdown.innerHTML += `
+          <li data-value="${item.id}">${item.name}</li>
+        `;
+          });
+        }
+
+        // ---- Dropdown toggle logic ----
+        filter.addEventListener("click", function (e) {
+          filter.classList.toggle("open");
+          dropdown.style.display = filter.classList.contains("open") ? "block" : "none";
+          e.stopPropagation();
+        });
+
+        dropdown.addEventListener("mousedown", function (e) {
+          if (e.target.tagName === "LI") {
+            // Remove active from all
+            dropdown.querySelectorAll("li").forEach(li => li.classList.remove("active"));
+            e.target.classList.add("active");
+
+            // Update label + hidden input
+            valueSpan.textContent = e.target.textContent;
+            hiddenInput.value = e.target.getAttribute("data-value");
+
+            // Close dropdown
+            filter.classList.remove("open");
+            dropdown.style.display = "none";
+
+            if (typeof filterExams === "function") {
+              filterExams();
+            }
+          }
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!filter.contains(e.target) && !dropdown.contains(e.target)) {
+            filter.classList.remove("open");
+            dropdown.style.display = "none";
+          }
+        });
+      } catch (error) {
+        showToast("error", "Error", `Could not load ${defaultLabel.toLowerCase()}s`, "");
+      }
+    }
+
+
+    let Exams = [];
+    let currentPage = 1;
+    let totalPages = 1;
+    const limit = 40;
+    async function fetchExams(page = 1) {
+
+      showLoading();
+      await setupCustomFilter(
+        "customFacultyFilter",
+        "customFacultyDropdown",
+        "customFacultyValue",
+        "faculty_hidden",
+        searchFaculties,
+        "All Faculties"
+      );
+
+      // Department filter
+      await setupCustomFilter(
+        "customDepartmentFilter",
+        "customDepartmentDropdown",
+        "customDepartmentValue",
+        "department_hidden",
+        searchDepartments,
+        "All Departments"
+      );
+
+      // Subject filter
+      await setupCustomFilter(
+        "customSubjectFilter",
+        "customSubjectDropdown",
+        "customSubjectValue",
+        "subject_hidden",
+        searchCourses,
+        "All Subjects"
+      );
+      const res = await getExams({ page, limit });
+      if (res?.status === 'success') {
+        Exams = res.data;
+        // update page state
+        currentPage = page;
+
+        // if backend says "next = false", this is last page
+        totalPages = res.next ? page + 1 : page;
+
+        renderExams(Exams);
+        updatePaginationUI();
+
+
+      }
+      else {
+        showToast("error", "Error", "Failed to fetch Exams", "");
+
+      }
+    }
+
+    function updatePaginationUI() {
+      const prevBtn = document.getElementById("prevPage");
+      const nextBtn = document.getElementById("nextPage");
+      const pageInput = document.getElementById("pageInput");
+
+      pageInput.textContent = currentPage;
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = !Exams.length || currentPage === totalPages;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+      if (currentPage > 1) fetchExams(currentPage - 1);
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+      if (currentPage < totalPages) fetchExams(currentPage + 1);
+    });
+
+
+
+
+
+
+
+
+
+    async function renderExams(list = Exams) {
+      const container = document.querySelector(".exams");
+      container.innerHTML = "";
+
+      for (let e of list) {
+
+
+        container.innerHTML += `
+
+
+
+  <div class="col-12 col-md-6 col-lg-4">
+                        <div class="exam-card">
+                            <div class="exam-card-header">
+                                <span class="exam-card-title">${e.name}</span>
+                                <span class="exam-card-menu">
+ <span class="menu-dots"><i class="fas fa-ellipsis-v e-menu" data-idx="${e.id}"></i>  <div class="e-dropdown hidden">
+    <div class="e-dropdown-item edit-e" data-idx="${e.id}"> <i class="fas fa-edit me-2" ></i>Edit</div>
+    <div class="e-dropdown-item delete-e" data-idx="${e.id}"><i class="fas fa-trash-alt me-2"></i>Delete</div>
+  </div></span>                                </span>
+                            </div>
+                            <div class="exam-card-badges-row">
+                                <span class="exam-badge">${e.subject.code}</span>
+                                <span class="exam-badge">${e.details.exam_format
+          }</span>
+                            </div>
+                            <div class="exam-card-details">
+                                <div class="exam-card-detail">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>${e.due_date
+          }</span>
+                                </div>
+                                <div class="exam-card-detail">
+                                    <i class="fa fa-location-dot"></i>
+                                    <span>${e.details.location
+          }</span>
+                                </div>
+                                <div class="exam-card-detail">
+                                    <i class="fa fa-clock"></i>
+                                    <span>${e.details.duration
+
+          }</span>
+                                </div>
+                            </div>
+                            <button onclick="window.location.href='/admin/exam_details.html?id=${e.id}'" class="exam-card-btn"><i class="far fa-eye"></i> View Details</button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+`;
+      }
+
+      document.querySelectorAll(".e-menu").forEach(icon => {
+        icon.onclick = e => {
+          e.stopPropagation();
+          const dropdown = e.currentTarget.nextElementSibling;
+          if (!dropdown) return;
+
+          // Close other dropdowns
+          document.querySelectorAll(".e-dropdown").forEach(menu => {
+            if (menu !== dropdown) menu.classList.add("hidden");
+          });
+
+          // Toggle current
+          dropdown.classList.toggle("hidden");
+        };
+      });
+
+
+      // Close when clicking outside
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".e-dropdown").forEach(menu => menu.classList.add("hidden"));
+      });
+
+
+
+      document.querySelectorAll(".edit-e").forEach(btn => {
+        btn.onclick = async e => {
+          const idx = e.target.getAttribute("data-idx");
+          window.location.href = `/admin/edit_exam.html?id=${idx}`;
+        }
+      });
+
+      document.querySelectorAll(".delete-e").forEach(btn => {
+        btn.onclick = async e => {
+          const idx = e.target.getAttribute("data-idx");
+          showPopup(
+            'confirm',
+            'Delete Exam',
+            `Are you sure you want to delete this exam?`,
+            async () => {
+              await deleteExam(idx);
+              closePopup();
+              fetchExams();
+
+            }
+          );
+          fetchExams();
+        };
+      });
+
+
+
+
+
+
+      hideLoading();
+
+
+    }
+
+
+    async function filterExams() {
+      const searchVal = document.getElementById("searchInput").value.toLowerCase();
+
+      // Use hidden inputs from custom filters
+      const facultyVal = document.getElementById("faculty_hidden").value;
+      const departmentVal = document.getElementById("department_hidden").value;
+      const subjectVal = document.getElementById("subject_hidden")?.value || "";
+      const DateVal = document.getElementById("DateFilter").value;
+
+      let filtered = Exams;
+
+      // ---- Apply filters ----
+      if (facultyVal) {
+        filtered = filtered.filter(e => e.faculty.id == facultyVal);
+      }
+
+      if (searchVal) {
+        filtered = filtered.filter(e =>
+          e.faculty.name.toLowerCase().includes(searchVal) ||
+          (e.name || "").toLowerCase().includes(searchVal) ||
+          e.department.name.toLowerCase().includes(searchVal) ||
+          e.subject.code.toLowerCase().includes(searchVal)
+        );
+      }
+
+      if (departmentVal) {
+        filtered = filtered.filter(e => e.department.id == departmentVal);
+      }
+
+
+
+      if (subjectVal) {
+        filtered = filtered.filter(e => e.subject.id == subjectVal);
+      }
+      if (DateVal) {
+
+        filtered = filtered.filter(e => {
+          if (!e.due_date) return false;
+
+          // Convert "DD-MM-YYYY" → "YYYY-MM-DD"
+          const [day, month, year] = e.due_date.split("-");
+          const normalized = `${year}-${month}-${day}`;
+
+          return normalized === DateVal;
+        });
+      }
+
+      // Render results
+      renderExams(filtered);
+    }
+
+
+
+
+
+    document.getElementById("DateFilter").addEventListener("change", filterExams);
+
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      filterExams();
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      showLoading();
+      await fetchExams();
+    });
+
+
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/loading.js"></script>
+</body>
+
+</html>

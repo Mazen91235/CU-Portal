@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React & TypeScript Workshop - Event Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #5a0f61;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .header-icon i {
+      font-size: 1.5rem;
+    }
+    
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb a {
+      color: #5a0f61;
+      text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    
+    .breadcrumb .separator {
+      margin: 0 0.5rem;
+      color: #999;
+    }
+    
+    .breadcrumb .current {
+      color: #666;
+    }
+    
+    /* Event Header */
+    .event-header {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      height: 300px;
+    }
+    
+    .event-header-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .event-header-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem;
+      color: white;
+    }
+    
+    .event-category {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      align-self: flex-start;
+    }
+    
+    .event-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .event-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    /* Event Content */
+    .event-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+    
+    /* Event Details */
+    .event-details {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .event-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .info-content {
+      flex: 1;
+    }
+    
+    .info-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+      font-weight: 500;
+    }
+    
+    .event-description {
+      margin-bottom: 2rem;
+    }
+    
+    .description-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .description-text {
+      line-height: 1.8;
+      color: #555;
+    }
+    
+    /* Event Sidebar */
+    .event-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .event-creator, .quick-actions {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .creator-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .creator-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #5a0f61;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+    
+    .creator-details {
+      flex: 1;
+    }
+    
+    .creator-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .creator-role {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    /* Button Styles */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: #5a0f61;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4a0c51;
+    }
+    
+    .btn-secondary {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e9ecef;
+    }
+    
+    .btn-block {
+      width: 100%;
+    }
+    
+    /* Attachments Section */
+    .attachments {
+      margin-top: 2rem;
+    }
+    
+    .attachments-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .attachment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .attachment-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .attachment-item:hover {
+      border-color: #5a0f61;
+      background-color: rgba(90, 15, 97, 0.05);
+    }
+    
+    .attachment-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: rgba(90, 15, 97, 0.1);
+      color: #5a0f61;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .attachment-info {
+      flex: 1;
+    }
+    
+    .attachment-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .attachment-size {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    
+    .attachment-download {
+      color: #5a0f61;
+      cursor: pointer;
+    }
+    
+    /* Participants Section */
+    .participants {
+      margin-top: 2rem;
+    }
+    
+    .participants-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .participants-count {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    .participants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    
+    .participant {
+      text-align: center;
+    }
+    
+    .participant-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #5a0f61;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 auto 0.5rem;
+    }
+    
+    .participant-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .event-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .event-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .header-left {
+        margin-bottom: 1rem;
+      }
+      
+      .user-info {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .event-title {
+        font-size: 2rem;
+      }
+      
+      .participants-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+      
+      .participant-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <div>
+        <div class="title">Campus Activities</div>
+        <div class="subtitle">Discover and join exciting events</div>
+      </div>
+    </div>
+    <div class="user-info">
+      Welcome back,<br />
+      Mohamed Ali
+    </div>
+  </header>
+  
+  <main class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <a href="campus-activities.html">Campus Activities</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">Event Details</span>
+    </div>
+    
+    <!-- Event Header -->
+    <div class="event-header">
+      <img src="https://picsum.photos/seed/react-workshop/1200/300.jpg" alt="React & TypeScript Workshop" class="event-header-image">
+      <div class="event-header-overlay">
+        <span class="event-category">Workshop</span>
+        <h1 class="event-title">React & TypeScript Workshop</h1>
+        <p class="event-subtitle">Learn modern React development with TypeScript</p>
+      </div>
+    </div>
+    
+    <!-- Event Content -->
+    <div class="event-content">
+      <!-- Event Details -->
+      <div class="event-details">
+        <h2 class="section-title">Event Details</h2>
+        
+        <div class="event-info-grid">
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Date</div>
+              <div class="info-value">Sunday, March 10, 2024</div>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Time</div>
+              <div class="info-value">14:00 - 17:00</div>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Location</div>
+              <div class="info-value">Online Event</div>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Participants</div>
+              <div class="info-value">45 Registered</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="event-description">
+          <h3 class="description-title">Description</h3>
+          <p class="description-text">
+            Join us for an intensive workshop on React and TypeScript! This hands-on session will cover the fundamentals of building modern web applications with React and TypeScript. You'll learn about component architecture, state management, hooks, and how to leverage TypeScript's static typing to build more robust applications.
+          </p>
+          <p class="description-text">
+            The workshop is designed for developers with basic JavaScript knowledge who want to expand their skills in modern frontend development. We'll start with the basics and gradually move to more advanced topics, ensuring that everyone can follow along regardless of their prior experience with React or TypeScript.
+          </p>
+        </div>
+        
+        <div class="attachments">
+          <h3 class="attachments-title">Attachments & Links</h3>
+          <div class="attachment-list">
+            <div class="attachment-item">
+              <div class="attachment-icon">
+                <i class="fas fa-file-archive"></i>
+              </div>
+              <div class="attachment-info">
+                <div class="attachment-name">Workshop Materials.zip</div>
+                <div class="attachment-size">12.4 MB</div>
+              </div>
+              <div class="attachment-download">
+                <i class="fas fa-download"></i>
+              </div>
+            </div>
+            
+            <div class="attachment-item">
+              <div class="attachment-icon">
+                <i class="fas fa-code-branch"></i>
+              </div>
+              <div class="attachment-info">
+                <div class="attachment-name">Code Repository</div>
+                <div class="attachment-size">GitHub Link</div>
+              </div>
+              <div class="attachment-download">
+                <i class="fas fa-external-link-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="participants">
+          <div class="participants-title">
+            Participants <span class="participants-count">(45)</span>
+          </div>
+          <div class="participants-grid">
+            <div class="participant">
+              <div class="participant-avatar">MA</div>
+              <div class="participant-name">Mohamed Ali</div>
+            </div>
+            <div class="participant">
+              <div class="participant-avatar">SJ</div>
+              <div class="participant-name">Sarah Johnson</div>
+            </div>
+            <div class="participant">
+              <div class="participant-avatar">DW</div>
+              <div class="participant-name">David Wilson</div>
+            </div>
+            <div class="participant">
+              <div class="participant-avatar">EB</div>
+              <div class="participant-name">Emma Brown</div>
+            </div>
+            <div class="participant">
+              <div class="participant-avatar">MJ</div>
+              <div class="participant-name">Michael Jones</div>
+            </div>
+            <div class="participant">
+              <div class="participant-avatar">AT</div>
+              <div class="participant-name">Anna Taylor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Event Sidebar -->
+      <div class="event-sidebar">
+        <!-- Event Creator -->
+        <div class="event-creator">
+          <h3 class="sidebar-title">Event Creator</h3>
+          <div class="creator-info">
+            <div class="creator-avatar">MA</div>
+            <div class="creator-details">
+              <div class="creator-name">Mohamed Ahmed</div>
+              <div class="creator-role">Computer Science Department</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h3 class="sidebar-title">Quick Actions</h3>
+          <div class="action-buttons">
+            <button class="btn btn-primary btn-block" id="register-btn">
+              <i class="fas fa-check-circle"></i> Register for Event
+            </button>
+            <button class="btn btn-secondary btn-block" id="share-btn">
+              <i class="fas fa-share-alt"></i> Share Event
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Register button
+      const registerBtn = document.getElementById('register-btn');
+      registerBtn.addEventListener('click', () => {
+        // In a real application, this would register the user for the event
+        if (registerBtn.textContent.includes('Register')) {
+          registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Registered';
+          registerBtn.style.backgroundColor = '#28a745';
+          alert('You have successfully registered for this event!');
+        } else {
+          registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Register for Event';
+          registerBtn.style.backgroundColor = '';
+          alert('You have cancelled your registration for this event.');
+        }
+      });
+      
+      // Share button
+      const shareBtn = document.getElementById('share-btn');
+      shareBtn.addEventListener('click', () => {
+        // In a real application, this would open a share dialog
+        if (navigator.share) {
+          navigator.share({
+            title: 'React & TypeScript Workshop',
+            text: 'Learn modern React development with TypeScript',
+            url: window.location.href
+          });
+        } else {
+          // Fallback for browsers that don't support the Web Share API
+          alert('Share link copied to clipboard!');
+        }
+      });
+      
+      // Attachment download buttons
+      document.querySelectorAll('.attachment-download').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const attachmentName = btn.closest('.attachment-item').querySelector('.attachment-name').textContent;
+          console.log(`Downloading ${attachmentName}`);
+          // In a real application, this would download the attachment
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,709 @@
+.um-title-section {
+    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
+    padding: 32px 32px 24px 32px; /* Increased left/right padding */
+    border-radius: 8px;
+    margin: 72px 24px 24px 24px; /* Top, right, bottom, left margins */
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Title Styles */
+.um-title {
+    color: var(--slate-50, #F8FAFC);
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.96px;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+/* Subtitle Styles */
+.um-subtitle {
+    color: var(--slate-50, #F8FAFC);
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 159%;
+    letter-spacing: 0.72px;
+    text-transform: capitalize;
+    margin-bottom: 0;
+}
+
+
+/* Info Card Border Radius */
+.info-card, .card, .um-info-card {
+    border-radius: 8px !important;
+
+}
+/* Info Cards Container (big card) */
+.um-info-cards-container {
+    background: #fff; /* big card is white */
+    border-radius: 8px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    width: 100%;
+}
+
+/* Info Cards Row */
+.um-info-cards-row {
+    display: flex;
+    gap: 200px;
+    flex-wrap: wrap;
+    justify-content: center; /* center the cards horizontally */
+    align-items: flex-start;
+}
+
+/* Individual Info Card (mini card) */
+.um-info-card {
+    margin-top: 20px;
+    margin-bottom:20px;
+    background: #F8FAFC;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    display: flex;
+    align-items: flex-start;
+    width: 95%; /* increased width */
+    height: 127px;
+    padding: 20px 20px;
+    gap: 48px;
+    min-width: 320px;
+    max-width: 320px;
+    min-height: 127px;
+    max-height: 127px;
+    overflow: hidden;
+    flex-direction: row; /* icon left, text right */
+}
+
+/* Card Icon - always 84x84px */
+.um-info-card-icon {
+    width: 84px;
+    height: 84px;
+    min-width: 84px;
+    min-height: 84px;
+    max-width: 84px;
+    max-height: 84px;
+    background: rgba(140, 13, 171, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* remove margin-right: auto */
+}
+.um-info-card-icon img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 60px;
+    max-height: 60px;
+}
+
+
+
+/* Card Content - fill remaining space, left aligned, no wrapping */
+.um-info-card-content {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; /* right align content */
+    text-align: right;      /* keep left-to-right text direction */
+ 
+    overflow: hidden;
+}
+
+/* Card Title (e.g. "Total Users") */
+.um-info-card-title {
+    color: #ACACAC;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.14px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Card Value (e.g. "5423", "189") */
+.um-info-card-value {
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%; /* 32px */
+    letter-spacing: -0.32px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Growth Section */
+.um-info-card-growth {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.um-info-card-growth img {
+    width: 21.67px;
+    height: 20px;
+}
+.um-info-card-growth-text {
+    color: var(--slate-600, #00AC4F);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.12px;
+    text-transform: capitalize;
+}
+
+/* This Month Text */
+.um-info-card-month {
+    color: var(--slate-600, #475569);
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.12px;
+    text-transform: capitalize;
+}
+
+/* Pending Requests Action */
+.um-info-card-action {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.um-info-card-review {
+    color: #7B1684;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.um-info-card-review-eye {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+    background: none;
+}
+
+/* Filters Section */
+.um-filters-section {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    margin: 0 24px 24px 24px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    overflow: hidden;
+    border: 1px solid #E2E8F0; /* 1px gray border */
+}
+
+/* Background image placeholder */
+.um-filters-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 72px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: contain;
+    /* background-image: url('./assets/iconsax-building.png');  */
+    z-index: 1;
+}
+
+/* Filters Row */
+.um-filters-row {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+}
+
+/* Filters Group (push filters to right) */
+.um-filters-group {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+}
+
+/* Filter Dropdown Container */
+.um-filter-dropdown {
+  position: relative;
+  min-width: 180px;
+  flex: 1 1 0;
+}
+
+/* Search Input */
+.um-filter-search {
+    display: flex;
+    align-items: center;
+    background: #F8FAFC;
+    border-radius: 6px;
+    padding: 0 16px;
+    height: 48px;
+    min-width: 260px;
+    flex: 1 1 0;
+    border: 1px solid #E2E8F0;
+    gap: 8px;
+}
+.um-filter-search i {
+    color: #94A3B8;
+    font-size: 18px;
+}
+.um-filter-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: #64748B;
+}
+
+/* Filter Input */
+.um-filter-input {
+    background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #64748B;
+  height: 48px;
+  padding: 0 40px 0 40px;
+  box-shadow: none;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  background-repeat: no-repeat;
+}
+
+/* Filter Input: left and right icon backgrounds with spacing */
+.um-filter-input.faculty-bg {
+  background-image: url('../assets/table.svg'), url('../assets/iconsax-building.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px; /* space between left icon and text */
+}
+
+.um-filter-input.department-bg {
+  background-image: url('../assets/iconsax-building-4.png'), url('../assets/iconsax-building-4.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px;
+}
+
+.um-filter-input.year-bg {
+  background-image: url('../assets/iconsax-calendar.png'), url('../assets/iconsax-calendar.png');
+  background-position: 16px center, left 16px center;
+  background-size: 20px 20px, 20px 20px;
+  padding-left: 48px;
+}
+
+/* Arrow Icon */
+.um-filter-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Filter Button */
+.um-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    height: 48px;
+    padding: 0 18px;
+    font-size: 16px;
+    color: #64748B;
+    cursor: pointer;
+    min-width: 180px;
+    transition: border-color 0.2s;
+}
+.um-filter-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.um-filter-btn:focus,
+.um-filter-btn:hover {
+    border-color: #7B1684;
+}
+
+/* Dropdown styles from personal-details.css */
+/* Dropdown List */
+.gender-dropdown-list {
+  position: fixed;
+  top: var(--dropdown-top, 0px);
+  left: var(--dropdown-left, 0px);
+  width: var(--dropdown-width, 180px);
+  max-width: 320px;
+  min-width: 120px;
+  background: #fff;
+  border: 1px solid #7B1684;
+  border-radius: 12px;
+  box-shadow: none;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+  margin: 0;
+  padding: 0;  overflow: hidden;
+  list-style: none;
+  transition: opacity 0.2s;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+}
+
+/* Show dropdown when open */
+.gender-dropdown-list.open {
+  opacity: 1;
+  pointer-events: auto;  overflow: hidden;
+  display: block;
+}
+
+/* Dropdown List Items */
+.gender-dropdown-list li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  margin: 0; /* Ensure no margin */
+  cursor: pointer;
+  font-size: 16px;
+  color: #374151;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+  transition: background 0.15s, color 0.15s;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+.gender-dropdown-list li span {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+    overflow: hidden;
+  box-sizing: border-box;
+}
+
+.gender-dropdown-list li.active,
+.gender-dropdown-list li:hover {
+  background: #f3f3f3;  overflow: hidden;
+  color: #7B1684;
+  font-weight: 500;
+}
+
+.gender-dropdown-list li:last-child {
+  border-bottom: none;
+}
+
+/* Faculty Select Group Focus/Hover */
+#faculty-select-group .form-control.um-filter-focus,
+#faculty-select-group .form-control:hover {
+  border-color: #7B1684 !important;
+  box-shadow: 0 0 0 2px rgba(123, 22, 132, 0.15);
+}
+
+/* Table Section */
+.um-table-section {
+    margin: 0 24px 24px 24px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.04);
+    overflow: hidden;
+}
+
+/* Table Wrapper */
+.um-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.um-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: transparent;
+}
+
+.um-table thead tr th {
+    background: linear-gradient(0deg, #520E58 0%, #7B1684 100%);
+    color: #F8FAFC;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 16px 12px;
+    text-align: left;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+/* Table header (top corners) */
+.um-table thead tr th:first-child {
+    border-top-left-radius: 8px;
+}
+.um-table thead tr th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* Table last row (bottom corners) */
+.um-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+.um-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+/* Remove column borders in thead */
+.um-table thead tr th {
+    border-right: none;
+    border-left: none;
+}
+
+.um-table tbody tr {
+    background: #fff;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.um-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.um-table td {
+    font-size: 16px;
+    color: #374151;
+    padding: 14px 12px;
+    vertical-align: middle;
+    border: none;
+}
+
+.um-table-email {
+    color: #7B1684;
+    text-decoration: underline;
+    font-size: 15px;
+}
+
+.um-role-admin {
+    background: #E0EDFF;
+    color: #2563EB;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.um-role-student {
+    background: #F3E8FF;
+    color: #7B1684;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.um-table-action {
+    color: #7B1684;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fa-eye {
+    color: #7B1684;
+}
+/* Faculty Dropdown: scrollable, show max 5 items */
+#faculty-dropdown {
+  max-height: 240px; /* 5 items * ~48px each */
+  overflow-y: auto;
+}
+
+/* Optional: always show scrollbar for clarity */
+#faculty-dropdown::-webkit-scrollbar {
+  width: 6px;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+#faculty-dropdown::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .um-title-section{
+        width: 100%;
+        margin-left: 0 ;
+        margin-top: 80px;
+        margin-right: 0;
+        border-radius:0 ;
+    }
+    .um-info-cards-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .um-info-card {
+        width: 50%;
+        max-width: 100%;
+    }/* Responsive: Make info card icon smaller on mobile */
+  .um-info-card-icon img {
+    width: 42px !important;
+    height: 42px !important;
+    /* Optionally center if needed */
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 1024px) {
+    .um-filters-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .um-filters-group {
+        flex-direction: column;
+        margin-left: 0;
+        gap: 12px;
+    }
+    .um-filter-search,
+    .um-filter-btn {
+        width: 100%;
+        min-width: 0;
+    }
+    .um-filters-section {
+        padding: 16px 12px;
+    }
+    .um-filter-dropdown {
+        width: 100%;
+        min-width: 0;
+    }
+    .um-filter-input {
+        width: 100%;
+    }
+    .um-filter-search {
+        height: 48px;
+    }
+    .um-table {
+        min-width: 700px;
+    }
+    .um-table-wrapper {
+        overflow-x: auto;
+    }
+
+    /* Responsive: stack cards vertically and center them */
+    .um-info-cards-row {
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    .um-info-card {
+        width: 97%;
+        max-width: 100%;
+        min-width: 0;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 20px 16px;
+        margin-left: auto;
+        text-align: right;
+        margin-right: auto;
+    }
+    .um-info-card-icon {
+        margin-bottom: 8px;
+    }
+    .um-info-card-content {
+        align-items: flex-end; /* right align content */
+        text-align: left;      /* keep left-to-right text direction */
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 430px) {
+  .um-info-card-title,
+  .um-info-card-value,
+  .um-info-card-growth-text {
+    font-size: calc(100% - 1px) !important;
+    white-space: normal !important;
+    word-break: break-word;
+    text-align: left !important;
+    align-items: flex-start !important;
+    
+  }
+}
+
+/* Info Cards Row: always one row on large screens */
+@media (min-width: 1025px) {
+    .um-info-cards-row {
+        flex-direction: row;
+        gap: 90px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .um-info-card {
+        width: 320px;
+        max-width: 320px;
+        min-width: 260px;
+        margin-left: 0;
+        margin-right: 0;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px 20px;
+        height: 127px;
+    }
+    .um-info-card-content {
+        align-items: flex-start;
+        text-align: left;
+        width: 100%;
+    }
+}

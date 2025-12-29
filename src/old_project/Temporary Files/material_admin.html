@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials Explorer - CS101 Grades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/toasts.css">
+    <link rel="stylesheet" href="../components/navbar.html">
+    <link rel="stylesheet" href="../components/sidebar.html">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a202c;
+        }
+        
+        /* Content Wrapper */
+        #content-wrapper {
+            transition: all 0.3s ease;
+            padding-left: 0;
+        }
+        
+        #content-wrapper.sidebar-hidden {
+            padding-left: 0;
+        }
+        
+        #content-wrapper.sidebar-visible {
+            padding-left: 250px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px; /* Account for fixed navbar */
+        }
+        
+        /* Materials Explorer Header */
+        .explorer-header {
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        h1{
+            background: linear-gradient(120deg, #5A0F61 0%, #d472fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+           
+        }
+        
+        .explorer-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .explorer-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-nav a {
+            color: #6B7280;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumb-nav a:hover {
+            color: #4B5563;
+        }
+        
+        .breadcrumb-nav .separator {
+            margin: 0 0.5rem;
+            color: #9CA3AF;
+        }
+        
+        .breadcrumb-nav .current {
+            color: #4B5563;
+            font-weight: 500;
+        }
+        
+        /* Filters Section */
+        .filters-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-dropdown {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4B5563;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 14px;
+            color: #1F2937;
+            transition: border-color 0.2s ease;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #661666;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        /* Search and Actions Section */
+        .search-actions-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #5a1474;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+        }
+        
+        .actions-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .action-button {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .add-folder-btn {
+            background-color: #68177a;
+            color: white;
+        }
+        
+        .add-folder-btn:hover {
+            background-color: #551a98;
+        }
+        
+        .add-file-btn {
+            background-color: white;
+            color: #811d98;
+            border: 1px solid #631572;
+        }
+        
+        .add-file-btn:hover {
+            background-color: #F9FAFB;
+        }
+        
+        /* Content Section */
+        .content-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #371f36;
+        }
+        
+        /* Folder and File Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* Folder Card */
+        .folder-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .folder-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .folder-tag {
+            background-color: rgba(107, 33, 168, 0.1);
+            color: #6B21A8;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        
+        .folder-date {
+            font-size: 12px;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .folder-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .folder-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 1rem;
+        }
+        
+        .folder-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+        
+        .folder-info {
+            font-size: 14px;
+            color: #6B7280;
+        }
+        
+        /* File Card */
+        .file-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .file-tag {
+            background-color: rgba(107, 33, 168, 0.1);
+            color: #6B21A8;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        
+        .file-date {
+            font-size: 12px;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .file-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F2937;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .file-action-btn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4B5563;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .file-action-btn:hover {
+            background-color: #F9FAFB;
+            border-color: #9CA3AF;
+        }
+        
+        /* File type icons */
+        .file-pdf {
+            color: #EF4444;
+        }
+        
+        .file-excel {
+            color: #10B981;
+        }
+        
+        .file-word {
+            color: #3B82F6;
+        }
+        
+        .file-powerpoint {
+            color: #F97316;
+        }
+        
+        /* Modal Styles */
+        .card-details {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-details.active {
+            display: flex;
+        }
+        
+        .card-details .bg-white {
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalFadeIn 0.3s ease-out;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Add Folder Modal Styles */
+        .add-folder-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-folder-modal.active {
+            display: flex;
+        }
+        
+        .add-folder-modal .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalFadeIn 0.3s ease-out;
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F2937;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6B7280;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            color: #1F2937;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4B5563;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #1F2937;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #5a1474;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-cancel {
+            background-color: #F3F4F6;
+            color: #4B5563;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #E5E7EB;
+        }
+        
+        .btn-primary {
+            background-color: #68177a;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #551a98;
+        }
+        
+        /* Add File Modal Styles */
+        .add-file-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-file-modal.active {
+            display: flex;
+        }
+        
+        .add-file-modal .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalFadeIn 0.3s ease-out;
+            max-width: 600px;
+            width: 90%;
+            padding: 2rem;
+        }
+        
+        .file-path {
+            font-size: 0.875rem;
+            color: #4B5563;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background-color: #F9FAFB;
+            border-radius: 8px;
+        }
+        
+        .file-input-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-input-group {
+            flex: 1;
+        }
+        
+        .file-type-group {
+            flex: 1;
+        }
+        
+        .file-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #1F2937;
+            transition: border-color 0.2s ease;
+            background-color: white;
+        }
+        
+        .file-select:focus {
+            outline: none;
+            border-color: #5a1474;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #D1D5DB;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #9CA3AF;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #5a1474;
+            background-color: rgba(107, 33, 168, 0.05);
+        }
+        
+        .file-upload-text {
+            color: #6B7280;
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload-btn {
+            background-color: #F3F4F6;
+            color: #4B5563;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .file-upload-btn:hover {
+            background-color: #E5E7EB;
+        }
+        
+        .file-list {
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background-color: #F9FAFB;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-item-icon {
+            margin-right: 0.75rem;
+            color: #6B7280;
+        }
+        
+        .file-item-name {
+            flex: 1;
+            font-size: 0.875rem;
+            color: #1F2937;
+        }
+        
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .file-item-remove:hover {
+            color: #DC2626;
+        }
+        
+        .add-files-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .add-files-count {
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+        
+        .add-files-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-add-files {
+            background-color: #68177a;
+            color: white;
+        }
+        
+        .btn-add-files:hover {
+            background-color: #551a98;
+        }
+        
+        .btn-add-files:disabled {
+            background-color: #D1D5DB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+        }
+        
+        /* Page Navigation */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filters-section {
+                flex-direction: column;
+            }
+            
+            .filter-dropdown {
+                width: 100%;
+            }
+            
+            .search-actions-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .actions-container {
+                justify-content: center;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #content-wrapper.sidebar-visible {
+                padding-left: 0;
+            }
+            
+            .file-input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div id="content-wrapper" class="sidebar-hidden">
+        <div id="navbar-container" class="fixed-top"></div>
+        
+        <div class="container">
+            <!-- Main Grades Page -->
+            <div id="mainPage" class="page active">
+                <!-- Materials Explorer Header -->
+                <div class="explorer-header">
+                    <h1 class="explorer-title">Materials Explorer</h1>
+                    <p class="explorer-subtitle">Navigate through your course materials with ease</p>
+                </div>
+                
+                <!-- Breadcrumb Navigation -->
+                <div class="breadcrumb-nav">
+                    <a href="#">Materials</a>
+                    <span class="separator">></span>
+                    <a href="#">Computer Science</a>
+                    <span class="separator">></span>
+                    <span class="current">CS101 Grades</span>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Faculty</label>
+                        <select class="filter-select">
+                            <option>Computers and Information</option>
+                            <option>Engineering</option>
+                            <option>Business</option>
+                            <option>Arts</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Department</label>
+                        <select class="filter-select">
+                            <option>Computer Science</option>
+                            <option>Information Technology</option>
+                            <option>Software Engineering</option>
+                            <option>Data Science</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Academic Year</label>
+                        <select class="filter-select">
+                            <option>2024-2025</option>
+                            <option>2023-2024</option>
+                            <option>2022-2023</option>
+                            <option>2021-2022</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Subject</label>
+                        <select class="filter-select">
+                            <option>CS101</option>
+                            <option>CS102</option>
+                            <option>CS201</option>
+                            <option>CS202</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Search and Actions Section -->
+                <div class="search-actions-section">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search by grade file name..." class="search-input">
+                    </div>
+                    <div class="actions-container">
+                        <button class="action-button add-folder-btn" id="addFolderBtn">
+                            <i class="fas fa-folder-plus"></i>
+                            Add Folder
+                        </button>
+                        <button class="action-button add-file-btn" id="addFileBtn">
+                            <i class="fas fa-file-plus"></i>
+                            Add File
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Folders Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Folders</h2>
+                    <div class="content-grid">
+                        <!-- Folder Cards -->
+                        <div class="folder-card" onclick="showFinalPage('Assignments')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-01-15</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Assignments</span>
+                            </div>
+                            <div class="folder-info">6 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Quizzes')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-02-10</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Quizzes</span>
+                            </div>
+                            <div class="folder-info">4 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Midterm')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-03-05</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Midterm</span>
+                            </div>
+                            <div class="folder-info">3 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Final')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-04-01</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Final</span>
+                            </div>
+                            <div class="folder-info">6 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Exam')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-04-15</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Exam</span>
+                            </div>
+                            <div class="folder-info">2 files</div>
+                        </div>
+                        
+                        <div class="folder-card" onclick="showFinalPage('Projects')">
+                            <div class="folder-header">
+                                <span class="folder-tag">CS101</span>
+                                <span class="folder-date"><i class="far fa-calendar-alt"></i> 2024-05-01</span>
+                            </div>
+                            <div class="folder-content">
+                                <svg class="folder-icon" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.660156" width="48" height="48" rx="8" fill="#F1F2F4"/>
+                                    <path d="M32.6602 32C33.1906 32 33.6993 31.7893 34.0744 31.4142C34.4494 31.0391 34.6602 30.5304 34.6602 30V20C34.6602 19.4696 34.4494 18.9609 34.0744 18.5858C33.6993 18.2107 33.1906 18 32.6602 18H24.7602C24.4257 18.0033 24.0957 17.9226 23.8005 17.7654C23.5052 17.6081 23.2541 17.3794 23.0702 17.1L22.2602 15.9C22.078 15.6235 21.8301 15.3965 21.5387 15.2394C21.2472 15.0823 20.9213 15.0001 20.5902 15H16.6602C16.1297 15 15.621 15.2107 15.2459 15.5858C14.8709 15.9609 14.6602 16.4696 14.6602 17V30C14.6602 30.5304 14.8709 31.0391 15.2459 31.4142C15.621 31.7893 16.1297 32 16.6602 32H32.6602Z" stroke="#5A0F61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="folder-name">Projects</span>
+                            </div>
+                            <div class="folder-info">5 files</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Files Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Recent Files</h2>
+                    <div class="content-grid">
+                        <!-- File Cards -->
+                        <div class="file-card" data-filename="Assignment 1 - Variables.pdf" data-date="2024-01-22">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-01-22</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Assignment 1 - Variables.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Assignment 2 - Functions.xlsx" data-date="2024-02-05">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-02-05</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Assignment 2 - Functions.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Final Page -->
+            <div id="finalPage" class="page">
+                <!-- Materials Explorer Header -->
+                <div class="explorer-header">
+                    <h1 class="explorer-title">Materials Explorer</h1>
+                    <p class="explorer-subtitle">Navigate through your course materials with ease</p>
+                </div>
+                
+                <!-- Breadcrumb Navigation -->
+                <div class="breadcrumb-nav">
+                    <a href="#" onclick="showMainPage()">Materials</a>
+                    <span class="separator">></span>
+                    <a href="#" onclick="showMainPage()">Computer Science</a>
+                    <span class="separator">></span>
+                    <a href="#" onclick="showMainPage()">CS101 Grades</a>
+                    <span class="separator">></span>
+                    <span class="current" id="finalPageBreadcrumb">Final</span>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Faculty</label>
+                        <select class="filter-select">
+                            <option>Computers and Information</option>
+                            <option>Engineering</option>
+                            <option>Business</option>
+                            <option>Arts</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Department</label>
+                        <select class="filter-select">
+                            <option>Computer Science</option>
+                            <option>Information Technology</option>
+                            <option>Software Engineering</option>
+                            <option>Data Science</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Academic Year</label>
+                        <select class="filter-select">
+                            <option>2024-2025</option>
+                            <option>2023-2024</option>
+                            <option>2022-2023</option>
+                            <option>2021-2022</option>
+                        </select>
+                    </div>
+                    <div class="filter-dropdown">
+                        <label class="filter-label">Subject</label>
+                        <select class="filter-select">
+                            <option>CS101</option>
+                            <option>CS102</option>
+                            <option>CS201</option>
+                            <option>CS202</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Search and Actions Section -->
+                <div class="search-actions-section">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search by grade file name..." class="search-input">
+                    </div>
+                    <div class="actions-container">
+                        <button class="action-button add-folder-btn" id="addFolderBtn2">
+                            <i class="fas fa-folder-plus"></i>
+                            Add Folder
+                        </button>
+                        <button class="action-button add-file-btn" id="addFileBtn2">
+                            <i class="fas fa-file-plus"></i>
+                            Add File
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Files Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Files</h2>
+                    <div class="content-grid">
+                        <!-- File Cards -->
+                        <div class="file-card" data-filename="Assignment 1 - Variables.pdf" data-date="2024-01-22">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-01-22</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Assignment 1 - Variables.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Assignment 2 - Functions.xlsx" data-date="2024-02-05">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-02-05</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Assignment 2 - Functions.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Scores.pdf" data-date="2024-03-10">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-10</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-pdf file-pdf"></i>
+                                </div>
+                                <span class="file-name">Final Exam Scores.pdf</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Grade Report.xlsx" data-date="2024-03-15">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-15</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-excel file-excel"></i>
+                                </div>
+                                <span class="file-name">Final Grade Report.xlsx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Feedback.docx" data-date="2024-03-20">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-03-20</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-word file-word"></i>
+                                </div>
+                                <span class="file-name">Final Exam Feedback.docx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-card" data-filename="Final Exam Review.pptx" data-date="2024-04-01">
+                            <div class="file-header">
+                                <span class="file-tag">CS101</span>
+                                <span class="file-date"><i class="far fa-calendar-alt"></i> 2024-04-01</span>
+                            </div>
+                            <div class="file-content">
+                                <div class="file-icon">
+                                    <i class="far fa-file-powerpoint file-powerpoint"></i>
+                                </div>
+                                <span class="file-name">Final Exam Review.pptx</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="file-action-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card Details Modal -->
+        <div id="cardDetailsModal" class="card-details">
+            <div class="bg-white p-8 rounded-2xl shadow-xl">
+                <div class="flex items-center mb-8">
+                    <a href="#" id="closeModal" class="flex items-center text-gray-700 hover:text-gray-900">
+                        <i class="fas fa-arrow-left text-xl mr-3"></i>
+                        <div>
+                            <div class="final-title" id="modalTitle">Final</div>
+                            <div class="text-sm text-gray-500">View grades for final</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="cs101-tag text-xs font-semibold px-2 py-1 rounded-full">CS101</span>
+                        <span class="text-gray-600 text-sm" id="modalDate"><i class="far fa-calendar-alt mr-1"></i>2024-01-22</span>
+                    </div>
+                    <div class="flex items-center mb-6">
+                        <i class="far fa-file-pdf text-red-500 text-2xl mr-3" id="modalFileIcon"></i>
+                        <span class="file-name font-medium text-gray-900" id="modalFileName">Assignment 1 - Variables.pdf</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between space-x-4">
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="fas fa-eye mr-2"></i> Preview
+                    </button>
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </button>
+                    <button class="flex-1 flex items-center justify-center text-gray-700 hover:text-gray-900 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
+                        <i class="fas fa-external-link-alt mr-2"></i> Open
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Folder Modal -->
+        <div id="addFolderModal" class="add-folder-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Add New Folder</h2>
+                    <button class="close-btn" id="closeAddFolderModal">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="folderName" class="form-label">Folder Name</label>
+                    <input type="text" id="folderName" class="form-input" placeholder="Enter folder name">
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-cancel" id="cancelAddFolder">Cancel</button>
+                    <button class="btn btn-primary" id="confirmAddFolder">Add Folder</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add File Modal -->
+        <div id="addFileModal" class="add-file-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Add files to your course materials</h2>
+                    <button class="close-btn" id="closeAddFileModal">&times;</button>
+                </div>
+                
+                <div class="file-path">
+                    @ Faculty > Computer Science > Artificial Intelligence > Materials
+                </div>
+                
+                <div class="file-input-row">
+                    <div class="file-input-group">
+                        <label for="fileName" class="form-label">File Name</label>
+                        <input type="text" id="fileName" class="form-input" placeholder="e.g. Week 5 Lectures, Assignment Resources...">
+                    </div>
+                    <div class="file-type-group">
+                        <label for="fileType" class="form-label">File Type</label>
+                        <select id="fileType" class="file-select">
+                            <option value="PDF">PDF</option>
+                            <option value="DOC">DOC</option>
+                            <option value="DOCX">DOCX</option>
+                            <option value="XLS">XLS</option>
+                            <option value="XLSX">XLSX</option>
+                            <option value="PPT">PPT</option>
+                            <option value="PPTX">PPTX</option>
+                            <option value="TXT">TXT</option>
+                            <option value="ZIP">ZIP</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="file-upload-area" id="fileUploadArea">
+                    <p class="file-upload-text">No file selected</p>
+                    <button class="file-upload-btn" id="browseBtn">Browse</button>
+                    <input type="file" id="fileInput" style="display: none;" multiple>
+                </div>
+                
+                <div class="file-list" id="fileList"></div>
+                
+                <div class="add-files-footer">
+                    <div class="add-files-count" id="fileCount">+ Add 0 Files</div>
+                    <div class="add-files-actions">
+                        <button class="btn btn-cancel" id="cancelAddFile">Close</button>
+                        <button class="btn btn-add-files" id="confirmAddFile" disabled>+ Add 0 Files</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show main page
+        function showMainPage() {
+            document.getElementById('mainPage').classList.add('active');
+            document.getElementById('finalPage').classList.remove('active');
+        }
+        
+        // Show final page
+        function showFinalPage(folderName) {
+            // Update title and breadcrumb
+            document.getElementById('finalPageBreadcrumb').textContent = folderName;
+            document.getElementById('modalTitle').textContent = folderName;
+            
+            // Show final page and hide main page
+            document.getElementById('mainPage').classList.remove('active');
+            document.getElementById('finalPage').classList.add('active');
+        }
+        
+        // Get DOM elements
+        const modal = document.getElementById('cardDetailsModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalFileName = document.getElementById('modalFileName');
+        const modalDate = document.getElementById('modalDate');
+        const modalFileIcon = document.getElementById('modalFileIcon');
+        
+        // Add Folder Modal elements
+        const addFolderModal = document.getElementById('addFolderModal');
+        const addFolderBtn = document.getElementById('addFolderBtn');
+        const addFolderBtn2 = document.getElementById('addFolderBtn2');
+        const closeAddFolderModal = document.getElementById('closeAddFolderModal');
+        const cancelAddFolder = document.getElementById('cancelAddFolder');
+        const confirmAddFolder = document.getElementById('confirmAddFolder');
+        const folderNameInput = document.getElementById('folderName');
+        
+        // Add File Modal elements
+        const addFileModal = document.getElementById('addFileModal');
+        const addFileBtn = document.getElementById('addFileBtn');
+        const addFileBtn2 = document.getElementById('addFileBtn2');
+        const closeAddFileModal = document.getElementById('closeAddFileModal');
+        const cancelAddFile = document.getElementById('cancelAddFile');
+        const confirmAddFile = document.getElementById('confirmAddFile');
+        const fileNameInput = document.getElementById('fileName');
+        const fileTypeSelect = document.getElementById('fileType');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const browseBtn = document.getElementById('browseBtn');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const fileCount = document.getElementById('fileCount');
+        
+        // Selected files array
+        let selectedFiles = [];
+        
+        // Add event listeners to all file cards
+        document.querySelectorAll('.file-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Get file data
+                const fileName = this.getAttribute('data-filename');
+                const fileDate = this.getAttribute('data-date');
+                
+                // Determine file type and icon
+                let fileIcon = '';
+                if (fileName.endsWith('.pdf')) {
+                    fileIcon = 'far fa-file-pdf text-red-500';
+                } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                    fileIcon = 'far fa-file-excel text-green-500';
+                } else if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
+                    fileIcon = 'far fa-file-word text-blue-500';
+                } else if (fileName.endsWith('.pptx') || fileName.endsWith('.ppt')) {
+                    fileIcon = 'far fa-file-powerpoint text-orange-500';
+                }
+                
+                // Update modal content
+                modalFileName.textContent = fileName;
+                modalDate.innerHTML = `<i class="far fa-calendar-alt mr-1"></i>${fileDate}`;
+                modalFileIcon.className = `${fileIcon} text-2xl mr-3`;
+                
+                // Show modal
+                modal.classList.add('active');
+            });
+        });
+        
+        // Close modal when clicking close button
+        closeModalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.classList.remove('active');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+        
+        // Show Add Folder Modal when clicking Add Folder buttons
+        addFolderBtn.addEventListener('click', function() {
+            addFolderModal.classList.add('active');
+            folderNameInput.focus();
+        });
+        
+        addFolderBtn2.addEventListener('click', function() {
+            addFolderModal.classList.add('active');
+            folderNameInput.focus();
+        });
+        
+        // Close Add Folder Modal
+        closeAddFolderModal.addEventListener('click', function() {
+            addFolderModal.classList.remove('active');
+            folderNameInput.value = '';
+        });
+        
+        cancelAddFolder.addEventListener('click', function() {
+            addFolderModal.classList.remove('active');
+            folderNameInput.value = '';
+        });
+        
+        // Close Add Folder Modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === addFolderModal) {
+                addFolderModal.classList.remove('active');
+                folderNameInput.value = '';
+            }
+        });
+        
+        // Handle Add Folder confirmation
+        confirmAddFolder.addEventListener('click', function() {
+            const folderName = folderNameInput.value.trim();
+            
+            if (folderName) {
+                // Here you would typically send the folder name to the server
+                // For demonstration, we'll just show a success message and close the modal
+                alert(`Folder "${folderName}" has been created successfully!`);
+                addFolderModal.classList.remove('active');
+                folderNameInput.value = '';
+                
+                // In a real application, you would refresh the folder list
+                // or add the new folder to the DOM dynamically
+            } else {
+                // Highlight the input field if empty
+                folderNameInput.style.borderColor = '#EF4444';
+                setTimeout(() => {
+                    folderNameInput.style.borderColor = '';
+                }, 2000);
+            }
+        });
+        
+        // Handle Enter key in folder name input
+        folderNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                confirmAddFolder.click();
+            }
+        });
+        
+        // Show Add File Modal when clicking Add File buttons
+        addFileBtn.addEventListener('click', function() {
+            addFileModal.classList.add('active');
+            fileNameInput.focus();
+        });
+        
+        addFileBtn2.addEventListener('click', function() {
+            addFileModal.classList.add('active');
+            fileNameInput.focus();
+        });
+        
+        // Close Add File Modal
+        closeAddFileModal.addEventListener('click', function() {
+            addFileModal.classList.remove('active');
+            resetAddFileModal();
+        });
+        
+        cancelAddFile.addEventListener('click', function() {
+            addFileModal.classList.remove('active');
+            resetAddFileModal();
+        });
+        
+        // Close Add File Modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === addFileModal) {
+                addFileModal.classList.remove('active');
+                resetAddFileModal();
+            }
+        });
+        
+        // Handle Browse button click
+        browseBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Handle file selection
+        fileInput.addEventListener('change', function() {
+            handleFileSelection(this.files);
+        });
+        
+        // Handle drag and drop
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', function() {
+            this.classList.remove('dragover');
+        });
+        
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            handleFileSelection(e.dataTransfer.files);
+        });
+        
+        // Handle file selection
+        function handleFileSelection(files) {
+            // Add new files to the selectedFiles array
+            for (let i = 0; i < files.length; i++) {
+                selectedFiles.push(files[i]);
+            }
+            
+            // Update the UI
+            updateFileList();
+            updateFileCount();
+            
+            // Update the upload area text
+            if (selectedFiles.length > 0) {
+                fileUploadArea.querySelector('.file-upload-text').textContent = `${selectedFiles.length} file(s) selected`;
+            } else {
+                fileUploadArea.querySelector('.file-upload-text').textContent = 'No file selected';
+            }
+        }
+        
+        // Update the file list UI
+        function updateFileList() {
+            fileList.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                // Determine file icon
+                let fileIcon = 'fa-file';
+                if (file.type.includes('pdf')) {
+                    fileIcon = 'fa-file-pdf text-red-500';
+                } else if (file.type.includes('word') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+                    fileIcon = 'fa-file-word text-blue-500';
+                } else if (file.type.includes('excel') || file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+                    fileIcon = 'fa-file-excel text-green-500';
+                } else if (file.type.includes('powerpoint') || file.name.endsWith('.ppt') || file.name.endsWith('.pptx')) {
+                    fileIcon = 'fa-file-powerpoint text-orange-500';
+                }
+                
+                fileItem.innerHTML = `
+                    <i class="far ${fileIcon} file-item-icon"></i>
+                    <span class="file-item-name">${file.name}</span>
+                    <button class="file-item-remove" data-index="${index}">Remove</button>
+                `;
+                
+                fileList.appendChild(fileItem);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.file-item-remove').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    selectedFiles.splice(index, 1);
+                    updateFileList();
+                    updateFileCount();
+                    
+                    // Update the upload area text
+                    if (selectedFiles.length > 0) {
+                        fileUploadArea.querySelector('.file-upload-text').textContent = `${selectedFiles.length} file(s) selected`;
+                    } else {
+                        fileUploadArea.querySelector('.file-upload-text').textContent = 'No file selected';
+                    }
+                });
+            });
+        }
+        
+        // Update the file count
+        function updateFileCount() {
+            const count = selectedFiles.length;
+            fileCount.textContent = `+ Add ${count} File${count !== 1 ? 's' : ''}`;
+            confirmAddFile.textContent = `+ Add ${count} File${count !== 1 ? 's' : ''}`;
+            confirmAddFile.disabled = count === 0;
+        }
+        
+        // Reset the Add File Modal
+        function resetAddFileModal() {
+            selectedFiles = [];
+            fileNameInput.value = '';
+            fileTypeSelect.value = 'PDF';
+            fileInput.value = '';
+            fileList.innerHTML = '';
+            updateFileCount();
+            fileUploadArea.querySelector('.file-upload-text').textContent = 'No file selected';
+        }
+        
+        // Handle Add File confirmation
+        confirmAddFile.addEventListener('click', function() {
+            const fileName = fileNameInput.value.trim();
+            const fileType = fileTypeSelect.value;
+            
+            if (selectedFiles.length > 0) {
+                // Here you would typically send the files to the server
+                // For demonstration, we'll just show a success message and close the modal
+                const fileNames = selectedFiles.map(file => file.name).join(', ');
+                alert(`${selectedFiles.length} file(s) (${fileNames}) have been uploaded successfully!`);
+                addFileModal.classList.remove('active');
+                resetAddFileModal();
+                
+                // In a real application, you would refresh the file list
+                // or add the new files to the DOM dynamically
+            }
+        });
+        
+        // Handle Enter key in file name input
+        fileNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !confirmAddFile.disabled) {
+                confirmAddFile.click();
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/loading.js"></script>
+</body>
+</html>
