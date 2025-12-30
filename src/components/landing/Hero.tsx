@@ -1,9 +1,24 @@
+import { useRef, useEffect } from "react";
 import heroImage from "../../assets/hero section photo.png";
 import styles from "./Hero.module.css";
 
-export const Hero = () => {
+export const Hero = ({
+    setSections,
+}: {
+    setSections: React.Dispatch<
+        React.SetStateAction<React.RefObject<HTMLElement>[]>
+    >;
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current)
+            setSections((state) => [
+                ...state,
+                ref as React.RefObject<HTMLElement>,
+            ]);
+    }, [setSections]);
     return (
-        <section className={styles.hero} id="hero">
+        <section ref={ref} className={styles.hero} id="hero">
             <div className={styles.heroText}>
                 <h1>Simplify Your Student Life</h1>
                 <h2>

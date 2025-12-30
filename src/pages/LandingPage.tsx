@@ -6,11 +6,36 @@ import { Snapshots } from "../components/landing/Snapshots";
 import { BeginningStory } from "../components/landing/BeginningStory";
 import { ContactForm } from "../components/landing/ContactForm";
 import { Team } from "../components/landing/Team";
+import { useEffect, useState } from "react";
 import { Footer } from "../components/landing/Footer";
 import { PageSeo } from "../components/PageSeo";
 import styles from "./LandingPage.module.css";
 
 export const LandingPage = () => {
+    const [activeSection, setActiveSection] = useState("hero");
+    const [sections, setSections] = useState<React.RefObject<HTMLElement>[]>(
+        []
+    );
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+        sections.forEach((section) => {
+            if (section.current) {
+                observer.observe(section.current);
+            }
+        });
+        return () => {
+            observer.disconnect();
+        };
+    }, [sections]);
     return (
         <>
             <PageSeo
@@ -18,12 +43,15 @@ export const LandingPage = () => {
                 description="Discover the CU - Portal, your all-in-one platform for managing academics, campus activities, and student services seamlessly."
             />
             <div className={styles.landingPage}>
-                <Header />
-                <Hero />
-                <Features />
-                <HowItWorks />
-                <Snapshots />
-                <BeginningStory />
+                <Header
+                    activeSection={activeSection}
+                    setActiveSection={setActiveSection}
+                />
+                <Hero setSections={setSections} />
+                <Features setSections={setSections} />
+                <HowItWorks setSections={setSections} />
+                <Snapshots setSections={setSections} />
+                <BeginningStory setSections={setSections} />
                 <ContactForm />
                 <Team />
                 <Footer />

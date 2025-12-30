@@ -2,9 +2,14 @@ import { useState } from "react";
 import Logo from "../logo/Logo";
 import styles from "./Header.module.css";
 
-export const Header = () => {
+export const Header = ({
+    activeSection,
+    setActiveSection,
+}: {
+    activeSection: string;
+    setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+}) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState("hero");
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
@@ -80,13 +85,13 @@ export const Header = () => {
                         How to Start
                     </a>
                     <a
-                        href="#Snapshots"
+                        href="#snapshots"
                         className={`${styles.navLink} ${
-                            activeSection === "Snapshots" ? styles.active : ""
+                            activeSection === "snapshots" ? styles.active : ""
                         }`}
                         onClick={(e) => {
                             e.preventDefault();
-                            handleNavClick("Snapshots");
+                            handleNavClick("snapshots");
                         }}
                     >
                         Snapshots
@@ -180,15 +185,15 @@ export const Header = () => {
                     </li>
                     <li>
                         <a
-                            href="#Snapshots"
+                            href="#snapshots"
                             className={`${styles.sidebarLink} ${
-                                activeSection === "Snapshots"
+                                activeSection === "snapshots"
                                     ? styles.active
                                     : ""
                             }`}
                             onClick={(e) => {
                                 e.preventDefault();
-                                handleNavClick("Snapshots");
+                                handleNavClick("snapshots");
                             }}
                         >
                             Snapshots

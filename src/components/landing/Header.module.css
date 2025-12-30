@@ -144,7 +144,7 @@
     padding: 20px;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
     transition: right var(--transition-duration) ease;
-    z-index: 2100;
+    z-index: 100001;
 }
 
 .sidebar.active {

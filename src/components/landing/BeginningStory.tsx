@@ -1,9 +1,28 @@
+import { useEffect, useRef } from "react";
 import beginningImage from "../../assets/beginning-illustration.png";
 import styles from "./BeginningStory.module.css";
 
-export const BeginningStory = () => {
+export const BeginningStory = ({
+    setSections,
+}: {
+    setSections: React.Dispatch<
+        React.SetStateAction<React.RefObject<HTMLElement>[]>
+    >;
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current)
+            setSections((state) => [
+                ...state,
+                ref as React.RefObject<HTMLElement>,
+            ]);
+    }, [setSections]);
     return (
-        <section className={styles.beginningSection} id="beginning-card">
+        <section
+            ref={ref}
+            className={styles.beginningSection}
+            id="beginning-card"
+        >
             <div
                 className={`${styles.beginningCard} ${styles.beginningFlexContainer}`}
             >

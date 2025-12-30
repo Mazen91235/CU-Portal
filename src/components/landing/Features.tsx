@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import coursesIcon from "../../assets/icons/iconsax-book-saved.png";
 import trackerIcon from "../../assets/icons/tracker.png";
 import roadmapsIcon from "../../assets/icons/target.png";
@@ -45,9 +46,23 @@ const features = [
     },
 ];
 
-export const Features = () => {
+export const Features = ({
+    setSections,
+}: {
+    setSections: React.Dispatch<
+        React.SetStateAction<React.RefObject<HTMLElement>[]>
+    >;
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current)
+            setSections((state) => [
+                ...state,
+                ref as React.RefObject<HTMLElement>,
+            ]);
+    }, [setSections]);
     return (
-        <section className={styles.features} id="features">
+        <section ref={ref} className={styles.features} id="features">
             <div className={styles.toolkitCard}>
                 <h2 className={styles.toolkitTitle}>
                     Your Toolkit for{" "}

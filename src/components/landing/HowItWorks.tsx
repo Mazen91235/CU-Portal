@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import userIcon from "../../assets/icons/iconsax-user.png";
 import dashboardIcon from "../../assets/icons/dashboard-personalize.png";
 import statusIcon from "../../assets/icons/iconsax-status-up.png";
@@ -24,10 +25,24 @@ const steps = [
     },
 ];
 
-export const HowItWorks = () => {
+export const HowItWorks = ({
+    setSections,
+}: {
+    setSections: React.Dispatch<
+        React.SetStateAction<React.RefObject<HTMLElement>[]>
+    >;
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current)
+            setSections((state) => [
+                ...state,
+                ref as React.RefObject<HTMLElement>,
+            ]);
+    }, [setSections]);
     return (
         <>
-            <section className={styles.howItWork} id="how-it-work">
+            <section ref={ref} className={styles.howItWork} id="how-it-work">
                 <div>
                     <h2 className={styles.howItWorkTitle}>How It Works</h2>
                     <h2 className={styles.howItWorkSubtitle}>

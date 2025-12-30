@@ -1,10 +1,25 @@
+import { useRef, useEffect } from "react";
 import snapshot1 from "../../assets/snapshots/dashboard-view-2.png";
 import snapshot2 from "../../assets/snapshots/dashboard-view-1.png";
 import styles from "./Snapshots.module.css";
 
-export const Snapshots = () => {
+export const Snapshots = ({
+    setSections,
+}: {
+    setSections: React.Dispatch<
+        React.SetStateAction<React.RefObject<HTMLElement>[]>
+    >;
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current)
+            setSections((state) => [
+                ...state,
+                ref as React.RefObject<HTMLElement>,
+            ]);
+    }, [setSections]);
     return (
-        <section className={styles.screenshotSection} id="Snapshots">
+        <section ref={ref} className={styles.screenshotSection} id="snapshots">
             <div className={styles.screenshotsGalleryOverlap}>
                 <img
                     src={snapshot1}
