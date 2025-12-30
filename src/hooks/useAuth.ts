@@ -11,9 +11,11 @@ import { GetCookie, SetCookie } from "../utils/CookiesManager";
 export default function useAuth({
     permission,
     reverse = false,
+    shouldNavigate = true,
 }: {
     permission?: string;
     reverse?: boolean;
+    shouldNavigate?: boolean;
 } = {}) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -34,31 +36,34 @@ export default function useAuth({
                     return;
                 }
                 SetCookie("refresh_token", "", -1);
-                navigate("/auth/login", {
-                    state: {
-                        error: "Session expired. Please log in again.",
-                    },
-                });
+                if (shouldNavigate)
+                    navigate("/auth/login", {
+                        state: {
+                            error: "Session expired. Please log in again.",
+                        },
+                    });
                 return;
             }
         },
-        [refreshTokenMutation, navigate]
+        [refreshTokenMutation, navigate, shouldNavigate]
     );
     useEffect(() => {
         (async () => {
             try {
                 if (GetCookie("refresh_token") && !permission && reverse) {
-                    navigate("/user", {
-                        state: { error: "You are already logged in." },
-                    });
+                    if (shouldNavigate)
+                        navigate("/user", {
+                            state: { error: "You are already logged in." },
+                        });
                 }
                 if (!GetCookie("refresh_token") && !reverse) {
                     if (user || access_token) await logoutMutation().unwrap();
-                    navigate("/login", {
-                        state: {
-                            error: "You must be logged in to access this resource.",
-                        },
-                    });
+                    if (shouldNavigate)
+                        navigate("/login", {
+                            state: {
+                                error: "You must be logged in to access this resource.",
+                            },
+                        });
                 }
                 if (!GetCookie("access_token") && GetCookie("refresh_token")) {
                     await refreshToken();
@@ -68,19 +73,21 @@ export default function useAuth({
                     const normalPredicate = !hasPermission && !reverse;
                     const reversePredicate = hasPermission && reverse;
                     if (normalPredicate || reversePredicate) {
-                        navigate("/user", {
-                            state: {
-                                error: "You do not have permission to access this resource.",
-                            },
-                        });
+                        if (shouldNavigate)
+                            navigate("/user", {
+                                state: {
+                                    error: "You do not have permission to access this resource.",
+                                },
+                            });
                     }
                 }
             } catch {
-                navigate("/login", {
-                    state: {
-                        error: "You must be logged in to access this resource.",
-                    },
-                });
+                if (shouldNavigate)
+                    navigate("/login", {
+                        state: {
+                            error: "You must be logged in to access this resource.",
+                        },
+                    });
             }
         })();
     }, [
@@ -93,6 +100,7 @@ export default function useAuth({
         refreshToken,
         permission,
         reverse,
+        shouldNavigate,
     ]);
     return null;
 }

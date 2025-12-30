@@ -7,20 +7,27 @@ import { BeginningStory } from "../components/landing/BeginningStory";
 import { ContactForm } from "../components/landing/ContactForm";
 import { Team } from "../components/landing/Team";
 import { Footer } from "../components/landing/Footer";
+import { PageSeo } from "../components/PageSeo";
 import styles from "./LandingPage.module.css";
 
 export const LandingPage = () => {
     return (
-        <div className={styles.landingPage}>
-            <Header />
-            <Hero />
-            <Features />
-            <HowItWorks />
-            <Snapshots />
-            <BeginningStory />
-            <ContactForm />
-            <Team />
-            <Footer />
-        </div>
+        <>
+            <PageSeo
+                title="CU - Portal - Your Gateway to Campus Life"
+                description="Discover the CU - Portal, your all-in-one platform for managing academics, campus activities, and student services seamlessly."
+            />
+            <div className={styles.landingPage}>
+                <Header />
+                <Hero />
+                <Features />
+                <HowItWorks />
+                <Snapshots />
+                <BeginningStory />
+                <ContactForm />
+                <Team />
+                <Footer />
+            </div>
+        </>
     );
 };

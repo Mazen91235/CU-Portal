@@ -4,9 +4,11 @@ import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import useGetNotifications from "./hooks/useGetNotifications";
 import { LandingPage } from "./pages/LandingPage";
+import useAuth from "./hooks/useAuth";
 import "./App.css";
 
 function App() {
+    useAuth({ shouldNavigate: false });
     useGetUser();
     useGetNotifications();
     useRouteMessages();
