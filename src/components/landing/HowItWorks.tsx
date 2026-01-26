@@ -1,4 +1,6 @@
 import { useRef, useEffect } from "react";
+import { Link } from "react-router";
+import { useAppSelector } from "../../services/redux/Hooks";
 import userIcon from "../../assets/icons/iconsax-user.png";
 import dashboardIcon from "../../assets/icons/dashboard-personalize.png";
 import statusIcon from "../../assets/icons/iconsax-status-up.png";
@@ -13,9 +15,9 @@ const steps = [
     },
     {
         icon: dashboardIcon,
-        title: "Personalize Your Dashboard",
+        title: "Create Your Academic Profile",
         description:
-            "Input your class schedules, assignments, and exam dates. Our intuitive tools help you get organized in minutes.",
+            "Register in Your Faculty, select your department and year, and register your courses to get started.",
     },
     {
         icon: statusIcon,
@@ -33,6 +35,7 @@ export const HowItWorks = ({
     >;
 }) => {
     const ref = useRef<HTMLElement>(null);
+    const user = useAppSelector((state) => state.user.user);
     useEffect(() => {
         if (ref.current)
             setSections((state) => [
@@ -70,9 +73,12 @@ export const HowItWorks = ({
                         ))}
                     </div>
                     <div className={styles.simpleStepsCta}>
-                        <button className={styles.simpleStepsBtn}>
+                        <Link
+                            to={!user ? "/login" : "/user"}
+                            className={styles.simpleStepsBtn}
+                        >
                             Organize Your Academic Life
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </section>

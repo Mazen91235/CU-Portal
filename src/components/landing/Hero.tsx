@@ -1,4 +1,6 @@
 import { useRef, useEffect } from "react";
+import { Link } from "react-router";
+import { useAppSelector } from "../../services/redux/Hooks";
 import heroImage from "../../assets/hero section photo.png";
 import styles from "./Hero.module.css";
 
@@ -10,6 +12,7 @@ export const Hero = ({
     >;
 }) => {
     const ref = useRef<HTMLElement>(null);
+    const user = useAppSelector((state) => state.user.user);
     useEffect(() => {
         if (ref.current)
             setSections((state) => [
@@ -28,9 +31,12 @@ export const Hero = ({
                     Organize your studies, track your progress, and connect with
                     your academic community.
                 </p>
-                <a href="/login" className={styles.ctaButton}>
+                <Link
+                    to={!user ? "/login" : "/user"}
+                    className={styles.ctaButton}
+                >
                     Get Started Now!
-                </a>
+                </Link>
             </div>
             <div className={styles.heroImage}>
                 <img

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { useAppSelector } from "../services/redux/Hooks";
+import { useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
@@ -8,6 +8,7 @@ import {
     useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie, SetCookie } from "../utils/CookiesManager";
+import { setAccessToken } from "../services/redux/reducers/UserReducer";
 export default function useAuth({
     permission,
     reverse = false,
@@ -17,8 +18,8 @@ export default function useAuth({
     reverse?: boolean;
     shouldNavigate?: boolean;
 } = {}) {
-    const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [logoutMutation] = useLogoutMutation();
     const [refreshTokenMutation] = useRefreshTokenMutation();
     const user = useAppSelector((state) => state.user.user);
@@ -28,7 +29,7 @@ export default function useAuth({
         async (retries: number = 3) => {
             try {
                 await refreshTokenMutation(
-                    GetCookie("refresh_token")!
+                    GetCookie("refresh_token")!,
                 ).unwrap();
             } catch {
                 if (retries > 0) {
@@ -45,7 +46,7 @@ export default function useAuth({
                 return;
             }
         },
-        [refreshTokenMutation, navigate, shouldNavigate]
+        [refreshTokenMutation, navigate, shouldNavigate],
     );
     useEffect(() => {
         (async () => {
@@ -67,6 +68,9 @@ export default function useAuth({
                 }
                 if (!GetCookie("access_token") && GetCookie("refresh_token")) {
                     await refreshToken();
+                }
+                if (!access_token && GetCookie("access_token")) {
+                    dispatch(setAccessToken(GetCookie("access_token")!));
                 }
                 if (user && permission) {
                     const hasPermission = permissions.includes(permission);
@@ -91,11 +95,11 @@ export default function useAuth({
             }
         })();
     }, [
-        location,
         user,
         access_token,
         permissions,
         navigate,
+        dispatch,
         logoutMutation,
         refreshToken,
         permission,
@@ -106,13 +110,12 @@ export default function useAuth({
 }
 
 export function useGetGoogleAccessToken() {
-    useAuth();
+    useAuth({ shouldNavigate: false });
     const access_token = useAppSelector((state) => state.user.access_token);
     const [getGoogleStoredToken] = useGetGoogleStoredTokenMutation();
     const [getGoogleAccessToken] = useLazyGetGoogleAccessTokenQuery();
     useEffect(() => {
         (async () => {
-            if (!access_token) return;
             try {
                 if (
                     GetCookie("oauth_state") &&
@@ -121,9 +124,10 @@ export function useGetGoogleAccessToken() {
                     await getGoogleStoredToken({
                         oauth_state: GetCookie("oauth_state")!,
                         google_details_token: GetCookie(
-                            "google_details_token"
+                            "google_details_token",
                         )!,
                     }).unwrap();
+                if (!access_token) return;
                 await getGoogleAccessToken().unwrap();
             } catch {
                 return;

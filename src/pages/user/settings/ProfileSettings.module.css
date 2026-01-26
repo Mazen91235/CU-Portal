@@ -1,0 +1,93 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--primary-padding);
+    margin-top: 2rem;
+}
+
+.card {
+    border-radius: 16px;
+    background: var(--white);
+    border: none;
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 1rem;
+    padding: 1.2rem;
+    box-shadow: var(--dark-box-shadow);
+}
+
+.header {
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.underline {
+    width: 120px;
+    height: 2px;
+    background: var(--primary-purple);
+    margin-left: 30px;
+    margin-top: 4px;
+    border-radius: 2px;
+}
+
+.avatarGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.avatar {
+    width: 79px;
+    height: 79px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.googleIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .avatarGroup {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -10,6 +10,15 @@ const Logo = ({
     height?: number;
     onClick?: () => void;
 }) => {
+    if (!onClick) {
+        onClick = () => {
+            const location = window.location.href;
+            if (location.includes("/user")) window.location.href = "/user";
+            else if (location.includes("/admin"))
+                window.location.href = "/admin";
+            else window.location.href = "/";
+        };
+    }
     return (
         <img
             src={logoImage}

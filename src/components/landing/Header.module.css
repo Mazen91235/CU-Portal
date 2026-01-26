@@ -76,22 +76,23 @@
     font-size: 16px;
     font-weight: var(--primary-font-weight-heavy);
     border-radius: var(--primary-border-radius);
-    background: #ffedd5;
-    border: 1px solid #ffedd5;
+    background: var(--secondary-orange);
+    border: 1px solid var(--secondary-orange);
     padding: 10px 16px;
     height: 40px;
     cursor: pointer;
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    transition: background var(--transition-duration),
+    transition:
+        background var(--transition-duration),
         color var(--transition-duration);
     font-family: var(--primary-font-family);
 }
 
 .loginBtn:hover {
     color: var(--white);
-    background: #fb923c;
+    background: var(--primary-orange);
 }
 
 .signupBtn {
@@ -113,7 +114,25 @@
 }
 
 .signupBtn:hover {
-    background: linear-gradient(0deg, #36063b 0%, #6e0a77 100%);
+    background: var(--secondary-purple-gradient);
+}
+
+.dashboardBtn {
+    padding: 10px 16px;
+    color: var(--white);
+    border-radius: var(--primary-border-radius);
+    background: var(--primary-purple);
+    box-shadow: 0px 4px 4px 0px rgba(117, 21, 125, 0.1);
+    border: 1px solid #7b1684;
+    font-weight: var(--primary-font-weight-heavy);
+    cursor: pointer;
+    transition: background var(--transition-duration);
+    height: 40px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    font-family: var(--primary-font-family);
+    font-size: 16px;
 }
 
 .mobileMenuToggle {
@@ -124,8 +143,10 @@
     padding: 0;
     font-size: 34px;
     color: var(--primary-purple);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        color var(--transition-duration), opacity 0.25s;
+    transition:
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color var(--transition-duration),
+        opacity 0.25s;
 }
 
 .mobileMenuToggle.menuOpen {
@@ -181,7 +202,8 @@
     display: block;
     padding: 12px 15px;
     border-radius: var(--primary-border-radius);
-    transition: background var(--transition-duration),
+    transition:
+        background var(--transition-duration),
         color var(--transition-duration);
     font-family: var(--primary-font-family);
     font-weight: var(--primary-font-weight-heavy);

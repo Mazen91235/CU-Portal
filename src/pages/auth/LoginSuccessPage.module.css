@@ -1,0 +1,236 @@
+.container {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: var(--grey-background);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px 40px;
+    text-align: left;
+    height: 10vh;
+}
+
+.logo {
+    font-family: var(--primary-font-family);
+    font-size: 24px;
+    font-style: normal;
+    color: var(--primary-purple);
+    font-weight: 600;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.logo .highlight {
+    color: var(--primary-orange);
+    text-transform: none;
+}
+
+.cornerImageTopRight {
+    position: absolute;
+    top: -150px;
+    right: -300px;
+    width: 665.222px;
+    height: 471.028px;
+    z-index: 0;
+}
+
+.cornerImageBottomLeft {
+    position: absolute;
+    bottom: -150px;
+    left: -220px;
+    width: 665.222px;
+    height: 471.028px;
+    z-index: 0;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    min-height: 90vh;
+}
+
+.illustration img {
+    width: calc(547px * 0.8);
+    height: calc(820px * 0.8);
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 100px;
+    object-fit: contain;
+}
+
+.welcomeCard {
+    display: inline-flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 13px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--dark-box-shadow);
+    margin-top: -150px;
+    margin-right: -250px;
+    text-align: center;
+    width: calc(461px * 1.2);
+    height: calc(304px * 1.2);
+    position: relative;
+}
+
+.welcomeCard::before {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    content: "";
+    background: var(--overlay-bg);
+    z-index: -1;
+    backdrop-filter: blur(5px);
+}
+
+.welcomeCard h2 {
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--primary-purple);
+    line-height: 1.2;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.gradientTextH2 {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+.welcomeCard p {
+    color: var(--dark-grey);
+    font-size: 16px;
+}
+
+.continueBtn {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin: 0 auto;
+    transition: background-color var(--transition-duration) ease;
+}
+
+.continueBtn:hover {
+    background-color: #5b1582;
+}
+
+.iconCircle {
+    width: 60px;
+    height: 60px;
+    border-radius: 510%;
+    background-color: var(--light-purple);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconCircle.success {
+    background-color: var(--success-green);
+    color: var(--white);
+}
+
+.iconCircle .material-icons i {
+    font-size: 1.2em;
+    color: var(--white);
+}
+
+@media (max-width: 1024px) {
+    .contentWrapper {
+        flex-direction: column;
+        gap: 40px;
+        padding: 10px;
+    }
+
+    .illustration img {
+        position: static;
+        width: calc(547px * 0.5);
+        height: calc(820px * 0.5);
+        margin-left: 0;
+    }
+
+    .welcomeCard {
+        margin-top: 0;
+        margin-right: 0;
+        width: 90%;
+        max-width: 450px;
+        height: auto;
+        padding: 30px;
+    }
+
+    .welcomeCard h2 {
+        font-size: 28px;
+    }
+
+    .cornerImageTopRight,
+    .cornerImageBottomLeft {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .welcomeCard {
+        width: 95%;
+        padding: 25px;
+    }
+
+    .welcomeCard h2 {
+        font-size: 24px;
+    }
+
+    .welcomeCard p {
+        font-size: 14px;
+    }
+
+    .continueBtn {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+
+    .illustration img {
+        width: calc(547px * 0.4);
+        height: calc(820px * 0.4);
+    }
+
+    .iconCircle {
+        width: 50px;
+        height: 50px;
+    }
+
+    .iconCircle .material-icons i {
+        font-size: 1em;
+    }
+}

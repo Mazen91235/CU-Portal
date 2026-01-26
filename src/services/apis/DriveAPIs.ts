@@ -13,22 +13,17 @@ export const DriveAPI = createApi({
         },
     }),
     endpoints: (builder) => ({
-        uploadFileToDrive: builder.mutation<string, FormData>(
-            {
-                query: (fileData) => ({
-                    url: "/files?uploadType=multipart",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "multipart/related",
-                    },
-                    body: fileData,
-                }),
-                transformResponse: (response: { data: { id: string } }) => response.data.id,
-            }
-        ),
+        uploadFileToDrive: builder.mutation<string, FormData>({
+            query: (fileData) => ({
+                url: "/files?uploadType=multipart",
+                method: "POST",
+                body: fileData,
+            }),
+            transformResponse: ({ id }: { id: string }) => id,
+        }),
         makeFilePublic: builder.mutation<boolean, string>({
             query: (fileId) => ({
-                url: `/files/${fileId}/permissions`,
+                url: `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
                 method: "POST",
                 body: {
                     role: "reader",
@@ -73,7 +68,7 @@ export const DriveAPI = createApi({
                 body: chunk,
                 headers: {
                     "Content-Range": `bytes ${start}-${end}/${total}`,
-                    "Content-Type": "application/octet-stream"
+                    "Content-Type": "application/octet-stream",
                 },
             }),
             transformResponse: (_, meta) => ({
@@ -96,13 +91,12 @@ export const DriveAPI = createApi({
                     "Content-Range": `bytes */${total}`,
                 },
             }),
-            transformResponse: (response: { data: { id: string } }) => response.data.id,
+            transformResponse: (response: { data: { id: string } }) =>
+                response.data.id,
         }),
-        removeFileFromDrive: builder.mutation<
-            boolean, string
-        >({
+        removeFileFromDrive: builder.mutation<boolean, string>({
             query: (fileId) => ({
-                url: `/files/${fileId}`,
+                url: `https://www.googleapis.com/drive/v3/files/${fileId}`,
                 method: "DELETE",
             }),
             transformResponse: () => true,
@@ -115,5 +109,5 @@ export const {
     useGetResumableSessionMutation,
     useUploadChunkMutation,
     useFinalizeUploadMutation,
-    useRemoveFileFromDriveMutation
+    useRemoveFileFromDriveMutation,
 } = DriveAPI;

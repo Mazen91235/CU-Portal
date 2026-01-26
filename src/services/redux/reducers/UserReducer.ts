@@ -29,7 +29,7 @@ const UserSlice = createSlice({
                     state.user = null;
                     state.access_token = null;
                 }
-            }
+            },
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.refreshToken.matchFulfilled,
@@ -37,7 +37,7 @@ const UserSlice = createSlice({
                 if (payload.status == "success") {
                     state.access_token = payload.data?.access_token || null;
                 }
-            }
+            },
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
@@ -46,7 +46,7 @@ const UserSlice = createSlice({
                     state.google_access_token =
                         payload.data?.access_token || null;
                 }
-            }
+            },
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleAccessToken.matchFulfilled,
@@ -55,7 +55,7 @@ const UserSlice = createSlice({
                     state.google_access_token =
                         payload.data?.access_token || null;
                 }
-            }
+            },
         );
         builder.addMatcher(
             UserAPI.endpoints.getUserData.matchFulfilled,
@@ -63,15 +63,21 @@ const UserSlice = createSlice({
                 if (payload.status == "success") {
                     state.user = payload.data || null;
                 }
-            }
+            },
         );
         builder.addMatcher(
             UserAPI.endpoints.getUserPermissions.matchFulfilled,
             (state, { payload }) => {
                 if (payload.status == "success") {
                     state.permissions = payload.data || [];
+                    if (state.user && state.user.is_early_access) {
+                        state.permissions = state.permissions.filter(
+                            (p) => p != "Early Access",
+                        );
+                        state.permissions.push("Early Access");
+                    }
                 }
-            }
+            },
         );
     },
 });

@@ -1,5 +1,5 @@
-import useAuth from "../hooks/useAuth";
 import { Outlet } from "react-router";
+import useAuth from "../hooks/useAuth";
 
 export default function ProtectedRoute({
     permission,

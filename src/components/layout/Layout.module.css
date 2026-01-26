@@ -1,0 +1,27 @@
+.layoutContainer {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.mainContent {
+    margin-top: 60px;
+    transition: margin-left var(--transition-duration) ease;
+    min-height: calc(100vh - 60px);
+    overflow-y: auto;
+    padding: var(--primary-padding);
+}
+
+.mainContent.sidebarOpen {
+    margin-left: 256px;
+}
+
+.mainContent.sidebarClosed {
+    margin-left: 0;
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        margin-left: 0 !important;
+    }
+}

@@ -33,6 +33,10 @@
     text-decoration: none;
     transition: opacity var(--transition-duration);
     font-family: var(--primary-font-family);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .footerLink:hover {

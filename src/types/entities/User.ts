@@ -25,7 +25,9 @@ export type User = {
     role?: Role | null;
     role_id?: number | null;
     manages?: object;
-    details?: object;
+    details?: {
+        avatar?: string | null;
+    };
     google_id?: string | null;
     google_name?: string | null;
     google_email?: string | null;

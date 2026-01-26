@@ -1,0 +1,479 @@
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--grey-background);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px 40px;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.logo {
+    color: var(--primary-purple);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo .highlight {
+    color: var(--primary-orange);
+}
+
+.cornerImageTopRight {
+    position: absolute;
+    top: -250px;
+    right: -250px;
+    width: 600px;
+    height: auto;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.cornerImageBottomLeft {
+    position: absolute;
+    bottom: -250px;
+    left: -200px;
+    width: 600px;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.contentWrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    align-items: center;
+    padding-bottom: 0;
+}
+
+.illustration {
+    flex-shrink: 0;
+    margin-right: 60px;
+    align-self: flex-end;
+    margin-bottom: 0;
+}
+
+.illustration img {
+    width: calc(445px * 0.8);
+    height: calc(667px * 0.8);
+    margin-left: -250px;
+    display: block;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    position: absolute;
+    bottom: 0;
+    left: 280px;
+}
+
+.illustrationImgMobile {
+    display: none;
+}
+
+.profileFormCard {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 60px 70px;
+    box-shadow: var(--dark-box-shadow);
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    margin-top: -100px;
+    margin-right: -200px;
+}
+
+.profileFormCard h2 {
+    font-size: 38px;
+    color: var(--primary-purple);
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.gradientTextH2 {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: var(--medium-grey);
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.inputRow {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.inputRow > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.inputGroup {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    padding: 12px 15px 12px 0;
+    background-color: var(--white);
+    height: 50px;
+}
+
+.inputGroup span {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px;
+    padding: 10px 0 10px 15px;
+    cursor: default;
+    flex-shrink: 0;
+}
+
+.inputGroup :global(.input-group) {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.inputGroup :global(.input-group) input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--dark-text);
+    background-color: transparent;
+    padding: 0;
+    height: 100%;
+}
+
+.inputGroup :global(.input-group) input::placeholder {
+    color: var(--medium-grey);
+}
+
+.inputGroup.error {
+    border-color: var(--error-red);
+}
+
+.selectGroup {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    padding: 12px 15px 12px 0;
+    background-color: var(--white);
+    height: 50px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.selectGroup span {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px;
+    padding: 10px 0 10px 15px;
+    cursor: default;
+}
+
+.selectGroup select {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--dark-text);
+    background-color: transparent;
+    padding: 0;
+    height: 100%;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.selectGroup select option {
+    color: var(--dark-text);
+}
+
+.selectGroup i {
+    color: var(--medium-grey);
+    pointer-events: none;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.selectGroup.error,
+.fileInputGroup.error {
+    border-color: var(--error-red);
+}
+
+.fileInputGroup {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    padding: 12px 15px;
+    background-color: var(--white);
+    height: 50px;
+    cursor: pointer;
+    position: relative;
+}
+
+.fileInputGroup span {
+    color: var(--medium-grey);
+    margin-right: 10px;
+    font-size: 24px;
+    cursor: default;
+}
+
+.fileInputGroup input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--dark-text);
+    background-color: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+.fileInputGroup input[type="text"]::placeholder {
+    color: var(--medium-grey);
+}
+
+.hiddenFileInput {
+    display: none;
+}
+
+.attachmentInfoText {
+    position: absolute;
+    top: 50px;
+    left: 5px;
+    font-size: 11px;
+    color: var(--medium-grey);
+    text-align: left;
+    line-height: 1.2;
+}
+.dragOver {
+    border: 2px dashed var(--primary-purple);
+    background-color: #f9f5fb;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-size: 14px;
+    color: var(--dark-grey);
+    width: 100%;
+    padding-left: 5px;
+}
+
+.checkboxGroup label {
+    cursor: text;
+    user-select: none;
+}
+
+.checkboxGroup a {
+    color: var(--primary-purple);
+    text-decoration: underline;
+}
+
+.checkboxGroup input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--medium-grey);
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.checkboxGroup input[type="checkbox"]:checked {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+}
+
+.checkboxGroup input[type="checkbox"]:checked::after {
+    content: "\2713";
+    font-size: 14px;
+    color: var(--white);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 1024px) {
+    .contentWrapper {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .container {
+        overflow: visible;
+        height: auto;
+        padding-bottom: 0;
+        position: relative;
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo {
+        z-index: 20;
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .illustration {
+        display: none;
+    }
+
+    .illustrationImgMobile {
+        display: block;
+        width: calc(445px * 0.25);
+        height: calc(667px * 0.25);
+        margin-left: 0;
+        transform: rotateY(180deg);
+        position: absolute;
+        top: -50px;
+        right: 0;
+    }
+
+    .profileFormCard {
+        padding: 40px 30px;
+        max-width: calc(100% - 80px);
+        margin: 0;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .profileFormCard h2 {
+        font-size: 32px;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .inputRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .inputRow > div {
+        width: 100%;
+        margin: 5px 0 0 0;
+    }
+
+    .selectGroup,
+    .fileInputGroup {
+        height: 45px;
+    }
+
+    .checkboxGroup {
+        margin-top: 15px;
+        margin-bottom: 25px;
+        font-size: 13px;
+        padding-left: 5px;
+    }
+
+    .checkboxGroup input[type="checkbox"] {
+        margin-right: 8px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .checkboxGroup input[type="checkbox"]:checked::after {
+        font-size: 12px;
+    }
+
+    .cornerImageTopRight {
+        top: -150px;
+    }
+
+    .cornerImageBottomLeft {
+        bottom: -200px;
+        left: -400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        margin-top: 10px;
+    }
+
+    .logo {
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+        z-index: 30;
+        position: relative;
+        font-size: 30px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .profileFormCard {
+        max-width: 100%;
+    }
+
+    .illustrationImgMobile {
+        display: block;
+        width: calc(445px * 0.25);
+        height: calc(667px * 0.25);
+        margin-left: 0;
+        transform: rotateY(180deg);
+        position: absolute;
+        top: -50px;
+        right: -30px;
+    }
+}
+
+@media (max-width: 440px) and (min-width: 370px) {
+    .illustrationImgMobile {
+        top: -120px;
+        right: -30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cornerImageTopRight,
+    .cornerImageBottomLeft {
+        display: none;
+    }
+}

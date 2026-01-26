@@ -1,0 +1,243 @@
+.container {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: var(--grey-background);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px 40px;
+    text-align: left;
+    height: 10vh;
+}
+
+.cornerImageTopRight {
+    position: absolute;
+    top: -150px;
+    right: -300px;
+    width: 665.222px;
+    height: 471.028px;
+    z-index: 0;
+}
+
+.cornerImageBottomLeft {
+    position: absolute;
+    bottom: -150px;
+    left: -220px;
+    width: 665.222px;
+    height: 471.028px;
+    z-index: 0;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    min-height: 90vh;
+}
+
+.illustration img {
+    width: calc(547px * 0.8);
+    height: calc(820px * 0.8);
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 100px;
+    object-fit: contain;
+}
+
+.welcomeCard {
+    display: inline-flex;
+    padding: 36px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 13px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--dark-box-shadow);
+    margin-top: -100px;
+    margin-right: -250px;
+    text-align: center;
+    width: calc(461px * 1.2);
+}
+
+.welcomeCard::before {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    content: "";
+    background: rgba(0, 0, 0, 0.1);
+    z-index: -1;
+    backdrop-filter: blur(5px);
+}
+
+.iconCircle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.title {
+    text-align: center;
+    justify-content: center;
+    font-family: var(--primary-font-family);
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 1.68px;
+    text-transform: capitalize;
+    background: var(--gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: #64748b;
+    font-family: var(--primary-font-family);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 1.44px;
+}
+
+.emailContainer {
+    text-align: center;
+    font-family: var(--primary-font-family);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: lowercase;
+    background: #881792;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.inputGroup {
+    margin: 24px 0;
+    width: 100%;
+    max-width: 508px;
+}
+
+.resendContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    color: #64748b;
+    margin: 32px 0 0 0;
+    width: 100%;
+    max-width: 508px;
+}
+
+.resendLink {
+    color: var(--primary-orange);
+    font-weight: 500;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.resendLink:hover {
+    color: #fb923c;
+}
+
+.resendLink:disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: gray;
+    text-decoration: none;
+}
+
+.infoBox {
+    background: #eef6ff;
+    color: #2563eb;
+    font-size: 18px;
+    padding: 18px 0;
+    border-radius: 10px;
+    margin: 24px auto 0 auto;
+    width: 100%;
+    max-width: 583px;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+}
+
+@media (max-width: 1024px) {
+    .contentWrapper {
+        gap: 40px;
+        flex-direction: column;
+        padding-top: 200px;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .illustration {
+        order: 2;
+    }
+
+    .welcomeCard {
+        order: 1;
+        margin: 200px auto 0 auto;
+    }
+
+    .illustration img {
+        width: 400px;
+        height: auto;
+        position: static;
+        padding: 0;
+        margin-left: -60px;
+    }
+
+    .cornerImageTopRight {
+        top: 50px;
+        right: -400px;
+    }
+
+    .cornerImageTopRight,
+    .cornerImageBottomLeft {
+        opacity: 0.7;
+    }
+
+    .header {
+        text-align: center;
+    }
+}
+
+@media (max-width: 800px) {
+    .welcomeCard {
+        width: calc(100% - 40px);
+        height: auto;
+        padding: 36px 18px;
+    }
+}
+
+@media (max-width: 400px) {
+    .title {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+}

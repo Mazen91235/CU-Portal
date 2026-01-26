@@ -1,0 +1,151 @@
+.input-group {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.input-group select {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px 10px 10px;
+    border-radius: var(--primary-border-radius) !important;
+    border: 1px solid var(--light-grey);
+    outline: none;
+    cursor: pointer;
+    background: var(--white)
+        url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20640%20640%27%20fill%3D%27var(--primary-color-black)%27%3E%3Cpath%20d%3D%27M300.3%20440.8C312.9%20451%20331.4%20450.3%20343.1%20438.6L471.1%20310.6C480.3%20301.4%20483%20287.7%20478%20275.7C473%20263.7%20461.4%20256%20448.5%20256L192.5%20256C179.6%20256%20167.9%20263.8%20162.9%20275.8C157.9%20287.8%20160.7%20301.5%20169.9%20310.6L297.9%20438.6L300.3%20440.8z%27%2F%3E%3C%2Fsvg%3E")
+        right 15px center / 16px no-repeat;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+@supports (appearance: base-select) {
+    @media (hover: hover) {
+        .input-group select,
+        .input-group select::picker(select) {
+            appearance: base-select;
+        }
+    }
+}
+
+@media (hover: hover) {
+    @supports (appearance: base-select) {
+        .input-group select {
+            padding: 10px 20px 10px 10px;
+            background-image: none;
+        }
+
+        .input-group select::picker-icon {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20640%20640%27%20fill%3D%27var(--primary-color-black)%27%3E%3Cpath%20d%3D%27M300.3%20440.8C312.9%20451%20331.4%20450.3%20343.1%20438.6L471.1%20310.6C480.3%20301.4%20483%20287.7%20478%20275.7C473%20263.7%20461.4%20256%20448.5%20256L192.5%20256C179.6%20256%20167.9%20263.8%20162.9%20275.8C157.9%20287.8%20160.7%20301.5%20169.9%20310.6L297.9%20438.6L300.3%20440.8z%27%2F%3E%3C%2Fsvg%3E");
+            transition: rotate 0.2s ease-out;
+        }
+
+        .input-group select:open::picker-icon {
+            rotate: 180deg;
+        }
+
+        .input-group select::picker(select) {
+            padding: 0;
+            margin-top: 5px;
+            border: 1px solid var(--light-grey);
+            background: var(--white);
+            border-radius: var(--primary-border-radius);
+            max-height: 300px;
+            opacity: 0;
+            height: 0;
+            overflow: clip;
+            transition:
+                height 0.5s ease-out,
+                opacity 0.5s ease-out,
+                overlay 0.5s,
+                display 0.5s;
+            transition-behavior: allow-discrete;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-purple) transparent;
+            box-shadow: var(--light-box-shadow);
+        }
+
+        .input-group select::picker(select)::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .input-group select::picker(select)::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .input-group select::picker(select)::-webkit-scrollbar-thumb {
+            background: var(--primary-purple);
+            border-radius: 3px;
+        }
+
+        .input-group select::picker(select)::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-purple);
+            opacity: 0.8;
+        }
+
+        .input-group select::picker(select)::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        .input-group select:open::picker(select) {
+            opacity: 1;
+            height: calc-size(auto, size);
+            overflow: auto;
+        }
+
+        @starting-style {
+            .input-group select:open::picker(select) {
+                opacity: 0;
+                height: 0;
+            }
+        }
+
+        .input-group select option {
+            padding: 10px 15px;
+            border-top: 1px solid var(--light-grey);
+            cursor: pointer;
+            transition-property: color, background;
+            transition-duration: 0.2s;
+            transition-timing-function: ease-out;
+        }
+
+        .input-group select option:where(:hover, :focus, :active) {
+            background: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .input-group select option:checked {
+            background: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .input-group select option::checkmark {
+            display: none;
+        }
+
+        .input-group select option:first-child {
+            border: 0;
+        }
+    }
+}
+
+.input-group select:focus {
+    border-color: var(--primary-purple);
+}
+
+.input-group select option:disabled {
+    color: var(--light-grey);
+}
+
+.input-group select.error {
+    border-color: var(--error-red);
+    border-width: 2px;
+}

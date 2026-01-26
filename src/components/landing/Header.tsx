@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router";
+import { useAppSelector } from "../../services/redux/Hooks";
 import Logo from "../logo/Logo";
 import styles from "./Header.module.css";
 
@@ -10,7 +12,7 @@ export const Header = ({
     setActiveSection: React.Dispatch<React.SetStateAction<string>>;
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
+    const user = useAppSelector((state) => state.user.user);
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -112,8 +114,20 @@ export const Header = ({
                     </a>
                 </nav>
                 <div className={styles.headerRight}>
-                    <button className={styles.loginBtn}>Login</button>
-                    <button className={styles.signupBtn}>Sign Up</button>
+                    {!user ? (
+                        <>
+                            <Link to="/login" className={styles.loginBtn}>
+                                Login
+                            </Link>
+                            <Link to="/signup" className={styles.signupBtn}>
+                                Sign Up
+                            </Link>
+                        </>
+                    ) : (
+                        <Link to="/user" className={styles.dashboardBtn}>
+                            Dashboard
+                        </Link>
+                    )}
                     <button
                         className={`${styles.mobileMenuToggle} ${
                             sidebarOpen ? styles.menuOpen : ""
@@ -216,20 +230,35 @@ export const Header = ({
                         </a>
                     </li>
                     <hr />
-                    <li>
-                        <button
-                            className={`${styles.loginBtn} ${styles.sidebarBtn}`}
-                        >
-                            Login
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={`${styles.signupBtn} ${styles.sidebarBtn}`}
-                        >
-                            Sign Up
-                        </button>
-                    </li>
+                    {!user ? (
+                        <>
+                            <li>
+                                <Link
+                                    to="/login"
+                                    className={`${styles.loginBtn} ${styles.sidebarBtn}`}
+                                >
+                                    Login
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/signup"
+                                    className={`${styles.signupBtn} ${styles.sidebarBtn}`}
+                                >
+                                    Sign Up
+                                </Link>
+                            </li>
+                        </>
+                    ) : (
+                        <li>
+                            <Link
+                                to="/user"
+                                className={`${styles.dashboardBtn} ${styles.sidebarBtn}`}
+                            >
+                                Dashboard
+                            </Link>
+                        </li>
+                    )}
                 </ul>
             </nav>
         </>

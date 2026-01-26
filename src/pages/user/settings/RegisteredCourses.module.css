@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--primary-padding);
+    min-height: 100vh;
+    background-color: var(--grey-background);
+}
+
+.mainCard {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: var(--dark-box-shadow);
+    width: 100%;
+    max-width: 1400px;
+    margin: 2rem auto;
+}
+
+.pageTitle {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.underline {
+    width: 120px;
+    height: 2px;
+    background: var(--primary-purple);
+    margin-top: 4px;
+    margin-bottom: 2rem;
+    border-radius: 2px;
+}
+
+.section {
+    margin-bottom: 3rem;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.hatIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.courseBadge {
+    background: var(--primary-purple);
+    color: var(--white);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.searchContainer {
+    margin-bottom: 1.5rem;
+}
+
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .mainCard {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.2rem;
+    }
+
+    .cardsGrid {
+        grid-template-columns: 1fr;
+    }
+}

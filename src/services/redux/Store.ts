@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./reducers/UserReducer";
+import notificationReducer from "./reducers/NotificationReducer";
 import { AuthenticateAPI } from "../apis/AuthenticateAPIs";
 import { UserAPI } from "../apis/user/UserAPIs";
 import { setupListeners } from "@reduxjs/toolkit/query";
@@ -33,6 +34,7 @@ import { MessageAPI } from "../apis/MessageAPIs";
 const store = configureStore({
     reducer: {
         user: userReducer,
+        notification: notificationReducer,
         [AuthenticateAPI.reducerPath]: AuthenticateAPI.reducer,
         [DriveAPI.reducerPath]: DriveAPI.reducer,
         [MessageAPI.reducerPath]: MessageAPI.reducer,
@@ -91,7 +93,7 @@ const store = configureStore({
             AdminRoleAPI.middleware,
             AdminTaskAPI.middleware,
             AdminUserAPI.middleware,
-            AdminYearAPI.middleware
+            AdminYearAPI.middleware,
         ),
 });
 

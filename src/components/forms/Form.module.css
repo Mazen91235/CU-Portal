@@ -1,0 +1,28 @@
+.form-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+}
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-full {
+    max-width: 100%;
+}
+.error {
+    color: var(--error-red);
+}
+@media (max-width: 996px) {
+    .form-container {
+        align-items: center;
+        padding: 30px;
+    }
+    .form {
+        max-width: 100vw;
+    }
+}

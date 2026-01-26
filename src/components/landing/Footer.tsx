@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import styles from "./Footer.module.css";
 
 export const Footer = () => {
@@ -15,50 +16,40 @@ export const Footer = () => {
                 <span className={styles.footerHighlight}>o</span>rtal
             </div>
             <div className={styles.footerLinks}>
-                <a
-                    href="#Snapshots"
+                <button
                     className={styles.footerLink}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        handleFooterLinkClick("Snapshots");
-                    }}
+                    onClick={() => handleFooterLinkClick("snapshots")}
                 >
                     Snapshots
-                </a>
-                <a
-                    href="#team-section"
+                </button>
+                <button
                     className={styles.footerLink}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        handleFooterLinkClick("team-section");
-                    }}
+                    onClick={() => handleFooterLinkClick("team-section")}
                 >
                     Our team
-                </a>
-                <a
-                    href="#contact-form-section"
+                </button>
+                <button
                     className={styles.footerLink}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        handleFooterLinkClick("contact-form-section");
-                    }}
+                    onClick={() =>
+                        handleFooterLinkClick("contact-form-section")
+                    }
                 >
                     Contact Us
-                </a>
+                </button>
             </div>
             <div className={styles.footerSecondaryLinks}>
-                <a
-                    href="/privacy-policy"
+                <Link
+                    to="/privacy-policy"
                     className={styles.footerSecondaryLink}
                 >
                     Privacy Policy
-                </a>
-                <a
-                    href="/terms-of-service"
+                </Link>
+                <Link
+                    to="/terms-of-service"
                     className={styles.footerSecondaryLink}
                 >
                     Terms & Conditions
-                </a>
+                </Link>
             </div>
         </footer>
     );

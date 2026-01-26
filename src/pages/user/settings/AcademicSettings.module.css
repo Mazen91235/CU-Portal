@@ -1,0 +1,76 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--primary-padding);
+    min-height: 100vh;
+    background-color: var(--grey-background);
+}
+
+.card {
+    border-radius: 24px;
+    background: var(--white);
+    border: none;
+    width: 100%;
+    max-width: 1100px;
+    padding: 2rem;
+    box-shadow: var(--dark-box-shadow);
+}
+
+.header {
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.underline {
+    width: 120px;
+    height: 2px;
+    background: var(--primary-purple);
+    margin-left: 30px;
+    margin-top: 4px;
+    border-radius: 2px;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+.buttonContainer button {
+    width: 260px;
+    font-size: 17px;
+    height: 44px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .buttonContainer button {
+        width: 100%;
+    }
+}

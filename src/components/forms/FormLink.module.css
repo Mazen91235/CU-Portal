@@ -1,0 +1,19 @@
+.form-link {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 16px;
+    font-weight: var(--primary-font-weight-heavy);
+}
+.form-link.with-subtext {
+    justify-content: space-between;
+}
+.form-link a {
+    color: var(--primary-purple);
+}
+.form-link span {
+    color: var(--dark-text);
+    border: none;
+    text-decoration: none;
+}

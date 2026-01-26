@@ -1,0 +1,19 @@
+.splitter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.splitter > div {
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .splitter {
+        flex-direction: column;
+    }
+    .splitter > div {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}

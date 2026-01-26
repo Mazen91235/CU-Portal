@@ -1,0 +1,12 @@
+.form-splitter {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--light-grey);
+}
+
+.form-splitter .line {
+    width: 45%;
+    border: 1px solid var(--light-grey);
+}
