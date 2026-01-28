@@ -7,7 +7,7 @@ const initialState = {
     user: null as User | null,
     access_token: null as string | null,
     google_access_token: null as string | null,
-    permissions: [] as string[],
+    permissions: null as string[] | null,
 };
 
 const UserSlice = createSlice({
@@ -62,6 +62,7 @@ const UserSlice = createSlice({
             (state, { payload }) => {
                 if (payload.status == "success") {
                     state.user = payload.data || null;
+                    state.permissions = null;
                 }
             },
         );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import clockIcon from "../../assets/icons/clock-icon.svg";
 import locationIcon from "../../assets/icons/location-icon.svg";
 import subjectIcon from "../../assets/icons/subject-icon.svg";
@@ -65,9 +65,22 @@ export const Card = ({
 }: CardProps) => {
     const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
+    const optionsRef = useRef<HTMLDivElement>(null);
+
     const handleOptionClick = (action?: () => void) => {
         setShowOptionsMenu(false);
         action?.();
+    };
+
+    const handleClicks = (e: PointerEvent) => {
+        if (
+            e.target instanceof Node &&
+            optionsRef.current &&
+            !optionsRef.current.contains(e.target)
+        ) {
+            setShowOptionsMenu(false);
+            document.removeEventListener("click", handleClicks);
+        }
     };
 
     return (
@@ -86,10 +99,22 @@ export const Card = ({
             <div className={styles.titleRow}>
                 <h3 className={styles.title}>{title}</h3>
                 {hasOptions && (
-                    <div className={styles.optionsContainer}>
+                    <div ref={optionsRef} className={styles.optionsContainer}>
                         <button
                             className={styles.optionsButton}
-                            onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+                            onClick={() => {
+                                if (!showOptionsMenu)
+                                    document.addEventListener(
+                                        "click",
+                                        handleClicks,
+                                    );
+                                else
+                                    document.removeEventListener(
+                                        "click",
+                                        handleClicks,
+                                    );
+                                setShowOptionsMenu(!showOptionsMenu);
+                            }}
                             aria-label="More options"
                         >
                             <svg

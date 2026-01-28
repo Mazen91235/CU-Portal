@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { LandingPage } from "./pages/LandingPage";
+import { LandingPage } from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import LoginSuccessPage from "./pages/auth/LoginSuccessPage";
 import CreateProfilePage from "./pages/auth/CreateProfilePage";
@@ -13,11 +13,16 @@ import { UserDashboard } from "./components/user/dashboard/Dashboard";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
 import { AcademicSettings } from "./pages/user/settings/AcademicSettings";
 import { RegisteredCourses } from "./pages/user/settings/RegisteredCourses";
+import { FacultiesPage } from "./pages/admin/faculties/FacultiesPage";
+import { DepartmentsPage } from "./pages/admin/departments/DepartmentsPage";
+import { YearsPage } from "./pages/admin/years/YearsPage";
+import { usePageLoading } from "./hooks/usePageLoading";
 
 function App() {
     useGetUser();
     useGetNotifications();
     useRouteMessages();
+    usePageLoading();
     return (
         <Routes>
             <Route index element={<LandingPage />} />
@@ -38,7 +43,7 @@ function App() {
             <Route path="/admin" element={<ProtectedRoute />}>
                 <Route
                     path=""
-                    element={<ProtectedRoute permission="Access Admin" />}
+                    element={<ProtectedRoute permission="View Admin Panel" />}
                 >
                     <Route index element={<div>Admin Dashboard</div>} />
                 </Route>
@@ -46,13 +51,20 @@ function App() {
                     path="faculties"
                     element={<ProtectedRoute permission="View Faculties" />}
                 >
-                    <Route index element={<div>Admin Faculties</div>} />
+                    <Route index element={<FacultiesPage />} />
                 </Route>
                 <Route
                     path="departments"
                     element={<ProtectedRoute permission="View Departments" />}
                 >
-                    <Route index element={<div>Admin Departments</div>} />
+                    <Route index element={<DepartmentsPage />} />
+                </Route>
+
+                <Route
+                    path="years"
+                    element={<ProtectedRoute permission="View Years" />}
+                >
+                    <Route index element={<YearsPage />} />
                 </Route>
             </Route>
         </Routes>

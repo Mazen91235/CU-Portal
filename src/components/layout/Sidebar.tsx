@@ -61,7 +61,7 @@ type NavSection = {
     links: NavLink[];
 };
 
-const navSections: NavSection[] = [
+const navSectionsDefault: NavSection[] = [
     {
         title: "Academic",
         links: [
@@ -347,13 +347,17 @@ export const Sidebar = ({
     const permissions = useAppSelector((state) => state.user.permissions);
     const [logout] = useLogoutMutation();
     const [expandedSections, setExpandedSections] = useState<string[]>([]);
+    const [navSections, setNavSections] = useState<NavSection[]>([
+        ...navSectionsDefault,
+    ]);
     useEffect(() => {
         if (permissions) {
             const section = showAdminLinks(permissions);
             if (section) {
-                navSections.reverse();
-                navSections.push(section);
-                navSections.reverse();
+                setNavSections((prev) => [
+                    section,
+                    ...prev.filter((s) => s.title !== "Admin Pages"),
+                ]);
             }
         }
     }, [permissions]);
@@ -402,7 +406,7 @@ export const Sidebar = ({
             });
             return newExpanded;
         });
-    }, [location.pathname]);
+    }, [location.pathname, navSections]);
 
     const handleLogout = async () => {
         try {

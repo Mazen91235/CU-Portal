@@ -38,8 +38,14 @@ project-root/
     old_project/ -> (Read Only Folder (Never modify or touch it just you can read it only))
     pages/
       admin/
+        faculties/
+        departments/
+        years/
+        courses/
       auth/
       user/
+        settings/
+      landing/
     services/
       apis/
         admin/
@@ -107,6 +113,7 @@ the main css shared over the project is found in the `index.css` file in the roo
 - Any Custom Select box use a component from `Select` or `SearchableInput` in case that this custom select box was searchable and that's rare to encounter
 - Any Card Encountered like in pages courses or tasks or exams or announcements or etc.. use the Card component as it should be generic and cover all these cards
 - When Converting and encountering any needed assets .. copy them with meaningful name to the `src/assets` proper folder whether `icons` or whatever but don't import anything from old_project directly
+- Include `Layout` component in any page created so that the Layout is properly set and include the page content in the Layout
 
 ---
 

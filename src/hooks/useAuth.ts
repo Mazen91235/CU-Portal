@@ -72,7 +72,7 @@ export default function useAuth({
                 if (!access_token && GetCookie("access_token")) {
                     dispatch(setAccessToken(GetCookie("access_token")!));
                 }
-                if (user && permission) {
+                if (user && permissions && permission) {
                     const hasPermission = permissions.includes(permission);
                     const normalPredicate = !hasPermission && !reverse;
                     const reversePredicate = hasPermission && reverse;
