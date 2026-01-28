@@ -11,6 +11,7 @@ type SearchableInputProps<T extends Record<string, unknown>> = {
     placeholder?: string;
     options: { value: string; label: string }[];
     defaultValue?: string;
+    disabled?: boolean;
 };
 
 export const SearchableInput = <T extends Record<string, unknown>>({
@@ -21,6 +22,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
     placeholder,
     options,
     defaultValue,
+    disabled,
 }: SearchableInputProps<T>) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -57,6 +59,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
     }, [selectedValue, options]);
 
     const handleContainerClick = () => {
+        if (disabled) return;
         if (!isOpen) {
             setIsOpen(true);
             setSearchTerm(displayValue);
@@ -81,7 +84,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
                 <label htmlFor={`form-${String(name)}-field`}>{label}</label>
             )}
             <div
-                className={`${styles["searchable-container"]} ${isOpen ? styles["open"] : ""} ${errors[name] ? styles["error"] : ""}`}
+                className={`${styles["searchable-container"]} ${isOpen ? styles["open"] : ""} ${errors[name] ? styles["error"] : ""} ${disabled ? styles["disabled"] : ""}`}
                 onClick={handleContainerClick}
             >
                 <input
@@ -92,6 +95,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
                     onChange={handleInputChange}
                     readOnly={!isOpen}
                     placeholder={placeholder}
+                    disabled={disabled}
                 />
                 <input
                     type="hidden"
@@ -100,7 +104,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
                 />
                 <div className={styles["arrow-icon"]} />
             </div>
-            {isOpen && filteredOptions.length > 0 && (
+            {isOpen && !disabled && filteredOptions.length > 0 && (
                 <div className={styles["options-dropdown"]}>
                     {filteredOptions.map((option, i) => (
                         <div
@@ -113,7 +117,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
                     ))}
                 </div>
             )}
-            {isOpen && filteredOptions.length === 0 && (
+            {isOpen && !disabled && filteredOptions.length === 0 && (
                 <div className={styles["options-dropdown"]}>
                     <div className={styles["no-options"]}>No options found</div>
                 </div>

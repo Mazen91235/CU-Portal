@@ -1,18 +1,22 @@
 import { useState } from "react";
-import { Button } from "../forms/Button";
+import clockIcon from "../../assets/icons/clock-icon.svg";
+import locationIcon from "../../assets/icons/location-icon.svg";
+import subjectIcon from "../../assets/icons/subject-icon.svg";
+import timeIcon from "../../assets/icons/time-icon.svg";
 import styles from "./Card.module.css";
+import { Button } from "../forms/Button";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
     icon: "clock" | "location" | "calendar" | "subject" | "person" | "time";
-    label: string;
-    value: string;
+    label?: string;
+    value?: string;
     color?: CardItemColor;
 };
 
 type CardProps = {
-    title: string;
+    title?: string;
     badge?: string;
     secondaryBadge?: string;
     items?: CardItem[];
@@ -29,14 +33,14 @@ type CardProps = {
 
 const getIconPath = (icon: string): string => {
     const iconMap: Record<string, string> = {
-        clock: "/assets/m100.svg",
-        location: "/assets/m102.svg",
-        calendar: "/assets/m100.svg",
-        subject: "/assets/m110.svg",
-        person: "/assets/m111.svg",
-        time: "/assets/m101.svg",
+        clock: clockIcon,
+        location: locationIcon,
+        calendar: clockIcon,
+        subject: subjectIcon,
+        person: subjectIcon,
+        time: timeIcon,
     };
-    return iconMap[icon] || "/assets/m100.svg";
+    return iconMap[icon] || clockIcon;
 };
 
 const getColorClass = (color?: CardItemColor): string => {
@@ -162,9 +166,13 @@ export const Card = ({
 
             {button && buttonAction && (
                 <div className={styles.buttonContainer}>
-                    <Button type="button" onClick={buttonAction}>
-                        {button}
-                    </Button>
+                    <Button
+                        onClick={buttonAction}
+                        text={button}
+                        loadingText={"Loading..."}
+                        isOrange={false}
+                        isSubmitting={false}
+                    />
                 </div>
             )}
         </article>

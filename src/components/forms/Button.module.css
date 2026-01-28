@@ -10,50 +10,20 @@
     cursor: pointer;
     font-size: 16px;
     font-weight: var(--primary-font-weight);
-    transition: transform var(--transition-duration) ease;
+    position: relative;
 }
 
 .button:disabled {
     cursor: not-allowed;
 }
 
-.button:hover,
-.button-remove:hover,
-.button-google:hover {
-    transform: scale(1.07);
-}
-
-.button:active,
-.button-remove:active,
-.button-google:active {
-    transform: scale(0.98);
-}
-
-.button-remove {
-    background: rgba(150, 150, 150, 0.69);
-    color: var(--white);
-    font-weight: var(--primary-font-weight);
-    border-radius: 12px;
-    min-width: 180px;
-    padding: 0.7rem 1.5rem;
-    height: 44px;
-    border: none;
-    cursor: pointer;
-    transition: transform var(--transition-duration) ease;
-}
-
-.button-google {
-    width: 260px;
-    border-radius: 12px;
-    border: 1px solid #8f9598;
-    background: var(--white);
-    color: #333;
-    font-weight: var(--primary-font-weight);
-    padding: 0.7rem 1.5rem;
-    height: 44px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform var(--transition-duration) ease;
+.button:disabled::before {
+    width: 100%;
+    height: 100%;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--light-grey);
+    opacity: 0.2;
 }

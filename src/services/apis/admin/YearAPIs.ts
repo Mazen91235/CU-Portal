@@ -27,7 +27,7 @@ export const AdminYearAPI = createApi({
         }),
         getYear: builder.query<GenericAPIResponse<Year>, { year_id: number }>({
             query: ({ year_id }) => ({
-                url: `/${year_id}`,
+                url: `/view/${year_id}`,
                 method: "GET",
                 credentials: "include",
             }),

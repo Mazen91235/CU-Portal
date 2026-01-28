@@ -33,7 +33,7 @@ export const AdminDepartmentAPI = createApi({
             { department_id: number }
         >({
             query: ({ department_id }) => ({
-                url: `/${department_id}`,
+                url: `/view/${department_id}`,
                 method: "GET",
                 credentials: "include",
             }),

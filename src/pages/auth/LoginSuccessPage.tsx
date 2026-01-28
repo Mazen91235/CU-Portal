@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { SetCookie } from "../../utils/CookiesManager";
 import { useGetGoogleStoredTokenMutation } from "../../services/apis/AuthenticateAPIs";
-import decorTop from "../../old_project/assets/freepik--background-simple--inject-251.png";
-import decorBottom from "../../old_project/assets/freepik--background-simple--inject-251 (1).png";
-import illustrationImg from "../../old_project/assets/a011f92672ccbe9d6137861d6fbf9cde95308f2c.png";
-import styles from "./LoginSuccessPage.module.css";
 import Logo from "../../components/logo/Logo";
 import { PageSeo } from "../../components/PageSeo";
+import decorTop from "../../assets/decorations/bg-top.png";
+import decorBottom from "../../assets/decorations/bg-bottom.png";
+import illustrationImg from "../../assets/decorations/login-illustration.png";
+import styles from "./LoginSuccessPage.module.css";
 
 const LoginSuccessPage = () => {
     const navigate = useNavigate();

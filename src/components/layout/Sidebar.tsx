@@ -1,50 +1,50 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import logoImg from "../../old_project/assets/logo.png";
-import dropdownIcon from "../../old_project/assets/sidebar-dropdown-icon.svg";
-import homeIcon from "../../old_project/assets/sidebar-icon-home.svg";
-import coursesIcon from "../../old_project/assets/sidebar-icon-courses.svg";
-import courseMapIcon from "../../old_project/assets/sidebar-icon-coursemap.svg";
-import calendarIcon from "../../old_project/assets/sidebar-icon-calendar.svg";
-import tasksIcon from "../../old_project/assets/sidebar-icon-tasks.svg";
-import examsIcon from "../../old_project/assets/sidebar-icon-exams.svg";
-import announcementsIcon from "../../old_project/assets/sidebar-icon-announcements.svg";
-import materialsIcon from "../../old_project/assets/sidebar-icon-materials.svg";
-import otherMaterialsIcon from "../../old_project/assets/sidebar-icon-other-materials.svg";
-import gradesIcon from "../../old_project/assets/sidebar-icon-grades.svg";
-import studyTrackerIcon from "../../old_project/assets/sidebar-icon-study-tracker.svg";
-import eventsIcon from "../../old_project/assets/sidebar-icon-events.svg";
-import cvGeneratorIcon from "../../old_project/assets/sidebar-icon-cv-generator.svg";
-import roadmapsIcon from "../../old_project/assets/sidebar-icon-roadmaps.svg";
-import discussionIcon from "../../old_project/assets/sidebar-icon-discussion.svg";
-import profileSettingsIcon from "../../old_project/assets/sidebar-icon-profile-settings.svg";
-import academicSettingsIcon from "../../old_project/assets/sidebar-icon-academic-settings.svg";
-import registeredCoursesIcon from "../../old_project/assets/sidebar-icon-registered-courses.svg";
-import logoutIcon from "../../old_project/assets/sidebar-icon-logout.svg";
-import adminDashboardIcon from "../../old_project/assets/sidebar-icon-admin-dashboard.svg";
-import adminFacultiesIcon from "../../old_project/assets/sidebar-icon-admin-faculties.svg";
-import adminDepartmentsIcon from "../../old_project/assets/sidebar-icon-admin-departments.svg";
-import adminYearsIcon from "../../old_project/assets/sidebar-icon-admin-years.svg";
-import adminCourseMapsIcon from "../../old_project/assets/sidebar-icon-admin-course-maps.svg";
-import adminUsersIcon from "../../old_project/assets/sidebar-icon-admin-users.svg";
-import adminRolesIcon from "../../old_project/assets/sidebar-icon-admin-roles.svg";
-import adminCoursesIcon from "../../old_project/assets/sidebar-icon-admin-courses.svg";
-import adminMaterialsIcon from "../../old_project/assets/sidebar-icon-admin-materials.svg";
-import adminGradesIcon from "../../old_project/assets/sidebar-icon-admin-grades.svg";
-import adminTasksIcon from "../../old_project/assets/sidebar-icon-admin-tasks.svg";
-import adminExamsIcon from "../../old_project/assets/sidebar-icon-admin-exams.svg";
-import adminAnnouncementsIcon from "../../old_project/assets/sidebar-icon-admin-announcements.svg";
-import adminLogsIcon from "../../old_project/assets/sidebar-icon-admin-logs.svg";
-import adminRoadmapsIcon from "../../old_project/assets/sidebar-icon-admin-roadmaps.svg";
-import adminStudyMapsIcon from "../../old_project/assets/sidebar-icon-admin-study-maps.svg";
-import adminStudyAnalysisIcon from "../../old_project/assets/sidebar-icon-admin-study-analysis.svg";
-import adminEventsIcon from "../../old_project/assets/sidebar-icon-admin-events.svg";
-import adminDiscussionsIcon from "../../old_project/assets/sidebar-icon-admin-discussions.svg";
-import styles from "./Sidebar.module.css";
 import { useAppSelector } from "../../services/redux/Hooks";
 import { useLogoutMutation } from "../../services/apis/AuthenticateAPIs";
+import dropdownIcon from "../../assets/icons/sidebar-dropdown.svg";
+import homeIcon from "../../assets/icons/sidebar-home.svg";
+import coursesIcon from "../../assets/icons/sidebar-courses.svg";
+import courseMapIcon from "../../assets/icons/sidebar-coursemap.svg";
+import calendarIcon from "../../assets/icons/sidebar-calendar.svg";
+import tasksIcon from "../../assets/icons/sidebar-tasks.svg";
+import examsIcon from "../../assets/icons/sidebar-exams.svg";
+import announcementsIcon from "../../assets/icons/sidebar-announcements.svg";
+import materialsIcon from "../../assets/icons/sidebar-materials.svg";
+import otherMaterialsIcon from "../../assets/icons/sidebar-other-materials.svg";
+import gradesIcon from "../../assets/icons/sidebar-grades.svg";
+import studyTrackerIcon from "../../assets/icons/sidebar-study-tracker.svg";
+import eventsIcon from "../../assets/icons/sidebar-events.svg";
+import cvGeneratorIcon from "../../assets/icons/sidebar-cv-generator.svg";
+import roadmapsIcon from "../../assets/icons/sidebar-roadmaps.svg";
+import discussionIcon from "../../assets/icons/sidebar-discussion.svg";
+import profileSettingsIcon from "../../assets/icons/sidebar-profile-settings.svg";
+import academicSettingsIcon from "../../assets/icons/sidebar-academic-settings.svg";
+import registeredCoursesIcon from "../../assets/icons/sidebar-registered-courses.svg";
+import logoutIcon from "../../assets/icons/sidebar-logout.svg";
+import adminDashboardIcon from "../../assets/icons/sidebar-admin-dashboard.svg";
+import adminFacultiesIcon from "../../assets/icons/sidebar-admin-faculties.svg";
+import adminDepartmentsIcon from "../../assets/icons/sidebar-admin-departments.svg";
+import adminYearsIcon from "../../assets/icons/sidebar-admin-years.svg";
+import adminCourseMapsIcon from "../../assets/icons/sidebar-admin-course-maps.svg";
+import adminUsersIcon from "../../assets/icons/sidebar-admin-users.svg";
+import adminRolesIcon from "../../assets/icons/sidebar-admin-roles.svg";
+import adminCoursesIcon from "../../assets/icons/sidebar-admin-courses.svg";
+import adminMaterialsIcon from "../../assets/icons/sidebar-admin-materials.svg";
+import adminGradesIcon from "../../assets/icons/sidebar-admin-grades.svg";
+import adminTasksIcon from "../../assets/icons/sidebar-admin-tasks.svg";
+import adminExamsIcon from "../../assets/icons/sidebar-admin-exams.svg";
+import adminAnnouncementsIcon from "../../assets/icons/sidebar-admin-announcements.svg";
+import adminLogsIcon from "../../assets/icons/sidebar-admin-logs.svg";
+import adminRoadmapsIcon from "../../assets/icons/sidebar-admin-roadmaps.svg";
+import adminStudyMapsIcon from "../../assets/icons/sidebar-admin-study-maps.svg";
+import adminStudyAnalysisIcon from "../../assets/icons/sidebar-admin-study-analysis.svg";
+import adminEventsIcon from "../../assets/icons/sidebar-admin-events.svg";
+import adminDiscussionsIcon from "../../assets/icons/sidebar-admin-discussions.svg";
+import styles from "./Sidebar.module.css";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { GetAvatarLink } from "../../utils/LinkHandler";
+import Logo from "../logo/Logo";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
@@ -428,12 +428,7 @@ export const Sidebar = ({
         >
             <ul className={styles.nav}>
                 <li className={styles.websiteLogo}>
-                    <img
-                        src={logoImg}
-                        alt="CU Portal Logo"
-                        width="110"
-                        height="110"
-                    />
+                    <Logo width={110} height={110} />
                 </li>
 
                 {navSections.map((section) => (

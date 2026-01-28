@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import menuIcon from "../../old_project/assets/Group.svg";
-import notificationIcon from "../../old_project/assets/notif.svg";
-import styles from "./Navbar.module.css";
 import { useAppSelector } from "../../services/redux/Hooks";
 import { GetAvatarLink } from "../../utils/LinkHandler";
 import { formatDateTime } from "../../utils/Formatter";
+import menuIcon from "../../assets/icons/menu-icon.svg";
+import notificationIcon from "../../assets/icons/notification-icon.svg";
+import styles from "./Navbar.module.css";
 
 export const Navbar = ({
     isOpen,

@@ -2,9 +2,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--primary-padding);
     min-height: 100vh;
     background-color: var(--grey-background);
+    padding: 0px;
+    margin: 0px;
 }
 
 .card {
@@ -40,12 +41,17 @@
     border-radius: 2px;
 }
 
-.formGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.form {
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+}
+
+.selectGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
 }
 
 .buttonContainer {
@@ -72,5 +78,10 @@
 
     .buttonContainer button {
         width: 100%;
+    }
+
+    .selectGroup {
+        flex-direction: column;
+        gap: 20px;
     }
 }

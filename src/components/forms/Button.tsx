@@ -4,45 +4,30 @@ export const Button = ({
     text,
     loadingText,
     isSubmitting,
-    isOrange = true,
-    variant,
     type = "submit",
     onClick,
-    children,
+    isOrange = true,
 }: {
-    text?: string;
-    loadingText?: string;
-    isSubmitting?: boolean;
-    isOrange?: boolean;
-    variant?: "primary" | "remove" | "google";
+    text: string;
+    loadingText: string;
+    isSubmitting: boolean;
     type?: "button" | "submit" | "reset";
     onClick?: () => void;
-    children?: React.ReactNode;
+    isOrange?: boolean;
 }) => {
-    const getClassName = () => {
-        if (variant === "remove") return styles["button-remove"];
-        if (variant === "google") return styles["button-google"];
-        return styles["button"];
-    };
-
-    const getStyle = () => {
-        if (variant) return undefined;
-        return {
-            background: isOrange
-                ? "var(--primary-orange)"
-                : "var(--primary-purple)",
-        };
-    };
-
     return (
         <button
             type={type}
             disabled={isSubmitting}
-            className={getClassName()}
-            style={getStyle()}
+            className={styles["button"]}
             onClick={onClick}
+            style={{
+                background: isOrange
+                    ? "var(--primary-orange)"
+                    : "var(--primary-purple)",
+            }}
         >
-            {children || (isSubmitting ? loadingText : text)}
+            {isSubmitting ? loadingText : text}
         </button>
     );
 };

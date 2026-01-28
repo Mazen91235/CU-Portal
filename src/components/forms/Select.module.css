@@ -149,3 +149,12 @@
     border-color: var(--error-red);
     border-width: 2px;
 }
+
+.input-group select:disabled {
+    background-color: var(--light-grey);
+    cursor: not-allowed;
+}
+
+.input-group select:disabled:focus {
+    border-color: var(--light-grey);
+}

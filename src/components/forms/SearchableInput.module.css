@@ -28,6 +28,15 @@
     border-color: var(--primary-purple);
 }
 
+.searchable-container.disabled {
+    background-color: var(--light-grey);
+    cursor: not-allowed;
+}
+
+.searchable-container.disabled:focus-within {
+    border-color: var(--light-grey);
+}
+
 .visible-input {
     width: 100%;
     border: none;
@@ -45,6 +54,10 @@
     color: var(--medium-grey);
     font-weight: var(--secondary-font-weight);
     font-size: 14px;
+}
+
+.visible-input:disabled {
+    cursor: not-allowed;
 }
 
 .arrow-icon {

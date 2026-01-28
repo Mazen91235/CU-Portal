@@ -1,4 +1,5 @@
 import type { FieldErrors, UseFormRegister, Path } from "react-hook-form";
+import styles from "./FileInputContainer.module.css";
 import { Input } from "./Input";
 
 export const FileInputContainer = <T extends Record<string, unknown>>({
@@ -6,22 +7,22 @@ export const FileInputContainer = <T extends Record<string, unknown>>({
     name,
     type,
     errors,
-    styles,
     ref,
     refCurrent,
     currentImg,
     onChange,
+    disabled,
 }: {
     register: UseFormRegister<T>;
     name: Path<T>;
     type: string;
     errors: FieldErrors<T>;
     label?: string;
-    styles: Record<string, string>;
     ref?: React.Ref<HTMLInputElement | HTMLTextAreaElement>;
     refCurrent?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
     currentImg: string;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    disabled?: boolean;
 }) => {
     return (
         <section>
@@ -33,10 +34,12 @@ export const FileInputContainer = <T extends Record<string, unknown>>({
                 id={styles["avatar"]}
                 ref={ref}
                 onChange={onChange}
+                disabled={disabled}
             />
             <span
                 id={styles["avatar_container"]}
-                onClick={() => refCurrent?.current?.click()}
+                className={disabled ? styles["disabled"] : ""}
+                onClick={() => !disabled && refCurrent?.current?.click()}
             >
                 <img src={currentImg} alt="" />
             </span>

@@ -33,7 +33,7 @@ export const AdminFacultyAPI = createApi({
             { faculty_id: number }
         >({
             query: ({ faculty_id }) => ({
-                url: `/${faculty_id}`,
+                url: `/view/${faculty_id}`,
                 method: "GET",
                 credentials: "include",
             }),

@@ -10,13 +10,13 @@ import { useSignupMutation } from "../../services/apis/AuthenticateAPIs";
 import { Form } from "../../components/forms/Form";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/forms/Button";
-import decorTop from "../../old_project/assets/freepik--background-simple--inject-251.png";
-import decorBottom from "../../old_project/assets/freepik--background-simple--inject-251 (1).png";
-import illustrationImg from "../../old_project/assets/7de525c83cdb32bf7fac2a99588c4cefe7a08a01.png";
-import styles from "./CreateProfilePage.module.css";
 import { Select } from "../../components/forms/Select";
 import Logo from "../../components/logo/Logo";
 import { PageSeo } from "../../components/PageSeo";
+import decorTop from "../../assets/decorations/bg-top.png";
+import decorBottom from "../../assets/decorations/bg-bottom.png";
+import illustrationImg from "../../assets/decorations/create-profile-illustration.png";
+import styles from "./CreateProfilePage.module.css";
 import { useUploadFileToDrive } from "../../hooks/useHandleProcesses";
 import { InputError } from "../../components/forms/InputError";
 

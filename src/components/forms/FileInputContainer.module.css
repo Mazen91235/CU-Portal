@@ -1,0 +1,70 @@
+#avatar {
+    display: none;
+}
+section span {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    position: relative;
+    border-radius: 100px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+section span::before {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    content: "Choose Avatar";
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    text-align: center;
+    color: white;
+    font-family: arial;
+    font-size: 12pt;
+    opacity: 0;
+    transition: 0.25s ease-in-out;
+    border-radius: 100px;
+}
+section span::before:hover {
+    opacity: 1;
+}
+section span:hover::before {
+    opacity: 1;
+}
+section span img {
+    width: auto;
+    height: 100%;
+    margin: auto;
+}
+
+section span.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+section span.disabled::before {
+    content: "";
+    opacity: 0.1;
+    background: var(--light-grey);
+    z-index: 10;
+}
+
+section span.disabled::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 120px;
+    content: "";
+    background: var(--light-grey);
+    opacity: 0.7;
+    z-index: 11;
+    border-radius: 100px;
+}
