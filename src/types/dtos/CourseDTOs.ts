@@ -1,8 +1,8 @@
 import type { SearchDto } from "./SearchDTOs";
 
 export type CourseSearchDto = {
-        facultyId?: string;
-        department_id?: string;
-        semester_id?: string;
-        year_id?: string;
-            } & SearchDto;
+    faculty_id?: number;
+    department_id?: number;
+    semester_id?: number;
+    year_id?: number;
+} & SearchDto;

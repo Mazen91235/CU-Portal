@@ -1,21 +1,33 @@
-import type { ChangeEventHandler } from "react";
+import {
+    useState,
+    type ChangeEvent,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
 import styles from "./SelectFilter.module.css";
 
 type SelectFilterProps = {
-    value: string;
-    onChange: ChangeEventHandler<HTMLSelectElement>;
+    setValue: Dispatch<SetStateAction<string>>;
     options: { value: string; label: string }[];
     placeholder?: string;
 };
 
 export const SelectFilter = ({
-    value,
-    onChange,
+    setValue,
     options,
     placeholder,
 }: SelectFilterProps) => {
+    const [selectValue, setSelectValue] = useState("");
+    const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setSelectValue(e.target.value);
+        setValue(e.target.value);
+    };
     return (
-        <select value={value} onChange={onChange} className={styles["select"]}>
+        <select
+            value={selectValue}
+            onChange={onChange}
+            className={styles["select"]}
+        >
             {placeholder && <option value="">{placeholder}</option>}
             {options.map((option) => (
                 <option key={option.value} value={option.value}>

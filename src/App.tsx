@@ -7,7 +7,6 @@ import CreateProfilePage from "./pages/auth/CreateProfilePage";
 import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import useGetNotifications from "./hooks/useGetNotifications";
-import "./App.css";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 import { UserDashboard } from "./components/user/dashboard/Dashboard";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
@@ -16,7 +15,12 @@ import { RegisteredCourses } from "./pages/user/settings/RegisteredCourses";
 import { FacultiesPage } from "./pages/admin/faculties/FacultiesPage";
 import { DepartmentsPage } from "./pages/admin/departments/DepartmentsPage";
 import { YearsPage } from "./pages/admin/years/YearsPage";
+import { CoursesPage } from "./pages/admin/courses/CoursesPage";
+import { CoursePage } from "./pages/admin/courses/CoursePage";
+import { AddCourse } from "./pages/admin/courses/AddCourse";
+import { EditCourse } from "./pages/admin/courses/EditCourse";
 import { usePageLoading } from "./hooks/usePageLoading";
+import "./App.css";
 
 function App() {
     useGetUser();
@@ -65,6 +69,16 @@ function App() {
                     element={<ProtectedRoute permission="View Years" />}
                 >
                     <Route index element={<YearsPage />} />
+                </Route>
+
+                <Route
+                    path="courses"
+                    element={<ProtectedRoute permission="View Courses" />}
+                >
+                    <Route index element={<CoursesPage />} />
+                    <Route path="create" element={<AddCourse />} />
+                    <Route path="edit/:courseId" element={<EditCourse />} />
+                    <Route path=":courseId" element={<CoursePage />} />
                 </Route>
             </Route>
         </Routes>

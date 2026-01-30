@@ -25,7 +25,7 @@ export const FileInputContainer = <T extends Record<string, unknown>>({
     disabled?: boolean;
 }) => {
     return (
-        <section>
+        <section className={styles.fileInputContainer}>
             <Input
                 register={register}
                 name={name}

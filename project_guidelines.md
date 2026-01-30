@@ -114,6 +114,7 @@ the main css shared over the project is found in the `index.css` file in the roo
 - Any Card Encountered like in pages courses or tasks or exams or announcements or etc.. use the Card component as it should be generic and cover all these cards
 - When Converting and encountering any needed assets .. copy them with meaningful name to the `src/assets` proper folder whether `icons` or whatever but don't import anything from old_project directly
 - Include `Layout` component in any page created so that the Layout is properly set and include the page content in the Layout
+- When Handling Primary Fetch Rely on useAuthQuery with authQueryParams instead of useEffect to be cleaner and robust to long loading time of fetching user data or any network issues
 
 ---
 

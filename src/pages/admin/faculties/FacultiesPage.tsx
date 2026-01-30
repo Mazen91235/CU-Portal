@@ -152,8 +152,7 @@ export const FacultiesPage = () => {
                         <div className={styles["search-section"]}>
                             <Search
                                 placeholder="Search faculties"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                setValue={setSearchQuery}
                             />
                         </div>
 

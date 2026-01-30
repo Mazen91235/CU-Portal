@@ -10,6 +10,7 @@ export const usePageLoading = (
     const location = useLocation();
     const { setLoading, clearLoading } = useLoading();
     useEffect(() => {
+        if (document.readyState == "complete") return;
         setLoading();
     }, [location, setLoading]); // Set loading on location change
     const startPageLoading = useCallback(
@@ -38,10 +39,10 @@ export const usePageLoading = (
 
     // Cleanup on unmount
     useEffect(() => {
+        if (execute) startPageLoading(callback);
         return () => {
             if (cleanupRef.current) cleanupRef.current();
         };
-    }, []);
-    if (execute) startPageLoading(callback);
+    }, [execute, startPageLoading, callback]);
     return startPageLoading;
 };

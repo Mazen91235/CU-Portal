@@ -164,8 +164,7 @@ export const YearsPage = () => {
                     <div className={styles["container"]}>
                         <div className={styles["filter-section"]}>
                             <SelectFilter
-                                value={yearFilter}
-                                onChange={(e) => setYearFilter(e.target.value)}
+                                setValue={setYearFilter}
                                 options={yearOptions}
                             />
                         </div>

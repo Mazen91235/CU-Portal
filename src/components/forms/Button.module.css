@@ -27,3 +27,18 @@
     background: var(--light-grey);
     opacity: 0.2;
 }
+
+.button.orange {
+    background-color: var(--primary-orange);
+    color: var(--white);
+}
+
+.button.purple {
+    background-color: var(--primary-purple);
+    color: var(--white);
+}
+
+.button.secondary {
+    background-color: var(--light-grey);
+    color: var(--dark-text);
+}

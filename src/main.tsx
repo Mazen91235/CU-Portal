@@ -6,6 +6,7 @@ import { HelmetProvider } from "react-helmet-async";
 import store from "./services/redux/Store.ts";
 import { LoadingProvider } from "./contexts/providers/LoadingProvider.tsx";
 import { Toasts } from "./components/toast/Toast.tsx";
+import { Loading } from "./components/loading/Loading.tsx";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")!).render(
             <Provider store={store}>
                 <HelmetProvider>
                     <LoadingProvider>
+                        <Loading />
                         <Toasts />
                         <App />
                     </LoadingProvider>

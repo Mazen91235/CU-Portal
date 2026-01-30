@@ -244,25 +244,16 @@ export const DepartmentsPage = () => {
                             <div className={styles["search-wrapper"]}>
                                 <Search
                                     placeholder="Search departments..."
-                                    value={searchQuery}
-                                    onChange={(e) =>
-                                        setSearchQuery(e.target.value)
-                                    }
+                                    setValue={setSearchQuery}
                                 />
                             </div>
                             <div className={styles["filters-wrapper"]}>
                                 <SelectFilter
-                                    value={facultyFilter}
-                                    onChange={(e) =>
-                                        setFacultyFilter(e.target.value)
-                                    }
+                                    setValue={setFacultyFilter}
                                     options={facultyOptions}
                                 />
                                 <SelectFilter
-                                    value={studyTypeFilter}
-                                    onChange={(e) =>
-                                        setStudyTypeFilter(e.target.value)
-                                    }
+                                    setValue={setStudyTypeFilter}
                                     options={studyTypeOptions}
                                 />
                             </div>

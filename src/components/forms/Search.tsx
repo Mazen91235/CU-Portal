@@ -1,23 +1,45 @@
-import type { ChangeEventHandler } from "react";
+import {
+    useCallback,
+    useRef,
+    useState,
+    type ChangeEvent,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
 import styles from "./Search.module.css";
 
 export const Search = ({
     placeholder,
-    value,
-    onChange,
+    setValue,
 }: {
     placeholder?: string;
-    value?: string;
-    onChange?: ChangeEventHandler<HTMLInputElement>;
+    setValue?: Dispatch<SetStateAction<string>>;
 }) => {
+    const timeout = useRef<number | null>(null);
+    const [inputValue, setInputValue] = useState("");
+    const handleChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
+            setInputValue(value);
+            if (setValue) {
+                if (timeout.current) {
+                    clearTimeout(timeout.current);
+                }
+                timeout.current = setTimeout(() => {
+                    setValue(value);
+                }, 300);
+            }
+        },
+        [setValue],
+    );
     return (
         <div className={styles["search-container"]}>
             <input
                 type="text"
                 className={styles["search-input"]}
                 placeholder={placeholder || "Search..."}
-                value={value}
-                onChange={onChange}
+                value={inputValue}
+                onChange={handleChange}
             />
             <svg
                 className={styles["search-icon"]}

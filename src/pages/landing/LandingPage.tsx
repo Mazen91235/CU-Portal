@@ -11,6 +11,7 @@ import { Footer } from "../../components/landing/Footer";
 import { PageSeo } from "../../components/PageSeo";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import styles from "./LandingPage.module.css";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 export const LandingPage = () => {
     const [activeSection, setActiveSection] = useState("hero");
@@ -20,6 +21,7 @@ export const LandingPage = () => {
     useIntersectionObserver(sections, (entry) => {
         setActiveSection(entry.target.id);
     });
+    usePageLoading(true);
     return (
         <>
             <PageSeo

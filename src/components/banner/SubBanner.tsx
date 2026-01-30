@@ -1,0 +1,54 @@
+import { Link } from "react-router";
+
+import styles from "./SubBanner.module.css";
+
+type SubBannerProps = {
+    title: string;
+    description?: string;
+    button?: string;
+    buttonAction?: () => void;
+    icon?: string;
+    linkText?: string;
+    linkTo?: string;
+};
+
+export const SubBanner = ({
+    title,
+    description,
+    button,
+    buttonAction,
+    icon,
+    linkText,
+    linkTo,
+}: SubBannerProps) => {
+    return (
+        <header className={styles["subBanner"]}>
+            <div className={styles["leftSection"]}>
+                {linkTo && linkText && (
+                    <Link to={linkTo} className={styles["backLink"]}>
+                        <i className="fas fa-arrow-left"></i>
+                        {linkText}
+                    </Link>
+                )}
+                <div className={styles["content"]}>
+                    {icon && (
+                        <img src={icon} alt="Icon" className={styles["icon"]} />
+                    )}
+                    <div className={styles["textContent"]}>
+                        <h1 className={styles["title"]}>{title}</h1>
+                        {description && (
+                            <p className={styles["description"]}>
+                                {description}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </div>
+            {button && buttonAction && (
+                <button className={styles["button"]} onClick={buttonAction}>
+                    {button}
+                </button>
+            )}
+        </header>
+    );
+};

@@ -1,7 +1,7 @@
 #avatar {
     display: none;
 }
-section span {
+.fileInputContainer span {
     width: 120px;
     height: 120px;
     cursor: pointer;
@@ -12,7 +12,7 @@ section span {
     justify-content: center;
     align-items: center;
 }
-section span::before {
+.fileInputContainer span::before {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -32,31 +32,31 @@ section span::before {
     transition: 0.25s ease-in-out;
     border-radius: 100px;
 }
-section span::before:hover {
+.fileInputContainer span::before:hover {
     opacity: 1;
 }
-section span:hover::before {
+.fileInputContainer span:hover::before {
     opacity: 1;
 }
-section span img {
+.fileInputContainer span img {
     width: auto;
     height: 100%;
     margin: auto;
 }
 
-section span.disabled {
+.fileInputContainer span.disabled {
     cursor: not-allowed;
     pointer-events: none;
 }
 
-section span.disabled::before {
+.fileInputContainer span.disabled::before {
     content: "";
     opacity: 0.1;
     background: var(--light-grey);
     z-index: 10;
 }
 
-section span.disabled::after {
+.fileInputContainer span.disabled::after {
     position: absolute;
     top: 0;
     left: 0;
