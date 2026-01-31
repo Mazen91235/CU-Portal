@@ -17,9 +17,13 @@ import { DepartmentsPage } from "./pages/admin/departments/DepartmentsPage";
 import { YearsPage } from "./pages/admin/years/YearsPage";
 import { CoursesPage } from "./pages/admin/courses/CoursesPage";
 import { CoursePage } from "./pages/admin/courses/CoursePage";
-import { AddCourse } from "./pages/admin/courses/AddCourse";
+import { CreateCourse } from "./pages/admin/courses/CreateCourse";
 import { EditCourse } from "./pages/admin/courses/EditCourse";
 import { usePageLoading } from "./hooks/usePageLoading";
+import { CreateTask } from "./pages/admin/tasks/CreateTask";
+import { EditTask } from "./pages/admin/tasks/EditTask";
+import { TaskPage } from "./pages/admin/tasks/TaskPage";
+import { TasksPage } from "./pages/admin/tasks/TasksPage";
 import "./App.css";
 
 function App() {
@@ -76,9 +80,19 @@ function App() {
                     element={<ProtectedRoute permission="View Courses" />}
                 >
                     <Route index element={<CoursesPage />} />
-                    <Route path="create" element={<AddCourse />} />
+                    <Route path="create" element={<CreateCourse />} />
                     <Route path="edit/:courseId" element={<EditCourse />} />
                     <Route path=":courseId" element={<CoursePage />} />
+                </Route>
+
+                <Route
+                    path="tasks"
+                    element={<ProtectedRoute permission="View Tasks" />}
+                >
+                    <Route index element={<TasksPage />} />
+                    <Route path="create" element={<CreateTask />} />
+                    <Route path="edit/:taskId" element={<EditTask />} />
+                    <Route path=":taskId" element={<TaskPage />} />
                 </Route>
             </Route>
         </Routes>

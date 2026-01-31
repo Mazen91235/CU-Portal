@@ -20,6 +20,7 @@ import verifyIcon from "../../assets/icons/verify-icon.svg";
 import styles from "./VerifyEmailPage.module.css";
 import type { DefaultAPIResponse } from "../../types/responses/GenericAPIResponse";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 const verifyEmailSchema = z.object({
     code: z
@@ -35,11 +36,10 @@ export const VerifyEmailPage = () => {
     const navigate = useNavigate();
     const [userEmail, setUserEmail] = useState("");
     const [canResendAfter, setCanResendAfter] = useState(0);
-
     const [getVerificationDetails] = useLazyGetVerificationDetailsQuery();
     const [verifyEmail] = useVerifyEmailMutation();
     const [resendVerificationCode] = useResendVerificationCodeMutation();
-
+    usePageLoading(true);
     const {
         register,
         handleSubmit,

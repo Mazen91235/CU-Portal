@@ -3,13 +3,21 @@ import clockIcon from "../../assets/icons/clock-icon.svg";
 import locationIcon from "../../assets/icons/location-icon.svg";
 import subjectIcon from "../../assets/icons/subject-icon.svg";
 import timeIcon from "../../assets/icons/time-icon.svg";
+import buildingIcon from "../../assets/icons/building-icon.svg";
 import styles from "./Card.module.css";
 import { Button } from "../forms/Button";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon: "clock" | "location" | "calendar" | "subject" | "person" | "time";
+    icon:
+        | "clock"
+        | "location"
+        | "calendar"
+        | "subject"
+        | "person"
+        | "time"
+        | "building";
     label?: string;
     value?: string;
     color?: CardItemColor;
@@ -39,12 +47,17 @@ const getIconPath = (icon: string): string => {
         subject: subjectIcon,
         person: subjectIcon,
         time: timeIcon,
+        building: buildingIcon,
     };
     return iconMap[icon] || clockIcon;
 };
 
-const getColorClass = (color?: CardItemColor): string => {
-    if (!color) return styles["item-default"];
+const getColorClass = (color?: CardItemColor, index?: number): string => {
+    if (!color) {
+        const colors: CardItemColor[] = ["green", "yellow", "orange", "pink"];
+        if (index == undefined) return styles[`item-default`];
+        return styles[`item-${colors[index % colors.length]}`];
+    }
     return styles[`item-${color}`];
 };
 
@@ -171,7 +184,7 @@ export const Card = ({
                     {items.slice(0, 4).map((item, index) => (
                         <div
                             key={index}
-                            className={`${styles.item} ${getColorClass(item.color)}`}
+                            className={`${styles.item} ${getColorClass(item.color, index)}`}
                         >
                             <span className={styles.itemLabel}>
                                 <img

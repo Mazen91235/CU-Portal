@@ -1,0 +1,262 @@
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.taskStatsRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.2rem;
+    margin-bottom: 2.2rem;
+    width: 100%;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.taskStatCard {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--dark-box-shadow);
+    border: 1px solid var(--light-grey);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.2rem;
+    gap: 1rem;
+    min-width: 0;
+    width: 100%;
+}
+
+.taskStatImgbox {
+    background: var(--light-grey);
+    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.7rem;
+    font-size: 1.5rem;
+}
+
+.taskStatTexts {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.taskStatTitle {
+    color: var(--medium-grey);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.taskStatValue {
+    color: var(--dark-text);
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.taskInfoRow {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.2rem;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    flex-direction: column;
+}
+
+.taskInfoCard {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--dark-box-shadow);
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+    padding: 2.5rem 2.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid var(--light-grey);
+    margin-bottom: 0;
+}
+
+.taskDetailsCard {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--dark-box-shadow);
+    padding: 2.5rem 2.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid var(--light-grey);
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.taskLinksCard {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--dark-box-shadow);
+    padding: 2.5rem 2.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid var(--light-grey);
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.taskInfoCard h4,
+.taskDetailsCard h4,
+.taskLinksCard h4 {
+    color: var(--dark-text);
+    font-size: 1.13rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+.taskInfoList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.taskInfoList li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    color: var(--medium-grey);
+    font-size: 15px;
+    margin-bottom: 1.3rem;
+    font-weight: 400;
+}
+
+.taskInfoList li:last-child {
+    margin-bottom: 0;
+}
+
+.taskInfoList i {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    color: var(--medium-grey);
+    flex-shrink: 0;
+}
+
+.tiLabel {
+    font-size: 13px;
+    color: var(--medium-grey);
+    font-weight: 400;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.tiValue {
+    color: var(--dark-text);
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: -2px;
+    display: block;
+}
+
+.detailsContent {
+    width: 100%;
+    color: var(--dark-text);
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.detailsContent p,
+.detailsContent pre {
+    margin: 0;
+}
+
+.linksList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.linksList li {
+    margin-bottom: 0.8rem;
+}
+
+.linksList li:last-child {
+    margin-bottom: 0;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-size: 15px;
+    word-break: break-all;
+    transition: all 0.2s ease;
+}
+
+.link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.link i {
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+@media (max-width: 992px) {
+    .taskStatsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .taskInfoRow {
+        flex-direction: column;
+        gap: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .taskInfoCard,
+    .taskDetailsCard,
+    .taskLinksCard {
+        padding: 1.5rem 1rem;
+        border-radius: 10px;
+        box-shadow: var(--light-box-shadow);
+    }
+
+    .taskInfoCard h4,
+    .taskDetailsCard h4,
+    .taskLinksCard h4 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .taskInfoList li {
+        gap: 0.5rem;
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+
+    .taskInfoList i {
+        width: 18px;
+        height: 18px;
+        margin-top: 1px;
+    }
+}

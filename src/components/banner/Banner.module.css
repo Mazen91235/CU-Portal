@@ -2,7 +2,7 @@
     background: linear-gradient(90deg, #520e58 0%, #7b1684 100%);
     padding: 32px;
     border-radius: var(--primary-border-radius);
-    margin: 72px 24px 24px 24px;
+    margin: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;

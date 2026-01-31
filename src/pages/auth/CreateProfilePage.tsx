@@ -19,13 +19,14 @@ import illustrationImg from "../../assets/decorations/create-profile-illustratio
 import styles from "./CreateProfilePage.module.css";
 import { useUploadFileToDrive } from "../../hooks/useHandleProcesses";
 import { InputError } from "../../components/forms/InputError";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 const CreateProfilePage = () => {
     const navigate = useNavigate();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [signup] = useSignupMutation();
-
+    usePageLoading(true);
     const schema = z
         .object({
             name: z.string().min(1, "Name is required"),
@@ -123,7 +124,6 @@ const CreateProfilePage = () => {
     };
 
     const uploadFile = useUploadFileToDrive({
-        file: selectedFile!,
         reject: (error: string) => {
             showToast("error", "Error", error);
         },
@@ -142,7 +142,7 @@ const CreateProfilePage = () => {
             }
             let fileUrl: string | null = null;
             if (selectedFile) {
-                fileUrl = (await uploadFile()) || "";
+                fileUrl = (await uploadFile(selectedFile)) || "";
                 if (!fileUrl) {
                     return;
                 }

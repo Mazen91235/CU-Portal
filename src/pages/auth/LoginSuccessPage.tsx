@@ -8,11 +8,13 @@ import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
 import styles from "./LoginSuccessPage.module.css";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 const LoginSuccessPage = () => {
     const navigate = useNavigate();
     const [getGoogleStoredToken] = useGetGoogleStoredTokenMutation();
     const [searchParams] = useSearchParams();
+    usePageLoading(true);
     const token = searchParams.get("token");
     const state = searchParams.get("state");
     useEffect(() => {

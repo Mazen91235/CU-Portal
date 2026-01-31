@@ -20,7 +20,7 @@ import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import courseIcon from "../../../assets/icons/course-icon.svg";
 
-import styles from "./AddCourse.module.css";
+import styles from "./CreateCourse.module.css";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 
 const courseSchema = z.object({
@@ -34,7 +34,7 @@ const courseSchema = z.object({
 
 type CourseFormData = z.infer<typeof courseSchema>;
 
-export const AddCourse = () => {
+export const CreateCourse = () => {
     const navigate = useNavigate();
     const [faculties, setFaculties] = useState<Faculty[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);

@@ -1,0 +1,134 @@
+.container {
+    margin-bottom: 1rem;
+}
+
+.label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #22223b;
+    display: block;
+    font-family: var(--primary-font-family);
+}
+
+.fileDrop {
+    border: 2px dashed #d1c4e9;
+    border-radius: 10px;
+    background: #fff;
+    padding: 28px 0;
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 14px;
+    transition:
+        border-color 0.2s,
+        background-color 0.2s;
+    cursor: pointer;
+}
+
+.fileDrop i {
+    color: #7d677e;
+}
+
+.fileDrop span {
+    color: #64748b;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.fileDrop.dragging {
+    border-color: var(--primary-purple);
+    background-color: rgba(90, 15, 97, 0.05);
+}
+
+.fileDrop.disabled {
+    background-color: var(--light-grey);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.browseBtn {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--primary-font-family);
+    margin-top: 12px;
+}
+
+.browseBtn:hover {
+    background: #f3f4f6;
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.browseBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.browseBtn:disabled:hover {
+    background: #fff;
+    border-color: #e5e7eb;
+    color: #64748b;
+}
+
+.uploadedFilesList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+    margin-top: 8px;
+}
+
+.uploadedFileItem {
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    color: #1f2937;
+}
+
+.uploadedFileName {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.removeUploadBtn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 1.1rem;
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.15s;
+}
+
+.removeUploadBtn:hover {
+    background-color: transparent;
+    color: #dc2626;
+}
+
+.removeUploadBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.removeUploadBtn:disabled:hover {
+    color: #ef4444;
+}
+
+.error {
+    color: var(--error-red);
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+    font-family: var(--primary-font-family);
+}

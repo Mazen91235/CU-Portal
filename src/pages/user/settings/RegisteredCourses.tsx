@@ -157,10 +157,7 @@ export const RegisteredCourses = () => {
                             <div className={styles.searchContainer}>
                                 <Search
                                     placeholder="Search by subject name, instructor, or code"
-                                    value={searchQuery}
-                                    onChange={(e) =>
-                                        setSearchQuery(e.target.value)
-                                    }
+                                    setValue={setSearchQuery}
                                 />
                             </div>
 

@@ -1,0 +1,371 @@
+import { useState, useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+    useLazyGetTaskQuery,
+    useUpdateTaskMutation,
+} from "../../../services/apis/admin/TaskAPIs";
+import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { Subject } from "../../../types/entities/Subject";
+import { handleErrors } from "../../../utils/ErrorHandling";
+import { PageSeo } from "../../../components/PageSeo";
+import { SubBanner } from "../../../components/banner/SubBanner";
+import { Input } from "../../../components/forms/Input";
+import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Button } from "../../../components/forms/Button";
+import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
+import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
+import { Layout } from "../../../components/layout/Layout";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import taskIcon from "../../../assets/icons/task-icon.svg";
+
+import styles from "./EditTask.module.css";
+import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import type { FileData, LinkData, Task } from "../../../types/entities/Task";
+import { Form } from "../../../components/forms/Form";
+import { formatDateTime } from "../../../utils/Formatter";
+import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+
+const taskSchema = z.object({
+    title: z.string().min(1, "Task title is required"),
+    description: z.string().optional(),
+    submission_url: z.string().optional(),
+    subject_id: z.string().min(1, "Subject is required"),
+    deadline: z.string().optional(),
+    files: z.any().optional(),
+    links: z.string().optional(),
+});
+
+type TaskFormData = z.infer<typeof taskSchema>;
+
+export const EditTask = () => {
+    const navigate = useNavigate();
+    const { taskId } = useParams<{ taskId: string }>();
+    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
+    const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
+    const [task, setTask] = useState<Task | null>(null);
+    const user = useAppSelector((state) => state.user.user);
+
+    const [getTask] = useLazyGetTaskQuery();
+    const [searchCourses] = useLazySearchCoursesQuery();
+    const [updateTask, { isLoading }] = useUpdateTaskMutation();
+    const uploadFile = useUploadFileToDrive({});
+    const [isUploading, setIsUploading] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+        setValue,
+        control,
+    } = useForm<TaskFormData>({
+        resolver: zodResolver(taskSchema),
+    });
+
+    const fetchSubjects = useCallback(async () => {
+        try {
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {};
+            if (!user) return;
+            params.faculty_id = user.faculty?.id;
+            params.department_id = user.department?.id;
+            params.year_id = user.year?.id;
+
+            const result = await searchCourses(params).unwrap();
+            setSubjects(result.data || []);
+        } catch (error) {
+            const err = (error as DefaultAPIResponse).data;
+            navigate("/admin/tasks", {
+                state: {
+                    error: err.message || "Failed to fetch subjects",
+                },
+            });
+        }
+    }, [searchCourses, navigate, user]);
+
+    const fetchTask = useCallback(async () => {
+        if (!taskId) return;
+
+        try {
+            const result = await getTask({
+                task_id: parseInt(taskId),
+            }).unwrap();
+            const task = result.data;
+            setTask(task || null);
+            if (task) {
+                setValue("title", task.name || "");
+                setValue(
+                    "description",
+                    (task.details as { description?: string })?.description ||
+                        "",
+                );
+                setValue("submission_url", task.url || "");
+                if (task.deadline) {
+                    const date = new Date(formatDateTime(task.deadline, true));
+                    setValue("deadline", date.toISOString().slice(0, 16));
+                }
+                if (task.details?.files_data) {
+                    setExistingFiles(
+                        task.details.files_data.map((file, index) => {
+                            return {
+                                ...file,
+                                url: task.urls ? task.urls[index] : "",
+                            };
+                        }),
+                    );
+                }
+                if (task.links && Array.isArray(task.links)) {
+                    setExistingLinks(task.links);
+                }
+            }
+        } catch (error) {
+            const err = (error as DefaultAPIResponse).data;
+            navigate("/admin/tasks", {
+                state: {
+                    error: err.message || "Failed to fetch task",
+                },
+            });
+        }
+    }, [taskId, getTask, setValue, navigate]);
+
+    const authQueryParams = useCallback(
+        () => Promise.all([fetchSubjects(), fetchTask()]),
+        [fetchSubjects, fetchTask],
+    );
+
+    useAuthQuery(authQueryParams);
+
+    const uploadFiles = async (files: FileList): Promise<string> => {
+        const urls: string[] = [];
+
+        for (const file of Array.from(files)) {
+            const url = await uploadFile(file);
+            if (url) urls.push(url);
+        }
+
+        return urls.join(", ");
+    };
+
+    const onSubmit = async (data: TaskFormData) => {
+        if (!taskId) return;
+
+        try {
+            let urls = existingFiles.map((file) => file.url).join(", ");
+            if (data.files && (data.files as FileList).length > 0) {
+                setIsUploading(true);
+                const newUrls = await uploadFiles(data.files as FileList);
+                urls = urls ? `${urls}, ${newUrls}` : newUrls;
+                setIsUploading(false);
+            }
+
+            const taskData = {
+                task_id: parseInt(taskId),
+                title: data.title,
+                description: data.description || undefined,
+                submission_url: data.submission_url || undefined,
+                subject_id: parseInt(data.subject_id),
+                deadline: data.deadline || undefined,
+                urls: urls ? urls.split(", ") : undefined,
+                links: (() => {
+                    const newLinks = data.links
+                        ? data.links
+                              .split(",")
+                              .map((pair) => {
+                                  const [title, url] = pair.split("|");
+                                  return {
+                                      title: title?.trim(),
+                                      url: url?.trim(),
+                                  };
+                              })
+                              .filter((link) => link.title && link.url)
+                        : [];
+                    return newLinks.length > 0 ? newLinks : undefined;
+                })(),
+            };
+
+            await updateTask(taskData).unwrap();
+            navigate("/admin/tasks", {
+                state: { success: "Task updated successfully" },
+            });
+        } catch (error) {
+            handleErrors(error, setError);
+        }
+    };
+
+    const handleCancel = () => {
+        navigate("/admin/tasks");
+    };
+
+    useEffect(() => {
+        if (task && subjects?.length > 0) {
+            setValue("subject_id", task.subject?.id?.toString() || "");
+        }
+    }, [task, subjects, setValue]);
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Edit Task | CU Portal"
+                description="Update task information"
+            />
+            <SubBanner
+                title="Edit Task"
+                description="Update task information"
+                icon={taskIcon}
+                linkText="Back to Tasks"
+                linkTo="/admin/tasks"
+            />
+            <main className={styles.container}>
+                <Form
+                    onSubmit={handleSubmit(onSubmit)}
+                    errors={errors}
+                    className={styles.formCard}
+                >
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Task Title"
+                            register={register}
+                            name="title"
+                            type="text"
+                            placeholder="e.g., Data Structures Assignment #3"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <SearchableInput
+                            label="Subject"
+                            register={register}
+                            name="subject_id"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                            setValue={setValue}
+                            control={control}
+                            options={subjects.map((subject) => ({
+                                value: subject.id?.toString() || "",
+                                label: subject.name || "",
+                            }))}
+                            placeholder="Select a subject"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Deadline"
+                            register={register}
+                            name="deadline"
+                            type="datetime-local"
+                            placeholder="Select deadline"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Description"
+                            register={register}
+                            name="description"
+                            type="textarea"
+                            placeholder="Enter task description..."
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                            isTextArea
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Submission URL"
+                            register={register}
+                            name="submission_url"
+                            type="url"
+                            placeholder="e.g., https://submission-portal.com/submit"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                        />
+                    </div>
+
+                    <div className={styles.attachmentsSection}>
+                        <h3>
+                            <i
+                                className="fa fa-paperclip"
+                                style={{ marginRight: "8px" }}
+                            ></i>
+                            Attachments & Links
+                        </h3>
+
+                        <FilesInputContainer
+                            register={register}
+                            name="files"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                            setValue={setValue}
+                            existingFiles={existingFiles.map((file, index) => ({
+                                id: `existing-${index}`,
+                                name: file.name || `File ${index + 1}`,
+                                url: task?.urls?.[index] || "",
+                                isExisting: true,
+                            }))}
+                            setExistingFiles={(files) => {
+                                const updatedFileData = files.map((file) => ({
+                                    name: file.name,
+                                    url: file.url,
+                                    size: file.size,
+                                }));
+                                setExistingFiles(updatedFileData);
+                            }}
+                        />
+
+                        <LinksInputContainer
+                            register={register}
+                            name="links"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
+                            setValue={setValue}
+                            existingLinks={existingLinks.map((link) => ({
+                                title: link.title || "",
+                                url: link.url || "",
+                                isExisting: true,
+                            }))}
+                            setExistingLinks={(links) => {
+                                setExistingLinks(
+                                    links.map((link) => ({
+                                        title: link.title,
+                                        url: link.url,
+                                    })),
+                                );
+                            }}
+                        />
+                    </div>
+
+                    <div className={styles.formActions}>
+                        <Button
+                            text="Cancel"
+                            loadingText="Cancelling..."
+                            type="button"
+                            isSubmitting={false}
+                            onClick={handleCancel}
+                            isSecondary={true}
+                        />
+                        <Button
+                            text="Update Task"
+                            loadingText="Updating..."
+                            isSubmitting={isLoading || isUploading}
+                            type="submit"
+                            isOrange={false}
+                        />
+                    </div>
+                </Form>
+            </main>
+        </Layout>
+    );
+};

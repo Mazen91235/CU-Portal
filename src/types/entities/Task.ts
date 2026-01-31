@@ -4,12 +4,28 @@ import type { Subject } from "./Subject";
 import type { User } from "./User";
 import type { Year } from "./Year";
 
+export type FileData = {
+    id?: string;
+    name?: string;
+    mimeType?: string;
+    type?: string;
+    size?: number;
+    webContentLink?: string;
+    webViewLink?: string;
+    url?: string;
+};
+
+export type LinkData = {
+    title: string;
+    url: string;
+};
+
 export type Task = {
     id?: number;
     name?: string;
     urls?: string[];
     url?: string;
-    links?: string[];
+    links?: LinkData[];
     type?: string;
     faculty?: Faculty | null;
     faculty_id?: number | null;
@@ -17,7 +33,10 @@ export type Task = {
     department_id?: number | null;
     year?: Year | null;
     year_id?: number | null;
-    details?: object;
+    details?: {
+        description?: string;
+        files_data?: FileData[];
+    };
     deadline?: string | null;
     due_date?: string | null;
     modified_at?: string | null;

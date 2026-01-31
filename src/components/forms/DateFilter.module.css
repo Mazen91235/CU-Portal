@@ -1,0 +1,214 @@
+.container {
+    position: relative;
+    width: 100%;
+}
+
+.dateFilter {
+    position: relative;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: var(--primary-font-size);
+    background-color: #f3f4f6;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    outline: none;
+    font-family: var(--primary-font-family);
+    color: var(--dark-text);
+}
+
+.dateFilter:hover {
+    border-color: #cbd5e1;
+}
+
+.dateFilter.active {
+    border-color: var(--primary-purple);
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(90, 15, 97, 0.1);
+}
+
+.calendarIcon {
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+.dateDisplay {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.dateDisplay.placeholder {
+    color: #9ca3af;
+}
+
+/* Calendar Dropdown */
+.calendarDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    padding: 16px;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.calendarNav {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: #4b5563;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendarNav:hover {
+    background: #f3f4f6;
+}
+
+.calendarTitle {
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+    font-size: 14px;
+    color: var(--dark-text);
+}
+
+.calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.calendarDayHeader {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    padding: 4px 2px;
+}
+
+.calendarDay {
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    font-family: var(--primary-font-family);
+    color: var(--dark-text);
+}
+
+.calendarDay:hover:not(:disabled) {
+    background: #f3f4f6;
+}
+
+.calendarDay.selected {
+    background: linear-gradient(135deg, #5a0f61 0%, #8c0dab 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.calendarDay.otherMonth {
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.calendarDay.today {
+    font-weight: bold;
+    position: relative;
+}
+
+.calendarDay.today::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--primary-purple);
+    border-radius: 50%;
+}
+
+.calendarDay:disabled {
+    cursor: not-allowed;
+}
+
+.calendarActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 8px;
+}
+
+.calendarBtn {
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    flex: 1;
+    font-family: var(--primary-font-family);
+    color: var(--dark-text);
+    font-weight: 500;
+}
+
+.calendarBtn:hover {
+    background: #f3f4f6;
+}
+
+.calendarBtn.primary {
+    background: linear-gradient(135deg, #5a0f61 0%, #8c0dab 100%);
+    color: white;
+    border: none;
+}
+
+.calendarBtn.primary:hover {
+    opacity: 0.9;
+}

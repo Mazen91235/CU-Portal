@@ -9,10 +9,12 @@ import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
 import googleIcon from "../../assets/icons/google-icon.svg";
 import styles from "./LoginPage.module.css";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    usePageLoading(true);
     const token = searchParams.get("token");
 
     useEffect(() => {

@@ -245,6 +245,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Courses",
             path: "/admin/courses",
             icon: adminCoursesIcon,
+            activatesPaths: ["/admin/courses/"],
         });
     }
 
@@ -269,6 +270,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Tasks",
             path: "/admin/tasks",
             icon: adminTasksIcon,
+            activatesPaths: ["/admin/tasks/"],
         });
     }
 
@@ -277,6 +279,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Exams",
             path: "/admin/exams",
             icon: adminExamsIcon,
+            activatesPaths: ["/admin/exams/"],
         });
     }
 
@@ -285,6 +288,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Announcements",
             path: "/admin/announcements",
             icon: adminAnnouncementsIcon,
+            activatesPaths: ["/admin/announcements/"],
         });
     }
 

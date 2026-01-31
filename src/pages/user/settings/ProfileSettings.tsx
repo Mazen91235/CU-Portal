@@ -16,6 +16,7 @@ import { showToast } from "../../../utils/ToastsManager";
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
 import { useUpdateUserDataMutation } from "../../../services/apis/user/UserAPIs";
+import { usePageLoading } from "../../../hooks/usePageLoading";
 
 const profileSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -45,6 +46,7 @@ export const ProfileSettings = () => {
     } = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
     });
+    usePageLoading(true);
     const user = useAppSelector((state) => state.user.user);
 
     useEffect(() => {
@@ -62,9 +64,6 @@ export const ProfileSettings = () => {
     }, [user, setValue]);
     const fileInput = useRef<HTMLInputElement>(null);
     const uploadFileToDrive = useUploadFileToDrive({
-        file: fileInput.current?.files
-            ? fileInput.current.files[0]
-            : new File([], ""),
         reject: (error) => {
             handlePopupErrors(error);
         },
@@ -74,7 +73,7 @@ export const ProfileSettings = () => {
         try {
             let url = user?.details?.avatar || user?.google_avatar || "";
             if (data.avatar && data.avatar.length > 0) {
-                url = (await uploadFileToDrive()) || url;
+                url = (await uploadFileToDrive(data.avatar[0])) || url;
             }
             await updateUser({
                 name: data.name,
