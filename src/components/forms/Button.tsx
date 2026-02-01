@@ -8,20 +8,30 @@ export const Button = ({
     onClick,
     isOrange = true,
     isSecondary = false,
+    isDefault = false,
 }: {
     text: string;
     loadingText: string;
     isSubmitting: boolean;
-    type?: "button" | "submit" | "reset";
+    type?: "button" | "submit" | "reset" | "default";
     onClick?: () => void;
     isOrange?: boolean;
     isSecondary?: boolean;
+    isDefault?: boolean;
 }) => {
+    const buttonType = type === "default" ? "button" : type;
+    const getButtonClass = () => {
+        if (isDefault || type === "default") return styles["default"];
+        if (isSecondary) return styles["secondary"];
+        if (isOrange) return styles["orange"];
+        return styles["purple"];
+    };
+
     return (
         <button
-            type={type}
+            type={buttonType}
             disabled={isSubmitting}
-            className={`${styles["button"]} ${isSecondary ? styles["secondary"] : isOrange ? styles["orange"] : styles["purple"]}`}
+            className={`${styles["button"]} ${getButtonClass()}`}
             onClick={onClick}
         >
             {isSubmitting ? loadingText : text}

@@ -8,10 +8,12 @@ import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import { Bordered } from "../../../components/bordered/Bordered";
-import courseIcon from "../../../assets/icons/course-icon.svg";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { GetAvatarLink } from "../../../utils/LinkHandler";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { Heading } from "../../../components/heading/Heading";
+
+import { GetAvatarLink, GetIcon } from "../../../utils/LinkHandler";
+
 import styles from "./CoursePage.module.css";
 
 export const CoursePage = () => {
@@ -60,7 +62,7 @@ export const CoursePage = () => {
 
             <SubBanner
                 title={course.name || "Course Details"}
-                icon={courseIcon}
+                icon={GetIcon("course")}
                 button="Edit Course"
                 buttonAction={() =>
                     navigate(`/admin/courses/edit/${course.id}`)
@@ -101,9 +103,11 @@ export const CoursePage = () => {
                         </div>
 
                         <Bordered>
-                            <h4 className={styles.sectionTitle}>
-                                Course Information
-                            </h4>
+                            <Heading
+                                icon="info-circle"
+                                content="Course Information"
+                                size="large"
+                            />
                             <ul className={styles.infoList}>
                                 <li>
                                     <i className="fas fa-university"></i>
@@ -158,9 +162,11 @@ export const CoursePage = () => {
                 {activeTab === "students" && (
                     <Bordered>
                         <div className={styles.studentsCardHeader}>
-                            <div className={styles.sectionTitle}>
-                                Enrolled Students
-                            </div>
+                            <Heading
+                                icon="users"
+                                content="Enrolled Students"
+                                size="large"
+                            />
                             <div className={styles.studentsCardCount}>
                                 {enrolledCount} Students
                             </div>

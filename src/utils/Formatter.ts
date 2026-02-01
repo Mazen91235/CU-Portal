@@ -21,6 +21,29 @@ export const formatDateTime = (
     });
 };
 
+export const formatDate = (dateString?: string | null): string => {
+    if (!dateString) return "N/A";
+    const datePartArray = dateString.split("-");
+    datePartArray.reverse();
+    const datePart = datePartArray.join("-");
+    const date = new Date(datePart);
+    return date.toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+};
+
+export const formatTime = (dateTimeString?: string | null): string => {
+    if (!dateTimeString) return "N/A";
+    const timePart = dateTimeString.split(" ")[1];
+    const date = new Date("1970-01-01T" + timePart);
+    return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+};
+
 export const formatString = (str: string, maxLength: number): string => {
     if (str.length > maxLength) {
         return (

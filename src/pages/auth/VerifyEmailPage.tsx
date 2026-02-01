@@ -8,19 +8,21 @@ import {
     useVerifyEmailMutation,
     useResendVerificationCodeMutation,
 } from "../../services/apis/AuthenticateAPIs";
-import { showToast } from "../../utils/ToastsManager";
 import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/forms/Button";
+import type { DefaultAPIResponse } from "../../types/responses/GenericAPIResponse";
+import { usePageLoading } from "../../hooks/usePageLoading";
+
+import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { GetIcon } from "../../utils/LinkHandler";
+
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
-import verifyIcon from "../../assets/icons/verify-icon.svg";
+
 import styles from "./VerifyEmailPage.module.css";
-import type { DefaultAPIResponse } from "../../types/responses/GenericAPIResponse";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { usePageLoading } from "../../hooks/usePageLoading";
 
 const verifyEmailSchema = z.object({
     code: z
@@ -145,7 +147,7 @@ export const VerifyEmailPage = () => {
                     </div>
                     <div className={styles.welcomeCard}>
                         <div className={styles.iconCircle}>
-                            <img src={verifyIcon} alt="Verify icon" />
+                            <img src={GetIcon("verify")} alt="Verify icon" />
                         </div>
                         <div className={styles.title}>EMAIL VERIFICATION</div>
                         <div className={styles.subtitle}>

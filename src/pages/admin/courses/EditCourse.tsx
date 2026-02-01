@@ -21,11 +21,13 @@ import { Input } from "../../../components/forms/Input";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
-import courseIcon from "../../../assets/icons/course-icon.svg";
-
-import styles from "./EditCourse.module.css";
+import { Heading } from "../../../components/heading/Heading";
 import { useAuthQuery } from "../../../hooks/useAuthQuery";
 import type { Subject } from "../../../types/entities/Subject";
+
+import { GetIcon } from "../../../utils/LinkHandler";
+
+import styles from "./EditCourse.module.css";
 
 const courseSchema = z.object({
     name: z.string().min(1, "Course name is required"),
@@ -176,16 +178,18 @@ export const EditCourse = () => {
             <SubBanner
                 title="Edit Course"
                 description="Update course information"
-                icon={courseIcon}
+                icon={GetIcon("course")}
                 linkText="Back to Courses"
                 linkTo="/admin/courses"
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <section className={styles["formSection"]}>
-                        <h2 className={styles["sectionTitle"]}>
-                            Basic Information
-                        </h2>
+                        <Heading
+                            icon="info-circle"
+                            content="Basic Information"
+                            size="medium"
+                        />
 
                         <div className={styles["formRow"]}>
                             <Input

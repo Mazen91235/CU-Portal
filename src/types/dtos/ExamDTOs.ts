@@ -20,7 +20,7 @@ export type ExamRegisterDto = {
     location?: string;
     duration?: number;
     exam_type?: string;
-    exam_format?: string;
-    exam_weight?: number;
+    exam_format?: "MCQ" | "Written" | "Mixed" | "Practical" | "Oral" | "Other";
+    exam_weight?: string;
     subject_id?: number;
 };

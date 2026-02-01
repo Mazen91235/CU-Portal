@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import clockIcon from "../../assets/icons/clock-icon.svg";
+import clockIcon from "../../assets/icons/time-icon.svg";
+import calendarIcon from "../../assets/icons/calendar-icon.svg";
 import locationIcon from "../../assets/icons/location-icon.svg";
 import subjectIcon from "../../assets/icons/subject-icon.svg";
 import timeIcon from "../../assets/icons/time-icon.svg";
@@ -43,7 +44,7 @@ const getIconPath = (icon: string): string => {
     const iconMap: Record<string, string> = {
         clock: clockIcon,
         location: locationIcon,
-        calendar: clockIcon,
+        calendar: calendarIcon,
         subject: subjectIcon,
         person: subjectIcon,
         time: timeIcon,

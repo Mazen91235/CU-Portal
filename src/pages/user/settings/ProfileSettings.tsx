@@ -8,15 +8,15 @@ import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
-import { GetAvatarLink } from "../../../utils/LinkHandler";
 import { FileInputContainer } from "../../../components/forms/FileInputContainer";
-import googleLogo from "../../../assets/icons/google-logo.png";
-import styles from "./ProfileSettings.module.css";
-import { showToast } from "../../../utils/ToastsManager";
-import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
 import { useUpdateUserDataMutation } from "../../../services/apis/user/UserAPIs";
 import { usePageLoading } from "../../../hooks/usePageLoading";
+
+import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { GetAvatarLink, GetIcon } from "../../../utils/LinkHandler";
+
+import styles from "./ProfileSettings.module.css";
 
 const profileSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -218,7 +218,7 @@ export const ProfileSettings = () => {
                                     disabled
                                 >
                                     <img
-                                        src={googleLogo}
+                                        src={GetIcon("google-logo")}
                                         alt="Google"
                                         className={styles.googleIcon}
                                     />

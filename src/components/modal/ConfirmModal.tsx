@@ -1,4 +1,4 @@
-import warningIcon from "../../assets/icons/warning-circle.svg";
+import { GetIcon } from "../../utils/LinkHandler";
 
 import styles from "./ConfirmModal.module.css";
 
@@ -32,7 +32,7 @@ const ConfirmModal = ({
                 <div className={styles.content}>
                     <span className={styles.iconWrapper}>
                         <img
-                            src={warningIcon}
+                            src={GetIcon("warning-circle")}
                             alt="Warning"
                             className={styles.icon}
                         />

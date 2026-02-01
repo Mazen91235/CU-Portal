@@ -20,14 +20,16 @@ import { LinksInputContainer } from "../../../components/forms/LinksInputContain
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import taskIcon from "../../../assets/icons/task-icon.svg";
-
-import styles from "./EditTask.module.css";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
 import type { FileData, LinkData, Task } from "../../../types/entities/Task";
 import { Form } from "../../../components/forms/Form";
-import { formatDateTime } from "../../../utils/Formatter";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+
+import { formatDateTime } from "../../../utils/Formatter";
+import { GetIcon } from "../../../utils/LinkHandler";
+
+import styles from "./EditTask.module.css";
+import { Heading } from "../../../components/heading/Heading";
 
 const taskSchema = z.object({
     title: z.string().min(1, "Task title is required"),
@@ -219,7 +221,7 @@ export const EditTask = () => {
             <SubBanner
                 title="Edit Task"
                 description="Update task information"
-                icon={taskIcon}
+                icon={GetIcon("task")}
                 linkText="Back to Tasks"
                 linkTo="/admin/tasks"
             />
@@ -295,13 +297,11 @@ export const EditTask = () => {
                     </div>
 
                     <div className={styles.attachmentsSection}>
-                        <h3>
-                            <i
-                                className="fa fa-paperclip"
-                                style={{ marginRight: "8px" }}
-                            ></i>
-                            Attachments & Links
-                        </h3>
+                        <Heading
+                            icon="paperclip"
+                            content="Attachments & Links"
+                            size="medium"
+                        />
 
                         <FilesInputContainer
                             register={register}

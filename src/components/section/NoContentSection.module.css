@@ -1,0 +1,17 @@
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+}
+
+.emptyState i {
+    font-size: 4rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.emptyState p {
+    font-size: 1.125rem;
+    font-weight: 500;
+}

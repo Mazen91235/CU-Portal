@@ -1,0 +1,13 @@
+.content {
+    width: 100%;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--dark-grey);
+    white-space: pre-wrap;
+}
+
+.content span {
+    width: 100%;
+    display: block;
+    text-align: center;
+}

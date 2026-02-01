@@ -35,6 +35,18 @@ export type Task = {
     year_id?: number | null;
     details?: {
         description?: string;
+        instructions?: string;
+        location?: string;
+        exam_type?: string;
+        exam_format?:
+            | "MCQ"
+            | "Written"
+            | "Mixed"
+            | "Practical"
+            | "Oral"
+            | "Other";
+        exam_weight?: string;
+        duration?: number;
         files_data?: FileData[];
     };
     deadline?: string | null;

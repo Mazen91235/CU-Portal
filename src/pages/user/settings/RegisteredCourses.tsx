@@ -2,8 +2,6 @@ import { useCallback, useMemo, useState } from "react";
 import { PageSeo } from "../../../components/PageSeo";
 import { Search } from "../../../components/forms/Search";
 import { Card } from "../../../components/card/Card";
-import hatIcon from "../../../assets/icons/hat.png";
-import styles from "./RegisteredCourses.module.css";
 import {
     useLazyGetAvailableCoursesQuery,
     useLazyGetEnrolledCoursesQuery,
@@ -13,6 +11,10 @@ import {
 import type { Subject } from "../../../types/entities/Subject";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Layout } from "../../../components/layout/Layout";
+
+import { GetIcon } from "../../../utils/LinkHandler";
+
+import styles from "./RegisteredCourses.module.css";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { showToast } from "../../../utils/ToastsManager";
 
@@ -89,7 +91,7 @@ export const RegisteredCourses = () => {
                         <div className={styles.section}>
                             <div className={styles.sectionHeader}>
                                 <img
-                                    src={hatIcon}
+                                    src={GetIcon("hat")}
                                     alt="Hat Icon"
                                     className={styles.hatIcon}
                                 />
@@ -142,7 +144,7 @@ export const RegisteredCourses = () => {
                         <div className={styles.section}>
                             <div className={styles.sectionHeader}>
                                 <img
-                                    src={hatIcon}
+                                    src={GetIcon("hat")}
                                     alt="Hat Icon"
                                     className={styles.hatIcon}
                                 />

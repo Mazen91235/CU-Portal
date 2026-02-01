@@ -25,6 +25,7 @@ import { Card } from "../../../components/card/Card";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
+import { NoContentSection } from "../../../components/section/NoContentSection";
 
 import styles from "./TasksPage.module.css";
 import { formatDateTime } from "../../../utils/Formatter";
@@ -279,6 +280,12 @@ export const TasksPage = () => {
         [subjects],
     );
 
+    useEffect(() => {
+        if (page > 1) {
+            fetchTasks();
+        }
+    }, [page, fetchTasks]);
+
     return (
         <Layout>
             <PageSeo
@@ -292,14 +299,15 @@ export const TasksPage = () => {
                 buttonAction={handleAddTask}
             />
             <div className={styles.container}>
-                <div className={styles.filters}>
-                    <div className={styles.filterGroup}>
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchRow}>
                         <Search
-                            placeholder="Search by task name"
+                            placeholder="Search tasks..."
                             setValue={setSearchQuery}
                         />
                     </div>
-                    <div className={styles.filterGroup}>
+
+                    <div className={styles.filtersRow}>
                         <SelectFilter
                             options={facultyOptions}
                             setValue={setFacultyFilter}
@@ -327,7 +335,7 @@ export const TasksPage = () => {
                     </div>
                 </div>
 
-                <div className={styles.taskGrid}>
+                <div className={styles.tasksGrid}>
                     {tasks.map((task) => (
                         <Card
                             key={task.id}
@@ -360,6 +368,12 @@ export const TasksPage = () => {
                         />
                     ))}
                 </div>
+
+                {tasks.length === 0 && !isFetching && (
+                    <NoContentSection icon="tasks" label="No tasks found" />
+                )}
+
+                <Pagination onReached={handlePagination} />
             </div>
 
             <ConfirmModal
@@ -370,7 +384,6 @@ export const TasksPage = () => {
                 message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
                 confirmText="Delete"
             />
-            <Pagination onReached={handlePagination} />
         </Layout>
     );
 };

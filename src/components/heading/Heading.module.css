@@ -1,0 +1,27 @@
+.heading {
+    font-weight: 600;
+    color: var(--primary-purple);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.heading i {
+    font-size: 0.875em;
+}
+
+/* Small size - used in Quick Info sections (14px) */
+.small {
+    font-size: 14px;
+}
+
+/* Medium size - used in form sections (20px) */
+.medium {
+    font-size: 20px;
+}
+
+/* Large size - used in detail pages (24px) */
+.large {
+    font-size: 24px;
+}

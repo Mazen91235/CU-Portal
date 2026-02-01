@@ -4,6 +4,7 @@ import type { FileData, LinkData } from "../../types/entities/Task";
 import styles from "./AttachmentsAndLinksSection.module.css";
 import { downloadFile } from "../../utils/FileDownloader";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { Heading } from "../heading/Heading";
 
 type AttachmentsAndLinksSectionProps = {
     files: FileData[];
@@ -51,11 +52,15 @@ export const AttachmentsAndLinksSection = ({
     return (
         <>
             <div className={styles.section}>
-                <h3 className={styles.sectionTitle}>Attachments & Links</h3>
+                <Heading
+                    icon="paperclip"
+                    content="Attachments & Links"
+                    size="large"
+                />
 
                 {files.length > 0 && (
                     <>
-                        <h4 className={styles.subsectionTitle}>Files:</h4>
+                        <Heading icon="file" content="Files:" size="medium" />
                         <div className={styles.filesList}>
                             {files.map((file) => (
                                 <div key={file.id} className={styles.fileRow}>
@@ -104,7 +109,7 @@ export const AttachmentsAndLinksSection = ({
 
                 {links.length > 0 && (
                     <>
-                        <h4 className={styles.subsectionTitle}>Links:</h4>
+                        <Heading icon="link" content="Links:" size="medium" />
                         <div className={styles.linksList}>
                             {links.map((link, index) => (
                                 <div key={index} className={styles.linkRow}>

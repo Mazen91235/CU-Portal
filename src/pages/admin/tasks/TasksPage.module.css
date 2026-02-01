@@ -1,48 +1,40 @@
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
 }
 
-.filters {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
-    padding: 1.5rem;
-    box-shadow: var(--box-shadow-sm);
+.filtersContainer {
     margin-bottom: 2rem;
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
 }
 
-.filters .filterGroup {
-    width: 100%;
-    display: flex;
-    gap: 1.5rem;
+.searchRow {
+    margin-bottom: 1rem;
 }
 
-.taskGrid {
+.filtersRow {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.tasksGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-@media (max-width: 1024px) {
-    .filters {
-        grid-template-columns: 1fr 1fr;
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
     }
-}
 
-@media (max-width: 999px) {
-    .filters {
+    .filtersRow {
         grid-template-columns: 1fr;
     }
 
-    .filters .filterGroup {
-        flex-direction: column;
-    }
-
-    .taskGrid {
+    .tasksGrid {
         grid-template-columns: 1fr;
     }
 }

@@ -42,3 +42,19 @@
     background-color: var(--light-grey);
     color: var(--dark-text);
 }
+
+.button.default {
+    background: var(--white);
+    color: var(--primary-purple);
+    border: 1px solid var(--primary-purple);
+}
+
+.button.default:hover {
+    background: var(--primary-purple);
+    color: var(--white);
+}
+
+.button.default:disabled:hover {
+    background: var(--white);
+    color: var(--primary-purple);
+}

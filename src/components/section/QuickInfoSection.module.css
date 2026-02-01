@@ -1,0 +1,30 @@
+.quickInfoList {
+    display: flex;
+    flex-direction: column;
+}
+
+.quickInfoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.quickInfoRow:last-child {
+    border-bottom: none;
+}
+
+.quickInfoLabel {
+    font-size: 14px;
+    color: var(--medium-grey);
+    font-weight: var(--primary-font-weight);
+}
+
+.quickInfoValue {
+    font-size: 14px;
+    color: var(--dark-text);
+    font-weight: 600;
+    text-align: right;
+    text-transform: capitalize;
+}

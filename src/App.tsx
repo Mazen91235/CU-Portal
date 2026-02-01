@@ -8,7 +8,7 @@ import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import useGetNotifications from "./hooks/useGetNotifications";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
-import { UserDashboard } from "./components/user/dashboard/Dashboard";
+import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
 import { AcademicSettings } from "./pages/user/settings/AcademicSettings";
 import { RegisteredCourses } from "./pages/user/settings/RegisteredCourses";
@@ -24,6 +24,10 @@ import { CreateTask } from "./pages/admin/tasks/CreateTask";
 import { EditTask } from "./pages/admin/tasks/EditTask";
 import { TaskPage } from "./pages/admin/tasks/TaskPage";
 import { TasksPage } from "./pages/admin/tasks/TasksPage";
+import { CreateExam } from "./pages/admin/exams/CreateExam";
+import { EditExam } from "./pages/admin/exams/EditExam";
+import { ExamPage } from "./pages/admin/exams/ExamPage";
+import { ExamsPage } from "./pages/admin/exams/ExamsPage";
 import "./App.css";
 import useAuth from "./hooks/useAuth";
 
@@ -82,8 +86,18 @@ function App() {
                     element={<ProtectedRoute permission="View Courses" />}
                 >
                     <Route index element={<CoursesPage />} />
-                    <Route path="create" element={<CreateCourse />} />
-                    <Route path="edit/:courseId" element={<EditCourse />} />
+                    <Route
+                        path="create"
+                        element={<ProtectedRoute permission="Add Courses" />}
+                    >
+                        <Route index element={<CreateCourse />} />
+                    </Route>
+                    <Route
+                        path="edit/:courseId"
+                        element={<ProtectedRoute permission="Edit Courses" />}
+                    >
+                        <Route index element={<EditCourse />} />
+                    </Route>
                     <Route path=":courseId" element={<CoursePage />} />
                 </Route>
 
@@ -92,9 +106,39 @@ function App() {
                     element={<ProtectedRoute permission="View Tasks" />}
                 >
                     <Route index element={<TasksPage />} />
-                    <Route path="create" element={<CreateTask />} />
-                    <Route path="edit/:taskId" element={<EditTask />} />
+                    <Route
+                        path="create"
+                        element={<ProtectedRoute permission="Add Tasks" />}
+                    >
+                        <Route index element={<CreateTask />} />
+                    </Route>
+                    <Route
+                        path="edit/:taskId"
+                        element={<ProtectedRoute permission="Edit Tasks" />}
+                    >
+                        <Route index element={<EditTask />} />
+                    </Route>
                     <Route path=":taskId" element={<TaskPage />} />
+                </Route>
+
+                <Route
+                    path="exams"
+                    element={<ProtectedRoute permission="View Exams" />}
+                >
+                    <Route index element={<ExamsPage />} />
+                    <Route
+                        path="create"
+                        element={<ProtectedRoute permission="Add Exams" />}
+                    >
+                        <Route index element={<CreateExam />} />
+                    </Route>
+                    <Route
+                        path="edit/:examId"
+                        element={<ProtectedRoute permission="Edit Exams" />}
+                    >
+                        <Route index element={<EditExam />} />
+                    </Route>
+                    <Route path=":examId" element={<ExamPage />} />
                 </Route>
             </Route>
         </Routes>

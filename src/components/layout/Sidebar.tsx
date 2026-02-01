@@ -1,57 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+
 import { useAppSelector } from "../../services/redux/Hooks";
 import { useLogoutMutation } from "../../services/apis/AuthenticateAPIs";
-import dropdownIcon from "../../assets/icons/sidebar-dropdown.svg";
-import homeIcon from "../../assets/icons/sidebar-home.svg";
-import coursesIcon from "../../assets/icons/sidebar-courses.svg";
-import courseMapIcon from "../../assets/icons/sidebar-coursemap.svg";
-import calendarIcon from "../../assets/icons/sidebar-calendar.svg";
-import tasksIcon from "../../assets/icons/sidebar-tasks.svg";
-import examsIcon from "../../assets/icons/sidebar-exams.svg";
-import announcementsIcon from "../../assets/icons/sidebar-announcements.svg";
-import materialsIcon from "../../assets/icons/sidebar-materials.svg";
-import otherMaterialsIcon from "../../assets/icons/sidebar-other-materials.svg";
-import gradesIcon from "../../assets/icons/sidebar-grades.svg";
-import studyTrackerIcon from "../../assets/icons/sidebar-study-tracker.svg";
-import eventsIcon from "../../assets/icons/sidebar-events.svg";
-import cvGeneratorIcon from "../../assets/icons/sidebar-cv-generator.svg";
-import roadmapsIcon from "../../assets/icons/sidebar-roadmaps.svg";
-import discussionIcon from "../../assets/icons/sidebar-discussion.svg";
-import profileSettingsIcon from "../../assets/icons/sidebar-profile-settings.svg";
-import academicSettingsIcon from "../../assets/icons/sidebar-academic-settings.svg";
-import registeredCoursesIcon from "../../assets/icons/sidebar-registered-courses.svg";
-import logoutIcon from "../../assets/icons/sidebar-logout.svg";
-import adminDashboardIcon from "../../assets/icons/sidebar-admin-dashboard.svg";
-import adminFacultiesIcon from "../../assets/icons/sidebar-admin-faculties.svg";
-import adminDepartmentsIcon from "../../assets/icons/sidebar-admin-departments.svg";
-import adminYearsIcon from "../../assets/icons/sidebar-admin-years.svg";
-import adminCourseMapsIcon from "../../assets/icons/sidebar-admin-course-maps.svg";
-import adminUsersIcon from "../../assets/icons/sidebar-admin-users.svg";
-import adminRolesIcon from "../../assets/icons/sidebar-admin-roles.svg";
-import adminCoursesIcon from "../../assets/icons/sidebar-admin-courses.svg";
-import adminMaterialsIcon from "../../assets/icons/sidebar-admin-materials.svg";
-import adminGradesIcon from "../../assets/icons/sidebar-admin-grades.svg";
-import adminTasksIcon from "../../assets/icons/sidebar-admin-tasks.svg";
-import adminExamsIcon from "../../assets/icons/sidebar-admin-exams.svg";
-import adminAnnouncementsIcon from "../../assets/icons/sidebar-admin-announcements.svg";
-import adminLogsIcon from "../../assets/icons/sidebar-admin-logs.svg";
-import adminRoadmapsIcon from "../../assets/icons/sidebar-admin-roadmaps.svg";
-import adminStudyMapsIcon from "../../assets/icons/sidebar-admin-study-maps.svg";
-import adminStudyAnalysisIcon from "../../assets/icons/sidebar-admin-study-analysis.svg";
-import adminEventsIcon from "../../assets/icons/sidebar-admin-events.svg";
-import adminDiscussionsIcon from "../../assets/icons/sidebar-admin-discussions.svg";
-import styles from "./Sidebar.module.css";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { GetAvatarLink } from "../../utils/LinkHandler";
+import { type Icon } from "../../types/Icon";
 import Logo from "../logo/Logo";
+
+import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { GetAvatarLink, GetIcon } from "../../utils/LinkHandler";
+
+import styles from "./Sidebar.module.css";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
 type NavLink = {
     label: string;
     path: string;
-    icon: string;
+    icon: Icon;
     badge?: BadgeType;
     activatesPaths?: string[];
 };
@@ -65,41 +30,41 @@ const navSectionsDefault: NavSection[] = [
     {
         title: "Academic",
         links: [
-            { label: "Home", path: "/user", icon: homeIcon },
+            { label: "Home", path: "/user", icon: "sidebar-home" },
             {
                 label: "Courses",
                 path: "/user/courses",
-                icon: coursesIcon,
+                icon: "sidebar-courses",
             },
             {
                 label: "Course Map",
                 path: "/user/course-map",
-                icon: courseMapIcon,
+                icon: "sidebar-coursemap",
             },
             {
                 label: "Calendar",
                 path: "/user/calendar",
-                icon: calendarIcon,
+                icon: "sidebar-calendar",
             },
-            { label: "Tasks", path: "/user/tasks", icon: tasksIcon },
-            { label: "Exams", path: "/user/exams", icon: examsIcon },
+            { label: "Tasks", path: "/user/tasks", icon: "sidebar-tasks" },
+            { label: "Exams", path: "/user/exams", icon: "sidebar-exams" },
             {
                 label: "Announcements",
                 path: "/user/announcements",
-                icon: announcementsIcon,
+                icon: "sidebar-announcements",
             },
             {
                 label: "Materials",
                 path: "/user/materials",
-                icon: materialsIcon,
+                icon: "sidebar-materials",
             },
             {
                 label: "Other Materials",
                 path: "/user/other-materials",
-                icon: otherMaterialsIcon,
+                icon: "sidebar-other-materials",
                 badge: "Soon",
             },
-            { label: "Grades", path: "/user/grades", icon: gradesIcon },
+            { label: "Grades", path: "/user/grades", icon: "sidebar-grades" },
         ],
     },
     {
@@ -108,13 +73,13 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "Study Tracker",
                 path: "/user/study-tracker",
-                icon: studyTrackerIcon,
+                icon: "sidebar-study-tracker",
                 badge: "Soon",
             },
             {
                 label: "Events",
                 path: "/user/events",
-                icon: eventsIcon,
+                icon: "sidebar-events",
                 badge: "Soon",
             },
         ],
@@ -125,7 +90,7 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "CV Generator",
                 path: "/user/cv-generator",
-                icon: cvGeneratorIcon,
+                icon: "sidebar-cv-generator",
                 badge: "Soon",
             },
         ],
@@ -136,7 +101,7 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "Roadmaps",
                 path: "/user/roadmaps",
-                icon: roadmapsIcon,
+                icon: "sidebar-roadmaps",
                 badge: "Soon",
             },
         ],
@@ -147,7 +112,7 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "Discussion",
                 path: "/user/discussion",
-                icon: discussionIcon,
+                icon: "sidebar-discussion",
                 badge: "Soon",
             },
         ],
@@ -158,17 +123,17 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "Profile Settings",
                 path: "/user/settings/profile",
-                icon: profileSettingsIcon,
+                icon: "sidebar-profile-settings",
             },
             {
                 label: "Academic Settings",
                 path: "/user/settings/academic",
-                icon: academicSettingsIcon,
+                icon: "sidebar-academic-settings",
             },
             {
                 label: "Registered Courses",
                 path: "/user/settings/courses",
-                icon: registeredCoursesIcon,
+                icon: "sidebar-registered-courses",
             },
         ],
     },
@@ -186,7 +151,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Dashboard",
             path: "/admin",
-            icon: adminDashboardIcon,
+            icon: "sidebar-admin-dashboard",
             badge: "Soon",
         });
     }
@@ -195,7 +160,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Faculties",
             path: "/admin/faculties",
-            icon: adminFacultiesIcon,
+            icon: "sidebar-admin-faculties",
         });
     }
 
@@ -203,7 +168,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Departments",
             path: "/admin/departments",
-            icon: adminDepartmentsIcon,
+            icon: "sidebar-admin-departments",
         });
     }
 
@@ -211,7 +176,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Years",
             path: "/admin/years",
-            icon: adminYearsIcon,
+            icon: "sidebar-admin-years",
         });
     }
 
@@ -219,7 +184,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Course Maps",
             path: "/admin/course-maps",
-            icon: adminCourseMapsIcon,
+            icon: "sidebar-admin-course-maps",
         });
     }
 
@@ -227,7 +192,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Users",
             path: "/admin/users",
-            icon: adminUsersIcon,
+            icon: "sidebar-admin-users",
             activatesPaths: ["/admin/pending-users"],
         });
     }
@@ -236,7 +201,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Roles",
             path: "/admin/roles",
-            icon: adminRolesIcon,
+            icon: "sidebar-admin-roles",
         });
     }
 
@@ -244,7 +209,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Courses",
             path: "/admin/courses",
-            icon: adminCoursesIcon,
+            icon: "sidebar-admin-courses",
             activatesPaths: ["/admin/courses/"],
         });
     }
@@ -253,7 +218,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Materials",
             path: "/admin/materials",
-            icon: adminMaterialsIcon,
+            icon: "sidebar-admin-materials",
         });
     }
 
@@ -261,7 +226,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Grades",
             path: "/admin/grades",
-            icon: adminGradesIcon,
+            icon: "sidebar-admin-grades",
         });
     }
 
@@ -269,7 +234,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Tasks",
             path: "/admin/tasks",
-            icon: adminTasksIcon,
+            icon: "sidebar-admin-tasks",
             activatesPaths: ["/admin/tasks/"],
         });
     }
@@ -278,7 +243,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Exams",
             path: "/admin/exams",
-            icon: adminExamsIcon,
+            icon: "sidebar-admin-exams",
             activatesPaths: ["/admin/exams/"],
         });
     }
@@ -287,7 +252,7 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Announcements",
             path: "/admin/announcements",
-            icon: adminAnnouncementsIcon,
+            icon: "sidebar-admin-announcements",
             activatesPaths: ["/admin/announcements/"],
         });
     }
@@ -296,42 +261,42 @@ const showAdminLinks = (permissions: string[]) => {
         section.links.push({
             label: "Logs",
             path: "/admin/logs",
-            icon: adminLogsIcon,
+            icon: "sidebar-admin-logs",
         });
     }
 
     section.links.push({
         label: "Roadmaps",
         path: "/admin/roadmaps",
-        icon: adminRoadmapsIcon,
+        icon: "sidebar-admin-roadmaps",
         badge: "Soon",
     });
 
     section.links.push({
         label: "Study Maps",
         path: "/admin/study-maps",
-        icon: adminStudyMapsIcon,
+        icon: "sidebar-admin-study-maps",
         badge: "Soon",
     });
 
     section.links.push({
         label: "Study Analysis",
         path: "/admin/study-analysis",
-        icon: adminStudyAnalysisIcon,
+        icon: "sidebar-admin-study-analysis",
         badge: "Soon",
     });
 
     section.links.push({
         label: "Events",
         path: "/admin/events",
-        icon: adminEventsIcon,
+        icon: "sidebar-admin-events",
         badge: "Soon",
     });
 
     section.links.push({
         label: "Discussions",
         path: "/admin/discussions",
-        icon: adminDiscussionsIcon,
+        icon: "sidebar-admin-discussions",
         badge: "Soon",
     });
 
@@ -450,7 +415,7 @@ export const Sidebar = ({
                         >
                             <span>{section.title}</span>
                             <img
-                                src={dropdownIcon}
+                                src={GetIcon("sidebar-dropdown")}
                                 alt=""
                                 width="20"
                                 height="20"
@@ -469,7 +434,7 @@ export const Sidebar = ({
                                     >
                                         <div className={styles.linkContent}>
                                             <img
-                                                src={link.icon}
+                                                src={GetIcon(link.icon)}
                                                 alt=""
                                                 width="20"
                                                 height="20"
@@ -494,7 +459,7 @@ export const Sidebar = ({
                     <button onClick={handleLogout} className={styles.logoutBtn}>
                         <div className={styles.linkContent}>
                             <img
-                                src={logoutIcon}
+                                src={GetIcon("sidebar-logout")}
                                 alt=""
                                 width="20"
                                 height="20"

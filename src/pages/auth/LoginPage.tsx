@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { SetCookie } from "../../utils/CookiesManager";
-import { GetWebLink } from "../../utils/LinkHandler";
-import Logo from "../../components/logo/Logo";
 import { PageSeo } from "../../components/PageSeo";
+import Logo from "../../components/logo/Logo";
+import { usePageLoading } from "../../hooks/usePageLoading";
+
+import { GetWebLink, GetIcon } from "../../utils/LinkHandler";
+
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
-import googleIcon from "../../assets/icons/google-icon.svg";
+
 import styles from "./LoginPage.module.css";
-import { usePageLoading } from "../../hooks/usePageLoading";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -78,7 +80,7 @@ const LoginPage = () => {
                             aria-label="Sign in with Google"
                         >
                             <img
-                                src={googleIcon}
+                                src={GetIcon("google")}
                                 alt=""
                                 className={styles.googleIcon}
                                 aria-hidden="true"
