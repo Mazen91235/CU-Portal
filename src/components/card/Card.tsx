@@ -1,24 +1,14 @@
 import { useRef, useState } from "react";
-import clockIcon from "../../assets/icons/time-icon.svg";
-import calendarIcon from "../../assets/icons/calendar-icon.svg";
-import locationIcon from "../../assets/icons/location-icon.svg";
-import subjectIcon from "../../assets/icons/subject-icon.svg";
-import timeIcon from "../../assets/icons/time-icon.svg";
-import buildingIcon from "../../assets/icons/building-icon.svg";
 import styles from "./Card.module.css";
 import { Button } from "../forms/Button";
+import { formatString } from "../../utils/Formatter";
+import type { Icon } from "../../types/Icon";
+import { GetIcon } from "../../utils/LinkHandler";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon:
-        | "clock"
-        | "location"
-        | "calendar"
-        | "subject"
-        | "person"
-        | "time"
-        | "building";
+    icon: Icon;
     label?: string;
     value?: string;
     color?: CardItemColor;
@@ -38,19 +28,6 @@ type CardProps = {
     onEdit?: () => void;
     onDelete?: () => void;
     onView?: () => void;
-};
-
-const getIconPath = (icon: string): string => {
-    const iconMap: Record<string, string> = {
-        clock: clockIcon,
-        location: locationIcon,
-        calendar: calendarIcon,
-        subject: subjectIcon,
-        person: subjectIcon,
-        time: timeIcon,
-        building: buildingIcon,
-    };
-    return iconMap[icon] || clockIcon;
 };
 
 const getColorClass = (color?: CardItemColor, index?: number): string => {
@@ -111,7 +88,7 @@ export const Card = ({
             )}
 
             <div className={styles.titleRow}>
-                <h3 className={styles.title}>{title}</h3>
+                <h3 className={styles.title}>{formatString(title, 25)}</h3>
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>
                         <button
@@ -189,7 +166,7 @@ export const Card = ({
                         >
                             <span className={styles.itemLabel}>
                                 <img
-                                    src={getIconPath(item.icon)}
+                                    src={GetIcon(item.icon)}
                                     alt={`${item.label} icon`}
                                     className={styles.itemIcon}
                                 />

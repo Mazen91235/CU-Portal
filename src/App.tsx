@@ -28,6 +28,10 @@ import { CreateExam } from "./pages/admin/exams/CreateExam";
 import { EditExam } from "./pages/admin/exams/EditExam";
 import { ExamPage } from "./pages/admin/exams/ExamPage";
 import { ExamsPage } from "./pages/admin/exams/ExamsPage";
+import { CreateAnnouncement } from "./pages/admin/announcements/CreateAnnouncement";
+import { EditAnnouncement } from "./pages/admin/announcements/EditAnnouncement";
+import { AnnouncementPage } from "./pages/admin/announcements/AnnouncementPage";
+import { AnnouncementsPage } from "./pages/admin/announcements/AnnouncementsPage";
 import "./App.css";
 import useAuth from "./hooks/useAuth";
 
@@ -139,6 +143,33 @@ function App() {
                         <Route index element={<EditExam />} />
                     </Route>
                     <Route path=":examId" element={<ExamPage />} />
+                </Route>
+
+                <Route
+                    path="announcements"
+                    element={<ProtectedRoute permission="View Announcements" />}
+                >
+                    <Route index element={<AnnouncementsPage />} />
+                    <Route
+                        path="create"
+                        element={
+                            <ProtectedRoute permission="Add Announcements" />
+                        }
+                    >
+                        <Route index element={<CreateAnnouncement />} />
+                    </Route>
+                    <Route
+                        path="edit/:announcementId"
+                        element={
+                            <ProtectedRoute permission="Edit Announcements" />
+                        }
+                    >
+                        <Route index element={<EditAnnouncement />} />
+                    </Route>
+                    <Route
+                        path=":announcementId"
+                        element={<AnnouncementPage />}
+                    />
                 </Route>
             </Route>
         </Routes>

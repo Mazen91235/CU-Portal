@@ -15,6 +15,7 @@ import { usePageLoading } from "../../../hooks/usePageLoading";
 
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { GetAvatarLink, GetIcon } from "../../../utils/LinkHandler";
+import { showToast } from "../../../utils/ToastsManager";
 
 import styles from "./ProfileSettings.module.css";
 
