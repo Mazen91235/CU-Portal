@@ -17,6 +17,11 @@ export const StatCard = ({ type, value, icon }: StatCardProps) => {
                 iconColor: "#2563eb",
                 iconClass: "fa-calendar",
             },
+            clock: {
+                bgColor: "rgba(37, 99, 235, 0.1)",
+                iconColor: "#2563eb",
+                iconClass: "fa-clock",
+            },
             people: {
                 bgColor: "rgba(22, 163, 74, 0.1)",
                 iconColor: "#16a34a",

@@ -1,0 +1,105 @@
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.quickLinksSection {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.quickLinksTitle {
+    color: var(--primary-purple);
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.quickLinksDescription {
+    color: var(--medium-grey);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quickLinksGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.quickCard {
+    width: 230px;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    border-radius: 14px;
+    background: var(--white);
+    box-shadow: var(--dark-box-shadow);
+    transition: all 0.3s ease-in-out;
+}
+
+.quickCard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.quickCardIcon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+}
+
+.quickCardTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin: 0.625rem 0;
+}
+
+.quickCardDescription {
+    font-size: 0.875rem;
+    color: var(--medium-grey);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.quickCardButton {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    max-width: 180px;
+}
+
+.quickCardButton:hover {
+    background-color: var(--primary-purple-hover);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .statsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .quickLinksGrid {
+        grid-template-columns: 1fr;
+    }
+}

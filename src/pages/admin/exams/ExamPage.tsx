@@ -11,7 +11,7 @@ import { LongSection } from "../../../components/section/LongSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
-import { formatDate, formatTime } from "../../../utils/Formatter";
+import { formatDateTime } from "../../../utils/Formatter";
 import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./ExamPage.module.css";
@@ -66,13 +66,13 @@ export const ExamPage = () => {
             <div className={styles.container}>
                 <div className={styles.statsRow}>
                     <StatCard
-                        type="Date"
-                        value={formatDate(exam.due_date) || "N/A"}
-                        icon="calendar"
+                        type="Subject"
+                        value={exam.subject?.name || "N/A"}
+                        icon="book"
                     />
                     <StatCard
-                        type="Time"
-                        value={formatTime(exam.deadline) || "N/A"}
+                        type="Date"
+                        value={formatDateTime(exam.deadline) || "N/A"}
                         icon="calendar"
                     />
                     <StatCard
@@ -82,12 +82,7 @@ export const ExamPage = () => {
                                 ? `${exam.details.duration} hours`
                                 : "N/A"
                         }
-                        icon="calendar"
-                    />
-                    <StatCard
-                        type="Location"
-                        value={exam.details?.location || "N/A"}
-                        icon="tag"
+                        icon="clock"
                     />
                 </div>
 
@@ -130,6 +125,10 @@ export const ExamPage = () => {
                         <QuickInfoSection
                             items={[
                                 { label: "Type:", value: "Exam" },
+                                {
+                                    label: "Location:",
+                                    value: exam.details?.location || "N/A",
+                                },
                                 {
                                     label: "Faculty:",
                                     value: exam.faculty?.name || "N/A",

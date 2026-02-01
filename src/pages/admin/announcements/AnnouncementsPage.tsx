@@ -279,12 +279,6 @@ export const AnnouncementsPage = () => {
         [subjects],
     );
 
-    useEffect(() => {
-        if (page > 1) {
-            fetchAnnouncements();
-        }
-    }, [page, fetchAnnouncements]);
-
     return (
         <Layout>
             <PageSeo

@@ -1,6 +1,6 @@
 import { Layout } from "../../../components/layout/Layout";
 
-export const UserDashboard = () => {
+export const Dashboard = () => {
     return (
         <Layout>
             <div>User Dashboard</div>

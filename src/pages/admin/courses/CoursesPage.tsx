@@ -223,23 +223,28 @@ export const CoursesPage = () => {
                 buttonAction={handleAddCourse}
             />
             <div className={styles.container}>
-                <div className={styles.filters}>
-                    <Search
-                        placeholder="Search by course name or code"
-                        setValue={setSearchQuery}
-                    />
-                    <SelectFilter
-                        options={facultyOptions}
-                        setValue={setFacultyFilter}
-                    />
-                    <SelectFilter
-                        options={departmentOptions}
-                        setValue={setDepartmentFilter}
-                    />
-                    <SelectFilter
-                        options={yearOptions}
-                        setValue={setYearFilter}
-                    />
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchRow}>
+                        <Search
+                            placeholder="Search by course name or code"
+                            setValue={setSearchQuery}
+                        />
+                    </div>
+
+                    <div className={styles.filtersRow}>
+                        <SelectFilter
+                            options={facultyOptions}
+                            setValue={setFacultyFilter}
+                        />
+                        <SelectFilter
+                            options={departmentOptions}
+                            setValue={setDepartmentFilter}
+                        />
+                        <SelectFilter
+                            options={yearOptions}
+                            setValue={setYearFilter}
+                        />
+                    </div>
                 </div>
 
                 <div className={styles.courseGrid}>
@@ -267,7 +272,7 @@ export const CoursesPage = () => {
                                         course.year?.year?.toString() || "N/A",
                                 },
                                 {
-                                    icon: "person",
+                                    icon: "user",
                                     label: "Students",
                                     value:
                                         course.users_count?.toString() || "0",

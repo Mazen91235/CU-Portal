@@ -1,0 +1,176 @@
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
+import { PageSeo } from "../../../components/PageSeo";
+import { Search } from "../../../components/forms/Search";
+import { Card } from "../../../components/card/Card";
+import {
+    useLazyGetAvailableCoursesQuery,
+    useLazyGetEnrolledCoursesQuery,
+} from "../../../services/apis/user/CourseAPIs";
+import type { Subject } from "../../../types/entities/Subject";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { Layout } from "../../../components/layout/Layout";
+import { Banner } from "../../../components/banner/Banner";
+import { GetIcon } from "../../../utils/LinkHandler";
+
+import styles from "./CoursesPage.module.css";
+
+export const CoursesPage = () => {
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
+    const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
+    const [registeredCourses, setRegisteredCourses] = useState<Subject[]>([]);
+    const [availableCourses, setAvailableCourses] = useState<Subject[]>([]);
+
+    const fetchData = useCallback(async () => {
+        await Promise.all([
+            getEnrolledCourses()
+                .unwrap()
+                .then((response) => {
+                    setRegisteredCourses(response.data || []);
+                }),
+            getAvailableCourses({})
+                .unwrap()
+                .then((response) => {
+                    setAvailableCourses(response.data || []);
+                }),
+        ]);
+    }, [getEnrolledCourses, getAvailableCourses]);
+
+    useAuthQuery(fetchData);
+
+    const filteredAvailableCourses = useMemo(() => {
+        return availableCourses.filter((course) => {
+            return (
+                course.name
+                    ?.toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                course.code?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        });
+    }, [availableCourses, searchQuery]);
+
+    const handleViewCourse = (courseId: number) => {
+        navigate(`/user/courses/${courseId}`);
+    };
+
+    return (
+        <Layout>
+            <PageSeo
+                title="My Courses - CU Portal"
+                description="View your registered and available courses"
+            />
+            <Banner
+                title="My Courses"
+                description="View your registered and available courses"
+            />
+            <div className={styles.container}>
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <img
+                            src={GetIcon("hat")}
+                            alt="Hat Icon"
+                            className={styles.hatIcon}
+                        />
+                        <span className={styles.sectionTitle}>
+                            Registered Courses
+                        </span>
+                        <span className={styles.courseBadge}>
+                            {registeredCourses.length} Courses
+                        </span>
+                    </div>
+
+                    <div className={styles.cardsGrid}>
+                        {registeredCourses.map((course) => (
+                            <Card
+                                key={course.id}
+                                title={course.name}
+                                badge={course.code}
+                                secondaryBadge={`${course.credits} Credits`}
+                                items={[
+                                    {
+                                        icon: "subject",
+                                        label: "Faculty",
+                                        value: course.faculty?.name,
+                                        color: "pink",
+                                    },
+                                    {
+                                        icon: "location",
+                                        label: "Department",
+                                        value: course.department?.name,
+                                        color: "yellow",
+                                    },
+                                    {
+                                        icon: "calendar",
+                                        label: "Year",
+                                        value: course.year?.year?.toString(),
+                                        color: "green",
+                                    },
+                                ]}
+                                button="View Course"
+                                buttonAction={() =>
+                                    handleViewCourse(course.id!)
+                                }
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <img
+                            src={GetIcon("hat")}
+                            alt="Hat Icon"
+                            className={styles.hatIcon}
+                        />
+                        <span className={styles.sectionTitle}>
+                            Available Courses
+                        </span>
+                        <span className={styles.courseBadge}>
+                            {filteredAvailableCourses.length} Courses
+                        </span>
+                    </div>
+
+                    <div className={styles.searchContainer}>
+                        <Search
+                            placeholder="Search by course name or code"
+                            setValue={setSearchQuery}
+                        />
+                    </div>
+
+                    <div className={styles.cardsGrid}>
+                        {filteredAvailableCourses.map((course) => (
+                            <Card
+                                key={course.id}
+                                title={course.name}
+                                badge={course.code}
+                                secondaryBadge={`${course.credits?.toString()} Credits`}
+                                items={[
+                                    {
+                                        icon: "subject",
+                                        label: "Faculty",
+                                        value: course.faculty?.name,
+                                        color: "pink",
+                                    },
+                                    {
+                                        icon: "location",
+                                        label: "Department",
+                                        value: course.department?.name,
+                                        color: "yellow",
+                                    },
+                                    {
+                                        icon: "calendar",
+                                        label: "Year",
+                                        value: course.year?.year?.toString(),
+                                        color: "green",
+                                    },
+                                ]}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    );
+};

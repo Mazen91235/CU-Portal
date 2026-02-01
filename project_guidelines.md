@@ -15,23 +15,27 @@ project-root/
   public/
   src/
     assets/
-      icons
+      decorations/
+      icons/
+      snapshots/
+      team/
     components/
-      admin/
-        layout/
       auth/
+      banner/
       bordered/
       card/
       forms/
+      heading/
       landing/
       layout/
       loading/
+      logo/
       modal/
       notifications/
+      pagination/
       preview/
+      section/
       toast/
-      user/
-        settings/
     contexts/
       contexts/
       hooks/
@@ -40,28 +44,31 @@ project-root/
     old_project/ -> (Read Only Folder (Never modify or touch it just you can read it only))
     pages/
       admin/
-        faculties/
-        departments/
-        years/
+        announcements/
         courses/
+        departments/
+        exams/
+        faculties/
         tasks/
+        years/
       auth/
-      user/
-        settings/
       landing/
+      user/
+        dashboard/
+        settings/
     services/
       apis/
         admin/
         user/
       redux/
         reducers/
-      signalr/
     types/
       dtos/
       entities/
       props/
       responses/
     utils/
+    webfonts/
   README.md
   project_guidelines.md  ← (THIS FILE)
 ```

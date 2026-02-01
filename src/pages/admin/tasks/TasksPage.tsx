@@ -118,7 +118,7 @@ export const TasksPage = () => {
         try {
             if (!hasNextPage) return;
             const result = await getTasks({
-                title: searchQuery || undefined,
+                query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
                     ? parseInt(departmentFilter)
@@ -279,12 +279,6 @@ export const TasksPage = () => {
         ],
         [subjects],
     );
-
-    useEffect(() => {
-        if (page > 1) {
-            fetchTasks();
-        }
-    }, [page, fetchTasks]);
 
     return (
         <Layout>

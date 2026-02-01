@@ -24,6 +24,16 @@ export const CourseAPI = createApi({
                 credentials: "include",
             }),
         }),
+        getEnrolledCourse: builder.query<
+            GenericAPIResponse<Subject>,
+            { course_id: number }
+        >({
+            query: ({ course_id }) => ({
+                url: `/enrolled/${course_id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
         getAvailableCourses: builder.query<
             GenericAPIResponse<Subject[]>,
             SearchDto
@@ -62,6 +72,7 @@ export const CourseAPI = createApi({
 
 export const {
     useLazyGetEnrolledCoursesQuery,
+    useLazyGetEnrolledCourseQuery,
     useLazyGetAvailableCoursesQuery,
     useRegisterCourseMutation,
     useUnregisterCourseMutation,

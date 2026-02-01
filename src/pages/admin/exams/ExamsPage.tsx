@@ -118,7 +118,7 @@ export const ExamsPage = () => {
         try {
             if (!hasNextPage) return;
             const result = await getExams({
-                title: searchQuery || undefined,
+                query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
                     ? parseInt(departmentFilter)
@@ -280,12 +280,6 @@ export const ExamsPage = () => {
         [subjects],
     );
 
-    useEffect(() => {
-        if (page > 1) {
-            fetchExams();
-        }
-    }, [page, fetchExams]);
-
     return (
         <Layout>
             <PageSeo
@@ -355,7 +349,7 @@ export const ExamsPage = () => {
                                     value: formatDate(exam.due_date) || "N/A",
                                 },
                                 {
-                                    icon: "clock",
+                                    icon: "time",
                                     label: "Time",
                                     value: formatTime(exam.deadline) || "N/A",
                                 },

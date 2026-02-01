@@ -3,8 +3,8 @@ import styles from "./Banner.module.css";
 type BannerProps = {
     title: string;
     description?: string;
-    button: string;
-    buttonAction: () => void;
+    button?: string;
+    buttonAction?: () => void;
 };
 
 export const Banner = ({
@@ -21,9 +21,11 @@ export const Banner = ({
                     <p className={styles["description"]}>{description}</p>
                 )}
             </div>
-            <button className={styles["button"]} onClick={buttonAction}>
-                {button}
-            </button>
+            {button && buttonAction && (
+                <button className={styles["button"]} onClick={buttonAction}>
+                    {button}
+                </button>
+            )}
         </section>
     );
 };

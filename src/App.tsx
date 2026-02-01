@@ -8,7 +8,7 @@ import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import useGetNotifications from "./hooks/useGetNotifications";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
-import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
+import { Dashboard as UserDashboard } from "./pages/user/dashboard/Dashboard";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
 import { AcademicSettings } from "./pages/user/settings/AcademicSettings";
 import { RegisteredCourses } from "./pages/user/settings/RegisteredCourses";
@@ -32,8 +32,16 @@ import { CreateAnnouncement } from "./pages/admin/announcements/CreateAnnounceme
 import { EditAnnouncement } from "./pages/admin/announcements/EditAnnouncement";
 import { AnnouncementPage } from "./pages/admin/announcements/AnnouncementPage";
 import { AnnouncementsPage } from "./pages/admin/announcements/AnnouncementsPage";
-import "./App.css";
+import { TasksPage as UserTasksPage } from "./pages/user/tasks/TasksPage";
+import { TaskPage as UserTaskPage } from "./pages/user/tasks/TaskPage";
+import { ExamsPage as UserExamsPage } from "./pages/user/exams/ExamsPage";
+import { ExamPage as UserExamPage } from "./pages/user/exams/ExamPage";
+import { AnnouncementsPage as UserAnnouncementsPage } from "./pages/user/announcements/AnnouncementsPage";
+import { AnnouncementPage as UserAnnouncementPage } from "./pages/user/announcements/AnnouncementPage";
+import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage";
+import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
 import useAuth from "./hooks/useAuth";
+import "./App.css";
 
 function App() {
     useAuth({ shouldNavigate: false });
@@ -56,6 +64,25 @@ function App() {
                     <Route path="profile" element={<ProfileSettings />} />
                     <Route path="academic" element={<AcademicSettings />} />
                     <Route path="courses" element={<RegisteredCourses />} />
+                </Route>
+                <Route path="tasks">
+                    <Route index element={<UserTasksPage />} />
+                    <Route path=":taskId" element={<UserTaskPage />} />
+                </Route>
+                <Route path="exams">
+                    <Route index element={<UserExamsPage />} />
+                    <Route path=":examId" element={<UserExamPage />} />
+                </Route>
+                <Route path="announcements">
+                    <Route index element={<UserAnnouncementsPage />} />
+                    <Route
+                        path=":announcementId"
+                        element={<UserAnnouncementPage />}
+                    />
+                </Route>
+                <Route path="courses">
+                    <Route index element={<UserCoursesPage />} />
+                    <Route path=":courseId" element={<UserCoursePage />} />
                 </Route>
             </Route>
             <Route path="/admin" element={<ProtectedRoute />}>
