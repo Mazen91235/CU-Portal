@@ -1,0 +1,6 @@
+.bordered {
+    background: var(--white);
+    border-radius: var(--primary-border-radius);
+    box-shadow: var(--dark-box-shadow);
+    padding: var(--primary-padding);
+}

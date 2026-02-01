@@ -1,0 +1,40 @@
+.statCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    padding: 20px;
+    border-radius: var(--primary-border-radius);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.statImgbox {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--primary-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statImgbox i {
+    font-size: 20px;
+}
+
+.statTexts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.statTitle {
+    font-size: 14px;
+    color: var(--medium-grey);
+    font-weight: var(--primary-font-weight);
+}
+
+.statValue {
+    font-size: 18px;
+    color: var(--dark-text);
+    font-weight: var(--primary-font-weight-heavy);
+}

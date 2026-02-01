@@ -25,8 +25,10 @@ import { EditTask } from "./pages/admin/tasks/EditTask";
 import { TaskPage } from "./pages/admin/tasks/TaskPage";
 import { TasksPage } from "./pages/admin/tasks/TasksPage";
 import "./App.css";
+import useAuth from "./hooks/useAuth";
 
 function App() {
+    useAuth({ shouldNavigate: false });
     useGetUser();
     useGetNotifications();
     useRouteMessages();

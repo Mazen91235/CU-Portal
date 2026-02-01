@@ -20,6 +20,7 @@ project-root/
       admin/
         layout/
       auth/
+      bordered/
       card/
       forms/
       landing/
@@ -27,6 +28,7 @@ project-root/
       loading/
       modal/
       notifications/
+      preview/
       toast/
       user/
         settings/
@@ -42,6 +44,7 @@ project-root/
         departments/
         years/
         courses/
+        tasks/
       auth/
       user/
         settings/

@@ -11,7 +11,6 @@ import { CalendarAPI } from "../apis/user/CalendarAPIs";
 import { CourseAPI } from "../apis/user/CourseAPIs";
 import { CourseMapAPI } from "../apis/user/CourseMapAPIs";
 import { ExamAPI } from "../apis/user/ExamAPIs";
-import { FileAPI } from "../apis/user/FileAPIs";
 import { GradeAPI } from "../apis/user/GradeAPIs";
 import { MaterialAPI } from "../apis/user/MaterialAPIs";
 import { TaskAPI } from "../apis/user/TaskAPIs";
@@ -43,7 +42,6 @@ const store = configureStore({
         [CourseAPI.reducerPath]: CourseAPI.reducer,
         [CourseMapAPI.reducerPath]: CourseMapAPI.reducer,
         [ExamAPI.reducerPath]: ExamAPI.reducer,
-        [FileAPI.reducerPath]: FileAPI.reducer,
         [GradeAPI.reducerPath]: GradeAPI.reducer,
         [MaterialAPI.reducerPath]: MaterialAPI.reducer,
         [NotificationAPI.reducerPath]: NotificationAPI.reducer,
@@ -74,7 +72,6 @@ const store = configureStore({
             CourseAPI.middleware,
             CourseMapAPI.middleware,
             ExamAPI.middleware,
-            FileAPI.middleware,
             GradeAPI.middleware,
             MaterialAPI.middleware,
             NotificationAPI.middleware,

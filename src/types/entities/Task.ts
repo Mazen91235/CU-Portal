@@ -9,7 +9,7 @@ export type FileData = {
     name?: string;
     mimeType?: string;
     type?: string;
-    size?: number;
+    size?: string;
     webContentLink?: string;
     webViewLink?: string;
     url?: string;

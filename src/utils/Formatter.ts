@@ -20,3 +20,14 @@ export const formatDateTime = (
         minute: "2-digit",
     });
 };
+
+export const formatString = (str: string, maxLength: number): string => {
+    if (str.length > maxLength) {
+        return (
+            str.substring(0, maxLength - 5) +
+            "..." +
+            str.substring(str.length - 5)
+        );
+    }
+    return str;
+};

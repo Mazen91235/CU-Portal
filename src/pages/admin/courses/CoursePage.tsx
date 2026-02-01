@@ -5,12 +5,14 @@ import type { Subject } from "../../../types/entities/Subject";
 import type { User } from "../../../types/entities/User";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
-import styles from "./CoursePage.module.css";
 import { SubBanner } from "../../../components/banner/SubBanner";
+import { StatCard } from "../../../components/card/StatCard";
+import { Bordered } from "../../../components/bordered/Bordered";
 import courseIcon from "../../../assets/icons/course-icon.svg";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { GetAvatarLink } from "../../../utils/LinkHandler";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import styles from "./CoursePage.module.css";
 
 export const CoursePage = () => {
     const { courseId } = useParams<{ courseId: string }>();
@@ -85,113 +87,78 @@ export const CoursePage = () => {
 
                 {activeTab === "overview" && (
                     <>
-                        <div className={styles.courseStatsRow}>
-                            <div className={styles.courseStatCard}>
-                                <div
-                                    className={styles.courseStatImgbox}
-                                    style={{
-                                        backgroundColor:
-                                            "rgba(37, 99, 235, 0.10)",
-                                    }}
-                                >
-                                    <i
-                                        className="fas fa-users"
-                                        style={{ color: "#2563eb" }}
-                                    ></i>
-                                </div>
-                                <div className={styles.courseStatTexts}>
-                                    <div className={styles.courseStatTitle}>
-                                        Enrolled
-                                    </div>
-                                    <div className={styles.courseStatValue}>
-                                        {enrolledCount}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={styles.courseStatCard}>
-                                <div
-                                    className={styles.courseStatImgbox}
-                                    style={{
-                                        backgroundColor:
-                                            "rgba(22, 163, 74, .1)",
-                                    }}
-                                >
-                                    <i
-                                        className="fas fa-user-check"
-                                        style={{ color: "#16a34a" }}
-                                    ></i>
-                                </div>
-                                <div className={styles.courseStatTexts}>
-                                    <div className={styles.courseStatTitle}>
-                                        Credits
-                                    </div>
-                                    <div className={styles.courseStatValue}>
-                                        {course.credits || "N/A"}
-                                    </div>
-                                </div>
-                            </div>
+                        <div className={styles.statsRow}>
+                            <StatCard
+                                type="Enrolled"
+                                value={enrolledCount}
+                                icon="people"
+                            />
+                            <StatCard
+                                type="Credits"
+                                value={course.credits || "N/A"}
+                                icon="check"
+                            />
                         </div>
 
-                        <div className={styles.courseInfoRow}>
-                            <div className={styles.courseInfoCard}>
-                                <h4>Course Information</h4>
-                                <ul className={styles.courseInfoList}>
-                                    <li>
-                                        <i className="fas fa-university"></i>
-                                        <div>
-                                            <span className={styles.ciLabel}>
-                                                Faculty
-                                            </span>
-                                            <span className={styles.ciValue}>
-                                                {course.faculty?.name || "N/A"}
-                                            </span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <i className="fas fa-building"></i>
-                                        <div>
-                                            <span className={styles.ciLabel}>
-                                                Department
-                                            </span>
-                                            <span className={styles.ciValue}>
-                                                {course.department?.name ||
-                                                    "N/A"}
-                                            </span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <i className="fas fa-calendar-alt"></i>
-                                        <div>
-                                            <span className={styles.ciLabel}>
-                                                Academic Year
-                                            </span>
-                                            <span className={styles.ciValue}>
-                                                {course.year?.year?.toString() ||
-                                                    "N/A"}
-                                            </span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <i className="fas fa-code"></i>
-                                        <div>
-                                            <span className={styles.ciLabel}>
-                                                Course Code
-                                            </span>
-                                            <span className={styles.ciValue}>
-                                                {course.code}
-                                            </span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <Bordered>
+                            <h4 className={styles.sectionTitle}>
+                                Course Information
+                            </h4>
+                            <ul className={styles.infoList}>
+                                <li>
+                                    <i className="fas fa-university"></i>
+                                    <div>
+                                        <span className={styles.infoLabel}>
+                                            Faculty
+                                        </span>
+                                        <span className={styles.infoValue}>
+                                            {course.faculty?.name || "N/A"}
+                                        </span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-building"></i>
+                                    <div>
+                                        <span className={styles.infoLabel}>
+                                            Department
+                                        </span>
+                                        <span className={styles.infoValue}>
+                                            {course.department?.name || "N/A"}
+                                        </span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-calendar-alt"></i>
+                                    <div>
+                                        <span className={styles.infoLabel}>
+                                            Academic Year
+                                        </span>
+                                        <span className={styles.infoValue}>
+                                            {course.year?.year?.toString() ||
+                                                "N/A"}
+                                        </span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-code"></i>
+                                    <div>
+                                        <span className={styles.infoLabel}>
+                                            Course Code
+                                        </span>
+                                        <span className={styles.infoValue}>
+                                            {course.code}
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </Bordered>
                     </>
                 )}
 
                 {activeTab === "students" && (
-                    <div className={styles.studentsCard}>
+                    <Bordered>
                         <div className={styles.studentsCardHeader}>
-                            <div className={styles.studentsCardTitle}>
+                            <div className={styles.sectionTitle}>
                                 Enrolled Students
                             </div>
                             <div className={styles.studentsCardCount}>
@@ -229,7 +196,7 @@ export const CoursePage = () => {
                                 </li>
                             )}
                         </ul>
-                    </div>
+                    </Bordered>
                 )}
             </div>
         </Layout>

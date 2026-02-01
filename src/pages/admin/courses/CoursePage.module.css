@@ -2,6 +2,9 @@
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .courseTabsRow {
@@ -9,8 +12,6 @@
     width: 100%;
     background: var(--light-grey);
     border-radius: 10px;
-    margin-bottom: 2.2rem;
-    margin-top: 10px;
     overflow: hidden;
     box-shadow: var(--light-box-shadow);
 }
@@ -37,166 +38,65 @@
     box-shadow: none;
 }
 
-.courseStatsRow {
+.statsRow {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.2rem;
-    margin-bottom: 2.2rem;
-    width: 100%;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.courseStatCard {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--dark-box-shadow);
-    border: 1px solid var(--light-grey);
-    height: 100px;
-    display: flex;
-    align-items: center;
-    padding: 0 1.2rem;
-    gap: 1rem;
-    min-width: 0;
-    width: 100%;
-}
-
-.courseStatImgbox {
-    background: var(--light-grey);
-    border-radius: 10px;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.7rem;
-    font-size: 1.5rem;
-}
-
-.courseStatTexts {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.courseStatTitle {
-    color: var(--medium-grey);
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 2px;
-}
-
-.courseStatValue {
-    color: var(--dark-text);
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 2px;
-}
-
-.courseInfoRow {
-    display: flex;
     gap: 1.5rem;
-    margin-bottom: 2.2rem;
-    flex-wrap: nowrap;
-    width: 100%;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
 }
 
-.courseInfoCard {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--dark-box-shadow);
-    min-width: 0;
-    width: 100%;
-    max-width: none;
-    padding: 2.5rem 2.7rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    border: 1px solid var(--light-grey);
-    margin-bottom: 0;
+.sectionTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-purple);
+    margin: 0 0 20px 0;
 }
 
-.courseInfoCard h4 {
-    color: var(--dark-text);
-    font-size: 1.13rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-}
-
-.courseInfoList {
+.infoList {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.courseInfoList li {
+.infoList li {
     display: flex;
     align-items: flex-start;
-    gap: 0.7rem;
-    color: var(--medium-grey);
-    font-size: 15px;
-    margin-bottom: 1.3rem;
-    font-weight: 400;
+    gap: 12px;
 }
 
-.courseInfoList li:last-child {
-    margin-bottom: 0;
-}
-
-.courseInfoList i {
-    width: 22px;
-    height: 22px;
+.infoList li i {
+    font-size: 20px;
+    color: var(--primary-purple);
+    min-width: 24px;
     margin-top: 2px;
-    color: var(--medium-grey);
-    flex-shrink: 0;
 }
 
-.ciLabel {
-    font-size: 13px;
-    color: var(--medium-grey);
-    font-weight: 400;
-    margin-bottom: 2px;
-    display: block;
+.infoList li > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
 }
 
-.ciValue {
-    color: var(--dark-text);
+.infoLabel {
+    font-size: 14px;
+    color: var(--medium-grey);
+    font-weight: var(--primary-font-weight);
+}
+
+.infoValue {
     font-size: 16px;
-    font-weight: 500;
-    margin-top: -2px;
-    display: block;
-}
-
-.studentsCard {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--dark-box-shadow);
-    padding: 3rem 3.5rem 2.5rem 3.5rem;
-    margin-bottom: 2.5rem;
-    border: 1px solid var(--light-grey);
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-    overflow-x: auto;
+    color: var(--dark-text);
+    font-weight: var(--primary-font-weight-heavy);
 }
 
 .studentsCardHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.2rem;
-}
-
-.studentsCardTitle {
-    color: var(--dark-text);
-    font-size: 1.18rem;
-    font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .studentsCardCount {
@@ -209,23 +109,16 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    min-width: 0;
-    width: 100%;
 }
 
 .studentListItem {
     display: flex;
     align-items: center;
-    gap: 1.1rem;
-    background: var(--white);
-    border-radius: 14px;
-    border: 1px solid var(--light-grey);
-    padding: 2.5rem 2rem;
-    margin-bottom: 1.2rem;
-    width: 100%;
-    box-shadow: var(--light-box-shadow);
-    min-width: 0;
-    flex-wrap: wrap;
+    gap: 1rem;
+    background: var(--grey-background);
+    border-radius: var(--primary-border-radius);
+    padding: 16px;
+    margin-bottom: 12px;
 }
 
 .studentListItem:last-child {
@@ -236,29 +129,26 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: cover;
     flex-shrink: 0;
 }
 
 .studentInfo {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 4px;
     flex: 1;
 }
 
 .studentName {
     color: var(--dark-text);
-    font-size: 1.08rem;
-    font-weight: 500;
-    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .studentEmail {
     color: var(--medium-grey);
-    font-size: 0.97rem;
+    font-size: 14px;
     font-weight: 400;
 }
 
@@ -267,54 +157,4 @@
     color: var(--medium-grey);
     padding: 3rem;
     font-size: 1rem;
-}
-
-@media (max-width: 992px) {
-    .courseStatsRow {
-        grid-template-columns: 1fr;
-    }
-
-    .courseInfoRow {
-        flex-direction: column;
-        gap: 2.2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .studentsCard {
-        padding: 1.2rem 0.5rem 1rem 0.5rem;
-        border-radius: 10px;
-        box-shadow: var(--light-box-shadow);
-        max-width: 100vw;
-        margin-left: 0;
-        margin-right: 0;
-        overflow-x: auto;
-    }
-
-    .studentsCardHeader {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-        padding: 0 1rem;
-    }
-
-    .studentsList {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .studentListItem {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.7rem;
-        padding: 1.2rem 0.7rem;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        min-width: 0;
-        width: auto;
-    }
-
-    .studentInfo {
-        width: 100%;
-    }
 }
