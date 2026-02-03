@@ -1,0 +1,132 @@
+.calendar-wrapper {
+    min-height: 410px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.nav-label {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--primary-purple);
+    min-width: 170px;
+    max-width: 170px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: var(--primary-purple);
+    font-size: 1rem;
+    padding: 0 10px;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    color: #4b1a8a;
+}
+
+.calendar-table-outer {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.calendar-table {
+    user-select: none;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+    padding: 0.2rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.calendar-table th {
+    font-size: 20px;
+    color: #4b5563;
+    font-weight: 500;
+    font-family: "Inter", Arial, sans-serif;
+    background: none;
+    border: none;
+}
+
+.calendar-row {
+    height: 60px;
+}
+
+.calendar-table td {
+    vertical-align: middle;
+    height: 60px;
+}
+
+.legend {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.legend span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot-exam {
+    background: var(--error-red);
+}
+
+.dot-assignment {
+    background: var(--primary-orange);
+}
+
+.dot-event {
+    background: var(--success-green);
+}
+
+@media (max-width: 768px) {
+    .calendar-wrapper {
+        min-height: 280px;
+    }
+
+    .calendar-table th,
+    .calendar-table td {
+        font-size: 0.85rem;
+        padding: 0.1rem;
+    }
+
+    .legend {
+        gap: 10px;
+        font-size: 0.85rem;
+    }
+
+    .legend-dot {
+        width: 8px;
+        height: 8px;
+    }
+}

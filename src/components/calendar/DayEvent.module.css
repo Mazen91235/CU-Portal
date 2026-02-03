@@ -1,0 +1,122 @@
+.event-card {
+    border-radius: var(--primary-border-radius);
+    border: 1px solid #dddfe3;
+    background: var(--white);
+    padding: 1.25rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-content {
+    padding-right: 0;
+}
+
+.event-title {
+    font-family: "Roboto", "Inter", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.badge {
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    height: 25px;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.badge-exam {
+    background: var(--error-red);
+    color: var(--white);
+}
+
+.badge-assignment {
+    background: var(--primary-orange);
+    color: var(--white);
+}
+
+.badge-event {
+    background: var(--success-green);
+    color: var(--white);
+}
+
+.event-detail {
+    color: #757c8a;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.view-btn-wrapper {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.view-btn {
+    background: var(--primary-purple);
+    color: var(--white);
+    border-radius: var(--primary-border-radius);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    transition: background 0.18s;
+    box-shadow: var(--dark-box-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    background: #4b0f51;
+}
+
+.view-btn i {
+    color: var(--white);
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 768px) {
+    .event-card {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        height: 18px;
+    }
+
+    .event-detail {
+        font-size: 0.85rem;
+    }
+
+    .view-btn-wrapper {
+        margin-top: 1rem;
+    }
+
+    .view-btn {
+        font-size: 0.85rem;
+    }
+}

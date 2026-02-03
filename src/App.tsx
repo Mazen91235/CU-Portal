@@ -40,6 +40,7 @@ import { AnnouncementsPage as UserAnnouncementsPage } from "./pages/user/announc
 import { AnnouncementPage as UserAnnouncementPage } from "./pages/user/announcements/AnnouncementPage";
 import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage";
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
+import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import useAuth from "./hooks/useAuth";
 import "./App.css";
 
@@ -83,6 +84,9 @@ function App() {
                 <Route path="courses">
                     <Route index element={<UserCoursesPage />} />
                     <Route path=":courseId" element={<UserCoursePage />} />
+                </Route>
+                <Route path="calendar">
+                    <Route index element={<CalendarPage />} />
                 </Route>
             </Route>
             <Route path="/admin" element={<ProtectedRoute />}>

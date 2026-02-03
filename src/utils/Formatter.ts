@@ -65,3 +65,19 @@ export const formatString = (str?: string, maxLength?: number): string => {
     }
     return str;
 };
+
+export const formatCalendarDay = (date: Date): string => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        "0",
+    )}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+export const parseDateString = (dateStr: string): Date | null => {
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return null;
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+};
