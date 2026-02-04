@@ -34,7 +34,7 @@ import { Form } from "../../../components/forms/Form";
 import { Select } from "../../../components/forms/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { GetAvatarLink } from "../../../utils/LinkHandler";
+import { Avatar } from "../../../components/avatar/Avatar";
 import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
 
 export const UserPage = () => {
@@ -199,15 +199,7 @@ export const UserPage = () => {
 
                 <div className={styles.userDetailsMainRow}>
                     <div className={styles.userDetailsAvatarWrapper}>
-                        <img
-                            className={styles.userDetailsAvatar}
-                            src={GetAvatarLink(
-                                user.details?.avatar ||
-                                    user.google_avatar ||
-                                    "",
-                            )}
-                            alt={user.name}
-                        />
+                        <Avatar user={user} size="large" />
                     </div>
                     <div className={styles.userDetailsInfoTableWrapper}>
                         <table className={styles.userDetailsInfoTable}>

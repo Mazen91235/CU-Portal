@@ -38,7 +38,7 @@ export default function useAuth({
                 }
                 SetCookie("refresh_token", "", -1);
                 if (shouldNavigate)
-                    navigate("/auth/login", {
+                    navigate("/login", {
                         state: {
                             error: "Session expired. Please log in again.",
                         },

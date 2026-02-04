@@ -16,6 +16,8 @@ import hatIcon from "../assets/icons/hat.png";
 import bookSavedIcon from "../assets/icons/iconsax-book-saved.png";
 import statusUpIcon from "../assets/icons/iconsax-status-up.png";
 import userIcon from "../assets/icons/iconsax-user.png";
+import usersAssignedIcon from "../assets/icons/users-assigned.svg";
+import permissionsIcon from "../assets/icons/permissions-icon.svg";
 import locationIcon from "../assets/icons/location-icon.svg";
 import logoIcon from "../assets/icons/logo.png";
 import menuIcon from "../assets/icons/menu-icon.svg";
@@ -147,6 +149,8 @@ export const GetIcon = (icon: Icon): string => {
         "book-saved": bookSavedIcon,
         "status-up": statusUpIcon,
         user: userIcon,
+        "users-assigned": usersAssignedIcon,
+        permissions: permissionsIcon,
         location: locationIcon,
         logo: logoIcon,
         menu: menuIcon,

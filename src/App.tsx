@@ -45,6 +45,8 @@ import useAuth from "./hooks/useAuth";
 import { UsersPage } from "./pages/admin/users/UsersPage";
 import { UserPage } from "./pages/admin/users/UserPage";
 import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
+import { RolePage } from "./pages/admin/roles/RolePage";
+import { RolesPage } from "./pages/admin/roles/RolesPage";
 import "./App.css";
 
 function App() {
@@ -126,6 +128,14 @@ function App() {
                     <Route index element={<UsersPage />} />
                     <Route path=":userId" element={<UserPage />} />
                     <Route path="pending" element={<PendingUsersPage />} />
+                </Route>
+
+                <Route
+                    path="roles"
+                    element={<ProtectedRoute permission="View Roles" />}
+                >
+                    <Route index element={<RolesPage />} />
+                    <Route path=":roleId" element={<RolePage />} />
                 </Route>
 
                 <Route

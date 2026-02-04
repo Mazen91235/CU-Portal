@@ -11,9 +11,8 @@ import { Bordered } from "../../../components/bordered/Bordered";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
-
-import { GetAvatarLink, GetIcon } from "../../../utils/LinkHandler";
-
+import { Avatar } from "../../../components/avatar/Avatar";
+import { GetIcon } from "../../../utils/LinkHandler";
 import styles from "./CoursePage.module.css";
 
 export const CoursePage = () => {
@@ -177,15 +176,7 @@ export const CoursePage = () => {
                                     key={student.id}
                                     className={styles.studentListItem}
                                 >
-                                    <img
-                                        src={GetAvatarLink(
-                                            student.details?.avatar ||
-                                                student?.google_avatar ||
-                                                "",
-                                        )}
-                                        alt={student.name || "Unknown User"}
-                                        className={styles.studentInitialsIcon}
-                                    />
+                                    <Avatar user={student} size="medium" />
                                     <div className={styles.studentInfo}>
                                         <div className={styles.studentName}>
                                             {student.name || "Unknown User"}

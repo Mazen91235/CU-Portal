@@ -23,6 +23,7 @@ project-root/
       auth/
       banner/
       bordered/
+      calendar/
       card/
       forms/
       heading/
@@ -50,12 +51,18 @@ project-root/
         exams/
         faculties/
         tasks/
+        users/
         years/
       auth/
       landing/
       user/
+        announcements/
+        calendar/
+        courses/
         dashboard/
+        exams/
         settings/
+        tasks/
     services/
       apis/
         admin/

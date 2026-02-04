@@ -25,9 +25,9 @@ import monitorIcon from "../../../assets/icons/monitor.png";
 import pendingClockIcon from "../../../assets/icons/pending-clock-new.png";
 import eyeReviewIcon from "../../../assets/icons/eye-review.png";
 import arrowUpIcon from "../../../assets/icons/arrow-up.png";
-import eyeIcon from "../../../assets/icons/eye.png";
+import { Avatar } from "../../../components/avatar/Avatar";
+import { Table } from "../../../components/table/Table";
 import styles from "./UsersPage.module.css";
-import { GetAvatarLink } from "../../../utils/LinkHandler";
 
 export const UsersPage = () => {
     const navigate = useNavigate();
@@ -205,6 +205,32 @@ export const UsersPage = () => {
         return styles.roleDefault;
     };
 
+    const tableData = useMemo(() => {
+        if (usersLoading && users.length === 0) {
+            return [];
+        }
+
+        return users.map((user: User) => ({
+            data: [
+                user.name || "N/A",
+                user.phone || "N/A",
+                <span key={user.id} className={styles.tableEmail}>
+                    {user.email || "N/A"}
+                </span>,
+                user.faculty?.name || "N/A",
+                user.department?.name || "N/A",
+                user.year?.year || "N/A",
+                <span
+                    key={`${user.id}-role`}
+                    className={getRoleBadgeClass(user.role?.name || "")}
+                >
+                    {user.role?.name || "N/A"}
+                </span>,
+            ],
+            onClick: () => handleViewUser(user.id!),
+        }));
+    }, [users, usersLoading]);
+
     return (
         <Layout>
             <PageSeo
@@ -254,10 +280,10 @@ export const UsersPage = () => {
                             <div className={styles.infoCardAvatars}>
                                 {stats?.last_five_users_active?.map(
                                     (avatarUrl, idx) => (
-                                        <img
+                                        <Avatar
                                             key={idx}
-                                            src={GetAvatarLink(avatarUrl)}
-                                            alt={`Active User ${idx + 1}`}
+                                            url={avatarUrl}
+                                            size="medium"
                                         />
                                     ),
                                 )}
@@ -335,83 +361,32 @@ export const UsersPage = () => {
             </section>
 
             <section className={styles.tableSection}>
-                <div className={styles.tableWrapper}>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>E-Mail</th>
-                                <th>Faculty</th>
-                                <th>Department</th>
-                                <th>Academic Year</th>
-                                <th>Role</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {usersLoading && users.length === 0 ? (
-                                <tr>
-                                    <td
-                                        colSpan={8}
-                                        style={{
-                                            textAlign: "center",
-                                            padding: "2rem",
-                                        }}
-                                    >
-                                        Loading...
-                                    </td>
-                                </tr>
-                            ) : users.length === 0 ? (
-                                <tr>
-                                    <td
-                                        colSpan={8}
-                                        style={{
-                                            textAlign: "center",
-                                            padding: "2rem",
-                                        }}
-                                    >
-                                        No users found
-                                    </td>
-                                </tr>
-                            ) : (
-                                users.map((user: User) => (
-                                    <tr key={user.id}>
-                                        <td>{user.name || "N/A"}</td>
-                                        <td>{user.phone || "N/A"}</td>
-                                        <td className={styles.tableEmail}>
-                                            {user.email || "N/A"}
-                                        </td>
-                                        <td>{user.faculty?.name || "N/A"}</td>
-                                        <td>
-                                            {user.department?.name || "N/A"}
-                                        </td>
-                                        <td>{user.year?.year || "N/A"}</td>
-                                        <td>
-                                            <span
-                                                className={getRoleBadgeClass(
-                                                    user.role?.name || "",
-                                                )}
-                                            >
-                                                {user.role?.name || "N/A"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span
-                                                className={styles.tableAction}
-                                                onClick={() =>
-                                                    handleViewUser(user.id!)
-                                                }
-                                            >
-                                                <img src={eyeIcon} alt="View" />
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                {usersLoading && users.length === 0 ? (
+                    <div
+                        style={{
+                            textAlign: "center",
+                            padding: "2rem",
+                            background: "var(--background-white)",
+                            borderRadius: "12px",
+                        }}
+                    >
+                        Loading...
+                    </div>
+                ) : (
+                    <Table
+                        columns={[
+                            "Name",
+                            "Phone",
+                            "E-Mail",
+                            "Faculty",
+                            "Department",
+                            "Academic Year",
+                            "Role",
+                        ]}
+                        data={tableData}
+                        action={true}
+                    />
+                )}
             </section>
 
             <Pagination onReached={handlePagination} />

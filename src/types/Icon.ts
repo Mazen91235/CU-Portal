@@ -13,6 +13,8 @@ export type Icon =
     | "book-saved"
     | "status-up"
     | "user"
+    | "users-assigned"
+    | "permissions"
     | "location"
     | "logo"
     | "menu"

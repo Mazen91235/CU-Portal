@@ -3,7 +3,7 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Role } from "../../../types/entities/Role";
 import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { RoleSearchDto } from "../../../types/dtos/RoleDTOs";
+import type { RoleDto, RoleSearchDto } from "../../../types/dtos/RoleDTOs";
 export const AdminRoleAPI = createApi({
     reducerPath: "adminRoleAPI",
     baseQuery: fetchBaseQuery({
@@ -25,7 +25,10 @@ export const AdminRoleAPI = createApi({
                 params: query,
             }),
         }),
-        getRole: builder.query<GenericAPIResponse<Role>, { role_id: number }>({
+        getRole: builder.query<
+            GenericAPIResponse<RoleDto>,
+            { role_id: number }
+        >({
             query: ({ role_id }) => ({
                 url: `/${role_id}`,
                 method: "GET",
@@ -42,7 +45,7 @@ export const AdminRoleAPI = createApi({
         }),
         countPermissions: builder.query<GenericAPIResponse<number>, void>({
             query: () => ({
-                url: `/count-permissions`,
+                url: `/permissions/count`,
                 method: "GET",
                 credentials: "include",
             }),
@@ -80,6 +83,7 @@ export const {
     useLazyGetRolesQuery,
     useLazyGetRoleQuery,
     useLazySearchRolesQuery,
+    useLazyCountPermissionsQuery,
     useCreateRoleMutation,
     useUpdateRoleMutation,
     useDeleteRoleMutation,

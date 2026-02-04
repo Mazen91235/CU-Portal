@@ -1,0 +1,74 @@
+.tableContainer {
+    background: var(--background-white);
+    border-radius: 12px;
+    box-shadow:
+        0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
+        0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-roboto), Arial, sans-serif;
+}
+
+.table thead {
+    background: linear-gradient(0deg, #520e58 0%, #7b1684 100%);
+}
+
+.table thead th {
+    padding: 1rem 0.75rem;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: #f8fafc;
+    border: none;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.table thead th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.table tbody td {
+    padding: 1.25rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+    word-break: normal;
+    white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background: var(--background-light-gray);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tableAction {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.tableAction:hover {
+    background: var(--background-light-gray);
+}
+
+.tableAction img {
+    width: 20px;
+    height: 20px;
+}

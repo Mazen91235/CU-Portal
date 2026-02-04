@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAppSelector } from "../../services/redux/Hooks";
-import { GetAvatarLink } from "../../utils/LinkHandler";
+import { Avatar } from "../avatar/Avatar";
 import { formatDateTime } from "../../utils/Formatter";
 import menuIcon from "../../assets/icons/menu-icon.svg";
 import notificationIcon from "../../assets/icons/notification-icon.svg";
@@ -142,17 +142,7 @@ export const Navbar = ({
                             to="/user/settings/profile"
                             className={styles.profileLink}
                         >
-                            <img
-                                src={GetAvatarLink(
-                                    user?.details?.avatar ||
-                                        user?.google_avatar ||
-                                        "",
-                                )}
-                                alt="Profile"
-                                className={styles.profileImg}
-                                width="40"
-                                height="40"
-                            />
+                            <Avatar user={user} size="medium" />
                         </Link>
                     </div>
                 </div>

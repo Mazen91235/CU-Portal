@@ -7,7 +7,8 @@ import { type Icon } from "../../types/Icon";
 import Logo from "../logo/Logo";
 
 import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { GetAvatarLink, GetIcon } from "../../utils/LinkHandler";
+import { Avatar } from "../avatar/Avatar";
+import { GetIcon } from "../../utils/LinkHandler";
 
 import styles from "./Sidebar.module.css";
 
@@ -202,6 +203,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Roles",
             path: "/admin/roles",
             icon: "sidebar-admin-roles",
+            activatesPaths: ["/admin/roles/"],
         });
     }
 
@@ -470,14 +472,7 @@ export const Sidebar = ({
                 </li>
 
                 <li className={styles.userCard}>
-                    <img
-                        src={GetAvatarLink(
-                            user?.details?.avatar || user?.google_avatar || "",
-                        )}
-                        alt="User Avatar"
-                        width="50"
-                        height="50"
-                    />
+                    <Avatar user={user} size="medium" />
                     <div className={styles.userInfo}>
                         <span className={styles.userName}>{user?.name}</span>
                         <span className={styles.userAcademic}>
