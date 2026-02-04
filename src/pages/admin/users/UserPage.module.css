@@ -1,0 +1,1190 @@
+/* User Details Card */
+.userDetailsCard {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 32px 24px 24px 24px;
+    width: 92%;
+    margin: 48px auto 0 auto;
+    position: relative;
+    max-width: 1165px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.userDetailsCardHeader {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    position: relative;
+    gap: 0;
+}
+
+.userRoleContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.userRoleLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.userBadge {
+    background: rgba(140, 13, 171, 0.2);
+    color: #7b1684;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.userEarlyAccessBadge {
+    background: #e0edff;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.editRoleBtn {
+    background: #800080;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.editRoleBtn:hover {
+    opacity: 0.9;
+}
+
+.roleFormContainer {
+    width: 100%;
+    padding: 0;
+}
+
+.roleForm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+    flex-direction: row;
+}
+
+.roleForm > div:nth-child(1) {
+    width: 40%;
+}
+
+.roleFormActions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.roleFormActions > button {
+    width: max-content;
+}
+
+.userDetailsMainRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 32px;
+    margin-top: 0;
+}
+
+.userDetailsAvatarWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    margin-bottom: 0;
+    margin-right: 0;
+}
+
+.userDetailsAvatar {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #7b1684;
+    background: #f3e8ff;
+}
+
+.userDetailsInfoTableWrapper {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 700px;
+    width: 700px;
+}
+
+.userDetailsInfoTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+}
+
+.userDetailsInfoTable td {
+    padding: 8px 18px 8px 0;
+    font-size: 17px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.userDetailsLabel {
+    color: var(--slate-500, #64748b);
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+    min-width: 110px;
+    padding-right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.userDetailsLabel img {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.userDetailsValue {
+    font-weight: 400;
+    color: #374151;
+    word-break: break-word;
+    padding-left: 4px;
+    min-width: 120px;
+    vertical-align: middle;
+}
+
+/* Sections Row Container */
+.sectionsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 0;
+}
+
+.sectionsRow > .section {
+    flex: 1 1 45%;
+    min-width: 340px;
+    max-width: 600px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Exams Section */
+.examsSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.examsHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.examsHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #e6d6f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    overflow: visible;
+}
+
+.examsHeaderIcon img {
+    width: 80%;
+    height: 80%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    background: none;
+}
+
+.examsHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.examsListPublished {
+    background: #f6edfb;
+    border-radius: 12px;
+    padding: 14px 8px 8px 8px;
+    margin-bottom: 16px;
+}
+
+.examsListGray {
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 14px 8px 8px 8px;
+    margin-bottom: 16px;
+}
+
+.examCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+}
+
+.examCardWhiteBg {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+}
+
+.examsListPublished .examCard {
+    background: #f6edfb;
+}
+
+.examCardIcon {
+    margin-right: 12px;
+}
+
+.examCircleIcon {
+    width: 47px;
+    height: 47px;
+    border-radius: 50%;
+    background: rgba(211, 222, 241, 0.32);
+    padding: 7px;
+    object-fit: contain;
+    display: block;
+}
+
+.examCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.examCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.examCardSubject {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a41bb1;
+    margin-bottom: 2px;
+}
+
+.examCardDate {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.examCardBadges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.examBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    margin-bottom: 2px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.examBadgePublisher {
+    background: #e6d6f3;
+    color: #7b1684;
+}
+
+.examBadgePending {
+    background: #fef9e6;
+    color: #b9910c;
+}
+
+.examBadgeComplete {
+    background: #e6fee6;
+    color: #22c55e;
+}
+
+.examBadgeUpcoming {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Tasks Section */
+.tasksSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.tasksHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.tasksHeaderIcon {
+    width: 44px;
+    height: 44px;
+    background: #fef6ee;
+    border-radius: 50%;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.tasksHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.tasksListPublished {
+    background: #fef6ee;
+    border-radius: 12px;
+    padding: 14px 8px 8px 8px;
+    margin-bottom: 16px;
+}
+
+.tasksListGray {
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 14px 8px 8px 8px;
+    margin-bottom: 16px;
+}
+
+.taskCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+}
+
+.taskCardWhiteBg {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+}
+
+.taskCardIcon {
+    margin-right: 12px;
+}
+
+.taskCircleIcon {
+    width: 38px;
+    height: 38px;
+    background: #fff7ed;
+    border-radius: 50%;
+    padding: 7px;
+    object-fit: contain;
+    display: block;
+}
+
+.taskCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.taskCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.taskCardSubject {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f97316;
+    margin-bottom: 2px;
+}
+
+.taskCardDate {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.taskCardBadges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.taskBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    margin-bottom: 2px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.taskBadgePublisher {
+    background: #e6d6f3;
+    color: #7b1684;
+}
+
+.taskBadgePending {
+    background: #fef9e6;
+    color: #b9910c;
+}
+
+.taskBadgeComplete {
+    background: #e6fee6;
+    color: #22c55e;
+}
+
+.taskBadgeUpcoming {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Announcement Section */
+.announcementSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.announcementHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.announcementHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #e6d6f3;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.announcementHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.announcementList {
+    background: #f6edfb;
+    border-radius: 16px;
+    padding: 18px 12px 12px 12px;
+}
+
+.announcementCard {
+    display: flex;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+    min-height: 110px;
+}
+
+.announcementCardBorder {
+    width: 5px;
+    border-radius: 12px 0 0 12px;
+    margin-right: 0;
+}
+
+.announcementBorderBlue {
+    background: #3b82f6;
+}
+
+.announcementBorderRed {
+    background: #ef4444;
+}
+
+.announcementCardContent {
+    flex: 1;
+    padding: 18px 18px 12px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.announcementCardTitleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.announcementCardTitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.announcementBadge {
+    background: #e6d6f3;
+    color: #7b1684;
+    border-radius: 8px;
+    padding: 4px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.announcementCardDesc {
+    font-size: 15px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.announcementCardDate {
+    font-size: 13px;
+    color: #a1a1aa;
+}
+
+/* Materials Section */
+.materialsSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.materialsHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.materialsHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #fef6ee;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.materialsHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.materialsList {
+    background: #fef6ee;
+    border-radius: 16px;
+    padding: 18px 12px 12px 12px;
+}
+
+.materialsCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+    min-height: 90px;
+    padding: 10px 12px;
+}
+
+.materialsCardIcon {
+    margin-right: 12px;
+}
+
+.materialsCircleIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fef6ee;
+    padding: 8px;
+    object-fit: contain;
+    display: block;
+    overflow: visible;
+}
+
+.materialsCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.materialsCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.materialsCardSubject {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f97316;
+    margin-bottom: 2px;
+}
+
+.materialsCardDateRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+.materialsCardDate {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.materialsCardBadges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.materialsBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    margin-bottom: 2px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.materialsBadgePublisher {
+    background: #e6d6f3;
+    color: #7b1684;
+}
+
+/* Grades Section */
+.gradesSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.gradesHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.gradesHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #fef6ee;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.gradesHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.gradesList {
+    background: #fef6ee;
+    border-radius: 16px;
+    padding: 18px 12px 12px 12px;
+}
+
+.gradesCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+    min-height: 90px;
+    padding: 10px 12px;
+}
+
+.gradesCardIcon {
+    margin-right: 12px;
+}
+
+.gradesCircleIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fef6ee;
+    padding: 8px;
+    object-fit: contain;
+    display: block;
+    overflow: visible;
+}
+
+.gradesCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gradesCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.gradesCardSubject {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f97316;
+    margin-bottom: 2px;
+}
+
+.gradesCardDateRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+.gradesCardDate {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.gradesCardBadges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.gradesBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    margin-bottom: 2px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.gradesBadgePublisher {
+    background: #e6d6f3;
+    color: #7b1684;
+}
+
+/* Subjects Section */
+.subjectsSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.subjectsHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.subjectsHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #e6d6f3;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.subjectsHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.subjectsList {
+    background: #f6edfb;
+    border-radius: 16px;
+    padding: 18px 12px 12px 12px;
+}
+
+.subjectsCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+    min-height: 90px;
+    padding: 10px 12px;
+    border: 3px solid #e6d6f3;
+}
+
+.subjectsCardIcon {
+    margin-right: 12px;
+}
+
+.subjectsCircleIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #e6d6f3;
+    padding: 8px;
+    object-fit: contain;
+    display: block;
+    overflow: visible;
+}
+
+.subjectsCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.subjectsCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.subjectsCardCode {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f97316;
+    margin-bottom: 2px;
+}
+
+.subjectsCardCredit {
+    color: var(--slate-500, #64748b);
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+/* Activity Logs Section */
+.activityLogsFullWidth {
+    width: 92%;
+    max-width: 1165px;
+    margin: 32px auto 0 auto;
+}
+
+.activityLogsSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+}
+
+.activityLogsHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.activityLogsHeaderIcon {
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    background: #e6d6f3;
+    padding: 8px;
+    object-fit: contain;
+}
+
+.activityLogsHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.activityLogsList {
+    background: #f6edfb;
+    border-radius: 16px;
+    padding: 18px 12px 12px 12px;
+}
+
+.activityLogCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+    position: relative;
+    min-height: 70px;
+    padding: 10px 12px;
+    border: 2px solid #e6d6f3;
+}
+
+.activityLogCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.activityLogCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.activityLogCardDate {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.activityLogCardBadge {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.activityLogBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    text-align: center;
+    min-width: 70px;
+    text-transform: capitalize;
+}
+
+.activityLogBadgeInfo {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.activityLogBadgeWarning {
+    background: #fef9e6;
+    color: #b9910c;
+}
+
+.activityLogBadgeError {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Empty State */
+.emptySection {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .userDetailsCard {
+        max-width: 98vw;
+        padding: 18px 8px 18px 8px;
+    }
+    .userDetailsAvatar {
+        width: 72px;
+        height: 72px;
+    }
+    .userDetailsInfoTable {
+        border-spacing: 0 2px;
+        margin-left: 10px;
+    }
+    .userDetailsInfoTable td {
+        padding: 6px 8px 6px 0;
+    }
+}
+
+@media (max-width: 1100px) {
+    .sectionsRow > .section {
+        min-width: 280px;
+        max-width: 100vw;
+    }
+    .sectionsRow {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 900px) {
+    .sectionsRow {
+        flex-direction: column;
+        gap: 0;
+        align-items: center;
+    }
+    .sectionsRow > .section {
+        min-width: 0;
+        max-width: 100vw;
+        margin-bottom: 24px;
+        width: 95vw;
+        display: flex;
+        justify-content: center;
+    }
+    .examsSection,
+    .tasksSection,
+    .announcementSection,
+    .materialsSection,
+    .gradesSection,
+    .subjectsSection,
+    .activityLogsSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 1200px) {
+    .userDetailsMainRow {
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+        justify-content: center;
+    }
+    .userDetailsAvatarWrapper {
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0;
+        margin-right: 0;
+        width: 100%;
+    }
+    .userDetailsInfoTableWrapper {
+        width: 100%;
+        max-width: 98vw;
+        justify-content: center;
+        align-items: center;
+        padding-left: 32px;
+    }
+    .userDetailsInfoTable {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+        display: table;
+        float: none;
+        border-spacing: 0 4px;
+    }
+}
+
+@media (max-width: 600px) {
+    .userDetailsInfoTable {
+        border-spacing: 0 2px;
+    }
+    .userDetailsInfoTableWrapper {
+        padding-left: 16px;
+    }
+}

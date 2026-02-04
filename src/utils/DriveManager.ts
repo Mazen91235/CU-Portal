@@ -19,7 +19,6 @@ export function GetDriveIdFromUrl(url: string) {
         }
         return null;
     } catch {
-        // console.error("Error extracting Drive ID:", error);
         return null;
     }
 }

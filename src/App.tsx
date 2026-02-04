@@ -42,6 +42,9 @@ import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import useAuth from "./hooks/useAuth";
+import { UsersPage } from "./pages/admin/users/UsersPage";
+import { UserPage } from "./pages/admin/users/UserPage";
+import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
 import "./App.css";
 
 function App() {
@@ -114,6 +117,15 @@ function App() {
                     element={<ProtectedRoute permission="View Years" />}
                 >
                     <Route index element={<YearsPage />} />
+                </Route>
+
+                <Route
+                    path="users"
+                    element={<ProtectedRoute permission="View Users" />}
+                >
+                    <Route index element={<UsersPage />} />
+                    <Route path=":userId" element={<UserPage />} />
+                    <Route path="pending" element={<PendingUsersPage />} />
                 </Route>
 
                 <Route

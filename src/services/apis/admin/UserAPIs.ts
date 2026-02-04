@@ -4,6 +4,7 @@ import type { User } from "../../../types/entities/User";
 import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
+    UserResponseDto,
     UsersDataResponseDto,
     UsersUpdateDto,
 } from "../../../types/dtos/UserDTOs";
@@ -39,7 +40,10 @@ export const AdminUserAPI = createApi({
                 credentials: "include",
             }),
         }),
-        getUser: builder.query<GenericAPIResponse<User>, { user_id: number }>({
+        getUser: builder.query<
+            GenericAPIResponse<UserResponseDto>,
+            { user_id: number }
+        >({
             query: ({ user_id }) => ({
                 url: `/${user_id}`,
                 method: "GET",
@@ -62,13 +66,14 @@ export const AdminUserAPI = createApi({
                     credentials: "include",
                     body: data,
                 }),
-            }
+            },
         ),
     }),
 });
 
 export const {
     useLazyGetUsersQuery,
+    useLazyGetUsersDataQuery,
     useLazyGetUserQuery,
     useLazySearchUsersQuery,
     useUpdateUsersMutation,

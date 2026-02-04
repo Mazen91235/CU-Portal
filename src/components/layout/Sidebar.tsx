@@ -193,7 +193,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Users",
             path: "/admin/users",
             icon: "sidebar-admin-users",
-            activatesPaths: ["/admin/pending-users"],
+            activatesPaths: ["/admin/users/"],
         });
     }
 

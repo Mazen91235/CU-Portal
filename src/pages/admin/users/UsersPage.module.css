@@ -1,0 +1,346 @@
+/* Info Cards Section */
+.infoCardsContainer {
+    padding: 1rem 2rem;
+}
+
+.infoCardsRow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.infoCard {
+    background: var(--background-white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow:
+        0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
+        0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.infoCardIcon {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    background: rgba(123, 21, 132, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 100%;
+}
+
+.infoCardIcon img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.infoCardContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.infoCardTitle {
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.infoCardValue {
+    font-family: var(--font-poppins), Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.infoCardGrowth {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.infoCardGrowth img {
+    width: 16px;
+    height: 16px;
+}
+
+.infoCardGrowthText {
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-size: 0.875rem;
+    color: var(--success-color);
+    font-weight: 500;
+}
+
+.infoCardAvatars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.infoCardAvatars img {
+    width: 40px;
+    height: 40px;
+}
+
+.avatarImg {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--background-white);
+    margin-left: -8px;
+}
+
+.avatarImg:first-child {
+    margin-left: 0;
+}
+
+.infoCardAction {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.infoCardAction:hover {
+    transform: translateX(4px);
+}
+
+.infoCardReviewEye {
+    width: 20px;
+    height: 20px;
+}
+
+.infoCardReview {
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+/* Filters Section */
+.filtersSection {
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: visible;
+}
+
+.filtersBg {
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
+    bottom: 0;
+    background: var(--background-light-gray);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.filtersRow {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+}
+
+.filterSearch {
+    flex: 1;
+}
+
+.filtersGroup {
+    display: flex;
+    gap: 1rem;
+}
+
+.filterItem {
+    min-width: 220px;
+}
+
+/* Table Section */
+.tableSection {
+    padding: 1rem 2rem 2rem 2rem;
+}
+
+.tableWrapper {
+    background: var(--background-white);
+    border-radius: 12px;
+    box-shadow:
+        0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
+        0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-roboto), Arial, sans-serif;
+}
+
+.table thead {
+    background: linear-gradient(0deg, #520e58 0%, #7b1684 100%);
+}
+
+.table thead th {
+    padding: 1rem 0.75rem;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: #f8fafc;
+    border: none;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.table thead th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.table tbody td {
+    padding: 1.25rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+    word-break: normal;
+    white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background: var(--background-light-gray);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tableEmail {
+    color: var(--primary-color);
+}
+
+.roleAdmin,
+.roleStudent,
+.roleDefault {
+    padding: 0.35em 1em;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.roleAdmin {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+.roleStudent {
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+}
+
+.roleDefault {
+    background: rgba(123, 21, 132, 0.1);
+    color: var(--primary-color);
+}
+
+.tableAction {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.tableAction:hover {
+    background: var(--background-light-gray);
+}
+
+.tableAction img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1340px) {
+    .infoCardsRow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filtersRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterSearch {
+        width: 100%;
+    }
+
+    .filtersGroup {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filterItem {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .titleSection {
+        padding: 1.5rem 1rem 0.5rem 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .infoCardsContainer {
+        padding: 1rem;
+    }
+
+    .infoCardsRow {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .filtersSection {
+        padding: 1rem;
+    }
+
+    .filtersBg {
+        left: 1rem;
+        right: 1rem;
+    }
+
+    .tableSection {
+        padding: 1rem;
+    }
+
+    .tableWrapper {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 800px;
+    }
+}

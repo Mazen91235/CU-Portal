@@ -54,6 +54,41 @@ export const formatTime = (dateTimeString?: string | null): string => {
     });
 };
 
+export const formatTimeAgo = (dateTimeString?: string | null): string => {
+    if (!dateTimeString) return "N/A";
+    let date: Date;
+    const now = new Date();
+    if (dateTimeString.includes("T")) {
+        date = new Date(dateTimeString);
+    } else {
+        const datePartArray = dateTimeString.split(" ")[0].split("-");
+        datePartArray.reverse();
+        const datePart = datePartArray.join("-");
+        const timePart = dateTimeString.split(" ")[1];
+        dateTimeString = datePart + "T" + timePart;
+        date = new Date(dateTimeString);
+    }
+    const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    const intervals: { [key: string]: number } = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60,
+        second: 1,
+    };
+    for (const interval in intervals) {
+        const intervalSeconds = intervals[interval];
+        const count = Math.floor(secondsAgo / intervalSeconds);
+        if (count >= 1) {
+            return `${count} ${interval}${count > 1 ? "s" : ""} ago`;
+        }
+    }
+    return "Just now";
+};
+
 export const formatString = (str?: string, maxLength?: number): string => {
     if (!str) return "N/A";
     if (maxLength && str.length > maxLength) {

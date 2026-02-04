@@ -105,8 +105,19 @@
 }
 
 .confirmBtn {
-    background-color: #f97316;
     color: var(--white);
+}
+
+.confirmBtn.orange {
+    background-color: #f97316;
+}
+
+.confirmBtn.green {
+    background-color: #16a34a;
+}
+
+.confirmBtn.red {
+    background-color: #dc2626;
 }
 
 .confirmBtn:hover {

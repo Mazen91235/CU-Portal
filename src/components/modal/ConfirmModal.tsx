@@ -9,6 +9,7 @@ type ConfirmModalProps = {
     confirmText: string;
     title?: string;
     message?: string;
+    colorType?: "orange" | "green" | "red";
 };
 
 const ConfirmModal = ({
@@ -18,6 +19,7 @@ const ConfirmModal = ({
     confirmText,
     title = "Are you sure?",
     message = "This action might affect other data.",
+    colorType = "orange",
 }: ConfirmModalProps) => {
     if (!isOpen) return null;
 
@@ -25,6 +27,13 @@ const ConfirmModal = ({
         onConfirm();
         onClose();
     };
+
+    const colorClass =
+        colorType === "green"
+            ? styles.green
+            : colorType === "red"
+              ? styles.red
+              : styles.orange;
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -46,7 +55,7 @@ const ConfirmModal = ({
                             Cancel
                         </button>
                         <button
-                            className={styles.confirmBtn}
+                            className={`${styles.confirmBtn} ${colorClass}`}
                             onClick={handleConfirm}
                         >
                             {confirmText}

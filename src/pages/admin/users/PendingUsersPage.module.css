@@ -1,0 +1,374 @@
+/* Filters Section - Same as UsersPage */
+.filtersSection {
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: visible;
+}
+
+.filtersBg {
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
+    bottom: 0;
+    background: var(--background-light-gray);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.filtersRow {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+}
+
+.filterSearch {
+    flex: 1;
+}
+
+.filtersGroup {
+    display: flex;
+    gap: 1rem;
+}
+
+.filterItem {
+    min-width: 220px;
+}
+
+/* Pending Section */
+.pendingSection {
+    padding: 1rem 2rem 2rem 2rem;
+}
+
+.pendingCard {
+    background: var(--background-white);
+    border-radius: 12px;
+    box-shadow:
+        0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
+        0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+    padding: 1.5rem;
+}
+
+.pendingHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.pendingTitle {
+    color: var(--primary-color);
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pendingHeaderActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.approveAllBtn,
+.rejectAllBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.approveAllBtn {
+    background: var(--success-green);
+    color: var(--background-white);
+}
+
+.approveAllBtn img,
+.rejectAllBtn img {
+    width: 20px;
+    height: 20px;
+}
+
+.rejectAllBtn {
+    background: var(--background-white);
+    color: var(--error-red);
+    border: 1px solid var(--error-red);
+}
+
+.rejectAllBtn:hover {
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.pendingUsersContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.emptyState {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Mini Card Styling */
+.pendingMiniCard {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: var(--background-white);
+    box-shadow:
+        0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
+        0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
+    min-width: 0;
+}
+
+.pendingMiniAvatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 2rem;
+    flex-shrink: 0;
+}
+
+.pendingMiniContent {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.pendingMiniName {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-roboto), Arial, sans-serif;
+}
+
+.pendingMiniEmailPhone {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.pendingMiniBadges {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.pendingMiniBadgeEngineering,
+.pendingMiniBadgeSecondary,
+.pendingMiniBadgeYear {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.95rem;
+    padding: 0.35em 1em;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-weight: 500;
+}
+
+.pendingMiniBadgeEngineering {
+    background: rgba(140, 13, 171, 0.2);
+    color: var(--primary-color);
+}
+
+.pendingMiniBadgeSecondary,
+.pendingMiniBadgeYear {
+    background: var(--background-light-gray);
+    color: var(--primary-dark);
+}
+
+.pendingMiniBadgeEngineering img,
+.pendingMiniBadgeSecondary img,
+.pendingMiniBadgeYear img {
+    width: 20px;
+    height: 20px;
+}
+
+.pendingMiniIdRow {
+    display: flex;
+    align-items: center;
+    background: var(--background-light-gray);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    justify-content: space-between;
+}
+
+.pendingMiniIdLabel {
+    display: flex;
+    align-items: center;
+    color: var(--primary-dark);
+    font-size: 1rem;
+    font-weight: 500;
+    gap: 0.5rem;
+}
+
+.pendingMiniIdLabel img {
+    width: 20px;
+    height: 20px;
+}
+
+.pendingMiniIdBtn {
+    min-width: 120px;
+    width: 180px;
+    max-width: 220px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    background: var(--background-white);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.pendingMiniIdBtn img {
+    width: 20px;
+    height: 20px;
+}
+
+.pendingMiniActionsRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.approveBtn,
+.rejectBtn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.approveBtn {
+    width: 267px;
+    background: var(--success-green);
+    color: var(--background-white);
+}
+
+.rejectBtn {
+    width: 180px;
+    background: var(--background-white);
+    color: var(--error-red);
+    border: 1px solid var(--error-red);
+}
+
+/* Responsive Styles */
+@media (max-width: 1340px) {
+    .filtersRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterSearch {
+        width: 100%;
+    }
+
+    .filtersGroup {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filterItem {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 760px) {
+    .pendingMiniCard {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+    }
+
+    .pendingMiniAvatar {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        align-self: center;
+    }
+
+    .pendingMiniEmailPhone {
+        gap: 0.5rem;
+        flex-direction: column;
+    }
+
+    .pendingMiniBadges {
+        flex-direction: column;
+    }
+
+    .pendingMiniIdRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .pendingMiniIdBtn {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .pendingMiniActionsRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .approveBtn,
+    .rejectBtn {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .pendingHeader {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .pendingHeaderActions {
+        flex-direction: column;
+    }
+}
