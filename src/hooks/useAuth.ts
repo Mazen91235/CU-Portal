@@ -9,7 +9,6 @@ import {
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie, SetCookie } from "../utils/CookiesManager";
 import { setAccessToken } from "../services/redux/reducers/UserReducer";
-import { showToast } from "../utils/ToastsManager";
 export default function useAuth({
     permission,
     reverse = false,
@@ -32,30 +31,22 @@ export default function useAuth({
                 await refreshTokenMutation(
                     GetCookie("refresh_token")!,
                 ).unwrap();
-            } catch (error) {
+            } catch {
                 if (retries > 0) {
                     await refreshToken(retries - 1);
                     return;
                 }
                 SetCookie("refresh_token", "", -1);
-                console.log("Refresh token failed");
-                console.error(error);
-                showToast(
-                    "error",
-                    "Error",
-                    "Session expired. Please log in again.",
-                );
-
-                // if (shouldNavigate)
-                //     navigate("/login", {
-                //         state: {
-                //             error: "Session expired. Please log in again.",
-                //         },
-                //     });
+                if (shouldNavigate)
+                    navigate("/login", {
+                        state: {
+                            error: "Session expired. Please log in again.",
+                        },
+                    });
                 return;
             }
         },
-        [refreshTokenMutation],
+        [refreshTokenMutation, navigate, shouldNavigate],
     );
     useEffect(() => {
         (async () => {
