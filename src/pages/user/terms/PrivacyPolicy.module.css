@@ -1,0 +1,79 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem 1rem;
+}
+
+.content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.pageTitle {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-size: 2.25rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.effectiveDate {
+    font-size: 0.9rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0.5rem;
+}
+
+.introText {
+    margin-bottom: 1.5rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+.section {
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    border-left: 4px solid var(--color-primary);
+    padding-left: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.definitionList dt {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: 1rem;
+}
+
+.definitionList dd {
+    margin-left: 1rem;
+    color: var(--color-text-secondary);
+}
+
+.list {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.list li {
+    margin-bottom: 0.5rem;
+    margin-top: 0.625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.contactLink {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.contactLink:hover {
+    text-decoration: underline;
+}

@@ -48,8 +48,11 @@ import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
 import { RolePage } from "./pages/admin/roles/RolePage";
 import { RolesPage } from "./pages/admin/roles/RolesPage";
 import { NotificationsPage } from "./pages/user/notifications/NotificationsPage";
-import "./App.css";
+import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
+import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
+
+import "./App.css";
 
 function App() {
     useAuth({ shouldNavigate: false });
@@ -61,6 +64,8 @@ function App() {
     return (
         <Routes>
             <Route index element={<LandingPage />} />
+            <Route path="privacy_policy" element={<PrivacyPolicy />} />
+            <Route path="terms_of_service" element={<TermsOfService />} />
             <Route path="" element={<ProtectedRoute reverse={true} />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/login-success" element={<LoginSuccessPage />} />

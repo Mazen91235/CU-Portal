@@ -10,14 +10,16 @@ import { GetWebLink, GetIcon } from "../../utils/LinkHandler";
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
-
-import styles from "./LoginPage.module.css";
 import { useAppDispatch } from "../../services/redux/Hooks";
 import { setIsProcessing } from "../../services/redux/reducers/UserReducer";
+import { useRefreshTokenMutation } from "../../services/apis/AuthenticateAPIs";
+
+import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [refreshToken] = useRefreshTokenMutation();
     const [searchParams] = useSearchParams();
     usePageLoading(true);
     const token = searchParams.get("token");
@@ -37,6 +39,7 @@ const LoginPage = () => {
                     tokenParts[2],
                     parseInt(tokenParts[3]),
                 );
+                await refreshToken(tokenParts[2]).unwrap();
                 navigate("/user", {
                     state: {
                         isProcessing: true,
@@ -45,7 +48,7 @@ const LoginPage = () => {
             }
         };
         handlePageLoad();
-    }, [token, navigate, dispatch]);
+    }, [token, navigate, dispatch, refreshToken]);
 
     return (
         <>
