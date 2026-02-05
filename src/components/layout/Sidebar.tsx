@@ -37,36 +37,62 @@ const navSectionsDefault: NavSection[] = [
                 label: "Courses",
                 path: "/user/courses",
                 icon: "sidebar-courses",
+                activatesPaths: ["/user/courses/"],
             },
             {
                 label: "Course Map",
-                path: "/user/course-map",
+                // path: "/user/course-map",
+                path: "#!",
                 icon: "sidebar-coursemap",
+                badge: "Soon",
             },
             {
                 label: "Calendar",
                 path: "/user/calendar",
                 icon: "sidebar-calendar",
             },
-            { label: "Tasks", path: "/user/tasks", icon: "sidebar-tasks" },
-            { label: "Exams", path: "/user/exams", icon: "sidebar-exams" },
+            {
+                label: "Tasks",
+                path: "/user/tasks",
+                icon: "sidebar-tasks",
+                activatesPaths: ["/user/tasks/"],
+            },
+            {
+                label: "Exams",
+                path: "/user/exams",
+                icon: "sidebar-exams",
+                activatesPaths: ["/user/exams/"],
+            },
             {
                 label: "Announcements",
                 path: "/user/announcements",
                 icon: "sidebar-announcements",
+                activatesPaths: ["/user/announcements/"],
             },
             {
                 label: "Materials",
-                path: "/user/materials",
+                // path: "/user/materials",
+                path: "#!",
                 icon: "sidebar-materials",
+                badge: "Soon",
+                activatesPaths: ["/user/materials/"],
             },
             {
                 label: "Other Materials",
-                path: "/user/other-materials",
+                // path: "/user/other-materials",
+                path: "#!",
                 icon: "sidebar-other-materials",
                 badge: "Soon",
+                activatesPaths: ["/user/other-materials/"],
             },
-            { label: "Grades", path: "/user/grades", icon: "sidebar-grades" },
+            {
+                label: "Grades",
+                // path: "/user/grades",
+                path: "#!",
+                icon: "sidebar-grades",
+                badge: "Soon",
+                activatesPaths: ["/user/grades/"],
+            },
         ],
     },
     {
@@ -74,15 +100,18 @@ const navSectionsDefault: NavSection[] = [
         links: [
             {
                 label: "Study Tracker",
-                path: "/user/study-tracker",
+                // path: "/user/study-tracker",
+                path: "#!",
                 icon: "sidebar-study-tracker",
                 badge: "Soon",
             },
             {
                 label: "Events",
-                path: "/user/events",
+                // path: "/user/events",
+                path: "#!",
                 icon: "sidebar-events",
                 badge: "Soon",
+                activatesPaths: ["/user/events/"],
             },
         ],
     },
@@ -91,7 +120,8 @@ const navSectionsDefault: NavSection[] = [
         links: [
             {
                 label: "CV Generator",
-                path: "/user/cv-generator",
+                // path: "/user/cv-generator",
+                path: "#!",
                 icon: "sidebar-cv-generator",
                 badge: "Soon",
             },
@@ -102,9 +132,11 @@ const navSectionsDefault: NavSection[] = [
         links: [
             {
                 label: "Roadmaps",
-                path: "/user/roadmaps",
+                // path: "/user/roadmaps",
+                path: "#!",
                 icon: "sidebar-roadmaps",
                 badge: "Soon",
+                activatesPaths: ["/user/roadmaps/"],
             },
         ],
     },
@@ -113,9 +145,11 @@ const navSectionsDefault: NavSection[] = [
         links: [
             {
                 label: "Discussion",
-                path: "/user/discussion",
+                // path: "/user/discussion",
+                path: "#!",
                 icon: "sidebar-discussion",
                 badge: "Soon",
+                activatesPaths: ["/user/discussion/"],
             },
         ],
     },
@@ -152,7 +186,8 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Admin Panel")) {
         section.links.push({
             label: "Dashboard",
-            path: "/admin",
+            // path: "/admin",
+            path: "#!",
             icon: "sidebar-admin-dashboard",
             badge: "Soon",
         });
@@ -185,8 +220,10 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Course Maps")) {
         section.links.push({
             label: "Course Maps",
-            path: "/admin/course-maps",
+            // path: "/admin/course-maps",
+            path: "#!",
             icon: "sidebar-admin-course-maps",
+            badge: "Soon",
         });
     }
 
@@ -220,16 +257,22 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Materials")) {
         section.links.push({
             label: "Materials",
-            path: "/admin/materials",
+            // path: "/admin/materials",
+            path: "#!",
             icon: "sidebar-admin-materials",
+            badge: "Soon",
+            activatesPaths: ["/admin/materials/"],
         });
     }
 
     if (permissions.includes("View Grades")) {
         section.links.push({
             label: "Grades",
-            path: "/admin/grades",
+            // path: "/admin/grades",
+            path: "#!",
             icon: "sidebar-admin-grades",
+            badge: "Soon",
+            activatesPaths: ["/admin/grades/"],
         });
     }
 
@@ -263,44 +306,56 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
-            path: "/admin/logs",
+            // path: "/admin/logs",
+            path: "#!",
             icon: "sidebar-admin-logs",
+            badge: "Soon",
+            activatesPaths: ["/admin/logs/"],
         });
     }
 
     section.links.push({
         label: "Roadmaps",
-        path: "/admin/roadmaps",
+        // path: "/admin/roadmaps",
+        path: "#!",
         icon: "sidebar-admin-roadmaps",
         badge: "Soon",
+        activatesPaths: ["/admin/roadmaps/"],
     });
 
     section.links.push({
         label: "Study Maps",
-        path: "/admin/study-maps",
+        // path: "/admin/study-maps",
+        path: "#!",
         icon: "sidebar-admin-study-maps",
         badge: "Soon",
+        activatesPaths: ["/admin/study-maps/"],
     });
 
     section.links.push({
         label: "Study Analysis",
-        path: "/admin/study-analysis",
+        // path: "/admin/study-analysis",
+        path: "#!",
         icon: "sidebar-admin-study-analysis",
         badge: "Soon",
     });
 
     section.links.push({
         label: "Events",
-        path: "/admin/events",
+        // path: "/admin/events",
+        path: "#!",
         icon: "sidebar-admin-events",
         badge: "Soon",
+        activatesPaths: ["/admin/events/"],
     });
 
     section.links.push({
         label: "Discussions",
-        path: "/admin/discussions",
+        // path: "/admin/discussions",
+        path: "#!",
         icon: "sidebar-admin-discussions",
         badge: "Soon",
+        activatesPaths: ["/admin/discussions/"],
     });
 
     return section.links.length > 0 ? section : null;
