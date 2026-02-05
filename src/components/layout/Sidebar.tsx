@@ -481,8 +481,8 @@ export const Sidebar = ({
                             />
                         </button>
                         <ul className={styles.subNav}>
-                            {section.links.map((link) => (
-                                <li key={link.path}>
+                            {section.links.map((link, index) => (
+                                <li key={index}>
                                     <Link
                                         to={link.path}
                                         className={
