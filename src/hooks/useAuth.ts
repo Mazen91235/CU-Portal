@@ -45,6 +45,7 @@ export default function useAuth({
                     "Error",
                     "Session expired. Please log in again.",
                 );
+
                 // if (shouldNavigate)
                 //     navigate("/login", {
                 //         state: {
