@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
@@ -8,7 +8,10 @@ import {
     useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie, SetCookie } from "../utils/CookiesManager";
-import { setAccessToken } from "../services/redux/reducers/UserReducer";
+import {
+    setAccessToken,
+    setIsProcessing,
+} from "../services/redux/reducers/UserReducer";
 export default function useAuth({
     permission,
     reverse = false,
@@ -24,7 +27,9 @@ export default function useAuth({
     const [refreshTokenMutation] = useRefreshTokenMutation();
     const user = useAppSelector((state) => state.user.user);
     const access_token = useAppSelector((state) => state.user.access_token);
+    const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
+    const location = useLocation();
     const refreshToken = useCallback(
         async (retries: number = 3) => {
             try {
@@ -50,6 +55,7 @@ export default function useAuth({
     );
     useEffect(() => {
         (async () => {
+            if (isProcessing) return;
             try {
                 if (GetCookie("refresh_token") && !permission && reverse) {
                     if (shouldNavigate)
@@ -65,6 +71,15 @@ export default function useAuth({
                                 error: "You must be logged in to access this resource.",
                             },
                         });
+                }
+                if (location.state?.isProcessing) {
+                    dispatch(setIsProcessing(false));
+                    navigate(location.pathname, {
+                        replace: true,
+                        state: {
+                            isProcessing: false,
+                        },
+                    });
                 }
                 if (!GetCookie("access_token") && GetCookie("refresh_token")) {
                     await refreshToken();
@@ -97,7 +112,9 @@ export default function useAuth({
     }, [
         user,
         access_token,
+        isProcessing,
         permissions,
+        location,
         navigate,
         dispatch,
         logout,
