@@ -22,11 +22,12 @@ import { handlePopupErrors } from "../../utils/ErrorHandling";
 const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [startedLoading, setStartedLoading] = useState(false);
     const [tokenParts, setTokenParts] = useState<(string | number)[] | null>(
         null,
     );
     const [searchParams] = useSearchParams();
-    usePageLoading(true);
+    const startPageLoading = usePageLoading();
     const token = searchParams.get("token");
 
     useEffect(() => {
@@ -35,10 +36,16 @@ const LoginPage = () => {
                 const tokenParts = token.split("___");
                 dispatch(setIsProcessing(true));
                 setTokenParts(tokenParts);
+            } else if (!startedLoading) {
+                setStartedLoading(true);
             }
         };
         handlePageLoad();
-    }, [token, dispatch]);
+    }, [token, startedLoading, dispatch, startPageLoading]);
+
+    useEffect(() => {
+        if (startPageLoading && startedLoading) startPageLoading();
+    }, [startPageLoading, startedLoading]);
 
     useEffect(() => {
         const processToken = async () => {
