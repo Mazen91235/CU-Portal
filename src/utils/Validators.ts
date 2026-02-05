@@ -1,6 +1,10 @@
-export const validateUserAccess = (level?: number, path?: string) => {
-    console.log("Validating access for level:", level, "to path:", path);
-    if ((level || 4) > 3) return true;
+export const validateUserAccess = (
+    level?: number,
+    path?: string,
+    roleLevel?: number,
+) => {
+    if ((level || 4) > 3 || ((level || 4) > 2 && (roleLevel || 4) < 3))
+        return true;
     const allowedPaths = [
         [],
         ["/user", "/user/settings/profile", "/user/settings/academic"],

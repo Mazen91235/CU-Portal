@@ -15,7 +15,9 @@ export const useValidateUserLevel = () => {
                 !location.pathname.includes("/admin"))
         )
             return;
-        if (!validateUserAccess(user.level, location.pathname)) {
+        if (
+            !validateUserAccess(user.level, location.pathname, user.role?.level)
+        ) {
             navigate("/user", {
                 state: {
                     error: "Please complete the required steps to proceed.",

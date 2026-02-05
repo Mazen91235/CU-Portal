@@ -15,7 +15,11 @@ export function useAuthQuery<TTriggerArg, TReturn>(
     useEffect(() => {
         (async () => {
             const path = location.pathname;
-            if (!access_token || !user || !validateUserAccess(user.level, path))
+            if (
+                !access_token ||
+                !user ||
+                !validateUserAccess(user.level, path, user.role?.level)
+            )
                 return;
             try {
                 if (shouldLoad) setLoading();
