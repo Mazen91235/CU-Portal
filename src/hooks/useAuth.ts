@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
-    useLogoutMutation,
+    useLazyLogoutQuery,
     useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie, SetCookie } from "../utils/CookiesManager";
@@ -20,7 +20,7 @@ export default function useAuth({
 } = {}) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [logoutMutation] = useLogoutMutation();
+    const [logout] = useLazyLogoutQuery();
     const [refreshTokenMutation] = useRefreshTokenMutation();
     const user = useAppSelector((state) => state.user.user);
     const access_token = useAppSelector((state) => state.user.access_token);
@@ -58,7 +58,7 @@ export default function useAuth({
                         });
                 }
                 if (!GetCookie("refresh_token") && !reverse) {
-                    if (user || access_token) await logoutMutation().unwrap();
+                    if (user || access_token) await logout().unwrap();
                     if (shouldNavigate)
                         navigate("/login", {
                             state: {
@@ -100,7 +100,7 @@ export default function useAuth({
         permissions,
         navigate,
         dispatch,
-        logoutMutation,
+        logout,
         refreshToken,
         permission,
         reverse,

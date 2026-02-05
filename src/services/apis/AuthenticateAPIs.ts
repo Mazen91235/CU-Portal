@@ -25,10 +25,10 @@ export const AuthenticateAPI = createApi({
         },
     }),
     endpoints: (builder) => ({
-        logout: builder.mutation<GenericAPIResponse, void>({
+        logout: builder.query<GenericAPIResponse, void>({
             query: () => ({
                 url: "/logout",
-                method: "POST",
+                method: "GET",
                 credentials: "include",
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
@@ -168,7 +168,7 @@ export const AuthenticateAPI = createApi({
 
 export const {
     useRefreshTokenMutation,
-    useLogoutMutation,
+    useLazyLogoutQuery,
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
     useSignupMutation,

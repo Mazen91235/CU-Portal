@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 import { useAppSelector } from "../../services/redux/Hooks";
-import { useLogoutMutation } from "../../services/apis/AuthenticateAPIs";
+import { useLazyLogoutQuery } from "../../services/apis/AuthenticateAPIs";
 import { type Icon } from "../../types/Icon";
 import Logo from "../logo/Logo";
 
@@ -372,7 +372,7 @@ export const Sidebar = ({
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
-    const [logout] = useLogoutMutation();
+    const [logout] = useLazyLogoutQuery();
     const [expandedSections, setExpandedSections] = useState<string[]>([]);
     const [navSections, setNavSections] = useState<NavSection[]>([
         ...navSectionsDefault,
