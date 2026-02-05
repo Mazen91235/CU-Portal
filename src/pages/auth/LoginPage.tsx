@@ -5,7 +5,7 @@ import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
 import { usePageLoading } from "../../hooks/usePageLoading";
 
-import { GetIcon, GetApiLink } from "../../utils/LinkHandler";
+import { GetWebLink, GetIcon } from "../../utils/LinkHandler";
 
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
@@ -76,7 +76,7 @@ const LoginPage = () => {
                         <p>You need to sign in with Google to continue</p>
                         <Link
                             className={styles.googleSigninBtn}
-                            to={GetApiLink("login-with-google")}
+                            to={GetWebLink("login-with-google")}
                             aria-label="Sign in with Google"
                         >
                             <img

@@ -80,7 +80,6 @@ import trackerIcon from "../assets/icons/tracker.png";
 import verifyIcon from "../assets/icons/verify-icon.svg";
 import warningCircleIcon from "../assets/icons/warning-circle.svg";
 
-const domain = "https://cu-portal.com";
 const apiDomain = "https://api.cu-portal.com";
 const version = "v1";
 export const GetUserApiLink = (path: string): string => {
@@ -108,7 +107,7 @@ export const GetWebLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${domain}/${path}`;
+    return `${apiDomain}/${path}`;
 };
 
 export const GetAvatarLink = (path: string): string => {
