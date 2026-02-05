@@ -16,12 +16,13 @@ const NotificationSlice = createSlice({
             NotificationAPI.endpoints.getNotifications.matchFulfilled,
             (
                 state,
-                { payload }: { payload: GenericAPIResponse<Notification[]> }
+                { payload }: { payload: GenericAPIResponse<Notification[]> },
             ) => {
                 if (payload.status == "success") {
-                    state.notifications = payload.data || [];
+                    state.notifications =
+                        payload.data?.filter((n) => !n.seen) || [];
                 }
-            }
+            },
         );
     },
 });

@@ -1,0 +1,82 @@
+import { Link } from "react-router";
+import type { Notification } from "../../types/entities/Notification";
+import { formatTimeAgo } from "../../utils/Formatter";
+import notificationGrade from "../../assets/icons/notification-grade.svg";
+import notificationReminder from "../../assets/icons/notification-reminder.svg";
+import notificationMaterial from "../../assets/icons/notification-material.svg";
+import notificationDue from "../../assets/icons/notification-due.svg";
+import notificationDefault from "../../assets/icons/notification-icon.svg";
+import styles from "./NotificationItem.module.css";
+
+const getNotificationIcon = (type?: string): string => {
+    switch (type) {
+        case "grade":
+            return notificationGrade;
+        case "due":
+            return notificationDue;
+        case "material":
+            return notificationMaterial;
+        case "reminder":
+            return notificationReminder;
+        default:
+            return notificationDefault;
+    }
+};
+
+export const NotificationItem = ({
+    notification,
+    isUnread,
+    onMarkAsRead,
+}: {
+    notification: Notification;
+    isUnread: boolean;
+    onMarkAsRead?: () => void;
+}) => {
+    return (
+        <div className={styles.notificationCard}>
+            <img
+                src={getNotificationIcon(notification.type)}
+                alt={notification.type || "notification"}
+                className={styles.notificationIcon}
+            />
+            <div className={styles.notificationContent}>
+                {notification.url ? (
+                    <Link
+                        to={notification.url}
+                        target="_blank"
+                        className={styles.notificationLink}
+                    >
+                        <div className={styles.notificationTitle}>
+                            {notification.content}
+                        </div>
+                    </Link>
+                ) : (
+                    <div className={styles.notificationTitle}>
+                        {notification.content}
+                    </div>
+                )}
+                <div className={styles.notificationSubtitle}>
+                    {formatTimeAgo(notification.created_at)}
+                </div>
+            </div>
+            {isUnread ? (
+                <div className={styles.notificationBtnRow}>
+                    <button
+                        className={styles.markReadBtn}
+                        onClick={onMarkAsRead}
+                    >
+                        Mark As Read
+                    </button>
+                </div>
+            ) : (
+                notification.url && (
+                    <div className={styles.notificationBtnRow}>
+                        <Link to={notification.url} target="_blank">
+                            <i className={`far fa-eye ${styles.eyeIcon}`}></i>
+                        </Link>
+                    </div>
+                )
+            )}
+        </div>
+    );
+};

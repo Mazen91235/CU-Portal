@@ -6,6 +6,8 @@ import { formatDateTime } from "../../utils/Formatter";
 import menuIcon from "../../assets/icons/menu-icon.svg";
 import notificationIcon from "../../assets/icons/notification-icon.svg";
 import styles from "./Navbar.module.css";
+import { useMarkNotificationAsSeenMutation } from "../../services/apis/user/NotificationAPIs";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 
 export const Navbar = ({
     isOpen,
@@ -15,6 +17,7 @@ export const Navbar = ({
     onMenuToggle: () => void;
 }) => {
     const navigate = useNavigate();
+    const [markNotificationsAsSeen] = useMarkNotificationAsSeenMutation();
     const [showNotifications, setShowNotifications] = useState(false);
     const notifications = useAppSelector(
         (state) => state.notification.notifications,
@@ -35,6 +38,14 @@ export const Navbar = ({
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    const handleNotificationClick = async (notification_id: number) => {
+        try {
+            await markNotificationsAsSeen({ notification_id }).unwrap();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
 
     const handleViewAllNotifications = () => {
         setShowNotifications(false);
@@ -93,7 +104,14 @@ export const Navbar = ({
                                                 key={notification.id}
                                                 className={`${styles.notificationItem}`}
                                             >
-                                                <Link to="#">
+                                                <Link
+                                                    to={notification.url || "#"}
+                                                    onClick={() =>
+                                                        handleNotificationClick(
+                                                            notification.id!,
+                                                        )
+                                                    }
+                                                >
                                                     <div
                                                         className={
                                                             styles.notificationContent

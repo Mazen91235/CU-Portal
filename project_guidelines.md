@@ -21,6 +21,7 @@ project-root/
       team/
     components/
       auth/
+      avatar/
       banner/
       bordered/
       calendar/
@@ -36,6 +37,7 @@ project-root/
       pagination/
       preview/
       section/
+      table/
       toast/
     contexts/
       contexts/

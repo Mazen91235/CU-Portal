@@ -39,6 +39,9 @@ export type User = {
     pending_user?: PendingUser | null;
     user_id?: number | null;
     notifications_count?: number;
+    enrolled_courses_count?: number;
     created_at?: string | null;
     modified_at?: string | null;
+    // user level for progress
+    level?: number;
 };

@@ -8,7 +8,7 @@ import useGetUser from "./hooks/useGetUser";
 import useRouteMessages from "./hooks/useRouteMessages";
 import useGetNotifications from "./hooks/useGetNotifications";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
-import { Dashboard as UserDashboard } from "./pages/user/dashboard/Dashboard";
+import { DashboardPage } from "./pages/user/dashboard/DashboardPage";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
 import { AcademicSettings } from "./pages/user/settings/AcademicSettings";
 import { RegisteredCourses } from "./pages/user/settings/RegisteredCourses";
@@ -47,13 +47,16 @@ import { UserPage } from "./pages/admin/users/UserPage";
 import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
 import { RolePage } from "./pages/admin/roles/RolePage";
 import { RolesPage } from "./pages/admin/roles/RolesPage";
+import { NotificationsPage } from "./pages/user/notifications/NotificationsPage";
 import "./App.css";
+import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
 
 function App() {
     useAuth({ shouldNavigate: false });
     useGetUser();
     useGetNotifications();
     useRouteMessages();
+    useValidateUserLevel();
     usePageLoading();
     return (
         <Routes>
@@ -65,7 +68,8 @@ function App() {
                 <Route path="/verify-email" element={<VerifyEmailPage />} />
             </Route>
             <Route path="/user" element={<ProtectedRoute />}>
-                <Route index element={<UserDashboard />} />
+                <Route index element={<DashboardPage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="settings">
                     <Route path="profile" element={<ProfileSettings />} />
                     <Route path="academic" element={<AcademicSettings />} />

@@ -33,9 +33,9 @@ const LoginPage = () => {
                     tokenParts[2],
                     parseInt(tokenParts[3]),
                 );
+                navigate("/user");
             }
         };
-
         handlePageLoad();
     }, [token, navigate]);
 

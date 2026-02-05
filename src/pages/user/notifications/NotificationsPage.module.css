@@ -1,0 +1,131 @@
+.notificationsContainer {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(90, 15, 97, 0.04);
+    padding: 32px 32px 18px 32px;
+    margin: 72px 24px 24px 24px;
+}
+
+.headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+}
+
+.pageTitle {
+    color: #64748b;
+    font-family: var(--primary-font-family);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: 1.68px;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+.unreadCount {
+    color: var(--primary-orange);
+    font-family: var(--primary-font-family);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 159%;
+    letter-spacing: 0.4px;
+}
+
+.headerActions {
+    display: flex;
+    gap: 16px;
+}
+
+.markAllReadBtn {
+    border-radius: var(--primary-border-radius);
+    background: var(--badge-new-bg);
+    color: var(--white);
+    display: flex;
+    width: 179px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: var(--primary-font-family);
+    cursor: pointer;
+    transition: all var(--transition-duration);
+}
+
+.markAllReadBtn:hover:not(:disabled) {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: var(--light-box-shadow);
+}
+
+.markAllReadBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.notificationsSection {
+    margin: 32px 24px 0 24px;
+}
+
+.sectionTitle {
+    color: #64748b;
+    font-family: var(--primary-font-family);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    padding-left: 20px;
+}
+
+.loadingState,
+.emptyState {
+    text-align: center;
+    padding: 32px;
+    color: var(--medium-grey);
+    font-family: var(--primary-font-family);
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .notificationsContainer {
+        margin: 72px 12px 24px 12px;
+        padding: 24px 16px 12px 16px;
+    }
+
+    .headerSection {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pageTitle {
+        font-size: 24px;
+        letter-spacing: 1.2px;
+    }
+
+    .unreadCount {
+        font-size: 18px;
+    }
+
+    .headerActions {
+        justify-content: flex-end;
+    }
+
+    .markAllReadBtn {
+        width: auto;
+        padding: 10px 16px;
+    }
+
+    .notificationsSection {
+        margin: 24px 0 0 0;
+    }
+
+    .sectionTitle {
+        font-size: 18px;
+        padding-left: 10px;
+    }
+}
