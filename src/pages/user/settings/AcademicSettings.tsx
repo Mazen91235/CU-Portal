@@ -10,7 +10,7 @@ import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/Facult
 import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { useCallback, useEffect, useState, type ChangeEvent } from "react";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import type { Faculty } from "../../../types/entities/Faculty";
 import type { Department } from "../../../types/entities/Department";
 import type { Year } from "../../../types/entities/Year";
@@ -54,6 +54,7 @@ export const AcademicSettings = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
 
     const facultyChanged = (e: ChangeEvent<HTMLSelectElement>) => {
+        console.log("Selected faculty ID:", e.target.value);
         const selectedFaculty =
             faculties.find((fac) => fac.id === parseInt(e.target.value, 10)) ||
             null;
@@ -65,37 +66,44 @@ export const AcademicSettings = () => {
         setStudyType(selectedStudyType);
     };
 
-    const authQueryParam = useCallback(
-        () =>
-            Promise.all([
-                searchFaculties({})
-                    .unwrap()
-                    .then((response) => {
-                        setFaculties(response.data || []);
-                    }),
-                searchYears({})
-                    .unwrap()
-                    .then((response) => {
-                        setYears(response.data || []);
-                    }),
-            ]),
-        [searchFaculties, searchYears],
-    );
-
-    useEffect(() => {
-        if (!faculty || studyType === "") {
-            setDepartments([]);
-            return;
+    const fetchFaculties = useCallback(async () => {
+        try {
+            const result = await searchFaculties({}).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
         }
-        searchDepartments({
-            faculty_id: faculty ? faculty.id : undefined,
-            study_type: studyType !== "" ? studyType : undefined,
-        })
-            .unwrap()
-            .then((response) => {
-                setDepartments(response.data || []);
-            });
-    }, [faculty, studyType, searchDepartments]);
+    }, [searchFaculties]);
+
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!faculty || studyType === "") {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                faculty_id: faculty ? faculty.id : undefined,
+                study_type: studyType !== "" ? studyType : undefined,
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchDepartments, faculty, studyType]);
+
+    const fetchYears = useCallback(async () => {
+        try {
+            const result = await searchYears({}).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchYears]);
+
+    const authQueryParam = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
+        [fetchFaculties, fetchDepartments, fetchYears],
+    );
 
     useAuthQuery(authQueryParam);
 
@@ -103,6 +111,10 @@ export const AcademicSettings = () => {
         if (faculties.length && years.length && user) {
             const hasAcademicData =
                 user.faculty || user.type || user.year || user.department;
+            if (!hasAcademicData) {
+                setDisabled(false);
+                return;
+            }
             setValue("faculty", user.faculty?.id?.toString() || "");
             setValue("studyType", (user.type as "Mainstream" | "Credit") || "");
             setValue("year", user.year?.id?.toString() || "");
