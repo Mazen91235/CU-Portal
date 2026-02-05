@@ -113,7 +113,7 @@ export const GetWebLink = (path: string): string => {
 
 export const GetAvatarLink = (path: string): string => {
     if (!path || path.trim() == "") return DefaultAvatar;
-    if (path.startsWith("/")) return GetWebLink(path);
+    if (path.startsWith("/")) return GetApiLink(path);
     return path.replace("/uc?export=view&id=", "/thumbnail?sz=1000&id=");
 };
 
@@ -125,7 +125,7 @@ export const GetImgFromLink = async (path: string): Promise<File> => {
         return new File([blob], "default-avatar.png", { type: blob.type });
     }
     if (path.startsWith("/")) {
-        const response = await fetch(GetWebLink(path));
+        const response = await fetch(GetApiLink(path));
         const blob = await response.blob();
         return new File([blob], "avatar.png", { type: blob.type });
     }
