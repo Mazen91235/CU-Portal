@@ -8,15 +8,21 @@
     gap: 1rem;
     transition:
         transform 0.2s ease,
-        box-shadow 0.2s ease;
+        box-shadow 0.2s ease,
+        z-index 0s;
     position: relative;
     height: 100%;
     overflow: visible;
+    z-index: 1;
 }
 
 .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(60, 60, 60, 0.12);
+}
+
+.cardWithMenu {
+    z-index: 1001;
 }
 
 .badgeContainer {
@@ -92,9 +98,10 @@
     border: 1px solid var(--light-grey);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    z-index: 1002;
     overflow: visible;
     min-width: 120px;
+    pointer-events: auto;
 }
 
 .optionItem {
@@ -107,6 +114,7 @@
     font-size: 14px;
     color: var(--dark-text);
     transition: background-color 0.2s;
+    pointer-events: auto;
 }
 
 .optionItem:hover {

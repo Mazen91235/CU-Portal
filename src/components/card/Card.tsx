@@ -75,7 +75,9 @@ export const Card = ({
     };
 
     return (
-        <article className={styles.card}>
+        <article
+            className={`${styles.card} ${showOptionsMenu ? styles.cardWithMenu : ""}`}
+        >
             {badge && (
                 <div className={styles.badgeContainer}>
                     <span className={styles.badge}>{badge}</span>
