@@ -63,7 +63,7 @@ export const Card = ({
         action?.();
     };
 
-    const handleClicks = (e: PointerEvent) => {
+    const handleClicks = (e: MouseEvent) => {
         if (
             e.target instanceof Node &&
             optionsRef.current &&
