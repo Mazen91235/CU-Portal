@@ -81,26 +81,27 @@ import verifyIcon from "../assets/icons/verify-icon.svg";
 import warningCircleIcon from "../assets/icons/warning-circle.svg";
 
 const domain = "https://cu-portal.com";
+const apiDomain = "https://api.cu-portal.com";
 const version = "v1";
 export const GetUserApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${domain}/api/${version}/user/${path}`;
+    return `${apiDomain}/${version}/user/${path}`;
 };
 
 export const GetAdminApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${domain}/api/${version}/admin/${path}`;
+    return `${apiDomain}/${version}/admin/${path}`;
 };
 
 export const GetApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${domain}/api/${version}/${path}`;
+    return `${apiDomain}/${version}/${path}`;
 };
 
 export const GetWebLink = (path: string): string => {
