@@ -5,6 +5,7 @@ import { Avatar } from "../avatar/Avatar";
 import { formatDateTime } from "../../utils/Formatter";
 import menuIcon from "../../assets/icons/menu-icon.svg";
 import notificationIcon from "../../assets/icons/notification-icon.svg";
+import helpIcon from "../../assets/icons/help-icon.png";
 import styles from "./Navbar.module.css";
 import { useMarkNotificationAsSeenMutation } from "../../services/apis/user/NotificationAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
@@ -69,6 +70,13 @@ export const Navbar = ({
 
                 <div className={styles.rightSection}>
                     <div className={styles.iconsContainer}>
+                        <Link
+                            to="https://wa.me/+201281518436"
+                            className={styles.iconButton}
+                            aria-label="Help & Support"
+                        >
+                            <img src={helpIcon} alt="" width="24" height="24" />
+                        </Link>
                         <div
                             className={styles.notificationWrapper}
                             ref={notificationRef}

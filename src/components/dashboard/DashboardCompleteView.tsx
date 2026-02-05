@@ -15,13 +15,17 @@ import coursesWhiteIcon from "../../assets/icons/courses-white.svg";
 import announcementsWhiteIcon from "../../assets/icons/announcements-white.svg";
 import dashboardExamsIcon from "../../assets/icons/dashboard-exams-icon.svg";
 import dashboardTasksIcon from "../../assets/icons/dashboard-tasks-icon.svg";
-import userDefaultAvatar from "../../assets/icons/user-default-avatar.png";
 
 import styles from "./DashboardCompleteView.module.css";
 import { useLazyGetCalendarTasksQuery } from "../../services/apis/user/CalendarAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import useAuthQuery from "../../hooks/useAuthQuery";
-import { formatDateTime, formatString } from "../../utils/Formatter";
+import {
+    captitalize,
+    formatDateTime,
+    formatString,
+} from "../../utils/Formatter";
+import { Avatar } from "../avatar/Avatar";
 
 export const DashboardCompleteView = ({
     user,
@@ -242,11 +246,13 @@ export const DashboardCompleteView = ({
             <div className={styles["sidebar-column"]}>
                 <div className={styles["user-card"]}>
                     <div className={styles["user-card-header"]}>
-                        <span className={styles["user-role"]}>User</span>
+                        <span className={styles["user-role"]}>
+                            {captitalize(user.role.name)}
+                        </span>
                     </div>
-                    <img
-                        src={user.details?.avatar || userDefaultAvatar}
-                        alt={user.name}
+                    <Avatar
+                        user={user}
+                        size="large"
                         className={styles["user-avatar"]}
                     />
                     <h3 className={styles["user-name"]}>{user.name}</h3>

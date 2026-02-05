@@ -11,6 +11,7 @@ import { Avatar } from "../avatar/Avatar";
 import { GetIcon } from "../../utils/LinkHandler";
 
 import styles from "./Sidebar.module.css";
+import { captitalize } from "../../utils/Formatter";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
@@ -481,7 +482,7 @@ export const Sidebar = ({
                     </div>
                     {user?.role && (
                         <span className={styles.userRole}>
-                            {user.role.name}
+                            {captitalize(user.role.name)}
                         </span>
                     )}
                 </li>

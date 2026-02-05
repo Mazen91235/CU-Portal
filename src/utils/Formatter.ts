@@ -116,3 +116,8 @@ export const parseDateString = (dateStr: string): Date | null => {
     const day = parseInt(parts[2], 10);
     return new Date(year, month, day);
 };
+
+export const captitalize = (str?: string): string => {
+    if (!str) return "N/A";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
