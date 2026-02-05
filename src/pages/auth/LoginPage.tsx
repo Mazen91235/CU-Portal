@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { SetCookie } from "../../utils/CookiesManager";
 import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
@@ -74,9 +74,9 @@ const LoginPage = () => {
                             welcome back
                         </h2>
                         <p>You need to sign in with Google to continue</p>
-                        <Link
+                        <a
                             className={styles.googleSigninBtn}
-                            to={GetWebLink("login-with-google")}
+                            href={GetWebLink("login-with-google")}
                             aria-label="Sign in with Google"
                         >
                             <img
@@ -86,7 +86,7 @@ const LoginPage = () => {
                                 aria-hidden="true"
                             />
                             Sign up / in with Google
-                        </Link>
+                        </a>
                     </div>
                 </main>
             </div>
