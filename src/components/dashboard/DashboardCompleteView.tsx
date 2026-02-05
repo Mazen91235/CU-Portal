@@ -247,7 +247,7 @@ export const DashboardCompleteView = ({
                 <div className={styles["user-card"]}>
                     <div className={styles["user-card-header"]}>
                         <span className={styles["user-role"]}>
-                            {captitalize(user.role.name)}
+                            {captitalize(user.role?.name)}
                         </span>
                     </div>
                     <Avatar

@@ -480,11 +480,9 @@ export const Sidebar = ({
                             {user?.department?.code} {user?.year?.year}
                         </span>
                     </div>
-                    {user?.role && (
-                        <span className={styles.userRole}>
-                            {captitalize(user.role.name)}
-                        </span>
-                    )}
+                    <span className={styles.userRole}>
+                        {captitalize(user?.role?.name)}
+                    </span>
                 </li>
             </ul>
 
