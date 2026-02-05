@@ -55,6 +55,16 @@ export default function useAuth({
     );
     useEffect(() => {
         (async () => {
+            if (location.state?.isProcessing) {
+                dispatch(setIsProcessing(false));
+                navigate(location.pathname, {
+                    replace: true,
+                    state: {
+                        isProcessing: false,
+                    },
+                });
+                return;
+            }
             if (isProcessing) return;
             try {
                 if (GetCookie("refresh_token") && !permission && reverse) {
@@ -71,15 +81,6 @@ export default function useAuth({
                                 error: "You must be logged in to access this resource.",
                             },
                         });
-                }
-                if (location.state?.isProcessing) {
-                    dispatch(setIsProcessing(false));
-                    navigate(location.pathname, {
-                        replace: true,
-                        state: {
-                            isProcessing: false,
-                        },
-                    });
                 }
                 if (!GetCookie("access_token") && GetCookie("refresh_token")) {
                     await refreshToken();
