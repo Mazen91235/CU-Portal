@@ -26,27 +26,63 @@ import {
     formatString,
 } from "../../utils/Formatter";
 import { Avatar } from "../avatar/Avatar";
+import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
+import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
+import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
+import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
 
-export const DashboardCompleteView = ({
-    user,
-    courses,
-    announcements,
-    exams,
-    tasks,
-}: {
-    user: User;
-    courses: Subject[];
-    announcements: Announcement[];
-    exams: Task[];
-    tasks: Task[];
-}) => {
+export const DashboardCompleteView = ({ user }: { user: User }) => {
+    const [getExams] = useLazyGetExamsQuery();
+    const [getTasks] = useLazyGetTasksQuery();
+    const [getAnnouncements] = useLazyGetAnnouncementsQuery();
+    const [getCourses] = useLazyGetEnrolledCoursesQuery();
     const [getCalendar] = useLazyGetCalendarTasksQuery();
     const navigate = useNavigate();
+    const [exams, setExams] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [courses, setCourses] = useState<Subject[]>([]);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [isFloatingDayOpen, setIsFloatingDayOpen] = useState(false);
+
+    const fetchExams = useCallback(async () => {
+        try {
+            const result = await getExams({ limit: 3 }).unwrap();
+            setExams(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getExams]);
+
+    const fetchTasks = useCallback(async () => {
+        try {
+            const result = await getTasks({ limit: 3 }).unwrap();
+            setTasks(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getTasks]);
+
+    const fetchAnnouncements = useCallback(async () => {
+        try {
+            const result = await getAnnouncements({ limit: 3 }).unwrap();
+            setAnnouncements(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getAnnouncements]);
+
+    const fetchCourses = useCallback(async () => {
+        try {
+            const result = await getCourses().unwrap();
+            setCourses(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getCourses]);
 
     const fetchCalendar = useCallback(
         async (year: number, month: number) => {
@@ -65,8 +101,23 @@ export const DashboardCompleteView = ({
     );
 
     const authQueryParams = useCallback(
-        () => fetchCalendar(currentYear, currentMonth),
-        [fetchCalendar, currentYear, currentMonth],
+        () =>
+            Promise.all([
+                fetchExams(),
+                fetchTasks(),
+                fetchAnnouncements(),
+                fetchCourses(),
+                fetchCalendar(currentYear, currentMonth),
+            ]),
+        [
+            fetchExams,
+            fetchTasks,
+            fetchAnnouncements,
+            fetchCourses,
+            fetchCalendar,
+            currentYear,
+            currentMonth,
+        ],
     );
 
     useAuthQuery(authQueryParams);

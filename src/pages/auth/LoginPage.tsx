@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { SetCookie } from "../../utils/CookiesManager";
 import { PageSeo } from "../../components/PageSeo";
@@ -11,15 +11,20 @@ import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
 import { useAppDispatch } from "../../services/redux/Hooks";
-import { setIsProcessing } from "../../services/redux/reducers/UserReducer";
-import { useRefreshTokenMutation } from "../../services/apis/AuthenticateAPIs";
+import {
+    setAccessToken,
+    setIsProcessing,
+} from "../../services/redux/reducers/UserReducer";
 
 import styles from "./LoginPage.module.css";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [refreshToken] = useRefreshTokenMutation();
+    const [tokenParts, setTokenParts] = useState<(string | number)[] | null>(
+        null,
+    );
     const [searchParams] = useSearchParams();
     usePageLoading(true);
     const token = searchParams.get("token");
@@ -29,26 +34,39 @@ const LoginPage = () => {
             if (token) {
                 const tokenParts = token.split("___");
                 dispatch(setIsProcessing(true));
-                SetCookie(
-                    "access_token",
-                    tokenParts[0],
-                    parseInt(tokenParts[1]),
-                );
-                SetCookie(
-                    "refresh_token",
-                    tokenParts[2],
-                    parseInt(tokenParts[3]),
-                );
-                await refreshToken(tokenParts[2]).unwrap();
-                navigate("/user", {
-                    state: {
-                        isProcessing: true,
-                    },
-                });
+                setTokenParts(tokenParts);
             }
         };
         handlePageLoad();
-    }, [token, navigate, dispatch, refreshToken]);
+    }, [token, dispatch]);
+
+    useEffect(() => {
+        const processToken = async () => {
+            if (tokenParts) {
+                try {
+                    SetCookie(
+                        "access_token",
+                        tokenParts[0] as string,
+                        tokenParts[1] as number,
+                    );
+                    SetCookie(
+                        "refresh_token",
+                        tokenParts[2] as string,
+                        tokenParts[3] as number,
+                    );
+                    dispatch(setAccessToken(tokenParts[0] as string));
+                    navigate("/user", {
+                        state: {
+                            isProcessing: true,
+                        },
+                    });
+                } catch (error) {
+                    handlePopupErrors(error);
+                }
+            }
+        };
+        processToken();
+    }, [tokenParts, navigate, dispatch]);
 
     return (
         <>
