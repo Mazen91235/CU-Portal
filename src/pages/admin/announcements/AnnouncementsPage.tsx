@@ -25,12 +25,14 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
+import { formatDate } from "../../../utils/Formatter";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./AnnouncementsPage.module.css";
-import { formatDate } from "../../../utils/Formatter";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -90,6 +92,7 @@ export const AnnouncementsPage = () => {
 
     const fetchSubjects = useCallback(async () => {
         try {
+            if (!user) return;
             const params: {
                 faculty_id?: number;
                 department_id?: number;
@@ -99,6 +102,12 @@ export const AnnouncementsPage = () => {
             if (departmentFilter)
                 params.department_id = parseInt(departmentFilter);
             if (yearFilter) params.year_id = parseInt(yearFilter);
+
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
 
             if (Object.keys(params).length < 3) {
                 setSubjects([]);
@@ -110,12 +119,12 @@ export const AnnouncementsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, facultyFilter, departmentFilter, yearFilter]);
+    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
 
     const fetchAnnouncements = useCallback(async () => {
         try {
-            if (!hasNextPage) return;
-            const result = await getAnnouncements({
+            if (!hasNextPage || !user) return;
+            const params = {
                 query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
@@ -124,7 +133,13 @@ export const AnnouncementsPage = () => {
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 page,
-            }).unwrap();
+            };
+            if (!user.canAccessAll) {
+                params.faculty_id = undefined;
+                params.department_id = undefined;
+                params.year_id = undefined;
+            }
+            const result = await getAnnouncements(params).unwrap();
             setAnnouncements((prev) => {
                 const filteredPrev = prev.filter(
                     (announcement) =>
@@ -149,6 +164,7 @@ export const AnnouncementsPage = () => {
         searchQuery,
         page,
         hasNextPage,
+        user,
     ]);
 
     const authQueryParams = useCallback(
@@ -301,18 +317,22 @@ export const AnnouncementsPage = () => {
                     </div>
 
                     <div className={styles.filtersRow}>
-                        <SelectFilter
-                            options={facultyOptions}
-                            setValue={setFacultyFilter}
-                        />
-                        <SelectFilter
-                            options={departmentOptions}
-                            setValue={setDepartmentFilter}
-                        />
-                        <SelectFilter
-                            options={yearOptions}
-                            setValue={setYearFilter}
-                        />
+                        {user?.canAccessAll && (
+                            <>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={setFacultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={setYearFilter}
+                                />
+                            </>
+                        )}
                         <SelectFilter
                             options={subjectOptions}
                             setValue={setSubjectFilter}

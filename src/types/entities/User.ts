@@ -44,4 +44,6 @@ export type User = {
     modified_at?: string | null;
     // user level for progress
     level?: number;
+    // user access for faculties, departments, years
+    canAccessAll?: boolean;
 };

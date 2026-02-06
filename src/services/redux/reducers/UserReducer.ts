@@ -109,6 +109,19 @@ const UserSlice = createSlice({
                         );
                         state.permissions.push("Early Access");
                     }
+                    const accessPermissions = [
+                        "Access All Faculties",
+                        "Access All Departments",
+                        "Access All Years",
+                    ];
+                    if (
+                        state.user &&
+                        accessPermissions.every((p) =>
+                            state.permissions?.includes(p),
+                        )
+                    ) {
+                        state.user.canAccessAll = true;
+                    }
                 }
             },
         );

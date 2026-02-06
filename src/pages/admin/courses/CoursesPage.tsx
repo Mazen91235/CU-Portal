@@ -22,11 +22,13 @@ import { Card } from "../../../components/card/Card";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./CoursesPage.module.css";
 
 export const CoursesPage = () => {
     const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -82,14 +84,20 @@ export const CoursesPage = () => {
 
     const fetchCourses = useCallback(async () => {
         try {
-            if (!hasNextPage) return;
-            const result = await getCourses({
+            if (!hasNextPage || !user) return;
+            const params = {
                 faculty_id: parseInt(facultyFilter) || undefined,
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
                 query: searchQuery || "",
                 page,
-            }).unwrap();
+            };
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
+            const result = await getCourses(params).unwrap();
             setCourses((prev) => {
                 const filteredPrev = prev.filter(
                     (course) =>
@@ -112,6 +120,7 @@ export const CoursesPage = () => {
         searchQuery,
         page,
         hasNextPage,
+        user,
     ]);
 
     const authQueryParams = useCallback(
@@ -230,21 +239,22 @@ export const CoursesPage = () => {
                             setValue={setSearchQuery}
                         />
                     </div>
-
-                    <div className={styles.filtersRow}>
-                        <SelectFilter
-                            options={facultyOptions}
-                            setValue={setFacultyFilter}
-                        />
-                        <SelectFilter
-                            options={departmentOptions}
-                            setValue={setDepartmentFilter}
-                        />
-                        <SelectFilter
-                            options={yearOptions}
-                            setValue={setYearFilter}
-                        />
-                    </div>
+                    {user?.canAccessAll && (
+                        <div className={styles.filtersRow}>
+                            <SelectFilter
+                                options={facultyOptions}
+                                setValue={setFacultyFilter}
+                            />
+                            <SelectFilter
+                                options={departmentOptions}
+                                setValue={setDepartmentFilter}
+                            />
+                            <SelectFilter
+                                options={yearOptions}
+                                setValue={setYearFilter}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.courseGrid}>
