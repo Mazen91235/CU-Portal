@@ -28,7 +28,7 @@ import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 
 import styles from "./ExamsPage.module.css";
-import { formatDate, formatTime } from "../../../utils/Formatter";
+import { formatDateTime } from "../../../utils/Formatter";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
@@ -344,14 +344,15 @@ export const ExamsPage = () => {
                                     value: exam.faculty?.name || "N/A",
                                 },
                                 {
-                                    icon: "calendar",
-                                    label: "Date",
-                                    value: formatDate(exam.due_date) || "N/A",
+                                    icon: "subject",
+                                    label: "Subject",
+                                    value: exam.subject?.name || "N/A",
                                 },
                                 {
-                                    icon: "time",
-                                    label: "Time",
-                                    value: formatTime(exam.deadline) || "N/A",
+                                    icon: "calendar",
+                                    label: "Date",
+                                    value:
+                                        formatDateTime(exam.deadline) || "N/A",
                                 },
                                 {
                                     icon: "location",

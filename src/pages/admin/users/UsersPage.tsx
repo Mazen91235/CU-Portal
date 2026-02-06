@@ -194,16 +194,12 @@ export const UsersPage = () => {
         }
     };
 
-    const handleViewUser = (userId: number) => {
-        navigate(`/admin/users/${userId}`);
-    };
-
-    const getRoleBadgeClass = (roleName: string) => {
+    const getRoleBadgeClass = useCallback((roleName: string) => {
         const lowerRole = roleName.toLowerCase();
         if (lowerRole.includes("admin")) return styles.roleAdmin;
         if (lowerRole.includes("student")) return styles.roleStudent;
         return styles.roleDefault;
-    };
+    }, []);
 
     const tableData = useMemo(() => {
         if (usersLoading && users.length === 0) {
@@ -217,9 +213,6 @@ export const UsersPage = () => {
                 <span key={user.id} className={styles.tableEmail}>
                     {user.email || "N/A"}
                 </span>,
-                user.faculty?.name || "N/A",
-                user.department?.name || "N/A",
-                user.year?.year || "N/A",
                 <span
                     key={`${user.id}-role`}
                     className={getRoleBadgeClass(user.role?.name || "")}
@@ -227,9 +220,9 @@ export const UsersPage = () => {
                     {user.role?.name || "N/A"}
                 </span>,
             ],
-            onClick: () => handleViewUser(user.id!),
+            onClick: () => navigate(`/admin/users/${user.id}`),
         }));
-    }, [users, usersLoading]);
+    }, [users, usersLoading, getRoleBadgeClass, navigate]);
 
     return (
         <Layout>
@@ -374,15 +367,7 @@ export const UsersPage = () => {
                     </div>
                 ) : (
                     <Table
-                        columns={[
-                            "Name",
-                            "Phone",
-                            "E-Mail",
-                            "Faculty",
-                            "Department",
-                            "Academic Year",
-                            "Role",
-                        ]}
+                        columns={["Name", "Phone", "E-Mail", "Role"]}
                         data={tableData}
                         action={true}
                     />

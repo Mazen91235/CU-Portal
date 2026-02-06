@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import snapshot1 from "../../assets/snapshots/dashboard-view-2.png";
-import snapshot2 from "../../assets/snapshots/dashboard-view-1.png";
+import snapshot1 from "../../assets/snapshots/snapshot1.png";
+import snapshot2 from "../../assets/snapshots/snapshot2.png";
 import styles from "./Snapshots.module.css";
 
 export const Snapshots = ({
