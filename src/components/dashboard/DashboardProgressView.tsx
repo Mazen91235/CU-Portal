@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import type { User } from "../../types/entities/User";
+import { usePageLoading } from "../../hooks/usePageLoading";
 
 import welcomeCharacter from "../../assets/decorations/login-illustration.png";
 import styles from "./DashboardProgressView.module.css";
@@ -22,6 +23,7 @@ export const DashboardProgressView = ({
     userLevel: number;
     user: User;
 }) => {
+    usePageLoading(true);
     const steps: ProgressStep[] = [
         {
             id: 1,
