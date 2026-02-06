@@ -32,6 +32,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         const handlePageLoad = async () => {
+            if (!searchParams) return;
             if (token) {
                 const tokenParts = token.split("___");
                 dispatch(setIsProcessing(true));
@@ -41,7 +42,7 @@ const LoginPage = () => {
             }
         };
         handlePageLoad();
-    }, [token, startedLoading, dispatch, startPageLoading]);
+    }, [token, startedLoading, searchParams, dispatch, startPageLoading]);
 
     useEffect(() => {
         if (startPageLoading && startedLoading) startPageLoading();
