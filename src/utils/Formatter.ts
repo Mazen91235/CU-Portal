@@ -15,6 +15,7 @@ export const formatDateTime = (
         date = new Date(dateTimeString);
     }
     if (toDate) {
+        date.setHours(date.getHours() + getDiffHours(date));
         return date.toISOString();
     }
     return date.toLocaleTimeString([], {
@@ -24,6 +25,18 @@ export const formatDateTime = (
         hour: "2-digit",
         minute: "2-digit",
     });
+};
+
+const getDiffHours = (date: Date): number => {
+    const dateLocal = date.toLocaleString("en-US", {
+        timeZone: "Africa/Cairo",
+    });
+    const dateLocalObj = new Date(dateLocal);
+    const dateUTC = date.toLocaleString("en-US", {
+        timeZone: "UTC",
+    });
+    const dateUTCObj = new Date(dateUTC);
+    return (dateLocalObj.getTime() - dateUTCObj.getTime()) / (1000 * 60 * 60);
 };
 
 export const formatDate = (dateString?: string | null): string => {
