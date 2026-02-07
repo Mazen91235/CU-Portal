@@ -164,7 +164,7 @@ export const EditAnnouncement = () => {
                 title: data.title,
                 content: data.content || undefined,
                 subject_id: parseInt(data.subject_id),
-                urls: urls ? urls.split(", ") : undefined,
+                urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
                         ? data.links

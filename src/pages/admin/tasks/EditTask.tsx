@@ -175,7 +175,7 @@ export const EditTask = () => {
                 submission_url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
                 deadline: data.deadline || undefined,
-                urls: urls ? urls.split(", ") : undefined,
+                urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
                         ? data.links

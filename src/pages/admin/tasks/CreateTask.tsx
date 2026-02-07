@@ -109,7 +109,7 @@ export const CreateTask = () => {
                 submission_url: data.submission_url,
                 subject_id: parseInt(data.subject_id),
                 deadline: data.deadline,
-                urls: urls?.split(", "),
+                urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
                     .map((pair) => {

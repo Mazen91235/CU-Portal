@@ -105,7 +105,7 @@ export const CreateAnnouncement = () => {
                 title: data.title,
                 content: data.content,
                 subject_id: parseInt(data.subject_id),
-                urls: urls?.split(", "),
+                urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
                     .map((pair) => {
