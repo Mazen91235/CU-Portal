@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
-import { showToast } from "../../utils/ToastsManager";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { formatFileSize } from "../../utils/Formatter";
+import { useAppDispatch } from "../../services/redux/Hooks";
+import { setProcess } from "../../services/redux/reducers/ProcessReducer";
+import type { Process } from "../../types/Process";
 import styles from "./BulkUploadModal.module.css";
 
 type BulkUploadModalProps = {
     files: File[];
     onClose: () => void;
-    onMaterialCreate: (name: string, url: string) => Promise<void>;
+    onMaterialCreate: (uploadResult: Process) => Promise<void>;
 };
 
 export function BulkUploadModal({
@@ -17,7 +18,7 @@ export function BulkUploadModal({
     onMaterialCreate,
 }: BulkUploadModalProps) {
     const [files, setFiles] = useState<File[]>(initialFiles);
-    const [isUploading, setIsUploading] = useState(false);
+    const dispatch = useAppDispatch();
     const uploadFileToDrive = useUploadFileToDriveChunked({});
     const [isDragOver, setIsDragOver] = useState(false);
 
@@ -64,39 +65,27 @@ export function BulkUploadModal({
     };
 
     const handleSubmit = async () => {
-        if (files.length === 0 || isUploading) return;
+        if (files.length === 0) return;
 
-        setIsUploading(true);
-
-        try {
-            // Upload files sequentially
-            for (const file of files) {
-                // Upload file to Google Drive
-                const result = await uploadFileToDrive(file, file.name);
-
-                if (!result?.url) {
-                    showToast(
-                        "error",
-                        "Error",
-                        `Failed to upload ${file.name}`,
+        onClose();
+        // Upload files sequentially
+        for (const file of files) {
+            // Upload file to Google Drive
+            uploadFileToDrive(file, file.name).then((result) => {
+                if (!result) return;
+                if (!result.url) {
+                    dispatch(
+                        setProcess({
+                            ...result,
+                            status: "failed",
+                            reason: "Failed to upload file",
+                        }),
                     );
-                    continue;
+                    return;
                 }
-
                 // Create material with the uploaded file URL
-                await onMaterialCreate(file.name, result.url);
-            }
-
-            showToast(
-                "success",
-                "Success",
-                `${files.length} file${files.length > 1 ? "s" : ""} uploaded successfully`,
-            );
-            onClose();
-        } catch (error) {
-            handlePopupErrors(error);
-        } finally {
-            setIsUploading(false);
+                onMaterialCreate(result);
+            });
         }
     };
 
@@ -165,27 +154,18 @@ export function BulkUploadModal({
                     <button
                         className={styles.cancelBtn}
                         onClick={onClose}
-                        disabled={isUploading}
+                        disabled={false}
                     >
                         Cancel
                     </button>
                     <button
                         className={styles.submitBtn}
                         onClick={handleSubmit}
-                        disabled={files.length === 0 || isUploading}
+                        disabled={files.length === 0}
                     >
-                        {isUploading ? (
-                            <>
-                                <i className="fa-solid fa-spinner fa-spin me-2"></i>
-                                Uploading...
-                            </>
-                        ) : (
-                            <>
-                                <i className="fa-solid fa-upload me-2"></i>
-                                Upload {files.length} file
-                                {files.length !== 1 ? "s" : ""}
-                            </>
-                        )}
+                        <i className="fa-solid fa-upload me-2"></i>
+                        Upload {files.length} file
+                        {files.length !== 1 ? "s" : ""}
                     </button>
                 </div>
             </div>

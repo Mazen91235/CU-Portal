@@ -54,7 +54,6 @@ export const AcademicSettings = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
 
     const facultyChanged = (e: ChangeEvent<HTMLSelectElement>) => {
-        console.log("Selected faculty ID:", e.target.value);
         const selectedFaculty =
             faculties.find((fac) => fac.id === parseInt(e.target.value, 10)) ||
             null;

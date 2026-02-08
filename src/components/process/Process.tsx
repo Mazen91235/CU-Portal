@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "../../services/redux/Hooks";
-import styles from "./Process.module.css";
 import { formatString } from "../../utils/Formatter";
+import type { Process } from "../../types/Process";
+import { showToast } from "../../utils/ToastsManager";
+import { useNavigate } from "react-router";
+import styles from "./Process.module.css";
 
 export function Process() {
     const processes = useAppSelector((state) => state.process.processes);
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
     const inProgressProcesses = useMemo(
@@ -41,6 +45,13 @@ export function Process() {
         setIsOpen(!isOpen);
     };
 
+    const handleClick = (process: Process) => {
+        if (!["failed", "completed"].includes(process.status)) return;
+        if (process.status == "failed")
+            showToast("error", "Error", process.reason || "Unknown error");
+        else if (process.url) navigate(process.url);
+    };
+
     return (
         <div
             className={`${styles.processContainer} ${isOpen ? styles.open : ""}`}
@@ -58,9 +69,10 @@ export function Process() {
                         <div
                             key={process.id}
                             className={`${styles.processItem} ${styles[process.status]}`}
+                            onClick={() => handleClick(process)}
                         >
                             <span className={styles.processName}>
-                                {formatString(process.name, 15)}
+                                {formatString(process.name, 30)}
                             </span>
                             <div className={styles.circularProgress}>
                                 <svg
@@ -90,10 +102,10 @@ export function Process() {
                                     ></circle>
                                 </svg>
                                 <div className={styles.spinnerBorder}></div>
-                                <div className={styles.done}>
+                                <div className={styles.completedIcon}>
                                     <i className="fa-solid fa-check"></i>
                                 </div>
-                                <div className={styles.failed}>
+                                <div className={styles.failedIcon}>
                                     <i className="fa-solid fa-times"></i>
                                 </div>
                                 <span className={styles.progressText}>

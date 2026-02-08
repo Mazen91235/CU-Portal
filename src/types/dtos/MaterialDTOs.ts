@@ -1,7 +1,7 @@
 import type { SearchDto } from "./SearchDTOs";
 
 export type MaterialSearchDto = {
-    name?: string | null;
+    type?: "file" | "folder" | "drive" | "youtube" | "external";
     subject_id?: number | null;
     parent_id?: number | null;
     faculty_id?: number | null;

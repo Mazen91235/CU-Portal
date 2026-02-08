@@ -63,19 +63,34 @@ export const DriveAPI = createApi({
                 total: number;
             }
         >({
-            query: ({ sessionUrl, chunk, start, end, total }) => ({
-                url: sessionUrl,
-                method: "PUT",
-                body: chunk,
-                headers: {
-                    "Content-Range": `bytes ${start}-${end}/${total}`,
-                    "Content-Type": "application/octet-stream",
-                },
-            }),
-            transformResponse: (_, meta) => ({
-                status: meta?.response?.status || 0,
-                range: meta?.response?.headers?.get("Range") || "",
-            }),
+            async queryFn(
+                { sessionUrl, chunk, start, end, total },
+                _api,
+                _extraOptions,
+                baseQuery,
+            ) {
+                const result = await baseQuery({
+                    url: sessionUrl,
+                    method: "PUT",
+                    body: chunk,
+                    headers: {
+                        "Content-Range": `bytes ${start}-${end}/${total}`,
+                        "Content-Type": "application/octet-stream",
+                    },
+                });
+
+                if (result.error && result.error.status === 308) {
+                    const response = result.meta?.response;
+                    return {
+                        data: {
+                            status: 308,
+                            range: response?.headers.get("Range") || "",
+                        },
+                    };
+                }
+
+                return result.error ? { error: result.error } : { data: {} };
+            },
         }),
         finalizeUpload: builder.mutation<
             string,

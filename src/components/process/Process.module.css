@@ -108,18 +108,11 @@
     display: none;
 }
 
-.done {
+.failedIcon,
+.completedIcon {
+    display: none;
     width: 45px;
     height: 45px;
-    position: absolute;
-    display: none;
-}
-
-.failed {
-    width: 45px;
-    height: 45px;
-    position: absolute;
-    display: none;
 }
 
 .pending .spinnerBorder {
@@ -151,12 +144,12 @@
     }
 }
 
-.done .progressBar,
-.done .progressText {
+.completed .progressBar,
+.completed .progressText {
     display: none;
 }
 
-.done .done {
+.completed .completedIcon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -169,12 +162,18 @@
     font-size: 1.2rem;
 }
 
+.failed,
+.completed {
+    cursor: pointer;
+    user-select: none;
+}
+
 .failed .progressBar,
 .failed .progressText {
     display: none;
 }
 
-.failed .failed {
+.failed .failedIcon {
     display: flex;
     align-items: center;
     justify-content: center;

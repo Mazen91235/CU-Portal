@@ -5,7 +5,7 @@ import type { User } from "./User";
 export type Material = {
     id?: number;
     name?: string;
-    type?: string;
+    type?: "file" | "folder" | "drive" | "youtube" | "external";
     url?: string;
     subject?: Subject | null;
     subject_id?: number | null;

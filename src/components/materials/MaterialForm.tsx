@@ -1,20 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import type { Material } from "../../types/entities/Material";
 import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
-import styles from "./MaterialForm.module.css";
 import { Button } from "../forms/Button";
 import type { FileData } from "../../types/entities/Task";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { useAppDispatch } from "../../services/redux/Hooks";
 import { setProcess } from "../../services/redux/reducers/ProcessReducer";
 import type { Process } from "../../types/Process";
+import styles from "./MaterialForm.module.css";
 
 interface MaterialFormProps {
     materialType: "folder" | "file" | "drive" | "youtube" | "external" | null;
     material: Material | null;
     parentId: number | null;
     onClose: () => void;
-    onSubmit: (data: FormData) => Promise<void>;
+    onSubmit: (data: FormData, uploadResult?: Process) => Promise<void>;
 }
 
 export function MaterialForm({
@@ -87,15 +87,28 @@ export function MaterialForm({
             if (material && material.id) {
                 formData.append("id", material.id.toString());
             }
-            let process: Process | null = null;
             if (materialType === "file") {
                 if (file) {
-                    process = (await uploadFile(file, name)) || null;
-                    if (process) {
-                        formData.append("url", process.url || "");
-                    }
+                    onClose();
+                    uploadFile(file, name).then((result) => {
+                        if (!result) return;
+                        if (!result.url) {
+                            dispatch(
+                                setProcess({
+                                    ...result,
+                                    status: "failed",
+                                    reason: "Failed to upload file",
+                                }),
+                            );
+                            return;
+                        }
+                        formData.append("url", result.url);
+                        onSubmit(formData, result);
+                    });
                 } else if (existingFileData) {
                     formData.append("url", existingFileData.url || "");
+                    await onSubmit(formData);
+                    onClose();
                 }
             } else if (
                 materialType === "drive" ||
@@ -103,12 +116,12 @@ export function MaterialForm({
                 materialType === "external"
             ) {
                 formData.append("url", link);
+                await onSubmit(formData);
+                onClose();
+            } else if (materialType === "folder") {
+                await onSubmit(formData);
+                onClose();
             }
-
-            await onSubmit(formData);
-            if (process)
-                dispatch(setProcess({ ...process, status: "completed" }));
-            onClose();
         } catch (error) {
             handlePopupErrors(error);
         } finally {

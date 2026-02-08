@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { Material } from "../../types/entities/Material";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./FloatingContainer.module.css";
 
 interface FloatingContainerProps {
@@ -11,6 +12,7 @@ interface FloatingContainerProps {
     onClose: () => void;
     onConfirm: (targetId: number | null) => void;
     onNavigate: (folderId: number | null) => void;
+    onCreateFolder: (name: string, parentId: number | null) => Promise<void>;
 }
 
 export function FloatingContainer({
@@ -22,8 +24,12 @@ export function FloatingContainer({
     onClose,
     onConfirm,
     onNavigate,
+    onCreateFolder,
 }: FloatingContainerProps) {
     const [selectedTarget, setSelectedTarget] = useState<number | null>(null);
+    const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [newFolderName, setNewFolderName] = useState("");
 
     const selectedMaterialsData = materials.filter(
         (m) => m.id && selectedMaterials.includes(m.id),
@@ -45,23 +51,41 @@ export function FloatingContainer({
 
     const handleFolderDoubleClick = (folderId: number) => {
         onNavigate(folderId);
-        setSelectedTarget(null);
-    };
-
-    const handleBackClick = () => {
-        if (currentPath.length > 0) {
-            const parentId =
-                currentPath.length > 1
-                    ? (currentPath[currentPath.length - 2].id ?? null)
-                    : null;
-            onNavigate(parentId);
-            setSelectedTarget(null);
-        }
+        setSelectedTarget(folderId);
     };
 
     const handleRootClick = () => {
         onNavigate(null);
         setSelectedTarget(null);
+    };
+
+    const handleCreateFolder = async () => {
+        if (!newFolderName.trim()) {
+            return;
+        }
+        try {
+            setIsLoading(true);
+            await onCreateFolder(newFolderName.trim(), currentFolderId ?? null);
+            setNewFolderName("");
+            setIsCreatingFolder(false);
+        } catch (error) {
+            handlePopupErrors(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancelCreateFolder = () => {
+        setNewFolderName("");
+        setIsCreatingFolder(false);
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleCreateFolder();
+        } else if (e.key === "Escape") {
+            handleCancelCreateFolder();
+        }
     };
 
     return (
@@ -71,9 +95,10 @@ export function FloatingContainer({
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.header}>
-                    <h3>
+                    <h3 className={styles.dialogTitle}>
                         {operation === "copy" ? "Copy" : "Move"}{" "}
-                        {selectedMaterials.length} item(s)
+                        {selectedMaterials.length} Material
+                        {selectedMaterials.length !== 1 ? "s" : ""} to...
                     </h3>
                     <button className={styles.closeButton} onClick={onClose}>
                         ×
@@ -105,14 +130,11 @@ export function FloatingContainer({
                     ))}
                 </div>
 
-                <div className={styles.breadcrumb}>
-                    <button
-                        className={styles.breadcrumbBtn}
-                        onClick={handleRootClick}
-                    >
+                <div className={styles.navigationPath}>
+                    <div className={styles.pathSegment}>
                         <svg
-                            width="16"
-                            height="16"
+                            width="18"
+                            height="18"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -120,84 +142,110 @@ export function FloatingContainer({
                         >
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                         </svg>
-                        Home
-                    </button>
-                    {currentPath.map((folder) => (
-                        <div
-                            key={folder.id}
-                            className={styles.breadcrumbSegment}
-                        >
-                            <svg
-                                className={styles.separator}
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
+                        Materials
+                    </div>
+                    <div className={styles.pathSeparator}>{">"}</div>
+                    <div
+                        className={`${styles.pathSegment} ${!currentPath.length ? styles.active : ""}`}
+                        onClick={handleRootClick}
+                        style={{
+                            cursor:
+                                currentFolderId === null
+                                    ? "default"
+                                    : "pointer",
+                        }}
+                    >
+                        Subject Root
+                    </div>
+                    {currentPath.map((folder, index) => (
+                        <React.Fragment key={folder.id}>
+                            <div className={styles.pathSeparator}>{">"}</div>
+                            <div
+                                className={`${styles.pathSegment} ${index === currentPath.length - 1 ? styles.active : ""}`}
+                                onClick={() =>
+                                    index !== currentPath.length - 1 &&
+                                    folder.id &&
+                                    onNavigate(folder.id)
+                                }
+                                style={{
+                                    cursor:
+                                        index === currentPath.length - 1
+                                            ? "default"
+                                            : "pointer",
+                                }}
                             >
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
-                            <span className={styles.breadcrumbText}>
                                 {folder.name}
-                            </span>
-                        </div>
+                            </div>
+                        </React.Fragment>
                     ))}
-                </div>
-
-                <div className={styles.navigation}>
-                    {currentPath.length > 0 && (
-                        <button
-                            className={styles.backButton}
-                            onClick={handleBackClick}
-                        >
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                <polyline points="15 18 9 12 15 6" />
-                            </svg>
-                            Back
-                        </button>
-                    )}
                     <button
-                        className={`${styles.selectCurrentBtn} ${selectedTarget === currentFolderId ? styles.selected : ""}`}
-                        onClick={() =>
-                            setSelectedTarget(currentFolderId ?? null)
-                        }
+                        className={styles.newFolderBtn}
+                        onClick={() => setIsCreatingFolder(true)}
                     >
                         <svg
-                            width="20"
-                            height="20"
+                            width="14"
+                            height="14"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="2"
+                            strokeWidth="2.5"
                         >
-                            <polyline points="20 6 9 17 4 12" />
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        Select Current Folder
+                        New Folder
                     </button>
                 </div>
+
+                {isCreatingFolder && (
+                    <div className={styles.addFolderContainer}>
+                        <input
+                            type="text"
+                            className={styles.newFolderInput}
+                            placeholder="Folder name"
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            disabled={isLoading}
+                            autoFocus
+                        />
+                        <div className={styles.newFolderActions}>
+                            <button
+                                className={styles.createButton}
+                                onClick={handleCreateFolder}
+                                disabled={!newFolderName.trim() || isLoading}
+                            >
+                                Create
+                            </button>
+                            <button
+                                className={styles.cancelCreateButton}
+                                onClick={handleCancelCreateFolder}
+                                disabled={isLoading}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className={styles.folderList}>
                     {folders.length === 0 ? (
                         <div className={styles.emptyState}>
                             <svg
-                                width="48"
-                                height="48"
+                                width="64"
+                                height="64"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
-                                strokeWidth="2"
+                                strokeWidth="1.5"
                             >
                                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                             </svg>
-                            <p>No folders here</p>
+                            <h3>No Folders Found.</h3>
+                            <p>
+                                Create a new folder or just leave materials
+                                here.
+                            </p>
                         </div>
                     ) : (
                         folders.map((folder) => (
@@ -212,30 +260,27 @@ export function FloatingContainer({
                                     handleFolderDoubleClick(folder.id)
                                 }
                             >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                                </svg>
+                                <div className={styles.folderIcon}>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                    >
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                </div>
                                 <span className={styles.folderName}>
-                                    {folder.name}
+                                    {folder.name && folder.name.length > 20
+                                        ? folder.name.substring(0, 15) +
+                                          "..." +
+                                          folder.name.substring(
+                                              folder.name.length - 5,
+                                          )
+                                        : folder.name || "Untitled"}
                                 </span>
-                                <svg
-                                    className={styles.chevron}
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <polyline points="9 18 15 12 9 6" />
-                                </svg>
                             </div>
                         ))
                     )}
@@ -248,7 +293,6 @@ export function FloatingContainer({
                     <button
                         className={styles.confirmButton}
                         onClick={handleConfirm}
-                        disabled={selectedTarget === null}
                     >
                         {operation === "copy" ? "Copy Here" : "Move Here"}
                     </button>

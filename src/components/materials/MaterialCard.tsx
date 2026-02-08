@@ -25,6 +25,7 @@ type MaterialCardProps = {
     onDownload?: (fileId: string, fileName: string) => void;
     onOpenLink?: (url: string) => void;
     className?: string;
+    isDraggingGlobal?: boolean;
 };
 
 export const MaterialCard = ({
@@ -42,6 +43,7 @@ export const MaterialCard = ({
     onOpenLink,
     onDrop,
     className = "",
+    isDraggingGlobal = false,
 }: MaterialCardProps) => {
     const [clickCount, setClickCount] = useState(0);
     const clickTimeoutRef = useRef<number | null>(null);
@@ -72,7 +74,10 @@ export const MaterialCard = ({
             if (moveX > 10 || moveY > 10) {
                 setIsDragging(true);
                 if (material.id) {
-                    onClick(material.id);
+                    // Select without toggling during drag
+                    if (!isSelected) {
+                        onClick(material.id);
+                    }
                     onDragStart(material.id);
                 }
                 document.removeEventListener("mousemove", handleMouseMove);
@@ -119,7 +124,6 @@ export const MaterialCard = ({
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("Dropped on material", material.id);
         if (onDrop) {
             onDrop(material.id || null);
         }
@@ -135,14 +139,12 @@ export const MaterialCard = ({
 
     const handleCopy = () => {
         if (material.id) {
-            onClick(material.id);
             onCopy(material.id);
         }
     };
 
     const handleMove = () => {
         if (material.id) {
-            onClick(material.id);
             onMove(material.id);
         }
     };
@@ -179,6 +181,11 @@ export const MaterialCard = ({
         }
     };
 
+    const handleMouseUpInDrag = () => {
+        if (isFolder && isDragOver && onDrop) {
+            onDrop(material.id || null);
+        }
+    };
     const truncateName = (name: string, maxLength = 30) => {
         if (name.length <= maxLength) return name;
         return `${name.substring(0, 25)}...${name.substring(name.length - 5)}`;
@@ -191,13 +198,14 @@ export const MaterialCard = ({
                 data-id={material.id}
                 onMouseDown={handleMouseDown}
                 onMouseEnter={() => {
-                    if (isDragging) {
+                    if (isDraggingGlobal) {
                         setIsDragOver(true);
                     }
                 }}
                 onMouseLeave={() => {
                     setIsDragOver(false);
                 }}
+                onMouseUp={handleMouseUpInDrag}
                 onDrop={handleDrop}
             >
                 <span className={styles.materialSelectedIcon}>

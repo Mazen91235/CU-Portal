@@ -49,7 +49,8 @@
 .breadcrumbItem.dragOver {
     background: rgba(124, 59, 237, 0.1);
     color: var(--primary-purple);
-    border: 2px dashed var(--primary-purple);
+    border: 1px dashed var(--primary-purple) !important;
+    padding: calc(0.5rem - 1px) calc(0.75rem - 1px);
 }
 
 .separator {

@@ -102,7 +102,7 @@ export const AdminMaterialAPI = createApi({
             { material_id: number } & MaterialRegisterDto
         >({
             query: ({ material_id, ...data }) => ({
-                url: `/${material_id}`,
+                url: `/update/${material_id}`,
                 method: "PATCH",
                 credentials: "include",
                 body: data,

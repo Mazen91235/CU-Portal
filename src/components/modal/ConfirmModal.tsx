@@ -10,6 +10,7 @@ type ConfirmModalProps = {
     title?: string;
     message?: string;
     colorType?: "orange" | "green" | "red";
+    disabled?: boolean;
 };
 
 const ConfirmModal = ({
@@ -20,12 +21,12 @@ const ConfirmModal = ({
     title = "Are you sure?",
     message = "This action might affect other data.",
     colorType = "orange",
+    disabled = false,
 }: ConfirmModalProps) => {
     if (!isOpen) return null;
 
     const handleConfirm = () => {
         onConfirm();
-        onClose();
     };
 
     const colorClass =
@@ -51,12 +52,17 @@ const ConfirmModal = ({
                     <p className={styles.message}>{message}</p>
 
                     <div className={styles.buttonRow}>
-                        <button className={styles.cancelBtn} onClick={onClose}>
+                        <button
+                            className={styles.cancelBtn}
+                            onClick={onClose}
+                            disabled={disabled}
+                        >
                             Cancel
                         </button>
                         <button
                             className={`${styles.confirmBtn} ${colorClass}`}
                             onClick={handleConfirm}
+                            disabled={disabled}
                         >
                             {confirmText}
                         </button>

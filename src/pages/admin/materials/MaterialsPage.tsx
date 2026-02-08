@@ -21,7 +21,7 @@ import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useAppSelector } from "../../../services/redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
@@ -38,11 +38,26 @@ import { BulkUploadModal } from "../../../components/materials/BulkUploadModal";
 
 import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
 import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
-import styles from "./MaterialsPage.module.css";
 import { Banner } from "../../../components/banner/Banner";
+import type { Process } from "../../../types/Process";
+import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
+import { useSearchParams } from "react-router";
+import type {
+    DefaultAPIResponse,
+    GenericAPIResponse,
+} from "../../../types/responses/GenericAPIResponse";
+import { useCreateProcess } from "../../../hooks/useHandleProcesses";
+import styles from "./MaterialsPage.module.css";
 
 export function MaterialsPage() {
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [materialFromUrl, setMaterialFromUrl] = useState<{
+        id?: number;
+        subject_id?: number;
+        parent_id?: number | null;
+    } | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -61,6 +76,7 @@ export function MaterialsPage() {
 
     const [currentPath, setCurrentPath] = useState<Material[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
+    const [floatingFolders, setFloatingFolders] = useState<Material[]>([]);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
     const [formData, setFormData] = useState<{
@@ -101,9 +117,11 @@ export function MaterialsPage() {
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
     const [updateMaterial] = useUpdateMaterialMutation();
-    const [deleteMaterial] = useDeleteMaterialMutation();
+    const [deleteMaterial, { isLoading: isDeleting }] =
+        useDeleteMaterialMutation();
     const [copyMaterials] = useCopyMaterialsMutation();
-    const [moveMaterials] = useMoveMaterialsMutation();
+    const [moveMaterials, { isLoading: isMoving }] = useMoveMaterialsMutation();
+    const createProcess = useCreateProcess({});
 
     const fetchFaculties = useCallback(async () => {
         try {
@@ -173,24 +191,66 @@ export function MaterialsPage() {
         }
     }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
 
-    const fetchMaterials = useCallback(async () => {
-        if (!subjectFilter) return;
+    const fetchMaterials = useCallback(
+        async (parentId?: number | null) => {
+            if (!subjectFilter) return;
 
-        try {
-            const parentId =
-                currentPath.length > 0
-                    ? currentPath[currentPath.length - 1].id
-                    : null;
-            const response = await getMaterials({
-                subject_id: parseInt(subjectFilter),
-                parent_id: parentId ?? undefined,
-                query: searchQuery || undefined,
-            }).unwrap();
-            setMaterials(response.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [subjectFilter, currentPath, searchQuery, getMaterials]);
+            if (materialFromUrl?.subject_id) {
+                setSubjectFilter(materialFromUrl.subject_id.toString());
+                setMaterialFromUrl(
+                    (prev) => prev && { ...prev, subject_id: undefined },
+                );
+            }
+            if (!parentId)
+                parentId =
+                    currentPath.length > 0
+                        ? currentPath[currentPath.length - 1].id
+                        : null;
+
+            if (materialFromUrl?.parent_id !== undefined) {
+                parentId = materialFromUrl.parent_id ?? null;
+                setMaterialFromUrl(
+                    (prev) => prev && { ...prev, parent_id: undefined },
+                );
+            }
+
+            try {
+                const response = await getMaterials({
+                    subject_id: parseInt(subjectFilter),
+                    parent_id: parentId ?? undefined,
+                    query: searchQuery || undefined,
+                }).unwrap();
+                setMaterials(response.data || []);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        },
+        [
+            subjectFilter,
+            currentPath,
+            materialFromUrl,
+            searchQuery,
+            getMaterials,
+        ],
+    );
+
+    const fetchFolders = useCallback(
+        async (parentId?: number | null) => {
+            if (!subjectFilter) return;
+
+            try {
+                const response = await getMaterials({
+                    type: "folder",
+                    subject_id: parseInt(subjectFilter),
+                    parent_id: parentId ?? undefined,
+                }).unwrap();
+                setFloatingFolders(response.data || []);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        },
+        [subjectFilter, getMaterials],
+    );
 
     useEffect(() => {
         setCurrentPath([]);
@@ -206,6 +266,7 @@ export function MaterialsPage() {
                 fetchYears(),
                 fetchSubjects(),
                 fetchMaterials(),
+                fetchFolders(),
             ]),
         [
             fetchFaculties,
@@ -213,31 +274,35 @@ export function MaterialsPage() {
             fetchYears,
             fetchSubjects,
             fetchMaterials,
+            fetchFolders,
         ],
     );
 
     useAuthQuery(authQueryParams);
 
-    const handleNavigate = async (material: Material | null) => {
-        if (material === null) {
-            setCurrentPath([]);
-        } else {
-            if (!material.id) {
-                showToast("error", "Error", "Invalid material");
-                return;
+    const handleNavigate = useCallback(
+        async (material: Material | null) => {
+            if (material === null) {
+                setCurrentPath([]);
+            } else {
+                if (!material.id) {
+                    showToast("error", "Error", "Invalid material");
+                    return;
+                }
+                try {
+                    const response = await getMaterialParents({
+                        material_id: material.id,
+                    }).unwrap();
+                    setCurrentPath([...(response.data || [])]);
+                } catch (error) {
+                    handlePopupErrors(error);
+                }
             }
-            try {
-                const response = await getMaterialParents({
-                    material_id: material.id,
-                }).unwrap();
-                setCurrentPath([...(response.data || [])]);
-            } catch (error) {
-                handlePopupErrors(error);
-            }
-        }
-        setSelectedMaterials([]);
-        setIsSelectionMode(false);
-    };
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
+        },
+        [getMaterialParents],
+    );
 
     const handleCardClick = (materialId: number) => {
         if (isSelectionMode) {
@@ -293,17 +358,38 @@ export function MaterialsPage() {
 
     const confirmMove = async (targetId: number | null) => {
         if (selectedMaterials.length === 0) return;
-
+        const processName = `Moving ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+        setConfirmModal({ isOpen: false, action: null, targetId: null });
         try {
-            await moveMaterials({
-                material_ids: selectedMaterials,
-                destination_id: targetId ?? undefined,
-            }).unwrap();
-
-            showToast("success", "Success", "Materials moved successfully");
-            await fetchMaterials();
-            setSelectedMaterials([]);
-            setIsSelectionMode(false);
+            createProcess(processName).then(async (process) => {
+                try {
+                    await moveMaterials({
+                        material_ids: selectedMaterials,
+                        destination_id: targetId ?? undefined,
+                    }).unwrap();
+                    dispatch(setProcess({ ...process, status: "completed" }));
+                    setCurrentPath((prev) => {
+                        const latestParentId =
+                            prev.length > 0 ? prev[prev.length - 1].id : null;
+                        fetchMaterials(latestParentId);
+                        return prev;
+                    });
+                } catch (error) {
+                    const res =
+                        (error as Error).message ||
+                        (error as DefaultAPIResponse)?.data?.message ||
+                        "Move failed";
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            status: "failed",
+                            reason: res,
+                        }),
+                    );
+                }
+            });
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -362,8 +448,10 @@ export function MaterialsPage() {
             await fetchMaterials();
             setSelectedMaterials([]);
             setIsSelectionMode(false);
+            setConfirmModal({ isOpen: false, action: null });
         } catch (error) {
             handlePopupErrors(error);
+            setConfirmModal({ isOpen: false, action: null });
         }
     };
 
@@ -384,49 +472,100 @@ export function MaterialsPage() {
         setIsSelectionMode(false);
     };
 
-    const handleFormSubmit = async (data: FormData) => {
-        try {
-            const material = formData.material;
-            if (material && material.id) {
-                await updateMaterial({
-                    material_id: material.id,
-                    subject_id: parseInt(subjectFilter),
-                    ...Object.fromEntries(data),
-                }).unwrap();
-                showToast(
-                    "success",
-                    "Success",
-                    "Material updated successfully",
-                );
-            } else {
-                await createMaterial({
-                    subject_id: parseInt(subjectFilter),
-                    ...Object.fromEntries(data),
-                }).unwrap();
-                showToast(
-                    "success",
-                    "Success",
-                    "Material created successfully",
-                );
+    const handleFormSubmit = useCallback(
+        async (data: FormData, uploadResult?: Process) => {
+            try {
+                const material = formData.material;
+                let result: GenericAPIResponse<Material>;
+                if (material && material.id) {
+                    result = await updateMaterial({
+                        material_id: material.id,
+                        subject_id: parseInt(subjectFilter),
+                        ...Object.fromEntries(data),
+                    }).unwrap();
+                } else {
+                    result = await createMaterial({
+                        subject_id: parseInt(subjectFilter),
+                        ...Object.fromEntries(data),
+                    }).unwrap();
+                }
+                if (!uploadResult) {
+                    showToast(
+                        "success",
+                        "Success",
+                        material && material.id
+                            ? "Material updated successfully"
+                            : "Material created successfully",
+                    );
+                } else {
+                    const url = `/admin/materials?material_id=${result.data?.id}&subject_id=${subjectFilter}&parent_id=${currentPath[currentPath.length - 1]?.id ?? ""}`;
+                    dispatch(
+                        setProcess({
+                            ...uploadResult,
+                            status: "completed",
+                            url,
+                        }),
+                    );
+                }
+                setCurrentPath((prev) => {
+                    const latestParentId =
+                        prev.length > 0 ? prev[prev.length - 1].id : null;
+                    fetchMaterials(latestParentId);
+                    return prev;
+                });
+                setFormData({ show: false, type: null, material: null });
+            } catch (error) {
+                handlePopupErrors(error);
             }
-            await fetchMaterials();
-            setFormData({ show: false, type: null, material: null });
-        } catch (error) {
-            handlePopupErrors(error);
+        },
+        [
+            createMaterial,
+            dispatch,
+            fetchMaterials,
+            subjectFilter,
+            currentPath,
+            updateMaterial,
+            formData,
+        ],
+    );
+
+    const handleCopyMaterials = (materialId?: number) => {
+        if (materialId && !selectedMaterials.includes(materialId)) {
+            setSelectedMaterials([...selectedMaterials, materialId]);
+            setIsSelectionMode(true);
         }
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+        fetchFolders(parentId);
+        setFloatingContainer({
+            show: true,
+            operation: "copy",
+            targetPath: currentPath,
+        });
     };
 
-    const handleCopyMaterials = () => {
-        setFloatingContainer({ show: true, operation: "copy", targetPath: [] });
+    const handleMoveMaterials = (materialId?: number) => {
+        if (materialId && !selectedMaterials.includes(materialId)) {
+            setSelectedMaterials([...selectedMaterials, materialId]);
+            setIsSelectionMode(true);
+        }
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+        fetchFolders(parentId);
+        setFloatingContainer({
+            show: true,
+            operation: "move",
+            targetPath: currentPath,
+        });
     };
 
-    const handleMoveMaterials = () => {
-        setFloatingContainer({ show: true, operation: "move", targetPath: [] });
-    };
-
-    const handlePreview = (fileId: string, fileName: string) => {
+    const handlePreview = useCallback((fileId: string, fileName: string) => {
         setPreviewFile({ id: fileId, name: fileName });
-    };
+    }, []);
 
     const handleClosePreview = () => {
         setPreviewFile(null);
@@ -454,52 +593,127 @@ export function MaterialsPage() {
                 const response = await getMaterialParents({
                     material_id: folderId,
                 }).unwrap();
-                const folder = materials.find((m) => m.id === folderId);
-                if (folder) {
-                    setFloatingContainer((prev) => ({
-                        ...prev,
-                        targetPath: [...(response.data || []), folder],
-                    }));
-                }
+                setFloatingContainer((prev) => ({
+                    ...prev,
+                    targetPath: [...(response.data || [])],
+                }));
             } catch (error) {
                 handlePopupErrors(error);
             }
         }
+        await fetchFolders(folderId);
     };
 
     const handleFloatingConfirm = async (targetId: number | null) => {
         if (selectedMaterials.length === 0) return;
-
+        const processName = `${floatingContainer.operation === "copy" ? "Copying" : "Moving"} ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+        setFloatingContainer({
+            show: false,
+            operation: "copy",
+            targetPath: [],
+        });
         try {
-            if (floatingContainer.operation === "copy") {
-                await copyMaterials({
-                    material_ids: selectedMaterials,
-                    destination_id: targetId ?? undefined,
-                }).unwrap();
-                showToast(
-                    "success",
-                    "Success",
-                    "Materials copied successfully",
-                );
-            } else {
-                await moveMaterials({
-                    material_ids: selectedMaterials,
-                    destination_id: targetId ?? undefined,
-                }).unwrap();
-                showToast("success", "Success", "Materials moved successfully");
-            }
-            await fetchMaterials();
-            setSelectedMaterials([]);
-            setIsSelectionMode(false);
-            setFloatingContainer({
-                show: false,
-                operation: "copy",
-                targetPath: [],
+            createProcess(processName).then(async (process) => {
+                try {
+                    if (!process) {
+                        showToast("error", "Error", "Failed to create process");
+                        return;
+                    }
+                    if (floatingContainer.operation === "copy") {
+                        await copyMaterials({
+                            material_ids: selectedMaterials,
+                            destination_id: targetId ?? undefined,
+                        }).unwrap();
+                    } else {
+                        await moveMaterials({
+                            material_ids: selectedMaterials,
+                            destination_id: targetId ?? undefined,
+                        }).unwrap();
+                    }
+                    dispatch(setProcess({ ...process, status: "completed" }));
+                    setCurrentPath((prev) => {
+                        const latestParentId =
+                            prev.length > 0 ? prev[prev.length - 1].id : null;
+                        fetchMaterials(latestParentId);
+                        return prev;
+                    });
+                } catch (error) {
+                    const res =
+                        (error as Error).message ||
+                        (error as DefaultAPIResponse)?.data?.message ||
+                        "Operation failed";
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            status: "failed",
+                            reason: res,
+                        }),
+                    );
+                }
             });
         } catch (error) {
             handlePopupErrors(error);
         }
     };
+
+    const handleCreateFolderInFloating = async (
+        name: string,
+        parentId: number | null,
+    ) => {
+        try {
+            await createMaterial({
+                name: name,
+                type: "folder",
+                parent_id: parentId ?? undefined,
+                subject_id: parseInt(subjectFilter),
+            }).unwrap();
+
+            showToast("success", "Success", "Folder created successfully");
+
+            // Refresh the materials list in the floating container
+            if (parentId === null) {
+                setFloatingContainer((prev) => ({ ...prev, targetPath: [] }));
+            }
+
+            await fetchFolders(parentId ?? undefined);
+        } catch (error) {
+            handlePopupErrors(error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        if (searchParams) {
+            const material_id = searchParams.get("material_id");
+            const subject_id = searchParams.get("subject_id");
+            const parent_id = searchParams.get("parent_id");
+            if (material_id || subject_id || parent_id) {
+                setMaterialFromUrl({
+                    id: material_id ? parseInt(material_id) : undefined,
+                    subject_id: subject_id ? parseInt(subject_id) : undefined,
+                    parent_id: parent_id ? parseInt(parent_id) : undefined,
+                });
+                setSearchParams({});
+                handleNavigate({
+                    id: parent_id ? parseInt(parent_id) : undefined,
+                });
+            }
+        }
+    }, [searchParams, setSearchParams, handleNavigate]);
+
+    useEffect(() => {
+        if (materialFromUrl && materialFromUrl.id && materials.length > 0) {
+            const material = materials.find((m) => m.id === materialFromUrl.id);
+            if (material) {
+                handlePreview(
+                    material.details?.file_data?.id || "",
+                    material.name || "Preview",
+                );
+            }
+        }
+    }, [materialFromUrl, materials, handlePreview]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.type === "folder"),
@@ -643,25 +857,34 @@ export function MaterialsPage() {
         setBulkUploadFiles(null);
     };
 
-    const handleCreateMaterialFromUpload = async (
-        name: string,
-        url: string,
-    ): Promise<void> => {
-        const parentId =
-            currentPath.length > 0
-                ? currentPath[currentPath.length - 1].id
-                : null;
+    const handleCreateMaterialFromUpload = useCallback(
+        async (uploadResult: Process): Promise<void> => {
+            const parentId =
+                currentPath.length > 0
+                    ? currentPath[currentPath.length - 1].id
+                    : null;
 
-        await createMaterial({
-            name: name,
-            type: "file",
-            subject_id: parseInt(subjectFilter),
-            parent_id: parentId ?? undefined,
-            url: url,
-        }).unwrap();
+            const result = await createMaterial({
+                name: uploadResult.name,
+                type: "file",
+                subject_id: parseInt(subjectFilter),
+                parent_id: parentId ?? undefined,
+                url: uploadResult.url,
+            }).unwrap();
 
-        await fetchMaterials();
-    };
+            const url = `/admin/materials?material_id=${result.data?.id}&subject_id=${subjectFilter}&parent_id=${currentPath[currentPath.length - 1]?.id ?? ""}`;
+
+            dispatch(setProcess({ ...uploadResult, status: "completed", url }));
+            setCurrentPath((prev) => {
+                const latestParentId =
+                    (prev.length > 0 ? prev[prev.length - 1] : null)?.id ??
+                    null;
+                fetchMaterials(latestParentId);
+                return prev;
+            });
+        },
+        [createMaterial, dispatch, fetchMaterials, subjectFilter, currentPath],
+    );
 
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
@@ -755,14 +978,14 @@ export function MaterialsPage() {
                                 </button>
                                 <button
                                     className={`${styles.selectionBtn} ${styles.copyBtn}`}
-                                    onClick={handleCopyMaterials}
+                                    onClick={() => handleCopyMaterials()}
                                 >
                                     <i className="fa fa-link me-2"></i>
                                     Copy to
                                 </button>
                                 <button
                                     className={`${styles.selectionBtn} ${styles.moveBtn}`}
-                                    onClick={handleMoveMaterials}
+                                    onClick={() => handleMoveMaterials()}
                                 >
                                     <i className="fa fa-folder me-2"></i>
                                     Move to
@@ -788,6 +1011,7 @@ export function MaterialsPage() {
                             path={currentPath}
                             onNavigate={handleNavigate}
                             onDrop={handleDropOnFolder}
+                            isDraggingGlobal={draggedFilesState.active}
                         />
 
                         <div className={styles.contentSection}>
@@ -820,11 +1044,18 @@ export function MaterialsPage() {
                                             onDelete={() =>
                                                 handleDeleteMaterials(folderId)
                                             }
-                                            onCopy={() => handleCopyMaterials()}
-                                            onMove={() => handleMoveMaterials()}
+                                            onCopy={() =>
+                                                handleCopyMaterials(folderId)
+                                            }
+                                            onMove={() =>
+                                                handleMoveMaterials(folderId)
+                                            }
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
+                                            isDraggingGlobal={
+                                                draggedFilesState.active
+                                            }
                                         />
                                     );
                                 })}
@@ -853,11 +1084,18 @@ export function MaterialsPage() {
                                             onDelete={() =>
                                                 handleDeleteMaterials(fileId)
                                             }
-                                            onCopy={() => handleCopyMaterials()}
-                                            onMove={() => handleMoveMaterials()}
+                                            onCopy={() =>
+                                                handleCopyMaterials(fileId)
+                                            }
+                                            onMove={() =>
+                                                handleMoveMaterials(fileId)
+                                            }
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
+                                            isDraggingGlobal={
+                                                draggedFilesState.active
+                                            }
                                         />
                                     );
                                 })}
@@ -872,6 +1110,7 @@ export function MaterialsPage() {
                             path={currentPath}
                             onNavigate={handleNavigate}
                             onDrop={handleDropOnFolder}
+                            isDraggingGlobal={draggedFilesState.active}
                         />
                         <EmptySection
                             text="No Files Available"
@@ -926,16 +1165,13 @@ export function MaterialsPage() {
                         materials={materials}
                         selectedMaterials={selectedMaterials}
                         currentPath={floatingContainer.targetPath}
-                        folders={materials.filter(
-                            (m) =>
-                                m.type === "folder" &&
-                                (floatingContainer.targetPath.length === 0
-                                    ? m.parent_id === null
-                                    : m.parent_id ===
-                                      floatingContainer.targetPath[
-                                          floatingContainer.targetPath.length -
-                                              1
-                                      ].id),
+                        folders={floatingFolders.filter((f) =>
+                            floatingContainer.targetPath.length === 0
+                                ? f.parent_id === null
+                                : f.parent_id ===
+                                  floatingContainer.targetPath[
+                                      floatingContainer.targetPath.length - 1
+                                  ].id,
                         )}
                         onClose={() =>
                             setFloatingContainer({
@@ -946,6 +1182,7 @@ export function MaterialsPage() {
                         }
                         onConfirm={handleFloatingConfirm}
                         onNavigate={handleFloatingNavigate}
+                        onCreateFolder={handleCreateFolderInFloating}
                     />
                 )}
 
@@ -1029,6 +1266,14 @@ export function MaterialsPage() {
                         confirmModal.action === "bulkDelete"
                             ? "red"
                             : "orange"
+                    }
+                    disabled={
+                        confirmModal.action === "delete" ||
+                        confirmModal.action === "bulkDelete"
+                            ? isDeleting
+                            : confirmModal.action === "move"
+                              ? isMoving
+                              : false
                     }
                 />
 

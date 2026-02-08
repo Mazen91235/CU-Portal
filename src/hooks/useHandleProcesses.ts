@@ -65,8 +65,9 @@ export function useUploadFileToDriveChunked({
                 );
                 const chunkSize = 5 * 1024 * 1024; // 5MB
                 let start = 0;
-                let end = Math.min(start + chunkSize, file?.size || 0);
+                let end = 0;
                 while (start < (file?.size || 0)) {
+                    end = Math.min(start + chunkSize, file?.size || 0);
                     const chunk = file?.slice(start, end);
                     if (!chunk) break;
                     const uploadChunkResponse = await uploadChunk({
@@ -80,13 +81,13 @@ export function useUploadFileToDriveChunked({
                     if (uploadChunkResponse?.status == 308 && range) {
                         const bytesUploaded = parseInt(range.split("-")[1]) + 1;
                         start = bytesUploaded;
-                        continue;
+                    } else {
+                        start = end;
                     }
-                    start = end;
-                    end = Math.min(start + chunkSize, file?.size || 0);
                     dispatch(
                         setProcess({
                             ...process,
+                            status: "pending",
                             progress: Math.round(
                                 (start / (file?.size || 1)) * 100,
                             ),

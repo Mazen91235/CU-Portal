@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Material } from "../../types/entities/Material";
 import styles from "./Navigator.module.css";
 
@@ -5,41 +6,43 @@ interface NavigatorProps {
     path: Material[];
     onNavigate: (material: Material | null) => void;
     onDrop?: (targetId: number | null) => void;
+    isDraggingGlobal?: boolean;
 }
 
-export function Navigator({ path, onNavigate, onDrop }: NavigatorProps) {
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        e.currentTarget.classList.add(styles.dragOver);
+export function Navigator({
+    path,
+    onNavigate,
+    onDrop,
+    isDraggingGlobal = false,
+}: NavigatorProps) {
+    const [dragOverId, setDragOverId] = useState<number | null | "home">(null);
+
+    const handleMouseEnter = (id: number | null | "home") => {
+        if (isDraggingGlobal) {
+            setDragOverId(id);
+        }
     };
 
-    const handleDragLeave = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        e.currentTarget.classList.remove(styles.dragOver);
+    const handleMouseLeave = () => {
+        setDragOverId(null);
     };
 
-    const handleDrop = (e: React.DragEvent, targetId: number | null) => {
-        e.preventDefault();
-        e.stopPropagation();
-        e.currentTarget.classList.remove(styles.dragOver);
-
-        const materialId = e.dataTransfer.getData("materialId");
-        if (materialId && onDrop) {
+    const handleMouseUp = (targetId: number | null) => {
+        if (isDraggingGlobal && onDrop) {
             onDrop(targetId);
         }
+        setDragOverId(null);
     };
 
     return (
         <div className={styles.navigator}>
             <div className={styles.breadcrumb}>
                 <button
-                    className={styles.breadcrumbItem}
+                    className={`${styles.breadcrumbItem} ${dragOverId === "home" ? styles.dragOver : ""}`}
                     onClick={() => onNavigate(null)}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={(e) => handleDrop(e, null)}
+                    onMouseEnter={() => handleMouseEnter("home")}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseUp={() => handleMouseUp(null)}
                 >
                     <svg
                         width="16"
@@ -69,11 +72,13 @@ export function Navigator({ path, onNavigate, onDrop }: NavigatorProps) {
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
                         <button
-                            className={`${styles.breadcrumbItem} ${index === path.length - 1 ? styles.active : ""}`}
+                            className={`${styles.breadcrumbItem} ${index === path.length - 1 ? styles.active : ""} ${dragOverId === folder.id ? styles.dragOver : ""}`}
                             onClick={() => onNavigate(folder)}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={(e) => handleDrop(e, folder.id ?? null)}
+                            onMouseEnter={() =>
+                                handleMouseEnter(folder.id ?? null)
+                            }
+                            onMouseLeave={handleMouseLeave}
+                            onMouseUp={() => handleMouseUp(folder.id ?? null)}
                         >
                             {folder.name}
                         </button>
