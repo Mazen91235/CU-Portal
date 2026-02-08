@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
+import { Process } from "../process/Process";
 import styles from "./Layout.module.css";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -22,6 +23,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
             >
                 {children}
             </main>
+            <Process />
         </div>
     );
 };

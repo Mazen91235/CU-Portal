@@ -75,6 +75,17 @@ export const AdminMaterialAPI = createApi({
                 params: query,
             }),
         }),
+        fetchMaterialsFromDrive: builder.mutation<
+            GenericAPIResponse<Material>,
+            MaterialFetchFromDriveDto
+        >({
+            query: (data) => ({
+                url: `/fetch-from-drive`,
+                method: "POST",
+                credentials: "include",
+                body: data,
+            }),
+        }),
         createMaterial: builder.mutation<
             GenericAPIResponse<Material>,
             MaterialRegisterDto
@@ -132,6 +143,7 @@ export const {
     useLazyGetMaterialParentsQuery,
     useLazyGetMaterialFromDriveQuery,
     useLazyGetMaterialsFromDriveQuery,
+    useFetchMaterialsFromDriveMutation,
     useCreateMaterialMutation,
     useUpdateMaterialMutation,
     useDeleteMaterialMutation,

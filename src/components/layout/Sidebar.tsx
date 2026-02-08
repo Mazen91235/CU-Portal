@@ -257,10 +257,8 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Materials")) {
         section.links.push({
             label: "Materials",
-            // path: "/admin/materials",
-            path: "#!",
+            path: "/admin/materials",
             icon: "sidebar-admin-materials",
-            badge: "Soon",
             activatesPaths: ["/admin/materials/"],
         });
     }

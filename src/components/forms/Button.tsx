@@ -9,6 +9,7 @@ export const Button = ({
     isOrange = true,
     isSecondary = false,
     isDefault = false,
+    className = "",
 }: {
     text: string;
     loadingText: string;
@@ -18,6 +19,7 @@ export const Button = ({
     isOrange?: boolean;
     isSecondary?: boolean;
     isDefault?: boolean;
+    className?: string;
 }) => {
     const buttonType = type === "default" ? "button" : type;
     const getButtonClass = () => {
@@ -31,7 +33,7 @@ export const Button = ({
         <button
             type={buttonType}
             disabled={isSubmitting}
-            className={`${styles["button"]} ${getButtonClass()}`}
+            className={`${styles["button"]} ${getButtonClass()} ${className}`}
             onClick={onClick}
         >
             {isSubmitting ? loadingText : text}

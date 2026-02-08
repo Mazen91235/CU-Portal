@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -21,6 +21,7 @@ import buildingFacultyIcon from "../../../assets/icons/building-faculty.png";
 import buildingDepartmentIcon from "../../../assets/icons/building-department.png";
 import certificateYearIcon from "../../../assets/icons/certificate-year.png";
 import idCardDetailsIcon from "../../../assets/icons/id-card-details.png";
+import calendarIcon from "../../../assets/icons/iconsax-calendar.png";
 import examIconCircle from "../../../assets/icons/exam-icon.png";
 import taskIconCircle from "../../../assets/icons/task-details-icon.png";
 import announcementIconCircle from "../../../assets/icons/announcement-icon.png";
@@ -36,9 +37,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
+import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
 export const UserPage = () => {
     const { userId } = useParams<{ userId: string }>();
+    const navigate = useNavigate();
     const [isEditingRole, setIsEditingRole] = useState(false);
     const [user, setUser] = useState<UserResponseDto>({});
     const [roles, setRoles] = useState<Role[]>([]);
@@ -68,18 +71,28 @@ export const UserPage = () => {
             const result = await getUser({ user_id: Number(userId) }).unwrap();
             setUser(result.data || {});
         } catch (error) {
-            handlePopupErrors(error);
+            const res = error as DefaultAPIResponse;
+            navigate("/admin/users", {
+                state: {
+                    error: res.data?.message || "Failed to fetch user data",
+                },
+            });
         }
-    }, [userId, getUser]);
+    }, [userId, getUser, navigate]);
 
     const fetchRoles = useCallback(async () => {
         try {
             const result = await getRoles({}).unwrap();
             setRoles(result.data || []);
         } catch (error) {
-            handlePopupErrors(error);
+            const res = error as DefaultAPIResponse;
+            navigate("/admin/users", {
+                state: {
+                    error: res.data?.message || "Failed to fetch roles data",
+                },
+            });
         }
-    }, [getRoles]);
+    }, [getRoles, navigate]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchUserData(), fetchRoles()]),
@@ -275,8 +288,17 @@ export const UserPage = () => {
                                     <td className={styles.userDetailsValue}>
                                         {user.national_id || "N/A"}
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <img
+                                            src={calendarIcon}
+                                            alt="Joined Date"
+                                        />{" "}
+                                        Joined At:
+                                    </td>
+                                    <td>
+                                        {formatDateTime(user.created_at) ||
+                                            "N/A"}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

@@ -277,7 +277,6 @@ export const DepartmentsPage = () => {
                                                 icon: "subject",
                                                 label: "Study Type",
                                                 value: dept.study_type || "N/A",
-                                                color: "green",
                                             },
                                         ]}
                                         editable
@@ -356,6 +355,7 @@ export const DepartmentsPage = () => {
                         }
                         loadingText={editMode ? "Updating..." : "Saving..."}
                         isSubmitting={isCreating || isUpdating}
+                        isOrange={false}
                     />
                 </FloatingForm>
 

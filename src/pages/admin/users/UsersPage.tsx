@@ -11,9 +11,9 @@ import {
     useLazyGetUsersQuery,
     useLazyGetUsersDataQuery,
 } from "../../../services/apis/admin/UserAPIs";
-import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import type { User } from "../../../types/entities/User";
 import type { Faculty } from "../../../types/entities/Faculty";
 import type { Department } from "../../../types/entities/Department";
@@ -27,10 +27,12 @@ import eyeReviewIcon from "../../../assets/icons/eye-review.png";
 import arrowUpIcon from "../../../assets/icons/arrow-up.png";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
+import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./UsersPage.module.css";
 
 export const UsersPage = () => {
     const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedFaculty, setSelectedFaculty] = useState("");
     const [selectedDepartment, setSelectedDepartment] = useState("");
@@ -42,11 +44,11 @@ export const UsersPage = () => {
     const [departments, setDepartments] = useState<Department[]>([]);
     const [years, setYears] = useState<Year[]>([]);
 
-    const [getUsers, { isFetching: usersLoading }] = useLazyGetUsersQuery();
+    const [getUsers, { isFetching }] = useLazyGetUsersQuery();
     const [getUsersData, { data: usersStatsData }] = useLazyGetUsersDataQuery();
-    const [getFaculties] = useLazyGetFacultiesQuery();
-    const [getDepartments] = useLazyGetDepartmentsQuery();
-    const [getYears] = useLazyGetYearsQuery();
+    const [searchFaculties] = useLazySearchFacultiesQuery();
+    const [searchDepartments] = useLazySearchDepartmentsQuery();
+    const [searchYears] = useLazySearchYearsQuery();
 
     const fetchUsersData = useCallback(async () => {
         try {
@@ -58,12 +60,12 @@ export const UsersPage = () => {
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await getFaculties({}).unwrap();
+            const result = await searchFaculties({}).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getFaculties]);
+    }, [searchFaculties]);
 
     const fetchDepartments = useCallback(async () => {
         try {
@@ -71,27 +73,27 @@ export const UsersPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await getDepartments({
+            const result = await searchDepartments({
                 faculty_id: Number(selectedFaculty),
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, selectedFaculty]);
+    }, [searchDepartments, selectedFaculty]);
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await getYears({}).unwrap();
+            const result = await searchYears({}).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getYears]);
+    }, [searchYears]);
 
     const fetchUsers = useCallback(async () => {
         try {
-            if (!hasNextPage) return;
+            if (!hasNextPage || !user) return;
             const params: {
                 query?: string;
                 faculty_id?: number;
@@ -105,6 +107,12 @@ export const UsersPage = () => {
             if (selectedDepartment)
                 params.department_id = Number(selectedDepartment);
             if (selectedYear) params.year_id = Number(selectedYear);
+
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
 
             const result = await getUsers(params).unwrap();
             setUsers((prev) => {
@@ -127,6 +135,7 @@ export const UsersPage = () => {
         selectedYear,
         page,
         hasNextPage,
+        user,
     ]);
 
     const authQueryParams = useCallback(
@@ -189,7 +198,7 @@ export const UsersPage = () => {
     }, [usersStatsData]);
 
     const handlePagination = () => {
-        if (hasNextPage && !usersLoading && users.length > 0) {
+        if (hasNextPage && !isFetching && users.length > 0) {
             setPage(page + 1);
         }
     };
@@ -202,10 +211,6 @@ export const UsersPage = () => {
     }, []);
 
     const tableData = useMemo(() => {
-        if (usersLoading && users.length === 0) {
-            return [];
-        }
-
         return users.map((user: User) => ({
             data: [
                 user.name || "N/A",
@@ -222,7 +227,7 @@ export const UsersPage = () => {
             ],
             onClick: () => navigate(`/admin/users/${user.id}`),
         }));
-    }, [users, usersLoading, getRoleBadgeClass, navigate]);
+    }, [users, getRoleBadgeClass, navigate]);
 
     return (
         <Layout>
@@ -327,51 +332,42 @@ export const UsersPage = () => {
                             setValue={setSearchQuery}
                         />
                     </div>
-                    <div className={styles.filtersGroup}>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedFaculty}
-                                setValue={setSelectedFaculty}
-                                options={facultyOptions}
-                            />
+                    {user?.canAccessAll && (
+                        <div className={styles.filtersGroup}>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedFaculty}
+                                    setValue={setSelectedFaculty}
+                                    options={facultyOptions}
+                                />
+                            </div>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedDepartment}
+                                    setValue={setSelectedDepartment}
+                                    options={departmentOptions}
+                                />
+                            </div>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedYear}
+                                    setValue={setSelectedYear}
+                                    options={yearOptions}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedDepartment}
-                                setValue={setSelectedDepartment}
-                                options={departmentOptions}
-                            />
-                        </div>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedYear}
-                                setValue={setSelectedYear}
-                                options={yearOptions}
-                            />
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
             <section className={styles.tableSection}>
-                {usersLoading && users.length === 0 ? (
-                    <div
-                        style={{
-                            textAlign: "center",
-                            padding: "2rem",
-                            background: "var(--background-white)",
-                            borderRadius: "12px",
-                        }}
-                    >
-                        Loading...
-                    </div>
-                ) : (
+                {
                     <Table
                         columns={["Name", "Phone", "E-Mail", "Role"]}
                         data={tableData}
                         action={true}
                     />
-                )}
+                }
             </section>
 
             <Pagination onReached={handlePagination} />

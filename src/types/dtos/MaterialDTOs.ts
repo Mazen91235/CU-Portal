@@ -12,6 +12,7 @@ export type MaterialSearchDto = {
 
 export type MaterialRegisterDto = {
     name?: string | null;
+    type?: string | null;
     description?: string | null;
     url?: string | null;
     subject_id?: number | null;

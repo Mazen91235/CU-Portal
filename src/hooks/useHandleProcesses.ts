@@ -15,12 +15,12 @@ import { GenerateRandomString } from "../utils/RandomGenerators";
 import { setProcess } from "../services/redux/reducers/ProcessReducer";
 import { showToast } from "../utils/ToastsManager";
 
-export default function useUploadFileToDriveChunked({
+export function useUploadFileToDriveChunked({
     resolve,
     reject,
 }: {
-    resolve?: (url: string) => void;
-    reject?: (error: string) => void;
+    resolve?: (process: Process) => void;
+    reject?: (process: Process) => void;
 }) {
     useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
@@ -36,7 +36,7 @@ export default function useUploadFileToDriveChunked({
             const process: Process = {
                 id: GenerateRandomString(16),
                 name: processName,
-                status: "pending",
+                status: "processing",
                 progress: 0,
             };
             try {
@@ -57,10 +57,12 @@ export default function useUploadFileToDriveChunked({
                 dispatch(setProcess(process));
                 const resumableSessionURL = await getResumableSession({
                     metadata,
-                    file,
+                    fileType: file.type,
+                    fileSize: file.size,
                 }).unwrap();
-                process.status = "in_progress";
-                dispatch(setProcess(process));
+                dispatch(
+                    setProcess({ ...process, status: "pending", progress: 0 }),
+                );
                 const chunkSize = 5 * 1024 * 1024; // 5MB
                 let start = 0;
                 let end = Math.min(start + chunkSize, file?.size || 0);
@@ -82,31 +84,39 @@ export default function useUploadFileToDriveChunked({
                     }
                     start = end;
                     end = Math.min(start + chunkSize, file?.size || 0);
-                    process.progress = Math.round(
-                        (start / (file?.size || 1)) * 100,
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            progress: Math.round(
+                                (start / (file?.size || 1)) * 100,
+                            ),
+                        }),
                     );
-                    dispatch(setProcess(process));
                 }
                 const uploadedFileId = await finalizeUpload({
                     sessionUrl: resumableSessionURL!,
                     total: file?.size || 0,
                 }).unwrap();
-                process.progress = 100;
-                process.status = "pending";
-                dispatch(setProcess(process));
+                dispatch(
+                    setProcess({
+                        ...process,
+                        progress: 100,
+                        status: "processing",
+                    }),
+                );
                 await makeFilePublic(uploadedFileId!).unwrap();
                 const url = GetDriveUrl(uploadedFileId!);
-                process.status = "completed";
-                process.url = url;
-                dispatch(setProcess(process));
-                if (resolve) resolve(url);
-                return url;
-            } catch {
-                process.status = "failed";
-                process.reason = "Failed to Upload File";
-                dispatch(setProcess(process));
-                if (reject) reject("Failed to Upload File");
-                throw new Error("Failed to Upload File");
+                dispatch(setProcess({ ...process, url: url }));
+                if (resolve) resolve({ ...process, url: url });
+                return { ...process, url: url };
+            } catch (error) {
+                const res = (error as Error).message || "Failed to Upload File";
+                dispatch(
+                    setProcess({ ...process, status: "failed", reason: res }),
+                );
+                if (reject)
+                    reject({ ...process, status: "failed", reason: res });
+                throw new Error(res);
             }
         },
         [
@@ -122,6 +132,41 @@ export default function useUploadFileToDriveChunked({
     );
     return uploadFileToDriveChunked;
 }
+
+export const useCreateProcess = ({
+    resolve,
+    reject,
+}: {
+    resolve?: (process: Process) => void;
+    reject?: (process: Process) => void;
+}) => {
+    const dispatch = useAppDispatch();
+    const createProcess = useCallback(
+        async (name: string) => {
+            const process: Process = {
+                id: GenerateRandomString(16),
+                name,
+                status: "processing",
+                progress: 0,
+            };
+            try {
+                dispatch(setProcess(process));
+                if (resolve) resolve(process);
+                return process;
+            } catch (error) {
+                const res = (error as Error).message || "An error occurred";
+                dispatch(
+                    setProcess({ ...process, status: "failed", reason: res }),
+                );
+                if (reject)
+                    reject({ ...process, status: "failed", reason: res });
+            }
+            return process;
+        },
+        [dispatch, resolve, reject],
+    );
+    return createProcess;
+};
 
 export function useUploadFileToDrive({
     resolve,

@@ -36,20 +36,21 @@ export const DriveAPI = createApi({
             string,
             {
                 metadata: { name: string; mimeType: string; parents: string[] };
-                file: File;
+                fileType: string;
+                fileSize: number;
             }
         >({
-            query: ({ metadata, file }) => ({
+            query: ({ metadata, fileType, fileSize }) => ({
                 url: `/files?uploadType=resumable`,
                 method: "POST",
                 body: metadata,
                 headers: {
-                    "X-Upload-Content-Type": file.type,
-                    "X-Upload-Content-Length": file.size.toString() || "0",
+                    "X-Upload-Content-Type": fileType,
+                    "X-Upload-Content-Length": fileSize.toString() || "0",
                 },
             }),
             transformResponse: (_, meta) => {
-                return meta?.response?.headers.get("location") || "";
+                return meta?.response?.headers?.get("location") || "";
             },
         }),
         uploadChunk: builder.mutation<
@@ -73,7 +74,7 @@ export const DriveAPI = createApi({
             }),
             transformResponse: (_, meta) => ({
                 status: meta?.response?.status || 0,
-                range: meta?.response?.headers.get("Range") || "",
+                range: meta?.response?.headers?.get("Range") || "",
             }),
         }),
         finalizeUpload: builder.mutation<
@@ -86,13 +87,12 @@ export const DriveAPI = createApi({
             query: ({ sessionUrl, total }) => ({
                 url: sessionUrl,
                 method: "PUT",
-                body: null,
+                body: {},
                 headers: {
                     "Content-Range": `bytes */${total}`,
                 },
             }),
-            transformResponse: (response: { data: { id: string } }) =>
-                response.data.id,
+            transformResponse: (response: { id: string }) => response.id,
         }),
         removeFileFromDrive: builder.mutation<boolean, string>({
             query: (fileId) => ({

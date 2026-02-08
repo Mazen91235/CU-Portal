@@ -58,7 +58,17 @@ export const hasMissingProperties = (
     return false;
 };
 
-export const handlePopupErrors = (response: DefaultAPIResponse | unknown) => {
+export const handlePopupErrors = (
+    response: DefaultAPIResponse | string | Error | unknown,
+) => {
+    if (typeof response === "string") {
+        showToast("error", "Error", response);
+        return;
+    }
+    if (response instanceof Error) {
+        showToast("error", "Error", response.message);
+        return;
+    }
     const data = (response as DefaultAPIResponse).data;
     if (typeof data == "string") {
         showToast("error", "Error", data);

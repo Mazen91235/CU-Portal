@@ -134,3 +134,41 @@ export const captitalize = (str?: string): string => {
     if (!str) return "N/A";
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+export const formatDateIntoPeriod = (
+    dateTimeString?: string | null,
+): string => {
+    if (!dateTimeString) return "N/A";
+    let date: Date;
+    const now = new Date();
+    if (dateTimeString.includes("T")) {
+        date = new Date(dateTimeString);
+    } else {
+        const datePartArray = dateTimeString.split(" ")[0].split("-");
+        datePartArray.reverse();
+        const datePart = datePartArray.join("-");
+        const timePart = dateTimeString.split(" ")[1] || "00:00:00";
+        dateTimeString = datePart + "T" + timePart;
+        date = new Date(dateTimeString);
+    }
+    const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (secondsAgo < 60) return "Just now";
+    if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)} min ago`;
+    if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)} hr ago`;
+    if (secondsAgo < 604800)
+        return `${Math.floor(secondsAgo / 86400)} day${Math.floor(secondsAgo / 86400) > 1 ? "s" : ""} ago`;
+    if (secondsAgo < 2592000)
+        return `${Math.floor(secondsAgo / 604800)} week${Math.floor(secondsAgo / 604800) > 1 ? "s" : ""} ago`;
+    if (secondsAgo < 31536000)
+        return `${Math.floor(secondsAgo / 2592000)} month${Math.floor(secondsAgo / 2592000) > 1 ? "s" : ""} ago`;
+    return `${Math.floor(secondsAgo / 31536000)} year${Math.floor(secondsAgo / 31536000) > 1 ? "s" : ""} ago`;
+};
+
+export const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+};

@@ -1,0 +1,272 @@
+.folderCard,
+.fileCard {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow:
+        0px 4px 6px -2px rgba(124, 59, 237, 0.05),
+        0px 10px 25px -5px rgba(124, 59, 237, 0.1);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 260px;
+    max-width: 340px;
+    min-height: 325px;
+    transition: box-shadow var(--transition-duration);
+    cursor: pointer;
+    user-select: none;
+}
+
+.folderCard:hover,
+.fileCard:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.folderCard.selected,
+.fileCard.selected {
+    border: 1px solid var(--primary-purple);
+}
+
+.fileCard *,
+.folderCard * {
+    user-select: none;
+}
+
+.materialSelectedIcon {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.folderCard.selected .materialSelectedIcon,
+.fileCard.selected .materialSelectedIcon {
+    display: flex;
+}
+
+.folderHeader,
+.fileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+    position: relative;
+    height: 50px;
+}
+
+.fileHeader {
+    height: 45px;
+}
+
+.folderTag,
+.fileTag {
+    background: var(--grey-background);
+    color: var(--primary-purple);
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 12px;
+    width: auto;
+    padding: 4px 12px;
+    margin: 2px auto;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dropdown {
+    margin-left: auto;
+    margin-top: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.dropdown .dropdown-menu {
+    border: 1px solid var(--light-grey);
+    box-shadow: var(--light-box-shadow);
+    border-radius: var(--primary-border-radius);
+    padding: 0.5rem 0;
+}
+
+.dropdown .dropdown-menu .dropdown-item {
+    padding: 0.5rem 1.5rem;
+    font-size: var(--secondary-font-size);
+    color: var(--primary-purple);
+    transition: background-color var(--transition-duration);
+}
+
+.dropdown button {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+    color: var(--primary-purple);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+}
+
+.dropdown button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.folderContent,
+.fileContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.svg {
+    border-radius: 12px;
+    margin-bottom: -10px;
+}
+
+.folderInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.25rem;
+}
+
+.folderName {
+    font-family: var(--primary-font-family);
+    font-size: 18px;
+    font-weight: var(--primary-font-weight-heavy);
+    color: var(--dark-text);
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.folderDate,
+.fileDate {
+    font-size: 12px;
+    color: var(--medium-grey);
+    margin-top: 2px;
+    margin-left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    width: 100%;
+}
+
+.folderStats {
+    font-size: 13px;
+    color: var(--medium-grey);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.folderStats span {
+    background: var(--grey-background);
+    padding: 4px 8px;
+    border-radius: 20000px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.fileIcon {
+    width: 105px;
+    height: 88px;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: -10px;
+}
+
+.fileIcon img {
+    width: 64px !important;
+    height: 64px !important;
+}
+
+.fileInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.fileName {
+    font-family: var(--primary-font-family);
+    font-size: var(--secondary-font-size);
+    font-weight: var(--primary-font-weight-heavy);
+    color: var(--dark-text);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.fileActions {
+    margin-top: 20px;
+    margin-left: 0;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1rem;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    width: calc(100% - 3rem);
+    justify-content: space-between;
+}
+
+.fileActionBtn {
+    background: var(--grey-background);
+    border: 1px solid var(--light-grey);
+    color: var(--dark-text);
+    cursor: pointer;
+    font-size: var(--secondary-font-size);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition:
+        background var(--transition-duration),
+        border-color var(--transition-duration),
+        color var(--transition-duration);
+    border-radius: var(--primary-border-radius);
+    padding: 8px 0;
+    flex: 1 1 0;
+    justify-content: center;
+    font-weight: var(--primary-font-weight);
+    box-shadow: none;
+}
+
+.fileActionBtn:hover {
+    background: var(--grey-background);
+    border-color: var(--light-grey);
+    color: var(--primary-purple);
+}
+
+.folderCard.dragOver,
+.fileCard.dragOver {
+    border: 1px dashed var(--primary-purple) !important;
+    background-color: #f1f2f4;
+}

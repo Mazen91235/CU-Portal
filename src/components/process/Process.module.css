@@ -1,0 +1,195 @@
+.processContainer {
+    width: 30%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: var(--white);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transition: 0.2s ease-in-out;
+    z-index: 1000;
+}
+
+.header {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 0 10px;
+    background: var(--grey-background);
+    cursor: pointer;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.header span {
+    font-size: 16px;
+}
+
+.icon {
+    font-size: 1.2rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.open .icon {
+    transform: rotate(180deg);
+}
+
+.content {
+    max-height: 0;
+    overflow-y: auto;
+    padding: 0 10px;
+    transition: 0.2s ease-in-out;
+}
+
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+.open .content {
+    max-height: 300px;
+}
+
+.processItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--primary-border-radius);
+    margin: 10px 0;
+}
+
+.processName {
+    margin: 0;
+}
+
+.circularProgress {
+    width: 45px;
+    height: 45px;
+    position: relative;
+}
+
+.progressCircle {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progressBg {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 4;
+}
+
+.progressBar {
+    fill: none;
+    stroke: var(--success-green);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 188.4;
+    stroke-dashoffset: 188.4;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.progressText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+.spinnerBorder {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    display: none;
+}
+
+.done {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    display: none;
+}
+
+.failed {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    display: none;
+}
+
+.pending .spinnerBorder {
+    display: none;
+}
+
+.processing .progressBar,
+.processing .progressText {
+    display: none;
+}
+
+.processing .spinnerBorder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--success-green);
+    border: 3px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner 0.75s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.done .progressBar,
+.done .progressText {
+    display: none;
+}
+
+.done .done {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--success-green);
+    border-radius: 50%;
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
+.failed .progressBar,
+.failed .progressText {
+    display: none;
+}
+
+.failed .failed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #dc2626;
+    border-radius: 50%;
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .processContainer {
+        width: 300px;
+        max-width: 90%;
+    }
+}

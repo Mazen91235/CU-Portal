@@ -210,6 +210,7 @@ export const YearsPage = () => {
                         text={editMode ? "Edit year" : "Add year"}
                         loadingText={editMode ? "Updating..." : "Adding..."}
                         isSubmitting={isCreating || isUpdating}
+                        isOrange={false}
                     />
                 </FloatingForm>
 

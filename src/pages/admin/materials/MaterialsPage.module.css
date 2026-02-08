@@ -1,0 +1,327 @@
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.explorerHeader {
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.explorerTitle {
+    font-size: 36px;
+    font-weight: var(--primary-font-weight-heavy);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--primary-purple) 0%, #9265e7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.explorerSubtitle {
+    font-size: 16px;
+    opacity: 0.9;
+    color: var(--text-color);
+}
+
+.filtersSection {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+}
+
+.filterDropdown {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filterLabel {
+    display: block;
+    font-size: var(--secondary-font-size);
+    font-weight: var(--primary-font-weight);
+    margin-bottom: 0.5rem;
+    color: var(--dark-grey);
+}
+
+.searchActionsSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.searchContainer {
+    flex: 1;
+    min-width: 250px;
+}
+
+.actionsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.actionButton {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: var(--primary-border-radius);
+    font-size: var(--secondary-font-size);
+    font-weight: var(--primary-font-weight);
+    cursor: pointer;
+    transition: all var(--transition-duration) ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.addFolderBtn,
+.addFileBtn {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    border: none;
+}
+
+.fetchBtn {
+    background-color: var(--white);
+    color: var(--primary-purple);
+    border: 1px solid var(--primary-purple);
+}
+
+.fetchBtn:hover {
+    background-color: var(--grey-background);
+}
+
+.selectionBtns {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    padding: var(--primary-padding);
+    background: var(--white);
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.selectedCount {
+    font-weight: var(--primary-font-weight);
+    color: var(--dark-text);
+}
+
+.selectionBtn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--primary-border-radius);
+    font-size: 15px;
+    font-weight: var(--primary-font-weight);
+    cursor: pointer;
+    transition: all var(--transition-duration) ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 150px;
+    justify-content: center;
+    border: 1px solid var(--light-grey);
+    background: var(--grey-background);
+}
+
+.selectionBtn:hover {
+    background: var(--light-grey);
+    border-color: #d1d5db;
+}
+
+.copyBtn {
+    background: var(--grey-background);
+    color: var(--dark-text);
+    border: 1px solid var(--light-grey);
+}
+
+.copyBtn:hover {
+    background: var(--light-grey);
+    color: var(--primary-purple);
+    border-color: #d1d5db;
+}
+
+.moveBtn {
+    background: var(--grey-background);
+    color: var(--dark-text);
+    border: 1px solid var(--light-grey);
+}
+
+.moveBtn:hover {
+    background: var(--light-grey);
+    color: var(--primary-purple);
+    border-color: #d1d5db;
+}
+
+.deleteBtn {
+    background: #ef4444;
+    color: var(--white);
+    border: 1px solid #ef4444;
+}
+
+.deleteBtn:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: var(--white);
+}
+
+.cancelBtn {
+    background: var(--grey-background);
+    color: var(--dark-text);
+    border: 1px solid var(--light-grey);
+}
+
+.cancelBtn:hover {
+    background: var(--light-grey);
+    color: var(--primary-purple);
+    border-color: #d1d5db;
+}
+
+.contentSection {
+    margin-bottom: 2rem;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.filterPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.filterPageImage {
+    display: block;
+    margin: 2rem auto;
+    max-width: 300px;
+}
+
+.filterPageTitle {
+    font-size: 1.8rem;
+    font-weight: var(--primary-font-weight-heavy);
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.filterPageSubtitle {
+    font-size: 1.1rem;
+    color: var(--medium-grey);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+@media (max-width: 992px) {
+    .selectionBtn {
+        min-width: 0;
+    }
+
+    .explorerTitle {
+        font-size: 28px;
+    }
+
+    .explorerSubtitle {
+        font-size: 14px;
+    }
+
+    .searchActionsSection {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchContainer {
+        width: 100%;
+    }
+
+    .actionsContainer {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .actionButton {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .selectionBtns {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .selectionBtn {
+        width: 100%;
+    }
+
+    .contentGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .filtersSection {
+        flex-direction: column;
+    }
+
+    .filterDropdown {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .selectionBtn {
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    .filterPageTitle {
+        font-size: 1.5rem;
+    }
+
+    .filterPageSubtitle {
+        font-size: 1rem;
+    }
+}
+
+.draggedFilesIcon {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 11000;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+}
+
+.draggedFilesIcon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.draggedFilesCount {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    background: #f1f2f4;
+    color: var(--primary-purple);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+}

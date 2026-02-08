@@ -1,0 +1,31 @@
+.emptySection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.image {
+    display: block;
+    margin: 2rem auto;
+    max-width: 300px;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}

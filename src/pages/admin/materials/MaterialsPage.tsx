@@ -1,0 +1,1051 @@
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import {
+    useLazyGetMaterialsQuery,
+    useLazyGetMaterialParentsQuery,
+    useCreateMaterialMutation,
+    useUpdateMaterialMutation,
+    useDeleteMaterialMutation,
+    useCopyMaterialsMutation,
+    useMoveMaterialsMutation,
+} from "../../../services/apis/admin/MaterialAPIs";
+import type { Material } from "../../../types/entities/Material";
+import type { Faculty } from "../../../types/entities/Faculty";
+import type { Department } from "../../../types/entities/Department";
+import type { Year } from "../../../types/entities/Year";
+import type { Subject } from "../../../types/entities/Subject";
+import { showToast } from "../../../utils/ToastsManager";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { downloadFile } from "../../../utils/FileDownloader";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import { PageSeo } from "../../../components/PageSeo";
+import { Layout } from "../../../components/layout/Layout";
+import { SelectFilter } from "../../../components/forms/SelectFilter";
+import { Search } from "../../../components/forms/Search";
+import { EmptySection } from "../../../components/materials/EmptySection";
+import { MaterialCard } from "../../../components/materials/MaterialCard";
+import { MaterialForm } from "../../../components/materials/MaterialForm";
+import { Navigator } from "../../../components/materials/Navigator";
+import { FloatingContainer } from "../../../components/materials/FloatingContainer";
+import { Preview } from "../../../components/preview/Preview";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
+import { DropZone } from "../../../components/materials/DropZone";
+import { BulkUploadModal } from "../../../components/materials/BulkUploadModal";
+
+import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
+import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
+import styles from "./MaterialsPage.module.css";
+import { Banner } from "../../../components/banner/Banner";
+
+export function MaterialsPage() {
+    const user = useAppSelector((state) => state.user.user);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [facultyFilter, setFacultyFilter] = useState("");
+    const [departmentFilter, setDepartmentFilter] = useState("");
+    const [yearFilter, setYearFilter] = useState("");
+    const [subjectFilter, setSubjectFilter] = useState("");
+    const [draggedFilesState, setDraggedFilesState] = useState({
+        active: false,
+        x: 0,
+        y: 0,
+    });
+
+    const [faculties, setFaculties] = useState<Faculty[]>([]);
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [years, setYears] = useState<Year[]>([]);
+    const [subjects, setSubjects] = useState<Subject[]>([]);
+
+    const [currentPath, setCurrentPath] = useState<Material[]>([]);
+    const [materials, setMaterials] = useState<Material[]>([]);
+    const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
+    const [isSelectionMode, setIsSelectionMode] = useState(false);
+    const [formData, setFormData] = useState<{
+        show: boolean;
+        type: "folder" | "file" | "drive" | "youtube" | "external" | null;
+        material: Material | null;
+    }>({ show: false, type: null, material: null });
+    const [floatingContainer, setFloatingContainer] = useState<{
+        show: boolean;
+        operation: "copy" | "move";
+        targetPath: Material[];
+    }>({ show: false, operation: "copy", targetPath: [] });
+    const [previewFile, setPreviewFile] = useState<{
+        id: string;
+        name: string;
+    } | null>(null);
+    const [fileToDownload, setFileToDownload] = useState<{
+        url: string;
+        name: string;
+    } | null>(null);
+    const [shouldDownload, setShouldDownload] = useState(false);
+    const downloadLink = useRef<HTMLAnchorElement>(null);
+    const [confirmModal, setConfirmModal] = useState<{
+        isOpen: boolean;
+        action: "delete" | "bulkDelete" | "move" | null;
+        targetId?: number | null;
+        materialId?: number;
+    }>({ isOpen: false, action: null });
+    const [dropZoneVisible, setDropZoneVisible] = useState(false);
+    const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
+    const [isDraggingExternal, setIsDraggingExternal] = useState(false);
+
+    const [searchFaculties] = useLazySearchFacultiesQuery();
+    const [searchDepartments] = useLazySearchDepartmentsQuery();
+    const [searchYears] = useLazySearchYearsQuery();
+    const [searchCourses] = useLazySearchCoursesQuery();
+    const [getMaterials] = useLazyGetMaterialsQuery();
+    const [getMaterialParents] = useLazyGetMaterialParentsQuery();
+    const [createMaterial] = useCreateMaterialMutation();
+    const [updateMaterial] = useUpdateMaterialMutation();
+    const [deleteMaterial] = useDeleteMaterialMutation();
+    const [copyMaterials] = useCopyMaterialsMutation();
+    const [moveMaterials] = useMoveMaterialsMutation();
+
+    const fetchFaculties = useCallback(async () => {
+        try {
+            const result = await searchFaculties({}).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchFaculties]);
+
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                faculty_id: parseInt(facultyFilter) || undefined,
+                study_type: "",
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchDepartments, facultyFilter]);
+
+    const fetchYears = useCallback(async () => {
+        try {
+            const result = await searchYears({}).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchYears]);
+
+    const fetchSubjects = useCallback(async () => {
+        try {
+            if (!user) return;
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {};
+            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
+            if (departmentFilter)
+                params.department_id = parseInt(departmentFilter);
+            if (yearFilter) params.year_id = parseInt(yearFilter);
+
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                setFacultyFilter(user.faculty?.id?.toString() || "");
+                params.department_id = user.department?.id;
+                setDepartmentFilter(user.department?.id?.toString() || "");
+                params.year_id = user.year?.id;
+                setYearFilter(user.year?.id?.toString() || "");
+            }
+
+            if (Object.keys(params).length < 3) {
+                setSubjects([]);
+                return;
+            }
+
+            const result = await searchCourses(params).unwrap();
+            setSubjects(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+
+    const fetchMaterials = useCallback(async () => {
+        if (!subjectFilter) return;
+
+        try {
+            const parentId =
+                currentPath.length > 0
+                    ? currentPath[currentPath.length - 1].id
+                    : null;
+            const response = await getMaterials({
+                subject_id: parseInt(subjectFilter),
+                parent_id: parentId ?? undefined,
+                query: searchQuery || undefined,
+            }).unwrap();
+            setMaterials(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [subjectFilter, currentPath, searchQuery, getMaterials]);
+
+    useEffect(() => {
+        setCurrentPath([]);
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+    }, [facultyFilter, departmentFilter, yearFilter, subjectFilter]);
+
+    const authQueryParams = useCallback(
+        async () =>
+            Promise.all([
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchSubjects(),
+                fetchMaterials(),
+            ]),
+        [
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchSubjects,
+            fetchMaterials,
+        ],
+    );
+
+    useAuthQuery(authQueryParams);
+
+    const handleNavigate = async (material: Material | null) => {
+        if (material === null) {
+            setCurrentPath([]);
+        } else {
+            if (!material.id) {
+                showToast("error", "Error", "Invalid material");
+                return;
+            }
+            try {
+                const response = await getMaterialParents({
+                    material_id: material.id,
+                }).unwrap();
+                setCurrentPath([...(response.data || [])]);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        }
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+    };
+
+    const handleCardClick = (materialId: number) => {
+        if (isSelectionMode) {
+            setSelectedMaterials((prev) =>
+                prev.includes(materialId)
+                    ? prev.filter((id) => id !== materialId)
+                    : [...prev, materialId],
+            );
+        } else {
+            setIsSelectionMode(true);
+            setSelectedMaterials([materialId]);
+        }
+    };
+
+    const handleCardDoubleClick = (material: Material) => {
+        if (material.type === "folder") {
+            handleNavigate(material);
+        }
+    };
+
+    const handleDragStart = (materialId: number) => {
+        if (!selectedMaterials.includes(materialId)) {
+            setSelectedMaterials([materialId]);
+        }
+        setDraggedFilesState({ ...draggedFilesState, active: true });
+        document.addEventListener("mousemove", handleDragMove);
+        document.addEventListener("mouseup", handleDragEnd);
+    };
+
+    const handleDragMove = (e: MouseEvent) => {
+        setDraggedFilesState({
+            active: true,
+            x: e.clientX + 10,
+            y: e.clientY + 10,
+        });
+    };
+
+    const handleDragEnd = () => {
+        setDraggedFilesState({ active: false, x: 0, y: 0 });
+        document.removeEventListener("mousemove", handleDragMove);
+        document.removeEventListener("mouseup", handleDragEnd);
+    };
+
+    const handleDropOnFolder = async (targetId: number | null) => {
+        if (selectedMaterials.length === 0) return;
+
+        setConfirmModal({
+            isOpen: true,
+            action: "move",
+            targetId: targetId,
+        });
+    };
+
+    const confirmMove = async (targetId: number | null) => {
+        if (selectedMaterials.length === 0) return;
+
+        try {
+            await moveMaterials({
+                material_ids: selectedMaterials,
+                destination_id: targetId ?? undefined,
+            }).unwrap();
+
+            showToast("success", "Success", "Materials moved successfully");
+            await fetchMaterials();
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
+    const handleCreateMaterial = (
+        type: "folder" | "file" | "drive" | "youtube" | "external",
+    ) => {
+        setFormData({ show: true, type, material: null });
+    };
+
+    const handleEditMaterial = (material: Material) => {
+        const materialType = material.type as
+            | "folder"
+            | "file"
+            | "drive"
+            | "youtube"
+            | "external";
+        setFormData({ show: true, type: materialType, material });
+    };
+
+    const handleDeleteMaterials = async (materialId?: number) => {
+        if (!materialId && selectedMaterials.length === 0) return;
+
+        if (materialId) {
+            setConfirmModal({
+                isOpen: true,
+                action: "delete",
+                materialId: materialId,
+            });
+        } else {
+            setConfirmModal({
+                isOpen: true,
+                action: "bulkDelete",
+            });
+        }
+    };
+
+    const confirmDelete = async () => {
+        const materialId = confirmModal.materialId;
+        const materialIds = materialId ? [materialId] : selectedMaterials;
+
+        if (materialIds.length === 0) return;
+
+        try {
+            for (const materialId of materialIds) {
+                await deleteMaterial({ material_id: materialId }).unwrap();
+            }
+            showToast(
+                "success",
+                "Success",
+                materialIds.length > 1
+                    ? "Materials deleted successfully"
+                    : "Material deleted successfully",
+            );
+            await fetchMaterials();
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (selectedMaterials.length === materials.length) {
+            setSelectedMaterials([]);
+        } else {
+            setSelectedMaterials(
+                materials
+                    .map((m) => m.id)
+                    .filter((id): id is number => id !== undefined),
+            );
+        }
+    };
+
+    const handleCancelSelection = () => {
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+    };
+
+    const handleFormSubmit = async (data: FormData) => {
+        try {
+            const material = formData.material;
+            if (material && material.id) {
+                await updateMaterial({
+                    material_id: material.id,
+                    subject_id: parseInt(subjectFilter),
+                    ...Object.fromEntries(data),
+                }).unwrap();
+                showToast(
+                    "success",
+                    "Success",
+                    "Material updated successfully",
+                );
+            } else {
+                await createMaterial({
+                    subject_id: parseInt(subjectFilter),
+                    ...Object.fromEntries(data),
+                }).unwrap();
+                showToast(
+                    "success",
+                    "Success",
+                    "Material created successfully",
+                );
+            }
+            await fetchMaterials();
+            setFormData({ show: false, type: null, material: null });
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
+    const handleCopyMaterials = () => {
+        setFloatingContainer({ show: true, operation: "copy", targetPath: [] });
+    };
+
+    const handleMoveMaterials = () => {
+        setFloatingContainer({ show: true, operation: "move", targetPath: [] });
+    };
+
+    const handlePreview = (fileId: string, fileName: string) => {
+        setPreviewFile({ id: fileId, name: fileName });
+    };
+
+    const handleClosePreview = () => {
+        setPreviewFile(null);
+    };
+
+    const handleDownload = async (fileId: string, fileName: string) => {
+        try {
+            const url = await downloadFile(fileId);
+            setFileToDownload({ url, name: fileName });
+            setShouldDownload(true);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
+    const handleOpenLink = (url: string) => {
+        window.open(url, "_blank");
+    };
+
+    const handleFloatingNavigate = async (folderId: number | null) => {
+        if (folderId === null) {
+            setFloatingContainer((prev) => ({ ...prev, targetPath: [] }));
+        } else {
+            try {
+                const response = await getMaterialParents({
+                    material_id: folderId,
+                }).unwrap();
+                const folder = materials.find((m) => m.id === folderId);
+                if (folder) {
+                    setFloatingContainer((prev) => ({
+                        ...prev,
+                        targetPath: [...(response.data || []), folder],
+                    }));
+                }
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        }
+    };
+
+    const handleFloatingConfirm = async (targetId: number | null) => {
+        if (selectedMaterials.length === 0) return;
+
+        try {
+            if (floatingContainer.operation === "copy") {
+                await copyMaterials({
+                    material_ids: selectedMaterials,
+                    destination_id: targetId ?? undefined,
+                }).unwrap();
+                showToast(
+                    "success",
+                    "Success",
+                    "Materials copied successfully",
+                );
+            } else {
+                await moveMaterials({
+                    material_ids: selectedMaterials,
+                    destination_id: targetId ?? undefined,
+                }).unwrap();
+                showToast("success", "Success", "Materials moved successfully");
+            }
+            await fetchMaterials();
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
+            setFloatingContainer({
+                show: false,
+                operation: "copy",
+                targetPath: [],
+            });
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
+    const folders = useMemo(
+        () => materials.filter((m) => m.type === "folder"),
+        [materials],
+    );
+    const files = useMemo(
+        () => materials.filter((m) => m.type !== "folder"),
+        [materials],
+    );
+
+    const facultyOptions = useMemo(
+        () => [
+            { value: "", label: "All Faculties" },
+            ...faculties.map((faculty) => ({
+                value: faculty.id?.toString() || "",
+                label: faculty.name || "",
+            })),
+        ],
+        [faculties],
+    );
+
+    const departmentOptions = useMemo(
+        () => [
+            { value: "", label: "All Departments" },
+            ...departments.map((dept) => ({
+                value: dept.id?.toString() || "",
+                label: dept.name || "",
+            })),
+        ],
+        [departments],
+    );
+
+    const yearOptions = useMemo(
+        () => [
+            { value: "", label: "All Years" },
+            ...years.map((year) => ({
+                value: year.id?.toString() || "",
+                label: year.year?.toString() || "",
+            })),
+        ],
+        [years],
+    );
+
+    const subjectOptions = useMemo(
+        () => [
+            { value: "", label: "All Courses" },
+            ...subjects.map((subject) => ({
+                value: subject.id?.toString() || "",
+                label: subject.name || "",
+            })),
+        ],
+        [subjects],
+    );
+
+    useEffect(() => {
+        if (shouldDownload && downloadLink.current) {
+            downloadLink.current.click();
+            setShouldDownload(false);
+        }
+    }, [shouldDownload]);
+
+    // Handle global drag events for file upload
+    useEffect(() => {
+        const handleDocumentDragOver = (e: DragEvent) => {
+            e.preventDefault();
+            if (
+                isDraggingExternal ||
+                !facultyFilter ||
+                !departmentFilter ||
+                !yearFilter ||
+                !subjectFilter ||
+                bulkUploadFiles ||
+                formData.show
+            )
+                return;
+
+            // Check if dragging files
+            if (
+                e.dataTransfer?.items &&
+                Array.from(e.dataTransfer.items).some(
+                    (item) => item.kind === "file",
+                )
+            ) {
+                setDropZoneVisible(true);
+                setIsDraggingExternal(true);
+            }
+        };
+
+        const handleDocumentMouseLeave = (e: MouseEvent) => {
+            e.preventDefault();
+            // Check if actually leaving the document
+            if (
+                e.clientX <= 0 ||
+                e.clientY <= 0 ||
+                e.clientX >= window.innerWidth ||
+                e.clientY >= window.innerHeight
+            ) {
+                setDropZoneVisible(false);
+                setIsDraggingExternal(false);
+            }
+        };
+
+        document.addEventListener("dragover", handleDocumentDragOver);
+        document.addEventListener("mouseleave", handleDocumentMouseLeave);
+
+        return () => {
+            document.removeEventListener("dragover", handleDocumentDragOver);
+            document.removeEventListener(
+                "mouseleave",
+                handleDocumentMouseLeave,
+            );
+        };
+    }, [
+        isDraggingExternal,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        bulkUploadFiles,
+        formData.show,
+    ]);
+
+    const handleDropZoneFilesSelected = (files: File[]) => {
+        if (!subjectFilter) {
+            showToast(
+                "error",
+                "Error",
+                "Please select all filters before uploading files",
+            );
+            return;
+        }
+        setBulkUploadFiles(files);
+    };
+
+    const handleDropZoneClose = () => {
+        setDropZoneVisible(false);
+        setIsDraggingExternal(false);
+    };
+
+    const handleBulkUploadClose = () => {
+        setBulkUploadFiles(null);
+    };
+
+    const handleCreateMaterialFromUpload = async (
+        name: string,
+        url: string,
+    ): Promise<void> => {
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+
+        await createMaterial({
+            name: name,
+            type: "file",
+            subject_id: parseInt(subjectFilter),
+            parent_id: parentId ?? undefined,
+            url: url,
+        }).unwrap();
+
+        await fetchMaterials();
+    };
+
+    const showFilterPage = !subjectFilter;
+    const showEmptyPage = subjectFilter && materials.length === 0;
+    const showContentPage = subjectFilter && materials.length > 0;
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Materials Explorer - CU Portal"
+                description="Navigate through your course materials with ease"
+            />
+            <Banner
+                title="Materials Explorer"
+                description="Navigate through your course materials with ease"
+            />
+            <div className={styles.container}>
+                <div className={styles.filtersSection}>
+                    {user?.canAccessAll && (
+                        <>
+                            <SelectFilter
+                                options={facultyOptions}
+                                setValue={setFacultyFilter}
+                            />
+                            <SelectFilter
+                                options={departmentOptions}
+                                setValue={setDepartmentFilter}
+                            />
+                            <SelectFilter
+                                options={yearOptions}
+                                setValue={setYearFilter}
+                            />
+                        </>
+                    )}
+                    <SelectFilter
+                        options={subjectOptions}
+                        setValue={setSubjectFilter}
+                    />
+                </div>
+
+                {!showFilterPage && (
+                    <div className={styles.searchActionsSection}>
+                        <div className={styles.searchContainer}>
+                            <Search
+                                placeholder="Search Materials..."
+                                setValue={setSearchQuery}
+                            />
+                        </div>
+                        <div className={styles.actionsContainer}>
+                            <button
+                                className={`${styles.actionButton} ${styles.addFolderBtn}`}
+                                onClick={() => handleCreateMaterial("folder")}
+                            >
+                                <i className="fa-regular fa-folder"></i>
+                                Add Folder
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${styles.addFileBtn}`}
+                                onClick={() => handleCreateMaterial("file")}
+                            >
+                                <i className="fa-regular fa-file"></i>
+                                Add File
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${styles.fetchBtn}`}
+                                onClick={() => handleCreateMaterial("drive")}
+                            >
+                                <i className="fab fa-google-drive"></i>
+                                Fetch From Drive
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {showContentPage && (
+                    <>
+                        {isSelectionMode && selectedMaterials.length > 0 && (
+                            <div className={styles.selectionBtns}>
+                                <span className={styles.selectedCount}>
+                                    {selectedMaterials.length} item
+                                    {selectedMaterials.length > 1
+                                        ? "s"
+                                        : ""}{" "}
+                                    selected
+                                </span>
+                                <button
+                                    className={`${styles.selectionBtn} ${styles.copyBtn}`}
+                                    onClick={handleSelectAll}
+                                >
+                                    <i className="fa-regular fa-circle-check me-2"></i>
+                                    Select All
+                                </button>
+                                <button
+                                    className={`${styles.selectionBtn} ${styles.copyBtn}`}
+                                    onClick={handleCopyMaterials}
+                                >
+                                    <i className="fa fa-link me-2"></i>
+                                    Copy to
+                                </button>
+                                <button
+                                    className={`${styles.selectionBtn} ${styles.moveBtn}`}
+                                    onClick={handleMoveMaterials}
+                                >
+                                    <i className="fa fa-folder me-2"></i>
+                                    Move to
+                                </button>
+                                <button
+                                    className={`${styles.selectionBtn} ${styles.deleteBtn}`}
+                                    onClick={() => handleDeleteMaterials()}
+                                >
+                                    <i className="fa fa-trash me-2"></i>
+                                    Delete
+                                </button>
+                                <button
+                                    className={`${styles.selectionBtn} ${styles.cancelBtn}`}
+                                    onClick={handleCancelSelection}
+                                >
+                                    <i className="fa fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+
+                        <Navigator
+                            path={currentPath}
+                            onNavigate={handleNavigate}
+                            onDrop={handleDropOnFolder}
+                        />
+
+                        <div className={styles.contentSection}>
+                            <div className={styles.contentGrid}>
+                                {folders.map((folder) => {
+                                    if (!folder.id) return null;
+                                    const folderId = folder.id;
+                                    return (
+                                        <MaterialCard
+                                            key={folderId}
+                                            material={folder}
+                                            isSelected={selectedMaterials.includes(
+                                                folderId,
+                                            )}
+                                            onClick={() =>
+                                                handleCardClick(folderId)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(folder)
+                                            }
+                                            onDragStart={() =>
+                                                handleDragStart(folderId)
+                                            }
+                                            onDrop={() =>
+                                                handleDropOnFolder(folderId)
+                                            }
+                                            onEdit={() =>
+                                                handleEditMaterial(folder)
+                                            }
+                                            onDelete={() =>
+                                                handleDeleteMaterials(folderId)
+                                            }
+                                            onCopy={() => handleCopyMaterials()}
+                                            onMove={() => handleMoveMaterials()}
+                                            onPreview={handlePreview}
+                                            onDownload={handleDownload}
+                                            onOpenLink={handleOpenLink}
+                                        />
+                                    );
+                                })}
+                                {files.map((file) => {
+                                    if (!file.id) return null;
+                                    const fileId = file.id;
+                                    return (
+                                        <MaterialCard
+                                            key={fileId}
+                                            material={file}
+                                            isSelected={selectedMaterials.includes(
+                                                fileId,
+                                            )}
+                                            onClick={() =>
+                                                handleCardClick(fileId)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(file)
+                                            }
+                                            onDragStart={() =>
+                                                handleDragStart(fileId)
+                                            }
+                                            onEdit={() =>
+                                                handleEditMaterial(file)
+                                            }
+                                            onDelete={() =>
+                                                handleDeleteMaterials(fileId)
+                                            }
+                                            onCopy={() => handleCopyMaterials()}
+                                            onMove={() => handleMoveMaterials()}
+                                            onPreview={handlePreview}
+                                            onDownload={handleDownload}
+                                            onOpenLink={handleOpenLink}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                {showEmptyPage && (
+                    <>
+                        <Navigator
+                            path={currentPath}
+                            onNavigate={handleNavigate}
+                            onDrop={handleDropOnFolder}
+                        />
+                        <EmptySection
+                            text="No Files Available"
+                            subtitle="There are currently no files in this folder. Upload or add new materials to get started."
+                            img={folderEmptyIcon}
+                        />
+                    </>
+                )}
+
+                {showFilterPage && (
+                    <div className={styles.filterPage}>
+                        <img
+                            src={emptySectionIcon}
+                            alt="Materials Explorer"
+                            className={styles.filterPageImage}
+                        />
+                        <div className={styles.filterPageTitle}>
+                            Welcome to Materials Explorer
+                        </div>
+                        <div className={styles.filterPageSubtitle}>
+                            Easily browse, search, and manage your course
+                            materials. Use the filters above to find exactly
+                            what you need.
+                        </div>
+                    </div>
+                )}
+
+                {formData.show && (
+                    <MaterialForm
+                        materialType={formData.type}
+                        material={formData.material}
+                        parentId={
+                            currentPath.length > 0
+                                ? (currentPath[currentPath.length - 1].id ??
+                                  null)
+                                : null
+                        }
+                        onClose={() =>
+                            setFormData({
+                                show: false,
+                                type: null,
+                                material: null,
+                            })
+                        }
+                        onSubmit={handleFormSubmit}
+                    />
+                )}
+
+                {floatingContainer.show && (
+                    <FloatingContainer
+                        operation={floatingContainer.operation}
+                        materials={materials}
+                        selectedMaterials={selectedMaterials}
+                        currentPath={floatingContainer.targetPath}
+                        folders={materials.filter(
+                            (m) =>
+                                m.type === "folder" &&
+                                (floatingContainer.targetPath.length === 0
+                                    ? m.parent_id === null
+                                    : m.parent_id ===
+                                      floatingContainer.targetPath[
+                                          floatingContainer.targetPath.length -
+                                              1
+                                      ].id),
+                        )}
+                        onClose={() =>
+                            setFloatingContainer({
+                                show: false,
+                                operation: "copy",
+                                targetPath: [],
+                            })
+                        }
+                        onConfirm={handleFloatingConfirm}
+                        onNavigate={handleFloatingNavigate}
+                    />
+                )}
+
+                {previewFile && (
+                    <Preview
+                        file_id={previewFile.id}
+                        fileName={previewFile.name}
+                        onClose={handleClosePreview}
+                        onDownload={() =>
+                            handleDownload(previewFile.id, previewFile.name)
+                        }
+                    />
+                )}
+
+                {draggedFilesState.active && (
+                    <div
+                        className={styles.draggedFilesIcon}
+                        style={{
+                            left: `${draggedFilesState.x}px`,
+                            top: `${draggedFilesState.y}px`,
+                        }}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            color="#5A0F61"
+                        >
+                            <path d="M15.5 9H8.5V7H15.5V9ZM15.5 11H8.5V13H15.5V11ZM8.5 15H12.5V17H8.5V15ZM7 21C6.45 21 5.979 20.804 5.587 20.412C5.195 20.02 4.99933 19.5493 5 19V5C5 4.45 5.196 3.979 5.588 3.587C5.98 3.195 6.45067 2.99933 7 3H14L19 8V19C19 19.55 18.804 20.021 18.412 20.413C18.02 20.805 17.5493 21.0007 17 21H7Z" />
+                        </svg>
+                        <div className={styles.draggedFilesCount}>
+                            {selectedMaterials.length}
+                        </div>
+                    </div>
+                )}
+
+                <a
+                    href={fileToDownload?.url}
+                    className="d-none"
+                    download={fileToDownload?.name || "download"}
+                    ref={downloadLink}
+                />
+
+                <ConfirmModal
+                    isOpen={confirmModal.isOpen}
+                    onClose={() =>
+                        setConfirmModal({ isOpen: false, action: null })
+                    }
+                    onConfirm={() => {
+                        if (
+                            confirmModal.action === "delete" ||
+                            confirmModal.action === "bulkDelete"
+                        ) {
+                            confirmDelete();
+                        } else if (confirmModal.action === "move") {
+                            confirmMove(confirmModal.targetId ?? null);
+                        }
+                    }}
+                    title={
+                        confirmModal.action === "delete"
+                            ? "Delete Material?"
+                            : confirmModal.action === "bulkDelete"
+                              ? "Delete Materials?"
+                              : "Move Materials?"
+                    }
+                    message={
+                        confirmModal.action === "delete"
+                            ? "Are you sure you want to delete this material? This action cannot be undone."
+                            : confirmModal.action === "bulkDelete"
+                              ? `Are you sure you want to delete ${selectedMaterials.length} material${selectedMaterials.length > 1 ? "s" : ""}? This action cannot be undone.`
+                              : `Are you sure you want to move ${selectedMaterials.length} material${selectedMaterials.length > 1 ? "s" : ""} to this location?`
+                    }
+                    confirmText={
+                        confirmModal.action === "delete" ||
+                        confirmModal.action === "bulkDelete"
+                            ? "Delete"
+                            : "Move"
+                    }
+                    colorType={
+                        confirmModal.action === "delete" ||
+                        confirmModal.action === "bulkDelete"
+                            ? "red"
+                            : "orange"
+                    }
+                />
+
+                <DropZone
+                    isVisible={dropZoneVisible}
+                    onFilesSelected={handleDropZoneFilesSelected}
+                    onClose={handleDropZoneClose}
+                />
+
+                {bulkUploadFiles && (
+                    <BulkUploadModal
+                        files={bulkUploadFiles}
+                        onClose={handleBulkUploadClose}
+                        onMaterialCreate={handleCreateMaterialFromUpload}
+                    />
+                )}
+            </div>
+        </Layout>
+    );
+}

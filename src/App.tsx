@@ -48,6 +48,7 @@ import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
 import { RolePage } from "./pages/admin/roles/RolePage";
 import { RolesPage } from "./pages/admin/roles/RolesPage";
 import { NotificationsPage } from "./pages/user/notifications/NotificationsPage";
+import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
@@ -232,6 +233,13 @@ function App() {
                         path=":announcementId"
                         element={<AnnouncementPage />}
                     />
+                </Route>
+
+                <Route
+                    path="materials"
+                    element={<ProtectedRoute permission="View Materials" />}
+                >
+                    <Route index element={<MaterialsPage />} />
                 </Route>
             </Route>
         </Routes>

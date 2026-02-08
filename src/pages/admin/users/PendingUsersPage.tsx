@@ -11,9 +11,9 @@ import {
     useLazyGetUsersQuery,
     useUpdateUsersMutation,
 } from "../../../services/apis/admin/UserAPIs";
-import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { showToast } from "../../../utils/ToastsManager";
 import type { User } from "../../../types/entities/User";
 import type { Faculty } from "../../../types/entities/Faculty";
@@ -27,10 +27,12 @@ import badgeDepartmentIcon from "../../../assets/icons/badge-department.png";
 import badgeYearIcon from "../../../assets/icons/badge-year.png";
 import badgeIdCardIcon from "../../../assets/icons/badge-id-card.png";
 import badgeViewIcon from "../../../assets/icons/badge-view.png";
+import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./PendingUsersPage.module.css";
 
 export const PendingUsersPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const user = useAppSelector((state) => state.user.user);
     const [selectedFaculty, setSelectedFaculty] = useState("");
     const [selectedDepartment, setSelectedDepartment] = useState("");
     const [selectedYear, setSelectedYear] = useState("");
@@ -51,19 +53,19 @@ export const PendingUsersPage = () => {
     const [showRejectAllModal, setShowRejectAllModal] = useState(false);
 
     const [getPendingUsers, { isFetching }] = useLazyGetUsersQuery();
-    const [getFaculties] = useLazyGetFacultiesQuery();
-    const [getDepartments] = useLazyGetDepartmentsQuery();
-    const [getYears] = useLazyGetYearsQuery();
+    const [searchFaculties] = useLazySearchFacultiesQuery();
+    const [searchDepartments] = useLazySearchDepartmentsQuery();
+    const [searchYears] = useLazySearchYearsQuery();
     const [updateUsers] = useUpdateUsersMutation();
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await getFaculties({}).unwrap();
+            const result = await searchFaculties({}).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getFaculties]);
+    }, [searchFaculties]);
 
     const fetchDepartments = useCallback(async () => {
         try {
@@ -73,25 +75,25 @@ export const PendingUsersPage = () => {
                 return;
             }
             params.faculty_id = Number(selectedFaculty);
-            const result = await getDepartments(params).unwrap();
+            const result = await searchDepartments(params).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, selectedFaculty]);
+    }, [searchDepartments, selectedFaculty]);
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await getYears({}).unwrap();
+            const result = await searchYears({}).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getYears]);
+    }, [searchYears]);
 
     const fetchPendingUsers = useCallback(async () => {
         try {
-            if (!hasNextPage) return;
+            if (!hasNextPage || !user) return;
             const params: {
                 query?: string;
                 faculty_id?: number;
@@ -106,6 +108,12 @@ export const PendingUsersPage = () => {
             if (selectedDepartment)
                 params.department_id = Number(selectedDepartment);
             if (selectedYear) params.year_id = Number(selectedYear);
+
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
 
             const result = await getPendingUsers(params).unwrap();
             setPendingUsers((prev) => {
@@ -128,6 +136,7 @@ export const PendingUsersPage = () => {
         selectedYear,
         page,
         hasNextPage,
+        user,
     ]);
 
     const authQueryParams = useCallback(
@@ -283,29 +292,31 @@ export const PendingUsersPage = () => {
                             setValue={setSearchQuery}
                         />
                     </div>
-                    <div className={styles.filtersGroup}>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedFaculty}
-                                setValue={setSelectedFaculty}
-                                options={facultyOptions}
-                            />
+                    {user?.canAccessAll && (
+                        <div className={styles.filtersGroup}>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedFaculty}
+                                    setValue={setSelectedFaculty}
+                                    options={facultyOptions}
+                                />
+                            </div>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedDepartment}
+                                    setValue={setSelectedDepartment}
+                                    options={departmentOptions}
+                                />
+                            </div>
+                            <div className={styles.filterItem}>
+                                <SelectFilter
+                                    value={selectedYear}
+                                    setValue={setSelectedYear}
+                                    options={yearOptions}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedDepartment}
-                                setValue={setSelectedDepartment}
-                                options={departmentOptions}
-                            />
-                        </div>
-                        <div className={styles.filterItem}>
-                            <SelectFilter
-                                value={selectedYear}
-                                setValue={setSelectedYear}
-                                options={yearOptions}
-                            />
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
