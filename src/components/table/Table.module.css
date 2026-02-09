@@ -4,7 +4,7 @@
     box-shadow:
         0 0.5px 1.75px 0 rgba(0, 0, 0, 0.04),
         0 1.85px 6.25px 0 rgba(0, 0, 0, 0.19);
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .table {
