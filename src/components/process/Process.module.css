@@ -186,6 +186,29 @@
     font-size: 1.2rem;
 }
 
+.deleteOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0);
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: var(--white);
+}
+
+.deleteOverlay:hover {
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 1;
+}
+
 @media (max-width: 768px) {
     .processContainer {
         width: 300px;

@@ -14,12 +14,15 @@ const ProcessSlice = createSlice({
                 state.processes.push(payload);
             else
                 state.processes = state.processes.map((p) =>
-                    p.id == payload.id ? payload : p
+                    p.id == payload.id ? payload : p,
                 );
+        },
+        removeProcess(state, { payload }: { payload: string }) {
+            state.processes = state.processes.filter((p) => p.id !== payload);
         },
     },
 });
 
-export const { setProcess } = ProcessSlice.actions;
+export const { setProcess, removeProcess } = ProcessSlice.actions;
 
 export default ProcessSlice.reducer;

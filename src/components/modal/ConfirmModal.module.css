@@ -124,6 +124,16 @@
     opacity: 0.9;
 }
 
+.confirmBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cancelBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 @keyframes popupFade {
     from {
         opacity: 0.4;

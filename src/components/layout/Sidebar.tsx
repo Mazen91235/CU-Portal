@@ -71,10 +71,9 @@ const navSectionsDefault: NavSection[] = [
             },
             {
                 label: "Materials",
-                // path: "/user/materials",
-                path: "#!",
+                path: "/user/materials",
                 icon: "sidebar-materials",
-                badge: "Soon",
+                badge: "Beta",
                 activatesPaths: ["/user/materials/"],
             },
             {
@@ -259,6 +258,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Materials",
             path: "/admin/materials",
             icon: "sidebar-admin-materials",
+            badge: "Beta",
             activatesPaths: ["/admin/materials/"],
         });
     }

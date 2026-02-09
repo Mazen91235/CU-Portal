@@ -131,6 +131,11 @@
     filter: brightness(0) invert(1);
 }
 
+.activeLink .badge {
+    background: #8c0dab;
+    color: var(--white);
+}
+
 .linkContent {
     margin: 0;
     padding: 0;

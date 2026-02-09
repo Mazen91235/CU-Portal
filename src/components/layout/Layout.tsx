@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
 import { Process } from "../process/Process";
@@ -10,6 +10,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+
+    useEffect(() => {
+        if (window.innerWidth < 1000) {
+            setIsSidebarOpen(false);
+        }
+    }, []);
 
     return (
         <div className={styles.layoutContainer}>

@@ -58,9 +58,36 @@ export const hasMissingProperties = (
     return false;
 };
 
+const ignoreUnknownError = (
+    error: DefaultAPIResponse | string | Error | unknown,
+) => {
+    const unKnownError = "invalid page number";
+    if (typeof error == "string" && error.toLowerCase() == unKnownError) {
+        return true;
+    }
+    if (error instanceof Error && error.message.toLowerCase() == unKnownError) {
+        return true;
+    }
+    if (typeof error == "object" && error !== null) {
+        const data = (error as DefaultAPIResponse).data;
+        if (typeof data == "object" && data !== null) {
+            const res = data as GenericAPIResponse;
+            if (
+                res.status == "error" &&
+                res.message.toLowerCase() == unKnownError
+            ) {
+                return true;
+            }
+        }
+    }
+};
+
 export const handlePopupErrors = (
     response: DefaultAPIResponse | string | Error | unknown,
 ) => {
+    if (ignoreUnknownError(response)) {
+        return;
+    }
     if (typeof response === "string") {
         showToast("error", "Error", response);
         return;
@@ -69,17 +96,11 @@ export const handlePopupErrors = (
         showToast("error", "Error", response.message);
         return;
     }
-    const data = (response as DefaultAPIResponse).data;
-    if (typeof data == "string") {
-        showToast("error", "Error", data);
+    const res = (response as DefaultAPIResponse).data as GenericAPIResponse;
+    if (res.status == "error") {
+        const message = res.message ?? "An Error Occurred. Please Try Again.";
+        showToast("error", "Error", message);
     } else {
-        const res = data as GenericAPIResponse;
-        if (res.status == "error") {
-            const message =
-                res.message ?? "An Error Occurred. Please Try Again.";
-            showToast("error", "Error", message);
-        } else {
-            showToast("error", "Error", "An Error Occurred. Please Try Again.");
-        }
+        showToast("error", "Error", "An Error Occurred. Please Try Again.");
     }
 };

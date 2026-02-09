@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAppSelector } from "../../services/redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../services/redux/Hooks";
 import { formatString } from "../../utils/Formatter";
 import type { Process } from "../../types/Process";
 import { showToast } from "../../utils/ToastsManager";
 import { useNavigate } from "react-router";
+import { removeProcess } from "../../services/redux/reducers/ProcessReducer";
 import styles from "./Process.module.css";
 
 export function Process() {
     const processes = useAppSelector((state) => state.process.processes);
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -51,7 +53,11 @@ export function Process() {
             showToast("error", "Error", process.reason || "Unknown error");
         else if (process.url) navigate(process.url);
     };
-
+    const handleRemove = (e: React.MouseEvent, processId: string) => {
+        e.stopPropagation();
+        dispatch(removeProcess(processId));
+        if (processes.length === 1) setIsOpen(false);
+    };
     return (
         <div
             className={`${styles.processContainer} ${isOpen ? styles.open : ""}`}
@@ -111,6 +117,18 @@ export function Process() {
                                 <span className={styles.progressText}>
                                     {Math.round(process.progress || 0)}%
                                 </span>
+                                {["completed", "failed"].includes(
+                                    process.status,
+                                ) && (
+                                    <div
+                                        className={styles.deleteOverlay}
+                                        onClick={(e) =>
+                                            handleRemove(e, process.id)
+                                        }
+                                    >
+                                        <i className="fa-solid fa-times"></i>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );

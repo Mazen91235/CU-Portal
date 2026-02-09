@@ -168,7 +168,7 @@
     object-fit: cover;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .searchContainer {
         display: none;
     }
@@ -185,11 +185,5 @@
 
     .notificationsDropdown {
         right: -60px;
-    }
-}
-
-@media (max-width: 400px) {
-    .notificationsDropdown {
-        right: 10px;
     }
 }

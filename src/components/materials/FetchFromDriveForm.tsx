@@ -1,0 +1,86 @@
+import { useState } from "react";
+import { Button } from "../forms/Button";
+import styles from "./MaterialForm.module.css";
+import { showToast } from "../../utils/ToastsManager";
+
+interface FetchFromDriveFormProps {
+    onClose: () => void;
+    onSubmit?: (url: string) => void;
+}
+
+export function FetchFromDriveForm({
+    onClose,
+    onSubmit,
+}: FetchFromDriveFormProps) {
+    const [driveUrl, setDriveUrl] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!driveUrl.trim()) {
+            showToast("error", "Error", "Please enter a Google Drive URL");
+            return;
+        }
+
+        if (onSubmit) {
+            onClose();
+            onSubmit(driveUrl.trim());
+            return;
+        }
+    };
+
+    return (
+        <div className={styles.modalOverlay} onClick={onClose}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.modalHeader}>
+                    <h2>Fetch From Drive</h2>
+                    <button
+                        type="button"
+                        className={styles.closeButton}
+                        onClick={onClose}
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="driveUrl" className={styles.label}>
+                            Google Drive URL
+                        </label>
+                        <input
+                            type="url"
+                            id="driveUrl"
+                            className={styles.input}
+                            value={driveUrl}
+                            onChange={(e) => setDriveUrl(e.target.value)}
+                            placeholder="https://drive.google.com/..."
+                            required
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className={styles.formActions}>
+                        <Button
+                            type="button"
+                            isSubmitting={false}
+                            text="Cancel"
+                            loadingText="Canceling..."
+                            className={styles.cancelButton}
+                            isDefault={true}
+                            onClick={onClose}
+                        />
+                        <Button
+                            type="submit"
+                            isSubmitting={false}
+                            text="Fetch Files"
+                            loadingText="Fetching..."
+                            className={styles.submitButton}
+                            isOrange={false}
+                        />
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}

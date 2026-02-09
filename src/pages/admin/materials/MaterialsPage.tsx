@@ -11,6 +11,7 @@ import {
     useDeleteMaterialMutation,
     useCopyMaterialsMutation,
     useMoveMaterialsMutation,
+    useLazyGetMaterialsFromDriveQuery,
 } from "../../../services/apis/admin/MaterialAPIs";
 import type { Material } from "../../../types/entities/Material";
 import type { Faculty } from "../../../types/entities/Faculty";
@@ -29,6 +30,7 @@ import { Search } from "../../../components/forms/Search";
 import { EmptySection } from "../../../components/materials/EmptySection";
 import { MaterialCard } from "../../../components/materials/MaterialCard";
 import { MaterialForm } from "../../../components/materials/MaterialForm";
+import { FetchFromDriveForm } from "../../../components/materials/FetchFromDriveForm";
 import { Navigator } from "../../../components/materials/Navigator";
 import { FloatingContainer } from "../../../components/materials/FloatingContainer";
 import { Preview } from "../../../components/preview/Preview";
@@ -84,6 +86,7 @@ export function MaterialsPage() {
         type: "folder" | "file" | "drive" | "youtube" | "external" | null;
         material: Material | null;
     }>({ show: false, type: null, material: null });
+    const [showFetchFromDriveForm, setShowFetchFromDriveForm] = useState(false);
     const [floatingContainer, setFloatingContainer] = useState<{
         show: boolean;
         operation: "copy" | "move";
@@ -121,6 +124,7 @@ export function MaterialsPage() {
         useDeleteMaterialMutation();
     const [copyMaterials] = useCopyMaterialsMutation();
     const [moveMaterials, { isLoading: isMoving }] = useMoveMaterialsMutation();
+    const [getMaterialsFromDrive] = useLazyGetMaterialsFromDriveQuery();
     const createProcess = useCreateProcess({});
 
     const fetchFaculties = useCallback(async () => {
@@ -445,10 +449,10 @@ export function MaterialsPage() {
                     ? "Materials deleted successfully"
                     : "Material deleted successfully",
             );
-            await fetchMaterials();
             setSelectedMaterials([]);
             setIsSelectionMode(false);
             setConfirmModal({ isOpen: false, action: null });
+            await fetchMaterials();
         } catch (error) {
             handlePopupErrors(error);
             setConfirmModal({ isOpen: false, action: null });
@@ -886,6 +890,51 @@ export function MaterialsPage() {
         [createMaterial, dispatch, fetchMaterials, subjectFilter, currentPath],
     );
 
+    const handleFetchFromDrive = useCallback(
+        (url: string) => {
+            const parentId =
+                currentPath.length > 0
+                    ? currentPath[currentPath.length - 1].id
+                    : null;
+            createProcess("Fetching from Drive").then(async (process) => {
+                try {
+                    await getMaterialsFromDrive({
+                        drive_url: url,
+                        subject_id: parseInt(subjectFilter),
+                        parent_id: parentId ?? undefined,
+                    }).unwrap();
+                    dispatch(setProcess({ ...process, status: "completed" }));
+                    setCurrentPath((prev) => {
+                        const latestParentId =
+                            prev.length > 0 ? prev[prev.length - 1].id : null;
+                        fetchMaterials(latestParentId);
+                        return prev;
+                    });
+                } catch (error) {
+                    const res =
+                        (error as Error).message ||
+                        (error as DefaultAPIResponse)?.data?.message ||
+                        "Fetch failed";
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            status: "failed",
+                            reason: res,
+                        }),
+                    );
+                }
+            });
+        },
+        [
+            currentPath,
+            subjectFilter,
+            createProcess,
+            dispatch,
+            getMaterialsFromDrive,
+            fetchMaterials,
+        ],
+    );
+
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
     const showContentPage = subjectFilter && materials.length > 0;
@@ -949,7 +998,7 @@ export function MaterialsPage() {
                             </button>
                             <button
                                 className={`${styles.actionButton} ${styles.fetchBtn}`}
-                                onClick={() => handleCreateMaterial("drive")}
+                                onClick={() => setShowFetchFromDriveForm(true)}
                             >
                                 <i className="fab fa-google-drive"></i>
                                 Fetch From Drive
@@ -1138,7 +1187,14 @@ export function MaterialsPage() {
                     </div>
                 )}
 
-                {formData.show && (
+                {showFetchFromDriveForm && (
+                    <FetchFromDriveForm
+                        onClose={() => setShowFetchFromDriveForm(false)}
+                        onSubmit={(url: string) => handleFetchFromDrive(url)}
+                    />
+                )}
+
+                {formData.show && formData.type !== "drive" && (
                     <MaterialForm
                         materialType={formData.type}
                         material={formData.material}
@@ -1268,12 +1324,9 @@ export function MaterialsPage() {
                             : "orange"
                     }
                     disabled={
-                        confirmModal.action === "delete" ||
-                        confirmModal.action === "bulkDelete"
-                            ? isDeleting
-                            : confirmModal.action === "move"
-                              ? isMoving
-                              : false
+                        (confirmModal.action === "delete" && isDeleting) ||
+                        (confirmModal.action === "bulkDelete" && isDeleting) ||
+                        (confirmModal.action === "move" && isMoving)
                     }
                 />
 

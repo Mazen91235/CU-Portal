@@ -26,6 +26,7 @@ const ConfirmModal = ({
     if (!isOpen) return null;
 
     const handleConfirm = () => {
+        if (disabled) return;
         onConfirm();
     };
 
