@@ -210,6 +210,7 @@ export const FacultiesPage = () => {
                     confirmText={isDeleting ? "Deleting..." : "Delete"}
                     title="Delete Faculty?"
                     message={`Are you sure you want to delete "${selectedFaculty?.name}"? This action cannot be undone.`}
+                    colorType="red"
                 />
             </Layout>
         </>

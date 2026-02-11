@@ -395,6 +395,7 @@ export const TasksPage = () => {
                 title="Delete Task"
                 message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
                 confirmText="Delete"
+                colorType="red"
             />
         </Layout>
     );

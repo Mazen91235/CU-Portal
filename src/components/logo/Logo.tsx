@@ -15,7 +15,8 @@ const Logo = ({
             const location = window.location.href;
             if (location.includes("/user")) window.location.href = "/user";
             else if (location.includes("/admin"))
-                window.location.href = "/admin";
+                // window.location.href = "/admin";
+                window.location.href = "/user";
             else window.location.href = "/";
         };
     }

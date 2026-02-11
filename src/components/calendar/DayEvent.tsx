@@ -98,7 +98,8 @@ export const DayEvent = ({
                 )}
             </div>
             <Link to={getViewLink()} className={styles["view-btn-wrapper"]}>
-                <div className={styles["view-btn"]}>View {getBadgeText()}</div>
+                <div className={styles["view-btn"]}>View</div>
+                {/* <div className={styles["view-btn"]}>View {getBadgeText()}</div> */}
             </Link>
         </div>
     );

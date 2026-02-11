@@ -397,6 +397,7 @@ export const AnnouncementsPage = () => {
                 title="Delete Announcement"
                 message={`Are you sure you want to delete "${selectedAnnouncement?.title}"? This action cannot be undone.`}
                 confirmText="Delete"
+                colorType="red"
             />
         </Layout>
     );

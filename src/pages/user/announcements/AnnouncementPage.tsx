@@ -82,10 +82,7 @@ export const AnnouncementPage = () => {
 
                 <div className={styles.contentGrid}>
                     <div className={styles.mainContent}>
-                        <LongSection
-                            title="Announcement Content"
-                            icon="align-left"
-                        >
+                        <LongSection title="Content" icon="align-left">
                             <div className={styles.detailsSection}>
                                 {announcement.content || (
                                     <span>No content available</span>

@@ -221,6 +221,7 @@ export const YearsPage = () => {
                     confirmText={isDeleting ? "Deleting..." : "Delete"}
                     title="Delete Year?"
                     message={`Are you sure you want to delete "${selectedYear?.year}"? This action cannot be undone.`}
+                    colorType="red"
                 />
             </Layout>
         </>

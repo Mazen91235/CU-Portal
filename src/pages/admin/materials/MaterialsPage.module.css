@@ -251,6 +251,7 @@
     .actionsContainer {
         width: 100%;
         justify-content: stretch;
+        flex-direction: column;
     }
 
     .actionButton {

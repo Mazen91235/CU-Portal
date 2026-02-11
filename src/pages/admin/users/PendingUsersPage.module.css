@@ -1,6 +1,6 @@
 /* Filters Section - Same as UsersPage */
 .filtersSection {
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 1rem;
     position: relative;
     overflow: visible;
 }
@@ -22,7 +22,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    padding: 1rem;
+    padding: 1rem 0px;
 }
 
 .filterSearch {
@@ -40,7 +40,7 @@
 
 /* Pending Section */
 .pendingSection {
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 1rem;
 }
 
 .pendingCard {

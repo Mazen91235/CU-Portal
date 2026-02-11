@@ -30,6 +30,7 @@
     transition: all 0.15s;
     cursor: pointer;
     font-family: var(--primary-font-family);
+    white-space: nowrap;
 }
 
 .addLinkBtn:hover,

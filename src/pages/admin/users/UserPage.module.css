@@ -38,6 +38,10 @@
     gap: 1rem;
 }
 
+.roleSelect {
+    margin-bottom: 0;
+}
+
 .userBadge {
     background: rgba(140, 13, 171, 0.2);
     color: #7b1684;
@@ -46,6 +50,7 @@
     font-size: 15px;
     font-weight: 500;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .userEarlyAccessBadge {
@@ -56,6 +61,7 @@
     font-size: 15px;
     font-weight: 500;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .editRoleBtn {
@@ -1177,6 +1183,21 @@
         display: table;
         float: none;
         border-spacing: 0 4px;
+    }
+    .userRoleContainer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+    .userRoleContainer .userRoleLeft {
+        width: 100%;
+    }
+    .userRoleContainer .editRoleBtn {
+        width: 100%;
+    }
+    .userDetailsInfoTable tr {
+        display: flex;
+        flex-wrap: wrap;
     }
 }
 

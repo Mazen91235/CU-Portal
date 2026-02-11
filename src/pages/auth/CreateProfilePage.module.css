@@ -332,7 +332,7 @@
     .contentWrapper {
         flex-direction: column;
         gap: 20px;
-        padding: 20px;
+        padding: 40px 20px;
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -373,7 +373,7 @@
     }
 
     .profileFormCard {
-        padding: 40px 30px;
+        padding: 40px 20px;
         max-width: calc(100% - 80px);
         margin: 0;
         box-sizing: border-box;
@@ -459,8 +459,8 @@
         margin-left: 0;
         transform: rotateY(180deg);
         position: absolute;
-        top: -50px;
-        right: -30px;
+        top: -55px;
+        right: -35px;
     }
 }
 

@@ -13,6 +13,7 @@ export const Select = <T extends Record<string, unknown>>({
     hasNoMarginOrBorder,
     onChange,
     children,
+    className,
 }: {
     register: UseFormRegister<T>;
     name: Path<T>;
@@ -22,6 +23,7 @@ export const Select = <T extends Record<string, unknown>>({
     hasNoMarginOrBorder?: boolean;
     onChange?: ChangeEventHandler<HTMLSelectElement>;
     children: React.ReactNode;
+    className?: string;
 }) => {
     const registration = register(name);
 
@@ -32,7 +34,7 @@ export const Select = <T extends Record<string, unknown>>({
 
     return (
         <div
-            className={styles["input-group"]}
+            className={`${styles["input-group"]} ${className ?? ""}`}
             style={hasNoMarginOrBorder ? { margin: 0 } : undefined}
         >
             {label && (

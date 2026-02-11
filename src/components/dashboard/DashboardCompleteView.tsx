@@ -251,7 +251,7 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
                     <div className={styles["section-header"]}>
                         <h5 className={styles["section-heading"]}>
                             <img src={dashboardTasksIcon} alt="task" />
-                            Tasks & Assignments
+                            Tasks Overview
                         </h5>
                         <Link
                             to="/user/tasks"

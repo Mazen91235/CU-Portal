@@ -219,6 +219,7 @@ export const RegisteredCourses = () => {
                             ? "Are you sure you want to register for this course?"
                             : "Are you sure you want to unregister from this course?"
                     }
+                    colorType={action === "register" ? "green" : "red"}
                 />
             </Layout>
         </>

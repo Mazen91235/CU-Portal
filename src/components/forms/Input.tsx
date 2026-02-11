@@ -23,6 +23,7 @@ type InputProps<T extends Record<string, unknown>> = {
     disabled?: boolean;
     isTextArea?: boolean;
     hasNoMarginOrBorder?: boolean;
+    className?: string;
 };
 
 function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
@@ -52,6 +53,7 @@ const InputInner = <T extends Record<string, unknown>>(
         disabled,
         isTextArea,
         hasNoMarginOrBorder,
+        className,
     }: InputProps<T>,
     forwardedRef: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
 ) => {
@@ -66,7 +68,7 @@ const InputInner = <T extends Record<string, unknown>>(
 
     return (
         <div
-            className={styles["input-group"]}
+            className={`${styles["input-group"]} ${className ?? ""}`}
             style={
                 hasNoMarginOrBorder
                     ? {

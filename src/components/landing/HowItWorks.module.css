@@ -145,6 +145,7 @@
     box-shadow: var(--light-box-shadow);
     transition: background var(--transition-duration);
     position: static;
+    text-align: center;
 }
 
 .simpleStepsBtn:hover {
@@ -162,17 +163,17 @@
 
     .simpleStepsSection {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         padding: 1.2rem 0;
         position: relative;
         width: 95%;
-        max-width: 98vw;
+        max-width: 98%;
         margin: 0 auto;
     }
 
     .mainStepsCard {
-        width: 100vw;
-        max-width: 100vw;
+        width: 100%;
+        max-width: 100%;
         padding: 1rem 0.5rem 1.5rem;
         margin: 0;
         border-radius: var(--primary-border-radius);

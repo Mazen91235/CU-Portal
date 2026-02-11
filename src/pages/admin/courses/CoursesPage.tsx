@@ -307,6 +307,7 @@ export const CoursesPage = () => {
                 title="Delete Course"
                 message={`Are you sure you want to delete "${selectedCourse?.name}"? This action cannot be undone.`}
                 confirmText="Delete"
+                colorType="red"
             />
             <Pagination onReached={handlePagination} />
         </Layout>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
@@ -24,6 +24,7 @@ export default function useAuth({
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [logout] = useLazyLogoutQuery();
+    const refreshTokenRef = useRef<number | null>(null);
     const [refreshTokenMutation] = useRefreshTokenMutation();
     const user = useAppSelector((state) => state.user.user);
     const access_token = useAppSelector((state) => state.user.access_token);
@@ -36,6 +37,14 @@ export default function useAuth({
                 await refreshTokenMutation(
                     GetCookie("refresh_token")!,
                 ).unwrap();
+                if (refreshTokenRef.current)
+                    clearTimeout(refreshTokenRef.current);
+                refreshTokenRef.current = setTimeout(
+                    () => {
+                        refreshToken();
+                    },
+                    8 * 60 * 1000, // 8 minutes
+                );
             } catch {
                 if (retries > 0) {
                     await refreshToken(retries - 1);

@@ -408,6 +408,7 @@ export const ExamsPage = () => {
                 confirmText="Delete"
                 title="Delete Exam"
                 message={`Are you sure you want to delete "${selectedExam?.name}"? This action cannot be undone.`}
+                colorType="red"
             />
         </Layout>
     );

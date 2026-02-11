@@ -157,7 +157,7 @@ export const UserPage = () => {
                                                 styles.userEarlyAccessBadge
                                             }
                                         >
-                                            Early Access Member
+                                            Early Access
                                         </span>
                                     )}
                                 </div>
@@ -180,6 +180,7 @@ export const UserPage = () => {
                                     name="roleId"
                                     errors={errors}
                                     disabled={isSubmitting}
+                                    className={styles.roleSelect}
                                 >
                                     <option value="">Select Role</option>
                                     {roles.map((role) => (
@@ -288,7 +289,7 @@ export const UserPage = () => {
                                     <td className={styles.userDetailsValue}>
                                         {user.national_id || "N/A"}
                                     </td>
-                                    <td>
+                                    <td className={styles.userDetailsLabel}>
                                         <img
                                             src={calendarIcon}
                                             alt="Joined Date"

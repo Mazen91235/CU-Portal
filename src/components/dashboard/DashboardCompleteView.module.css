@@ -110,6 +110,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-duration);
+    white-space: nowrap;
 }
 
 .view-all-btn:hover {
@@ -425,6 +426,10 @@
 
     .main-column {
         order: 2;
+    }
+    .view-all-btn {
+        font-size: 14px;
+        padding: 6px 12px;
     }
 }
 
