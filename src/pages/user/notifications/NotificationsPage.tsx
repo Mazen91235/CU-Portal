@@ -33,7 +33,6 @@ export const NotificationsPage = () => {
                 const unreadRes = await getNotifications({
                     seen: false,
                     page: unReadPage,
-                    limit: 10,
                 }).unwrap();
                 setHasUnReadNextPage(unreadRes.next || false);
                 if (unReadPage === 1) {
@@ -49,7 +48,6 @@ export const NotificationsPage = () => {
                 const readRes = await getNotifications({
                     seen: true,
                     page: readPage,
-                    limit: 10,
                 }).unwrap();
                 setHasReadNextPage(readRes.next || false);
                 if (readPage === 1) {
