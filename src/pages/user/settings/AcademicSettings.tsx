@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PageSeo } from "../../../components/PageSeo";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
-import styles from "./AcademicSettings.module.css";
 import { Layout } from "../../../components/layout/Layout";
 import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -18,6 +17,9 @@ import { useUpdateUserAcademicDataMutation } from "../../../services/apis/user/U
 import { showToast } from "../../../utils/ToastsManager";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useRefreshTokenMutation } from "../../../services/apis/AuthenticateAPIs";
+import { GetCookie } from "../../../utils/CookiesManager";
+import styles from "./AcademicSettings.module.css";
 
 const academicSchema = z.object({
     faculty: z.string().min(1, "Faculty is required"),
@@ -45,6 +47,7 @@ export const AcademicSettings = () => {
     const [searchDepartments] = useLazySearchDepartmentsQuery();
     const [searchYears] = useLazySearchYearsQuery();
     const [updateAcademicData] = useUpdateUserAcademicDataMutation();
+    const [refreshToken] = useRefreshTokenMutation();
 
     const [faculties, setFaculties] = useState<Faculty[]>([]);
     const [faculty, setFaculty] = useState<Faculty | null>(null);
@@ -133,6 +136,7 @@ export const AcademicSettings = () => {
                 year_id: parseInt(data.year, 10),
                 department_id: parseInt(data.department, 10),
             }).unwrap();
+            await refreshToken(GetCookie("refresh_token")!).unwrap();
             showToast(
                 "success",
                 "Success",
