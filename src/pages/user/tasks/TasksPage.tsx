@@ -18,6 +18,8 @@ import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/Cour
 import type { Subject } from "../../../types/entities/Subject";
 
 import styles from "./TasksPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
+import { showToast } from "../../../utils/ToastsManager";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
@@ -103,6 +105,16 @@ export const TasksPage = () => {
         }
     };
 
+    const handleShareTask = (taskId: number) => {
+        const url = `${window.location.origin}/user/tasks/${taskId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Task link copied to clipboard successfully",
+        );
+    };
+
     const subjectOptions = useMemo(() => {
         const options = [{ label: "All Subjects", value: "" }];
         options.push(
@@ -170,6 +182,9 @@ export const TasksPage = () => {
                             ]}
                             button="View Task"
                             buttonAction={() => handleViewTask(task.id!)}
+                            hasOptions
+                            sharable
+                            onShare={() => handleShareTask(task.id!)}
                         />
                     ))}
                 </div>

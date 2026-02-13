@@ -30,6 +30,7 @@ import { formatDateTime } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./TasksPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
@@ -205,6 +206,16 @@ export const TasksPage = () => {
         navigate("/admin/tasks/create");
     };
 
+    const handleShareTask = (taskId: number) => {
+        const url = `${window.location.origin}/admin/tasks/${taskId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Task link copied to clipboard successfully",
+        );
+    };
+
     const handleEditTask = (taskId: number) => {
         navigate(`/admin/tasks/edit/${taskId}`);
     };
@@ -372,9 +383,11 @@ export const TasksPage = () => {
                             ]}
                             button="View Task"
                             buttonAction={() => handleViewTask(task.id!)}
+                            sharable
                             editable
                             deletable
                             hasOptions
+                            onShare={() => handleShareTask(task.id!)}
                             onEdit={() => handleEditTask(task.id!)}
                             onDelete={() => handleDeleteClick(task)}
                         />

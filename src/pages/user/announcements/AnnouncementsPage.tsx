@@ -17,6 +17,8 @@ import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/Cour
 import type { Subject } from "../../../types/entities/Subject";
 
 import styles from "./AnnouncementsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
+import { showToast } from "../../../utils/ToastsManager";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
@@ -93,6 +95,16 @@ export const AnnouncementsPage = () => {
         }
     };
 
+    const handleShareAnnouncement = (announcementId: number) => {
+        const url = `${window.location.origin}/user/announcements/${announcementId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Announcement link copied to clipboard successfully",
+        );
+    };
+
     const subjectOptions = useMemo(() => {
         const options = [{ label: "All Subjects", value: "" }];
         options.push(
@@ -157,6 +169,11 @@ export const AnnouncementsPage = () => {
                             button="View Announcement"
                             buttonAction={() =>
                                 handleViewAnnouncement(announcement.id!)
+                            }
+                            hasOptions
+                            sharable
+                            onShare={() =>
+                                handleShareAnnouncement(announcement.id!)
                             }
                         />
                     ))}

@@ -29,6 +29,7 @@ import { formatDate } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./AnnouncementsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
@@ -202,6 +203,16 @@ export const AnnouncementsPage = () => {
         navigate("/admin/announcements/create");
     };
 
+    const handleShareAnnouncement = (announcementId: number) => {
+        const url = `${window.location.origin}/admin/announcements/${announcementId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Announcement link copied to clipboard successfully",
+        );
+    };
+
     const handleEditAnnouncement = (announcementId: number) => {
         navigate(`/admin/announcements/edit/${announcementId}`);
     };
@@ -369,9 +380,13 @@ export const AnnouncementsPage = () => {
                             buttonAction={() =>
                                 handleViewAnnouncement(announcement.id!)
                             }
+                            sharable
                             editable
                             deletable
                             hasOptions
+                            onShare={() =>
+                                handleShareAnnouncement(announcement.id!)
+                            }
                             onEdit={() =>
                                 handleEditAnnouncement(announcement.id!)
                             }

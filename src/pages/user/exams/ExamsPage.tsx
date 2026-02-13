@@ -18,6 +18,8 @@ import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/Cour
 import type { Subject } from "../../../types/entities/Subject";
 
 import styles from "./ExamsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
+import { showToast } from "../../../utils/ToastsManager";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
@@ -103,6 +105,16 @@ export const ExamsPage = () => {
         }
     };
 
+    const handleShareExam = (examId: number) => {
+        const url = `${window.location.origin}/user/exams/${examId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Exam link copied to clipboard successfully",
+        );
+    };
+
     const subjectOptions = useMemo(() => {
         const options = [{ label: "All Subjects", value: "" }];
         options.push(
@@ -177,6 +189,9 @@ export const ExamsPage = () => {
                             ]}
                             button="View Exam"
                             buttonAction={() => handleViewExam(exam.id!)}
+                            hasOptions
+                            sharable
+                            onShare={() => handleShareExam(exam.id!)}
                         />
                     ))}
                 </div>

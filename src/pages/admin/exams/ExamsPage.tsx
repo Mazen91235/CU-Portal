@@ -30,6 +30,7 @@ import { formatDateTime } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./ExamsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
@@ -207,6 +208,16 @@ export const ExamsPage = () => {
         navigate("/admin/exams/create");
     };
 
+    const handleShareExam = (examId: number) => {
+        const url = `${window.location.origin}/admin/exams/${examId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Exam link copied to clipboard successfully",
+        );
+    };
+
     const handleEditExam = (examId: number) => {
         navigate(`/admin/exams/edit/${examId}`);
     };
@@ -382,9 +393,11 @@ export const ExamsPage = () => {
                             ]}
                             button="View Exam"
                             buttonAction={() => handleViewExam(exam.id!)}
+                            sharable
                             editable
                             deletable
                             hasOptions
+                            onShare={() => handleShareExam(exam.id!)}
                             onEdit={() => handleEditExam(exam.id!)}
                             onDelete={() => handleDeleteClick(exam)}
                         />

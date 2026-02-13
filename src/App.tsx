@@ -55,8 +55,6 @@ import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
 
 import "./App.css";
-import { useEffect } from "react";
-import { SetCookie } from "./utils/CookiesManager";
 
 function App() {
     useAuth({ shouldNavigate: false });
@@ -65,13 +63,6 @@ function App() {
     useRouteMessages();
     useValidateUserLevel();
     usePageLoading();
-    useEffect(() => {
-        SetCookie(
-            "refresh_token",
-            "47zeLOJ3k2JjH0Bh0y016A61HnR02gom46Qb0dU21OXS9909rK239FhkIfYA",
-            30 * 24 * 60 * 60,
-        ); // 30 days
-    }, []);
     return (
         <Routes>
             <Route index element={<LandingPage />} />
