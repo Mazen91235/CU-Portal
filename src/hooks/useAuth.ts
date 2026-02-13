@@ -139,26 +139,39 @@ export default function useAuth({
 export function useGetGoogleAccessToken() {
     useAuth({ shouldNavigate: false });
     const access_token = useAppSelector((state) => state.user.access_token);
-    const [getGoogleStoredToken] = useGetGoogleStoredTokenMutation();
-    const [getGoogleAccessToken] = useLazyGetGoogleAccessTokenQuery();
-    useEffect(() => {
-        (async () => {
+    const [getGoogleStoredTokenMutation] = useGetGoogleStoredTokenMutation();
+    const [getGoogleAccessTokenMutation] = useLazyGetGoogleAccessTokenQuery();
+    const getGoogleAccessToken = useCallback(
+        async (retries = 3) => {
             try {
                 if (
                     GetCookie("oauth_state") &&
-                    GetCookie("google_details_token")
+                    GetCookie("google_details_token") &&
+                    !access_token
                 )
-                    await getGoogleStoredToken({
+                    await getGoogleStoredTokenMutation({
                         oauth_state: GetCookie("oauth_state")!,
                         google_details_token: GetCookie(
                             "google_details_token",
                         )!,
                     }).unwrap();
                 if (!access_token) return;
-                await getGoogleAccessToken().unwrap();
+                await getGoogleAccessTokenMutation().unwrap();
             } catch {
+                if (retries > 0) {
+                    return await getGoogleAccessToken(retries - 1);
+                }
                 return;
             }
-        })();
-    }, [access_token, getGoogleAccessToken, getGoogleStoredToken]);
+        },
+        [
+            access_token,
+            getGoogleStoredTokenMutation,
+            getGoogleAccessTokenMutation,
+        ],
+    );
+
+    useEffect(() => {
+        getGoogleAccessToken();
+    }, [getGoogleAccessToken]);
 }
