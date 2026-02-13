@@ -12,34 +12,59 @@ export function useAuthQuery<TTriggerArg, TReturn>(
     const location = useLocation();
     const [shouldLoad, setShouldLoad] = useState(true);
     const { setLoading, clearLoading } = useLoading();
+
     useEffect(() => {
+        let isMounted = true;
+
         (async () => {
             const path = location.pathname;
+
+            // Early return - clear loading if not authorized
             if (
                 !access_token ||
                 !user ||
                 !validateUserAccess(user.level, path, user.role?.level)
-            )
+            ) {
+                if (isMounted) {
+                    setShouldLoad(false);
+                    clearLoading();
+                }
                 return;
+            }
+
+            // Only set loading and trigger if shouldLoad is true
+            if (!shouldLoad) {
+                if (isMounted) clearLoading();
+                return;
+            }
+
             try {
-                if (shouldLoad) setLoading();
-                await trigger().finally(() => setShouldLoad(false));
+                setLoading();
+                await trigger();
             } catch (error) {
                 handlePopupErrors(error);
+            } finally {
+                // Always clear loading after trigger completes or fails
+                if (isMounted) {
+                    setShouldLoad(false);
+                    clearLoading();
+                }
             }
         })();
+
+        // Cleanup function to prevent state updates on unmounted component
+        return () => {
+            isMounted = false;
+        };
     }, [
         access_token,
         user,
         trigger,
         shouldLoad,
         setLoading,
+        clearLoading,
         location.pathname,
     ]);
-
-    useEffect(() => {
-        if (!shouldLoad) clearLoading();
-    }, [shouldLoad, clearLoading]);
 
     useEffect(() => {
         setShouldLoad(true);
