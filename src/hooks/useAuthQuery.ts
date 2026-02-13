@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppSelector } from "../services/redux/Hooks";
 import { handlePopupErrors } from "../utils/ErrorHandling";
 import { useLoading } from "../contexts/hooks/useLoading";
@@ -10,65 +10,65 @@ export function useAuthQuery<TTriggerArg, TReturn>(
     const access_token = useAppSelector((state) => state.user.access_token);
     const user = useAppSelector((state) => state.user.user);
     const location = useLocation();
-    const [shouldLoad, setShouldLoad] = useState(true);
     const { setLoading, clearLoading } = useLoading();
+    const hasLoadedRef = useRef(false);
 
     useEffect(() => {
-        let isMounted = true;
+        let isCancelled = false;
+        hasLoadedRef.current = false;
 
-        (async () => {
+        const executeQuery = async () => {
             const path = location.pathname;
 
-            // Early return - clear loading if not authorized
-            if (
-                !access_token ||
-                !user ||
-                !validateUserAccess(user.level, path, user.role?.level)
-            ) {
-                if (isMounted) {
-                    setShouldLoad(false);
-                    clearLoading();
-                }
+            // Check authorization
+            const isAuthorized =
+                access_token &&
+                user &&
+                validateUserAccess(user.level, path, user.role?.level);
+
+            // If not authorized, ensure loading is cleared
+            if (!isAuthorized) {
+                clearLoading();
                 return;
             }
 
-            // Only set loading and trigger if shouldLoad is true
-            if (!shouldLoad) {
-                if (isMounted) clearLoading();
+            // If already loaded, don't load again
+            if (hasLoadedRef.current) {
+                clearLoading();
                 return;
             }
+
+            // Set loading and execute trigger
+            setLoading();
 
             try {
-                setLoading();
                 await trigger();
+                hasLoadedRef.current = true;
             } catch (error) {
                 handlePopupErrors(error);
             } finally {
-                // Always clear loading after trigger completes or fails
-                if (isMounted) {
-                    setShouldLoad(false);
+                // Always clear loading, even if component unmounted
+                if (!isCancelled) {
                     clearLoading();
                 }
             }
-        })();
+        };
 
-        // Cleanup function to prevent state updates on unmounted component
+        executeQuery();
+
+        // Cleanup function
         return () => {
-            isMounted = false;
+            isCancelled = true;
+            clearLoading();
         };
     }, [
         access_token,
         user,
         trigger,
-        shouldLoad,
         setLoading,
         clearLoading,
         location.pathname,
     ]);
-
-    useEffect(() => {
-        setShouldLoad(true);
-    }, [trigger]);
 }
 
 export default useAuthQuery;
