@@ -24,10 +24,12 @@ type CardProps = {
     hasOptions?: boolean;
     editable?: boolean;
     viewable?: boolean;
+    sharable?: boolean;
     deletable?: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
     onView?: () => void;
+    onShare?: () => void;
 };
 
 const getColorClass = (color?: CardItemColor, index?: number): string => {
@@ -49,10 +51,12 @@ export const Card = ({
     hasOptions = false,
     editable = false,
     viewable = false,
+    sharable = false,
     deletable = false,
     onEdit,
     onDelete,
     onView,
+    onShare,
 }: CardProps) => {
     const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
@@ -123,6 +127,16 @@ export const Card = ({
                         </button>
                         {showOptionsMenu && (
                             <div className={styles.optionsMenu}>
+                                {sharable && (
+                                    <button
+                                        onClick={() =>
+                                            handleOptionClick(onShare)
+                                        }
+                                        className={styles.optionItem}
+                                    >
+                                        Share
+                                    </button>
+                                )}
                                 {viewable && (
                                     <button
                                         onClick={() =>

@@ -16,6 +16,7 @@ type MaterialCardProps = {
     onDelete: (materialId: number) => void;
     onCopy: (materialId: number) => void;
     onMove: (materialId: number) => void;
+    onShare: (materialId: number) => void;
     onPreview?: (
         fileId: string,
         fileName: string,
@@ -39,6 +40,7 @@ export const MaterialCard = ({
     onDelete,
     onCopy,
     onMove,
+    onShare,
     onPreview,
     onDownload,
     onOpenLink,
@@ -151,8 +153,8 @@ export const MaterialCard = ({
         }
     };
 
-    const handleSelect = () => {
-        if (material.id) onClick(material.id);
+    const handleShare = () => {
+        if (material.id) onShare(material.id);
     };
 
     const handlePreview = (e: React.MouseEvent) => {
@@ -239,17 +241,16 @@ export const MaterialCard = ({
                         />
                     </svg>
                 </span>
-                {showCount && (
-                    <div className={styles.folderHeader}>
-                        <MaterialActionsDropdown
-                            onSelect={handleSelect}
-                            onMove={handleMove}
-                            onCopy={handleCopy}
-                            onEdit={handleEdit}
-                            onDelete={handleDelete}
-                        />
-                    </div>
-                )}
+                <div className={styles.folderHeader}>
+                    <MaterialActionsDropdown
+                        onShare={handleShare}
+                        onMove={handleMove}
+                        onCopy={handleCopy}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        showAll={showCount}
+                    />
+                </div>
                 <div className={styles.folderContent}>
                     <div className={styles.svg}>
                         <svg
@@ -442,17 +443,16 @@ export const MaterialCard = ({
                     />
                 </svg>
             </span>
-            {showCount && (
-                <div className={styles.fileHeader}>
-                    <MaterialActionsDropdown
-                        onSelect={handleSelect}
-                        onMove={handleMove}
-                        onCopy={handleCopy}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                </div>
-            )}
+            <div className={styles.fileHeader}>
+                <MaterialActionsDropdown
+                    onShare={handleShare}
+                    onMove={handleMove}
+                    onCopy={handleCopy}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    showAll={showCount}
+                />
+            </div>
             <div className={styles.fileContent}>
                 <div className={styles.fileIcon}>
                     <img

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Material } from "../../types/entities/Material";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./FloatingContainer.module.css";
@@ -9,6 +9,7 @@ interface FloatingContainerProps {
     selectedMaterials: number[];
     currentPath: Material[];
     folders: Material[];
+    initialTargetId: number | null | undefined;
     onClose: () => void;
     onConfirm: (targetId: number | null) => void;
     onNavigate: (folderId: number | null) => void;
@@ -21,6 +22,7 @@ export function FloatingContainer({
     selectedMaterials,
     currentPath,
     folders,
+    initialTargetId,
     onClose,
     onConfirm,
     onNavigate,
@@ -36,6 +38,10 @@ export function FloatingContainer({
     );
     const currentFolderId =
         currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
+
+    useEffect(() => {
+        setSelectedTarget(initialTargetId || null);
+    }, [initialTargetId]);
 
     const handleConfirm = () => {
         onConfirm(selectedTarget);

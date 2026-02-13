@@ -50,6 +50,7 @@ import type {
 } from "../../../types/responses/GenericAPIResponse";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
 import styles from "./MaterialsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function MaterialsPage() {
     const dispatch = useAppDispatch();
@@ -199,24 +200,11 @@ export function MaterialsPage() {
         async (parentId?: number | null) => {
             if (!subjectFilter) return;
 
-            if (materialFromUrl?.subject_id) {
-                setSubjectFilter(materialFromUrl.subject_id.toString());
-                setMaterialFromUrl(
-                    (prev) => prev && { ...prev, subject_id: undefined },
-                );
-            }
             if (!parentId)
                 parentId =
                     currentPath.length > 0
                         ? currentPath[currentPath.length - 1].id
                         : null;
-
-            if (materialFromUrl?.parent_id !== undefined) {
-                parentId = materialFromUrl.parent_id ?? null;
-                setMaterialFromUrl(
-                    (prev) => prev && { ...prev, parent_id: undefined },
-                );
-            }
 
             try {
                 const response = await getMaterials({
@@ -229,13 +217,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [
-            subjectFilter,
-            currentPath,
-            materialFromUrl,
-            searchQuery,
-            getMaterials,
-        ],
+        [subjectFilter, currentPath, searchQuery, getMaterials],
     );
 
     const fetchFolders = useCallback(
@@ -262,28 +244,6 @@ export function MaterialsPage() {
         setIsSelectionMode(false);
     }, [facultyFilter, departmentFilter, yearFilter, subjectFilter]);
 
-    const authQueryParams = useCallback(
-        async () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchSubjects(),
-                fetchMaterials(),
-                fetchFolders(),
-            ]),
-        [
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchSubjects,
-            fetchMaterials,
-            fetchFolders,
-        ],
-    );
-
-    useAuthQuery(authQueryParams);
-
     const handleNavigate = useCallback(
         async (material: Material | null) => {
             if (material === null) {
@@ -307,6 +267,47 @@ export function MaterialsPage() {
         },
         [getMaterialParents],
     );
+
+    const handleMatrialFromUrl = useCallback(() => {
+        if (materialFromUrl?.subject_id) {
+            setSubjectFilter(materialFromUrl.subject_id.toString());
+            setMaterialFromUrl(
+                (prev) => prev && { ...prev, subject_id: undefined },
+            );
+        }
+        if (materialFromUrl?.parent_id) {
+            handleNavigate({
+                id: materialFromUrl.parent_id || null,
+            } as Material);
+            setMaterialFromUrl(
+                (prev) => prev && { ...prev, parent_id: undefined },
+            );
+        }
+    }, [materialFromUrl, handleNavigate]);
+
+    const authQueryParams = useCallback(
+        async () =>
+            Promise.all([
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchSubjects(),
+                fetchMaterials(),
+                fetchFolders(),
+                handleMatrialFromUrl(),
+            ]),
+        [
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchSubjects,
+            fetchMaterials,
+            fetchFolders,
+            handleMatrialFromUrl,
+        ],
+    );
+
+    useAuthQuery(authQueryParams);
 
     const handleCardClick = (materialId: number) => {
         if (isSelectionMode) {
@@ -567,6 +568,28 @@ export function MaterialsPage() {
         });
     };
 
+    const handleShareMaterials = (materialId?: number, type?: string) => {
+        let url =
+            window.location.origin +
+            "/admin/materials?subject_id=" +
+            subjectFilter;
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+        if (type === "folder") {
+            url += "&parent_id=" + materialId;
+        } else {
+            url += `&parent_id=${parentId}&material_id=${materialId}`;
+        }
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Material link copied to clipboard successfully",
+        );
+    };
+
     const handlePreview = useCallback((fileId: string, fileName: string) => {
         setPreviewFile({ id: fileId, name: fileName });
     }, []);
@@ -700,12 +723,9 @@ export function MaterialsPage() {
                     parent_id: parent_id ? parseInt(parent_id) : undefined,
                 });
                 setSearchParams({});
-                handleNavigate({
-                    id: parent_id ? parseInt(parent_id) : undefined,
-                });
             }
         }
-    }, [searchParams, setSearchParams, handleNavigate]);
+    }, [searchParams, setSearchParams]);
 
     useEffect(() => {
         if (materialFromUrl && materialFromUrl.id && materials.length > 0) {
@@ -956,20 +976,24 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={facultyOptions}
                                 setValue={setFacultyFilter}
+                                value={facultyFilter}
                             />
                             <SelectFilter
                                 options={departmentOptions}
                                 setValue={setDepartmentFilter}
+                                value={departmentFilter}
                             />
                             <SelectFilter
                                 options={yearOptions}
                                 setValue={setYearFilter}
+                                value={yearFilter}
                             />
                         </>
                     )}
                     <SelectFilter
                         options={subjectOptions}
                         setValue={setSubjectFilter}
+                        value={subjectFilter}
                     />
                 </div>
 
@@ -1099,6 +1123,12 @@ export function MaterialsPage() {
                                             onMove={() =>
                                                 handleMoveMaterials(folderId)
                                             }
+                                            onShare={() => {
+                                                handleShareMaterials(
+                                                    folderId,
+                                                    folder.type,
+                                                );
+                                            }}
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
@@ -1139,6 +1169,12 @@ export function MaterialsPage() {
                                             onMove={() =>
                                                 handleMoveMaterials(fileId)
                                             }
+                                            onShare={() => {
+                                                handleShareMaterials(
+                                                    fileId,
+                                                    file.type,
+                                                );
+                                            }}
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
@@ -1229,6 +1265,13 @@ export function MaterialsPage() {
                                       floatingContainer.targetPath.length - 1
                                   ].id,
                         )}
+                        initialTargetId={
+                            floatingContainer.targetPath.length > 0
+                                ? floatingContainer.targetPath[
+                                      floatingContainer.targetPath.length - 1
+                                  ].id
+                                : null
+                        }
                         onClose={() =>
                             setFloatingContainer({
                                 show: false,

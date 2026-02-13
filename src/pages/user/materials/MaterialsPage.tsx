@@ -24,6 +24,8 @@ import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import { Banner } from "../../../components/banner/Banner";
 
 import styles from "./MaterialsPage.module.css";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
+import { showToast } from "../../../utils/ToastsManager";
 
 export function MaterialsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +36,7 @@ export function MaterialsPage() {
     } | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
+    const [parentIdFromUrl, setParentIdFromUrl] = useState<number | null>(null);
 
     const [subjects, setSubjects] = useState<Subject[]>([]);
     const [currentPath, setCurrentPath] = useState<Material[]>([]);
@@ -66,23 +69,14 @@ export function MaterialsPage() {
         async (parentId?: number | null) => {
             if (!subjectFilter) return;
 
-            if (materialFromUrl?.subject_id) {
-                setSubjectFilter(materialFromUrl.subject_id.toString());
-                setMaterialFromUrl(
-                    (prev) => prev && { ...prev, subject_id: undefined },
-                );
-            }
             if (!parentId)
                 parentId =
                     currentPath.length > 0
                         ? currentPath[currentPath.length - 1].id
                         : null;
 
-            if (materialFromUrl?.parent_id !== undefined) {
-                parentId = materialFromUrl.parent_id ?? null;
-                setMaterialFromUrl(
-                    (prev) => prev && { ...prev, parent_id: undefined },
-                );
+            if (parentIdFromUrl) {
+                parentId = parentIdFromUrl;
             }
 
             try {
@@ -99,8 +93,8 @@ export function MaterialsPage() {
         [
             subjectFilter,
             currentPath,
-            materialFromUrl,
             searchQuery,
+            parentIdFromUrl,
             getMaterials,
         ],
     );
@@ -109,15 +103,9 @@ export function MaterialsPage() {
         setCurrentPath([]);
     }, [subjectFilter]);
 
-    const authQueryParams = useCallback(
-        async () => Promise.all([fetchSubjects(), fetchMaterials()]),
-        [fetchSubjects, fetchMaterials],
-    );
-
-    useAuthQuery(authQueryParams);
-
     const handleNavigate = useCallback(
         async (material: Material | null) => {
+            setParentIdFromUrl(null);
             if (material === null) {
                 setCurrentPath([]);
             } else {
@@ -136,6 +124,35 @@ export function MaterialsPage() {
         },
         [getMaterialParents],
     );
+
+    const handleMatrialFromUrl = useCallback(() => {
+        if (materialFromUrl?.subject_id) {
+            setSubjectFilter(materialFromUrl.subject_id.toString());
+            setMaterialFromUrl(
+                (prev) => prev && { ...prev, subject_id: undefined },
+            );
+        }
+        if (materialFromUrl?.parent_id) {
+            handleNavigate({
+                id: materialFromUrl.parent_id || null,
+            } as Material);
+            setMaterialFromUrl(
+                (prev) => prev && { ...prev, parent_id: undefined },
+            );
+        }
+    }, [materialFromUrl, handleNavigate]);
+
+    const authQueryParams = useCallback(
+        async () =>
+            Promise.all([
+                fetchSubjects(),
+                fetchMaterials(),
+                handleMatrialFromUrl(),
+            ]),
+        [fetchSubjects, fetchMaterials, handleMatrialFromUrl],
+    );
+
+    useAuthQuery(authQueryParams);
 
     const handleCardDoubleClick = (material: Material) => {
         if (material.type === "folder") {
@@ -165,6 +182,28 @@ export function MaterialsPage() {
         window.open(url, "_blank");
     };
 
+    const handleShareMaterials = (materialId?: number, type?: string) => {
+        let url =
+            window.location.origin +
+            "/user/materials?subject_id=" +
+            subjectFilter;
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+        if (type === "folder") {
+            url += "&parent_id=" + materialId;
+        } else {
+            url += `&parent_id=${parentId}&material_id=${materialId}`;
+        }
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Material link copied to clipboard successfully",
+        );
+    };
+
     useEffect(() => {
         if (searchParams) {
             const material_id = searchParams.get("material_id");
@@ -177,9 +216,6 @@ export function MaterialsPage() {
                     parent_id: parent_id ? parseInt(parent_id) : undefined,
                 });
                 setSearchParams({});
-                handleNavigate({
-                    id: parent_id ? parseInt(parent_id) : undefined,
-                });
             }
         }
     }, [searchParams, setSearchParams, handleNavigate]);
@@ -242,6 +278,7 @@ export function MaterialsPage() {
                     <SelectFilter
                         options={subjectOptions}
                         setValue={setSubjectFilter}
+                        value={subjectFilter}
                     />
                 </div>
 
@@ -283,6 +320,12 @@ export function MaterialsPage() {
                                             onDelete={() => {}}
                                             onCopy={() => {}}
                                             onMove={() => {}}
+                                            onShare={() => {
+                                                handleShareMaterials(
+                                                    folderId,
+                                                    folder.type,
+                                                );
+                                            }}
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
@@ -309,6 +352,12 @@ export function MaterialsPage() {
                                             onDelete={() => {}}
                                             onCopy={() => {}}
                                             onMove={() => {}}
+                                            onShare={() => {
+                                                handleShareMaterials(
+                                                    fileId,
+                                                    file.type,
+                                                );
+                                            }}
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}

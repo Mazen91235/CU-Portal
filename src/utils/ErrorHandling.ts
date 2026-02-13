@@ -96,9 +96,14 @@ export const handlePopupErrors = (
         showToast("error", "Error", response.message);
         return;
     }
-    const res = (response as DefaultAPIResponse).data as GenericAPIResponse;
-    if (res.status == "error") {
-        const message = res.message ?? "An Error Occurred. Please Try Again.";
+    const res = response as DefaultAPIResponse;
+    if (res.error) {
+        showToast("error", "Error", "An Error Occurred. Please Try Again.");
+        return;
+    }
+    const data = res.data as GenericAPIResponse;
+    if (data.status == "error") {
+        const message = data.message ?? "An Error Occurred. Please Try Again.";
         showToast("error", "Error", message);
     } else {
         showToast("error", "Error", "An Error Occurred. Please Try Again.");
