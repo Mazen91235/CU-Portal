@@ -242,7 +242,7 @@ export const Header = ({
                             </li>
                             <li>
                                 <Link
-                                    to="/signup"
+                                    to="/login"
                                     className={`${styles.signupBtn} ${styles.sidebarBtn}`}
                                 >
                                     Sign Up
