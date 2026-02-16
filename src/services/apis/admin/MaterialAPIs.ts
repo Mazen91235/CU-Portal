@@ -13,7 +13,7 @@ export const AdminMaterialAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/materials"),
-            timeout: 5000,
+            timeout: 60000,
             credentials: "include",
         }),
     ),
