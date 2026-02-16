@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLazyGetNotificationsQuery } from "../services/apis/user/NotificationAPIs";
 import { useLocation } from "react-router";
-import { useAppSelector } from "../services/redux/Hooks";
+import { useLogin } from "./useLogin";
 
 export default function useGetNotifications({
     seen = false,
@@ -9,17 +9,18 @@ export default function useGetNotifications({
     limit = 50,
 }: { seen?: boolean; page?: number; limit?: number } = {}) {
     const location = useLocation();
-    const access_token = useAppSelector((state) => state.user.access_token);
+    const isLoggedIn = useLogin();
     const [getNotifications, { data }] = useLazyGetNotificationsQuery();
     useEffect(() => {
         (async () => {
+            const loggedIn = await isLoggedIn();
             try {
-                if (!access_token) return;
+                if (!loggedIn) return;
                 await getNotifications({ seen, page, limit }).unwrap();
             } catch {
                 return;
             }
         })();
-    }, [location, access_token, seen, page, limit, getNotifications]);
+    }, [location, seen, page, limit, isLoggedIn, getNotifications]);
     return data;
 }

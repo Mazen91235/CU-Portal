@@ -4,19 +4,21 @@ import { handlePopupErrors } from "../utils/ErrorHandling";
 import { useLoading } from "../contexts/hooks/useLoading";
 import { validateUserAccess } from "../utils/Validators";
 import { useLocation } from "react-router";
+import { useLogin } from "./useLogin";
 export function useAuthQuery<TTriggerArg, TReturn>(
     trigger: (arg?: TTriggerArg) => Promise<TReturn>,
 ) {
-    const access_token = useAppSelector((state) => state.user.access_token);
+    const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
     const location = useLocation();
     const [shouldLoad, setShouldLoad] = useState(true);
     const { setLoading, clearLoading } = useLoading();
     useEffect(() => {
         (async () => {
+            const loggedIn = await isLoggedIn();
             const path = location.pathname;
             if (
-                !access_token ||
+                !loggedIn ||
                 !user ||
                 !validateUserAccess(user.level, path, user.role?.level)
             )
@@ -28,14 +30,7 @@ export function useAuthQuery<TTriggerArg, TReturn>(
                 handlePopupErrors(error);
             }
         })();
-    }, [
-        access_token,
-        user,
-        trigger,
-        shouldLoad,
-        setLoading,
-        location.pathname,
-    ]);
+    }, [user, isLoggedIn, trigger, shouldLoad, setLoading, location.pathname]);
 
     useEffect(() => {
         if (!shouldLoad) clearLoading();
