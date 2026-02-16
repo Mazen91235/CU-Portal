@@ -5,56 +5,19 @@ import type { User } from "../../../types/entities/User";
 
 const initialState = {
     user: null as User | null,
-    access_token: null as string | null,
     google_access_token: null as string | null,
     permissions: null as string[] | null,
-    isProcessing: false,
 };
 
 const UserSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setAccessToken: (state, { payload }: { payload: string }) => {
-            state.access_token = payload;
-        },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
         },
-        setIsProcessing: (state, { payload }: { payload: boolean }) => {
-            state.isProcessing = payload;
-        },
     },
     extraReducers: (builder) => {
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.logout.matchPending,
-            (state) => {
-                state.isProcessing = true;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.logout.matchFulfilled,
-            (state, { payload }) => {
-                if (payload.status == "success") {
-                    state.user = null;
-                    state.access_token = null;
-                }
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.logout.matchRejected,
-            (state) => {
-                state.isProcessing = false;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.refreshToken.matchFulfilled,
-            (state, { payload }) => {
-                if (payload.status == "success") {
-                    state.access_token = payload.data?.access_token || null;
-                }
-            },
-        );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
             (state, { payload }) => {
@@ -128,7 +91,6 @@ const UserSlice = createSlice({
     },
 });
 
-export const { setAccessToken, setPermissions, setIsProcessing } =
-    UserSlice.actions;
+export const { setPermissions } = UserSlice.actions;
 
 export default UserSlice.reducer;

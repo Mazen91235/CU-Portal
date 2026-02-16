@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import { SetCookie } from "../../utils/CookiesManager";
-import type { RootState } from "../redux/Store";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
     GoogleAccessTokenResponseDto,
@@ -14,17 +13,12 @@ import type {
 import { GetApiLink } from "../../utils/LinkHandler";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetApiLink("/auth"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-        credentials: "include",
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetApiLink("/auth"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         logout: builder.query<GenericAPIResponse, void>({
             query: () => ({

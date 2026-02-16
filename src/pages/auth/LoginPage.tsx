@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
-import { SetCookie } from "../../utils/CookiesManager";
 import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
 import { usePageLoading } from "../../hooks/usePageLoading";
@@ -10,71 +7,11 @@ import { GetWebLink, GetIcon } from "../../utils/LinkHandler";
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/login-illustration.png";
-import { useAppDispatch } from "../../services/redux/Hooks";
-import {
-    setAccessToken,
-    setIsProcessing,
-} from "../../services/redux/reducers/UserReducer";
 
 import styles from "./LoginPage.module.css";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const [startedLoading, setStartedLoading] = useState(false);
-    const [tokenParts, setTokenParts] = useState<(string | number)[] | null>(
-        null,
-    );
-    const [searchParams] = useSearchParams();
-    const startPageLoading = usePageLoading();
-    const token = searchParams.get("token");
-
-    useEffect(() => {
-        const handlePageLoad = async () => {
-            if (!searchParams) return;
-            if (token) {
-                const tokenParts = token.split("___");
-                dispatch(setIsProcessing(true));
-                setTokenParts(tokenParts);
-            } else if (!startedLoading) {
-                setStartedLoading(true);
-            }
-        };
-        handlePageLoad();
-    }, [token, startedLoading, searchParams, dispatch, startPageLoading]);
-
-    useEffect(() => {
-        if (startPageLoading && startedLoading) startPageLoading();
-    }, [startPageLoading, startedLoading]);
-
-    useEffect(() => {
-        const processToken = async () => {
-            if (tokenParts) {
-                try {
-                    SetCookie(
-                        "access_token",
-                        tokenParts[0] as string,
-                        tokenParts[1] as number,
-                    );
-                    SetCookie(
-                        "refresh_token",
-                        tokenParts[2] as string,
-                        tokenParts[3] as number,
-                    );
-                    dispatch(setAccessToken(tokenParts[0] as string));
-                    navigate("/user", {
-                        state: {
-                            isProcessing: true,
-                        },
-                    });
-                } catch (error) {
-                    handlePopupErrors(error);
-                }
-            }
-        };
-        processToken();
-    }, [tokenParts, navigate, dispatch]);
+    usePageLoading(true);
 
     return (
         <>

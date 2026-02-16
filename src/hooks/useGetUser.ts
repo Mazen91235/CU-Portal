@@ -1,37 +1,29 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import {
     useLazyGetUserDataQuery,
     useLazyGetUserPermissionsQuery,
 } from "../services/apis/user/UserAPIs";
+import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
 
 export default function useGetUser() {
-    const access_token = useAppSelector((state) => state.user.access_token);
     const [getUserData, { data }] = useLazyGetUserDataQuery();
     const [getUserPermissions] = useLazyGetUserPermissionsQuery();
-    const getUser = useCallback(
-        async (maxRetries = 3) => {
-            try {
-                if (!access_token) return;
-                await getUserData();
-                await getUserPermissions();
-            } catch {
-                if (maxRetries > 0) {
-                    return await getUser(maxRetries - 1);
-                }
-                return;
-            }
-        },
-        [access_token, getUserData, getUserPermissions]
-    );
+    const user = useAppSelector((state) => state.user.user);
+    const permissions = useAppSelector((state) => state.user.permissions);
+    const isLoggedIn = useLogin();
     useEffect(() => {
         (async () => {
+            if (user || (permissions?.length || 0) > 0) return;
+            const loggedIn = await isLoggedIn();
+            if (!loggedIn) return;
             try {
-                await getUser();
+                await getUserData().unwrap();
+                await getUserPermissions().unwrap();
             } catch {
-                // Ignore errors
+                return;
             }
         })();
-    }, [access_token, getUser]);
+    }, [user, permissions, isLoggedIn, getUserData, getUserPermissions]);
     return data;
 }

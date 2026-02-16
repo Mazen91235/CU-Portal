@@ -439,7 +439,6 @@ export const Sidebar = ({
             navigate("/login", {
                 state: {
                     success: "You have been logged out successfully.",
-                    isProcessing: true,
                 },
             });
         } catch (error) {

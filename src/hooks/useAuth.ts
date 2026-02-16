@@ -1,17 +1,13 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
     useLazyLogoutQuery,
-    useRefreshTokenMutation,
 } from "../services/apis/AuthenticateAPIs";
-import { GetCookie, SetCookie } from "../utils/CookiesManager";
-import {
-    setAccessToken,
-    setIsProcessing,
-} from "../services/redux/reducers/UserReducer";
+import { GetCookie } from "../utils/CookiesManager";
+import { useLogin } from "./useLogin";
 export default function useAuth({
     permission,
     reverse = false,
@@ -24,78 +20,28 @@ export default function useAuth({
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [logout] = useLazyLogoutQuery();
-    const refreshTokenRef = useRef<number | null>(null);
-    const [refreshTokenMutation] = useRefreshTokenMutation();
+    const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
-    const access_token = useAppSelector((state) => state.user.access_token);
-    const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
     const location = useLocation();
-    const refreshToken = useCallback(
-        async (retries: number = 3) => {
-            try {
-                await refreshTokenMutation(
-                    GetCookie("refresh_token")!,
-                ).unwrap();
-                if (refreshTokenRef.current)
-                    clearTimeout(refreshTokenRef.current);
-                refreshTokenRef.current = setTimeout(
-                    () => {
-                        refreshToken();
-                    },
-                    8 * 60 * 1000, // 8 minutes
-                );
-            } catch {
-                if (retries > 0) {
-                    await refreshToken(retries - 1);
-                    return;
-                }
-                SetCookie("refresh_token", "", -1);
-                if (shouldNavigate)
-                    navigate("/login", {
-                        state: {
-                            error: "Session expired. Please log in again.",
-                        },
-                    });
-                return;
-            }
-        },
-        [refreshTokenMutation, navigate, shouldNavigate],
-    );
     useEffect(() => {
         (async () => {
-            if (location.state?.isProcessing) {
-                dispatch(setIsProcessing(false));
-                navigate(location.pathname, {
-                    replace: true,
-                    state: {
-                        isProcessing: false,
-                    },
-                });
-                return;
-            }
-            if (isProcessing) return;
+            const loggedIn = await isLoggedIn();
             try {
-                if (GetCookie("refresh_token") && !permission && reverse) {
+                if (loggedIn && !permission && reverse) {
                     if (shouldNavigate)
                         navigate("/user", {
                             state: { error: "You are already logged in." },
                         });
                 }
-                if (!GetCookie("refresh_token") && !reverse) {
-                    if (user || access_token) await logout().unwrap();
+                if (!loggedIn && !reverse) {
+                    if (user) await logout().unwrap();
                     if (shouldNavigate)
                         navigate("/login", {
                             state: {
                                 error: "You must be logged in to access this resource.",
                             },
                         });
-                }
-                if (!GetCookie("access_token") && GetCookie("refresh_token")) {
-                    await refreshToken();
-                }
-                if (!access_token && GetCookie("access_token")) {
-                    dispatch(setAccessToken(GetCookie("access_token")!));
                 }
                 if (user && permissions && permission) {
                     const hasPermission = permissions.includes(permission);
@@ -121,14 +67,12 @@ export default function useAuth({
         })();
     }, [
         user,
-        access_token,
-        isProcessing,
         permissions,
         location,
         navigate,
         dispatch,
         logout,
-        refreshToken,
+        isLoggedIn,
         permission,
         reverse,
         shouldNavigate,
@@ -138,16 +82,18 @@ export default function useAuth({
 
 export function useGetGoogleAccessToken() {
     useAuth({ shouldNavigate: false });
-    const access_token = useAppSelector((state) => state.user.access_token);
     const [getGoogleStoredTokenMutation] = useGetGoogleStoredTokenMutation();
     const [getGoogleAccessTokenMutation] = useLazyGetGoogleAccessTokenQuery();
-    const getGoogleAccessToken = useCallback(
-        async (retries = 3) => {
+    const isLoggedIn = useLogin();
+
+    useEffect(() => {
+        (async () => {
+            const loggedIn = await isLoggedIn();
             try {
                 if (
                     GetCookie("oauth_state") &&
                     GetCookie("google_details_token") &&
-                    !access_token
+                    !loggedIn
                 )
                     await getGoogleStoredTokenMutation({
                         oauth_state: GetCookie("oauth_state")!,
@@ -155,23 +101,14 @@ export function useGetGoogleAccessToken() {
                             "google_details_token",
                         )!,
                     }).unwrap();
-                if (!access_token) return;
-                await getGoogleAccessTokenMutation().unwrap();
+                if (loggedIn) await getGoogleAccessTokenMutation().unwrap();
             } catch {
-                if (retries > 0) {
-                    return await getGoogleAccessToken(retries - 1);
-                }
                 return;
             }
-        },
-        [
-            access_token,
-            getGoogleStoredTokenMutation,
-            getGoogleAccessTokenMutation,
-        ],
-    );
-
-    useEffect(() => {
-        getGoogleAccessToken();
-    }, [getGoogleAccessToken]);
+        })();
+    }, [
+        getGoogleStoredTokenMutation,
+        getGoogleAccessTokenMutation,
+        isLoggedIn,
+    ]);
 }
