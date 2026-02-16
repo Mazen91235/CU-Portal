@@ -8,6 +8,7 @@ export const AdminYearAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/years"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

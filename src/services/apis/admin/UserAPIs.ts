@@ -13,6 +13,7 @@ export const AdminUserAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/users"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

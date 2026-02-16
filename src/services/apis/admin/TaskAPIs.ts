@@ -11,6 +11,7 @@ export const AdminTaskAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/tasks"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

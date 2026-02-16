@@ -9,6 +9,7 @@ export const NotificationAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/notifications"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

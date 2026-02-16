@@ -8,6 +8,7 @@ export const GradeAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/grades"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

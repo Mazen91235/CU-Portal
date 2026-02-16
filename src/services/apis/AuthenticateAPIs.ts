@@ -16,6 +16,7 @@ export const AuthenticateAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetApiLink("/auth"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

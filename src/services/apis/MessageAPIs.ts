@@ -7,6 +7,7 @@ export const MessageAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetApiLink("/messages"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

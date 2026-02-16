@@ -8,6 +8,7 @@ export const AdminMessageAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/messages"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

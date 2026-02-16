@@ -7,6 +7,7 @@ export const UserAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink(""),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

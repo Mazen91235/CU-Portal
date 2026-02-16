@@ -10,6 +10,7 @@ export const CalendarAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/calendar"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

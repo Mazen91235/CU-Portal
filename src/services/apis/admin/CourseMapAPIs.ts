@@ -13,6 +13,7 @@ export const AdminCourseMapAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/course-maps"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

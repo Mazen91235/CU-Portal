@@ -8,6 +8,7 @@ export const AdminLogAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/logs"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

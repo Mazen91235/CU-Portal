@@ -7,6 +7,7 @@ export const CourseMapAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/course-map"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

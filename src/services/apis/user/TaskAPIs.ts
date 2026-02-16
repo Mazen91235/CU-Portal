@@ -9,6 +9,7 @@ export const TaskAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/tasks"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

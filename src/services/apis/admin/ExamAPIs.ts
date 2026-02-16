@@ -11,6 +11,7 @@ export const AdminExamAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/exams"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

@@ -8,6 +8,7 @@ export const AdminAnnouncementAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/announcements"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

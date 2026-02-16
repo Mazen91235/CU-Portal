@@ -9,6 +9,7 @@ export const ExamAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/exams"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

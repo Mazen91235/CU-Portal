@@ -9,6 +9,7 @@ export const MaterialAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/materials"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

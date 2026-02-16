@@ -8,6 +8,7 @@ export const AdminRoleAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/roles"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

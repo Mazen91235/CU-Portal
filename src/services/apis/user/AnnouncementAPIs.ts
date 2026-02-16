@@ -9,6 +9,7 @@ export const AnnouncementAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/announcements"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

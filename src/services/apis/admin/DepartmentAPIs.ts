@@ -8,6 +8,7 @@ export const AdminDepartmentAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/departments"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),

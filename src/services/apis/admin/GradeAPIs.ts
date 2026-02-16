@@ -11,6 +11,7 @@ export const AdminGradeAPI = createApi({
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/grades"),
+            timeout: 5000,
             credentials: "include",
         }),
     ),
