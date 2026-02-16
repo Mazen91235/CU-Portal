@@ -1,20 +1,15 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { User } from "../../../types/entities/User";
-import type { RootState } from "../../redux/Store";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 export const UserAPI = createApi({
     reducerPath: "userAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink(""),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetUserApiLink(""),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getUserData: builder.query<GenericAPIResponse<User>, void>({
             query: () => ({

@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Year } from "../../../types/entities/Year";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { YearSearchDto } from "../../../types/dtos/YearDTOs";
 export const AdminYearAPI = createApi({
     reducerPath: "adminYearAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/years"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/years"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getYears: builder.query<GenericAPIResponse<Year[]>, YearSearchDto>({
             query: (query) => ({

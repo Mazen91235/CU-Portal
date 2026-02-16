@@ -1,22 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Notification } from "../../../types/entities/Notification";
-import type { RootState } from "../../redux/Store";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { NotificationSearchDto } from "../../../types/dtos/NotificationDTOs"
+import type { NotificationSearchDto } from "../../../types/dtos/NotificationDTOs";
 
 export const NotificationAPI = createApi({
     reducerPath: "notificationAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetUserApiLink("/notifications"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetUserApiLink("/notifications"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getNotifications: builder.query<
             GenericAPIResponse<Notification[]>,

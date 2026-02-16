@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Log } from "../../../types/entities/Log";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { LogSearchDto } from "../../../types/dtos/LogDTOs";
 export const AdminLogAPI = createApi({
     reducerPath: "adminLogAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/logs"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/logs"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getLogs: builder.query<GenericAPIResponse<Log[]>, LogSearchDto>({
             query: (query) => ({

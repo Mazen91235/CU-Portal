@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Faculty } from "../../../types/entities/Faculty";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { FacultySearchDto } from "../../../types/dtos/FacultyDTOs";
 export const AdminFacultyAPI = createApi({
     reducerPath: "adminFacultyAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/faculties"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/faculties"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getFaculties: builder.query<
             GenericAPIResponse<Faculty[]>,

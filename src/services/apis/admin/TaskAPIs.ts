@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Task } from "../../../types/entities/Task";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     TaskRegisterDto,
@@ -9,16 +8,12 @@ import type {
 } from "../../../types/dtos/TaskDTOs";
 export const AdminTaskAPI = createApi({
     reducerPath: "adminTaskAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/tasks"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/tasks"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getTasks: builder.query<GenericAPIResponse<Task[]>, TaskSearchDto>({
             query: (query) => ({
@@ -43,7 +38,7 @@ export const AdminTaskAPI = createApi({
                     credentials: "include",
                     body: data,
                 }),
-            }
+            },
         ),
         updateTask: builder.mutation<
             GenericAPIResponse<Task>,

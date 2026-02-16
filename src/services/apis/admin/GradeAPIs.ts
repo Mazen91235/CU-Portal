@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Grade } from "../../../types/entities/Grade";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     GradeRegisterDto,
@@ -9,16 +8,12 @@ import type {
 } from "../../../types/dtos/GradeDTOs";
 export const AdminGradeAPI = createApi({
     reducerPath: "adminGradeAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/grades"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/grades"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getGrades: builder.query<GenericAPIResponse<Grade[]>, GradeSearchDto>({
             query: (query) => ({
@@ -77,7 +72,7 @@ export const AdminGradeAPI = createApi({
                     method: "DELETE",
                     credentials: "include",
                 }),
-            }
+            },
         ),
     }),
 });

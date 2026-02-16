@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { User } from "../../../types/entities/User";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     UserResponseDto,
@@ -11,16 +10,12 @@ import type {
 import type { UserSearchDto } from "../../../types/dtos/UserDTOs";
 export const AdminUserAPI = createApi({
     reducerPath: "adminUserAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/users"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/users"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getUsers: builder.query<GenericAPIResponse<User[]>, UserSearchDto>({
             query: (query) => ({

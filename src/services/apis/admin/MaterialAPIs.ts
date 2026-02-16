@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Material } from "../../../types/entities/Material";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     MaterialCopyDto,
@@ -11,16 +10,12 @@ import type {
 } from "../../../types/dtos/MaterialDTOs";
 export const AdminMaterialAPI = createApi({
     reducerPath: "adminMaterialAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/materials"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/materials"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getMaterials: builder.query<
             GenericAPIResponse<Material[]>,

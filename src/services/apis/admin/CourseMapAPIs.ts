@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Roadmap } from "../../../types/entities/Roadmap";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { CourseMapSearchDto } from "../../../types/dtos/CourseMapDTOs";
 import type {
@@ -11,16 +10,12 @@ import type {
 } from "../../../types/dtos/CourseMapDTOs";
 export const AdminCourseMapAPI = createApi({
     reducerPath: "adminCourseMapAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/course-maps"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/course-maps"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getCourseMaps: builder.query<
             GenericAPIResponse<Roadmap[]>,

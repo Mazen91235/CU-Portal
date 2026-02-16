@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Message } from "../../../types/entities/Message";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { MessageSearchDto } from "../../../types/dtos/MessageDTOs";
 export const AdminMessageAPI = createApi({
     reducerPath: "adminMessageAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/messages"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/messages"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getMessages: builder.query<
             GenericAPIResponse<Message[]>,

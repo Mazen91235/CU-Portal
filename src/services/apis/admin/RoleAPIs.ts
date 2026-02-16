@@ -1,21 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type { Role } from "../../../types/entities/Role";
-import type { RootState } from "../../redux/Store";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { RoleDto, RoleSearchDto } from "../../../types/dtos/RoleDTOs";
 export const AdminRoleAPI = createApi({
     reducerPath: "adminRoleAPI",
-    baseQuery: fetchBaseQuery({
-        baseUrl: GetAdminApiLink("/roles"),
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).user.access_token;
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetAdminApiLink("/roles"),
+            credentials: "include",
+        }),
+    ),
     endpoints: (builder) => ({
         getRoles: builder.query<GenericAPIResponse<Role[]>, RoleSearchDto>({
             query: (query) => ({
