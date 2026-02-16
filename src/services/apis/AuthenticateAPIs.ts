@@ -23,6 +23,7 @@ export const AuthenticateAPI = createApi({
             }
             return headers;
         },
+        credentials: "include",
     }),
     endpoints: (builder) => ({
         logout: builder.query<GenericAPIResponse, void>({
@@ -35,8 +36,6 @@ export const AuthenticateAPI = createApi({
                 try {
                     const data = (await queryFulfilled).data;
                     if (data.status == "success") {
-                        SetCookie("access_token", "", -1);
-                        SetCookie("refresh_token", "", -1);
                         SetCookie("google_details_token", "", -1);
                         SetCookie("oauth_state", "", -1);
                     }
@@ -44,6 +43,13 @@ export const AuthenticateAPI = createApi({
                     return;
                 }
             },
+        }),
+        isLoggedIn: builder.query<GenericAPIResponse, void>({
+            query: () => ({
+                url: "/is-logged-in",
+                method: "GET",
+                credentials: "include",
+            }),
         }),
         refreshToken: builder.mutation<
             GenericAPIResponse<RefreshTokenResponseDto>,
@@ -167,6 +173,7 @@ export const AuthenticateAPI = createApi({
 });
 
 export const {
+    useLazyIsLoggedInQuery,
     useRefreshTokenMutation,
     useLazyLogoutQuery,
     useGetGoogleStoredTokenMutation,
