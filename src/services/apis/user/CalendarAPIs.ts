@@ -5,14 +5,24 @@ import type {
     CalendarDayEventsDto,
     CalenderSearchDto,
 } from "../../../types/dtos/CalenderDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const CalendarAPI = createApi({
     reducerPath: "calendarAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/calendar"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getCalendarTasks: builder.query<

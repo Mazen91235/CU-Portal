@@ -6,14 +6,24 @@ import type {
     TaskRegisterDto,
     TaskSearchDto,
 } from "../../../types/dtos/TaskDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminTaskAPI = createApi({
     reducerPath: "adminTaskAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/tasks"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getTasks: builder.query<GenericAPIResponse<Task[]>, TaskSearchDto>({

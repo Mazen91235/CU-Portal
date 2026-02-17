@@ -6,14 +6,24 @@ import type {
     ExamRegisterDto,
     ExamSearchDto,
 } from "../../../types/dtos/ExamDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminExamAPI = createApi({
     reducerPath: "adminExamAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/exams"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getExams: builder.query<GenericAPIResponse<Task[]>, ExamSearchDto>({

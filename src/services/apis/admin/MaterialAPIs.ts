@@ -8,6 +8,7 @@ import type {
     MaterialRegisterDto,
     MaterialSearchDto,
 } from "../../../types/dtos/MaterialDTOs";
+import { maxRetries, retryCondition } from "../../../utils/APIHandling";
 export const AdminMaterialAPI = createApi({
     reducerPath: "adminMaterialAPI",
     baseQuery: retry(
@@ -16,6 +17,11 @@ export const AdminMaterialAPI = createApi({
             timeout: 60000,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getMaterials: builder.query<

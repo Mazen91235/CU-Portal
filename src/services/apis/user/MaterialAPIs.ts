@@ -3,15 +3,25 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Material } from "../../../types/entities/Material";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type { MaterialSearchDto } from "../../../types/dtos/MaterialDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 
 export const MaterialAPI = createApi({
     reducerPath: "materialAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/materials"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getMaterials: builder.query<

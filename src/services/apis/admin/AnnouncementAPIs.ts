@@ -3,14 +3,24 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Announcement } from "../../../types/entities/Announcement";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { AnnouncementSearchDto } from "../../../types/dtos/AnnouncementDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminAnnouncementAPI = createApi({
     reducerPath: "adminAnnouncementAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/announcements"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getAnnouncements: builder.query<

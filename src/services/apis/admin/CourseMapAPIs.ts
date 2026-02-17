@@ -8,14 +8,24 @@ import type {
     CourseMapUpdateYearsDto,
     CourseMapAddCoursesDto,
 } from "../../../types/dtos/CourseMapDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminCourseMapAPI = createApi({
     reducerPath: "adminCourseMapAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/course-maps"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getCourseMaps: builder.query<

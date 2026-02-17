@@ -6,14 +6,24 @@ import type {
     GradeRegisterDto,
     GradeSearchDto,
 } from "../../../types/dtos/GradeDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminGradeAPI = createApi({
     reducerPath: "adminGradeAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/grades"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getGrades: builder.query<GenericAPIResponse<Grade[]>, GradeSearchDto>({

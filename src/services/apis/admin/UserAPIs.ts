@@ -8,14 +8,24 @@ import type {
     UsersUpdateDto,
 } from "../../../types/dtos/UserDTOs";
 import type { UserSearchDto } from "../../../types/dtos/UserDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminUserAPI = createApi({
     reducerPath: "adminUserAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/users"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getUsers: builder.query<GenericAPIResponse<User[]>, UserSearchDto>({

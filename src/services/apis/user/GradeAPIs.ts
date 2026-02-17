@@ -3,14 +3,24 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Grade } from "../../../types/entities/Grade";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type { SearchDto } from "../../../types/dtos/SearchDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const GradeAPI = createApi({
     reducerPath: "gradeAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/grades"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getGrades: builder.query<

@@ -11,14 +11,20 @@ import type {
     ResendVerificationCodeResponseDto,
 } from "../../types/dtos/AuthenticateDTOs";
 import { GetApiLink } from "../../utils/LinkHandler";
+import { timeout, maxRetries, retryCondition } from "../../utils/APIHandling";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetApiLink("/auth"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         logout: builder.query<GenericAPIResponse, void>({

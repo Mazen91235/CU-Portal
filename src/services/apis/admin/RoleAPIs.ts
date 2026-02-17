@@ -3,14 +3,24 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import type { Role } from "../../../types/entities/Role";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { RoleDto, RoleSearchDto } from "../../../types/dtos/RoleDTOs";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminRoleAPI = createApi({
     reducerPath: "adminRoleAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/roles"),
-            timeout: 5000,
+            timeout,
             credentials: "include",
         }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
     ),
     endpoints: (builder) => ({
         getRoles: builder.query<GenericAPIResponse<Role[]>, RoleSearchDto>({
