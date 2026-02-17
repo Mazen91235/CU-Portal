@@ -1,13 +1,13 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useLazyIsLoggedInQuery } from "../services/apis/AuthenticateAPIs";
 import { validateCachedData } from "../utils/Validators";
 
 export const useLogin = () => {
     const [isLoggedIn] = useLazyIsLoggedInQuery();
-    const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+    const loggedInRef = useRef<boolean | null>(null);
     const issuedRef = useRef(false);
     const checkLogin = useCallback(async () => {
-        if (issuedRef.current) return loggedIn;
+        if (issuedRef.current) return loggedInRef.current;
         issuedRef.current = true;
         const userData = localStorage.getItem("user");
         const permissionsData = localStorage.getItem("permissions");
@@ -18,18 +18,18 @@ export const useLogin = () => {
                 validateCachedData(userParsed.last_fetched) &&
                 validateCachedData(permissionsParsed.last_fetched)
             ) {
-                setLoggedIn(true);
+                loggedInRef.current = true;
                 return true;
             }
         }
         try {
             await isLoggedIn().unwrap();
-            setLoggedIn(true);
+            loggedInRef.current = true;
             return true;
         } catch {
-            setLoggedIn(false);
+            loggedInRef.current = false;
             return false;
         }
-    }, [isLoggedIn, loggedIn]);
+    }, [isLoggedIn]);
     return checkLogin;
 };

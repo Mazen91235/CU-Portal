@@ -98,6 +98,16 @@ export const UserAPI = createApi({
                 credentials: "include",
                 body: data,
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        localStorage.removeItem("user");
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         updateUserAcademicData: builder.mutation<
             GenericAPIResponse<User>,
@@ -114,6 +124,16 @@ export const UserAPI = createApi({
                 credentials: "include",
                 body: data,
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        localStorage.removeItem("user");
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
     }),
 });

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
@@ -23,7 +23,6 @@ export default function useAuth({
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
-    const location = useLocation();
     useEffect(() => {
         (async () => {
             const loggedIn = await isLoggedIn();
@@ -68,7 +67,6 @@ export default function useAuth({
     }, [
         user,
         permissions,
-        location,
         navigate,
         dispatch,
         logout,

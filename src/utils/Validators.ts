@@ -1,3 +1,23 @@
+import type { User } from "../types/entities/User";
+
+export const validateUserLevel = (user: User | null | undefined) => {
+    if (!user) return 1;
+    if (
+        !user?.faculty ||
+        !user?.department ||
+        !user?.year ||
+        !user?.type ||
+        user?.type === ""
+    ) {
+        return 1;
+    } else if (!user?.status) {
+        return 2;
+    } else if ((user.enrolled_courses_count || 0) < 1) {
+        return 3;
+    } else {
+        return 4;
+    }
+};
 export const validateUserAccess = (
     level?: number,
     path?: string,
@@ -23,8 +43,8 @@ export const validateUserAccess = (
 
 export const validateCachedData = (
     timestamp?: number,
-    validityDurationInHours: number = 12,
+    validityDurationInMinutes: number = 15,
 ) => {
     if (!timestamp) return false;
-    return Date.now() - timestamp < validityDurationInHours * 60 * 60 * 1000;
+    return Date.now() - timestamp < validityDurationInMinutes * 60 * 1000;
 };

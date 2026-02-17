@@ -61,6 +61,16 @@ export const CourseAPI = createApi({
                 credentials: "include",
                 body: query,
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        localStorage.removeItem("user");
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         unregisterCourse: builder.mutation<
             GenericAPIResponse,
@@ -72,6 +82,16 @@ export const CourseAPI = createApi({
                 credentials: "include",
                 body: query,
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        localStorage.removeItem("user");
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
     }),
 });

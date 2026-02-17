@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
 import { UserAPI } from "../../apis/user/UserAPIs";
 import type { User } from "../../../types/entities/User";
+import { validateUserLevel } from "../../../utils/Validators";
 
 const initialState = {
     user: null as User | null,
@@ -46,21 +47,7 @@ const UserSlice = createSlice({
                     state.user = payload.data || null;
                     state.permissions = null;
                     if (!state.user) return;
-                    if (
-                        !state.user?.faculty ||
-                        !state.user?.department ||
-                        !state.user?.year ||
-                        !state.user?.type ||
-                        state.user?.type === ""
-                    ) {
-                        state.user.level = 1;
-                    } else if (!state.user?.status) {
-                        state.user.level = 2;
-                    } else if ((state.user.enrolled_courses_count || 0) < 1) {
-                        state.user.level = 3;
-                    } else {
-                        state.user.level = 4;
-                    }
+                    state.user.level = validateUserLevel(state.user);
                 }
             },
         );
