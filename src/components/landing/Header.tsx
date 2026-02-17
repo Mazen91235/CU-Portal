@@ -119,7 +119,7 @@ export const Header = ({
                             <Link to="/login" className={styles.loginBtn}>
                                 Login
                             </Link>
-                            <Link to="/signup" className={styles.signupBtn}>
+                            <Link to="/login" className={styles.signupBtn}>
                                 Sign Up
                             </Link>
                         </>
