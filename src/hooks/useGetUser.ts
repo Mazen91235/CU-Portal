@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import {
     useLazyGetUserDataQuery,
     useLazyGetUserPermissionsQuery,
@@ -15,14 +15,11 @@ export default function useGetUser() {
     const dispatch = useAppDispatch();
     const [getUserData, { data }] = useLazyGetUserDataQuery();
     const [getUserPermissions] = useLazyGetUserPermissionsQuery();
-    const issuedRef = useRef(false);
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
     const isLoggedIn = useLogin();
     useEffect(() => {
         (async () => {
-            if (issuedRef.current) return;
-            issuedRef.current = true;
             if (user || (permissions?.length || 0) > 0) return;
             const userStored = localStorage.getItem("user");
             const permissionsStored = localStorage.getItem("permissions");

@@ -17,8 +17,6 @@ import { useUpdateUserAcademicDataMutation } from "../../../services/apis/user/U
 import { showToast } from "../../../utils/ToastsManager";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useRefreshTokenMutation } from "../../../services/apis/AuthenticateAPIs";
-import { GetCookie } from "../../../utils/CookiesManager";
 import styles from "./AcademicSettings.module.css";
 
 const academicSchema = z.object({
@@ -47,7 +45,6 @@ export const AcademicSettings = () => {
     const [searchDepartments] = useLazySearchDepartmentsQuery();
     const [searchYears] = useLazySearchYearsQuery();
     const [updateAcademicData] = useUpdateUserAcademicDataMutation();
-    const [refreshToken] = useRefreshTokenMutation();
 
     const [faculties, setFaculties] = useState<Faculty[]>([]);
     const [faculty, setFaculty] = useState<Faculty | null>(null);
@@ -136,7 +133,6 @@ export const AcademicSettings = () => {
                 year_id: parseInt(data.year, 10),
                 department_id: parseInt(data.department, 10),
             }).unwrap();
-            await refreshToken(GetCookie("refresh_token")!).unwrap();
             showToast(
                 "success",
                 "Success",

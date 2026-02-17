@@ -104,6 +104,12 @@ const UserSlice = createSlice({
                 }
             },
         );
+        builder.addMatcher(
+            UserAPI.endpoints.updateUserAcademicData.matchFulfilled,
+            (state, { payload }) => {
+                if (payload.status == "success") state.user = null;
+            },
+        );
     },
 });
 
