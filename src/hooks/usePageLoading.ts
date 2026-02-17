@@ -15,6 +15,7 @@ export const usePageLoading = (
             oldLocationRef.current = location;
             setLoading();
         }
+        if (document.readyState !== "complete") setLoading();
     }, [location, setLoading]); // Set loading on location change
     const startPageLoading = useCallback(
         (callback?: () => void) => {
