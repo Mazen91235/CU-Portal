@@ -240,89 +240,89 @@ export const UsersPage = () => {
                 title="Users Management"
                 description="Search, Filter, Approve, And Update Users All In One Place"
             />
-
-            <section className={styles.infoCardsContainer}>
-                <div className={styles.infoCardsRow}>
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <img src={usersTotalIcon} alt="Users" />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Total Users
+            {user?.canAccessAll && (
+                <section className={styles.infoCardsContainer}>
+                    <div className={styles.infoCardsRow}>
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <img src={usersTotalIcon} alt="Users" />
                             </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.users_count || 0}
-                            </div>
-                            <div className={styles.infoCardGrowth}>
-                                <img src={arrowUpIcon} alt="Up" />
-                                <span className={styles.infoCardGrowthText}>
-                                    {stats?.percentage_increase || 0}% This
-                                    Month
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <img src={monitorIcon} alt="Active Now" />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Active Now
-                            </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.active_now || 0}
-                            </div>
-                            <div className={styles.infoCardAvatars}>
-                                {stats?.last_five_users_active?.map(
-                                    (avatarUrl, idx) => (
-                                        <Avatar
-                                            key={idx}
-                                            url={avatarUrl}
-                                            size="medium"
-                                        />
-                                    ),
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <img
-                                src={pendingClockIcon}
-                                alt="Pending Requests"
-                            />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Pending Requests
-                            </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.pending_users_count || 0}
-                            </div>
-                            <Link
-                                to="/admin/users/pending"
-                                style={{ textDecoration: "none" }}
-                            >
-                                <div className={styles.infoCardAction}>
-                                    <img
-                                        src={eyeReviewIcon}
-                                        alt="Review"
-                                        className={styles.infoCardReviewEye}
-                                    />
-                                    <span className={styles.infoCardReview}>
-                                        Review Now
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Total Users
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.users_count || 0}
+                                </div>
+                                <div className={styles.infoCardGrowth}>
+                                    <img src={arrowUpIcon} alt="Up" />
+                                    <span className={styles.infoCardGrowthText}>
+                                        {stats?.percentage_increase || 0}% This
+                                        Month
                                     </span>
                                 </div>
-                            </Link>
+                            </div>
+                        </div>
+
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <img src={monitorIcon} alt="Active Now" />
+                            </div>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Active Now
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.active_now || 0}
+                                </div>
+                                <div className={styles.infoCardAvatars}>
+                                    {stats?.last_five_users_active?.map(
+                                        (avatarUrl, idx) => (
+                                            <Avatar
+                                                key={idx}
+                                                url={avatarUrl}
+                                                size="medium"
+                                            />
+                                        ),
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <img
+                                    src={pendingClockIcon}
+                                    alt="Pending Requests"
+                                />
+                            </div>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Pending Requests
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.pending_users_count || 0}
+                                </div>
+                                <Link
+                                    to="/admin/users/pending"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className={styles.infoCardAction}>
+                                        <img
+                                            src={eyeReviewIcon}
+                                            alt="Review"
+                                            className={styles.infoCardReviewEye}
+                                        />
+                                        <span className={styles.infoCardReview}>
+                                            Review Now
+                                        </span>
+                                    </div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
+                </section>
+            )}
             <section className={styles.filtersSection}>
                 <div className={styles.filtersBg}></div>
                 <div className={styles.filtersRow}>
