@@ -32,8 +32,10 @@ export default function useAuth({
                 dispatch(setIsProcessing(false));
                 navigate(location.pathname, {
                     state: {
+                        ...location.state,
                         isProcessing: undefined,
                     },
+                    replace: true,
                 });
                 return;
             }

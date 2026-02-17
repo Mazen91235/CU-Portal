@@ -40,7 +40,6 @@ const UserSlice = createSlice({
                     state.permissions = null;
                     state.google_access_token = null;
                 }
-                state.isProcessing = false;
             },
         );
         builder.addMatcher(
