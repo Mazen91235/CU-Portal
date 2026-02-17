@@ -8,7 +8,7 @@ export const retryCondition = (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     __: unknown,
 ) => {
-    const statuses = ["TIMEOUT_ERROR", "FETCH_ERROR"];
+    const statuses = ["TIMEOUT_ERROR"];
     const status = "status" in error ? error.status : undefined;
     const statusStr = typeof status == "string" ? status : "";
     const statusNum = typeof status == "number" ? status : 0;
