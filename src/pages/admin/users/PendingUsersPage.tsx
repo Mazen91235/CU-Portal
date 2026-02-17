@@ -225,7 +225,19 @@ export const PendingUsersPage = () => {
 
     const handleApproveAll = async () => {
         try {
+            if (!user) return;
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {};
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
             const result = await getPendingUsers({
+                ...params,
                 is_active: false,
                 limit: Infinity,
             }).unwrap();
@@ -246,7 +258,19 @@ export const PendingUsersPage = () => {
 
     const handleRejectAll = async () => {
         try {
+            if (!user) return;
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {};
+            if (!user.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
             const result = await getPendingUsers({
+                ...params,
                 is_active: false,
                 limit: Infinity,
             }).unwrap();

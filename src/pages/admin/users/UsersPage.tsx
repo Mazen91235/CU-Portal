@@ -240,55 +240,54 @@ export const UsersPage = () => {
                 title="Users Management"
                 description="Search, Filter, Approve, And Update Users All In One Place"
             />
-            {user?.canAccessAll && (
-                <section className={styles.infoCardsContainer}>
-                    <div className={styles.infoCardsRow}>
-                        <div className={styles.infoCard}>
-                            <div className={styles.infoCardIcon}>
-                                <img src={usersTotalIcon} alt="Users" />
+            <section className={styles.infoCardsContainer}>
+                <div className={styles.infoCardsRow}>
+                    <div className={styles.infoCard}>
+                        <div className={styles.infoCardIcon}>
+                            <img src={usersTotalIcon} alt="Users" />
+                        </div>
+                        <div className={styles.infoCardContent}>
+                            <div className={styles.infoCardTitle}>
+                                Total Users
                             </div>
-                            <div className={styles.infoCardContent}>
-                                <div className={styles.infoCardTitle}>
-                                    Total Users
-                                </div>
-                                <div className={styles.infoCardValue}>
-                                    {stats?.users_count || 0}
-                                </div>
-                                <div className={styles.infoCardGrowth}>
-                                    <img src={arrowUpIcon} alt="Up" />
-                                    <span className={styles.infoCardGrowthText}>
-                                        {stats?.percentage_increase || 0}% This
-                                        Month
-                                    </span>
-                                </div>
+                            <div className={styles.infoCardValue}>
+                                {stats?.users_count || 0}
+                            </div>
+                            <div className={styles.infoCardGrowth}>
+                                <img src={arrowUpIcon} alt="Up" />
+                                <span className={styles.infoCardGrowthText}>
+                                    {stats?.percentage_increase || 0}% This
+                                    Month
+                                </span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className={styles.infoCard}>
-                            <div className={styles.infoCardIcon}>
-                                <img src={monitorIcon} alt="Active Now" />
+                    <div className={styles.infoCard}>
+                        <div className={styles.infoCardIcon}>
+                            <img src={monitorIcon} alt="Active Now" />
+                        </div>
+                        <div className={styles.infoCardContent}>
+                            <div className={styles.infoCardTitle}>
+                                Active Now
                             </div>
-                            <div className={styles.infoCardContent}>
-                                <div className={styles.infoCardTitle}>
-                                    Active Now
-                                </div>
-                                <div className={styles.infoCardValue}>
-                                    {stats?.active_now || 0}
-                                </div>
-                                <div className={styles.infoCardAvatars}>
-                                    {stats?.last_five_users_active?.map(
-                                        (avatarUrl, idx) => (
-                                            <Avatar
-                                                key={idx}
-                                                url={avatarUrl}
-                                                size="medium"
-                                            />
-                                        ),
-                                    )}
-                                </div>
+                            <div className={styles.infoCardValue}>
+                                {stats?.active_now || 0}
+                            </div>
+                            <div className={styles.infoCardAvatars}>
+                                {stats?.last_five_users_active?.map(
+                                    (avatarUrl, idx) => (
+                                        <Avatar
+                                            key={idx}
+                                            url={avatarUrl}
+                                            size="medium"
+                                        />
+                                    ),
+                                )}
                             </div>
                         </div>
-
+                    </div>
+                    {user?.canAccessAll && (
                         <div className={styles.infoCard}>
                             <div className={styles.infoCardIcon}>
                                 <img
@@ -320,9 +319,9 @@ export const UsersPage = () => {
                                 </Link>
                             </div>
                         </div>
-                    </div>
-                </section>
-            )}
+                    )}
+                </div>
+            </section>
             <section className={styles.filtersSection}>
                 <div className={styles.filtersBg}></div>
                 <div className={styles.filtersRow}>
