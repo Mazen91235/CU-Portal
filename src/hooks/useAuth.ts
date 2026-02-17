@@ -8,6 +8,7 @@ import {
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie } from "../utils/CookiesManager";
 import { useLogin } from "./useLogin";
+import { setIsProcessing } from "../services/redux/reducers/UserReducer";
 export default function useAuth({
     permission,
     reverse = false,
@@ -22,10 +23,21 @@ export default function useAuth({
     const [logout] = useLazyLogoutQuery();
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
+    const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
     const location = useLocation();
     useEffect(() => {
         (async () => {
+            if (location.state?.isProcessing) {
+                dispatch(setIsProcessing(false));
+                navigate(location.pathname, {
+                    state: {
+                        isProcessing: undefined,
+                    },
+                });
+                return;
+            }
+            if (isProcessing) return;
             const loggedIn = await isLoggedIn();
             try {
                 if (loggedIn && !permission && reverse) {
@@ -69,6 +81,7 @@ export default function useAuth({
         user,
         permissions,
         location,
+        isProcessing,
         navigate,
         dispatch,
         logout,

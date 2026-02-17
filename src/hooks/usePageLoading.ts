@@ -11,11 +11,13 @@ export const usePageLoading = (
     const oldLocationRef = useRef(location);
     const { setLoading, clearLoading } = useLoading();
     useEffect(() => {
-        if (location !== oldLocationRef.current) {
+        if (
+            location !== oldLocationRef.current ||
+            document.readyState !== "complete"
+        ) {
             oldLocationRef.current = location;
             setLoading();
         }
-        if (document.readyState !== "complete") setLoading();
     }, [location, setLoading]); // Set loading on location change
     const startPageLoading = useCallback(
         (callback?: () => void) => {
