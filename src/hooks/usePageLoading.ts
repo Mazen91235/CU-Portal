@@ -8,10 +8,13 @@ export const usePageLoading = (
 ) => {
     const cleanupRef = useRef<(() => void) | null>(null);
     const location = useLocation();
+    const oldLocationRef = useRef(location);
     const { setLoading, clearLoading } = useLoading();
     useEffect(() => {
-        if (document.readyState == "complete") return;
-        setLoading();
+        if (location !== oldLocationRef.current) {
+            oldLocationRef.current = location;
+            setLoading();
+        }
     }, [location, setLoading]); // Set loading on location change
     const startPageLoading = useCallback(
         (callback?: () => void) => {
