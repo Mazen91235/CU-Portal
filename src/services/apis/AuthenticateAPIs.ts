@@ -39,6 +39,8 @@ export const AuthenticateAPI = createApi({
                     if (data.status == "success") {
                         SetCookie("google_details_token", "", -1);
                         SetCookie("oauth_state", "", -1);
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("permissions");
                     }
                 } catch {
                     return;

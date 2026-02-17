@@ -20,3 +20,11 @@ export const validateUserAccess = (
     const currentAllowedPaths = allowedPaths[level || 4] || [];
     return currentAllowedPaths.some((p) => p === path);
 };
+
+export const validateCachedData = (
+    timestamp?: number,
+    validityDurationInHours: number = 12,
+) => {
+    if (!timestamp) return false;
+    return Date.now() - timestamp < validityDurationInHours * 60 * 60 * 1000;
+};

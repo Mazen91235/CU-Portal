@@ -13,6 +13,9 @@ const UserSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+        setUser: (state, { payload }: { payload: User | null }) => {
+            state.user = payload;
+        },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
         },
@@ -91,6 +94,6 @@ const UserSlice = createSlice({
     },
 });
 
-export const { setPermissions } = UserSlice.actions;
+export const { setUser, setPermissions } = UserSlice.actions;
 
 export default UserSlice.reducer;

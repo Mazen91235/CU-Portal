@@ -28,6 +28,23 @@ export const UserAPI = createApi({
                 method: "GET",
                 credentials: "include",
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        const user = data.data;
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify({
+                                ...user,
+                                last_fetched: Date.now(),
+                            }),
+                        );
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         getUserPermissions: builder.query<GenericAPIResponse<string[]>, void>({
             query: () => ({
@@ -35,6 +52,23 @@ export const UserAPI = createApi({
                 method: "GET",
                 credentials: "include",
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.status == "success") {
+                        const permissions = data.data;
+                        localStorage.setItem(
+                            "permissions",
+                            JSON.stringify({
+                                permissions,
+                                last_fetched: Date.now(),
+                            }),
+                        );
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         checkUserHasPermissions: builder.mutation<
             GenericAPIResponse<boolean>,
