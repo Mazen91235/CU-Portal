@@ -571,7 +571,7 @@ export function MaterialsPage() {
     const handleShareMaterials = (materialId?: number, type?: string) => {
         let url =
             window.location.origin +
-            "/admin/materials?subject_id=" +
+            "/user/materials?subject_id=" +
             subjectFilter;
         const parentId =
             currentPath.length > 0

@@ -7,6 +7,7 @@ import {
     validateUserEarlyAccess,
     validateUserLevel,
 } from "../../../utils/Validators";
+import { CourseAPI } from "../../apis/user/CourseAPIs";
 
 const initialState = {
     user: null as User | null,
@@ -21,6 +22,7 @@ const UserSlice = createSlice({
     reducers: {
         setUser: (state, { payload }: { payload: User | null }) => {
             state.user = payload;
+            validateUserLevel(state.user);
         },
         setIsProcessing: (state, { payload }: { payload: boolean }) => {
             state.isProcessing = payload;
@@ -78,8 +80,7 @@ const UserSlice = createSlice({
                 if (payload.status == "success") {
                     state.user = payload.data || null;
                     state.permissions = null;
-                    if (!state.user) return;
-                    state.user.level = validateUserLevel(state.user);
+                    validateUserLevel(state.user);
                 }
             },
         );
@@ -94,7 +95,25 @@ const UserSlice = createSlice({
             },
         );
         builder.addMatcher(
+            UserAPI.endpoints.updateUserData.matchFulfilled,
+            (state, { payload }) => {
+                if (payload.status == "success") state.user = null;
+            },
+        );
+        builder.addMatcher(
             UserAPI.endpoints.updateUserAcademicData.matchFulfilled,
+            (state, { payload }) => {
+                if (payload.status == "success") state.user = null;
+            },
+        );
+        builder.addMatcher(
+            CourseAPI.endpoints.registerCourse.matchFulfilled,
+            (state, { payload }) => {
+                if (payload.status == "success") state.user = null;
+            },
+        );
+        builder.addMatcher(
+            CourseAPI.endpoints.unregisterCourse.matchFulfilled,
             (state, { payload }) => {
                 if (payload.status == "success") state.user = null;
             },

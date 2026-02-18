@@ -1,7 +1,7 @@
 import type { User } from "../types/entities/User";
 
 export const validateUserLevel = (user: User | null | undefined) => {
-    if (!user) return 1;
+    if (!user) return;
     if (
         !user?.faculty ||
         !user?.department ||
@@ -9,13 +9,13 @@ export const validateUserLevel = (user: User | null | undefined) => {
         !user?.type ||
         user?.type === ""
     ) {
-        return 1;
+        user.level = 1;
     } else if (!user?.status) {
-        return 2;
+        user.level = 2;
     } else if ((user.enrolled_courses_count || 0) < 1) {
-        return 3;
+        user.level = 3;
     } else {
-        return 4;
+        user.level = 4;
     }
 };
 

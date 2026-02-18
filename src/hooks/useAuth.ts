@@ -9,6 +9,7 @@ import {
 import { GetCookie } from "../utils/CookiesManager";
 import { useLogin } from "./useLogin";
 import { setIsProcessing } from "../services/redux/reducers/UserReducer";
+
 export default function useAuth({
     permission,
     reverse = false,

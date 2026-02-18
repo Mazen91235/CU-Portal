@@ -96,7 +96,7 @@ export const CoursePage = () => {
                                 loadingText="Viewing Tasks..."
                                 onClick={() =>
                                     navigate(
-                                        "/user/tasks?course_id=" + course.id,
+                                        "/user/tasks?subject_id=" + course.id,
                                     )
                                 }
                                 type="button"
@@ -120,7 +120,7 @@ export const CoursePage = () => {
                                 loadingText="Viewing Exams..."
                                 onClick={() =>
                                     navigate(
-                                        "/user/exams?course_id=" + course.id,
+                                        "/user/exams?subject_id=" + course.id,
                                     )
                                 }
                                 type="button"
@@ -147,7 +147,7 @@ export const CoursePage = () => {
                                 loadingText="Viewing Announcements..."
                                 onClick={() =>
                                     navigate(
-                                        "/user/announcements?course_id=" +
+                                        "/user/announcements?subject_id=" +
                                             course.id,
                                     )
                                 }
@@ -173,7 +173,7 @@ export const CoursePage = () => {
                                 loadingText="Viewing Materials..."
                                 onClick={() =>
                                     navigate(
-                                        "/user/materials?course_id=" +
+                                        "/user/materials?subject_id=" +
                                             course.id,
                                     )
                                 }

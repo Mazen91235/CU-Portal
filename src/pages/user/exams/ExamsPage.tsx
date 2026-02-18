@@ -89,9 +89,9 @@ export const ExamsPage = () => {
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
     useEffect(() => {
-        const course_id = searchParams.get("course_id") || "";
-        if (course_id && subjects.length > 0) {
-            setSubjectFilter(course_id);
+        const subject_id = searchParams.get("subject_id") || "";
+        if (subject_id && subjects.length > 0) {
+            setSubjectFilter(subject_id);
         }
     }, [searchParams, subjects]);
 
