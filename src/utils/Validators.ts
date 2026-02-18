@@ -18,6 +18,32 @@ export const validateUserLevel = (user: User | null | undefined) => {
         return 4;
     }
 };
+
+export const validateUserEarlyAccess = (
+    user: User | null | undefined,
+    permissions: string[] | null | undefined,
+) => {
+    if (!user || !permissions) return;
+    if (user.is_early_access) {
+        permissions = permissions.filter((p) => p != "Early Access");
+        permissions.push("Early Access");
+    }
+};
+
+export const validateUserCanAccessAll = (
+    user: User | null | undefined,
+    permissions: string[] | null | undefined,
+) => {
+    if (!user || !permissions) return;
+    const accessPermissions = [
+        "Access All Faculties",
+        "Access All Departments",
+        "Access All Years",
+    ];
+    if (accessPermissions.every((p) => permissions?.includes(p)))
+        user.canAccessAll = true;
+};
+
 export const validateUserAccess = (
     level?: number,
     path?: string,

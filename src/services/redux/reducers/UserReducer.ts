@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AuthenticateAPI } from "../../apis/AuthenticateAPIs";
 import { UserAPI } from "../../apis/user/UserAPIs";
 import type { User } from "../../../types/entities/User";
-import { validateUserLevel } from "../../../utils/Validators";
+import {
+    validateUserCanAccessAll,
+    validateUserEarlyAccess,
+    validateUserLevel,
+} from "../../../utils/Validators";
 
 const initialState = {
     user: null as User | null,
@@ -23,6 +27,8 @@ const UserSlice = createSlice({
         },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
+            validateUserEarlyAccess(state.user, state.permissions);
+            validateUserCanAccessAll(state.user, state.permissions);
         },
     },
     extraReducers: (builder) => {
@@ -82,25 +88,8 @@ const UserSlice = createSlice({
             (state, { payload }) => {
                 if (payload.status == "success") {
                     state.permissions = payload.data || [];
-                    if (state.user && state.user.is_early_access) {
-                        state.permissions = state.permissions.filter(
-                            (p) => p != "Early Access",
-                        );
-                        state.permissions.push("Early Access");
-                    }
-                    const accessPermissions = [
-                        "Access All Faculties",
-                        "Access All Departments",
-                        "Access All Years",
-                    ];
-                    if (
-                        state.user &&
-                        accessPermissions.every((p) =>
-                            state.permissions?.includes(p),
-                        )
-                    ) {
-                        state.user.canAccessAll = true;
-                    }
+                    validateUserEarlyAccess(state.user, state.permissions);
+                    validateUserCanAccessAll(state.user, state.permissions);
                 }
             },
         );
