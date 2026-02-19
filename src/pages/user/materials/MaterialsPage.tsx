@@ -36,7 +36,6 @@ export function MaterialsPage() {
     } | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [parentIdFromUrl, setParentIdFromUrl] = useState<number | null>(null);
 
     const [subjects, setSubjects] = useState<Subject[]>([]);
     const [currentPath, setCurrentPath] = useState<Material[]>([]);
@@ -75,10 +74,6 @@ export function MaterialsPage() {
                         ? currentPath[currentPath.length - 1].id
                         : null;
 
-            if (parentIdFromUrl) {
-                parentId = parentIdFromUrl;
-            }
-
             try {
                 const response = await getMaterials({
                     subject_id: parseInt(subjectFilter),
@@ -90,13 +85,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [
-            subjectFilter,
-            currentPath,
-            searchQuery,
-            parentIdFromUrl,
-            getMaterials,
-        ],
+        [subjectFilter, currentPath, searchQuery, getMaterials],
     );
 
     useEffect(() => {
@@ -105,7 +94,7 @@ export function MaterialsPage() {
 
     const handleNavigate = useCallback(
         async (material: Material | null) => {
-            setParentIdFromUrl(null);
+            setMaterialFromUrl(null);
             if (material === null) {
                 setCurrentPath([]);
             } else {

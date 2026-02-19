@@ -244,9 +244,9 @@ const CreateProfilePage = () => {
                                 <Input
                                     register={register}
                                     name="national_id"
-                                    label="National ID"
+                                    label="National ID or Passport Number"
                                     type="text"
-                                    placeholder="National ID"
+                                    placeholder="National ID or Passport Number"
                                     errors={errors}
                                 />
                             </div>
