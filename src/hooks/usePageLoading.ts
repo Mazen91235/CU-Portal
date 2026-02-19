@@ -10,9 +10,12 @@ export const usePageLoading = (
     const location = useLocation();
     const { setLoading, clearLoading } = useLoading();
     useEffect(() => {
-        if (document.readyState == "complete") return;
+        if (document.readyState == "complete") {
+            clearLoading();
+            return;
+        }
         setLoading();
-    }, [location, setLoading]); // Set loading on location change
+    }, [location, setLoading, clearLoading]); // Set loading on location change
     const startPageLoading = useCallback(
         (callback?: () => void) => {
             const handleLoaded = () => {
