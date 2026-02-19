@@ -7,6 +7,8 @@ import styles from "./Loading.module.css";
 export const Loading = () => {
     const { loading } = useLoading();
 
+    // Until Fixing Stuck Loading and All Loading Bugs
+    return null;
     if (!loading) return null;
 
     return (
