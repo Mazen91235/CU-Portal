@@ -735,6 +735,7 @@ export function MaterialsPage() {
                     material.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
+                setMaterialFromUrl(null);
             }
         }
     }, [materialFromUrl, materials, handlePreview]);

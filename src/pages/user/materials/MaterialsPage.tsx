@@ -94,7 +94,6 @@ export function MaterialsPage() {
 
     const handleNavigate = useCallback(
         async (material: Material | null) => {
-            setMaterialFromUrl(null);
             if (material === null) {
                 setCurrentPath([]);
             } else {
@@ -217,6 +216,7 @@ export function MaterialsPage() {
                     material.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
+                setMaterialFromUrl(null);
             }
         }
     }, [materialFromUrl, materials, handlePreview]);
