@@ -38,7 +38,7 @@ export const AdminUserAPI = createApi({
         }),
         getUsersData: builder.query<
             GenericAPIResponse<UsersDataResponseDto>,
-            void
+            UserSearchDto
         >({
             query: () => ({
                 url: "/data",

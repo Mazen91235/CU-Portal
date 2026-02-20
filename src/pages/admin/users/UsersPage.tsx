@@ -52,11 +52,19 @@ export const UsersPage = () => {
 
     const fetchUsersData = useCallback(async () => {
         try {
-            await getUsersData().unwrap();
+            await getUsersData({
+                faculty_id: selectedFaculty
+                    ? Number(selectedFaculty)
+                    : undefined,
+                department_id: selectedDepartment
+                    ? Number(selectedDepartment)
+                    : undefined,
+                year_id: selectedYear ? Number(selectedYear) : undefined,
+            }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getUsersData]);
+    }, [selectedFaculty, selectedDepartment, selectedYear, getUsersData]);
 
     const fetchFaculties = useCallback(async () => {
         try {
