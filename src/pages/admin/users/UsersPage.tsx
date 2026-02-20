@@ -52,7 +52,8 @@ export const UsersPage = () => {
 
     const fetchUsersData = useCallback(async () => {
         try {
-            await getUsersData({
+            if (!user) return;
+            const params = {
                 faculty_id: selectedFaculty
                     ? Number(selectedFaculty)
                     : undefined,
@@ -60,11 +61,19 @@ export const UsersPage = () => {
                     ? Number(selectedDepartment)
                     : undefined,
                 year_id: selectedYear ? Number(selectedYear) : undefined,
+            };
+            if (!user?.canAccessAll) {
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
+            }
+            await getUsersData({
+                ...params,
             }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [selectedFaculty, selectedDepartment, selectedYear, getUsersData]);
+    }, [selectedFaculty, selectedDepartment, selectedYear, user, getUsersData]);
 
     const fetchFaculties = useCallback(async () => {
         try {
@@ -295,39 +304,37 @@ export const UsersPage = () => {
                             </div>
                         </div>
                     </div>
-                    {user?.canAccessAll && (
-                        <div className={styles.infoCard}>
-                            <div className={styles.infoCardIcon}>
-                                <img
-                                    src={pendingClockIcon}
-                                    alt="Pending Requests"
-                                />
-                            </div>
-                            <div className={styles.infoCardContent}>
-                                <div className={styles.infoCardTitle}>
-                                    Pending Requests
-                                </div>
-                                <div className={styles.infoCardValue}>
-                                    {stats?.pending_users_count || 0}
-                                </div>
-                                <Link
-                                    to="/admin/users/pending"
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    <div className={styles.infoCardAction}>
-                                        <img
-                                            src={eyeReviewIcon}
-                                            alt="Review"
-                                            className={styles.infoCardReviewEye}
-                                        />
-                                        <span className={styles.infoCardReview}>
-                                            Review Now
-                                        </span>
-                                    </div>
-                                </Link>
-                            </div>
+                    <div className={styles.infoCard}>
+                        <div className={styles.infoCardIcon}>
+                            <img
+                                src={pendingClockIcon}
+                                alt="Pending Requests"
+                            />
                         </div>
-                    )}
+                        <div className={styles.infoCardContent}>
+                            <div className={styles.infoCardTitle}>
+                                Pending Requests
+                            </div>
+                            <div className={styles.infoCardValue}>
+                                {stats?.pending_users_count || 0}
+                            </div>
+                            <Link
+                                to="/admin/users/pending"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className={styles.infoCardAction}>
+                                    <img
+                                        src={eyeReviewIcon}
+                                        alt="Review"
+                                        className={styles.infoCardReviewEye}
+                                    />
+                                    <span className={styles.infoCardReview}>
+                                        Review Now
+                                    </span>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </section>
             <section className={styles.filtersSection}>
