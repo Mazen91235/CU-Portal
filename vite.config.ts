@@ -9,7 +9,6 @@ export default defineConfig({
     //     '/api': {
     //       target: 'https://cu-portal.com',
     //       secure: true,
-    //       changeOrigin: true,
     //       rewrite: (path) => path.replace('/api', '/api/v1'),
     //     }
     //   }

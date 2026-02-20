@@ -282,12 +282,12 @@ export const UserPage = () => {
                                     <td className={styles.userDetailsLabel}>
                                         <img
                                             src={idCardDetailsIcon}
-                                            alt="National ID"
+                                            alt="Is Active"
                                         />
-                                        National ID:
+                                        Is Active:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.national_id || "N/A"}
+                                        {user.status ? "Yes" : "No"}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <img

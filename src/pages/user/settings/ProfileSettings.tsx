@@ -26,10 +26,6 @@ const profileSchema = z.object({
         .string()
         .min(11, "Phone number is required")
         .max(13, "Invalid phone number"),
-    nationalId: z
-        .string()
-        .min(14, "National ID is required")
-        .max(14, "Invalid National ID"),
     gender: z.enum(["male", "female"]),
     googleAccount: z.string(),
     avatar: z.instanceof(FileList).optional(),
@@ -55,7 +51,6 @@ export const ProfileSettings = () => {
             setValue("name", user?.name || "");
             setValue("email", user?.email || "");
             setValue("phone", user?.phone || "");
-            setValue("nationalId", user?.national_id || "");
             setValue("gender", (user?.gender as "male" | "female") || "male");
             setValue("googleAccount", user?.google_email || "");
             const avatarPath =
@@ -173,17 +168,6 @@ export const ProfileSettings = () => {
                                         label="Phone Number"
                                         disabled
                                     />
-                                    <Input
-                                        register={register}
-                                        name="nationalId"
-                                        type="text"
-                                        placeholder="Enter Your National ID"
-                                        errors={errors}
-                                        label="National ID"
-                                        disabled
-                                    />
-                                </div>
-                                <div className={styles.inputGroup}>
                                     <Select
                                         register={register}
                                         name="gender"
@@ -194,6 +178,8 @@ export const ProfileSettings = () => {
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </Select>
+                                </div>
+                                <div className={styles.inputGroup}>
                                     <Input
                                         register={register}
                                         name="googleAccount"

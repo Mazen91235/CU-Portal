@@ -14,7 +14,6 @@ export type SignupRequestDto = {
     name: string;
     email: string;
     phone: string;
-    national_id: string;
     gender: string;
     agreed: boolean;
     early_access: boolean;

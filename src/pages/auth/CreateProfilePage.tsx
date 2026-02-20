@@ -32,7 +32,6 @@ const CreateProfilePage = () => {
             name: z.string().min(1, "Name is required"),
             email: z.email("Invalid email address"),
             phone: z.string().min(1, "Phone number is required"),
-            national_id: z.string().min(1, "National ID is required"),
             gender: z.enum(["male", "female", ""], {
                 message: "Please select a gender",
             }),
@@ -152,7 +151,6 @@ const CreateProfilePage = () => {
                 name: data.name,
                 email: data.email,
                 phone: data.phone,
-                national_id: data.national_id,
                 gender: data.gender,
                 agreed: data.agreed,
                 early_access: data.early_access || false,
@@ -241,16 +239,6 @@ const CreateProfilePage = () => {
                                     placeholder="Phone Number"
                                     errors={errors}
                                 />
-                                <Input
-                                    register={register}
-                                    name="national_id"
-                                    label="National ID or Passport Number"
-                                    type="text"
-                                    placeholder="National ID or Passport Number"
-                                    errors={errors}
-                                />
-                            </div>
-                            <div className={styles.inputRow}>
                                 <Select
                                     register={register}
                                     name="gender"
@@ -261,6 +249,8 @@ const CreateProfilePage = () => {
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                 </Select>
+                            </div>
+                            <div className={styles.inputRow}>
                                 <div>
                                     <label
                                         htmlFor="file"

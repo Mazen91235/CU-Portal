@@ -10,7 +10,6 @@ export type User = {
     email?: string;
     password?: string;
     phone?: string;
-    national_id?: string;
     gender?: string;
     type?: string;
     year?: Year | null;
