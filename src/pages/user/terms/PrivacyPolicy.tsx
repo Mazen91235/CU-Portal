@@ -35,8 +35,8 @@ export const PrivacyPolicy = () => {
                             </dt>
                             <dd>
                                 Full name, Cairo University email address or
-                                personal email with proof of enrollment,
-                                academic year, and national ID.
+                                personal email with proof of enrollment, and
+                                academic year.
                             </dd>
                             <dt>
                                 <strong>Authentication Data</strong>

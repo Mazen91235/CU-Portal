@@ -305,11 +305,11 @@ const CreateProfilePage = () => {
                                 />
                                 <label htmlFor="terms">
                                     agree to{" "}
-                                    <Link to="/terms-of-service">
+                                    <Link to="/terms_of_service">
                                         our terms
                                     </Link>{" "}
                                     &{" "}
-                                    <Link to="/privacy-policy">
+                                    <Link to="/privacy_policy">
                                         privacy policy
                                     </Link>
                                 </label>

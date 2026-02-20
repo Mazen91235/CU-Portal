@@ -39,13 +39,13 @@ export const Footer = () => {
             </div>
             <div className={styles.footerSecondaryLinks}>
                 <Link
-                    to="/privacy-policy"
+                    to="/privacy_policy"
                     className={styles.footerSecondaryLink}
                 >
                     Privacy Policy
                 </Link>
                 <Link
-                    to="/terms-of-service"
+                    to="/terms_of_service"
                     className={styles.footerSecondaryLink}
                 >
                     Terms & Conditions
