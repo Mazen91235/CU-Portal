@@ -20,19 +20,19 @@ export default function useGetUser() {
     const isLoggedIn = useLogin();
     useEffect(() => {
         (async () => {
-            if (user || (permissions?.length || 0) > 0) return;
+            if (user && permissions != null) return;
             const userStored = localStorage.getItem("user");
             const permissionsStored = localStorage.getItem("permissions");
-            let validUserCached = false;
-            let validPermissionsCached = false;
-            if (userStored) {
+            let validUserCached = !!user;
+            let validPermissionsCached = permissions != null;
+            if (userStored && !user) {
                 const userData = JSON.parse(userStored);
                 if (validateCachedData(userData.last_fetched)) {
                     validUserCached = true;
                     dispatch(setUser(userData));
                 }
             }
-            if (permissionsStored) {
+            if (permissionsStored && permissions == null) {
                 const permissionsData = JSON.parse(permissionsStored);
                 if (validateCachedData(permissionsData.last_fetched)) {
                     validPermissionsCached = true;
