@@ -29,8 +29,10 @@ const UserSlice = createSlice({
         },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
-            validateUserEarlyAccess(state.user, state.permissions);
-            validateUserCanAccessAll(state.user, state.permissions);
+            setTimeout(() => {
+                validateUserEarlyAccess(state.user, state.permissions);
+                validateUserCanAccessAll(state.user, state.permissions);
+            }, 1000);
         },
     },
     extraReducers: (builder) => {
@@ -89,8 +91,10 @@ const UserSlice = createSlice({
             (state, { payload }) => {
                 if (payload.status == "success") {
                     state.permissions = payload.data || [];
-                    validateUserEarlyAccess(state.user, state.permissions);
-                    validateUserCanAccessAll(state.user, state.permissions);
+                    setTimeout(() => {
+                        validateUserEarlyAccess(state.user, state.permissions);
+                        validateUserCanAccessAll(state.user, state.permissions);
+                    }, 1000);
                 }
             },
         );
