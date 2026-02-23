@@ -24,8 +24,7 @@ export const validateUserEarlyAccess = (
     permissions: string[] | null | undefined,
 ) => {
     if (!user || !permissions) return;
-    if (user.is_early_access) {
-        permissions = permissions.filter((p) => p != "Early Access");
+    if (user.is_early_access && !permissions.includes("Early Access")) {
         permissions.push("Early Access");
     }
 };

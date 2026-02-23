@@ -23,16 +23,16 @@ const UserSlice = createSlice({
         setUser: (state, { payload }: { payload: User | null }) => {
             state.user = payload;
             validateUserLevel(state.user);
+            validateUserEarlyAccess(state.user, state.permissions);
+            validateUserCanAccessAll(state.user, state.permissions);
         },
         setIsProcessing: (state, { payload }: { payload: boolean }) => {
             state.isProcessing = payload;
         },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
-            setTimeout(() => {
-                validateUserEarlyAccess(state.user, state.permissions);
-                validateUserCanAccessAll(state.user, state.permissions);
-            }, 1000);
+            validateUserEarlyAccess(state.user, state.permissions);
+            validateUserCanAccessAll(state.user, state.permissions);
         },
     },
     extraReducers: (builder) => {
@@ -91,10 +91,8 @@ const UserSlice = createSlice({
             (state, { payload }) => {
                 if (payload.status == "success") {
                     state.permissions = payload.data || [];
-                    setTimeout(() => {
-                        validateUserEarlyAccess(state.user, state.permissions);
-                        validateUserCanAccessAll(state.user, state.permissions);
-                    }, 1000);
+                    validateUserEarlyAccess(state.user, state.permissions);
+                    validateUserCanAccessAll(state.user, state.permissions);
                 }
             },
         );
