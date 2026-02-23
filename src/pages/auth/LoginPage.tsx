@@ -12,7 +12,10 @@ import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
     usePageLoading(true);
-
+    let path = "login-with-google";
+    if (window.location.origin.includes("localhost")) {
+        path += "?localhost=true";
+    }
     return (
         <>
             <PageSeo
@@ -50,7 +53,7 @@ const LoginPage = () => {
                         <p>You need to sign in with Google to continue</p>
                         <a
                             className={styles.googleSigninBtn}
-                            href={GetWebLink("login-with-google")}
+                            href={GetWebLink(path)}
                             aria-label="Sign in with Google"
                         >
                             <img
