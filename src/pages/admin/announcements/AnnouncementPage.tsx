@@ -94,16 +94,16 @@ export const AnnouncementPage = () => {
                                     <span>No content available</span>
                                 )}
 
-                                {announcement.details?.files_data &&
+                                {((announcement.details?.files_data &&
                                     announcement.details.files_data.length >
-                                        0 && (
-                                        <AttachmentsAndLinksSection
-                                            files={
-                                                announcement.details.files_data
-                                            }
-                                            links={announcement.links || []}
-                                        />
-                                    )}
+                                        0) ||
+                                    (announcement.links &&
+                                        announcement.links.length > 0)) && (
+                                    <AttachmentsAndLinksSection
+                                        files={announcement.details?.files_data}
+                                        links={announcement.links || []}
+                                    />
+                                )}
                             </div>
                         </LongSection>
                     </div>

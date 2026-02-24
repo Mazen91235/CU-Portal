@@ -7,8 +7,8 @@ import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { Heading } from "../heading/Heading";
 
 type AttachmentsAndLinksSectionProps = {
-    files: FileData[];
-    links: LinkData[];
+    files?: FileData[];
+    links?: LinkData[];
 };
 
 export const AttachmentsAndLinksSection = ({
@@ -31,7 +31,7 @@ export const AttachmentsAndLinksSection = ({
     const handleDownload = async (file_id: string) => {
         try {
             const url = await downloadFile(file_id);
-            const fileToDownload = files.find((file) => file.id == file_id);
+            const fileToDownload = files?.find((file) => file.id == file_id);
             setFileToDownload({
                 ...fileToDownload,
                 url: url,
@@ -58,7 +58,7 @@ export const AttachmentsAndLinksSection = ({
                     size="large"
                 />
 
-                {files.length > 0 && (
+                {files && files.length > 0 && (
                     <>
                         <Heading icon="file" content="Files:" size="medium" />
                         <div className={styles.filesList}>
@@ -107,7 +107,7 @@ export const AttachmentsAndLinksSection = ({
                     </>
                 )}
 
-                {links.length > 0 && (
+                {links && links.length > 0 && (
                     <>
                         <Heading icon="link" content="Links:" size="medium" />
                         <div className={styles.linksList}>

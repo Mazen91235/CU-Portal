@@ -84,13 +84,14 @@ export const TaskPage = () => {
                                     <span>No description available</span>
                                 )}
 
-                                {task.details?.files_data &&
-                                    task.details.files_data.length > 0 && (
-                                        <AttachmentsAndLinksSection
-                                            files={task.details.files_data}
-                                            links={task.links || []}
-                                        />
-                                    )}
+                                {((task.details?.files_data &&
+                                    task.details.files_data.length > 0) ||
+                                    (task.links && task.links.length > 0)) && (
+                                    <AttachmentsAndLinksSection
+                                        files={task.details?.files_data}
+                                        links={task.links || []}
+                                    />
+                                )}
                             </div>
                         </LongSection>
                     </div>
