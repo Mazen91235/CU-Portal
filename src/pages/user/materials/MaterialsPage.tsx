@@ -266,7 +266,10 @@ export function MaterialsPage() {
                 <div className={styles.filtersSection}>
                     <SelectFilter
                         options={subjectOptions}
-                        setValue={setSubjectFilter}
+                        setValue={(value) => {
+                            if (value !== subjectFilter) setCurrentPath([]);
+                            setSubjectFilter(value);
+                        }}
                         value={subjectFilter}
                     />
                 </div>

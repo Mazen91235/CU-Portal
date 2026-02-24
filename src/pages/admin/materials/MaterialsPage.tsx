@@ -976,24 +976,39 @@ export function MaterialsPage() {
                         <>
                             <SelectFilter
                                 options={facultyOptions}
-                                setValue={setFacultyFilter}
+                                setValue={(value) => {
+                                    if (value !== facultyFilter)
+                                        setCurrentPath([]);
+                                    setFacultyFilter(value);
+                                }}
                                 value={facultyFilter}
                             />
                             <SelectFilter
                                 options={departmentOptions}
-                                setValue={setDepartmentFilter}
+                                setValue={(value) => {
+                                    if (value !== departmentFilter)
+                                        setCurrentPath([]);
+                                    setDepartmentFilter(value);
+                                }}
                                 value={departmentFilter}
                             />
                             <SelectFilter
                                 options={yearOptions}
-                                setValue={setYearFilter}
+                                setValue={(value) => {
+                                    if (value !== yearFilter)
+                                        setCurrentPath([]);
+                                    setYearFilter(value);
+                                }}
                                 value={yearFilter}
                             />
                         </>
                     )}
                     <SelectFilter
                         options={subjectOptions}
-                        setValue={setSubjectFilter}
+                        setValue={(value) => {
+                            if (value !== subjectFilter) setCurrentPath([]);
+                            setSubjectFilter(value);
+                        }}
                         value={subjectFilter}
                     />
                 </div>
