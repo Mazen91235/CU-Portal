@@ -17,6 +17,7 @@ export const FloatingDay = ({
         title: string;
         due?: string;
         location?: string;
+        subject?: string;
         id: number;
     }[];
 }) => {
@@ -60,6 +61,7 @@ export const FloatingDay = ({
                                 key={`event-${index}`}
                                 type={event.type}
                                 title={event.title}
+                                subject={event.subject}
                                 due={event.due}
                                 location={event.location}
                                 id={event.id}

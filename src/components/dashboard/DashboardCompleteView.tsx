@@ -156,6 +156,7 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
             title: exam.name || "",
             due: formatDateTime(exam.deadline) || "",
             location: exam.details?.location || "",
+            subject: exam.subject?.name || "",
             id: exam.id || 0,
         })),
         ...(selectedEvents.tasks || []).map((task: Task) => ({
@@ -163,6 +164,7 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
             title: task.name || "",
             due: formatDateTime(task.deadline) || "",
             location: task.details?.location || "",
+            subject: task.subject?.name || "",
             id: task.id || 0,
         })),
     ];
