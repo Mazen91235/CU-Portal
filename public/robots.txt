@@ -1,0 +1,10 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and user-specific pages
+Disallow: /admin/
+Disallow: /user/
+
+# Sitemap location
+Sitemap: https://cu-portal.com/sitemap.xml
