@@ -23,6 +23,7 @@ export const formatDateTime = (
         day: "numeric",
         year: "numeric",
         hour: "2-digit",
+        hour12: true,
         minute: "2-digit",
     });
 };
@@ -63,6 +64,7 @@ export const formatTime = (dateTimeString?: string | null): string => {
     const date = new Date("1970-01-01T" + timePart);
     return date.toLocaleTimeString([], {
         hour: "2-digit",
+        hour12: true,
         minute: "2-digit",
     });
 };
