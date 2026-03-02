@@ -12,7 +12,7 @@ import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDate, formatTime } from "../../../utils/Formatter";
+import { formatDateTime } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { Subject } from "../../../types/entities/Subject";
@@ -172,14 +172,15 @@ export const ExamsPage = () => {
                             badge={exam.subject?.code}
                             items={[
                                 {
-                                    icon: "calendar",
-                                    label: "Date",
-                                    value: formatDate(exam.due_date) || "N/A",
+                                    icon: "subject",
+                                    label: "Subject",
+                                    value: exam.subject?.name || "N/A",
                                 },
                                 {
                                     icon: "time",
-                                    label: "Time",
-                                    value: formatTime(exam.deadline) || "N/A",
+                                    label: "Due",
+                                    value:
+                                        formatDateTime(exam.deadline) || "N/A",
                                 },
                                 {
                                     icon: "location",

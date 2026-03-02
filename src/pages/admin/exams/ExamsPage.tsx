@@ -380,8 +380,8 @@ export const ExamsPage = () => {
                                     value: exam.subject?.name || "N/A",
                                 },
                                 {
-                                    icon: "calendar",
-                                    label: "Date",
+                                    icon: "time",
+                                    label: "Due",
                                     value:
                                         formatDateTime(exam.deadline) || "N/A",
                                 },
