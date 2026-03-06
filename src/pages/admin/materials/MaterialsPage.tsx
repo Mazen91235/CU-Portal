@@ -1246,7 +1246,7 @@ export function MaterialsPage() {
                     />
                 )}
 
-                {formData.show && formData.type !== "drive" && (
+                {formData.show && (
                     <MaterialForm
                         materialType={formData.type}
                         material={formData.material}
