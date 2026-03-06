@@ -6,29 +6,121 @@
   <!-- Home Page / Landing Page -->
   <url>
     <loc>https://cu-portal.com/</loc>
-    <lastmod>2026-02-10</lastmod>
+    <lastmod>2026-03-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Privacy Policy Page -->
-  <url>
-    <loc>https://cu-portal.com/privacy_policy</loc>
-    <lastmod>2025-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <!-- Terms of Service Page -->
-  <url>
-    <loc>https://cu-portal.com/terms_of_service</loc>
-    <lastmod>2025-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <!-- Login Page -->
+  <!-- Authentication Pages -->
   <url>
     <loc>https://cu-portal.com/login</loc>
-    <lastmod>2026-02-10</lastmod>
+    <lastmod>2026-03-06</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/login-success</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/create-profile</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/verify-email</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://cu-portal.com/privacy_policy</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/terms_of_service</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- User Dashboard -->
+  <url>
+    <loc>https://cu-portal.com/user</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Settings -->
+  <url>
+    <loc>https://cu-portal.com/user/settings/profile</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/user/settings/academic</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://cu-portal.com/user/settings/courses</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- User Notifications -->
+  <url>
+    <loc>https://cu-portal.com/user/notifications</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- User Tasks -->
+  <url>
+    <loc>https://cu-portal.com/user/tasks</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Exams -->
+  <url>
+    <loc>https://cu-portal.com/user/exams</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Announcements -->
+  <url>
+    <loc>https://cu-portal.com/user/announcements</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Courses -->
+  <url>
+    <loc>https://cu-portal.com/user/courses</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Materials -->
+  <url>
+    <loc>https://cu-portal.com/user/materials</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- User Calendar -->
+  <url>
+    <loc>https://cu-portal.com/user/calendar</loc>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 </urlset>

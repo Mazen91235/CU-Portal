@@ -9,6 +9,7 @@ import {
 import { GetCookie } from "../utils/CookiesManager";
 import { useLogin } from "./useLogin";
 import { setIsProcessing } from "../services/redux/reducers/UserReducer";
+import { useCheckCrawler } from "./useCheckCrawler";
 
 export default function useAuth({
     permission,
@@ -23,12 +24,14 @@ export default function useAuth({
     const dispatch = useAppDispatch();
     const [logout] = useLazyLogoutQuery();
     const isLoggedIn = useLogin();
+    const checkCrawler = useCheckCrawler();
     const user = useAppSelector((state) => state.user.user);
     const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
     const location = useLocation();
     useEffect(() => {
         (async () => {
+            if (checkCrawler()) return;
             if (location.state?.isProcessing) {
                 dispatch(setIsProcessing(false));
                 navigate(location.pathname, {
@@ -89,6 +92,7 @@ export default function useAuth({
         dispatch,
         logout,
         isLoggedIn,
+        checkCrawler,
         permission,
         reverse,
         shouldNavigate,
