@@ -16,6 +16,7 @@ export const PageSeo = ({
             <link href={Logo} rel="shortcut icon" />
             <link href={Logo} rel="favicon" />
             <link href={Logo} rel="apple-touch-icon" />
+            <meta name="description" content={description ?? ""} />
             <meta property="og:image" content={LogoLight} />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description ?? ""} />
