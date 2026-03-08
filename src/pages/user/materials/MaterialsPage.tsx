@@ -181,8 +181,10 @@ export function MaterialsPage() {
                 : null;
         if (type === "folder") {
             url += "&parent_id=" + materialId;
-        } else {
+        } else if (type === "file") {
             url += `&parent_id=${parentId}&material_id=${materialId}`;
+        } else {
+            url = materials.find((m) => m.id === materialId)?.url || "";
         }
         copyToClipboard(url);
         showToast(
