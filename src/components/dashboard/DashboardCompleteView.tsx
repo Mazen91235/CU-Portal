@@ -389,10 +389,21 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
                                     <div>
                                         <span>
                                             <i className="far fa-calendar"></i>
-                                            {formatDateTime(
-                                                announcement.created_at,
-                                            )}
+                                            {!announcement.date
+                                                ? "Created At: " +
+                                                  formatDateTime(
+                                                      announcement.created_at,
+                                                  )
+                                                : "Date: " +
+                                                  formatDateTime(
+                                                      announcement.date,
+                                                  )}
                                         </span>
+                                        <Link
+                                            to={`/user/announcements/${announcement.id}`}
+                                        >
+                                            View
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

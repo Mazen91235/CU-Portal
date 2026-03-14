@@ -388,6 +388,9 @@
     align-items: center;
     gap: 4px;
 }
+.announcement-item div div a {
+    color: var(--primary-purple);
+}
 
 .motivation-card {
     text-align: center;
