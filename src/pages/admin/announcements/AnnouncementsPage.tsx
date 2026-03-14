@@ -381,11 +381,6 @@ export const AnnouncementsPage = () => {
                                     value: announcement.faculty?.name || "N/A",
                                 },
                                 {
-                                    icon: "user",
-                                    label: "Author",
-                                    value: announcement.author?.name || "N/A",
-                                },
-                                {
                                     icon: "calendar",
                                     label: "Date",
                                     value:
