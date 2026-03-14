@@ -213,7 +213,7 @@ export const AnnouncementsPage = () => {
     };
 
     const handleShareAnnouncement = (announcementId: number) => {
-        const url = `${window.location.origin}/admin/announcements/${announcementId}`;
+        const url = `${window.location.origin}/user/announcements/${announcementId}`;
         copyToClipboard(url);
         showToast(
             "success",
