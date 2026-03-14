@@ -94,7 +94,7 @@ export const Card = ({
             )}
 
             <div className={styles.titleRow}>
-                <h3 className={styles.title}>{formatString(title, 25)}</h3>
+                <h3 className={styles.title}>{formatString(title, 30)}</h3>
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>
                         <button
