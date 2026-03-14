@@ -381,6 +381,11 @@ export const AnnouncementsPage = () => {
                                     value: announcement.faculty?.name || "N/A",
                                 },
                                 {
+                                    icon: "subject",
+                                    label: "Subject",
+                                    value: announcement.subject?.name || "N/A",
+                                },
+                                {
                                     icon: "calendar",
                                     label: "Date",
                                     value:
