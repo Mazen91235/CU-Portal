@@ -109,12 +109,7 @@ export const AnnouncementPage = () => {
 
                     <div className={styles.sidebar}>
                         <QuickInfoSection
-                            items={[
-                                {
-                                    label: "Created By:",
-                                    value: announcement.author?.name || "N/A",
-                                },
-                            ]}
+                            items={[{ label: "Type:", value: "Announcement" }]}
                         />
                     </div>
                 </div>

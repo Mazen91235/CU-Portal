@@ -117,10 +117,6 @@ export const AnnouncementPage = () => {
                         <QuickInfoSection
                             items={[
                                 {
-                                    label: "Created By:",
-                                    value: announcement.author?.name || "N/A",
-                                },
-                                {
                                     label: "Faculty:",
                                     value: announcement.faculty?.name || "N/A",
                                 },
@@ -134,6 +130,10 @@ export const AnnouncementPage = () => {
                                     value:
                                         announcement.year?.year?.toString() ||
                                         "N/A",
+                                },
+                                {
+                                    label: "Type:",
+                                    value: "Announcement",
                                 },
                             ]}
                         />
