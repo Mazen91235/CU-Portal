@@ -12,7 +12,8 @@ import type { CalendarDayEventsDto } from "../../../types/dtos/CalenderDTOs";
 
 import styles from "./CalendarPage.module.css";
 import type { Task } from "../../../types/entities/Task";
-import { formatDateTime } from "../../../utils/Formatter";
+import type { Announcement } from "../../../types/entities/Announcement";
+import { convertToDayEvent } from "../../../utils/CalendarHandler";
 
 export const CalendarPage = () => {
     const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
@@ -66,9 +67,17 @@ export const CalendarPage = () => {
         setCurrentMonth(month);
     };
 
-    const selectedEvents: { tasks: Task[]; exams: Task[] } = selectedDate
-        ? eventsData[selectedDate]
-        : { tasks: [], exams: [] };
+    const selectedEvents: {
+        tasks: Task[];
+        exams: Task[];
+        announcements: Announcement[];
+    } = selectedDate
+        ? eventsData[selectedDate] || {
+              tasks: [],
+              exams: [],
+              announcements: [],
+          }
+        : { tasks: [], exams: [], announcements: [] };
 
     const renderDetailsSection = () => {
         if (!selectedDate) {
@@ -76,7 +85,7 @@ export const CalendarPage = () => {
                 <EmptySection
                     icon="calendar"
                     title="Select a day to see what's happening 🚀"
-                    description="Click on any date to view your events, assignments, and exams"
+                    description="Click on any date to view your announcements, assignments, and exams"
                 />
             );
         }
@@ -92,7 +101,9 @@ export const CalendarPage = () => {
 
         if (
             !selectedEvents ||
-            (!selectedEvents.tasks.length && !selectedEvents.exams.length)
+            (!selectedEvents.tasks.length &&
+                !selectedEvents.exams.length &&
+                !selectedEvents.announcements.length)
         ) {
             return (
                 <EmptySection
@@ -110,21 +121,27 @@ export const CalendarPage = () => {
                     <span>{dateStr}</span>
                 </div>
                 <div className={styles["events-list"]}>
-                    {[...selectedEvents.tasks, ...selectedEvents.exams].map(
-                        (event, index) => (
-                            <DayEvent
-                                key={`event-${index}`}
-                                type={
-                                    event.type == "task" ? "assignment" : "exam"
-                                }
-                                title={event.name || "Untitled"}
-                                subject={event.subject?.name}
-                                due={formatDateTime(event.deadline)}
-                                location={event.details?.location}
-                                id={event.id!}
-                            />
+                    {[
+                        ...selectedEvents.tasks.map((event) =>
+                            convertToDayEvent(event, "assignment"),
                         ),
-                    )}
+                        ...selectedEvents.exams.map((event) =>
+                            convertToDayEvent(event, "exam"),
+                        ),
+                        ...selectedEvents.announcements.map((announcement) =>
+                            convertToDayEvent(announcement, "announcement"),
+                        ),
+                    ].map((event, index) => (
+                        <DayEvent
+                            key={`event-${index}`}
+                            type={event.type}
+                            title={event.title}
+                            subject={event.subject}
+                            due={event.due}
+                            location={event.location}
+                            id={event.id}
+                        />
+                    ))}
                 </div>
             </div>
         );

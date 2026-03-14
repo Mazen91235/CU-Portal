@@ -74,6 +74,11 @@ export const AnnouncementPage = () => {
                         icon="book"
                     />
                     <StatCard
+                        type="Date"
+                        value={formatDateTime(announcement.date) || "N/A"}
+                        icon="calendar"
+                    />
+                    <StatCard
                         type="Created At"
                         value={formatDateTime(announcement.created_at) || "N/A"}
                         icon="calendar"

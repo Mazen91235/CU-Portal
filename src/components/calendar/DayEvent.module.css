@@ -42,7 +42,7 @@
     color: var(--white);
 }
 
-.badge-event {
+.badge-announcement {
     background: var(--success-green);
     color: var(--white);
 }

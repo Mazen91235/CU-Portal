@@ -13,7 +13,7 @@ export const FloatingDay = ({
     onClose: () => void;
     dateStr: string;
     events: {
-        type: "exam" | "assignment" | "event";
+        type: "exam" | "assignment" | "announcement";
         title: string;
         due?: string;
         location?: string;

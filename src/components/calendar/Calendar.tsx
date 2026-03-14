@@ -86,7 +86,11 @@ export const Calendar = ({
                     cells.push(<td key={`empty-${i}-${j}`}></td>);
                 } else {
                     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                    const events = eventsData[dateStr] || { tasks: [], exams: [] };
+                    const events = eventsData[dateStr] || {
+                        tasks: [],
+                        exams: [],
+                        announcements: [],
+                    };
                     const isSelected = selectedDate === dateStr;
 
                     cells.push(
@@ -162,9 +166,9 @@ export const Calendar = ({
                 </span>
                 <span>
                     <span
-                        className={`${styles["legend-dot"]} ${styles["dot-event"]}`}
+                        className={`${styles["legend-dot"]} ${styles["dot-announcement"]}`}
                     ></span>{" "}
-                    Events
+                    Announcements
                 </span>
             </div>
         </div>

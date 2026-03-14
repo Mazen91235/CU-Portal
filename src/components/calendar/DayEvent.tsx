@@ -11,7 +11,7 @@ export const DayEvent = ({
     location,
     id,
 }: {
-    type: "exam" | "assignment" | "event";
+    type: "exam" | "assignment" | "announcement";
     title: string;
     subject?: string;
     due?: string;
@@ -24,8 +24,8 @@ export const DayEvent = ({
                 return styles["badge-exam"];
             case "assignment":
                 return styles["badge-assignment"];
-            case "event":
-                return styles["badge-event"];
+            case "announcement":
+                return styles["badge-announcement"];
             default:
                 return "";
         }
@@ -37,8 +37,8 @@ export const DayEvent = ({
                 return `/user/exams/${id}`;
             case "assignment":
                 return `/user/tasks/${id}`;
-            case "event":
-                return "#";
+            case "announcement":
+                return `/user/announcements/${id}`;
             default:
                 return "#";
         }
@@ -50,11 +50,15 @@ export const DayEvent = ({
                 return "Exam";
             case "assignment":
                 return "Assignment";
-            case "event":
-                return "Event";
+            case "announcement":
+                return "Announcement";
             default:
                 return "";
         }
+    };
+
+    const getDateLabel = () => {
+        return type === "announcement" ? "Date" : "Due";
     };
 
     return (
@@ -83,7 +87,7 @@ export const DayEvent = ({
                             alt="Due"
                             className={styles["detail-icon"]}
                         />
-                        {due ? `Due: ${due}` : ""}
+                        {due ? `${getDateLabel()}: ${due}` : ""}
                     </div>
                 )}
                 {location && (

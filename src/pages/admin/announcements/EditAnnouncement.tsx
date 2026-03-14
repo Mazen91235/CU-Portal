@@ -26,6 +26,7 @@ import type { Announcement } from "../../../types/entities/Announcement";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
+import { formatDateTime } from "../../../utils/Formatter";
 
 import { GetIcon } from "../../../utils/LinkHandler";
 
@@ -35,6 +36,7 @@ const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
+    date: z.string().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -103,6 +105,12 @@ export const EditAnnouncement = () => {
             if (announcement) {
                 setValue("title", announcement.title || "");
                 setValue("content", announcement.content || "");
+                if (announcement.date) {
+                    const date = new Date(
+                        formatDateTime(announcement.date, true),
+                    );
+                    setValue("date", date.toISOString().slice(0, 16));
+                }
                 if (announcement.details?.files_data) {
                     setExistingFiles(
                         announcement.details.files_data.map((file, index) => {
@@ -164,6 +172,7 @@ export const EditAnnouncement = () => {
                 title: data.title,
                 content: data.content || undefined,
                 subject_id: parseInt(data.subject_id),
+                date: data.date || undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
@@ -246,6 +255,18 @@ export const EditAnnouncement = () => {
                                 label: subject.name || "",
                             }))}
                             placeholder="Select a subject"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Date"
+                            register={register}
+                            name="date"
+                            type="datetime-local"
+                            placeholder="Select announcement date and time"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
                         />
                     </div>
 

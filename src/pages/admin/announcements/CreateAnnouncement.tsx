@@ -30,6 +30,7 @@ const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
+    date: z.string().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -105,6 +106,7 @@ export const CreateAnnouncement = () => {
                 title: data.title,
                 content: data.content,
                 subject_id: parseInt(data.subject_id),
+                date: data.date || undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
@@ -173,6 +175,18 @@ export const CreateAnnouncement = () => {
                                 label: subject.name || "",
                             }))}
                             placeholder="Select a subject"
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <Input
+                            label="Date"
+                            register={register}
+                            name="date"
+                            type="datetime-local"
+                            placeholder="Select announcement date and time"
+                            errors={errors}
+                            disabled={isLoading || isUploading}
                         />
                     </div>
 

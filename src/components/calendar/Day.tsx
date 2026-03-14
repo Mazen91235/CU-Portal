@@ -1,4 +1,5 @@
 import type { Task } from "../../types/entities/Task";
+import type { Announcement } from "../../types/entities/Announcement";
 import styles from "./Day.module.css";
 
 export const Day = ({
@@ -10,13 +11,13 @@ export const Day = ({
 }: {
     day: number;
     dateStr: string;
-    events: { tasks: Task[]; exams: Task[] };
+    events: { tasks: Task[]; exams: Task[]; announcements: Announcement[] };
     isSelected: boolean;
     onSelect: (date: string) => void;
 }) => {
     const eventTypes = {
         assignment: false,
-        event: false,
+        announcement: false,
         exam: false,
     };
 
@@ -28,6 +29,14 @@ export const Day = ({
             countExtra++;
         } else {
             eventTypes[type as keyof typeof eventTypes] = true;
+        }
+    });
+
+    events.announcements.forEach(() => {
+        if (eventTypes.announcement) {
+            countExtra++;
+        } else {
+            eventTypes.announcement = true;
         }
     });
 
@@ -43,9 +52,9 @@ export const Day = ({
                         className={`${styles["event-dot"]} ${styles["dot-assignment"]}`}
                     ></span>
                 )}
-                {eventTypes.event && (
+                {eventTypes.announcement && (
                     <span
-                        className={`${styles["event-dot"]} ${styles["dot-event"]}`}
+                        className={`${styles["event-dot"]} ${styles["dot-announcement"]}`}
                     ></span>
                 )}
                 {eventTypes.exam && (

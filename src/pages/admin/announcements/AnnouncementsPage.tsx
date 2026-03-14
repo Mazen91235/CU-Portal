@@ -20,12 +20,13 @@ import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
+import { DateFilter } from "../../../components/forms/DateFilter";
 import { Card } from "../../../components/card/Card";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDate } from "../../../utils/Formatter";
+import { formatDate, formatDateTime } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./AnnouncementsPage.module.css";
@@ -39,6 +40,8 @@ export const AnnouncementsPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState("");
+    const [dateToFilter, setDateToFilter] = useState("");
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [faculties, setFaculties] = useState<Faculty[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -133,6 +136,8 @@ export const AnnouncementsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
+                start_date: dateFromFilter || undefined,
+                end_date: dateToFilter || undefined,
                 page,
             };
             if (!user.canAccessAll) {
@@ -163,6 +168,8 @@ export const AnnouncementsPage = () => {
         yearFilter,
         subjectFilter,
         searchQuery,
+        dateFromFilter,
+        dateToFilter,
         page,
         hasNextPage,
         user,
@@ -197,6 +204,8 @@ export const AnnouncementsPage = () => {
         yearFilter,
         subjectFilter,
         searchQuery,
+        dateFromFilter,
+        dateToFilter,
     ]);
 
     const handleAddAnnouncement = () => {
@@ -348,6 +357,14 @@ export const AnnouncementsPage = () => {
                             options={subjectOptions}
                             setValue={setSubjectFilter}
                         />
+                        <DateFilter
+                            placeholder="Start Date"
+                            setValue={setDateFromFilter}
+                        />
+                        <DateFilter
+                            placeholder="End Date"
+                            setValue={setDateToFilter}
+                        />
                     </div>
                 </div>
 
@@ -367,6 +384,13 @@ export const AnnouncementsPage = () => {
                                     icon: "user",
                                     label: "Author",
                                     value: announcement.author?.name || "N/A",
+                                },
+                                {
+                                    icon: "calendar",
+                                    label: "Date",
+                                    value:
+                                        formatDateTime(announcement.date) ||
+                                        "N/A",
                                 },
                                 {
                                     icon: "calendar",

@@ -7,11 +7,12 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
+import { DateFilter } from "../../../components/forms/DateFilter";
 import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDate } from "../../../utils/Formatter";
+import { formatDate, formatDateTime } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { Subject } from "../../../types/entities/Subject";
@@ -25,6 +26,8 @@ export const AnnouncementsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
     const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [dateFromFilter, setDateFromFilter] = useState("");
+    const [dateToFilter, setDateToFilter] = useState("");
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
@@ -46,6 +49,8 @@ export const AnnouncementsPage = () => {
             if (!hasNextPage) return;
             const result = await getAnnouncements({
                 query: searchQuery || undefined,
+                start_date: dateFromFilter || undefined,
+                end_date: dateToFilter || undefined,
                 subject_id: parseInt(subjectFilter) || undefined,
                 page,
             }).unwrap();
@@ -64,7 +69,15 @@ export const AnnouncementsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getAnnouncements, searchQuery, subjectFilter, page, hasNextPage]);
+    }, [
+        getAnnouncements,
+        searchQuery,
+        subjectFilter,
+        dateFromFilter,
+        dateToFilter,
+        page,
+        hasNextPage,
+    ]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchAnnouncements()]),
@@ -76,7 +89,7 @@ export const AnnouncementsPage = () => {
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
-    }, [searchQuery, subjectFilter]);
+    }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
     useEffect(() => {
         const subject_id = searchParams.get("subject_id") || "";
@@ -133,10 +146,20 @@ export const AnnouncementsPage = () => {
                             placeholder="Search announcements..."
                             setValue={setSearchQuery}
                         />
+                    </div>
+                    <div className={styles.filtersRow}>
                         <SelectFilter
                             value={subjectFilter}
                             options={subjectOptions}
                             setValue={setSubjectFilter}
+                        />
+                        <DateFilter
+                            placeholder="Start Date"
+                            setValue={setDateFromFilter}
+                        />
+                        <DateFilter
+                            placeholder="End Date"
+                            setValue={setDateToFilter}
                         />
                     </div>
                 </div>
@@ -157,6 +180,13 @@ export const AnnouncementsPage = () => {
                                     icon: "user",
                                     label: "Author",
                                     value: announcement.author?.name || "N/A",
+                                },
+                                {
+                                    icon: "calendar",
+                                    label: "Date",
+                                    value:
+                                        formatDateTime(announcement.date) ||
+                                        "N/A",
                                 },
                                 {
                                     icon: "calendar",

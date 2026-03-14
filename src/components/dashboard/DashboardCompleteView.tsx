@@ -30,6 +30,7 @@ import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
 import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
+import { convertToDayEvent } from "../../utils/CalendarHandler";
 
 export const DashboardCompleteView = ({ user }: { user: User }) => {
     const [getExams] = useLazyGetExamsQuery();
@@ -148,25 +149,19 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
     const selectedEvents =
         selectedDate && eventsData[selectedDate]
             ? eventsData[selectedDate]
-            : { tasks: [], exams: [] };
+            : { tasks: [], exams: [], announcements: [] };
 
     const formattedEvents = [
-        ...(selectedEvents.exams || []).map((exam: Task) => ({
-            type: "exam" as const,
-            title: exam.name || "",
-            due: formatDateTime(exam.deadline) || "",
-            location: exam.details?.location || "",
-            subject: exam.subject?.name || "",
-            id: exam.id || 0,
-        })),
-        ...(selectedEvents.tasks || []).map((task: Task) => ({
-            type: "assignment" as const,
-            title: task.name || "",
-            due: formatDateTime(task.deadline) || "",
-            location: task.details?.location || "",
-            subject: task.subject?.name || "",
-            id: task.id || 0,
-        })),
+        ...(selectedEvents.exams || []).map((exam: Task) =>
+            convertToDayEvent(exam, "exam"),
+        ),
+        ...(selectedEvents.tasks || []).map((task: Task) =>
+            convertToDayEvent(task, "assignment"),
+        ),
+        ...(selectedEvents.announcements || []).map(
+            (announcement: Announcement) =>
+                convertToDayEvent(announcement, "announcement"),
+        ),
     ];
 
     return (
