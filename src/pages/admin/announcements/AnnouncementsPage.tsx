@@ -141,9 +141,9 @@ export const AnnouncementsPage = () => {
                 page,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id;
+                params.department_id = user.department?.id;
+                params.year_id = user.year?.id;
             }
             const result = await getAnnouncements(params).unwrap();
             setAnnouncements((prev) => {
