@@ -10,14 +10,20 @@ import styles from "./DateFilter.module.css";
 type DateFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     placeholder?: string;
+    defaultStartDate?: string;
 };
-
+    
 export const DateFilter = ({
     setValue,
     placeholder = "Select Date",
+    defaultStartDate = "",
 }: DateFilterProps) => {
-    const [selectedDate, setSelectedDate] = useState<string>("");
-    const [displayDate, setDisplayDate] = useState<string>("");
+    const initialSelectedDate =  defaultStartDate
+        ? new Date(defaultStartDate).toLocaleDateString("en-CA") // convert to "YYYY-MM-DD" format
+        : "";
+
+    const [selectedDate, setSelectedDate] = useState<string>(initialSelectedDate);
+    const [displayDate, setDisplayDate] = useState<string>(defaultStartDate);
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);

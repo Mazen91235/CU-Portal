@@ -40,7 +40,7 @@ export const ExamsPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
     const [exams, setExams] = useState<Task[]>([]);
     const [faculties, setFaculties] = useState<Faculty[]>([]);
@@ -354,6 +354,7 @@ export const ExamsPage = () => {
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
+                            defaultStartDate={new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric"})} // Set default date to today's date in "MMM DD, YYYY" format
                         />
                         <DateFilter
                             placeholder="Date To"
