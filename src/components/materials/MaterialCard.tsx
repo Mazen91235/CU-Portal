@@ -28,6 +28,7 @@ type MaterialCardProps = {
     showCount?: boolean;
     className?: string;
     isDraggingGlobal?: boolean;
+    navigatePerClick?: boolean;
 };
 
 export const MaterialCard = ({
@@ -48,6 +49,7 @@ export const MaterialCard = ({
     showCount = true,
     className = "",
     isDraggingGlobal = false,
+    navigatePerClick = false,
 }: MaterialCardProps) => {
     const [clickCount, setClickCount] = useState(0);
     const clickTimeoutRef = useRef<number | null>(null);
@@ -97,6 +99,11 @@ export const MaterialCard = ({
                 setClickCount(0);
                 if (clickTimeoutRef.current)
                     clearTimeout(clickTimeoutRef.current);
+                return;
+            }
+
+            if(material.id && isFolder && navigatePerClick) { // don't wait for the delay if navigatePerClick is true
+                onClick(material.id);
                 return;
             }
 
