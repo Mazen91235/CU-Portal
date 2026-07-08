@@ -3,49 +3,52 @@ import { useLoading } from "../contexts/hooks/useLoading";
 import { useLocation } from "react-router";
 
 export const usePageLoading = (
-    execute: boolean = false,
-    callback?: () => void,
+  execute: boolean = false,
+  callback?: () => void,
 ) => {
-    const cleanupRef = useRef<(() => void) | null>(null);
-    const location = useLocation();
-    const { setLoading, clearLoading } = useLoading();
-    useEffect(() => {
-        if (document.readyState == "complete") {
-            clearLoading();
-            return;
-        }
-        setLoading();
-    }, [location, setLoading, clearLoading]); // Set loading on location change
-    const startPageLoading = useCallback(
-        (callback?: () => void) => {
-            const handleLoaded = () => {
-                clearLoading();
-                document.removeEventListener("readystatechange", handleLoaded);
-                if (callback) callback();
-            };
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const location = useLocation();
+  const { startLoading, stopLoading } = useLoading();
 
-            if (document.readyState === "complete") {
-                handleLoaded();
-                cleanupRef.current = null;
-            } else {
-                document.addEventListener("readystatechange", handleLoaded);
-                cleanupRef.current = () => {
-                    document.removeEventListener(
-                        "readystatechange",
-                        handleLoaded,
-                    );
-                };
-            }
-        },
-        [clearLoading],
-    );
+  const startPageLoading = useCallback(
+    (cb?: () => void) => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
 
-    // Cleanup on unmount
-    useEffect(() => {
-        if (execute) startPageLoading(callback);
-        return () => {
-            if (cleanupRef.current) cleanupRef.current();
+      startLoading();
+
+      const handleLoaded = () => {
+        stopLoading();
+        document.removeEventListener("readystatechange", handleLoaded);
+        cleanupRef.current = null;
+        if (cb) cb();
+      };
+
+      if (document.readyState === "complete") {
+        handleLoaded();
+      } else {
+        document.addEventListener("readystatechange", handleLoaded);
+        cleanupRef.current = () => {
+          document.removeEventListener("readystatechange", handleLoaded);
+          stopLoading();
         };
-    }, [execute, startPageLoading, callback]);
-    return startPageLoading;
+      }
+    },
+    [startLoading, stopLoading],
+  );
+
+  useEffect(() => {
+    if (execute) startPageLoading(callback);
+
+    return () => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    };
+  }, [location, execute, startPageLoading]);
+
+  return startPageLoading;
 };
