@@ -305,7 +305,6 @@ export function MaterialsPage() {
                                             material={folder}
                                             showCount={false}
                                             isSelected={false}
-                                            navigatePerClick={true}
                                             onClick={() => handleCardClick(folder)}
                                             onDoubleClick={() =>{}}
                                             onDragStart={() => {}}
