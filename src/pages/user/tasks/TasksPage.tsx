@@ -154,7 +154,7 @@ export const TasksPage = () => {
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
-                            defaultStartDate={new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric"})} // Set default date to today's date in "MMM DD, YYYY" format
+                            defaultDate={new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric"})} // Set default date to today's date in "MMM DD, YYYY" format
                         />
                         <DateFilter
                             placeholder="Date To"
