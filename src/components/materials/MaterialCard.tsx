@@ -28,7 +28,6 @@ type MaterialCardProps = {
     showCount?: boolean;
     className?: string;
     isDraggingGlobal?: boolean;
-    navigatePerClick?: boolean;
 };
 
 export const MaterialCard = ({
