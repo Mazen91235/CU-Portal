@@ -99,7 +99,6 @@ export const Calendar = ({
           const toDay = `${toDayYear}-${String(toDayMonth + 1).padStart(2, "0")}-${String(toDayDate).padStart(2, "0")}`;
 
           const isToDay = selectedDate !== toDay;
-          console.log(toDay === selectedDate);
 
           cells.push(
             <td key={`day-${day}`}>
