@@ -10,6 +10,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
+import { DateInput } from "../../../components/forms/DateInput";
 import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
@@ -20,6 +21,7 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
+import { mergeDateAndTime } from "../../../utils/Formatter";
 
 import { GetIcon } from "../../../utils/LinkHandler";
 
@@ -31,7 +33,8 @@ const taskSchema = z.object({
     description: z.string().optional(),
     submission_url: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
-    deadline: z.string().min(1, "Deadline is required"),
+    deadline_date: z.string().min(1, "Deadline date is required"),
+    deadline_time: z.string().min(1, "Deadline time is required"),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -108,7 +111,10 @@ export const CreateTask = () => {
                 description: data.description,
                 submission_url: data.submission_url,
                 subject_id: parseInt(data.subject_id),
-                deadline: data.deadline,
+                deadline: mergeDateAndTime(
+                    data.deadline_date,
+                    data.deadline_time,
+                ),
                 urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
@@ -181,12 +187,22 @@ export const CreateTask = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <Input
+                        <DateInput
                             label="Deadline"
+                            placeholder="Select deadline date"
                             register={register}
-                            name="deadline"
-                            type="datetime-local"
-                            placeholder="Select deadline date and time"
+                            name="deadline_date"
+                            errors={errors}
+                            setValue={setValue}
+                            control={control}
+                            disabled={isLoading || isUploading}
+                        />
+                        <Input
+                            label="Deadline Time"
+                            register={register}
+                            name="deadline_time"
+                            type="time"
+                            placeholder="Select deadline time"
                             errors={errors}
                             disabled={isLoading || isUploading}
                         />

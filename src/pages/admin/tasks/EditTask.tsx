@@ -13,6 +13,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
+import { DateInput } from "../../../components/forms/DateInput";
 import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
@@ -25,7 +26,11 @@ import type { FileData, LinkData, Task } from "../../../types/entities/Task";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
-import { formatDateTime } from "../../../utils/Formatter";
+import {
+    formatDateInputValue,
+    formatTimeInputValue,
+    mergeDateAndTime,
+} from "../../../utils/Formatter";
 import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./EditTask.module.css";
@@ -36,7 +41,8 @@ const taskSchema = z.object({
     description: z.string().optional(),
     submission_url: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
-    deadline: z.string().optional(),
+    deadline_date: z.string().optional(),
+    deadline_time: z.string().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -111,8 +117,11 @@ export const EditTask = () => {
                 );
                 setValue("submission_url", task.url || "");
                 if (task.deadline) {
-                    const date = new Date(formatDateTime(task.deadline, true));
-                    setValue("deadline", date.toISOString().slice(0, 16));
+                    setValue("deadline_date", formatDateInputValue(task.deadline));
+                    setValue("deadline_time", formatTimeInputValue(task.deadline));
+                } else {
+                    setValue("deadline_date", "");
+                    setValue("deadline_time", "");
                 }
                 if (task.details?.files_data) {
                     setExistingFiles(
@@ -174,7 +183,10 @@ export const EditTask = () => {
                 description: data.description || undefined,
                 submission_url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
-                deadline: data.deadline || undefined,
+                deadline: mergeDateAndTime(
+                    data.deadline_date,
+                    data.deadline_time,
+                ),
                 urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
@@ -261,12 +273,22 @@ export const EditTask = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <Input
+                        <DateInput
                             label="Deadline"
-                            register={register}
-                            name="deadline"
-                            type="datetime-local"
                             placeholder="Select deadline"
+                            register={register}
+                            name="deadline_date"
+                            errors={errors}
+                            setValue={setValue}
+                            control={control}
+                            disabled={isLoading || isUploading}
+                        />
+                        <Input
+                            label="Deadline Time"
+                            register={register}
+                            name="deadline_time"
+                            type="time"
+                            placeholder="Select deadline time"
                             errors={errors}
                             disabled={isLoading || isUploading}
                         />
