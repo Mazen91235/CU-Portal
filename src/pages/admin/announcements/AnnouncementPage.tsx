@@ -1,7 +1,10 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 
-import { useLazyGetAnnouncementQuery } from "../../../services/apis/admin/AnnouncementAPIs";
+import {
+    useLazyGetAnnouncementQuery,
+    useDeleteAnnouncementMutation,
+} from "../../../services/apis/admin/AnnouncementAPIs";
 import type { Announcement } from "../../../types/entities/Announcement";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -10,8 +13,11 @@ import { StatCard } from "../../../components/card/StatCard";
 import { AttachmentsAndLinksSection } from "../../../components/preview/AttachmentsAndLinksSection";
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { showToast } from "../../../utils/ToastsManager";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 import { GetIcon } from "../../../utils/LinkHandler";
@@ -21,9 +27,13 @@ import styles from "./AnnouncementPage.module.css";
 export const AnnouncementPage = () => {
     const { announcementId } = useParams<{ announcementId: string }>();
     const navigate = useNavigate();
-    const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+    const [announcement, setAnnouncement] = useState<Announcement | null>(
+        null,
+    );
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [getAnnouncement] = useLazyGetAnnouncementQuery();
+    const [deleteAnnouncement] = useDeleteAnnouncementMutation();
 
     const fetchAnnouncement = useCallback(async () => {
         if (!announcementId) return;
@@ -50,6 +60,28 @@ export const AnnouncementPage = () => {
 
     useAuthQuery(authQueryParams);
 
+    const handleDeleteClick = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!announcement?.id) return;
+
+        try {
+            await deleteAnnouncement({
+                announcement_id: announcement.id,
+            }).unwrap();
+            showToast(
+                "success",
+                "Success",
+                "Announcement deleted successfully",
+            );
+            navigate("/admin/announcements");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
     if (!announcement) {
         return null;
     }
@@ -68,6 +100,8 @@ export const AnnouncementPage = () => {
                 buttonAction={() =>
                     navigate(`/admin/announcements/edit/${announcement.id}`)
                 }
+                deleteButton="Delete Announcement"
+                deleteAction={handleDeleteClick}
                 linkText="Back to Announcements"
                 linkTo="/admin/announcements"
             />
@@ -140,6 +174,16 @@ export const AnnouncementPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                confirmText="Delete"
+                title="Delete Announcement"
+                message={`Are you sure you want to delete "${announcement.title}"? This action cannot be undone.`}
+                colorType="red"
+            />
         </Layout>
     );
 };

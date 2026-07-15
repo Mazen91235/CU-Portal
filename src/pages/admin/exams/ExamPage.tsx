@@ -1,6 +1,9 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useLazyGetExamQuery } from "../../../services/apis/admin/ExamAPIs";
+import {
+    useLazyGetExamQuery,
+    useDeleteExamMutation,
+} from "../../../services/apis/admin/ExamAPIs";
 import type { Task } from "../../../types/entities/Task";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -8,8 +11,11 @@ import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { showToast } from "../../../utils/ToastsManager";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 import { GetIcon } from "../../../utils/LinkHandler";
@@ -20,8 +26,10 @@ export const ExamPage = () => {
     const { examId } = useParams<{ examId: string }>();
     const navigate = useNavigate();
     const [exam, setExam] = useState<Task | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [getExam] = useLazyGetExamQuery();
+    const [deleteExam] = useDeleteExamMutation();
 
     const fetchExam = useCallback(async () => {
         if (!examId) return;
@@ -43,6 +51,22 @@ export const ExamPage = () => {
 
     useAuthQuery(authQueryParams);
 
+    const handleDeleteClick = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!exam?.id) return;
+
+        try {
+            await deleteExam({ exam_id: exam.id }).unwrap();
+            showToast("success", "Success", "Exam deleted successfully");
+            navigate("/admin/exams");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
     if (!exam) {
         return null;
     }
@@ -59,6 +83,8 @@ export const ExamPage = () => {
                 icon={GetIcon("task")}
                 button="Edit Exam"
                 buttonAction={() => navigate(`/admin/exams/edit/${exam.id}`)}
+                deleteButton="Delete Exam"
+                deleteAction={handleDeleteClick}
                 linkText="Back to Exams"
                 linkTo="/admin/exams"
             />
@@ -158,6 +184,16 @@ export const ExamPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                confirmText="Delete"
+                title="Delete Exam"
+                message={`Are you sure you want to delete "${exam.name}"? This action cannot be undone.`}
+                colorType="red"
+            />
         </Layout>
     );
 };
