@@ -142,7 +142,7 @@ export function MaterialsPage() {
 
     useAuthQuery(authQueryParams);
 
-    const handleCardDoubleClick = (material: Material) => {
+    const handleCardClick = (material: Material) => {
         if (material.type === "folder") {
             handleNavigate(material);
         }
@@ -305,10 +305,8 @@ export function MaterialsPage() {
                                             material={folder}
                                             showCount={false}
                                             isSelected={false}
-                                            onClick={() => {}}
-                                            onDoubleClick={() =>
-                                                handleCardDoubleClick(folder)
-                                            }
+                                            onClick={() => handleCardClick(folder)}
+                                            onDoubleClick={() =>{}}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
@@ -337,10 +335,8 @@ export function MaterialsPage() {
                                             material={file}
                                             showCount={false}
                                             isSelected={false}
-                                            onClick={() => {}}
-                                            onDoubleClick={() =>
-                                                handleCardDoubleClick(file)
-                                            }
+                                            onClick={() => handleCardClick(file)}
+                                            onDoubleClick={() =>{}}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
