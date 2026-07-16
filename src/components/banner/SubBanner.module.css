@@ -108,7 +108,7 @@
 
 .deleteButton {
   padding: 0.625rem 1.25rem;
-  border-radius: 8px;
+  border-radius: var(--primary-border-radius);
   font-size: 1.1rem;
   font-weight: 500;
   border: 1px solid var(--error-red);
