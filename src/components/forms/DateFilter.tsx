@@ -33,7 +33,7 @@ export const DateFilter = ({
         const dateString = nextDay.toISOString().split("T")[0];
         setSelectedDate(dateString);
         setDisplayDate(
-            date.toLocaleDateString("en-US", {
+            date.toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
@@ -91,7 +91,7 @@ export const DateFilter = ({
         return days;
     };
 
-    const monthYear = currentMonth.toLocaleDateString("en-US", {
+    const monthYear = currentMonth.toLocaleDateString("en-CA", {
         month: "long",
         year: "numeric",
     });
@@ -116,10 +116,10 @@ export const DateFilter = ({
 
     useEffect(() => {
         if (defaultDate) {
-            const defaultDateInISO = new Date(defaultDate).toLocaleDateString("en-CA"); // Convert to "YYYY-MM-DD" format
-            setSelectedDate(defaultDateInISO);
-            setValue(defaultDateInISO);
-            setDisplayDate(defaultDate);
+            const defaultDateForDisplay = new Date(defaultDate).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" }); // Convert to "MMM DD, YYYY" format
+            setSelectedDate(defaultDate);
+            setValue(defaultDate);
+            setDisplayDate(defaultDateForDisplay);
         }
     }, [defaultDate]);
 
