@@ -14,6 +14,7 @@ import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
+import { DateInput } from "../../../components/forms/DateInput";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -23,6 +24,7 @@ import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
 
 import { GetIcon } from "../../../utils/LinkHandler";
+import { mergeDateAndTime } from "../../../utils/Formatter";
 
 import styles from "./CreateAnnouncement.module.css";
 
@@ -30,7 +32,8 @@ const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
-    date: z.string().optional(),
+    date_date: z.string().optional(),
+    date_time: z.string().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -106,7 +109,9 @@ export const CreateAnnouncement = () => {
                 title: data.title,
                 content: data.content,
                 subject_id: parseInt(data.subject_id),
-                date: data.date || undefined,
+                date: data.date_date
+                    ? mergeDateAndTime(data.date_date, data.date_time || "00:00")
+                    : undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
@@ -179,12 +184,22 @@ export const CreateAnnouncement = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <Input
+                        <DateInput
                             label="Date"
+                            placeholder="Select announcement date"
                             register={register}
-                            name="date"
-                            type="datetime-local"
-                            placeholder="Select announcement date and time"
+                            name="date_date"
+                            errors={errors}
+                            setValue={setValue}
+                            control={control}
+                            disabled={isLoading || isUploading}
+                        />
+                        <Input
+                            label="Time"
+                            register={register}
+                            name="date_time"
+                            type="time"
+                            placeholder="Select announcement time"
                             errors={errors}
                             disabled={isLoading || isUploading}
                         />

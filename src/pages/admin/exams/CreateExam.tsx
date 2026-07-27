@@ -10,6 +10,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
+import { DateInput } from "../../../components/forms/DateInput";
 import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
@@ -191,12 +192,13 @@ export const CreateExam = () => {
                             size="medium"
                         />
                         <div className={styles.dateTimeGroup}>
-                            <Input
+                            <DateInput
                                 label="Exam Date"
-                                type="date"
                                 register={register}
                                 name="due_date"
                                 errors={errors}
+                                setValue={setValue}
+                                control={control}
                                 disabled={isLoading}
                             />
                             <Input

@@ -10,12 +10,14 @@ import styles from "./DateFilter.module.css";
 type DateFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     placeholder?: string;
+    startRight?: boolean;
     defaultDate?: string;
 };
     
 export const DateFilter = ({
     setValue,
     placeholder = "Select Date",
+    startRight = false,
     defaultDate = "",
 }: DateFilterProps) => {
     const [selectedDate, setSelectedDate] = useState<string>("");
@@ -169,7 +171,9 @@ export const DateFilter = ({
             </button>
 
             {isOpen && (
-                <div className={styles.calendarDropdown}>
+                <div
+                    className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""}`}
+                >
                     <div className={styles.calendarHeader}>
                         <button
                             className={styles.calendarNav}

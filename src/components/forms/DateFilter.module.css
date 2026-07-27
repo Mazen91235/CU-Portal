@@ -65,6 +65,11 @@
     animation: slideDown 0.2s ease-out;
 }
 
+.calendarDropdown.startRight {
+    left: auto;
+    right: 0;
+}
+
 @keyframes slideDown {
     from {
         opacity: 0;
