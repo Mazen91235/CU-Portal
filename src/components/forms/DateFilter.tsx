@@ -10,20 +10,16 @@ import styles from "./DateFilter.module.css";
 type DateFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     placeholder?: string;
-    defaultStartDate?: string;
+    defaultDate?: string;
 };
     
 export const DateFilter = ({
     setValue,
     placeholder = "Select Date",
-    defaultStartDate = "",
+    defaultDate = "",
 }: DateFilterProps) => {
-    const initialSelectedDate =  defaultStartDate
-        ? new Date(defaultStartDate).toLocaleDateString("en-CA") // convert to "YYYY-MM-DD" format
-        : "";
-
-    const [selectedDate, setSelectedDate] = useState<string>(initialSelectedDate);
-    const [displayDate, setDisplayDate] = useState<string>(defaultStartDate);
+    const [selectedDate, setSelectedDate] = useState<string>("");
+    const [displayDate, setDisplayDate] = useState<string>("");
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);
@@ -37,7 +33,7 @@ export const DateFilter = ({
         const dateString = nextDay.toISOString().split("T")[0];
         setSelectedDate(dateString);
         setDisplayDate(
-            date.toLocaleDateString("en-US", {
+            date.toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
@@ -95,7 +91,7 @@ export const DateFilter = ({
         return days;
     };
 
-    const monthYear = currentMonth.toLocaleDateString("en-US", {
+    const monthYear = currentMonth.toLocaleDateString("en-CA", {
         month: "long",
         year: "numeric",
     });
@@ -117,6 +113,15 @@ export const DateFilter = ({
             currentMonth.getFullYear() === year
         );
     };
+
+    useEffect(() => {
+        if (defaultDate) {
+            const defaultDateForDisplay = new Date(defaultDate).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" }); // Convert to "MMM DD, YYYY" format
+            setSelectedDate(defaultDate);
+            setValue(defaultDate);
+            setDisplayDate(defaultDateForDisplay);
+        }
+    }, [defaultDate]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

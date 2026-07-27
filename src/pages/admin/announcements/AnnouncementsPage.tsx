@@ -360,7 +360,7 @@ export const AnnouncementsPage = () => {
                         <DateFilter
                             placeholder="Start Date"
                             setValue={setDateFromFilter}
-                            defaultStartDate={new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric"})} // Set default date to today's date in "MMM DD, YYYY" format
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
                         />
                         <DateFilter
                             placeholder="End Date"
