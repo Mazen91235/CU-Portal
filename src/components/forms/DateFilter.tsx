@@ -11,12 +11,14 @@ type DateFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     placeholder?: string;
     startRight?: boolean;
+    defaultDate?: string;
 };
-
+    
 export const DateFilter = ({
     setValue,
     placeholder = "Select Date",
     startRight = false,
+    defaultDate = "",
 }: DateFilterProps) => {
     const [selectedDate, setSelectedDate] = useState<string>("");
     const [displayDate, setDisplayDate] = useState<string>("");
@@ -33,7 +35,7 @@ export const DateFilter = ({
         const dateString = nextDay.toISOString().split("T")[0];
         setSelectedDate(dateString);
         setDisplayDate(
-            date.toLocaleDateString("en-US", {
+            date.toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
@@ -91,7 +93,7 @@ export const DateFilter = ({
         return days;
     };
 
-    const monthYear = currentMonth.toLocaleDateString("en-US", {
+    const monthYear = currentMonth.toLocaleDateString("en-CA", {
         month: "long",
         year: "numeric",
     });
@@ -113,6 +115,15 @@ export const DateFilter = ({
             currentMonth.getFullYear() === year
         );
     };
+
+    useEffect(() => {
+        if (defaultDate) {
+            const defaultDateForDisplay = new Date(defaultDate).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" }); // Convert to "MMM DD, YYYY" format
+            setSelectedDate(defaultDate);
+            setValue(defaultDate);
+            setDisplayDate(defaultDateForDisplay);
+        }
+    }, [defaultDate]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

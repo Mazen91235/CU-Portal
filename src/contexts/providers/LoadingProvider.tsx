@@ -2,20 +2,20 @@ import { useState } from "react";
 import { LoadingContext } from "../contexts/LoadingContext";
 
 export const LoadingProvider = ({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) => {
-    const [loading, setIsLoading] = useState<boolean>(false);
-    const setLoading = () => setIsLoading(true);
-    const clearLoading = () => setIsLoading(false);
-    const toggleLoading = () => setIsLoading(!loading);
+  const [loadingCount, setLoadingCount] = useState<number>(0);
+  const loading = loadingCount > 0;
 
-    const value = {
-        loading,
-        setLoading,
-        clearLoading,
-        toggleLoading,
-    };
-    return <LoadingContext value={value}>{children}</LoadingContext>;
+  const startLoading = () => setLoadingCount((c) => c + 1);
+  const stopLoading = () => setLoadingCount((c) => Math.max(0, c - 1));
+
+  const value = {
+    loading,
+    startLoading,
+    stopLoading,
+  };
+  return <LoadingContext value={value}>{children}</LoadingContext>;
 };

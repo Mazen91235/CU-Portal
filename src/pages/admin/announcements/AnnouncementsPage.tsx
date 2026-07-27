@@ -40,7 +40,7 @@ export const AnnouncementsPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [faculties, setFaculties] = useState<Faculty[]>([]);
@@ -360,6 +360,7 @@ export const AnnouncementsPage = () => {
                         <DateFilter
                             placeholder="Start Date"
                             setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
                         />
                         <DateFilter
                             placeholder="End Date"
