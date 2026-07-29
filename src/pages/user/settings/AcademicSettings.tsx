@@ -51,7 +51,6 @@ export const AcademicSettings = () => {
     const [studyType, setStudyType] = useState<string>("");
     const [departments, setDepartments] = useState<Department[]>([]);
     const [years, setYears] = useState<Year[]>([]);
-    const [disabled, setDisabled] = useState<boolean>(false);
 
     const facultyChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedFaculty =
@@ -108,12 +107,6 @@ export const AcademicSettings = () => {
 
     useEffect(() => {
         if (faculties.length && years.length && user) {
-            const hasAcademicData =
-                user.faculty || user.type || user.year || user.department;
-            if (!hasAcademicData) {
-                setDisabled(false);
-                return;
-            }
             setValue("faculty", user.faculty?.id?.toString() || "");
             setValue("studyType", (user.type as "Mainstream" | "Credit") || "");
             setValue("year", user.year?.id?.toString() || "");
@@ -121,7 +114,6 @@ export const AcademicSettings = () => {
             setStudyType((user.type as string) || "");
             if (departments.length)
                 setValue("department", user.department?.id?.toString() || "");
-            setDisabled(!!hasAcademicData);
         }
     }, [setValue, user, faculties, years, departments]);
 
@@ -166,7 +158,7 @@ export const AcademicSettings = () => {
                                         errors={errors}
                                         label="Faculty"
                                         onChange={facultyChanged}
-                                        disabled={isSubmitting || disabled}
+                                        disabled={isSubmitting}
                                     >
                                         <option value="">
                                             Select your faculty
@@ -187,7 +179,7 @@ export const AcademicSettings = () => {
                                         errors={errors}
                                         label="Study Type"
                                         onChange={studyTypeChanged}
-                                        disabled={isSubmitting || disabled}
+                                        disabled={isSubmitting}
                                     >
                                         <option value="">
                                             Select a study type
@@ -204,7 +196,7 @@ export const AcademicSettings = () => {
                                         name="year"
                                         errors={errors}
                                         label="Year"
-                                        disabled={isSubmitting || disabled}
+                                        disabled={isSubmitting}
                                     >
                                         <option value="">
                                             Select your year
@@ -224,7 +216,7 @@ export const AcademicSettings = () => {
                                         name="department"
                                         errors={errors}
                                         label="Department"
-                                        disabled={isSubmitting || disabled}
+                                        disabled={isSubmitting}
                                     >
                                         <option value="">
                                             Select your department
@@ -249,7 +241,7 @@ export const AcademicSettings = () => {
                                             ? "Saving..."
                                             : "Save changes"
                                     }
-                                    isSubmitting={isSubmitting || disabled}
+                                    isSubmitting={isSubmitting}
                                     isOrange={false}
                                 />
                             </div>
