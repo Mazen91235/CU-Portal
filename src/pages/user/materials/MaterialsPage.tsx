@@ -121,8 +121,16 @@ export function MaterialsPage() {
     );
 
     const authQueryParams = useCallback(
-        async () => Promise.all([fetchSubjects()]),
-        [fetchSubjects],
+        async () => 
+            Promise.all([
+                fetchSubjects(),
+                fetchMaterials(currentParentId),
+            ]),
+        [
+            fetchSubjects,
+            fetchMaterials,
+            currentParentId,
+        ],
     );
 
     useAuthQuery(authQueryParams);
@@ -136,15 +144,6 @@ export function MaterialsPage() {
 
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
-
-    useEffect(() => {
-        if (!subjectFilter) {
-            setMaterials([]);
-            return;
-        }
-
-        void fetchMaterials(currentParentId);
-    }, [fetchMaterials, currentParentId, subjectFilter]);
 
     const handleCardDoubleClick = (material: Material) => {
         if (material.type === "folder") {

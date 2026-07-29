@@ -284,12 +284,17 @@ export function MaterialsPage() {
                 fetchDepartments(),
                 fetchYears(),
                 fetchSubjects(),
+                fetchMaterials(currentParentId),
+                fetchFolders(currentParentId),
             ]),
         [
             fetchFaculties,
             fetchDepartments,
             fetchYears,
             fetchSubjects,
+            fetchMaterials,
+            fetchFolders,
+            currentParentId,
         ],
     );
 
@@ -304,15 +309,6 @@ export function MaterialsPage() {
 
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
-
-    useEffect(() => {
-        if (!subjectFilter) {
-            setMaterials([]);
-            return;
-        }
-
-        void fetchMaterials(currentParentId);
-    }, [fetchMaterials, currentParentId, subjectFilter]);
 
     const handleCardClick = (materialId: number) => {
         if (isSelectionMode) {
@@ -971,6 +967,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={facultyOptions}
                                 setValue={(value) => {
+                                    if(facultyFilter && value != facultyFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setFacultyFilter(value);
                                 }}
                                 value={facultyFilter}
@@ -978,6 +977,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={departmentOptions}
                                 setValue={(value) => {
+                                    if(departmentFilter && value != departmentFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setDepartmentFilter(value);
                                 }}
                                 value={departmentFilter}
@@ -985,6 +987,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={yearOptions}
                                 setValue={(value) => {
+                                    if(yearFilter && value != yearFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setYearFilter(value);
                                 }}
                                 value={yearFilter}
