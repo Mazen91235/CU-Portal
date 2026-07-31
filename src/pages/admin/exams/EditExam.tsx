@@ -13,6 +13,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
+import { DateInput } from "../../../components/forms/DateInput";
 import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
@@ -27,7 +28,10 @@ import { Heading } from "../../../components/heading/Heading";
 import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./EditExam.module.css";
-import { formatDateTime } from "../../../utils/Formatter";
+import {
+    formatDateInputValue,
+    formatTimeInputValue,
+} from "../../../utils/Formatter";
 
 const examSchema = z.object({
     title: z.string().min(1, "Exam name is required"),
@@ -102,17 +106,11 @@ export const EditExam = () => {
             setExam(examData || null);
 
             if (examData) {
-                const deadline = new Date(
-                    formatDateTime(examData.deadline, true),
-                );
                 setValue("title", examData.name || "");
                 setValue("subject_id", examData.subject?.id?.toString() || "");
                 setValue("exam_type", examData.details?.exam_type || "");
-                setValue("due_date", deadline.toISOString().slice(0, 10) || "");
-                setValue(
-                    "start_time",
-                    deadline.toISOString().slice(11, 16) || "",
-                );
+                setValue("due_date", formatDateInputValue(examData.deadline));
+                setValue("start_time", formatTimeInputValue(examData.deadline));
                 setValue(
                     "duration",
                     examData.details?.duration?.toString() || "",
@@ -255,12 +253,13 @@ export const EditExam = () => {
                             size="medium"
                         />
                         <div className={styles.dateTimeGroup}>
-                            <Input
+                            <DateInput
                                 label="Exam Date"
-                                type="date"
                                 register={register}
                                 name="due_date"
                                 errors={errors}
+                                setValue={setValue}
+                                control={control}
                                 disabled={isLoading}
                             />
                             <Input

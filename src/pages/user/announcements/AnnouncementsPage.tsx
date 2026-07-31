@@ -26,7 +26,7 @@ export const AnnouncementsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
     const [subjects, setSubjects] = useState<Subject[]>([]);
-    const [dateFromFilter, setDateFromFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [page, setPage] = useState(1);
@@ -156,6 +156,7 @@ export const AnnouncementsPage = () => {
                         <DateFilter
                             placeholder="Start Date"
                             setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
                         />
                         <DateFilter
                             placeholder="End Date"

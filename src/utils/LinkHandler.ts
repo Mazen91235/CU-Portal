@@ -1,7 +1,8 @@
+import DefaultAvatar from "../assets/default avatar.png";
 import { type Icon } from "../types/Icon";
 import type { IconType } from "react-icons";
-import DefaultAvatar from "../assets/default avatar.png";
 
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import {
     FaGraduationCap, FaFacebook, FaGithub, 
     FaLinkedin, FaLink, FaSpinner, FaUserCircle,
@@ -10,19 +11,16 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { BsActivity, BsJournalBookmark } from "react-icons/bs";
 import { BiTrendingUp } from "react-icons/bi";
-
+import { TfiMenuAlt } from "react-icons/tfi";
 import {
     LuBookOpen, LuMap, LuCalendar, LuClipboardList,
     LuListTodo, LuMegaphone, LuBook, LuBadge, LuRadar,
     LuCalendarDays, LuFileText, LuMapPin, LuMessageSquare,
     LuLandmark, LuBuilding, LuUsers, LuShield,
     LuActivity, LuChevronDown, LuChevronUp, LuLogOut, LuSettings,
-    LuBell, LuDownload, LuEye, LuMenu,
+    LuBell, LuDownload, LuEye, LuUserCog, LuLifeBuoy,
     LuUser, LuClock, LuPhone, LuMail, LuTarget, LuMonitor, LuPaperclip,
-    LuHexagon, LuLayoutDashboard,
-    LuMessagesSquare,
-    LuUserCog,
-    LuLifeBuoy
+    LuHexagon, LuLayoutDashboard, LuMessagesSquare,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
 
@@ -95,18 +93,17 @@ export const GetIcon = (icon: Icon | string): IconType => {
         hat: FaGraduationCap,
         "book-saved": BsJournalBookmark,
         "status-up": BiTrendingUp,
-        
         user: LuUser,
         users: LuUsers,
         "users-total": LuUsers,
         "users-assigned": LuUsers,
         "user-details": LuUser,
         "user-default-avatar": FaUserCircle,
-        
         permissions: LuShield,
         location: LuMapPin,
         logo: LuHexagon,
-        menu: LuMenu,
+        menu: TfiMenuAlt,
+        "checkmark-done": IoCheckmarkDoneSharp,
         notification: LuBell,
         help: LuLifeBuoy,
         

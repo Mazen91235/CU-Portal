@@ -123,6 +123,83 @@ export const formatCalendarDay = (date: Date): string => {
     )}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
+const parseDateValue = (dateTimeString?: string | null): Date | null => {
+    if (!dateTimeString) return null;
+
+    if (dateTimeString.includes("T")) {
+        return new Date(dateTimeString);
+    }
+
+    if (dateTimeString.includes(" ")) {
+        const datePartArray = dateTimeString.split(" ")[0].split("-");
+        datePartArray.reverse();
+        const datePart = datePartArray.join("-");
+        const timePart = dateTimeString.split(" ")[1] || "00:00:00";
+        return new Date(`${datePart}T${timePart}`);
+    }
+
+    const dateParts = dateTimeString.split("-").map(Number);
+    if (dateParts.length !== 3 || dateParts.some((part) => Number.isNaN(part))) {
+        return null;
+    }
+
+    const [year, month, day] = dateParts;
+    return new Date(year, month - 1, day);
+};
+
+const padDateValue = (value: number): string => String(value).padStart(2, "0");
+
+export const formatDateWithWeekday = (
+    dateTimeString?: string | null,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "N/A";
+
+    return date.toLocaleDateString([], {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
+};
+
+export const formatDateInputValue = (
+    dateTimeString?: string | null,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "";
+
+    return formatCalendarDay(date);
+};
+
+export const formatTimeInputValue = (
+    dateTimeString?: string | null,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "";
+
+    return `${padDateValue(date.getHours())}:${padDateValue(date.getMinutes())}`;
+};
+
+export const formatDateTimeInputValue = (
+    dateTimeString?: string | null,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "";
+
+    return `${formatCalendarDay(date)}T${padDateValue(date.getHours())}:${padDateValue(date.getMinutes())}`;
+};
+
+export const mergeDateAndTime = (
+    dateValue?: string | null,
+    timeValue?: string | null,
+): string | undefined => {
+    if (!dateValue) return undefined;
+    if (!timeValue) return dateValue;
+
+    return `${dateValue}T${timeValue}`;
+};
+
 export const parseDateString = (dateStr: string): Date | null => {
     const parts = dateStr.split("-");
     if (parts.length !== 3) return null;

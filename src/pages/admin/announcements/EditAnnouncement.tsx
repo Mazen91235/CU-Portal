@@ -17,6 +17,7 @@ import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
+import { DateInput } from "../../../components/forms/DateInput";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -26,7 +27,11 @@ import type { Announcement } from "../../../types/entities/Announcement";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
-import { formatDateTime } from "../../../utils/Formatter";
+import {
+    formatDateInputValue,
+    formatTimeInputValue,
+    mergeDateAndTime,
+} from "../../../utils/Formatter";
 
 import { GetIcon } from "../../../utils/LinkHandler";
 
@@ -36,7 +41,8 @@ const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
     subject_id: z.string().min(1, "Subject is required"),
-    date: z.string().optional(),
+    date_date: z.string().optional(),
+    date_time: z.string().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -106,10 +112,17 @@ export const EditAnnouncement = () => {
                 setValue("title", announcement.title || "");
                 setValue("content", announcement.content || "");
                 if (announcement.date) {
-                    const date = new Date(
-                        formatDateTime(announcement.date, true),
+                    setValue(
+                        "date_date",
+                        formatDateInputValue(announcement.date),
                     );
-                    setValue("date", date.toISOString().slice(0, 16));
+                    setValue(
+                        "date_time",
+                        formatTimeInputValue(announcement.date),
+                    );
+                } else {
+                    setValue("date_date", "");
+                    setValue("date_time", "");
                 }
                 if (announcement.details?.files_data) {
                     setExistingFiles(
@@ -172,7 +185,9 @@ export const EditAnnouncement = () => {
                 title: data.title,
                 content: data.content || undefined,
                 subject_id: parseInt(data.subject_id),
-                date: data.date || undefined,
+                date: data.date_date
+                    ? mergeDateAndTime(data.date_date, data.date_time || "00:00")
+                    : undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
@@ -259,12 +274,22 @@ export const EditAnnouncement = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <Input
+                        <DateInput
                             label="Date"
+                            placeholder="Select announcement date"
                             register={register}
-                            name="date"
-                            type="datetime-local"
-                            placeholder="Select announcement date and time"
+                            name="date_date"
+                            errors={errors}
+                            setValue={setValue}
+                            control={control}
+                            disabled={isLoading || isUploading}
+                        />
+                        <Input
+                            label="Time"
+                            register={register}
+                            name="date_time"
+                            type="time"
+                            placeholder="Select announcement time"
                             errors={errors}
                             disabled={isLoading || isUploading}
                         />

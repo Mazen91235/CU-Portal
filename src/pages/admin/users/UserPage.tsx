@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 export const UserPage = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -31,6 +32,8 @@ export const UserPage = () => {
     const [isEditingRole, setIsEditingRole] = useState(false);
     const [user, setUser] = useState<UserResponseDto>({});
     const [roles, setRoles] = useState<Role[]>([]);
+    const permissions = useAppSelector((state) => state.user.permissions);
+    const canManageUsers = permissions?.includes("Manage Users") ?? false;
 
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
@@ -147,12 +150,24 @@ export const UserPage = () => {
                                         </span>
                                     )}
                                 </div>
-                                <button
-                                    className={styles.editRoleBtn}
-                                    onClick={handleEditRole}
-                                >
-                                    Edit Role
-                                </button>
+                                {canManageUsers && (
+                                    <div className={styles.userRoleActions}>
+                                        <button
+                                            type="button"
+                                            className={styles.suspendUserBtn}
+                                            onClick={() => null}
+                                        >
+                                            Suspend User
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={styles.editRoleBtn}
+                                            onClick={handleEditRole}
+                                        >
+                                            Edit Role
+                                        </button>
+                                    </div>
+                                )}
                             </>
                         ) : (
                             <Form
