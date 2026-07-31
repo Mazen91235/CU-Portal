@@ -14,21 +14,7 @@ import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { UserResponseDto } from "../../../types/dtos/UserDTOs";
 import type { Role } from "../../../types/entities/Role";
-import userDetailsIcon from "../../../assets/icons/user-details.png";
-import mailDetailsIcon from "../../../assets/icons/mail-details.png";
-import callDetailsIcon from "../../../assets/icons/call-details.png";
-import buildingFacultyIcon from "../../../assets/icons/building-faculty.png";
-import buildingDepartmentIcon from "../../../assets/icons/building-department.png";
-import certificateYearIcon from "../../../assets/icons/certificate-year.png";
-import idCardDetailsIcon from "../../../assets/icons/id-card-details.png";
-import calendarIcon from "../../../assets/icons/iconsax-calendar.png";
-import examIconCircle from "../../../assets/icons/exam-icon.png";
-import taskIconCircle from "../../../assets/icons/task-details-icon.png";
-import announcementIconCircle from "../../../assets/icons/announcement-icon.png";
-import materialsIconCircle from "../../../assets/icons/materials-icon.png";
-import gradesIconCircle from "../../../assets/icons/grades-icon.png";
-import subjectsIconCircle from "../../../assets/icons/subjects-icon.png";
-import activityLogsIconCircle from "../../../assets/icons/activity-logs-icon.png";
+import IconComponent from "../../../components/IconComponent";
 import styles from "./UserPage.module.css";
 import z from "zod";
 import { Form } from "../../../components/forms/Form";
@@ -220,14 +206,14 @@ export const UserPage = () => {
                             <tbody>
                                 <tr>
                                     <td className={styles.userDetailsLabel}>
-                                        <img src={userDetailsIcon} alt="User" />{" "}
+                                        <IconComponent icon="user" />{" "}
                                         Name:
                                     </td>
                                     <td className={styles.userDetailsValue}>
                                         {user.name || "N/A"}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
-                                        <img src={mailDetailsIcon} alt="Mail" />{" "}
+                                        <IconComponent icon="mail-details" />{" "}
                                         E-Mail:
                                     </td>
                                     <td className={styles.userDetailsValue}>
@@ -236,20 +222,14 @@ export const UserPage = () => {
                                 </tr>
                                 <tr>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={callDetailsIcon}
-                                            alt="Phone"
-                                        />{" "}
+                                        <IconComponent icon="call-details" />{" "}
                                         Phone:
                                     </td>
                                     <td className={styles.userDetailsValue}>
                                         {user.phone || "N/A"}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={buildingFacultyIcon}
-                                            alt="Faculty"
-                                        />{" "}
+                                        <IconComponent icon="building" />{" "}
                                         Faculty:
                                     </td>
                                     <td className={styles.userDetailsValue}>
@@ -258,20 +238,14 @@ export const UserPage = () => {
                                 </tr>
                                 <tr>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={buildingDepartmentIcon}
-                                            alt="Department"
-                                        />{" "}
+                                        <IconComponent icon="building-department" />{" "}
                                         Department:
                                     </td>
                                     <td className={styles.userDetailsValue}>
                                         {user.department?.name || "N/A"}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={certificateYearIcon}
-                                            alt="Year"
-                                        />{" "}
+                                        <IconComponent icon="certificate-year" />{" "}
                                         Academic Year:
                                     </td>
                                     <td className={styles.userDetailsValue}>
@@ -280,20 +254,14 @@ export const UserPage = () => {
                                 </tr>
                                 <tr>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={idCardDetailsIcon}
-                                            alt="Is Active"
-                                        />
+                                        <IconComponent icon="id-card-details" />
                                         Is Active:
                                     </td>
                                     <td className={styles.userDetailsValue}>
                                         {user.status ? "Yes" : "No"}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
-                                        <img
-                                            src={calendarIcon}
-                                            alt="Joined Date"
-                                        />{" "}
+                                        <IconComponent icon="iconsax-calendar" />{" "}
                                         Joined At:
                                     </td>
                                     <td>
@@ -312,7 +280,7 @@ export const UserPage = () => {
                     <div className={styles.examsSection}>
                         <div className={styles.examsHeader}>
                             <span className={styles.examsHeaderIcon}>
-                                <img src={examIconCircle} alt="Exams" />
+                                <IconComponent icon="exam-icon" />
                             </span>
                             <span className={styles.examsHeaderTitle}>
                                 Exams
@@ -340,13 +308,7 @@ export const UserPage = () => {
                                                         styles.examCardIcon
                                                     }
                                                 >
-                                                    <img
-                                                        src={examIconCircle}
-                                                        alt="Exam"
-                                                        className={
-                                                            styles.examCircleIcon
-                                                        }
-                                                    />
+                                                    <IconComponent icon="exam-icon" className={styles.examCircleIcon} />
                                                 </div>
                                                 <div
                                                     className={
@@ -421,13 +383,7 @@ export const UserPage = () => {
                                             <div
                                                 className={styles.examCardIcon}
                                             >
-                                                <img
-                                                    src={examIconCircle}
-                                                    alt="Exam"
-                                                    className={
-                                                        styles.examCircleIcon
-                                                    }
-                                                />
+                                                <IconComponent icon="exam-icon" className={styles.examCircleIcon} />
                                             </div>
                                             <div
                                                 className={styles.examCardInfo}
@@ -486,11 +442,7 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.tasksSection}>
                         <div className={styles.tasksHeader}>
-                            <img
-                                src={taskIconCircle}
-                                alt="Tasks"
-                                className={styles.tasksHeaderIcon}
-                            />
+                            <IconComponent icon="task-details-icon" className={styles.tasksHeaderIcon} />
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
@@ -517,13 +469,7 @@ export const UserPage = () => {
                                                         styles.taskCardIcon
                                                     }
                                                 >
-                                                    <img
-                                                        src={taskIconCircle}
-                                                        alt="Task"
-                                                        className={
-                                                            styles.taskCircleIcon
-                                                        }
-                                                    />
+                                                    <IconComponent icon="task-details-icon" className={styles.taskCircleIcon} />
                                                 </div>
                                                 <div
                                                     className={
@@ -598,13 +544,7 @@ export const UserPage = () => {
                                             <div
                                                 className={styles.taskCardIcon}
                                             >
-                                                <img
-                                                    src={taskIconCircle}
-                                                    alt="Task"
-                                                    className={
-                                                        styles.taskCircleIcon
-                                                    }
-                                                />
+                                                <IconComponent icon="task-details-icon" className={styles.taskCircleIcon} />
                                             </div>
                                             <div
                                                 className={styles.taskCardInfo}
@@ -665,11 +605,7 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.announcementSection}>
                         <div className={styles.announcementHeader}>
-                            <img
-                                src={announcementIconCircle}
-                                alt="Announcement"
-                                className={styles.announcementHeaderIcon}
-                            />
+                            <IconComponent icon="announcement-icon" className={styles.announcementHeaderIcon} />
                             <span className={styles.announcementHeaderTitle}>
                                 Announcement
                             </span>
@@ -747,11 +683,7 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.materialsSection}>
                         <div className={styles.materialsHeader}>
-                            <img
-                                src={materialsIconCircle}
-                                alt="Materials"
-                                className={styles.materialsHeaderIcon}
-                            />
+                            <IconComponent icon="materials-icon" className={styles.materialsHeaderIcon} />
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
@@ -767,13 +699,7 @@ export const UserPage = () => {
                                         <div
                                             className={styles.materialsCardIcon}
                                         >
-                                            <img
-                                                src={materialsIconCircle}
-                                                alt="Material"
-                                                className={
-                                                    styles.materialsCircleIcon
-                                                }
-                                            />
+                                            <IconComponent icon="materials-icon" className={styles.materialsCircleIcon} />
                                         </div>
                                         <div
                                             className={styles.materialsCardInfo}
@@ -839,11 +765,7 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.gradesSection}>
                         <div className={styles.gradesHeader}>
-                            <img
-                                src={gradesIconCircle}
-                                alt="Grades"
-                                className={styles.gradesHeaderIcon}
-                            />
+                            <IconComponent icon="grades-icon" className={styles.gradesHeaderIcon} />
                             <span className={styles.gradesHeaderTitle}>
                                 Grades
                             </span>
@@ -857,13 +779,7 @@ export const UserPage = () => {
                                         className={styles.gradesCard}
                                     >
                                         <div className={styles.gradesCardIcon}>
-                                            <img
-                                                src={gradesIconCircle}
-                                                alt="Grade"
-                                                className={
-                                                    styles.gradesCircleIcon
-                                                }
-                                            />
+                                            <IconComponent icon="grades-icon" className={styles.gradesCircleIcon} />
                                         </div>
                                         <div className={styles.gradesCardInfo}>
                                             <div
@@ -922,11 +838,7 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.subjectsSection}>
                         <div className={styles.subjectsHeader}>
-                            <img
-                                src={subjectsIconCircle}
-                                alt="Subjects"
-                                className={styles.subjectsHeaderIcon}
-                            />
+                            <IconComponent icon="subjects-icon" className={styles.subjectsHeaderIcon} />
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
@@ -941,13 +853,7 @@ export const UserPage = () => {
                                         <div
                                             className={styles.subjectsCardIcon}
                                         >
-                                            <img
-                                                src={subjectsIconCircle}
-                                                alt="Subject"
-                                                className={
-                                                    styles.subjectsCircleIcon
-                                                }
-                                            />
+                                            <IconComponent icon="subjects-icon" className={styles.subjectsCircleIcon} />
                                         </div>
                                         <div
                                             className={styles.subjectsCardInfo}
@@ -989,11 +895,7 @@ export const UserPage = () => {
             <section className={styles.activityLogsFullWidth}>
                 <div className={styles.activityLogsSection}>
                     <div className={styles.activityLogsHeader}>
-                        <img
-                            src={activityLogsIconCircle}
-                            alt="Activity Logs"
-                            className={styles.activityLogsHeaderIcon}
-                        />
+                        <IconComponent icon="activity-logs-icon" className={styles.activityLogsHeaderIcon} />
                         <span className={styles.activityLogsHeaderTitle}>
                             Activity Logs
                         </span>
