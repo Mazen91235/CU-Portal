@@ -257,7 +257,7 @@ export const UsersPage = () => {
                 <div className={styles.infoCardsRow}>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <IconComponent icon="users-total" size={24} />
+                            <IconComponent icon="users-total" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>
@@ -267,7 +267,7 @@ export const UsersPage = () => {
                                 {stats?.users_count || 0}
                             </div>
                             <div className={styles.infoCardGrowth}>
-                                <IconComponent icon="arrow-up" color="green" />
+                                <IconComponent icon="arrow-up" color="green" size={16} />
                                 <span className={styles.infoCardGrowthText}>
                                     {stats?.percentage_increase || 0}% This
                                     Month
@@ -278,7 +278,7 @@ export const UsersPage = () => {
 
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <IconComponent icon="monitor" size={24} />
+                            <IconComponent icon="monitor" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>
@@ -302,7 +302,7 @@ export const UsersPage = () => {
                     </div>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <IconComponent icon="pending-clock-new" size={24} />
+                            <IconComponent icon="pending-clock-new" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>

@@ -203,13 +203,6 @@
     color: var(--primary-dark);
 }
 
-.pendingMiniBadgeEngineering img,
-.pendingMiniBadgeSecondary img,
-.pendingMiniBadgeYear img {
-    width: 20px;
-    height: 20px;
-}
-
 .pendingMiniIdRow {
     display: flex;
     align-items: center;
@@ -230,11 +223,6 @@
     gap: 0.5rem;
 }
 
-.pendingMiniIdLabel img {
-    width: 20px;
-    height: 20px;
-}
-
 .pendingMiniIdBtn {
     min-width: 120px;
     width: 180px;
@@ -252,11 +240,6 @@
     justify-content: center;
     gap: 0.5rem;
     transition: background 0.2s;
-}
-
-.pendingMiniIdBtn img {
-    width: 20px;
-    height: 20px;
 }
 
 .pendingMiniActionsRow {

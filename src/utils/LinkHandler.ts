@@ -2,37 +2,33 @@ import { type Icon } from "../types/Icon";
 import type { IconType } from "react-icons";
 import DefaultAvatar from "../assets/default avatar.png";
 
-// --- React Icons Imports ---
 import {
-    FaRegBuilding, FaRegCalendarAlt, FaGraduationCap, FaUniversity,
-    FaFacebook, FaGithub, FaLinkedin, FaLink, FaGlobe, FaSpinner,
-    FaScroll,
-    FaIdCard,
-    FaRegIdCard,
-    FaArrowUp,
+    FaGraduationCap, FaFacebook, FaGithub, 
+    FaLinkedin, FaLink, FaSpinner, FaUserCircle,
+    FaIdCard, FaScroll, FaArrowUp
 } from "react-icons/fa";
-import {
-    MdOutlineAnnouncement, MdOutlineMenuBook, MdOutlineEventNote,
-    MdGrade, MdOutlineTrackChanges, MdOutlineDashboardCustomize
-} from "react-icons/md";
-import {
-    FiDownload, FiShield, FiMapPin, FiMenu, FiBell, FiTarget,
-    FiCheckSquare, FiClock, FiCheckCircle, FiAlertCircle, FiChevronDown,
-    FiHome, FiMap, FiFolder, FiFolderPlus, FiFileText, FiSettings,
-    FiBookOpen, FiLogOut, FiUsers, FiUser, FiActivity, FiBarChart2, FiHexagon,
-    FiEye,
-    FiPaperclip,
-    FiMail,
-    FiPhone,
-    FiMonitor,
-} from "react-icons/fi";
-import { BsActivity, BsChatDots, BsJournalBookmark } from "react-icons/bs";
-import { PiExam } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc";
+import { BsActivity, BsJournalBookmark } from "react-icons/bs";
 import { BiTrendingUp } from "react-icons/bi";
+
+import {
+    LuBookOpen, LuMap, LuCalendar, LuClipboardList,
+    LuListTodo, LuMegaphone, LuBook, LuBadge, LuRadar,
+    LuCalendarDays, LuFileText, LuMapPin, LuMessageSquare,
+    LuLandmark, LuBuilding, LuUsers, LuShield,
+    LuActivity, LuChevronDown, LuChevronUp, LuLogOut, LuSettings,
+    LuBell, LuDownload, LuEye, LuMenu,
+    LuUser, LuClock, LuPhone, LuMail, LuTarget, LuMonitor, LuPaperclip,
+    LuHexagon, LuLayoutDashboard,
+    LuMessagesSquare,
+    LuUserCog,
+    LuLifeBuoy
+} from "react-icons/lu";
+import { FiBookOpen, FiHome } from "react-icons/fi";
 
 const apiDomain = "https://api.cu-portal.com";
 const version = "v1";
+
 export const GetUserApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
@@ -84,111 +80,122 @@ export const GetImgFromLink = async (path: string): Promise<File> => {
     return new File([blob], "avatar.png", { type: blob.type });
 };
 
-export const GetIcon = (icon: Icon): IconType => {
-    const iconMap: Record<Icon, IconType> = {
-        announcements: MdOutlineAnnouncement,
-        building: FaRegBuilding,
-        calendar: FaRegCalendarAlt,
-        chat: BsChatDots,
-        course: MdOutlineMenuBook,
-        "dashboard-personalize": MdOutlineDashboardCustomize,
-        download: FiDownload,
-        events: MdOutlineEventNote,
+export const GetIcon = (icon: Icon | string): IconType => {
+    const iconMap: Record<string, IconType> = {
+        announcements: LuMegaphone,
+        building: LuBuilding,
+        calendar: LuCalendar,
+        chat: LuMessageSquare,
+        course: LuBookOpen,
+        "dashboard-personalize": LuLayoutDashboard,
+        download: LuDownload,
+        events: LuCalendarDays,
         google: FcGoogle,
         "google-logo": FcGoogle,
         hat: FaGraduationCap,
         "book-saved": BsJournalBookmark,
         "status-up": BiTrendingUp,
-        user: FiUser,
-        "users-assigned": FiUsers,
-        permissions: FiShield,
-        location: FiMapPin,
-        logo: FiHexagon,
-        menu: FiMenu,
-        notification: FiBell,
-        subject: FiBookOpen,
-        target: FiTarget,
-        task: FiCheckSquare,
-        time: FiClock,
-        tracker: MdOutlineTrackChanges,
-        verify: FiCheckCircle,
-        "warning-circle": FiAlertCircle,
+        
+        user: LuUser,
+        users: LuUsers,
+        "users-total": LuUsers,
+        "users-assigned": LuUsers,
+        "user-details": LuUser,
+        "user-default-avatar": FaUserCircle,
+        
+        permissions: LuShield,
+        location: LuMapPin,
+        logo: LuHexagon,
+        menu: LuMenu,
+        notification: LuBell,
+        help: LuLifeBuoy,
+        
+        subject: LuBookOpen,
+        "subjects-icon": LuBookOpen,
+        target: LuTarget,
+        task: LuClipboardList,
+        "task-details-icon": LuFileText,
+        
+        time: LuClock,
+        tracker: FaGraduationCap, 
+        "view-icon": LuEye,
+        
         "spinner-ellipse-11": FaSpinner,
         "spinner-ellipse-12": FaSpinner,
         "spinner-ellipse-13": FaSpinner,
         "spinner-ellipse-14": FaSpinner,
         "spinner-ellipse-15": FaSpinner,
         "spinner-ellipse-16": FaSpinner,
-        "sidebar-dropdown": FiChevronDown,
-        "sidebar-home": FiHome,
-        "sidebar-courses": MdOutlineMenuBook,
-        "sidebar-coursemap": FiMap,
-        "sidebar-calendar": FaRegCalendarAlt,
-        "sidebar-tasks": FiCheckSquare,
-        "sidebar-exams": PiExam,
-        "sidebar-announcements": MdOutlineAnnouncement,
-        "sidebar-materials": FiFolder,
-        "sidebar-other-materials": FiFolderPlus,
-        "sidebar-grades": MdGrade,
-        "sidebar-study-tracker": MdOutlineTrackChanges,
-        "sidebar-events": MdOutlineEventNote,
-        "sidebar-cv-generator": FiFileText,
-        "sidebar-roadmaps": FiMap,
-        "sidebar-discussion": BsChatDots,
-        "sidebar-profile-settings": FiSettings,
-        "sidebar-academic-settings": FiSettings,
+        
+        "sidebar-dropdown": LuChevronDown,
+        "sidebar-dropup": LuChevronUp,
+
+        "sidebar-courses": LuBookOpen,
+        "sidebar-coursemap": LuMap,
+        "sidebar-calendar": LuCalendar,
+        "sidebar-tasks": LuClipboardList,
+        "sidebar-exams": LuListTodo,
+        "sidebar-announcements": LuMegaphone,
+        "sidebar-materials": LuBookOpen,
+        "sidebar-other-materials": LuBook,
+        "sidebar-grades": LuBadge,
+        "sidebar-study-tracker": LuRadar,
+        "sidebar-events": LuCalendarDays,
+        "sidebar-cv-generator": LuFileText,
+        
+        "sidebar-roadmaps": LuMapPin,
+        "sidebar-discussion": LuMessagesSquare,
+        "sidebar-profile-settings": LuUserCog,
+        "sidebar-academic-settings": LuSettings,
         "sidebar-registered-courses": FiBookOpen,
-        "sidebar-logout": FiLogOut,
-        "sidebar-admin-dashboard": FiHome,
-        "sidebar-admin-faculties": FaUniversity,
-        "sidebar-admin-departments": FaRegBuilding,
-        "sidebar-admin-years": FaRegCalendarAlt,
-        "sidebar-admin-course-maps": FiMap,
-        "sidebar-admin-users": FiUsers,
-        "sidebar-admin-roles": FiShield,
-        "sidebar-admin-courses": MdOutlineMenuBook,
-        "sidebar-admin-materials": FiFolder,
-        "sidebar-admin-grades": MdGrade,
-        "sidebar-admin-tasks": FiCheckSquare,
-        "sidebar-admin-exams": PiExam,
-        "sidebar-admin-announcements": MdOutlineAnnouncement,
-        "sidebar-admin-logs": FiActivity,
-        "sidebar-admin-roadmaps": FiMap,
-        "sidebar-admin-study-maps": FiMap,
-        "sidebar-admin-study-analysis": FiBarChart2,
-        "sidebar-admin-events": MdOutlineEventNote,
-        "sidebar-admin-discussions": BsChatDots,
+        "sidebar-logout": LuLogOut,
+        
+        "sidebar-admin-faculties": LuLandmark,
+        "sidebar-admin-departments": LuBuilding,
+        "sidebar-admin-years": LuCalendar,
+        "sidebar-admin-course-maps": LuMap,
+        "sidebar-admin-users": LuUsers,
+        "sidebar-admin-roles": LuShield,
+        "sidebar-admin-courses": LuBookOpen,
+        "sidebar-admin-materials": LuBookOpen,
+        "sidebar-admin-grades": LuBadge,
+        "sidebar-admin-tasks": LuClipboardList,
+        "sidebar-admin-exams": LuListTodo,
+        "sidebar-admin-announcements": LuMegaphone,
+        "sidebar-admin-roadmaps": LuMapPin,
+        "sidebar-admin-study-maps": LuMap,
+        "sidebar-admin-events": LuCalendarDays,
+        "sidebar-admin-discussions": LuMessagesSquare,
+        "sidebar-admin-logs": LuActivity,
+        "sidebar-home": FiHome,
         "social-facebook": FaFacebook,
         "social-github": FaGithub,
         "social-linkedin": FaLinkedin,
         "social-linktree": FaLink,
-        "social-website": FaGlobe,
+        "social-website": FcGoogle, 
         "badge-department": FaGraduationCap,
-        "badge-faculty": FiFileText,
-        "badge-id-card": FaIdCard,
-        "badge-view": FiEye,
-        "badge-year": FaScroll,
-        "call-details": FiPhone,
-        "user-details": FiUser,
-        "mail-details": FiMail,
-        "arrow-up": FaArrowUp,
-        "building-faculty": FaRegBuilding,
-        "building-department": FaRegBuilding,
-        "announcement-icon": MdOutlineAnnouncement,
-        "subjects-icon": FiBookOpen,
-        "task-details-icon": FiFileText,
-        "id-card-details": FaRegIdCard,
-        "grades-icon": FiPaperclip,
-        "exam-icon": PiExam,
+        "building-faculty": LuLandmark,
+        "building-department": LuBuilding,
+        "announcement-icon": LuMegaphone,
+        "id-card-details": FaIdCard,
+        "grades-icon": LuPaperclip,
+        "exam-icon": LuListTodo,
         "activity-logs-icon": BsActivity,
         "certificate-year": FaGraduationCap,
-        "materials-icon": BsJournalBookmark,
-        "iconsax-calendar": FaRegCalendarAlt,
-        monitor: FiMonitor,
-        "eye-review": FiEye,
-        "users-total": FiUsers,
-        "pending-clock-new": FiClock,
+        "materials-icon": LuBookOpen,
+        "iconsax-calendar": LuCalendar,
+        monitor: LuMonitor,
+        "eye-review": LuEye,
+        "pending-clock-new": LuClock,
+        "call-details": LuPhone,
+        "mail-details": LuMail,
+        "arrow-up": FaArrowUp,
+        "badge-faculty": LuFileText,
+        "badge-id-card": FaIdCard,
+        "badge-view": LuEye,
+        "badge-year": FaScroll,
     };
 
-    return iconMap[icon];
+    // Fallback to FiFileText if the icon key isn't found
+    return iconMap[icon as string] || LuFileText;
 };

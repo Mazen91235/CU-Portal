@@ -19,6 +19,7 @@ export type Icon =
     | "logo"
     | "menu"
     | "notification"
+    | "help"
     | "subject"
     | "target"
     | "task"

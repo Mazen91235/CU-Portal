@@ -35,7 +35,7 @@
     padding-right: 1.25rem;
 }
 
-.menuBtn img {
+.menuBtn svg {
     display: block;
 }
 
@@ -173,7 +173,7 @@
         display: none;
     }
 
-    .iconButton img {
+    .iconButton svg {
         width: 20px;
         height: 20px;
     }

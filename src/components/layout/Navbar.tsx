@@ -3,9 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useAppSelector } from "../../services/redux/Hooks";
 import { Avatar } from "../avatar/Avatar";
 import { formatDateTime } from "../../utils/Formatter";
-import menuIcon from "../../assets/icons/menu-icon.svg";
-import notificationIcon from "../../assets/icons/notification-icon.svg";
-import helpIcon from "../../assets/icons/help-icon.png";
+import IconComponent from "../IconComponent";
 import styles from "./Navbar.module.css";
 import { useMarkNotificationAsSeenMutation } from "../../services/apis/user/NotificationAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
@@ -64,7 +62,7 @@ export const Navbar = ({
                         className={styles.menuBtn}
                         aria-label="Toggle menu"
                     >
-                        <img src={menuIcon} alt="" width="24" height="24" />
+                        <IconComponent icon="menu" size="24" color="#5A0F61" />
                     </button>
                 </div>
 
@@ -75,7 +73,7 @@ export const Navbar = ({
                             className={styles.iconButton}
                             aria-label="Help & Support"
                         >
-                            <img src={helpIcon} alt="" width="24" height="24" />
+                            <IconComponent icon="help" size="24" />
                         </Link>
                         <div
                             className={styles.notificationWrapper}
@@ -88,12 +86,7 @@ export const Navbar = ({
                                 className={styles.iconButton}
                                 aria-label="Notifications"
                             >
-                                <img
-                                    src={notificationIcon}
-                                    alt=""
-                                    width="24"
-                                    height="24"
-                                />
+                                <IconComponent icon="notification" size="24" />
                                 {notifications.length > 0 && (
                                     <span className={styles.badge}>
                                         {notifications.length}

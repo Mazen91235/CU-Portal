@@ -6,7 +6,7 @@ export default function IconComponent({
     size,
     className, 
     color 
-}: { icon: Icon, size?: number, className?: string, color?: string })
+}: { icon: Icon, size?: number | string, className?: string, color?: string })
     {
     const IconComponent = GetIcon(icon);
     return IconComponent ? <IconComponent size={size} className={className} color={color} /> : null;
