@@ -12,6 +12,7 @@ type SubBannerProps = {
   icon?: string;
   linkText?: string;
   linkTo?: string;
+  img?: string;
 };
 
 export const SubBanner = ({
@@ -24,9 +25,16 @@ export const SubBanner = ({
   icon,
   linkText,
   linkTo,
+  img,
 }: SubBannerProps) => {
   return (
-    <header className={styles["subBanner"]}>
+    <header className={`${styles["subBanner"]} ${img ? styles["subBannerWithImage"] : ""}`} 
+      style={img ? {backgroundImage: `url(${img})`,
+        height: "320px", backgroundSize: "cover", 
+        backgroundPosition: "center", 
+        alignItems: "normal"} : {}
+      }
+    >
       <div className={styles["leftSection"]}>
         {linkTo && linkText && (
           <Link to={linkTo} className={styles["backLink"]}>
@@ -49,6 +57,7 @@ export const SubBanner = ({
           className={
             deleteAction ? styles["buttonGroup"] : styles["buttonWrapper"]
           }
+          style={img ? {alignItems: "end"} : {}}
         >
           <button className={styles["button"]} onClick={buttonAction}>
             {button}

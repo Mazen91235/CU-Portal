@@ -19,6 +19,7 @@ type CardProps = {
     badge?: string;
     secondaryBadge?: string;
     items?: CardItem[];
+    img?: string;
     button?: string;
     buttonAction?: () => void;
     hasOptions?: boolean;
@@ -46,6 +47,7 @@ export const Card = ({
     badge,
     secondaryBadge,
     items = [],
+    img,
     button,
     buttonAction,
     hasOptions = false,
@@ -82,8 +84,10 @@ export const Card = ({
         <article
             className={`${styles.card} ${showOptionsMenu ? styles.cardWithMenu : ""}`}
         >
+
+            {img && <div className={styles.imageContainer} style={{backgroundImage: `url(${img})`}}> </div>}
             {badge && (
-                <div className={styles.badgeContainer}>
+                <div className={styles.badgeContainer} style={img ? { position: "absolute", margin: "1rem" } : {}}>
                     <span className={styles.badge}>{badge}</span>
                     {secondaryBadge && (
                         <span className={styles.secondaryBadge}>
@@ -92,13 +96,14 @@ export const Card = ({
                     )}
                 </div>
             )}
-
-            <div className={styles.titleRow}>
-                <h3 className={styles.title}>{formatString(title, 30)}</h3>
+            {img && <h3 className={styles.title}>{formatString(title, 30)}</h3>}
+            <div className={styles.titleRow} style={img ? { position: "absolute", margin: "1rem" } : {}}>
+                {!img && <h3 className={styles.title}>{formatString(title, 30)}</h3>}
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>
                         <button
                             className={styles.optionsButton}
+                            style={img ? { opacity: 1 } : {}}
                             onClick={() => {
                                 if (!showOptionsMenu)
                                     document.addEventListener(
@@ -120,9 +125,9 @@ export const Card = ({
                                 viewBox="0 0 20 20"
                                 fill="none"
                             >
-                                <circle cx="10" cy="4" r="1.5" fill="#666" />
-                                <circle cx="10" cy="10" r="1.5" fill="#666" />
-                                <circle cx="10" cy="16" r="1.5" fill="#666" />
+                                <circle cx="10" cy="4" r="1.5" fill={img? "white" :"#666"} />
+                                <circle cx="10" cy="10" r="1.5" fill={img? "white" :"#666"} />
+                                <circle cx="10" cy="16" r="1.5" fill={img? "white" :"#666"} />
                             </svg>
                         </button>
                         {showOptionsMenu && (
