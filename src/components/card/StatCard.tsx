@@ -42,6 +42,16 @@ export const StatCard = ({ type, value, icon }: StatCardProps) => {
                 iconColor: "#a855f7",
                 iconClass: "fa-book",
             },
+            location: {
+                bgColor: "rgba(239, 68, 68, 0.1)",
+                iconColor: "#ef4444",
+                iconClass: "fa-location-dot",
+            },
+            "dollar-sign": {
+                bgColor: "rgba(239, 68, 68, 0.1)",
+                iconColor: "#ef4444",
+                iconClass: "fa-dollar-sign",
+            },
         };
 
         return (

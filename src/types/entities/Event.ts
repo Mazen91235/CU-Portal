@@ -7,7 +7,10 @@ export type Event = {
     id?: number;
     name?: string;
     description?: string;
+    instructions?: string;
+    img?: string;
     price?: number | null;
+    attendees?: number | null;
     urls?: string[];
     start_time?: string | null;
     end_time?: string | null;

@@ -40,6 +40,8 @@ import { AnnouncementsPage as UserAnnouncementsPage } from "./pages/user/announc
 import { AnnouncementPage as UserAnnouncementPage } from "./pages/user/announcements/AnnouncementPage";
 import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage";
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
+import { EventsPage as UserEventsPage } from "./pages/user/events/EventsPage";
+import { EventPage as UserEventPage } from "./pages/user/events/EventPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import useAuth from "./hooks/useAuth";
@@ -101,6 +103,10 @@ function App() {
                     <Route index element={<UserCoursesPage />} />
                     <Route path=":courseId" element={<UserCoursePage />} />
                 </Route>
+                <Route path="events">
+                    <Route index element={<UserEventsPage />} />
+                    <Route path=":eventId" element={<UserEventPage />} />
+                </Route>    
                 <Route path="materials">
                     <Route index element={<UserMaterialsPage />} />
                 </Route>

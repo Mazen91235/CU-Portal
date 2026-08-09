@@ -70,6 +70,12 @@ const navSectionsDefault: NavSection[] = [
                 activatesPaths: ["/user/announcements/"],
             },
             {
+                label: "Events",
+                path: "/user/events",
+                icon: "sidebar-events",
+                activatesPaths: ["/user/events/"],
+            },
+            {
                 label: "Materials",
                 path: "/user/materials",
                 icon: "sidebar-materials",
