@@ -32,6 +32,10 @@ import { CreateAnnouncement } from "./pages/admin/announcements/CreateAnnounceme
 import { EditAnnouncement } from "./pages/admin/announcements/EditAnnouncement";
 import { AnnouncementPage } from "./pages/admin/announcements/AnnouncementPage";
 import { AnnouncementsPage } from "./pages/admin/announcements/AnnouncementsPage";
+import { EventsPage } from "./pages/admin/events/EventsPage";
+import { EventPage } from "./pages/admin/events/EventPage";
+import { CreateEvent } from "./pages/admin/events/CreateEvent";
+import { EditEvent } from "./pages/admin/events/EditEvent";
 import { TasksPage as UserTasksPage } from "./pages/user/tasks/TasksPage";
 import { TaskPage as UserTaskPage } from "./pages/user/tasks/TaskPage";
 import { ExamsPage as UserExamsPage } from "./pages/user/exams/ExamsPage";
@@ -243,6 +247,20 @@ function App() {
                         path=":announcementId"
                         element={<AnnouncementPage />}
                     />
+                </Route>
+
+                <Route
+                    path="events"
+                    element={<ProtectedRoute permission="View Events" />}
+                >
+                    <Route index element={<EventsPage />} />
+                    <Route path="create" element={<ProtectedRoute permission="Add Events" />}>
+                        <Route index element={<CreateEvent />} />
+                    </Route>
+                    <Route path="edit/:eventId" element={<ProtectedRoute permission="Edit Events" />}>
+                        <Route index element={<EditEvent />} />
+                    </Route>
+                    <Route path=":eventId" element={<EventPage />} />
                 </Route>
 
                 <Route

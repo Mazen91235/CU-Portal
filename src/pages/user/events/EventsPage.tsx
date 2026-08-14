@@ -20,10 +20,15 @@ export const EventsPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [eventTypeFilter, setEventTypeFilter] = useState("");
+    const [freeFilter, setFreeFilter] = useState(false);
+    const [paidFilter, setPaidFilter] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [searchParams] = useSearchParams();
+    
+    // to be fetched from backend
+    const eventTypeOptions = [{label: "Event Type", value: ""}, { label: "Offline", value: "1" }, { label: "Online", value: "2" }]; 
 
     // This will hold the list of events fetched from the backend
     const fetchEvents = useCallback(async () => {
@@ -59,6 +64,18 @@ export const EventsPage = () => {
         navigate(`/user/events/${eventId}`);
     };
 
+    // to be done with backend filtering
+    const handleFreeFilter = () => {
+        setFreeFilter(!freeFilter);
+        setPaidFilter(false);
+    };
+
+    // to be done with backend filtering
+    const handlePaidFilter = () => {
+        setPaidFilter(!paidFilter);
+        setFreeFilter(false);
+    };
+
     const handlePagination = () => {
         if (hasNextPage && events.length > 0) {
             setPage(page + 1);
@@ -74,9 +91,6 @@ export const EventsPage = () => {
             "event link copied to clipboard successfully",
         );
     };
-
-    // to be fetched from backend
-    const eventTypeOptions = [{ label: "workshop", value: "1" }, { label: "activity", value: "2" }]; 
 
     return (
         <Layout>
@@ -98,13 +112,28 @@ export const EventsPage = () => {
                     </div>
                     <div className={styles.filters}>
                         <SelectFilter
-                            placeholder="Event type"
                             options={eventTypeOptions}
                             setValue={setEventTypeFilter}
                         />
-                        <div className={styles.eventPriceBtns}>
-                            <button className={styles.freeBtn}>Free</button>
-                            <button className={styles.paidBtn}>Paid</button>
+                        <div className={styles.priceButtons}>
+                            <button
+                                    type="button"
+                                    className={`${styles.priceButton} ${freeFilter ? styles.priceButtonActive : ""}`}
+                                    onClick={() => {
+                                        handleFreeFilter();
+                                    }}
+                                >
+                                    Free
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`${styles.priceButton} ${paidFilter ? styles.priceButtonActive : ""}`}
+                                    onClick={() => {
+                                        handlePaidFilter();
+                                    }}
+                                >
+                                    Paid
+                                </button>
                         </div>
                     </div>
                 </div>

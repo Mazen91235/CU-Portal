@@ -307,6 +307,15 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
+    if (permissions.includes("View Events")) {
+        section.links.push({
+            label: "Events",
+            path: "/admin/events",
+            icon: "sidebar-admin-events",
+            activatesPaths: ["/admin/events/"],
+        });
+    }
+
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
@@ -342,15 +351,6 @@ const showAdminLinks = (permissions: string[]) => {
         path: "#!",
         icon: "sidebar-admin-study-analysis",
         badge: "Soon",
-    });
-
-    section.links.push({
-        label: "Events",
-        // path: "/admin/events",
-        path: "#!",
-        icon: "sidebar-admin-events",
-        badge: "Soon",
-        activatesPaths: ["/admin/events/"],
     });
 
     section.links.push({

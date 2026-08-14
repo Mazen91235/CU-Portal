@@ -1,0 +1,66 @@
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.filtersContainer {
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    padding: 24px 16px;
+}
+
+.priceFilters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.filtersRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.priceButtons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.priceButton {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.875rem;
+    color: #1f2937;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--primary-font-family);
+}
+
+.priceButton:hover {
+    background: #f3f4f6;
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.priceButtonActive {
+    background: rgba(126, 87, 194, 0.08);
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.eventsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}

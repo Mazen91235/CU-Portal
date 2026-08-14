@@ -35,25 +35,32 @@
     align-items: start;
 }
 
-.filters div {
+.priceButtons {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.freeBtn, .paidBtn {
-    background: #FAFAFA;
+.priceButton {
+    background: #fafafa;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 10px 15px;
     font-size: 0.875rem;
-    color: #1F2937;
+    color: #1f2937;
     cursor: pointer;
     transition: all 0.2s;
     font-family: var(--primary-font-family);
 }
 
-.paidBtn:hover, .freeBtn:hover {
+.priceButton:hover {
     background: #f3f4f6;
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.priceButtonActive {
+    background: rgba(126, 87, 194, 0.08);
     border-color: var(--primary-purple);
     color: var(--primary-purple);
 }
