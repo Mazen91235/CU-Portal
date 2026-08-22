@@ -1,219 +1,244 @@
 .card {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--dark-box-shadow);
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        z-index 0s;
-    position: relative;
-    height: 100%;
-    overflow: visible;
-    z-index: 1;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--dark-box-shadow);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    z-index 0s;
+  position: relative;
+  height: 100%;
+  overflow: visible;
+  z-index: 1;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(60, 60, 60, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(60, 60, 60, 0.12);
 }
 
 .cardWithMenu {
-    z-index: 1001;
+  z-index: 1001;
 }
 
 .badgeContainer {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .badge {
-    background: var(--primary-purple);
-    color: var(--white);
-    font-weight: 600;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  background: var(--primary-purple);
+  color: var(--white);
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .secondaryBadge {
-    background: var(--light-grey);
-    color: var(--dark-grey);
-    font-weight: 600;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
+  background: var(--light-grey);
+  color: var(--dark-grey);
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
 }
 
 .titleRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .title {
-    font-family: var(--primary-font-family);
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #232323;
-    margin: 0;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-family: var(--primary-font-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #232323;
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .optionsContainer {
-    position: relative;
+  position: relative;
 }
 
 .optionsButton {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s;
 }
 
 .optionsButton:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .optionsMenu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--white);
-    border: 1px solid var(--light-grey);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1002;
-    overflow: visible;
-    min-width: 120px;
-    pointer-events: auto;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1002;
+  overflow: visible;
+  min-width: 120px;
+  pointer-events: auto;
 }
 
 .optionItem {
-    width: 100%;
-    padding: 8px 16px;
-    background: transparent;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--dark-text);
-    transition: background-color 0.2s;
-    pointer-events: auto;
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--dark-text);
+  transition: background-color 0.2s;
+  pointer-events: auto;
 }
 
 .optionItem:hover {
-    background: var(--light-grey);
+  background: var(--light-grey);
 }
 
 .itemsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 8px;
-    padding: 0.55rem 0.8rem;
-    font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
 }
 
 .itemLabel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #6b7280;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-weight: 500;
 }
 
 .itemIcon {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .itemValue {
-    font-weight: 600;
-    color: #64748b;
-    text-align: right;
+  font-weight: 600;
+  color: #64748b;
+  text-align: right;
 }
 
 .item-green {
-    background: var(--card-green);
+  background: var(--card-green);
 }
 
 .item-yellow {
-    background: var(--card-yellow);
+  background: var(--card-yellow);
 }
 
 .item-orange {
-    background: var(--card-orange);
+  background: var(--card-orange);
 }
 
 .item-pink {
-    background: var(--card-pink);
+  background: var(--card-pink);
 }
 
 .item-default {
-    background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .buttonContainer {
-    margin-top: auto;
+  margin-top: auto;
 }
 
 .buttonContainer button {
-    width: 100%;
-    background: var(--primary-purple);
-    color: var(--white);
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-        background-color 0.2s,
-        transform 0.2s;
+  width: 100%;
+  background: var(--primary-purple);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .buttonContainer button:hover {
-    background: #4a0c50;
-    transform: scale(1.02);
+  background: #4a0c50;
+  transform: scale(1.02);
 }
 
 .buttonContainer button:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
+}
+.profileContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.profileText {
+  font-size: 0.9rem;
+  color: var(--dark-text);
+  font-weight: 500;
+}
+.profileIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--light-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--dark-text);
+
+  font-size: 1.5rem;
 }
 
 @media (max-width: 768px) {
-    .card {
-        padding: 1rem;
-    }
+  .card {
+    padding: 1rem;
+  }
 
-    .title {
-        font-size: 1.1rem;
-    }
+  .title {
+    font-size: 1.1rem;
+  }
 
-    .item {
-        font-size: 0.9rem;
-        padding: 0.5rem 0.6rem;
-    }
+  .item {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.6rem;
+  }
 }
