@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
@@ -43,7 +44,6 @@ import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import { Banner } from "../../../components/banner/Banner";
 import type { Process } from "../../../types/Process";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
-import { useSearchParams } from "react-router";
 import type {
     DefaultAPIResponse,
     GenericAPIResponse,
@@ -53,19 +53,15 @@ import styles from "./MaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function MaterialsPage() {
+    const navigate = useNavigate();
+    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [materialFromUrl, setMaterialFromUrl] = useState<{
-        id?: number;
-        subject_id?: number;
-        parent_id?: number | null;
-    } | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -112,6 +108,8 @@ export function MaterialsPage() {
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
+    const subjectFilter = routeSubjectId ?? "";
+    const currentParentId = routeParentId ? Number(routeParentId) : null;
 
     const [searchFaculties] = useLazySearchFacultiesQuery();
     const [searchDepartments] = useLazySearchDepartmentsQuery();
@@ -200,12 +198,6 @@ export function MaterialsPage() {
         async (parentId?: number | null) => {
             if (!subjectFilter) return;
 
-            if (!parentId)
-                parentId =
-                    currentPath.length > 0
-                        ? currentPath[currentPath.length - 1].id
-                        : null;
-
             try {
                 const response = await getMaterials({
                     subject_id: parseInt(subjectFilter),
@@ -217,7 +209,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, currentPath, searchQuery, getMaterials],
+        [subjectFilter, searchQuery, getMaterials],
     );
 
     const fetchFolders = useCallback(
@@ -238,52 +230,52 @@ export function MaterialsPage() {
         [subjectFilter, getMaterials],
     );
 
+    const buildMaterialsPath = useCallback(
+        (subjectValue?: string | number | null, parentValue?: string | number | null) => {
+            if (!subjectValue) return "/admin/materials";
+            const subjectSegment = String(subjectValue);
+            if (!parentValue) {
+                return `/admin/materials/${subjectSegment}`;
+            }
+            return `/admin/materials/${subjectSegment}/${parentValue}`;
+        },
+        [],
+    );
+
+    const loadCurrentPath = useCallback(
+        async (materialId: number | null) => {
+            if (!materialId) {
+                setCurrentPath([]);
+                return;
+            }
+
+            try {
+                const response = await getMaterialParents({
+                    material_id: materialId,
+                }).unwrap();
+                setCurrentPath([...(response.data || [])]);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        },
+        [getMaterialParents],
+    );
+
     useEffect(() => {
-        setCurrentPath([]);
         setSelectedMaterials([]);
         setIsSelectionMode(false);
     }, [facultyFilter, departmentFilter, yearFilter, subjectFilter]);
 
     const handleNavigate = useCallback(
-        async (material: Material | null) => {
-            if (material === null) {
-                setCurrentPath([]);
-            } else {
-                if (!material.id) {
-                    showToast("error", "Error", "Invalid material");
-                    return;
-                }
-                try {
-                    const response = await getMaterialParents({
-                        material_id: material.id,
-                    }).unwrap();
-                    setCurrentPath([...(response.data || [])]);
-                } catch (error) {
-                    handlePopupErrors(error);
-                }
-            }
+        (material: Material | null) => {
+            navigate(
+                buildMaterialsPath(subjectFilter, material?.id ?? null),
+            );
             setSelectedMaterials([]);
             setIsSelectionMode(false);
         },
-        [getMaterialParents],
+        [buildMaterialsPath, navigate, subjectFilter],
     );
-
-    const handleMatrialFromUrl = useCallback(() => {
-        if (materialFromUrl?.subject_id) {
-            setSubjectFilter(materialFromUrl.subject_id.toString());
-            setMaterialFromUrl(
-                (prev) => prev && { ...prev, subject_id: undefined },
-            );
-        }
-        if (materialFromUrl?.parent_id) {
-            handleNavigate({
-                id: materialFromUrl.parent_id || null,
-            } as Material);
-            setMaterialFromUrl(
-                (prev) => prev && { ...prev, parent_id: undefined },
-            );
-        }
-    }, [materialFromUrl, handleNavigate]);
 
     const authQueryParams = useCallback(
         async () =>
@@ -292,9 +284,8 @@ export function MaterialsPage() {
                 fetchDepartments(),
                 fetchYears(),
                 fetchSubjects(),
-                fetchMaterials(),
-                fetchFolders(),
-                handleMatrialFromUrl(),
+                fetchMaterials(currentParentId),
+                fetchFolders(currentParentId),
             ]),
         [
             fetchFaculties,
@@ -303,11 +294,21 @@ export function MaterialsPage() {
             fetchSubjects,
             fetchMaterials,
             fetchFolders,
-            handleMatrialFromUrl,
+            currentParentId,
         ],
     );
 
     useAuthQuery(authQueryParams);
+
+    useEffect(() => {
+        if (!subjectFilter) {
+            setCurrentPath([]);
+            setMaterials([]);
+            return;
+        }
+
+        void loadCurrentPath(currentParentId);
+    }, [loadCurrentPath, currentParentId, subjectFilter]);
 
     const handleCardClick = (materialId: number) => {
         if (isSelectionMode) {
@@ -503,7 +504,7 @@ export function MaterialsPage() {
                             : "Material created successfully",
                     );
                 } else {
-                    const url = `/admin/materials?material_id=${result.data?.id}&subject_id=${subjectFilter}&parent_id=${currentPath[currentPath.length - 1]?.id ?? ""}`;
+                    const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
                     dispatch(
                         setProcess({
                             ...uploadResult,
@@ -527,6 +528,7 @@ export function MaterialsPage() {
             createMaterial,
             dispatch,
             fetchMaterials,
+            buildMaterialsPath,
             subjectFilter,
             currentPath,
             updateMaterial,
@@ -569,18 +571,12 @@ export function MaterialsPage() {
     };
 
     const handleShareMaterials = (materialId?: number, type?: string) => {
-        let url =
-            window.location.origin +
-            "/user/materials?subject_id=" +
-            subjectFilter;
-        const parentId =
-            currentPath.length > 0
-                ? currentPath[currentPath.length - 1].id
-                : null;
+        const parentId = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
+        let url = `${window.location.origin}${buildMaterialsPath(subjectFilter, parentId)}`;
         if (type === "folder") {
-            url += "&parent_id=" + materialId;
+            url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `&parent_id=${parentId}&material_id=${materialId}`;
+            url += `?material_id=${materialId}`;
         } else {
             url = materials.find((m) => m.id === materialId)?.url || "";
         }
@@ -714,33 +710,18 @@ export function MaterialsPage() {
     };
 
     useEffect(() => {
-        if (searchParams) {
-            const material_id = searchParams.get("material_id");
-            const subject_id = searchParams.get("subject_id");
-            const parent_id = searchParams.get("parent_id");
-            if (material_id || subject_id || parent_id) {
-                setMaterialFromUrl({
-                    id: material_id ? parseInt(material_id) : undefined,
-                    subject_id: subject_id ? parseInt(subject_id) : undefined,
-                    parent_id: parent_id ? parseInt(parent_id) : undefined,
-                });
-                setSearchParams({});
-            }
-        }
-    }, [searchParams, setSearchParams]);
-
-    useEffect(() => {
-        if (materialFromUrl && materialFromUrl.id && materials.length > 0) {
-            const material = materials.find((m) => m.id === materialFromUrl.id);
+        const material_id = searchParams.get("material_id");
+        if (material_id && materials.length > 0) {
+            const material = materials.find((m) => m.id === parseInt(material_id));
             if (material) {
                 handlePreview(
                     material.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setMaterialFromUrl(null);
+                setSearchParams({}, { replace: true });
             }
         }
-    }, [materialFromUrl, materials, handlePreview]);
+    }, [searchParams, materials, handlePreview, setSearchParams]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.type === "folder"),
@@ -899,7 +880,7 @@ export function MaterialsPage() {
                 url: uploadResult.url,
             }).unwrap();
 
-            const url = `/admin/materials?material_id=${result.data?.id}&subject_id=${subjectFilter}&parent_id=${currentPath[currentPath.length - 1]?.id ?? ""}`;
+            const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
 
             dispatch(setProcess({ ...uploadResult, status: "completed", url }));
             setCurrentPath((prev) => {
@@ -910,7 +891,14 @@ export function MaterialsPage() {
                 return prev;
             });
         },
-        [createMaterial, dispatch, fetchMaterials, subjectFilter, currentPath],
+        [
+            createMaterial,
+            dispatch,
+            fetchMaterials,
+            buildMaterialsPath,
+            subjectFilter,
+            currentPath,
+        ],
     );
 
     const handleFetchFromDrive = useCallback(
@@ -979,8 +967,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={facultyOptions}
                                 setValue={(value) => {
-                                    if (value !== facultyFilter)
-                                        setCurrentPath([]);
+                                    if(facultyFilter && value != facultyFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setFacultyFilter(value);
                                 }}
                                 value={facultyFilter}
@@ -988,8 +977,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={departmentOptions}
                                 setValue={(value) => {
-                                    if (value !== departmentFilter)
-                                        setCurrentPath([]);
+                                    if(departmentFilter && value != departmentFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setDepartmentFilter(value);
                                 }}
                                 value={departmentFilter}
@@ -997,8 +987,9 @@ export function MaterialsPage() {
                             <SelectFilter
                                 options={yearOptions}
                                 setValue={(value) => {
-                                    if (value !== yearFilter)
-                                        setCurrentPath([]);
+                                    if(yearFilter && value != yearFilter) {
+                                        navigate(buildMaterialsPath("", ""));
+                                    }
                                     setYearFilter(value);
                                 }}
                                 value={yearFilter}
@@ -1008,8 +999,12 @@ export function MaterialsPage() {
                     <SelectFilter
                         options={subjectOptions}
                         setValue={(value) => {
-                            if (value !== subjectFilter) setCurrentPath([]);
-                            setSubjectFilter(value);
+                            navigate(
+                                buildMaterialsPath(
+                                    typeof value === "string" ? value : "",
+                                    null,
+                                ),
+                            );
                         }}
                         value={subjectFilter}
                     />

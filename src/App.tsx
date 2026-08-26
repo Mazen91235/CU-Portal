@@ -103,6 +103,11 @@ function App() {
                 </Route>
                 <Route path="materials">
                     <Route index element={<UserMaterialsPage />} />
+                    <Route path=":subjectId" element={<UserMaterialsPage />} />
+                    <Route
+                        path=":subjectId/:parentId"
+                        element={<UserMaterialsPage />}
+                    />
                 </Route>
                 <Route path="calendar">
                     <Route index element={<CalendarPage />} />
@@ -244,6 +249,11 @@ function App() {
                     element={<ProtectedRoute permission="View Materials" />}
                 >
                     <Route index element={<MaterialsPage />} />
+                    <Route path=":subjectId" element={<MaterialsPage />} />
+                    <Route
+                        path=":subjectId/:parentId"
+                        element={<MaterialsPage />}
+                    />
                 </Route>
             </Route>
         </Routes>
