@@ -8,7 +8,7 @@ import Logo from "../logo/Logo";
 
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { Avatar } from "../avatar/Avatar";
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../IconComponent";
 
 import styles from "./Sidebar.module.css";
 import { captitalize } from "../../utils/Formatter";
@@ -471,11 +471,9 @@ export const Sidebar = ({
                             className={styles.sectionButton}
                         >
                             <span>{section.title}</span>
-                            <img
-                                src={GetIcon("sidebar-dropdown")}
-                                alt=""
-                                width="20"
-                                height="20"
+                            <IconComponent
+                                icon="sidebar-dropdown"
+                                size={20}
                             />
                         </button>
                         <ul className={styles.subNav}>
@@ -490,12 +488,7 @@ export const Sidebar = ({
                                         }
                                     >
                                         <div className={styles.linkContent}>
-                                            <img
-                                                src={GetIcon(link.icon)}
-                                                alt=""
-                                                width="20"
-                                                height="20"
-                                            />
+                                            <IconComponent icon={link.icon} size={20} />
                                             {link.label}
                                         </div>
                                         {link.badge && (
@@ -515,12 +508,7 @@ export const Sidebar = ({
                 <li className={styles.logoutItem}>
                     <button onClick={handleLogout} className={styles.logoutBtn}>
                         <div className={styles.linkContent}>
-                            <img
-                                src={GetIcon("sidebar-logout")}
-                                alt=""
-                                width="20"
-                                height="20"
-                            />
+                            <IconComponent icon="sidebar-logout" size={20} />
                             Logout
                         </div>
                     </button>

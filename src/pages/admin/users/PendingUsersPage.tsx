@@ -22,11 +22,7 @@ import type { Year } from "../../../types/entities/Year";
 import { GetDriveIdFromUrl } from "../../../utils/DriveManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import badgeFacultyIcon from "../../../assets/icons/badge-faculty.png";
-import badgeDepartmentIcon from "../../../assets/icons/badge-department.png";
-import badgeYearIcon from "../../../assets/icons/badge-year.png";
-import badgeIdCardIcon from "../../../assets/icons/badge-id-card.png";
-import badgeViewIcon from "../../../assets/icons/badge-view.png";
+import IconComponent from "../../../components/IconComponent";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./PendingUsersPage.module.css";
 
@@ -419,10 +415,7 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeEngineering
                                                 }
                                             >
-                                                <img
-                                                    src={badgeFacultyIcon}
-                                                    alt="Faculty"
-                                                />
+                                                <IconComponent icon="badge-faculty" size={20} />
                                                 <span>
                                                     {user.faculty?.name ||
                                                         "N/A"}
@@ -433,10 +426,7 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeSecondary
                                                 }
                                             >
-                                                <img
-                                                    src={badgeDepartmentIcon}
-                                                    alt="Department"
-                                                />
+                                                <IconComponent icon="badge-department" size={20} />
                                                 {user.department?.name || "N/A"}
                                             </span>
                                             <span
@@ -444,10 +434,7 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeYear
                                                 }
                                             >
-                                                <img
-                                                    src={badgeYearIcon}
-                                                    alt="Year"
-                                                />
+                                                <IconComponent icon="badge-year" size={20} />
                                                 {user.year?.year || "N/A"}
                                             </span>
                                         </div>
@@ -459,10 +446,7 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniIdLabel
                                                 }
                                             >
-                                                <img
-                                                    src={badgeIdCardIcon}
-                                                    alt="ID Card"
-                                                />
+                                                <IconComponent icon="badge-id-card" size={20} />
                                                 University ID Card
                                             </span>
                                             <button
@@ -476,10 +460,7 @@ export const PendingUsersPage = () => {
                                                     )
                                                 }
                                             >
-                                                <img
-                                                    src={badgeViewIcon}
-                                                    alt="View"
-                                                />
+                                                <IconComponent icon="badge-view" size={20} />
                                                 View Image
                                             </button>
                                         </div>

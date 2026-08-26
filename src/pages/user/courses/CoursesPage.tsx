@@ -11,7 +11,7 @@ import type { Subject } from "../../../types/entities/Subject";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
-import { GetIcon } from "../../../utils/LinkHandler";
+import IconComponent from "../../../components/IconComponent";
 
 import styles from "./CoursesPage.module.css";
 
@@ -68,11 +68,7 @@ export const CoursesPage = () => {
             <div className={styles.container}>
                 <div className={styles.section}>
                     <div className={styles.sectionHeader}>
-                        <img
-                            src={GetIcon("hat")}
-                            alt="Hat Icon"
-                            className={styles.hatIcon}
-                        />
+                        <IconComponent icon="hat" className={styles.hatIcon} />
                         <span className={styles.sectionTitle}>
                             Registered Courses
                         </span>
@@ -119,11 +115,7 @@ export const CoursesPage = () => {
 
                 <div className={styles.section}>
                     <div className={styles.sectionHeader}>
-                        <img
-                            src={GetIcon("hat")}
-                            alt="Hat Icon"
-                            className={styles.hatIcon}
-                        />
+                        <IconComponent icon="hat" className={styles.hatIcon} />
                         <span className={styles.sectionTitle}>
                             Available Courses
                         </span>

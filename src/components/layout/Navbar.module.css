@@ -35,8 +35,8 @@
   padding-right: 1.25rem;
 }
 
-.menuBtn img {
-  display: block;
+.menuBtn svg {
+    display: block;
 }
 
 .rightSection {
@@ -208,10 +208,10 @@
     display: none;
   }
 
-  .iconButton img {
-    width: 20px;
-    height: 20px;
-  }
+    .iconButton svg {
+        width: 20px;
+        height: 20px;
+    }
 
   .profileImg {
     width: 35px;

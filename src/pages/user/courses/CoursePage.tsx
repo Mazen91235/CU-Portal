@@ -9,7 +9,7 @@ import { StatCard } from "../../../components/card/StatCard";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetIcon } from "../../../utils/LinkHandler";
-
+import IconComponent from "../../../components/IconComponent";
 import styles from "./CoursePage.module.css";
 import { Button } from "../../../components/forms/Button";
 
@@ -82,11 +82,7 @@ export const CoursePage = () => {
 
                     <div className={styles.quickLinksGrid}>
                         <div className={styles.quickCard}>
-                            <img
-                                src={GetIcon("task")}
-                                alt="Tasks"
-                                className={styles.quickCardIcon}
-                            />
+                            <IconComponent icon="task" className={styles.quickCardIcon} />
                             <h5 className={styles.quickCardTitle}>Tasks</h5>
                             <p className={styles.quickCardDescription}>
                                 Check all current assignments for this course.
@@ -106,11 +102,7 @@ export const CoursePage = () => {
                         </div>
 
                         <div className={styles.quickCard}>
-                            <img
-                                src={GetIcon("sidebar-exams")}
-                                alt="Exams"
-                                className={styles.quickCardIcon}
-                            />
+                            <IconComponent icon="sidebar-exams" className={styles.quickCardIcon} />
                             <h5 className={styles.quickCardTitle}>Exams</h5>
                             <p className={styles.quickCardDescription}>
                                 Check all current exams for this course.
@@ -130,11 +122,7 @@ export const CoursePage = () => {
                         </div>
 
                         <div className={styles.quickCard}>
-                            <img
-                                src={GetIcon("announcements")}
-                                alt="Announcements"
-                                className={styles.quickCardIcon}
-                            />
+                            <IconComponent icon="announcements" className={styles.quickCardIcon} />
                             <h5 className={styles.quickCardTitle}>
                                 Announcements
                             </h5>
@@ -158,11 +146,7 @@ export const CoursePage = () => {
                         </div>
 
                         <div className={styles.quickCard}>
-                            <img
-                                src={GetIcon("subject")}
-                                alt="Materials"
-                                className={styles.quickCardIcon}
-                            />
+                            <IconComponent icon="subject" className={styles.quickCardIcon} />
                             <h5 className={styles.quickCardTitle}>Materials</h5>
                             <p className={styles.quickCardDescription}>
                                 Access lecture notes, PDFs, and other course
@@ -184,11 +168,7 @@ export const CoursePage = () => {
                         </div>
 
                         <div className={styles.quickCard}>
-                            <img
-                                src={GetIcon("sidebar-grades")}
-                                alt="Grades"
-                                className={styles.quickCardIcon}
-                            />
+                            <IconComponent icon="sidebar-grades" className={styles.quickCardIcon} />
                             <h5 className={styles.quickCardTitle}>Grades</h5>
                             <p className={styles.quickCardDescription}>
                                 Check all grades in one place. Stay in the Top.

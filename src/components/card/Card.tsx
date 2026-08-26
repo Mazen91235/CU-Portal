@@ -3,7 +3,7 @@ import styles from "./Card.module.css";
 import { Button } from "../forms/Button";
 import { formatString } from "../../utils/Formatter";
 import type { Icon } from "../../types/Icon";
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../IconComponent";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
@@ -181,11 +181,7 @@ export const Card = ({
                             className={`${styles.item} ${getColorClass(item.color, index)}`}
                         >
                             <span className={styles.itemLabel}>
-                                <img
-                                    src={GetIcon(item.icon)}
-                                    alt={`${item.label} icon`}
-                                    className={styles.itemIcon}
-                                />
+                                <IconComponent icon={item.icon} className={styles.itemIcon} />
                                 {item.label}
                             </span>
                             <span className={styles.itemValue}>

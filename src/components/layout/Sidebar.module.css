@@ -71,7 +71,7 @@
     color: var(--primary-purple);
 }
 
-.active > button img {
+.active > button svg {
     transform: rotate(180deg);
 }
 
@@ -113,7 +113,7 @@
     color: var(--white);
 }
 
-.subNav li a:hover img {
+.subNav li a:hover svg {
     filter: brightness(0) invert(1);
 }
 
@@ -127,7 +127,7 @@
     color: var(--white) !important;
 }
 
-.activeLink img {
+.activeLink svg {
     filter: brightness(0) invert(1);
 }
 
@@ -191,7 +191,7 @@
     color: var(--white);
 }
 
-.logoutBtn:hover img {
+.logoutBtn:hover svg {
     filter: brightness(0) invert(1);
 }
 

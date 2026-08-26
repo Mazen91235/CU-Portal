@@ -14,10 +14,11 @@ import { useUpdateUserDataMutation } from "../../../services/apis/user/UserAPIs"
 import { usePageLoading } from "../../../hooks/usePageLoading";
 
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
-import { GetAvatarLink, GetIcon } from "../../../utils/LinkHandler";
+import { GetAvatarLink} from "../../../utils/LinkHandler";
 import { showToast } from "../../../utils/ToastsManager";
 
 import styles from "./ProfileSettings.module.css";
+import IconComponent from "../../../components/IconComponent";
 
 const profileSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -204,11 +205,7 @@ export const ProfileSettings = () => {
                                     className={styles.googleButton}
                                     disabled
                                 >
-                                    <img
-                                        src={GetIcon("google-logo")}
-                                        alt="Google"
-                                        className={styles.googleIcon}
-                                    />
+                                    <IconComponent icon="google" className={styles.googleIcon} />
                                     Change Google account
                                 </button>
                             </div>

@@ -33,12 +33,6 @@
     border-radius: 100%;
 }
 
-.infoCardIcon img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-}
-
 .infoCardContent {
     flex: 1;
     display: flex;
@@ -64,11 +58,6 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.infoCardGrowth img {
-    width: 16px;
-    height: 16px;
 }
 
 .infoCardGrowthText {

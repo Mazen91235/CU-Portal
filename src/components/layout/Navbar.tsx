@@ -3,10 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useAppSelector } from "../../services/redux/Hooks";
 import { Avatar } from "../avatar/Avatar";
 import { formatDateTime } from "../../utils/Formatter";
-import menuIcon from "../../assets/icons/menu-icon.svg";
-import notificationIcon from "../../assets/icons/notification-icon.svg";
-import helpIcon from "../../assets/icons/help-icon.png";
-import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import IconComponent from "../IconComponent";
 import styles from "./Navbar.module.css";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { showToast } from "../../utils/ToastsManager";
@@ -103,34 +100,40 @@ export const Navbar = ({
             className={styles.menuBtn}
             aria-label="Toggle menu"
           >
-            <img src={menuIcon} alt="" width="24" height="24" />
+            <IconComponent icon="menu" size="24" color="#5A0F61" />
           </button>
         </div>
 
-        <div className={styles.rightSection}>
-          <div className={styles.iconsContainer}>
-            <Link
-              to="https://wa.me/+201281518436"
-              className={styles.iconButton}
-              aria-label="Help & Support"
-              title="Help & Support"
-            >
-              <img src={helpIcon} alt="" width="24" height="24" />
-            </Link>
-            <div className={styles.notificationWrapper} ref={notificationRef}>
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className={styles.iconButton}
-                aria-label="Notifications"
-                title="Notifications"
-              >
-                <img src={notificationIcon} alt="" width="24" height="24" />
-                {visibleNotifications.length > 0 && (
-                  <span className={styles.badge}>
-                    {visibleNotifications.length}
-                  </span>
-                )}
-              </button>
+                <div className={styles.rightSection}>
+                    <div className={styles.iconsContainer}>
+                        <Link
+                            to="https://wa.me/+201281518436"
+                            className={styles.iconButton}
+                            aria-label="Help & Support"
+                            title="Help & Support"
+                        >
+                            <IconComponent icon="help" size="24" />
+                        </Link>
+                        <div
+                            className={styles.notificationWrapper}
+                            ref={notificationRef}
+                        >
+                            <button
+                                onClick={() =>
+                                    setShowNotifications(!showNotifications)
+                                }
+                                className={styles.iconButton}
+                                aria-label="Notifications"
+                                title="Notifications"
+                            >
+                                <IconComponent icon="notification" size="24" />
+
+                                {visibleNotifications.length > 0 && (
+                                    <span className={styles.badge}>
+                                        {visibleNotifications.length}
+                                    </span>
+                                )}
+                            </button>
 
               {showNotifications && (
                 <div className={styles.notificationsDropdown}>
@@ -142,7 +145,7 @@ export const Navbar = ({
                       disabled={visibleNotifications.length === 0}
                       title="Mark All As Read"
                     >
-                      <IoCheckmarkDoneSharp />
+                      <IconComponent icon="checkmark-done" size="16" />
                     </button>
                   </div>
                   <div className={styles.notificationsList}>

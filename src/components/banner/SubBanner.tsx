@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import styles from "./SubBanner.module.css";
+import type { IconType } from "react-icons/lib";
 
 type SubBannerProps = {
   title: string;
@@ -9,7 +10,7 @@ type SubBannerProps = {
   buttonAction?: () => void;
   deleteButton?: string;
   deleteAction?: () => void;
-  icon?: string;
+  icon?: IconType;
   linkText?: string;
   linkTo?: string;
 };
@@ -25,6 +26,7 @@ export const SubBanner = ({
   linkText,
   linkTo,
 }: SubBannerProps) => {
+    const IconComponent = icon ? icon : null;
   return (
     <header className={styles["subBanner"]}>
       <div className={styles["leftSection"]}>
@@ -35,7 +37,7 @@ export const SubBanner = ({
           </Link>
         )}
         <div className={styles["content"]}>
-          {icon && <img src={icon} alt="Icon" className={styles["icon"]} />}
+          {IconComponent && <IconComponent className={styles["icon"]} />}
           <div className={styles["textContent"]}>
             <h1 className={styles["title"]}>{title}</h1>
             {description && (

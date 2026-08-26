@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 import styles from "./DayEvent.module.css";
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../IconComponent";
 
 export const DayEvent = ({
     type,
@@ -72,31 +72,19 @@ export const DayEvent = ({
                 </div>
                 {subject && (
                     <div className={styles["event-detail"]}>
-                        <img
-                            src={GetIcon("subject")}
-                            alt="Subject"
-                            className={styles["detail-icon"]}
-                        />
+                        <IconComponent icon="subject" className={styles["detail-icon"]} />
                         {subject ? `Subject: ${subject}` : ""}
                     </div>
                 )}
                 {due && (
                     <div className={styles["event-detail"]}>
-                        <img
-                            src={GetIcon("time")}
-                            alt="Due"
-                            className={styles["detail-icon"]}
-                        />
+                        <IconComponent icon="time" className={styles["detail-icon"]} />
                         {due ? `${getDateLabel()}: ${due}` : ""}
                     </div>
                 )}
                 {location && (
                     <div className={styles["event-detail"]}>
-                        <img
-                            src={GetIcon("location")}
-                            alt="Location"
-                            className={styles["detail-icon"]}
-                        />
+                        <IconComponent icon="location" className={styles["detail-icon"]} />
                         {location}
                     </div>
                 )}

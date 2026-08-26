@@ -20,11 +20,7 @@ import type { Department } from "../../../types/entities/Department";
 import type { Year } from "../../../types/entities/Year";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import usersTotalIcon from "../../../assets/icons/users-total.png";
-import monitorIcon from "../../../assets/icons/monitor.png";
-import pendingClockIcon from "../../../assets/icons/pending-clock-new.png";
-import eyeReviewIcon from "../../../assets/icons/eye-review.png";
-import arrowUpIcon from "../../../assets/icons/arrow-up.png";
+import IconComponent from "../../../components/IconComponent";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
 import { useAppSelector } from "../../../services/redux/Hooks";
@@ -261,7 +257,7 @@ export const UsersPage = () => {
                 <div className={styles.infoCardsRow}>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <img src={usersTotalIcon} alt="Users" />
+                            <IconComponent icon="users-total" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>
@@ -271,7 +267,7 @@ export const UsersPage = () => {
                                 {stats?.users_count || 0}
                             </div>
                             <div className={styles.infoCardGrowth}>
-                                <img src={arrowUpIcon} alt="Up" />
+                                <IconComponent icon="arrow-up" color="green" size={16} />
                                 <span className={styles.infoCardGrowthText}>
                                     {stats?.percentage_increase || 0}% This
                                     Month
@@ -282,7 +278,7 @@ export const UsersPage = () => {
 
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <img src={monitorIcon} alt="Active Now" />
+                            <IconComponent icon="monitor" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>
@@ -306,10 +302,7 @@ export const UsersPage = () => {
                     </div>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
-                            <img
-                                src={pendingClockIcon}
-                                alt="Pending Requests"
-                            />
+                            <IconComponent icon="pending-clock-new" size={48} />
                         </div>
                         <div className={styles.infoCardContent}>
                             <div className={styles.infoCardTitle}>
@@ -323,11 +316,7 @@ export const UsersPage = () => {
                                 style={{ textDecoration: "none" }}
                             >
                                 <div className={styles.infoCardAction}>
-                                    <img
-                                        src={eyeReviewIcon}
-                                        alt="Review"
-                                        className={styles.infoCardReviewEye}
-                                    />
+                                    <IconComponent icon="eye-review" className={styles.infoCardReviewEye}/>
                                     <span className={styles.infoCardReview}>
                                         Review Now
                                     </span>

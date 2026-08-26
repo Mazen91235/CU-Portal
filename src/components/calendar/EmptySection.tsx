@@ -1,5 +1,5 @@
 import type { Icon } from "../../types/Icon";
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../IconComponent";
 
 import styles from "./EmptySection.module.css";
 
@@ -15,11 +15,7 @@ export const EmptySection = ({
     return (
         <div className={styles["empty-section"]}>
             <div className={styles["icon-wrapper"]}>
-                <img
-                    src={GetIcon(icon)}
-                    alt={title}
-                    className={styles["icon"]}
-                />
+                <IconComponent icon={icon} className={styles["icon"]} />
             </div>
             <h5 className={styles["title"]}>{title}</h5>
             {description && (

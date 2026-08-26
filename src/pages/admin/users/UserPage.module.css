@@ -194,11 +194,11 @@
   gap: 6px;
 }
 
-.userDetailsLabel img {
-  width: 22px;
-  height: 22px;
-  margin-right: 6px;
-  vertical-align: middle;
+.userDetailsLabel svg {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .userDetailsValue {
@@ -258,15 +258,15 @@
   overflow: visible;
 }
 
-.examsHeaderIcon img {
-  width: 80%;
-  height: 80%;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  display: block;
-  margin: auto;
-  background: none;
+.examsHeaderIcon svg {
+    width: 80%;
+    height: 80%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    background: none;
 }
 
 .examsHeaderTitle {
