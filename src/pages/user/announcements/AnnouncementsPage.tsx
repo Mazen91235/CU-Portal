@@ -177,7 +177,7 @@ export const AnnouncementsPage = () => {
                         <Card
                             key={announcement.id}
                             title={announcement.title || ""}
-                            badge={announcement.subject?.code}
+                            badge={announcement.subject?.code || undefined}
                             items={[
                                 {
                                     icon: "subject",

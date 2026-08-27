@@ -8,7 +8,6 @@ import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { GetIcon } from "../../../utils/LinkHandler";
 import IconComponent from "../../../components/IconComponent";
 import styles from "./CoursePage.module.css";
 import { Button } from "../../../components/forms/Button";
@@ -53,7 +52,7 @@ export const CoursePage = () => {
 
             <SubBanner
                 title={course.name || "Course Details"}
-                icon={GetIcon("course")}
+                icon="course"
                 linkText="Back to Courses"
                 linkTo="/user/courses"
             />

@@ -10,6 +10,7 @@ import {
 } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { DepartmentStudyType } from "../../../types/entities/Department";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { PageSeo } from "../../../components/PageSeo";
@@ -39,7 +40,7 @@ type DepartmentFormData = z.infer<typeof departmentSchema>;
 export const DepartmentsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
-    const [studyTypeFilter, setStudyTypeFilter] = useState("");
+    const [studyTypeFilter, setStudyTypeFilter] = useState<string>("");
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -80,7 +81,8 @@ export const DepartmentsPage = () => {
             const result = await getDepartments({
                 data: {
                     faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type: studyTypeFilter || undefined,
+                    study_type:
+                        (studyTypeFilter as DepartmentStudyType) || undefined,
                 },
                 includes: ["faculty"],
                 limit: Infinity,
@@ -128,7 +130,7 @@ export const DepartmentsPage = () => {
             reset({
                 name: "",
                 code: "",
-                study_type: studyTypeFilter,
+                study_type: studyTypeFilter ?? "",
                 faculty_id: facultyFilter,
             });
         }
@@ -147,7 +149,7 @@ export const DepartmentsPage = () => {
             const departmentData = {
                 name: data.name,
                 code: data.code,
-                study_type: data.study_type,
+                study_type: data.study_type as DepartmentStudyType,
                 faculty_id: parseInt(data.faculty_id),
             };
 
@@ -268,7 +270,7 @@ export const DepartmentsPage = () => {
                                 filteredDepartments.map((dept) => (
                                     <Card
                                         key={dept.id}
-                                        badge={dept.code}
+                                        badge={dept.code ?? "N/A"}
                                         title={dept.name}
                                         items={[
                                             {

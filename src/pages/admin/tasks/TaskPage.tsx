@@ -17,11 +17,9 @@ import { SubmissionSection } from "../../../components/section/SubmissionSection
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./TaskPage.module.css";
 export const TaskPage = () => {
@@ -83,7 +81,7 @@ export const TaskPage = () => {
 
       <SubBanner
         title={task.name || "Task Details"}
-        icon={GetIcon("task")}
+        icon="task"
         button="Edit Task"
         buttonAction={() => navigate(`/admin/tasks/edit/${task.id}`)}
         deleteButton="Delete Task"

@@ -11,7 +11,6 @@ import { LongSection } from "../../../components/section/LongSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./ExamPage.module.css";
 
@@ -55,7 +54,7 @@ export const ExamPage = () => {
 
             <SubBanner
                 title={exam.name || "Exam Details"}
-                icon={GetIcon("task")}
+                icon="task"
                 linkText="Back to Exams"
                 linkTo="/user/exams"
             />

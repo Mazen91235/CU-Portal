@@ -11,8 +11,8 @@ export type EventOrganizer = {
     details?: {
         files_data?: FileData[];
     };
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     events?: Event[] | null;
     logo_id?: number | null;
     logo?: Attachment | null;

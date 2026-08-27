@@ -21,11 +21,7 @@ import styles from "./AcademicSettings.module.css";
 
 const academicSchema = z.object({
     faculty: z.string().min(1, "Faculty is required"),
-    studyType: z
-        .enum(["Mainstream", "Credit", ""])
-        .refine((val) => val !== "", {
-            message: "Study type is required",
-        }),
+    studyType: z.string(),
     year: z.string().min(1, "Year is required"),
     department: z.string().min(1, "Department is required"),
 });
@@ -69,7 +65,11 @@ export const AcademicSettings = () => {
 
     const studyTypeChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedStudyType = e.target.value;
-        setStudyType(selectedStudyType);
+        setStudyType(
+            selectedStudyType === "Mainstream" || selectedStudyType === "Credit"
+                ? selectedStudyType
+                : "",
+        );
         setValue("department", ""); // Reset department selection when study type changes
     };
 
@@ -91,7 +91,10 @@ export const AcademicSettings = () => {
             const result = await searchDepartments({
                 data: {
                     faculty_id: faculty ? faculty.id : undefined,
-                    study_type: studyType !== "" ? studyType : undefined,
+                    study_type:
+                        studyType === "Mainstream" || studyType === "Credit"
+                            ? studyType
+                            : undefined,
                 },
             }).unwrap();
             setDepartments(result.data || []);
@@ -126,7 +129,7 @@ export const AcademicSettings = () => {
             );
             setValue("year", user.year?.id?.toString() || "");
             setFaculty(user.faculty || null);
-            setStudyType((user.study_type as string) || "");
+            setStudyType(user.study_type || "");
             if (departments.length) {
                 setValue("department", user.department?.id?.toString() || "");
                 setValuesSet(true);
@@ -146,7 +149,11 @@ export const AcademicSettings = () => {
         try {
             await updateAcademicData({
                 faculty_id: parseInt(data.faculty, 10),
-                study_type: data.studyType,
+                study_type:
+                    data.studyType === "Mainstream" ||
+                    data.studyType === "Credit"
+                        ? data.studyType
+                        : undefined,
                 year_id: parseInt(data.year, 10),
                 department_id: parseInt(data.department, 10),
             }).unwrap();
@@ -191,7 +198,7 @@ export const AcademicSettings = () => {
                                         {faculties.map((faculty) => (
                                             <option
                                                 key={faculty.id}
-                                                value={faculty.id}
+                                                value={faculty.id ?? ""}
                                             >
                                                 {faculty.name}
                                             </option>
@@ -229,7 +236,7 @@ export const AcademicSettings = () => {
                                         {years.map((year) => (
                                             <option
                                                 key={year.id}
-                                                value={year.id}
+                                                value={year.id ?? ""}
                                             >
                                                 {year.year}
                                             </option>
@@ -249,7 +256,7 @@ export const AcademicSettings = () => {
                                         {departments.map((department) => (
                                             <option
                                                 key={department.id}
-                                                value={department.id}
+                                                value={department.id ?? ""}
                                             >
                                                 {department.name}
                                             </option>

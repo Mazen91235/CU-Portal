@@ -4,7 +4,8 @@ import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { SearchDto } from "./BaseDtos";
-import type { FileData, LinkData } from "./TaskDtos";
+import type { LinkData } from "./TaskDtos";
+import type { FileData } from "../entities/Task";
 
 export type AnnouncementCreateDto = {
     title: string;

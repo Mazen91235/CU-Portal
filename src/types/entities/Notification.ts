@@ -7,8 +7,8 @@ export type Notification = {
     notification_type?: NotificationType;
     parent_id?: number | null;
     url?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     users?: User[] | null;
     user_notifications?: UserNotification[] | null;
 };

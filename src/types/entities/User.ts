@@ -14,7 +14,6 @@ import type { UserSubjectLink } from "./UserSubjectLink";
 import type { RequestLimit } from "./RequestLimit";
 import type { Event } from "./Event";
 import type { UserEvent } from "./UserEvent";
-s;
 import type { Note } from "./Note";
 import type { Attachment } from "./Attachment";
 
@@ -30,18 +29,18 @@ export type User = {
     is_early_access?: boolean | null;
     manages?: object;
     details?: {
-        avatar?: string | null;
+        avatar?: Date | null;
     };
     google_id?: string | null;
     google_name?: string | null;
     google_email?: string | null;
-    google_avatar?: string | null;
-    google_refresh_token?: string | null;
+    google_avatar?: Date | null;
+    google_refresh_token?: Date | null;
     ips?: string[] | null;
-    refresh_token?: string | null;
-    refresh_expire_at?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    refresh_token?: Date | null;
+    refresh_expire_at?: Date | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     year_id?: number | null;
     year?: Year | null;
     department_id?: number | null;

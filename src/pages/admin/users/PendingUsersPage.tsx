@@ -242,7 +242,7 @@ export const PendingUsersPage = () => {
             const pendingUsers = result.data || [];
             await updateUsers({
                 data_to_update: pendingUsers.map((user) => ({
-                    id: user.id,
+                    id: user.id ?? 0,
                     approved: true,
                 })),
             }).unwrap();
@@ -263,9 +263,9 @@ export const PendingUsersPage = () => {
                 year_id?: number;
             } = {};
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getPendingUsers({
                 data: { ...params, status: false },
@@ -273,10 +273,15 @@ export const PendingUsersPage = () => {
             }).unwrap();
             const pendingUsers = result.data || [];
             await updateUsers({
-                data_to_update: pendingUsers.map((user) => ({
-                    id: user.id,
-                    approved: false,
-                })),
+                data_to_update: pendingUsers
+                    .filter(
+                        (user): user is typeof user & { id: number } =>
+                            user.id != null,
+                    )
+                    .map((user) => ({
+                        id: user.id,
+                        approved: false,
+                    })),
             }).unwrap();
             showToast("success", "Success", "All users rejected successfully");
             setPendingUsers([]);

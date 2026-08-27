@@ -22,7 +22,6 @@ import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
 import { mergeDateAndTime } from "../../../utils/Formatter";
 
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./CreateExam.module.css";
 
@@ -69,9 +68,9 @@ export const CreateExam = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id;
-            params.department_id = user.department?.id;
-            params.year_id = user.year?.id;
+            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+            params.department_id = user.department?.id ?? undefined ?? undefined;
+            params.year_id = user.year?.id ?? undefined ?? undefined;
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
@@ -91,7 +90,7 @@ export const CreateExam = () => {
             const examData = {
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(data.due_date, data.start_time || "00:00")!,
+                deadline: mergeDateAndTime(data.due_date, data.start_time || "00:00")!.toISOString(),
                 details: {
                     exam_type: data.exam_type || undefined,
                     duration: data.duration ? parseFloat(data.duration) : undefined,
@@ -132,7 +131,7 @@ export const CreateExam = () => {
             <SubBanner
                 title="Create New Exam"
                 description="Add a new exam for your students"
-                icon={GetIcon("task")}
+                icon="task"
                 linkText="Back to Exams"
                 linkTo="/admin/exams"
             />

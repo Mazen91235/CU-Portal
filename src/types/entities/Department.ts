@@ -12,8 +12,8 @@ export type Department = {
     code?: string | null;
     details?: object;
     study_type?: DepartmentStudyType;
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     faculty_id?: number | null;
     faculty?: Faculty | null;
     users?: User[] | null;
@@ -24,4 +24,4 @@ export type Department = {
     events?: Event[] | null;
 };
 
-export type DepartmentStudyType = "Mainstream" | "Credit" | "Both" | null;
+export type DepartmentStudyType = "Mainstream" | "Credit" | "Both" | "" | null;

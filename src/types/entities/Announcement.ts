@@ -10,14 +10,14 @@ export type Announcement = {
     id?: number;
     title?: string | null;
     content?: string | null;
-    date?: string | null;
+    date?: Date | null;
     urls?: string[] | null;
     links?: LinkData[] | null;
     details?: {
         files_data?: FileData[];
     };
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     faculty_id?: number | null;
     faculty?: Faculty | null;
     department_id?: number | null;

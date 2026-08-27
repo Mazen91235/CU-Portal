@@ -5,8 +5,8 @@ export type RequestLimit = {
     ip?: string | null;
     route?: string | null;
     status?: boolean | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     user_id?: number | null;
     user?: User | null;
 };

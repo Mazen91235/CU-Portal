@@ -1,4 +1,4 @@
-import type { DayEventDto } from "../types/dtos/CalendarDtos";
+import type { CalendarDayEventDto } from "../types/dtos/CalendarDtos";
 import type { AnnouncementResponseDto } from "../types/dtos/AnnouncementDtos";
 import type { TaskResponseDto } from "../types/dtos/TaskDtos";
 import type { ExamResponseDto } from "../types/dtos/ExamDtos";
@@ -7,14 +7,16 @@ import { formatDateTime } from "./Formatter";
 export const convertToDayEvent = (
     event: TaskResponseDto | ExamResponseDto | AnnouncementResponseDto,
     type: "assignment" | "exam" | "announcement",
-): DayEventDto => {
+): CalendarDayEventDto => {
     if (type === "assignment" || type === "exam") {
         const formattedEvent = event as TaskResponseDto | ExamResponseDto;
         return {
-            type,
-            title: formattedEvent.name || (type === "exam" ? "Unknown Exam" : "Unknown Task"),
+            event_type: type,
+            title:
+                formattedEvent.name ||
+                (type === "exam" ? "Unknown Exam" : "Unknown Task"),
             subject: formattedEvent.subject?.name || "Unknown Subject",
-            due: formatDateTime(formattedEvent.deadline),
+            due: formatDateTime(formattedEvent.deadline?.toLocaleString()),
             location: formattedEvent.details?.location,
             id: formattedEvent.id!,
         };
@@ -22,10 +24,10 @@ export const convertToDayEvent = (
 
     const formattedAnnouncement = event as AnnouncementResponseDto;
     return {
-        type,
+        event_type: type,
         title: formattedAnnouncement.title || "Unknown Announcement",
         subject: formattedAnnouncement.subject?.name || "Unknown Subject",
-        due: formatDateTime(formattedAnnouncement.date),
+        due: formatDateTime(formattedAnnouncement.date?.toISOString()),
         id: formattedAnnouncement.id!,
     };
 };

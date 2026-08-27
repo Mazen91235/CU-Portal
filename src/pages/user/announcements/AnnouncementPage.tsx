@@ -12,7 +12,6 @@ import { LongSection } from "../../../components/section/LongSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./AnnouncementPage.module.css";
 
@@ -61,7 +60,7 @@ export const AnnouncementPage = () => {
 
             <SubBanner
                 title={announcement.title || "Announcement Details"}
-                icon={GetIcon("announcements")}
+                icon="announcements"
                 linkText="Back to Announcements"
                 linkTo="/user/announcements"
             />

@@ -10,6 +10,7 @@ export type FileData = {
     name?: string;
     mime_type?: string;
     file_type?: string;
+    type?: string;
     size?: string;
     web_content_link?: string;
     web_view_link?: string;
@@ -30,7 +31,7 @@ export type Task = {
     details?: {
         description?: string;
         instructions?: string;
-        location?: string;
+        location?: Date;
         exam_type?: string;
         exam_format?:
             | "MCQ"
@@ -43,10 +44,10 @@ export type Task = {
         duration?: number;
         files_data?: FileData[];
     };
-    deadline?: string;
-    due_date?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    deadline?: Date;
+    due_date?: Date | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     year_id?: number | null;
     year?: Year | null;
     department_id?: number | null;

@@ -1,7 +1,7 @@
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { SearchDto } from "./BaseDtos";
-import type { FileData } from "./TaskDtos";
+import type { FileData } from "../entities/Task";
 
 export type MaterialCreateDto = {
     name: string;

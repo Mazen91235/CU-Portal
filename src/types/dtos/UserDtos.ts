@@ -6,6 +6,7 @@ import type { RoleResponseDto } from "./RoleDtos";
 import type { PendingUserResponseDto } from "./PendingUserDtos";
 import type { MaterialResponseDto } from "./MaterialDtos";
 import type { TaskResponseDto } from "./TaskDtos";
+import type { ExamResponseDto } from "./ExamDtos";
 import type { AnnouncementResponseDto } from "./AnnouncementDtos";
 import type { NotificationResponseDto } from "./NotificationDtos";
 import type { LogResponseDto } from "./LogDtos";
@@ -76,6 +77,38 @@ export type UserSearchDto = {
     refresh_expire_at_from?: string | null;
     refresh_expire_at_to?: string | null;
 } & SearchDto;
+
+export type UserGetUserWithDetailsDto = {
+    id?: number | null;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    status?: boolean | null;
+    gender?: string | null;
+    section?: number | null;
+    is_early_access?: boolean | null;
+    details?: object | null;
+    google_id?: string | null;
+    google_name?: string | null;
+    google_email?: string | null;
+    google_avatar?: string | null;
+    study_type?: UserStudyType | null;
+    created_at?: string | null;
+    updated_at?: string | null;
+    faculty?: FacultyResponseDto | null;
+    department?: DepartmentResponseDto | null;
+    year?: YearResponseDto | null;
+    role?: RoleResponseDto | null;
+    tasks_published?: TaskResponseDto[] | null;
+    tasks?: TaskResponseDto[] | null;
+    exams_published?: ExamResponseDto[] | null;
+    exams?: ExamResponseDto[] | null;
+    announcements_published?: AnnouncementResponseDto[] | null;
+    announcements?: AnnouncementResponseDto[] | null;
+    materials?: MaterialResponseDto[] | null;
+    subjects?: SubjectResponseDto[] | null;
+    logs?: LogResponseDto[] | null;
+};
 
 export type UserSignUpResponseDto = {
     token: string;

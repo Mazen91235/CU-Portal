@@ -43,9 +43,9 @@ export const validateUserCanAccessAll = (
 };
 
 export const validateUserAccess = (
-    level?: number,
+    level?: number | null,
     path?: string,
-    roleLevel?: number,
+    roleLevel?: number | null,
 ) => {
     if ((level || 4) > 3 || ((level || 4) > 2 && (roleLevel || 4) < 3))
         return true;

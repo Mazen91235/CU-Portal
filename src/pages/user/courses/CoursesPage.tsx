@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
-import { Search } from "../../../components/forms/Search";
 import { Card } from "../../../components/card/Card";
 import {
     useLazyGetAvailableCoursesQuery,
@@ -15,10 +14,11 @@ import IconComponent from "../../../components/IconComponent";
 
 import styles from "./CoursesPage.module.css";
 
+const searchQuery = "";
+
 export const CoursesPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
+        const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
     const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
     const [registeredCourses, setRegisteredCourses] = useState<
         SubjectResponseDto[]
@@ -85,26 +85,26 @@ export const CoursesPage = () => {
                         {registeredCourses.map((course) => (
                             <Card
                                 key={course.id}
-                                title={course.name}
-                                badge={course.code}
+                                title={course.name || undefined}
+                                badge={course.code || undefined}
                                 secondaryBadge={`${course.credits} Credits`}
                                 items={[
                                     {
                                         icon: "subject",
                                         label: "Faculty",
-                                        value: course.faculty?.name,
+                                        value: course.faculty?.name || undefined,
                                         color: "pink",
                                     },
                                     {
                                         icon: "location",
                                         label: "Department",
-                                        value: course.department?.name,
+                                        value: course.department?.name || undefined,
                                         color: "yellow",
                                     },
                                     {
                                         icon: "calendar",
                                         label: "Year",
-                                        value: course.year?.year?.toString(),
+                                        value: course.year?.year?.toString() || undefined,
                                         color: "green",
                                     },
                                 ]}
@@ -132,26 +132,26 @@ export const CoursesPage = () => {
                         {filteredAvailableCourses.map((course) => (
                             <Card
                                 key={course.id}
-                                title={course.name}
-                                badge={course.code}
+                                title={course.name || undefined}
+                                badge={course.code || undefined}
                                 secondaryBadge={`${course.credits?.toString()} Credits`}
                                 items={[
                                     {
                                         icon: "subject",
                                         label: "Faculty",
-                                        value: course.faculty?.name,
+                                        value: course.faculty?.name || undefined,
                                         color: "pink",
                                     },
                                     {
                                         icon: "location",
                                         label: "Department",
-                                        value: course.department?.name,
+                                        value: course.department?.name || undefined,
                                         color: "yellow",
                                     },
                                     {
                                         icon: "calendar",
                                         label: "Year",
-                                        value: course.year?.year?.toString(),
+                                        value: course.year?.year?.toString() || undefined,
                                         color: "green",
                                     },
                                 ]}

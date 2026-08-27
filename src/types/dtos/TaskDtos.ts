@@ -4,16 +4,7 @@ import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { SearchDto } from "./BaseDtos";
-
-export type FileData = {
-    id?: string;
-    name?: string;
-    mime_type?: string;
-    file_type?: string;
-    size?: string;
-    web_content_link?: string;
-    web_view_link?: string;
-};
+import type { FileData } from "../entities/Task";
 
 export type FileDataWithExisting = FileData & {
     url?: string;

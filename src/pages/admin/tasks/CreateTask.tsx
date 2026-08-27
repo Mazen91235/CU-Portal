@@ -23,7 +23,6 @@ import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResp
 import { Form } from "../../../components/forms/Form";
 import { mergeDateAndTime } from "../../../utils/Formatter";
 
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./CreateTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
@@ -69,9 +68,9 @@ export const CreateTask = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id;
-            params.department_id = user.department?.id;
-            params.year_id = user.year?.id;
+            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+            params.department_id = user.department?.id ?? undefined ?? undefined;
+            params.year_id = user.year?.id ?? undefined ?? undefined;
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
@@ -151,7 +150,7 @@ export const CreateTask = () => {
             <SubBanner
                 title="Create New Task"
                 description="Add a new assignment for your students"
-                icon={GetIcon("task")}
+                icon="task"
                 linkText="Back to Tasks"
                 linkTo="/admin/tasks"
             />

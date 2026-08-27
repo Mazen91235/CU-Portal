@@ -175,7 +175,7 @@ export const ExamsPage = () => {
                         <Card
                             key={exam.id}
                             title={exam.name || "Untitled Exam"}
-                            badge={exam.subject?.code}
+                            badge={exam.subject?.code || undefined}
                             items={[
                                 {
                                     icon: "subject",

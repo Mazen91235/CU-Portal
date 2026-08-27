@@ -12,7 +12,6 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
 import { Avatar } from "../../../components/avatar/Avatar";
-import { GetIcon } from "../../../utils/LinkHandler";
 import styles from "./CoursePage.module.css";
 
 export const CoursePage = () => {
@@ -61,7 +60,7 @@ export const CoursePage = () => {
 
             <SubBanner
                 title={course.name || "Course Details"}
-                icon={GetIcon("course")}
+                icon="course"
                 button="Edit Course"
                 buttonAction={() =>
                     navigate(`/admin/courses/edit/${course.id}`)

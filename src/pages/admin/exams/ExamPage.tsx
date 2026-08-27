@@ -14,11 +14,9 @@ import { LongSection } from "../../../components/section/LongSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./ExamPage.module.css";
 
@@ -81,7 +79,7 @@ export const ExamPage = () => {
 
       <SubBanner
         title={exam.name || "Exam Details"}
-        icon={GetIcon("task")}
+        icon="task"
         button="Edit Exam"
         buttonAction={() => navigate(`/admin/exams/edit/${exam.id}`)}
         deleteButton="Delete Exam"

@@ -5,10 +5,13 @@ import type {
     Path,
     UseFormSetValue,
 } from "react-hook-form";
-import type { FileData } from "../../types/dtos/TaskDtos";
+import type { FileData } from "../../types/entities/Task";
 import styles from "./FilesInputContainer.module.css";
 
-export type FileDataWithExisting = FileData & { url?: string; isExisting?: boolean };
+export type FileDataWithExisting = FileData & {
+    url?: string;
+    isExisting?: boolean;
+};
 
 export const FilesInputContainer = <T extends Record<string, unknown>>({
     register,

@@ -171,7 +171,7 @@ export const NotificationsPage = () => {
                                 notification={notification}
                                 isUnread={true}
                                 onMarkAsRead={() =>
-                                    handleMarkAsRead(notification.id)
+                                    handleMarkAsRead(notification.id ?? undefined)
                                 }
                             />
                         ))

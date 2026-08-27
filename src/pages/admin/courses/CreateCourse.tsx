@@ -20,7 +20,6 @@ import { Layout } from "../../../components/layout/Layout";
 import { Heading } from "../../../components/heading/Heading";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppSelector } from "../../../services/redux/Hooks";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./CreateCourse.module.css";
 import { useCallback, useState } from "react";
@@ -110,18 +109,18 @@ export const CreateCourse = () => {
             if (data.year_id) params.year_id = parseInt(data.year_id);
 
             if (!user?.canAccessAll) {
-                params.faculty_id = user?.faculty?.id;
-                params.department_id = user?.department?.id;
-                params.year_id = user?.year?.id;
+                params.faculty_id = user?.faculty?.id ?? undefined ?? undefined;
+                params.department_id = user?.department?.id ?? undefined ?? undefined;
+                params.year_id = user?.year?.id ?? undefined ?? undefined;
             }
 
             const courseData = {
                 name: data.name,
                 code: data.code,
                 credits: parseInt(data.credits),
-                faculty_id: params.faculty_id,
-                department_id: params.department_id,
-                year_id: params.year_id,
+                faculty_id: params.faculty_id!,
+                department_id: params.department_id!,
+                year_id: params.year_id!,
             };
 
             await createCourse(courseData).unwrap();
@@ -145,7 +144,7 @@ export const CreateCourse = () => {
             <SubBanner
                 title="Create New Course"
                 description="Add a new course to the university catalog"
-                icon={GetIcon("course")}
+                icon="course"
                 linkText="Back to Courses"
                 linkTo="/admin/courses"
             />

@@ -523,7 +523,7 @@ export const Sidebar = ({
                         </span>
                     </div>
                     <span className={styles.userRole}>
-                        {captitalize(user?.role?.name)}
+                        {captitalize(user?.role?.name || undefined)}
                     </span>
                 </li>
             </ul>

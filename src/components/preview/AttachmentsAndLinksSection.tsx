@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Preview } from "./Preview";
-import type { FileData, LinkData } from "../../types/dtos/TaskDtos";
+import type { FileDataWithExisting, LinkData } from "../../types/dtos/TaskDtos";
+import type { FileData } from "../../types/entities/Task";
 import styles from "./AttachmentsAndLinksSection.module.css";
 import { downloadFile } from "../../utils/FileDownloader";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
@@ -16,7 +17,8 @@ export const AttachmentsAndLinksSection = ({
     links,
 }: AttachmentsAndLinksSectionProps) => {
     const [previewFile, setPreviewFile] = useState<FileData | null>(null);
-    const [fileToDownload, setFileToDownload] = useState<FileData | null>(null);
+    const [fileToDownload, setFileToDownload] =
+        useState<FileDataWithExisting | null>(null);
     const [shouldDownload, setShouldDownload] = useState(false);
     const downloadLink = useRef<HTMLAnchorElement>(null);
 
@@ -33,8 +35,8 @@ export const AttachmentsAndLinksSection = ({
             const url = await downloadFile(file_id);
             const fileToDownload = files?.find((file) => file.id == file_id);
             setFileToDownload({
-                ...fileToDownload,
-                url: url,
+                ...(fileToDownload || {}),
+                url,
             });
             setShouldDownload(true);
         } catch (error) {

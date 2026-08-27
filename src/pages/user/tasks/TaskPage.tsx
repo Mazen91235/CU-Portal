@@ -13,7 +13,6 @@ import { SubmissionSection } from "../../../components/section/SubmissionSection
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./TaskPage.module.css";
 
@@ -57,7 +56,7 @@ export const TaskPage = () => {
 
             <SubBanner
                 title={task.name || "Task Details"}
-                icon={GetIcon("task")}
+                icon="task"
                 linkText="Back to Tasks"
                 linkTo="/user/tasks"
             />

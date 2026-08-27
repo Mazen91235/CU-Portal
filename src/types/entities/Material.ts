@@ -13,8 +13,8 @@ export type Material = {
         file_data?: FileData;
         fetched?: boolean;
     };
-    created_at?: string | null;
-    updated_at?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     subject_id?: number | null;
     subject?: Subject | null;
     author_id?: number | null;

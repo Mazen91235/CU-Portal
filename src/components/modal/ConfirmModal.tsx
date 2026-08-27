@@ -1,4 +1,4 @@
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../IconComponent";
 
 import styles from "./ConfirmModal.module.css";
 
@@ -42,9 +42,8 @@ const ConfirmModal = ({
             <div className={styles.box} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.content}>
                     <span className={styles.iconWrapper}>
-                        <img
-                            src={GetIcon("warning-circle")}
-                            alt="Warning"
+                        <IconComponent
+                            icon="warning-circle"
                             className={styles.icon}
                         />
                     </span>

@@ -4,6 +4,7 @@ import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     UserResponseDto,
     UserSearchDto,
+    UserGetUserWithDetailsDto,
     UserStatisticsResponseDto,
     UserUpdateUsersDto,
 } from "../../../types/dtos/UserDtos";
@@ -55,7 +56,7 @@ export const AdminUserAPI = createApi({
             }),
         }),
         getUser: builder.query<
-            GenericAPIResponse<UserResponseDto>,
+            GenericAPIResponse<UserGetUserWithDetailsDto>,
             { user_id: number }
         >({
             query: ({ user_id }) => ({

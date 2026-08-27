@@ -16,11 +16,9 @@ import { LongSection } from "../../../components/section/LongSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./AnnouncementPage.module.css";
 
@@ -91,7 +89,7 @@ export const AnnouncementPage = () => {
 
       <SubBanner
         title={announcement.title || "Announcement Details"}
-        icon={GetIcon("announcements")}
+        icon="announcements"
         button="Edit Announcement"
         buttonAction={() =>
           navigate(`/admin/announcements/edit/${announcement.id}`)

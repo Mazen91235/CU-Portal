@@ -22,7 +22,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { FileData, LinkData } from "../../../types/dtos/TaskDtos";
+import type { LinkData } from "../../../types/dtos/TaskDtos";
+import type { FileData } from "../../../types/entities/Task";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
@@ -31,8 +32,8 @@ import {
     formatTimeInputValue,
     mergeDateAndTime,
 } from "../../../utils/Formatter";
-import { GetIcon } from "../../../utils/LinkHandler";
-
+import { GetDriveUrl } from "../../../utils/DriveManager";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import styles from "./EditTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
 
@@ -55,7 +56,7 @@ export const EditTask = () => {
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
-    const [task, setTask] = useState<Task | null>(null);
+    const [task, setTask] = useState<TaskResponseDto | null>(null);
     const user = useAppSelector((state) => state.user.user);
 
     const [getTask] = useLazyGetTaskQuery();
@@ -83,9 +84,10 @@ export const EditTask = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id;
-            params.department_id = user.department?.id;
-            params.year_id = user.year?.id;
+            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+            params.department_id =
+                user.department?.id ?? undefined ?? undefined;
+            params.year_id = user.year?.id ?? undefined ?? undefined;
 
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -110,15 +112,17 @@ export const EditTask = () => {
             setTask(task || null);
             if (task) {
                 setValue("title", task.name || "");
-                setValue(
-                    "description",
-                    task.details?.description ||
-                        "",
-                );
+                setValue("description", task.details?.description || "");
                 setValue("submission_url", task.url || "");
                 if (task.deadline) {
-                    setValue("deadline_date", formatDateInputValue(task.deadline));
-                    setValue("deadline_time", formatTimeInputValue(task.deadline));
+                    setValue(
+                        "deadline_date",
+                        formatDateInputValue(task.deadline),
+                    );
+                    setValue(
+                        "deadline_time",
+                        formatTimeInputValue(task.deadline),
+                    );
                 } else {
                     setValue("deadline_date", "");
                     setValue("deadline_time", "");
@@ -169,7 +173,9 @@ export const EditTask = () => {
         if (!taskId) return;
 
         try {
-            let urls = existingFiles.map((file) => file.url).join(", ");
+            let urls = existingFiles
+                .map((file) => GetDriveUrl(file.id ?? ""))
+                .join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
@@ -235,7 +241,7 @@ export const EditTask = () => {
             <SubBanner
                 title="Edit Task"
                 description="Update task information"
-                icon={GetIcon("task")}
+                icon="task"
                 linkText="Back to Tasks"
                 linkTo="/admin/tasks"
             />

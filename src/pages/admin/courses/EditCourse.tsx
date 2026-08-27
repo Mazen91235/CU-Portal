@@ -24,7 +24,6 @@ import { Layout } from "../../../components/layout/Layout";
 import { Heading } from "../../../components/heading/Heading";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppSelector } from "../../../services/redux/Hooks";
-import { GetIcon } from "../../../utils/LinkHandler";
 
 import styles from "./EditCourse.module.css";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
@@ -158,9 +157,9 @@ export const EditCourse = () => {
             if (data.year_id) params.year_id = parseInt(data.year_id);
 
             if (!user?.canAccessAll) {
-                params.faculty_id = user?.faculty?.id;
-                params.department_id = user?.department?.id;
-                params.year_id = user?.year?.id;
+                params.faculty_id = user?.faculty?.id ?? undefined ?? undefined;
+                params.department_id = user?.department?.id ?? undefined ?? undefined;
+                params.year_id = user?.year?.id ?? undefined ?? undefined;
             }
 
             const courseData = {
@@ -168,9 +167,9 @@ export const EditCourse = () => {
                 name: data.name,
                 code: data.code,
                 credits: parseInt(data.credits),
-                faculty_id: params.faculty_id,
-                department_id: params.department_id,
-                year_id: params.year_id,
+                faculty_id: params.faculty_id!,
+                department_id: params.department_id!,
+                year_id: params.year_id!,
             };
 
             await updateCourse(courseData).unwrap();
@@ -194,7 +193,7 @@ export const EditCourse = () => {
             <SubBanner
                 title="Edit Course"
                 description="Update course information"
-                icon={GetIcon("course")}
+                icon="course"
                 linkText="Back to Courses"
                 linkTo="/admin/courses"
             />

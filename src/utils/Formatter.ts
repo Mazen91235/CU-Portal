@@ -1,44 +1,3 @@
-export const formatDateTime = (
-    dateTimeString?: string | null,
-    toDate: boolean = false,
-    weekDay: boolean = true,
-): string => {
-    if (!dateTimeString) return "N/A";
-    let date: Date;
-    if (dateTimeString.includes("T")) {
-        date = new Date(dateTimeString);
-    } else {
-        const datePartArray = dateTimeString.split(" ")[0].split("-");
-        datePartArray.reverse();
-        const datePart = datePartArray.join("-");
-        const timePart = dateTimeString.split(" ")[1];
-        dateTimeString = datePart + "T" + timePart;
-        date = new Date(dateTimeString);
-    }
-    if (toDate) {
-        date.setHours(date.getHours() + getDiffHours(date));
-        return date.toISOString();
-    }
-    if (weekDay)
-        return date.toLocaleDateString([], {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "2-digit",
-            hour12: true,
-            minute: "2-digit",
-        });
-    return date.toLocaleTimeString([], {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        hour: "2-digit",
-        hour12: true,
-        minute: "2-digit",
-    });
-};
-
 const getDiffHours = (date: Date): number => {
     const dateLocal = date.toLocaleString("en-US", {
         timeZone: "Africa/Cairo",
@@ -51,51 +10,94 @@ const getDiffHours = (date: Date): number => {
     return (dateLocalObj.getTime() - dateUTCObj.getTime()) / (1000 * 60 * 60);
 };
 
-export const formatDate = (dateString?: string | null): string => {
-    if (!dateString) return "N/A";
-    let date: Date;
-    if (dateString.includes("T")) {
-        date = new Date(dateString);
-    } else {
-        const datePartArray = dateString.split("-");
-        datePartArray.reverse();
-        const datePart = datePartArray.join("-");
-        date = new Date(datePart);
+const parseDateValue = (dateTimeString?: string | Date | null): Date | null => {
+    if (!dateTimeString) return null;
+    if (dateTimeString instanceof Date) {
+        return Number.isNaN(dateTimeString.getTime()) ? null : dateTimeString;
     }
-    return date.toLocaleDateString([], {
+    if (dateTimeString.includes("T")) {
+        const date = new Date(dateTimeString);
+        return Number.isNaN(date.getTime()) ? null : date;
+    }
+    if (dateTimeString.includes(" ")) {
+        const [datePart, timePart = "00:00:00"] = dateTimeString.split(" ");
+        const parts = datePart.split("-");
+        if (parts.length === 3) {
+            parts.reverse();
+            const date = new Date(`${parts.join("-")}T${timePart}`);
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+    }
+    const dateParts = dateTimeString.split("-").map(Number);
+    if (dateParts.length !== 3 || dateParts.some(Number.isNaN)) return null;
+    const [year, month, day] = dateParts;
+    const date = new Date(year, month - 1, day);
+    return Number.isNaN(date.getTime()) ? null : date;
+};
+
+export const formatDateTime = (
+    dateTimeString?: string | Date | null,
+    toDate = false,
+    weekDay = true,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "N/A";
+
+    const normalized = new Date(date.getTime());
+    if (toDate) {
+        normalized.setHours(normalized.getHours() + getDiffHours(normalized));
+        return normalized.toISOString();
+    }
+    if (weekDay) {
+        return normalized.toLocaleDateString([], {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            hour12: true,
+            minute: "2-digit",
+        });
+    }
+    return normalized.toLocaleTimeString([], {
         month: "short",
         day: "numeric",
         year: "numeric",
-    });
-};
-
-export const formatTime = (dateTimeString?: string | null): string => {
-    if (!dateTimeString) return "N/A";
-    const timePart = dateTimeString.split(" ")[1];
-    const date = new Date("1970-01-01T" + timePart);
-    return date.toLocaleTimeString([], {
         hour: "2-digit",
         hour12: true,
         minute: "2-digit",
     });
 };
 
-export const formatTimeAgo = (dateTimeString?: string | null): string => {
-    if (!dateTimeString) return "N/A";
-    let date: Date;
-    const now = new Date();
-    if (dateTimeString.includes("T")) {
-        date = new Date(dateTimeString);
-    } else {
-        const datePartArray = dateTimeString.split(" ")[0].split("-");
-        datePartArray.reverse();
-        const datePart = datePartArray.join("-");
-        const timePart = dateTimeString.split(" ")[1];
-        dateTimeString = datePart + "T" + timePart;
-        date = new Date(dateTimeString);
-    }
-    const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+export const formatDate = (dateString?: string | Date | null): string => {
+    const date = parseDateValue(dateString);
+    return date
+        ? date.toLocaleDateString([], {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+          })
+        : "N/A";
+};
 
+export const formatTime = (dateTimeString?: string | Date | null): string => {
+    const date = parseDateValue(dateTimeString);
+    return date
+        ? date.toLocaleTimeString([], {
+              hour: "2-digit",
+              hour12: true,
+              minute: "2-digit",
+          })
+        : "N/A";
+};
+
+export const formatTimeAgo = (
+    dateTimeString?: string | Date | null,
+): string => {
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "N/A";
+
+    const secondsAgo = Math.floor((Date.now() - date.getTime()) / 1000);
     const intervals: { [key: string]: number } = {
         year: 31536000,
         month: 2592000,
@@ -105,6 +107,7 @@ export const formatTimeAgo = (dateTimeString?: string | null): string => {
         minute: 60,
         second: 1,
     };
+
     for (const interval in intervals) {
         const intervalSeconds = intervals[interval];
         const count = Math.floor(secondsAgo / intervalSeconds);
@@ -137,37 +140,10 @@ export const formatCalendarDay = (date: Date): string => {
     )}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
-const parseDateValue = (dateTimeString?: string | null): Date | null => {
-    if (!dateTimeString) return null;
-
-    if (dateTimeString.includes("T")) {
-        return new Date(dateTimeString);
-    }
-
-    if (dateTimeString.includes(" ")) {
-        const datePartArray = dateTimeString.split(" ")[0].split("-");
-        datePartArray.reverse();
-        const datePart = datePartArray.join("-");
-        const timePart = dateTimeString.split(" ")[1] || "00:00:00";
-        return new Date(`${datePart}T${timePart}`);
-    }
-
-    const dateParts = dateTimeString.split("-").map(Number);
-    if (
-        dateParts.length !== 3 ||
-        dateParts.some((part) => Number.isNaN(part))
-    ) {
-        return null;
-    }
-
-    const [year, month, day] = dateParts;
-    return new Date(year, month - 1, day);
-};
-
 const padDateValue = (value: number): string => String(value).padStart(2, "0");
 
 export const formatDateWithWeekday = (
-    dateTimeString?: string | null,
+    dateTimeString?: string | Date | null,
 ): string => {
     const date = parseDateValue(dateTimeString);
     if (!date) return "N/A";
@@ -181,40 +157,39 @@ export const formatDateWithWeekday = (
 };
 
 export const formatDateInputValue = (
-    dateTimeString?: string | null,
+    dateTimeString?: string | Date | null,
 ): string => {
     const date = parseDateValue(dateTimeString);
-    if (!date) return "";
-
-    return formatCalendarDay(date);
+    return date ? formatCalendarDay(date) : "";
 };
 
 export const formatTimeInputValue = (
-    dateTimeString?: string | null,
+    dateTimeString?: string | Date | null,
 ): string => {
     const date = parseDateValue(dateTimeString);
-    if (!date) return "";
-
-    return `${padDateValue(date.getHours())}:${padDateValue(date.getMinutes())}`;
+    return date
+        ? `${padDateValue(date.getHours())}:${padDateValue(date.getMinutes())}`
+        : "";
 };
 
 export const formatDateTimeInputValue = (
-    dateTimeString?: string | null,
+    dateTimeString?: string | Date | null,
 ): string => {
     const date = parseDateValue(dateTimeString);
-    if (!date) return "";
-
-    return `${formatCalendarDay(date)}T${padDateValue(date.getHours())}:${padDateValue(date.getMinutes())}`;
+    return date
+        ? `${formatCalendarDay(date)}T${padDateValue(
+              date.getHours(),
+          )}:${padDateValue(date.getMinutes())}`
+        : "";
 };
 
 export const mergeDateAndTime = (
     dateValue?: string | null,
     timeValue?: string | null,
-): string | undefined => {
+): Date | undefined => {
     if (!dateValue) return undefined;
-    if (!timeValue) return dateValue;
-
-    return `${dateValue}T${timeValue}`;
+    const date = new Date(timeValue ? `${dateValue}T${timeValue}` : dateValue);
+    return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
 export const parseDateString = (dateStr: string): Date | null => {
@@ -232,23 +207,12 @@ export const captitalize = (str?: string): string => {
 };
 
 export const formatDateIntoPeriod = (
-    dateTimeString?: string | null,
+    dateTimeString?: string | Date | null,
 ): string => {
-    if (!dateTimeString) return "N/A";
-    let date: Date;
-    const now = new Date();
-    if (dateTimeString.includes("T")) {
-        date = new Date(dateTimeString);
-    } else {
-        const datePartArray = dateTimeString.split(" ")[0].split("-");
-        datePartArray.reverse();
-        const datePart = datePartArray.join("-");
-        const timePart = dateTimeString.split(" ")[1] || "00:00:00";
-        dateTimeString = datePart + "T" + timePart;
-        date = new Date(dateTimeString);
-    }
-    const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const date = parseDateValue(dateTimeString);
+    if (!date) return "N/A";
 
+    const secondsAgo = Math.floor((Date.now() - date.getTime()) / 1000);
     if (secondsAgo < 60) return "Just now";
     if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)} min ago`;
     if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)} hr ago`;

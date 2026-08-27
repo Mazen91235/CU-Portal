@@ -113,9 +113,9 @@ export const ExamsPage = () => {
             if (yearFilter) params.year_id = parseInt(yearFilter);
 
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+                params.department_id = user.department?.id ?? undefined ?? undefined;
+                params.year_id = user.year?.id ?? undefined ?? undefined;
             }
 
             if (Object.keys(params).length < 3) {

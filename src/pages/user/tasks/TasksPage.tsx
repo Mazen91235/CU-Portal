@@ -173,7 +173,7 @@ export const TasksPage = () => {
                         <Card
                             key={task.id}
                             title={task.name || ""}
-                            badge={task.subject?.code}
+                            badge={task.subject?.code || undefined}
                             items={[
                                 {
                                     icon: "subject",
@@ -183,7 +183,9 @@ export const TasksPage = () => {
                                 {
                                     icon: "calendar",
                                     label: "Deadline",
-                                    value: formatDateTime(task.deadline),
+                                    value: formatDateTime(
+                                        task.deadline?.toLocaleString(),
+                                    ),
                                 },
                             ]}
                             button="View Task"

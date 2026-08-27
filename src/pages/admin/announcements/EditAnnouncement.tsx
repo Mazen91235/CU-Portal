@@ -22,7 +22,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { FileData, LinkData } from "../../../types/dtos/TaskDtos";
+import type { LinkData } from "../../../types/dtos/TaskDtos";
+import type { FileData } from "../../../types/entities/Task";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
@@ -32,9 +33,7 @@ import {
     formatTimeInputValue,
     mergeDateAndTime,
 } from "../../../utils/Formatter";
-
-import { GetIcon } from "../../../utils/LinkHandler";
-
+import { GetDriveUrl } from "../../../utils/DriveManager";
 import styles from "./EditAnnouncement.module.css";
 
 const announcementSchema = z.object({
@@ -55,7 +54,8 @@ export const EditAnnouncement = () => {
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
-    const [announcement, setAnnouncement] = useState<AnnouncementResponseDto | null>(null);
+    const [announcement, setAnnouncement] =
+        useState<AnnouncementResponseDto | null>(null);
     const user = useAppSelector((state) => state.user.user);
 
     const [getAnnouncement] = useLazyGetAnnouncementQuery();
@@ -83,9 +83,10 @@ export const EditAnnouncement = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id;
-            params.department_id = user.department?.id;
-            params.year_id = user.year?.id;
+            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+            params.department_id =
+                user.department?.id ?? undefined ?? undefined;
+            params.year_id = user.year?.id ?? undefined ?? undefined;
 
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -172,7 +173,9 @@ export const EditAnnouncement = () => {
         if (!announcementId) return;
 
         try {
-            let urls = existingFiles.map((file) => file.url).join(", ");
+            let urls = existingFiles
+                .map((file) => GetDriveUrl(file.id ?? ""))
+                .join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
@@ -183,10 +186,13 @@ export const EditAnnouncement = () => {
             const announcementData = {
                 announcement_id: parseInt(announcementId),
                 title: data.title,
-                content: data.content || undefined,
+                content: data.content || "",
                 subject_id: parseInt(data.subject_id),
                 date: data.date_date
-                    ? mergeDateAndTime(data.date_date, data.date_time || "00:00")
+                    ? mergeDateAndTime(
+                          data.date_date,
+                          data.date_time || "00:00",
+                      )
                     : undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: (() => {
@@ -234,7 +240,7 @@ export const EditAnnouncement = () => {
             <SubBanner
                 title="Edit Announcement"
                 description="Update announcement information"
-                icon={GetIcon("announcements")}
+                icon="announcements"
                 linkText="Back to Announcements"
                 linkTo="/admin/announcements"
             />

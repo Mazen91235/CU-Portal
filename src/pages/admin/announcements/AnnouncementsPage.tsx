@@ -114,9 +114,9 @@ export const AnnouncementsPage = () => {
             if (yearFilter) params.year_id = parseInt(yearFilter);
 
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
+                params.department_id = user.department?.id ?? undefined ?? undefined;
+                params.year_id = user.year?.id ?? undefined ?? undefined;
             }
 
             if (Object.keys(params).length < 3) {
@@ -142,8 +142,8 @@ export const AnnouncementsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                date_from: dateFromFilter || undefined,
-                date_to: dateToFilter || undefined,
+                date_from: dateFromFilter ? new Date(dateFromFilter) : undefined,
+                date_to: dateToFilter ? new Date(dateToFilter) : undefined,
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
