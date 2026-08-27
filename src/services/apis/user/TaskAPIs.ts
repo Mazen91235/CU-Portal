@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Task } from "../../../types/entities/Task";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { TaskSearchDto } from "../../../types/dtos/TaskDTOs";
+import type {
+    TaskResponseDto,
+    TaskSearchDto,
+} from "../../../types/dtos/TaskDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,15 +27,23 @@ export const TaskAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getTasks: builder.query<GenericAPIResponse<Task[]>, TaskSearchDto>({
+        getTasks: builder.query<
+            GenericAPIResponse<TaskResponseDto[]>,
+            QueryModel<TaskSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
-        getTask: builder.query<GenericAPIResponse<Task>, { task_id: number }>({
+        getTask: builder.query<
+            GenericAPIResponse<TaskResponseDto>,
+            { task_id: number }
+        >({
             query: ({ task_id }) => ({
                 url: `/${task_id}`,
                 method: "GET",

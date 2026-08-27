@@ -1,12 +1,14 @@
 import type { User } from "./User";
+import type { ExactRole } from "./ExactRole";
+import type { RoleLink } from "./RoleLink";
 
 export type Role = {
     id?: number;
     name?: string;
-    level?: number;
-    permissions?: string[];
-    permissions_count?: number;
+    level?: number | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     users?: User[] | null;
-    user_id?: number | null;
-    users_count?: number;
+    exact_roles?: ExactRole[] | null;
+    role_links?: RoleLink[] | null;
 };

@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Notification } from "../../../types/entities/Notification";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { NotificationSearchDto } from "../../../types/dtos/NotificationDTOs";
+import type { NotificationResponseDto } from "../../../types/dtos/NotificationDtos";
+import type { UserNotificationSearchDto } from "../../../types/dtos/UserNotificationDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -25,18 +26,20 @@ export const NotificationAPI = createApi({
     ),
     endpoints: (builder) => ({
         getNotifications: builder.query<
-            GenericAPIResponse<Notification[]>,
-            NotificationSearchDto
+            GenericAPIResponse<NotificationResponseDto[]>,
+            QueryModel<UserNotificationSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         markNotificationAsSeen: builder.mutation<
-            GenericAPIResponse<Notification>,
+            GenericAPIResponse<boolean>,
             { notification_id: number }
         >({
             query: ({ notification_id }) => ({

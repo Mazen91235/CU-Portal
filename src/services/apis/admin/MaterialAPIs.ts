@@ -1,13 +1,15 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Material } from "../../../types/entities/Material";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
-    MaterialCopyDto,
-    MaterialFetchFromDriveDto,
-    MaterialRegisterDto,
+    MaterialCreateDto,
+    MaterialResponseDto,
     MaterialSearchDto,
-} from "../../../types/dtos/MaterialDTOs";
+    MaterialUpdateDto,
+    MaterialsFetchFromDriveDto,
+    MaterialsCopyOrMoveDto,
+} from "../../../types/dtos/MaterialDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import { maxRetries, retryCondition } from "../../../utils/APIHandling";
 export const AdminMaterialAPI = createApi({
     reducerPath: "adminMaterialAPI",
@@ -25,28 +27,20 @@ export const AdminMaterialAPI = createApi({
     ),
     endpoints: (builder) => ({
         getMaterials: builder.query<
-            GenericAPIResponse<Material[]>,
-            MaterialSearchDto
+            GenericAPIResponse<MaterialResponseDto[]>,
+            QueryModel<MaterialSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
-            }),
-        }),
-        getMaterialParents: builder.query<
-            GenericAPIResponse<Material[]>,
-            { material_id: number }
-        >({
-            query: ({ material_id }) => ({
-                url: `/${material_id}/parents`,
-                method: "GET",
-                credentials: "include",
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getMaterial: builder.query<
-            GenericAPIResponse<Material>,
+            GenericAPIResponse<MaterialResponseDto>,
             { material_id: number }
         >({
             query: ({ material_id }) => ({
@@ -55,31 +49,9 @@ export const AdminMaterialAPI = createApi({
                 credentials: "include",
             }),
         }),
-        getMaterialFromDrive: builder.query<
-            GenericAPIResponse<Material>,
-            MaterialFetchFromDriveDto
-        >({
-            query: (query) => ({
-                url: `/fetch-one-from-drive`,
-                method: "GET",
-                credentials: "include",
-                params: query,
-            }),
-        }),
-        getMaterialsFromDrive: builder.query<
-            GenericAPIResponse<Material>,
-            MaterialFetchFromDriveDto
-        >({
-            query: (query) => ({
-                url: `/fetch-from-drive`,
-                method: "GET",
-                credentials: "include",
-                params: query,
-            }),
-        }),
         fetchMaterialsFromDrive: builder.mutation<
-            GenericAPIResponse<Material>,
-            MaterialFetchFromDriveDto
+            GenericAPIResponse<boolean>,
+            MaterialsFetchFromDriveDto
         >({
             query: (data) => ({
                 url: `/fetch-from-drive`,
@@ -89,8 +61,8 @@ export const AdminMaterialAPI = createApi({
             }),
         }),
         createMaterial: builder.mutation<
-            GenericAPIResponse<Material>,
-            MaterialRegisterDto
+            GenericAPIResponse<MaterialResponseDto>,
+            MaterialCreateDto
         >({
             query: (data) => ({
                 url: `/`,
@@ -100,8 +72,8 @@ export const AdminMaterialAPI = createApi({
             }),
         }),
         updateMaterial: builder.mutation<
-            GenericAPIResponse<Material>,
-            { material_id: number } & MaterialRegisterDto
+            GenericAPIResponse<MaterialResponseDto>,
+            { material_id: number } & MaterialUpdateDto
         >({
             query: ({ material_id, ...data }) => ({
                 url: `/update/${material_id}`,
@@ -120,20 +92,26 @@ export const AdminMaterialAPI = createApi({
                 credentials: "include",
             }),
         }),
-        copyMaterials: builder.mutation<GenericAPIResponse, MaterialCopyDto>({
-            query: (query) => ({
+        copyMaterials: builder.mutation<
+            GenericAPIResponse,
+            MaterialsCopyOrMoveDto
+        >({
+            query: (data) => ({
                 url: `/copy`,
                 method: "PATCH",
                 credentials: "include",
-                body: query,
+                body: data,
             }),
         }),
-        moveMaterials: builder.mutation<GenericAPIResponse, MaterialCopyDto>({
-            query: (query) => ({
+        moveMaterials: builder.mutation<
+            GenericAPIResponse,
+            MaterialsCopyOrMoveDto
+        >({
+            query: (data) => ({
                 url: `/move`,
                 method: "PATCH",
                 credentials: "include",
-                body: query,
+                body: data,
             }),
         }),
     }),
@@ -142,9 +120,6 @@ export const AdminMaterialAPI = createApi({
 export const {
     useLazyGetMaterialsQuery,
     useLazyGetMaterialQuery,
-    useLazyGetMaterialParentsQuery,
-    useLazyGetMaterialFromDriveQuery,
-    useLazyGetMaterialsFromDriveQuery,
     useFetchMaterialsFromDriveMutation,
     useCreateMaterialMutation,
     useUpdateMaterialMutation,

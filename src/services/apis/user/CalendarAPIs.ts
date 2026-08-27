@@ -2,9 +2,9 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type {
-    CalendarDayEventsDto,
-    CalenderSearchDto,
-} from "../../../types/dtos/CalenderDTOs";
+    CalendarResponseDto,
+    CalendarSearchDto,
+} from "../../../types/dtos/CalendarDtos";
 import {
     timeout,
     maxRetries,
@@ -26,8 +26,8 @@ export const CalendarAPI = createApi({
     ),
     endpoints: (builder) => ({
         getCalendarTasks: builder.query<
-            GenericAPIResponse<CalendarDayEventsDto>,
-            CalenderSearchDto
+            GenericAPIResponse<CalendarResponseDto>,
+            CalendarSearchDto
         >({
             query: (query) => ({
                 url: "/",

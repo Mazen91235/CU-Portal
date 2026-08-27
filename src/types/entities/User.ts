@@ -1,28 +1,33 @@
+import type { Year } from "./Year";
 import type { Department } from "./Department";
 import type { Faculty } from "./Faculty";
-import type { PendingUser } from "./PendingUser";
 import type { Role } from "./Role";
-import type { Year } from "./Year";
+import type { PendingUser } from "./PendingUser";
+import type { Material } from "./Material";
+import type { Task } from "./Task";
+import type { Announcement } from "./Announcement";
+import type { Notification } from "./Notification";
+import type { UserNotification } from "./UserNotification";
+import type { Log } from "./Log";
+import type { Subject } from "./Subject";
+import type { UserSubjectLink } from "./UserSubjectLink";
+import type { RequestLimit } from "./RequestLimit";
+import type { Event } from "./Event";
+import type { UserEvent } from "./UserEvent";
+s;
+import type { Note } from "./Note";
+import type { Attachment } from "./Attachment";
 
 export type User = {
     id?: number;
     name?: string;
     email?: string;
-    password?: string;
     phone?: string;
     gender?: string;
-    type?: string;
-    year?: Year | null;
-    year_id?: number | null;
-    department?: Department | null;
-    department_id?: number | null;
-    faculty?: Faculty | null;
-    faculty_id?: number | null;
+    study_type?: UserStudyType;
     section?: number | null;
-    status?: boolean;
-    is_early_access?: boolean;
-    role?: Role | null;
-    role_id?: number | null;
+    status?: boolean | null;
+    is_early_access?: boolean | null;
     manages?: object;
     details?: {
         avatar?: string | null;
@@ -32,17 +37,36 @@ export type User = {
     google_email?: string | null;
     google_avatar?: string | null;
     google_refresh_token?: string | null;
-    ips?: string[];
+    ips?: string[] | null;
     refresh_token?: string | null;
     refresh_expire_at?: string | null;
-    pending_user?: PendingUser | null;
-    user_id?: number | null;
-    notifications_count?: number;
-    enrolled_courses_count?: number;
     created_at?: string | null;
-    modified_at?: string | null;
-    // user level for progress
-    level?: number;
-    // user access for faculties, departments, years
-    canAccessAll?: boolean;
+    updated_at?: string | null;
+    year_id?: number | null;
+    year?: Year | null;
+    department_id?: number | null;
+    department?: Department | null;
+    faculty_id?: number | null;
+    faculty?: Faculty | null;
+    role_id?: number | null;
+    role?: Role | null;
+    pending_user?: PendingUser | null;
+    materials?: Material[] | null;
+    tasks?: Task[] | null;
+    announcements?: Announcement[] | null;
+    notifications?: Notification[] | null;
+    user_notifications?: UserNotification[] | null;
+    events?: Event[] | null;
+    going_events?: Event[] | null;
+    user_events?: UserEvent[] | null;
+    notes?: Note[] | null;
+    logs?: Log[] | null;
+    subjects?: Subject[] | null;
+    user_subject_links?: UserSubjectLink[] | null;
+    request_limits?: RequestLimit[] | null;
+    attachments?: Attachment[] | null;
+    level?: number | null; // User level for progress
+    canAccessAll?: boolean | null; // User access for faculties, departments, years
 };
+
+export type UserStudyType = "Mainstream" | "Credit" | null;

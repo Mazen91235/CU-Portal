@@ -12,7 +12,7 @@ import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { UserResponseDto } from "../../../types/dtos/UserDTOs";
+import type { UserResponseDto } from "../../../types/dtos/UserDtos";
 import type { Role } from "../../../types/entities/Role";
 import IconComponent from "../../../components/IconComponent";
 import styles from "./UserPage.module.css";
@@ -221,8 +221,7 @@ export const UserPage = () => {
                             <tbody>
                                 <tr>
                                     <td className={styles.userDetailsLabel}>
-                                        <IconComponent icon="user" />{" "}
-                                        Name:
+                                        <IconComponent icon="user" /> Name:
                                     </td>
                                     <td className={styles.userDetailsValue}>
                                         {user.name || "N/A"}
@@ -323,7 +322,12 @@ export const UserPage = () => {
                                                         styles.examCardIcon
                                                     }
                                                 >
-                                                    <IconComponent icon="exam-icon" className={styles.examCircleIcon} />
+                                                    <IconComponent
+                                                        icon="exam-icon"
+                                                        className={
+                                                            styles.examCircleIcon
+                                                        }
+                                                    />
                                                 </div>
                                                 <div
                                                     className={
@@ -398,7 +402,12 @@ export const UserPage = () => {
                                             <div
                                                 className={styles.examCardIcon}
                                             >
-                                                <IconComponent icon="exam-icon" className={styles.examCircleIcon} />
+                                                <IconComponent
+                                                    icon="exam-icon"
+                                                    className={
+                                                        styles.examCircleIcon
+                                                    }
+                                                />
                                             </div>
                                             <div
                                                 className={styles.examCardInfo}
@@ -457,7 +466,10 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.tasksSection}>
                         <div className={styles.tasksHeader}>
-                            <IconComponent icon="task-details-icon" className={styles.tasksHeaderIcon} />
+                            <IconComponent
+                                icon="task-details-icon"
+                                className={styles.tasksHeaderIcon}
+                            />
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
@@ -484,7 +496,12 @@ export const UserPage = () => {
                                                         styles.taskCardIcon
                                                     }
                                                 >
-                                                    <IconComponent icon="task-details-icon" className={styles.taskCircleIcon} />
+                                                    <IconComponent
+                                                        icon="task-details-icon"
+                                                        className={
+                                                            styles.taskCircleIcon
+                                                        }
+                                                    />
                                                 </div>
                                                 <div
                                                     className={
@@ -559,7 +576,12 @@ export const UserPage = () => {
                                             <div
                                                 className={styles.taskCardIcon}
                                             >
-                                                <IconComponent icon="task-details-icon" className={styles.taskCircleIcon} />
+                                                <IconComponent
+                                                    icon="task-details-icon"
+                                                    className={
+                                                        styles.taskCircleIcon
+                                                    }
+                                                />
                                             </div>
                                             <div
                                                 className={styles.taskCardInfo}
@@ -620,7 +642,10 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.announcementSection}>
                         <div className={styles.announcementHeader}>
-                            <IconComponent icon="announcement-icon" className={styles.announcementHeaderIcon} />
+                            <IconComponent
+                                icon="announcement-icon"
+                                className={styles.announcementHeaderIcon}
+                            />
                             <span className={styles.announcementHeaderTitle}>
                                 Announcement
                             </span>
@@ -698,7 +723,10 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.materialsSection}>
                         <div className={styles.materialsHeader}>
-                            <IconComponent icon="materials-icon" className={styles.materialsHeaderIcon} />
+                            <IconComponent
+                                icon="materials-icon"
+                                className={styles.materialsHeaderIcon}
+                            />
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
@@ -714,7 +742,12 @@ export const UserPage = () => {
                                         <div
                                             className={styles.materialsCardIcon}
                                         >
-                                            <IconComponent icon="materials-icon" className={styles.materialsCircleIcon} />
+                                            <IconComponent
+                                                icon="materials-icon"
+                                                className={
+                                                    styles.materialsCircleIcon
+                                                }
+                                            />
                                         </div>
                                         <div
                                             className={styles.materialsCardInfo}
@@ -780,7 +813,10 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.gradesSection}>
                         <div className={styles.gradesHeader}>
-                            <IconComponent icon="grades-icon" className={styles.gradesHeaderIcon} />
+                            <IconComponent
+                                icon="grades-icon"
+                                className={styles.gradesHeaderIcon}
+                            />
                             <span className={styles.gradesHeaderTitle}>
                                 Grades
                             </span>
@@ -794,7 +830,12 @@ export const UserPage = () => {
                                         className={styles.gradesCard}
                                     >
                                         <div className={styles.gradesCardIcon}>
-                                            <IconComponent icon="grades-icon" className={styles.gradesCircleIcon} />
+                                            <IconComponent
+                                                icon="grades-icon"
+                                                className={
+                                                    styles.gradesCircleIcon
+                                                }
+                                            />
                                         </div>
                                         <div className={styles.gradesCardInfo}>
                                             <div
@@ -853,7 +894,10 @@ export const UserPage = () => {
                 <section className={styles.section}>
                     <div className={styles.subjectsSection}>
                         <div className={styles.subjectsHeader}>
-                            <IconComponent icon="subjects-icon" className={styles.subjectsHeaderIcon} />
+                            <IconComponent
+                                icon="subjects-icon"
+                                className={styles.subjectsHeaderIcon}
+                            />
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
@@ -868,7 +912,12 @@ export const UserPage = () => {
                                         <div
                                             className={styles.subjectsCardIcon}
                                         >
-                                            <IconComponent icon="subjects-icon" className={styles.subjectsCircleIcon} />
+                                            <IconComponent
+                                                icon="subjects-icon"
+                                                className={
+                                                    styles.subjectsCircleIcon
+                                                }
+                                            />
                                         </div>
                                         <div
                                             className={styles.subjectsCardInfo}
@@ -910,7 +959,10 @@ export const UserPage = () => {
             <section className={styles.activityLogsFullWidth}>
                 <div className={styles.activityLogsSection}>
                     <div className={styles.activityLogsHeader}>
-                        <IconComponent icon="activity-logs-icon" className={styles.activityLogsHeaderIcon} />
+                        <IconComponent
+                            icon="activity-logs-icon"
+                            className={styles.activityLogsHeaderIcon}
+                        />
                         <span className={styles.activityLogsHeaderTitle}>
                             Activity Logs
                         </span>

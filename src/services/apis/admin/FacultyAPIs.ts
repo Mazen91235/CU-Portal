@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Faculty } from "../../../types/entities/Faculty";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { FacultySearchDto } from "../../../types/dtos/FacultyDTOs";
+import type {
+    FacultyCreateDto,
+    FacultyResponseDto,
+    FacultySearchDto,
+    FacultyUpdateDto,
+} from "../../../types/dtos/FacultyDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,38 +29,32 @@ export const AdminFacultyAPI = createApi({
     ),
     endpoints: (builder) => ({
         getFaculties: builder.query<
-            GenericAPIResponse<Faculty[]>,
-            FacultySearchDto
+            GenericAPIResponse<FacultyResponseDto[]>,
+            QueryModel<FacultySearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getFaculty: builder.query<
-            GenericAPIResponse<Faculty>,
+            GenericAPIResponse<FacultyResponseDto>,
             { faculty_id: number }
         >({
             query: ({ faculty_id }) => ({
-                url: `/view/${faculty_id}`,
+                url: `/${faculty_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        searchFaculties: builder.query<
-            GenericAPIResponse<Faculty[]>,
-            FacultySearchDto
+        createFaculty: builder.mutation<
+            GenericAPIResponse<FacultyResponseDto>,
+            FacultyCreateDto
         >({
-            query: (query) => ({
-                url: `/search`,
-                method: "GET",
-                credentials: "include",
-                params: query,
-            }),
-        }),
-        createFaculty: builder.mutation<GenericAPIResponse<Faculty>, Faculty>({
             query: (data) => ({
                 url: `/`,
                 method: "POST",
@@ -64,8 +63,8 @@ export const AdminFacultyAPI = createApi({
             }),
         }),
         updateFaculty: builder.mutation<
-            GenericAPIResponse<Faculty>,
-            { faculty_id: number } & Faculty
+            GenericAPIResponse<FacultyResponseDto>,
+            { faculty_id: number } & FacultyUpdateDto
         >({
             query: ({ faculty_id, ...data }) => ({
                 url: `/${faculty_id}`,
@@ -90,7 +89,6 @@ export const AdminFacultyAPI = createApi({
 export const {
     useLazyGetFacultiesQuery,
     useLazyGetFacultyQuery,
-    useLazySearchFacultiesQuery,
     useCreateFacultyMutation,
     useUpdateFacultyMutation,
     useDeleteFacultyMutation,

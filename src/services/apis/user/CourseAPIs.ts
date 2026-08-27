@@ -1,8 +1,7 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Subject } from "../../../types/entities/Subject";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { SearchDto } from "../../../types/dtos/SearchDTOs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import {
     timeout,
     maxRetries,
@@ -23,7 +22,10 @@ export const CourseAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getEnrolledCourses: builder.query<GenericAPIResponse<Subject[]>, void>({
+        getEnrolledCourses: builder.query<
+            GenericAPIResponse<SubjectResponseDto[]>,
+            void
+        >({
             query: () => ({
                 url: "/enrolled",
                 method: "GET",
@@ -31,40 +33,39 @@ export const CourseAPI = createApi({
             }),
         }),
         getEnrolledCourse: builder.query<
-            GenericAPIResponse<Subject>,
-            { course_id: number }
+            GenericAPIResponse<SubjectResponseDto>,
+            { subject_id: number }
         >({
-            query: ({ course_id }) => ({
-                url: `/enrolled/${course_id}`,
+            query: ({ subject_id }) => ({
+                url: `/enrolled/${subject_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
         getAvailableCourses: builder.query<
-            GenericAPIResponse<Subject[]>,
-            SearchDto
+            GenericAPIResponse<SubjectResponseDto[]>,
+            void
         >({
-            query: (query) => ({
+            query: () => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
             }),
         }),
         registerCourse: builder.mutation<
             GenericAPIResponse,
-            { course_id: number }
+            { subject_id: number }
         >({
-            query: (query) => ({
+            query: (data) => ({
                 url: `/register`,
                 method: "POST",
                 credentials: "include",
-                body: query,
+                body: data,
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         localStorage.removeItem("user");
                     }
                 } catch {
@@ -74,18 +75,18 @@ export const CourseAPI = createApi({
         }),
         unregisterCourse: builder.mutation<
             GenericAPIResponse,
-            { course_id: number }
+            { subject_id: number }
         >({
-            query: (query) => ({
+            query: (data) => ({
                 url: `/unregister`,
                 method: "POST",
                 credentials: "include",
-                body: query,
+                body: data,
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         localStorage.removeItem("user");
                     }
                 } catch {

@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Message } from "../../../types/entities/Message";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { MessageSearchDto } from "../../../types/dtos/MessageDTOs";
+import type {
+    MessageResponseDto,
+    MessageSearchDto,
+} from "../../../types/dtos/MessageDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,14 +27,16 @@ export const AdminMessageAPI = createApi({
     ),
     endpoints: (builder) => ({
         getMessages: builder.query<
-            GenericAPIResponse<Message[]>,
-            MessageSearchDto
+            GenericAPIResponse<MessageResponseDto[]>,
+            QueryModel<MessageSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
     }),

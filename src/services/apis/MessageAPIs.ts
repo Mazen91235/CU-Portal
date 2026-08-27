@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
-import type { Message } from "../../types/entities/Message";
+import type {
+    MessageCreateDto,
+    MessageResponseDto,
+} from "../../types/dtos/MessageDtos";
 import { GetApiLink } from "../../utils/LinkHandler";
 import { timeout, maxRetries, retryCondition } from "../../utils/APIHandling";
 export const MessageAPI = createApi({
@@ -18,7 +21,10 @@ export const MessageAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        createMessage: builder.mutation<GenericAPIResponse<Message>, Message>({
+        createMessage: builder.mutation<
+            GenericAPIResponse<MessageResponseDto>,
+            MessageCreateDto
+        >({
             query: (data) => ({
                 url: "/",
                 method: "POST",

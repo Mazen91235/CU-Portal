@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Department } from "../../../types/entities/Department";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { DepartmentSearchDto } from "../../../types/dtos/DepartmentDTOs";
+import type {
+    DepartmentCreateDto,
+    DepartmentResponseDto,
+    DepartmentSearchDto,
+    DepartmentUpdateDto,
+} from "../../../types/dtos/DepartmentDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,40 +29,31 @@ export const AdminDepartmentAPI = createApi({
     ),
     endpoints: (builder) => ({
         getDepartments: builder.query<
-            GenericAPIResponse<Department[]>,
-            DepartmentSearchDto
+            GenericAPIResponse<DepartmentResponseDto[]>,
+            QueryModel<DepartmentSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getDepartment: builder.query<
-            GenericAPIResponse<Department>,
+            GenericAPIResponse<DepartmentResponseDto>,
             { department_id: number }
         >({
             query: ({ department_id }) => ({
-                url: `/view/${department_id}`,
+                url: `/${department_id}`,
                 method: "GET",
                 credentials: "include",
-            }),
-        }),
-        searchDepartments: builder.query<
-            GenericAPIResponse<Department[]>,
-            DepartmentSearchDto
-        >({
-            query: (query) => ({
-                url: `/search`,
-                method: "GET",
-                credentials: "include",
-                params: query,
             }),
         }),
         createDepartment: builder.mutation<
-            GenericAPIResponse<Department>,
-            Department
+            GenericAPIResponse<DepartmentResponseDto>,
+            DepartmentCreateDto
         >({
             query: (data) => ({
                 url: `/`,
@@ -67,8 +63,8 @@ export const AdminDepartmentAPI = createApi({
             }),
         }),
         updateDepartment: builder.mutation<
-            GenericAPIResponse<Department>,
-            { department_id: number } & Department
+            GenericAPIResponse<DepartmentResponseDto>,
+            { department_id: number } & DepartmentUpdateDto
         >({
             query: ({ department_id, ...data }) => ({
                 url: `/${department_id}`,
@@ -93,7 +89,6 @@ export const AdminDepartmentAPI = createApi({
 export const {
     useLazyGetDepartmentsQuery,
     useLazyGetDepartmentQuery,
-    useLazySearchDepartmentsQuery,
     useCreateDepartmentMutation,
     useUpdateDepartmentMutation,
     useDeleteDepartmentMutation,

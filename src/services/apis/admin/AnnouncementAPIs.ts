@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Announcement } from "../../../types/entities/Announcement";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { AnnouncementSearchDto } from "../../../types/dtos/AnnouncementDTOs";
+import type {
+    AnnouncementCreateDto,
+    AnnouncementResponseDto,
+    AnnouncementSearchDto,
+    AnnouncementUpdateDto,
+} from "../../../types/dtos/AnnouncementDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,18 +29,20 @@ export const AdminAnnouncementAPI = createApi({
     ),
     endpoints: (builder) => ({
         getAnnouncements: builder.query<
-            GenericAPIResponse<Announcement[]>,
-            AnnouncementSearchDto
+            GenericAPIResponse<AnnouncementResponseDto[]>,
+            QueryModel<AnnouncementSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getAnnouncement: builder.query<
-            GenericAPIResponse<Announcement>,
+            GenericAPIResponse<AnnouncementResponseDto>,
             { announcement_id: number }
         >({
             query: ({ announcement_id }) => ({
@@ -45,8 +52,8 @@ export const AdminAnnouncementAPI = createApi({
             }),
         }),
         createAnnouncement: builder.mutation<
-            GenericAPIResponse<Announcement>,
-            Announcement
+            GenericAPIResponse<AnnouncementResponseDto>,
+            AnnouncementCreateDto
         >({
             query: (data) => ({
                 url: `/`,
@@ -56,8 +63,8 @@ export const AdminAnnouncementAPI = createApi({
             }),
         }),
         updateAnnouncement: builder.mutation<
-            GenericAPIResponse<Announcement>,
-            { announcement_id: number } & Announcement
+            GenericAPIResponse<AnnouncementResponseDto>,
+            { announcement_id: number } & AnnouncementUpdateDto
         >({
             query: ({ announcement_id, ...data }) => ({
                 url: `/${announcement_id}`,
@@ -67,7 +74,7 @@ export const AdminAnnouncementAPI = createApi({
             }),
         }),
         deleteAnnouncement: builder.mutation<
-            GenericAPIResponse,
+            GenericAPIResponse<boolean>,
             { announcement_id: number }
         >({
             query: ({ announcement_id }) => ({

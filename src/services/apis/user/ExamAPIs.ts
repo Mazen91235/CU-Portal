@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Task } from "../../../types/entities/Task";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { ExamSearchDto } from "../../../types/dtos/ExamDTOs";
+import type {
+    ExamResponseDto,
+    ExamSearchDto,
+} from "../../../types/dtos/ExamDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,15 +27,23 @@ export const ExamAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getExams: builder.query<GenericAPIResponse<Task[]>, ExamSearchDto>({
+        getExams: builder.query<
+            GenericAPIResponse<ExamResponseDto[]>,
+            QueryModel<ExamSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
-        getExam: builder.query<GenericAPIResponse<Task>, { exam_id: number }>({
+        getExam: builder.query<
+            GenericAPIResponse<ExamResponseDto>,
+            { exam_id: number }
+        >({
             query: ({ exam_id }) => ({
                 url: `/${exam_id}`,
                 method: "GET",

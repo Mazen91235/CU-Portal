@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Role } from "../../../types/entities/Role";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { RoleDto, RoleSearchDto } from "../../../types/dtos/RoleDTOs";
+import type {
+    RoleCreateDto,
+    RoleResponseDto,
+    RoleSearchDto,
+    RoleUpdateDto,
+} from "../../../types/dtos/RoleDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -23,30 +28,27 @@ export const AdminRoleAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getRoles: builder.query<GenericAPIResponse<Role[]>, RoleSearchDto>({
+        getRoles: builder.query<
+            GenericAPIResponse<RoleResponseDto[]>,
+            QueryModel<RoleSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getRole: builder.query<
-            GenericAPIResponse<RoleDto>,
+            GenericAPIResponse<RoleResponseDto>,
             { role_id: number }
         >({
             query: ({ role_id }) => ({
                 url: `/${role_id}`,
                 method: "GET",
                 credentials: "include",
-            }),
-        }),
-        searchRoles: builder.query<GenericAPIResponse<Role[]>, RoleSearchDto>({
-            query: (query) => ({
-                url: `/search`,
-                method: "GET",
-                credentials: "include",
-                params: query,
             }),
         }),
         countPermissions: builder.query<GenericAPIResponse<number>, void>({
@@ -56,7 +58,10 @@ export const AdminRoleAPI = createApi({
                 credentials: "include",
             }),
         }),
-        createRole: builder.mutation<GenericAPIResponse<Role>, Role>({
+        createRole: builder.mutation<
+            GenericAPIResponse<RoleResponseDto>,
+            RoleCreateDto
+        >({
             query: (data) => ({
                 url: `/`,
                 method: "POST",
@@ -65,8 +70,8 @@ export const AdminRoleAPI = createApi({
             }),
         }),
         updateRole: builder.mutation<
-            GenericAPIResponse<Role>,
-            { role_id: number } & Role
+            GenericAPIResponse<RoleResponseDto>,
+            { role_id: number } & RoleUpdateDto
         >({
             query: ({ role_id, ...data }) => ({
                 url: `/${role_id}`,
@@ -88,7 +93,6 @@ export const AdminRoleAPI = createApi({
 export const {
     useLazyGetRolesQuery,
     useLazyGetRoleQuery,
-    useLazySearchRolesQuery,
     useLazyCountPermissionsQuery,
     useCreateRoleMutation,
     useUpdateRoleMutation,

@@ -1,11 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Task } from "../../../types/entities/Task";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
-    ExamRegisterDto,
+    ExamCreateDto,
+    ExamResponseDto,
     ExamSearchDto,
-} from "../../../types/dtos/ExamDTOs";
+    ExamUpdateDto,
+} from "../../../types/dtos/ExamDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -26,22 +28,24 @@ export const AdminExamAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getExams: builder.query<GenericAPIResponse<Task[]>, ExamSearchDto>({
+        getExams: builder.query<GenericAPIResponse<ExamResponseDto[]>, QueryModel<ExamSearchDto>>({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
-        getExam: builder.query<GenericAPIResponse<Task>, { exam_id: number }>({
+        getExam: builder.query<GenericAPIResponse<ExamResponseDto>, { exam_id: number }>({
             query: ({ exam_id }) => ({
                 url: `/${exam_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        createExam: builder.mutation<GenericAPIResponse<Task>, ExamRegisterDto>(
+        createExam: builder.mutation<GenericAPIResponse<ExamResponseDto>, ExamCreateDto>(
             {
                 query: (data) => ({
                     url: `/`,
@@ -52,8 +56,8 @@ export const AdminExamAPI = createApi({
             },
         ),
         updateExam: builder.mutation<
-            GenericAPIResponse<Task>,
-            { exam_id: number } & ExamRegisterDto
+            GenericAPIResponse<ExamResponseDto>,
+            { exam_id: number } & ExamUpdateDto
         >({
             query: ({ exam_id, ...data }) => ({
                 url: `/${exam_id}`,

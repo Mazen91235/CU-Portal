@@ -1,11 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Task } from "../../../types/entities/Task";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
-    TaskRegisterDto,
+    TaskCreateDto,
+    TaskResponseDto,
     TaskSearchDto,
-} from "../../../types/dtos/TaskDTOs";
+    TaskUpdateDto,
+} from "../../../types/dtos/TaskDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -26,22 +28,24 @@ export const AdminTaskAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getTasks: builder.query<GenericAPIResponse<Task[]>, TaskSearchDto>({
+        getTasks: builder.query<GenericAPIResponse<TaskResponseDto[]>, QueryModel<TaskSearchDto>>({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
-        getTask: builder.query<GenericAPIResponse<Task>, { task_id: number }>({
+        getTask: builder.query<GenericAPIResponse<TaskResponseDto>, { task_id: number }>({
             query: ({ task_id }) => ({
                 url: `/${task_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        createTask: builder.mutation<GenericAPIResponse<Task>, TaskRegisterDto>(
+        createTask: builder.mutation<GenericAPIResponse<TaskResponseDto>, TaskCreateDto>(
             {
                 query: (data) => ({
                     url: `/`,
@@ -52,8 +56,8 @@ export const AdminTaskAPI = createApi({
             },
         ),
         updateTask: builder.mutation<
-            GenericAPIResponse<Task>,
-            { task_id: number } & TaskRegisterDto
+            GenericAPIResponse<TaskResponseDto>,
+            { task_id: number } & TaskUpdateDto
         >({
             query: ({ task_id, ...data }) => ({
                 url: `/${task_id}`,

@@ -90,7 +90,10 @@ export const RegisteredCourses = () => {
 
                         <div className={styles.section}>
                             <div className={styles.sectionHeader}>
-                                <IconComponent icon="hat" className={styles.hatIcon} />
+                                <IconComponent
+                                    icon="hat"
+                                    className={styles.hatIcon}
+                                />
                                 <span className={styles.sectionTitle}>
                                     Registered Courses
                                 </span>
@@ -139,7 +142,10 @@ export const RegisteredCourses = () => {
 
                         <div className={styles.section}>
                             <div className={styles.sectionHeader}>
-                                <IconComponent icon="hat" className={styles.hatIcon} />
+                                <IconComponent
+                                    icon="hat"
+                                    className={styles.hatIcon}
+                                />
                                 <span className={styles.sectionTitle}>
                                     Available Courses
                                 </span>

@@ -81,7 +81,10 @@ export function MaterialsPage() {
     );
 
     const buildMaterialsPath = useCallback(
-        (subjectValue?: string | number | null, parentValue?: string | number | null) => {
+        (
+            subjectValue?: string | number | null,
+            parentValue?: string | number | null,
+        ) => {
             if (!subjectValue) return "/user/materials";
             const subjectSegment = String(subjectValue);
             if (!parentValue) {
@@ -113,24 +116,15 @@ export function MaterialsPage() {
 
     const handleNavigate = useCallback(
         (material: Material | null) => {
-            navigate(
-                buildMaterialsPath(subjectFilter, material?.id ?? null),
-            );
+            navigate(buildMaterialsPath(subjectFilter, material?.id ?? null));
         },
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
     const authQueryParams = useCallback(
-        async () => 
-            Promise.all([
-                fetchSubjects(),
-                fetchMaterials(currentParentId),
-            ]),
-        [
-            fetchSubjects,
-            fetchMaterials,
-            currentParentId,
-        ],
+        async () =>
+            Promise.all([fetchSubjects(), fetchMaterials(currentParentId)]),
+        [fetchSubjects, fetchMaterials, currentParentId],
     );
 
     useAuthQuery(authQueryParams);
@@ -174,7 +168,10 @@ export function MaterialsPage() {
     };
 
     const handleShareMaterials = (materialId?: number, type?: string) => {
-        const parentId = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
         let url = `${window.location.origin}${buildMaterialsPath(subjectFilter, parentId)}`;
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
@@ -194,7 +191,9 @@ export function MaterialsPage() {
     useEffect(() => {
         const material_id = searchParams.get("material_id");
         if (material_id && materials.length > 0) {
-            const material = materials.find((m) => m.id === parseInt(material_id));
+            const material = materials.find(
+                (m) => m.id === parseInt(material_id),
+            );
             if (material) {
                 handlePreview(
                     material.details?.file_data?.id || "",
@@ -286,8 +285,10 @@ export function MaterialsPage() {
                                             material={folder}
                                             showCount={false}
                                             isSelected={false}
-                                            onClick={() => handleCardClick(folder)}
-                                            onDoubleClick={() =>{}}
+                                            onClick={() =>
+                                                handleCardClick(folder)
+                                            }
+                                            onDoubleClick={() => {}}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
@@ -316,8 +317,10 @@ export function MaterialsPage() {
                                             material={file}
                                             showCount={false}
                                             isSelected={false}
-                                            onClick={() => handleCardClick(file)}
-                                            onDoubleClick={() =>{}}
+                                            onClick={() =>
+                                                handleCardClick(file)
+                                            }
+                                            onDoubleClick={() => {}}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}

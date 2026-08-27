@@ -1,10 +1,12 @@
-import type { Subject } from "./Subject";
 import type { User } from "./User";
+import type { Subject } from "./Subject";
 
 export type UserSubjectLink = {
     id?: number;
+    created_at?: string | null;
+    updated_at?: string | null;
+    user_id?: number;
     user?: User | null;
-    user_id?: number | null;
+    subject_id?: number;
     subject?: Subject | null;
-    subject_id?: number | null;
 };

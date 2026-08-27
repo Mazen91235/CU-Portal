@@ -4,7 +4,7 @@ import type { User } from "../../types/entities/User";
 import type { Subject } from "../../types/entities/Subject";
 import type { Announcement } from "../../types/entities/Announcement";
 import type { Task } from "../../types/entities/Task";
-import type { CalendarDayEventsDto } from "../../types/dtos/CalenderDTOs";
+import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
 import { Calendar } from "../../components/calendar/Calendar";
 import { FloatingDay } from "../../components/calendar/FloatingDay";
 import { Card } from "../../components/card/Card";

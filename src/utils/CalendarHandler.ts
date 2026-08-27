@@ -1,4 +1,4 @@
-import type { DayEventDto } from "../types/dtos/CalenderDTOs";
+import type { DayEventDto } from "../types/dtos/CalendarDtos";
 import type { Announcement } from "../types/entities/Announcement";
 import type { Task } from "../types/entities/Task";
 import { formatDateTime } from "./Formatter";

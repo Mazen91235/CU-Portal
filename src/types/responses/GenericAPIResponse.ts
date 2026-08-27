@@ -1,12 +1,8 @@
 export type GenericAPIResponse<T = null> = {
-    status: "success" | "error";
-    message: string;
+    success: boolean;
+    code?: number | null;
+    message?: string | null;
+    error?: string | null;
     data?: T | null;
-    next?: boolean;
-};
-
-export type DefaultAPIResponse<T = null> = {
-    status: number;
-    data: GenericAPIResponse<T>;
-    error?: string;
+    next_page?: boolean | null;
 };

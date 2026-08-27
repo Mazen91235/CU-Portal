@@ -2,14 +2,11 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import { SetCookie } from "../../utils/CookiesManager";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
-    GoogleAccessTokenResponseDto,
-    RefreshTokenResponseDto,
-    SignupRequestDto,
-    SignupResponseDto,
-    VerifyEmailResponseDto,
-    GetVerificationDetailsResponseDto,
-    ResendVerificationCodeResponseDto,
-} from "../../types/dtos/AuthenticateDTOs";
+    UserCreateDto,
+    UserGetStoredAccessTokenDto,
+    UserVerifyEmailDto,
+    UserTokenDetailsResponseDto,
+} from "../../types/dtos/UserDtos";
 import { GetApiLink } from "../../utils/LinkHandler";
 import { timeout, maxRetries, retryCondition } from "../../utils/APIHandling";
 export const AuthenticateAPI = createApi({
@@ -36,7 +33,7 @@ export const AuthenticateAPI = createApi({
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const data = (await queryFulfilled).data;
-                    if (data.status == "success") {
+                    if (data.success) {
                         SetCookie("google_details_token", "", -1);
                         SetCookie("oauth_state", "", -1);
                         localStorage.removeItem("user");
@@ -54,58 +51,27 @@ export const AuthenticateAPI = createApi({
                 credentials: "include",
             }),
         }),
-        refreshToken: builder.mutation<
-            GenericAPIResponse<RefreshTokenResponseDto>,
-            string
-        >({
-            query: (refreshToken) => ({
-                url: "/refresh",
-                method: "POST",
-                body: { refresh_token: refreshToken },
-                credentials: "include",
-            }),
-            onQueryStarted: async (_, { queryFulfilled }) => {
-                try {
-                    const data = (await queryFulfilled).data;
-                    if (data.status == "success") {
-                        SetCookie(
-                            "access_token",
-                            data.data?.access_token || "",
-                            data.data?.access_expires_in || 0,
-                        );
-                    }
-                } catch {
-                    return;
-                }
-            },
-        }),
         getGoogleStoredToken: builder.mutation<
-            GenericAPIResponse<GoogleAccessTokenResponseDto>,
-            { oauth_state: string; google_details_token: string }
+            GenericAPIResponse<string>,
+            UserGetStoredAccessTokenDto
         >({
-            query: ({ oauth_state, google_details_token }) => ({
-                url: "/get-google-stored-token",
+            query: (data) => ({
+                url: "/google-stored-token",
                 method: "POST",
-                body: { oauth_state, google_details_token },
+                body: data,
                 credentials: "include",
             }),
         }),
-        getGoogleAccessToken: builder.query<
-            GenericAPIResponse<GoogleAccessTokenResponseDto>,
-            void
-        >({
+        getGoogleAccessToken: builder.query<GenericAPIResponse<string>, void>({
             query: () => ({
-                url: "/get-google-access-token",
+                url: "/google-access-token",
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        signup: builder.mutation<
-            GenericAPIResponse<SignupResponseDto>,
-            SignupRequestDto
-        >({
+        register: builder.mutation<GenericAPIResponse, UserCreateDto>({
             query: (data) => ({
-                url: "/signup",
+                url: "/register",
                 method: "POST",
                 body: data,
                 credentials: "include",
@@ -113,7 +79,7 @@ export const AuthenticateAPI = createApi({
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const response = (await queryFulfilled).data;
-                    if (response.status === "success" && response.data) {
+                    if (response.success) {
                         SetCookie("google_details_token", "", -1);
                         SetCookie("oauth_state", "", -1);
                     }
@@ -122,52 +88,27 @@ export const AuthenticateAPI = createApi({
                 }
             },
         }),
-        verifyEmail: builder.mutation<
-            GenericAPIResponse<VerifyEmailResponseDto>,
-            { code: string }
-        >({
+        verifyEmail: builder.mutation<GenericAPIResponse, UserVerifyEmailDto>({
             query: (data) => ({
                 url: "/verify-email",
                 method: "POST",
                 body: data,
                 credentials: "include",
             }),
-            onQueryStarted: async (_, { queryFulfilled }) => {
-                try {
-                    const response = (await queryFulfilled).data;
-                    if (response.status === "success" && response.data) {
-                        SetCookie(
-                            "access_token",
-                            response.data.access_token || "",
-                            response.data.access_expires_in || 0,
-                        );
-                        SetCookie(
-                            "refresh_token",
-                            response.data.refresh_token || "",
-                            response.data.refresh_expires_in || 0,
-                        );
-                    }
-                } catch {
-                    return;
-                }
-            },
         }),
-        resendVerificationCode: builder.mutation<
-            GenericAPIResponse<ResendVerificationCodeResponseDto>,
-            void
-        >({
+        resendToken: builder.mutation<GenericAPIResponse, void>({
             query: () => ({
-                url: "/resend-verification-code",
+                url: "/resend-token",
                 method: "POST",
                 credentials: "include",
             }),
         }),
-        getVerificationDetails: builder.query<
-            GenericAPIResponse<GetVerificationDetailsResponseDto>,
+        getTokenDetails: builder.query<
+            GenericAPIResponse<UserTokenDetailsResponseDto>,
             void
         >({
             query: () => ({
-                url: "/get-verification-details",
+                url: "/token-details",
                 method: "GET",
                 credentials: "include",
             }),
@@ -177,12 +118,11 @@ export const AuthenticateAPI = createApi({
 
 export const {
     useLazyIsLoggedInQuery,
-    useRefreshTokenMutation,
     useLazyLogoutQuery,
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
-    useSignupMutation,
+    useRegisterMutation,
     useVerifyEmailMutation,
-    useResendVerificationCodeMutation,
-    useLazyGetVerificationDetailsQuery,
+    useResendTokenMutation,
+    useLazyGetTokenDetailsQuery,
 } = AuthenticateAPI;

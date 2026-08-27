@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { User } from "../../../types/entities/User";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     UserResponseDto,
-    UsersDataResponseDto,
-    UsersUpdateDto,
-} from "../../../types/dtos/UserDTOs";
-import type { UserSearchDto } from "../../../types/dtos/UserDTOs";
+    UserSearchDto,
+    UserStatisticsResponseDto,
+    UserUpdateUsersDto,
+} from "../../../types/dtos/UserDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -28,23 +28,30 @@ export const AdminUserAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getUsers: builder.query<GenericAPIResponse<User[]>, UserSearchDto>({
+        getUsers: builder.query<
+            GenericAPIResponse<UserResponseDto[]>,
+            QueryModel<UserSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
-        getUsersData: builder.query<
-            GenericAPIResponse<UsersDataResponseDto>,
-            UserSearchDto
+        getUserStatistics: builder.query<
+            GenericAPIResponse<UserStatisticsResponseDto>,
+            QueryModel<UserSearchDto>
         >({
             query: (query) => ({
-                url: "/data",
+                url: "/statistics",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getUser: builder.query<
@@ -57,31 +64,20 @@ export const AdminUserAPI = createApi({
                 credentials: "include",
             }),
         }),
-        searchUsers: builder.query<GenericAPIResponse<User[]>, UserSearchDto>({
-            query: (query) => ({
-                url: `/search`,
-                method: "GET",
+        updateUsers: builder.mutation<GenericAPIResponse, UserUpdateUsersDto>({
+            query: (data) => ({
+                url: `/`,
+                method: "PATCH",
                 credentials: "include",
-                params: query,
+                body: data,
             }),
         }),
-        updateUsers: builder.mutation<GenericAPIResponse<User>, UsersUpdateDto>(
-            {
-                query: (data) => ({
-                    url: `/`,
-                    method: "PATCH",
-                    credentials: "include",
-                    body: data,
-                }),
-            },
-        ),
     }),
 });
 
 export const {
     useLazyGetUsersQuery,
-    useLazyGetUsersDataQuery,
+    useLazyGetUserStatisticsQuery,
     useLazyGetUserQuery,
-    useLazySearchUsersQuery,
     useUpdateUsersMutation,
 } = AdminUserAPI;

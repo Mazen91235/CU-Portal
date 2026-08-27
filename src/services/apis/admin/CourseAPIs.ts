@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Subject } from "../../../types/entities/Subject";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
-import type { CourseSearchDto } from "../../../types/dtos/CourseDTOs";
+import type {
+    SubjectCreateDto,
+    SubjectResponseDto,
+    SubjectSearchDto,
+    SubjectUpdateDto,
+} from "../../../types/dtos/SubjectDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -24,49 +29,32 @@ export const AdminCourseAPI = createApi({
     ),
     endpoints: (builder) => ({
         getCourses: builder.query<
-            GenericAPIResponse<Subject[]>,
-            CourseSearchDto
+            GenericAPIResponse<SubjectResponseDto[]>,
+            QueryModel<SubjectSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getCourse: builder.query<
-            GenericAPIResponse<Subject>,
+            GenericAPIResponse<SubjectResponseDto>,
             { course_id: number }
         >({
             query: ({ course_id }) => ({
-                url: `/view/${course_id}`,
+                url: `/${course_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        searchCourses: builder.query<
-            GenericAPIResponse<Subject[]>,
-            CourseSearchDto
+        createCourse: builder.mutation<
+            GenericAPIResponse<SubjectResponseDto>,
+            SubjectCreateDto
         >({
-            query: (query) => ({
-                url: `/search`,
-                method: "GET",
-                credentials: "include",
-                params: query,
-            }),
-        }),
-        searchRegisteredCourses: builder.query<
-            GenericAPIResponse<Subject[]>,
-            CourseSearchDto
-        >({
-            query: (query) => ({
-                url: `/search-registered`,
-                method: "GET",
-                credentials: "include",
-                params: query,
-            }),
-        }),
-        createCourse: builder.mutation<GenericAPIResponse<Subject>, Subject>({
             query: (data) => ({
                 url: `/`,
                 method: "POST",
@@ -75,8 +63,8 @@ export const AdminCourseAPI = createApi({
             }),
         }),
         updateCourse: builder.mutation<
-            GenericAPIResponse<Subject>,
-            { course_id: number } & Subject
+            GenericAPIResponse<SubjectResponseDto>,
+            { course_id: number } & SubjectUpdateDto
         >({
             query: ({ course_id, ...data }) => ({
                 url: `/${course_id}`,
@@ -101,8 +89,6 @@ export const AdminCourseAPI = createApi({
 export const {
     useLazyGetCoursesQuery,
     useLazyGetCourseQuery,
-    useLazySearchCoursesQuery,
-    useLazySearchRegisteredCoursesQuery,
     useCreateCourseMutation,
     useUpdateCourseMutation,
     useDeleteCourseMutation,

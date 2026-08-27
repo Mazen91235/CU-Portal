@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Announcement } from "../../../types/entities/Announcement";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { AnnouncementSearchDto } from "../../../types/dtos/AnnouncementDTOs";
+import type {
+    AnnouncementResponseDto,
+    AnnouncementSearchDto,
+} from "../../../types/dtos/AnnouncementDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -25,18 +28,20 @@ export const AnnouncementAPI = createApi({
     ),
     endpoints: (builder) => ({
         getAnnouncements: builder.query<
-            GenericAPIResponse<Announcement[]>,
-            AnnouncementSearchDto
+            GenericAPIResponse<AnnouncementResponseDto[]>,
+            QueryModel<AnnouncementSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getAnnouncement: builder.query<
-            GenericAPIResponse<Announcement>,
+            GenericAPIResponse<AnnouncementResponseDto>,
             { announcement_id: number }
         >({
             query: ({ announcement_id }) => ({

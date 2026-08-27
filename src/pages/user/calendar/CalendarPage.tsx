@@ -8,7 +8,7 @@ import { Layout } from "../../../components/layout/Layout";
 import { Calendar } from "../../../components/calendar/Calendar";
 import { DayEvent } from "../../../components/calendar/DayEvent";
 import { EmptySection } from "../../../components/calendar/EmptySection";
-import type { CalendarDayEventsDto } from "../../../types/dtos/CalenderDTOs";
+import type { CalendarDayEventsDto } from "../../../types/dtos/CalendarDtos";
 
 import styles from "./CalendarPage.module.css";
 import type { Task } from "../../../types/entities/Task";

@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { Material } from "../../../types/entities/Material";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { MaterialSearchDto } from "../../../types/dtos/MaterialDTOs";
+import type {
+    MaterialResponseDto,
+    MaterialSearchDto,
+} from "../../../types/dtos/MaterialDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -25,18 +28,20 @@ export const MaterialAPI = createApi({
     ),
     endpoints: (builder) => ({
         getMaterials: builder.query<
-            GenericAPIResponse<Material[]>,
-            MaterialSearchDto
+            GenericAPIResponse<MaterialResponseDto[]>,
+            QueryModel<MaterialSearchDto>
         >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
-                params: query,
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         getMaterialParents: builder.query<
-            GenericAPIResponse<Material[]>,
+            GenericAPIResponse<MaterialResponseDto[]>,
             {
                 material_id: number;
             }
@@ -48,7 +53,7 @@ export const MaterialAPI = createApi({
             }),
         }),
         getMaterial: builder.query<
-            GenericAPIResponse<Material>,
+            GenericAPIResponse<MaterialResponseDto>,
             { material_id: number }
         >({
             query: ({ material_id }) => ({

@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import type { User } from "../../../types/entities/User";
+import type {
+    UserResponseDto,
+    UserUpdateDto,
+    UserHasPermissionsDto,
+    UserUpdateAcademicDataDto,
+} from "../../../types/dtos/UserDtos";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import {
     timeout,
@@ -22,16 +27,16 @@ export const UserAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getUserData: builder.query<GenericAPIResponse<User>, void>({
+        getUserData: builder.query<GenericAPIResponse<UserResponseDto>, void>({
             query: () => ({
-                url: "/data",
+                url: "/me",
                 method: "GET",
                 credentials: "include",
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         const user = data.data;
                         localStorage.setItem(
                             "user",
@@ -55,7 +60,7 @@ export const UserAPI = createApi({
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         const permissions = data.data;
                         localStorage.setItem(
                             "permissions",
@@ -72,13 +77,13 @@ export const UserAPI = createApi({
         }),
         checkUserHasPermissions: builder.mutation<
             GenericAPIResponse<boolean>,
-            { permissions: string[] }
+            UserHasPermissionsDto
         >({
-            query: ({ permissions }) => ({
+            query: (data) => ({
                 url: "/has-permissions",
                 method: "POST",
                 credentials: "include",
-                body: { permissions },
+                body: data,
             }),
         }),
         changeGoogleAccount: builder.query<GenericAPIResponse, void>({
@@ -89,8 +94,8 @@ export const UserAPI = createApi({
             }),
         }),
         updateUserData: builder.mutation<
-            GenericAPIResponse<User>,
-            { name?: string; url?: string }
+            GenericAPIResponse<UserResponseDto>,
+            UserUpdateDto
         >({
             query: (data) => ({
                 url: "/",
@@ -101,7 +106,7 @@ export const UserAPI = createApi({
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         localStorage.removeItem("user");
                     }
                 } catch {
@@ -110,13 +115,8 @@ export const UserAPI = createApi({
             },
         }),
         updateUserAcademicData: builder.mutation<
-            GenericAPIResponse<User>,
-            {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-                study_type?: string;
-            }
+            GenericAPIResponse<UserResponseDto>,
+            UserUpdateAcademicDataDto
         >({
             query: (data) => ({
                 url: "/academic-data",
@@ -127,7 +127,7 @@ export const UserAPI = createApi({
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data } = await queryFulfilled;
-                    if (data.status == "success") {
+                    if (data.success) {
                         localStorage.removeItem("user");
                     }
                 } catch {
