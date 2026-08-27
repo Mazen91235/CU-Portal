@@ -7,7 +7,7 @@ import {
     useLazyGetAvailableCoursesQuery,
     useLazyGetEnrolledCoursesQuery,
 } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -20,8 +20,8 @@ export const CoursesPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
     const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
-    const [registeredCourses, setRegisteredCourses] = useState<Subject[]>([]);
-    const [availableCourses, setAvailableCourses] = useState<Subject[]>([]);
+    const [registeredCourses, setRegisteredCourses] = useState<SubjectResponseDto[]>([]);
+    const [availableCourses, setAvailableCourses] = useState<SubjectResponseDto[]>([]);
 
     const fetchData = useCallback(async () => {
         await Promise.all([

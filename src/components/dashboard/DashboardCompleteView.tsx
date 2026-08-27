@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router";
-import type { User } from "../../types/entities/User";
-import type { Subject } from "../../types/entities/Subject";
-import type { Announcement } from "../../types/entities/Announcement";
-import type { Task } from "../../types/entities/Task";
+import type { UserResponseDto } from "../../types/dtos/UserDtos";
+import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
+import type { AnnouncementResponseDto } from "../../types/dtos/AnnouncementDtos";
+import type { TaskResponseDto } from "../../types/dtos/TaskDtos";
+import type { ExamResponseDto } from "../../types/dtos/ExamDtos";
 import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
 import { Calendar } from "../../components/calendar/Calendar";
 import { FloatingDay } from "../../components/calendar/FloatingDay";
@@ -30,19 +31,20 @@ import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
 import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
-import { convertToDayEvent } from "../../utils/CalendarHandler";
 
-export const DashboardCompleteView = ({ user }: { user: User }) => {
+export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
     const [getTasks] = useLazyGetTasksQuery();
     const [getAnnouncements] = useLazyGetAnnouncementsQuery();
     const [getCourses] = useLazyGetEnrolledCoursesQuery();
     const [getCalendar] = useLazyGetCalendarTasksQuery();
     const navigate = useNavigate();
-    const [exams, setExams] = useState<Task[]>([]);
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-    const [courses, setCourses] = useState<Subject[]>([]);
+    const [exams, setExams] = useState<ExamResponseDto[]>([]);
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
+    const [announcements, setAnnouncements] = useState<
+        AnnouncementResponseDto[]
+    >([]);
+    const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -51,7 +53,10 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
 
     const fetchExams = useCallback(async () => {
         try {
-            const result = await getExams({ limit: 3 }).unwrap();
+            const result = await getExams({
+                includes: ["subject"],
+                limit: 3,
+            }).unwrap();
             setExams(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -60,7 +65,10 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
 
     const fetchTasks = useCallback(async () => {
         try {
-            const result = await getTasks({ limit: 3 }).unwrap();
+            const result = await getTasks({
+                includes: ["subject"],
+                limit: 3,
+            }).unwrap();
             setTasks(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -69,7 +77,10 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
 
     const fetchAnnouncements = useCallback(async () => {
         try {
-            const result = await getAnnouncements({ limit: 3 }).unwrap();
+            const result = await getAnnouncements({
+                includes: ["subject"],
+                limit: 3,
+            }).unwrap();
             setAnnouncements(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -89,11 +100,11 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
         async (year: number, month: number) => {
             try {
                 const result = await getCalendar({
-                    year,
-                    month: month + 1,
+                    date_from: `${year}-${String(month + 1).padStart(2, "0")}-01`,
+                    date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
                 }).unwrap();
 
-                setEventsData(result.data || {});
+                setEventsData(result.data?.events || {});
             } catch (error) {
                 handlePopupErrors(error);
             }
@@ -152,16 +163,9 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
             : { tasks: [], exams: [], announcements: [] };
 
     const formattedEvents = [
-        ...(selectedEvents.exams || []).map((exam: Task) =>
-            convertToDayEvent(exam, "exam"),
-        ),
-        ...(selectedEvents.tasks || []).map((task: Task) =>
-            convertToDayEvent(task, "assignment"),
-        ),
-        ...(selectedEvents.announcements || []).map(
-            (announcement: Announcement) =>
-                convertToDayEvent(announcement, "announcement"),
-        ),
+        ...(selectedEvents.exams || []),
+        ...(selectedEvents.tasks || []),
+        ...(selectedEvents.announcements || []),
     ];
 
     return (
@@ -295,7 +299,7 @@ export const DashboardCompleteView = ({ user }: { user: User }) => {
                 <div className={styles["user-card"]}>
                     <div className={styles["user-card-header"]}>
                         <span className={styles["user-role"]}>
-                            {captitalize(user.role?.name)}
+                            {captitalize(user.role?.name || undefined)}
                         </span>
                     </div>
                     <Avatar

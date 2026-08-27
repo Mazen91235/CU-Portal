@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useLazyGetTasksQuery } from "../../../services/apis/user/TaskAPIs";
-import type { Task } from "../../../types/entities/Task";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
@@ -15,7 +15,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import { formatDateTime } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 
 import styles from "./TasksPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -25,12 +25,12 @@ export const TasksPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [searchParams] = useSearchParams();
@@ -50,10 +50,13 @@ export const TasksPage = () => {
         try {
             if (!hasNextPage) return;
             const result = await getTasks({
-                query: searchQuery || undefined,
-                start_date: dateFromFilter || undefined,
-                end_date: dateToFilter || undefined,
-                subject_id: parseInt(subjectFilter) || undefined,
+                data: {
+                    query: searchQuery || undefined,
+                    deadline_from: new Date(dateFromFilter),
+                    deadline_to: new Date(dateToFilter),
+                    subject_id: parseInt(subjectFilter) || undefined,
+                },
+                includes: ["subject"],
                 page,
             }).unwrap();
             setTasks((prev) => {
@@ -64,7 +67,7 @@ export const TasksPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }

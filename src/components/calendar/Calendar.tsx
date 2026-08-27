@@ -36,7 +36,6 @@ export const Calendar = ({
 }) => {
     const [month, setMonth] = useState(currentMonth);
     const [year, setYear] = useState(currentYear);
-
     const handlePrevMonth = () => {
         let newMonth = month;
         let newYear = year;

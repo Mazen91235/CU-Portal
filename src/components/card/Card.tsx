@@ -15,7 +15,7 @@ type CardItem = {
 };
 
 type CardProps = {
-    title?: string;
+    title?: string | null;
     badge?: string;
     secondaryBadge?: string;
     items?: CardItem[];

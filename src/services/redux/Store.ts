@@ -10,16 +10,16 @@ import { DriveAPI } from "../apis/DriveAPIs";
 import { AnnouncementAPI } from "../apis/user/AnnouncementAPIs";
 import { CalendarAPI } from "../apis/user/CalendarAPIs";
 import { CourseAPI } from "../apis/user/CourseAPIs";
-import { CourseMapAPI } from "../apis/user/CourseMapAPIs";
 import { ExamAPI } from "../apis/user/ExamAPIs";
-import { GradeAPI } from "../apis/user/GradeAPIs";
 import { MaterialAPI } from "../apis/user/MaterialAPIs";
 import { TaskAPI } from "../apis/user/TaskAPIs";
+import { UserFacultyAPI } from "../apis/user/FacultyAPIs";
+import { UserDepartmentAPI } from "../apis/user/DepartmentAPIs";
+import { UserYearAPI } from "../apis/user/YearAPIs";
+
 import { AdminCourseAPI } from "../apis/admin/CourseAPIs";
-import { AdminCourseMapAPI } from "../apis/admin/CourseMapAPIs";
 import { AdminDepartmentAPI } from "../apis/admin/DepartmentAPIs";
 import { AdminFacultyAPI } from "../apis/admin/FacultyAPIs";
-import { AdminGradeAPI } from "../apis/admin/GradeAPIs";
 import { AdminMaterialAPI } from "../apis/admin/MaterialAPIs";
 import { AdminRoleAPI } from "../apis/admin/RoleAPIs";
 import { AdminUserAPI } from "../apis/admin/UserAPIs";
@@ -42,20 +42,19 @@ const store = configureStore({
         [AnnouncementAPI.reducerPath]: AnnouncementAPI.reducer,
         [CalendarAPI.reducerPath]: CalendarAPI.reducer,
         [CourseAPI.reducerPath]: CourseAPI.reducer,
-        [CourseMapAPI.reducerPath]: CourseMapAPI.reducer,
         [ExamAPI.reducerPath]: ExamAPI.reducer,
-        [GradeAPI.reducerPath]: GradeAPI.reducer,
         [MaterialAPI.reducerPath]: MaterialAPI.reducer,
         [NotificationAPI.reducerPath]: NotificationAPI.reducer,
         [TaskAPI.reducerPath]: TaskAPI.reducer,
         [UserAPI.reducerPath]: UserAPI.reducer,
+        [UserFacultyAPI.reducerPath]: UserFacultyAPI.reducer,
+        [UserDepartmentAPI.reducerPath]: UserDepartmentAPI.reducer,
+        [UserYearAPI.reducerPath]: UserYearAPI.reducer,
         [AdminAnnouncementAPI.reducerPath]: AdminAnnouncementAPI.reducer,
         [AdminCourseAPI.reducerPath]: AdminCourseAPI.reducer,
-        [AdminCourseMapAPI.reducerPath]: AdminCourseMapAPI.reducer,
         [AdminDepartmentAPI.reducerPath]: AdminDepartmentAPI.reducer,
         [AdminExamAPI.reducerPath]: AdminExamAPI.reducer,
         [AdminFacultyAPI.reducerPath]: AdminFacultyAPI.reducer,
-        [AdminGradeAPI.reducerPath]: AdminGradeAPI.reducer,
         [AdminLogAPI.reducerPath]: AdminLogAPI.reducer,
         [AdminMaterialAPI.reducerPath]: AdminMaterialAPI.reducer,
         [AdminMessageAPI.reducerPath]: AdminMessageAPI.reducer,
@@ -72,20 +71,19 @@ const store = configureStore({
             AnnouncementAPI.middleware,
             CalendarAPI.middleware,
             CourseAPI.middleware,
-            CourseMapAPI.middleware,
             ExamAPI.middleware,
-            GradeAPI.middleware,
             MaterialAPI.middleware,
             NotificationAPI.middleware,
             TaskAPI.middleware,
             UserAPI.middleware,
+            UserFacultyAPI.middleware,
+            UserDepartmentAPI.middleware,
+            UserYearAPI.middleware,
             AdminAnnouncementAPI.middleware,
             AdminCourseAPI.middleware,
-            AdminCourseMapAPI.middleware,
             AdminDepartmentAPI.middleware,
             AdminExamAPI.middleware,
             AdminFacultyAPI.middleware,
-            AdminGradeAPI.middleware,
             AdminLogAPI.middleware,
             AdminMaterialAPI.middleware,
             AdminMessageAPI.middleware,

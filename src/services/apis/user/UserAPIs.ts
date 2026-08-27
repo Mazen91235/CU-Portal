@@ -6,6 +6,7 @@ import type {
     UserHasPermissionsDto,
     UserUpdateAcademicDataDto,
 } from "../../../types/dtos/UserDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import {
     timeout,
@@ -27,11 +28,17 @@ export const UserAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getUserData: builder.query<GenericAPIResponse<UserResponseDto>, void>({
-            query: () => ({
+        getUserData: builder.query<
+            GenericAPIResponse<UserResponseDto>,
+            QueryModel
+        >({
+            query: (query) => ({
                 url: "/me",
                 method: "GET",
                 credentials: "include",
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {

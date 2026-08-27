@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useLazyGetCourseQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
-import type { User } from "../../../types/entities/User";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
+import type { UserResponseDto } from "../../../types/dtos/UserDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -18,7 +18,7 @@ import styles from "./CoursePage.module.css";
 export const CoursePage = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const navigate = useNavigate();
-    const [course, setCourse] = useState<Subject | null>(null);
+    const [course, setCourse] = useState<SubjectResponseDto | null>(null);
     const [activeTab, setActiveTab] = useState<"overview" | "students">(
         "overview",
     );
@@ -50,7 +50,7 @@ export const CoursePage = () => {
     }
 
     const students = course.users || [];
-    const enrolledCount = course.users_count || 0;
+    const enrolledCount = course.users?.length || 0;
 
     return (
         <Layout>
@@ -171,7 +171,7 @@ export const CoursePage = () => {
                             </div>
                         </div>
                         <ul className={styles.studentsList}>
-                            {students.map((student: User) => (
+                            {students.map((student: UserResponseDto) => (
                                 <li
                                     key={student.id}
                                     className={styles.studentListItem}

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { Material } from "../../types/entities/Material";
+import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import styles from "./Navigator.module.css";
 
 interface NavigatorProps {
-    path: Material[];
-    onNavigate: (material: Material | null) => void;
+    path: MaterialResponseDto[];
+    onNavigate: (material: MaterialResponseDto | null) => void;
     onDrop?: (targetId: number | null) => void;
     isDraggingGlobal?: boolean;
 }

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useLazyGetExamQuery } from "../../../services/apis/user/ExamAPIs";
-import type { Task } from "../../../types/entities/Task";
+import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -18,7 +18,7 @@ import styles from "./ExamPage.module.css";
 export const ExamPage = () => {
     const { examId } = useParams<{ examId: string }>();
     const navigate = useNavigate();
-    const [exam, setExam] = useState<Task | null>(null);
+    const [exam, setExam] = useState<ExamResponseDto | null>(null);
 
     const [getExam] = useLazyGetExamQuery();
 

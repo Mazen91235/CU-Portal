@@ -7,7 +7,7 @@ import type { Attachment } from "./Attachment";
 export type Material = {
     id?: number;
     name?: string | null;
-    material_type?: "file" | "folder" | "drive" | "youtube" | "external";
+    material_type?: MaterialType;
     url?: string | null;
     details?: {
         file_data?: FileData;
@@ -26,3 +26,5 @@ export type Material = {
     week?: Week | null;
     attachment?: Attachment | null;
 };
+
+export type MaterialType = "file" | "folder" | "drive" | "youtube" | "external";

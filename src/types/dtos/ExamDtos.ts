@@ -4,6 +4,7 @@ import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { SearchDto } from "./BaseDtos";
+import type { TaskDetails } from "./TaskDtos";
 
 export type ExamCreateDto = {
     name: string;
@@ -12,7 +13,7 @@ export type ExamCreateDto = {
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
-    details?: object;
+    details?: TaskDetails;
 };
 
 export type ExamResponseDto = {
@@ -21,7 +22,7 @@ export type ExamResponseDto = {
     task_type?: string | null;
     deadline?: string | null;
     due_date?: string | null;
-    details?: object | null;
+    details?: TaskDetails | null;
     created_at?: string | null;
     updated_at?: string | null;
     subject?: SubjectResponseDto | null;
@@ -35,7 +36,7 @@ export type ExamUpdateDto = {
     name: string;
     deadline: string;
     subject_id: number;
-    details?: object;
+    details?: TaskDetails;
 };
 
 export type ExamDeleteDto = {

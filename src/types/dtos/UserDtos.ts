@@ -55,6 +55,8 @@ export type UserResponseDto = {
     notifications?: NotificationResponseDto[] | null;
     logs?: LogResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    level?: number | null;
+    canAccessAll?: boolean | null;
 };
 
 export type UserUpdateDto = {

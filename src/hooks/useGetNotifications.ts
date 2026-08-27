@@ -16,7 +16,7 @@ export default function useGetNotifications({
             const loggedIn = await isLoggedIn();
             try {
                 if (!loggedIn) return;
-                await getNotifications({ seen, page, limit }).unwrap();
+                await getNotifications({ data: { seen }, page, limit }).unwrap();
             } catch {
                 return;
             }

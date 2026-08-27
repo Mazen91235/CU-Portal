@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateCourseMutation } from "../../../services/apis/admin/CourseAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
@@ -38,13 +38,13 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const CreateCourse = () => {
     const navigate = useNavigate();
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
 
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
     const user = useAppSelector((state) => state.user.user);
     const [createCourse, { isLoading }] = useCreateCourseMutation();
 
@@ -61,7 +61,7 @@ export const CreateCourse = () => {
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -71,9 +71,9 @@ export const CreateCourse = () => {
     const fetchDepartments = useCallback(async () => {
         try {
             if (!selectedFacultyId) return;
-            const result = await searchDepartments({
+            const result = await searchDepartments({ data: {
                 faculty_id: parseInt(selectedFacultyId),
-            }).unwrap();
+            } }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -82,7 +82,7 @@ export const CreateCourse = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);

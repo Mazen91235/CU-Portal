@@ -1,6 +1,7 @@
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { SearchDto } from "./BaseDtos";
+import type { FileData } from "./TaskDtos";
 
 export type MaterialCreateDto = {
     name: string;
@@ -15,7 +16,7 @@ export type MaterialResponseDto = {
     name?: string | null;
     material_type?: string | null;
     url?: string | null;
-    details?: object | null;
+    details?: { file_data?: FileData; fetched?: boolean; folders_count?: number; files_count?: number } | null;
     created_at?: string | null;
     updated_at?: string | null;
     author?: UserResponseDto | null;

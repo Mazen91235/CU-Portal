@@ -6,7 +6,7 @@ import {
     useLazyGetNotificationsQuery,
     useMarkNotificationAsSeenMutation,
 } from "../../../services/apis/user/NotificationAPIs";
-import type { Notification } from "../../../types/entities/Notification";
+import type { NotificationResponseDto } from "../../../types/dtos/NotificationDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -21,9 +21,9 @@ export const NotificationsPage = () => {
     const [hasUnReadNextPage, setHasUnReadNextPage] = useState(true);
     const [hasReadNextPage, setHasReadNextPage] = useState(true);
     const [unreadNotifications, setUnreadNotifications] = useState<
-        Notification[]
+        NotificationResponseDto[]
     >([]);
-    const [readNotifications, setReadNotifications] = useState<Notification[]>(
+    const [readNotifications, setReadNotifications] = useState<NotificationResponseDto[]>(
         [],
     );
 
@@ -31,10 +31,10 @@ export const NotificationsPage = () => {
         try {
             if (hasUnReadNextPage) {
                 const unreadRes = await getNotifications({
-                    seen: false,
+                    data: { seen: false },
                     page: unReadPage,
                 }).unwrap();
-                setHasUnReadNextPage(unreadRes.next || false);
+                setHasUnReadNextPage(unreadRes.next_page || false);
                 if (unReadPage === 1) {
                     setUnreadNotifications(unreadRes?.data || []);
                 } else {
@@ -46,10 +46,10 @@ export const NotificationsPage = () => {
             }
             if (hasReadNextPage) {
                 const readRes = await getNotifications({
-                    seen: true,
+                    data: { seen: true },
                     page: readPage,
                 }).unwrap();
-                setHasReadNextPage(readRes.next || false);
+                setHasReadNextPage(readRes.next_page || false);
                 if (readPage === 1) {
                     setReadNotifications(readRes?.data || []);
                 } else {
@@ -105,7 +105,7 @@ export const NotificationsPage = () => {
         }
         try {
             const result = await getNotifications({
-                seen: false,
+                data: { seen: false },
                 limit: Infinity,
             }).unwrap();
             const unreadIds = result.data?.map((n) => n.id || 0) || [];

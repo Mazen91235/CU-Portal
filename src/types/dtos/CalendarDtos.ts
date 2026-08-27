@@ -3,13 +3,21 @@ export type CalendarSearchDto = {
     date_to: string;
 };
 
-export type CalendarResponseDto = Record<
+export type CalendarDayEventsDto = Record<
     string,
-    { tasks: DayEventDto[]; exams: DayEventDto[]; announcements: DayEventDto[] }
+    {
+        tasks: CalendarDayEventDto[];
+        exams: CalendarDayEventDto[];
+        announcements: CalendarDayEventDto[];
+    }
 >;
 
-export type DayEventDto = {
-    type: "assignment" | "exam" | "announcement";
+export type CalendarResponseDto = {
+    events: CalendarDayEventsDto;
+};
+
+export type CalendarDayEventDto = {
+    event_type: "assignment" | "exam" | "announcement";
     title: string;
     subject: string;
     due: string;

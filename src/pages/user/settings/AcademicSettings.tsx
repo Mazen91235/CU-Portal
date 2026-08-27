@@ -5,14 +5,14 @@ import { PageSeo } from "../../../components/PageSeo";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/user/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/user/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/user/YearAPIs";
 import { useCallback, useEffect, useState, type ChangeEvent } from "react";
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { useUpdateUserAcademicDataMutation } from "../../../services/apis/user/UserAPIs";
 import { showToast } from "../../../utils/ToastsManager";
 import { useAppSelector } from "../../../services/redux/Hooks";
@@ -21,7 +21,11 @@ import styles from "./AcademicSettings.module.css";
 
 const academicSchema = z.object({
     faculty: z.string().min(1, "Faculty is required"),
-    studyType: z.enum(["Mainstream", "Credit"]),
+    studyType: z
+        .enum(["Mainstream", "Credit", ""])
+        .refine((val) => val !== "", {
+            message: "Study type is required",
+        }),
     year: z.string().min(1, "Year is required"),
     department: z.string().min(1, "Department is required"),
 });
@@ -41,32 +45,37 @@ export const AcademicSettings = () => {
 
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
     const [updateAcademicData] = useUpdateUserAcademicDataMutation();
 
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [faculty, setFaculty] = useState<Faculty | null>(null);
+    const [valuesSet, setValuesSet] = useState(false);
+
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [faculty, setFaculty] = useState<FacultyResponseDto | null>(null);
     const [studyType, setStudyType] = useState<string>("");
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
 
     const facultyChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedFaculty =
             faculties.find((fac) => fac.id === parseInt(e.target.value, 10)) ||
             null;
         setFaculty(selectedFaculty);
+        setValue("department", ""); // Reset department selection when faculty changes
+        setValue("studyType", ""); // Reset study type selection when faculty changes
     };
 
     const studyTypeChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedStudyType = e.target.value;
         setStudyType(selectedStudyType);
+        setValue("department", ""); // Reset department selection when study type changes
     };
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -80,8 +89,10 @@ export const AcademicSettings = () => {
                 return;
             }
             const result = await searchDepartments({
-                faculty_id: faculty ? faculty.id : undefined,
-                study_type: studyType !== "" ? studyType : undefined,
+                data: {
+                    faculty_id: faculty ? faculty.id : undefined,
+                    study_type: studyType !== "" ? studyType : undefined,
+                },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
@@ -91,7 +102,7 @@ export const AcademicSettings = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -106,16 +117,30 @@ export const AcademicSettings = () => {
     useAuthQuery(authQueryParam);
 
     useEffect(() => {
+        if (valuesSet) return;
         if (faculties.length && years.length && user) {
             setValue("faculty", user.faculty?.id?.toString() || "");
-            setValue("studyType", (user.type as "Mainstream" | "Credit") || "");
+            setValue(
+                "studyType",
+                (user.study_type as "Mainstream" | "Credit") || "",
+            );
             setValue("year", user.year?.id?.toString() || "");
             setFaculty(user.faculty || null);
-            setStudyType((user.type as string) || "");
-            if (departments.length)
+            setStudyType((user.study_type as string) || "");
+            if (departments.length) {
                 setValue("department", user.department?.id?.toString() || "");
+                setValuesSet(true);
+            }
         }
-    }, [setValue, user, faculties, years, departments]);
+    }, [
+        setValue,
+        setValuesSet,
+        user,
+        faculties,
+        years,
+        departments,
+        valuesSet,
+    ]);
 
     const onSubmit = async (data: AcademicFormData) => {
         try {

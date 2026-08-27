@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useLazyGetExamsQuery } from "../../../services/apis/user/ExamAPIs";
-import type { Task } from "../../../types/entities/Task";
+import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
@@ -15,7 +15,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import { formatDateTime } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 
 import styles from "./ExamsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -25,12 +25,12 @@ export const ExamsPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState<string>(
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [exams, setExams] = useState<Task[]>([]);
+    const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [searchParams] = useSearchParams();
@@ -50,10 +50,12 @@ export const ExamsPage = () => {
         try {
             if (!hasNextPage) return;
             const result = await getExams({
-                query: searchQuery || undefined,
-                start_date: dateFromFilter || undefined,
-                end_date: dateToFilter || undefined,
-                subject_id: parseInt(subjectFilter) || undefined,
+                data: {
+                    query: searchQuery || undefined,
+                    deadline_from: dateFromFilter || undefined,
+                    deadline_to: dateToFilter || undefined,
+                    subject_id: parseInt(subjectFilter) || undefined,
+                },
                 page,
             }).unwrap();
             setExams((prev) => {
@@ -64,7 +66,7 @@ export const ExamsPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }

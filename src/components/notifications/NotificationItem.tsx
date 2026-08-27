@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import type { Notification } from "../../types/entities/Notification";
+import type { NotificationResponseDto } from "../../types/dtos/NotificationDtos";
 import { formatTimeAgo } from "../../utils/Formatter";
 import notificationGrade from "../../assets/icons/notification-grade.svg";
 import notificationReminder from "../../assets/icons/notification-reminder.svg";
@@ -8,7 +8,7 @@ import notificationDue from "../../assets/icons/notification-due.svg";
 import notificationDefault from "../../assets/icons/notification-icon.svg";
 import styles from "./NotificationItem.module.css";
 
-const getNotificationIcon = (type?: string): string => {
+const getNotificationIcon = (type?: string | null): string => {
     switch (type) {
         case "grade":
             return notificationGrade;
@@ -28,15 +28,15 @@ export const NotificationItem = ({
     isUnread,
     onMarkAsRead,
 }: {
-    notification: Notification;
+    notification: NotificationResponseDto;
     isUnread: boolean;
     onMarkAsRead?: () => void;
 }) => {
     return (
         <div className={styles.notificationCard}>
             <img
-                src={getNotificationIcon(notification.type)}
-                alt={notification.type || "notification"}
+                src={getNotificationIcon(notification.notification_type)}
+                alt={notification.notification_type || "notification"}
                 className={styles.notificationIcon}
             />
             <div className={styles.notificationContent}>

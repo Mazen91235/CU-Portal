@@ -11,14 +11,14 @@ import {
     useLazyGetUsersQuery,
     useUpdateUsersMutation,
 } from "../../../services/apis/admin/UserAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { showToast } from "../../../utils/ToastsManager";
-import type { User } from "../../../types/entities/User";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
+import type { UserResponseDto } from "../../../types/dtos/UserDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { GetDriveIdFromUrl } from "../../../utils/DriveManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -34,10 +34,10 @@ export const PendingUsersPage = () => {
     const [selectedYear, setSelectedYear] = useState("");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [pendingUsers, setPendingUsers] = useState<User[]>([]);
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
+    const [pendingUsers, setPendingUsers] = useState<UserResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
     const [imagePreview, setImagePreview] = useState<{
         isOpen: boolean;
         url: string;
@@ -49,14 +49,14 @@ export const PendingUsersPage = () => {
     const [showRejectAllModal, setShowRejectAllModal] = useState(false);
 
     const [getPendingUsers, { isFetching }] = useLazyGetUsersQuery();
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
     const [updateUsers] = useUpdateUsersMutation();
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -71,7 +71,7 @@ export const PendingUsersPage = () => {
                 return;
             }
             params.faculty_id = Number(selectedFaculty);
-            const result = await searchDepartments(params).unwrap();
+            const result = await searchDepartments({ data: params }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -80,7 +80,7 @@ export const PendingUsersPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -95,9 +95,8 @@ export const PendingUsersPage = () => {
                 faculty_id?: number;
                 department_id?: number;
                 year_id?: number;
-                is_active?: boolean;
-                page?: number;
-            } = { is_active: false, page };
+                status?: boolean;
+            } = { status: false };
 
             if (searchQuery) params.query = searchQuery;
             if (selectedFaculty) params.faculty_id = Number(selectedFaculty);
@@ -111,7 +110,7 @@ export const PendingUsersPage = () => {
                 params.year_id = user.year?.id;
             }
 
-            const result = await getPendingUsers(params).unwrap();
+            const result = await getPendingUsers({ data: params, page }).unwrap();
             setPendingUsers((prev) => {
                 const filteredPrev = prev.filter(
                     (user) =>
@@ -120,7 +119,7 @@ export const PendingUsersPage = () => {
                 if (page === 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -156,7 +155,7 @@ export const PendingUsersPage = () => {
     const facultyOptions = useMemo(() => {
         return [
             { value: "", label: "All Faculties" },
-            ...faculties.map((f: Faculty) => ({
+            ...faculties.map((f: FacultyResponseDto) => ({
                 value: String(f.id),
                 label: f.name || "",
             })),
@@ -166,7 +165,7 @@ export const PendingUsersPage = () => {
     const departmentOptions = useMemo(() => {
         return [
             { value: "", label: "All Departments" },
-            ...departments.map((d: Department) => ({
+            ...departments.map((d: DepartmentResponseDto) => ({
                 value: String(d.id),
                 label: d.name || "",
             })),
@@ -176,7 +175,7 @@ export const PendingUsersPage = () => {
     const yearOptions = useMemo(() => {
         return [
             { value: "", label: "All Years" },
-            ...years.map((y: Year) => ({
+            ...years.map((y: YearResponseDto) => ({
                 value: String(y.id),
                 label: y.year?.toString() || "",
             })),
@@ -233,8 +232,7 @@ export const PendingUsersPage = () => {
                 params.year_id = user.year?.id;
             }
             const result = await getPendingUsers({
-                ...params,
-                is_active: false,
+                data: { ...params, status: false },
                 limit: Infinity,
             }).unwrap();
             const pendingUsers = result.data || [];
@@ -266,8 +264,7 @@ export const PendingUsersPage = () => {
                 params.year_id = user.year?.id;
             }
             const result = await getPendingUsers({
-                ...params,
-                is_active: false,
+                data: { ...params, status: false },
                 limit: Infinity,
             }).unwrap();
             const pendingUsers = result.data || [];
@@ -375,7 +372,7 @@ export const PendingUsersPage = () => {
                         </div>
                     ) : (
                         <div className={styles.pendingUsersContainer}>
-                            {pendingUsers.map((user: User) => (
+                            {pendingUsers.map((user: UserResponseDto) => (
                                 <div
                                     key={user.id}
                                     className={styles.pendingMiniCard}

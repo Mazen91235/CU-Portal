@@ -66,7 +66,7 @@ export const Navbar = ({
     }
     try {
       const result = await getNotifications({
-        seen: false,
+        data: { seen: false },
         limit: Infinity,
       }).unwrap();
       const unreadIds = result.data?.map((n) => n.id || 0) || [];

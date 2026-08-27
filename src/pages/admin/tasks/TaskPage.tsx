@@ -5,7 +5,7 @@ import {
   useLazyGetTaskQuery,
   useDeleteTaskMutation,
 } from "../../../services/apis/admin/TaskAPIs";
-import type { Task } from "../../../types/entities/Task";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -27,7 +27,7 @@ import styles from "./TaskPage.module.css";
 export const TaskPage = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
-  const [task, setTask] = useState<Task | null>(null);
+  const [task, setTask] = useState<TaskResponseDto | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [getTask] = useLazyGetTaskQuery();
@@ -131,7 +131,7 @@ export const TaskPage = () => {
 
             <QuickInfoSection
               items={[
-                { label: "Type:", value: task.type || "N/A" },
+                { label: "Type:", value: task.task_type || "N/A" },
                 {
                   label: "Faculty:",
                   value: task.faculty?.name || "N/A",

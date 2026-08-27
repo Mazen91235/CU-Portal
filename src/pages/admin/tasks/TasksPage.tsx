@@ -4,15 +4,15 @@ import {
     useLazyGetTasksQuery,
     useDeleteTaskMutation,
 } from "../../../services/apis/admin/TaskAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Task } from "../../../types/entities/Task";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -42,26 +42,26 @@ export const TasksPage = () => {
     const [subjectFilter, setSubjectFilter] = useState("");
     const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(null);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [getTasks, { isFetching }] = useLazyGetTasksQuery();
     const [deleteTask] = useDeleteTaskMutation();
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -74,10 +74,10 @@ export const TasksPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({
+            const result = await searchDepartments({ data: {
                 faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: "",
-            }).unwrap();
+                study_type: undefined,
+            } }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -86,7 +86,7 @@ export const TasksPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -115,7 +115,7 @@ export const TasksPage = () => {
                 return;
             }
 
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -133,16 +133,16 @@ export const TasksPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                start_date: dateFromFilter || undefined,
-                end_date: dateToFilter || undefined,
-                page,
+                deadline_from: dateFromFilter || undefined,
+                deadline_to: dateToFilter || undefined,
+
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
                 params.department_id = undefined;
                 params.year_id = undefined;
             }
-            const result = await getTasks(params).unwrap();
+            const result = await getTasks({ data: params, page }).unwrap();
             setTasks((prev) => {
                 const filteredPrev = prev.filter(
                     (task) =>
@@ -151,7 +151,7 @@ export const TasksPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -220,7 +220,7 @@ export const TasksPage = () => {
         navigate(`/admin/tasks/edit/${taskId}`);
     };
 
-    const handleDeleteClick = (task: Task) => {
+    const handleDeleteClick = (task: TaskResponseDto) => {
         setSelectedTask(task);
         setIsDeleteModalOpen(true);
     };

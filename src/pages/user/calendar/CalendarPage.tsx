@@ -11,8 +11,8 @@ import { EmptySection } from "../../../components/calendar/EmptySection";
 import type { CalendarDayEventsDto } from "../../../types/dtos/CalendarDtos";
 
 import styles from "./CalendarPage.module.css";
-import type { Task } from "../../../types/entities/Task";
-import type { Announcement } from "../../../types/entities/Announcement";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
+import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { convertToDayEvent } from "../../../utils/CalendarHandler";
 
 export const CalendarPage = () => {
@@ -26,8 +26,8 @@ export const CalendarPage = () => {
         async (year: number, month: number) => {
             try {
                 const result = await getCalendar({
-                    year,
-                    month: month + 1,
+                    date_from: `${year}-${String(month + 1).padStart(2, "0")}-01`,
+                    date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
                 }).unwrap();
 
                 setEventsData(result.data || {});
@@ -68,9 +68,9 @@ export const CalendarPage = () => {
     };
 
     const selectedEvents: {
-        tasks: Task[];
-        exams: Task[];
-        announcements: Announcement[];
+        tasks: TaskResponseDto[];
+        exams: TaskResponseDto[];
+        announcements: AnnouncementResponseDto[];
     } = selectedDate
         ? eventsData[selectedDate] || {
               tasks: [],

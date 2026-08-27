@@ -13,7 +13,7 @@ import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { UserResponseDto } from "../../../types/dtos/UserDtos";
-import type { Role } from "../../../types/entities/Role";
+import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import IconComponent from "../../../components/IconComponent";
 import styles from "./UserPage.module.css";
 import z from "zod";
@@ -31,7 +31,7 @@ export const UserPage = () => {
     const navigate = useNavigate();
     const [isEditingRole, setIsEditingRole] = useState(false);
     const [user, setUser] = useState<UserResponseDto>({});
-    const [roles, setRoles] = useState<Role[]>([]);
+    const [roles, setRoles] = useState<RoleResponseDto[]>([]);
     const permissions = useAppSelector((state) => state.user.permissions);
     const canManageUsers = permissions?.includes("Manage Users") ?? false;
 

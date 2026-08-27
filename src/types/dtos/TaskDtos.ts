@@ -5,17 +5,48 @@ import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { SearchDto } from "./BaseDtos";
 
+export type FileData = {
+    id?: string;
+    name?: string;
+    mime_type?: string;
+    file_type?: string;
+    size?: string;
+    web_content_link?: string;
+    web_view_link?: string;
+};
+
+export type FileDataWithExisting = FileData & {
+    url?: string;
+    isExisting?: boolean;
+};
+
+export type LinkData = {
+    title: string;
+    url: string;
+};
+
+export type TaskDetails = {
+    description?: string;
+    instructions?: string;
+    location?: string;
+    exam_type?: string;
+    exam_format?: "MCQ" | "Written" | "Mixed" | "Practical" | "Oral" | "Other";
+    exam_weight?: string;
+    duration?: number;
+    files_data?: FileData[];
+};
+
 export type TaskCreateDto = {
     name: string;
     url?: string | null;
-    deadline: string;
+    deadline: Date;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
     urls?: string[];
-    links?: Record<string, string>[];
-    details?: object;
+    links?: LinkData[];
+    details?: TaskDetails;
 };
 
 export type TaskResponseDto = {
@@ -24,12 +55,12 @@ export type TaskResponseDto = {
     task_type?: string | null;
     url?: string | null;
     urls?: string[] | null;
-    links?: Record<string, string>[] | null;
-    details?: object | null;
-    deadline?: string | null;
-    due_date?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    links?: LinkData[] | null;
+    details?: TaskDetails | null;
+    deadline?: Date | null;
+    due_date?: Date | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     faculty?: FacultyResponseDto | null;
@@ -40,14 +71,14 @@ export type TaskResponseDto = {
 export type TaskUpdateDto = {
     name: string;
     url?: string | null;
-    deadline: string;
+    deadline: Date;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
     urls?: string[];
-    links?: Record<string, string>[];
-    details?: object;
+    links?: LinkData[];
+    details?: TaskDetails;
 };
 
 export type TaskDeleteDto = {
@@ -61,10 +92,10 @@ export type TaskSearchDto = {
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
-    deadline_from?: string | null;
-    deadline_to?: string | null;
-    created_at_from?: string | null;
-    created_at_to?: string | null;
-    updated_at_from?: string | null;
-    updated_at_to?: string | null;
+    deadline_from?: Date | null;
+    deadline_to?: Date | null;
+    created_at_from?: Date | null;
+    created_at_to?: Date | null;
+    updated_at_from?: Date | null;
+    updated_at_to?: Date | null;
 } & SearchDto;

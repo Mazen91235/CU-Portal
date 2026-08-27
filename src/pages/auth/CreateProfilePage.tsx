@@ -6,7 +6,7 @@ import z from "zod";
 import { GetCookie } from "../../utils/CookiesManager";
 import { handleErrors } from "../../utils/ErrorHandling";
 import { showToast } from "../../utils/ToastsManager";
-import { useSignupMutation } from "../../services/apis/AuthenticateAPIs";
+import { useRegisterMutation } from "../../services/apis/AuthenticateAPIs";
 import { Form } from "../../components/forms/Form";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/forms/Button";
@@ -25,7 +25,7 @@ const CreateProfilePage = () => {
     const navigate = useNavigate();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [signup] = useSignupMutation();
+    const [signup] = useRegisterMutation();
     usePageLoading(true);
     const schema = z
         .object({
@@ -153,7 +153,7 @@ const CreateProfilePage = () => {
                 phone: data.phone,
                 gender: data.gender,
                 agreed: data.agreed,
-                early_access: data.early_access || false,
+                is_early_access: data.early_access || false,
                 google_details_token: googleDetailsToken,
                 url: fileUrl || undefined,
             }).unwrap();

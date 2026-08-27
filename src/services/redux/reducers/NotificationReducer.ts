@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { NotificationAPI } from "../../apis/user/NotificationAPIs";
-import type { Notification } from "../../../types/entities/Notification";
+import type { NotificationResponseDto } from "../../../types/dtos/NotificationDtos";
 
 const initialState = {
-    notifications: [] as Notification[],
+    notifications: [] as NotificationResponseDto[],
 };
 
 const NotificationSlice = createSlice({
@@ -16,11 +16,11 @@ const NotificationSlice = createSlice({
             NotificationAPI.endpoints.getNotifications.matchFulfilled,
             (
                 state,
-                { payload }: { payload: GenericAPIResponse<Notification[]> },
+                { payload }: { payload: GenericAPIResponse<NotificationResponseDto[]> },
             ) => {
-                if (payload.status == "success") {
+                if (payload.success === true) {
                     state.notifications =
-                        payload.data?.filter((n) => !n.seen) || [];
+                        payload.data || [];
                 }
             },
         );

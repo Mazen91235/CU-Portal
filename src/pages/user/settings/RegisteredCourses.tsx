@@ -8,7 +8,7 @@ import {
     useRegisterCourseMutation,
     useUnregisterCourseMutation,
 } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Layout } from "../../../components/layout/Layout";
 
@@ -24,9 +24,14 @@ export const RegisteredCourses = () => {
     const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
     const [registerCourse] = useRegisterCourseMutation();
     const [unRegisterCourse] = useUnregisterCourseMutation();
-    const [registeredCourses, setRegisteredCourses] = useState<Subject[]>([]);
-    const [availableCourses, setAvailableCourses] = useState<Subject[]>([]);
-    const [selectedCourse, setSelectedCourse] = useState<Subject | null>(null);
+    const [registeredCourses, setRegisteredCourses] = useState<
+        SubjectResponseDto[]
+    >([]);
+    const [availableCourses, setAvailableCourses] = useState<
+        SubjectResponseDto[]
+    >([]);
+    const [selectedCourse, setSelectedCourse] =
+        useState<SubjectResponseDto | null>(null);
     const [action, setAction] = useState<"register" | "unregister" | null>(
         null,
     );
@@ -38,7 +43,7 @@ export const RegisteredCourses = () => {
                 .then((response) => {
                     setRegisteredCourses(response.data || []);
                 }),
-            getAvailableCourses({})
+            getAvailableCourses()
                 .unwrap()
                 .then((response) => {
                     setAvailableCourses(response.data || []);
@@ -61,11 +66,11 @@ export const RegisteredCourses = () => {
 
     const handleConfirm = useCallback(async () => {
         if (selectedCourse && selectedCourse.id && action === "register") {
-            await registerCourse({ course_id: selectedCourse.id }).unwrap();
+            await registerCourse({ subject_id: selectedCourse.id }).unwrap();
             showToast("success", "Success", "Course registered successfully.");
         }
         if (selectedCourse && selectedCourse.id && action === "unregister") {
-            await unRegisterCourse({ course_id: selectedCourse.id }).unwrap();
+            await unRegisterCourse({ subject_id: selectedCourse.id }).unwrap();
             showToast(
                 "success",
                 "Success",

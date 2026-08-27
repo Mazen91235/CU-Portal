@@ -11,7 +11,7 @@ import {
     useUpdateRoleMutation,
     useDeleteRoleMutation,
 } from "../../../services/apis/admin/RoleAPIs";
-import type { Role } from "../../../types/entities/Role";
+import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -22,9 +22,9 @@ import { Search } from "../../../components/forms/Search";
 export const RolesPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
-    const [roles, setRoles] = useState<Role[]>([]);
+    const [roles, setRoles] = useState<RoleResponseDto[]>([]);
     const [permissionsCount, setPermissionsCount] = useState<number>(0);
-    const [filteredRoles, setFilteredRoles] = useState<Role[]>([]);
+    const [filteredRoles, setFilteredRoles] = useState<RoleResponseDto[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
@@ -40,7 +40,7 @@ export const RolesPage = () => {
 
     const fetchRoles = useCallback(async () => {
         try {
-            const result = await getRoles({ query: searchQuery }).unwrap();
+            const result = await getRoles({ data: { query: searchQuery } }).unwrap();
             setRoles(result.data || []);
             setFilteredRoles(result.data || []);
         } catch (error) {
@@ -165,7 +165,7 @@ export const RolesPage = () => {
                             {
                                 icon: "users-assigned",
                                 label: "Assigned Users",
-                                value: String(role.users_count || 0),
+                                value: String(role.users?.length || 0),
                             },
                             {
                                 icon: "permissions",

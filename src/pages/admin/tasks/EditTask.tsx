@@ -7,8 +7,8 @@ import {
     useLazyGetTaskQuery,
     useUpdateTaskMutation,
 } from "../../../services/apis/admin/TaskAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -22,7 +22,7 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { FileData, LinkData, Task } from "../../../types/entities/Task";
+import type { FileData, LinkData } from "../../../types/dtos/TaskDtos";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
@@ -52,14 +52,14 @@ type TaskFormData = z.infer<typeof taskSchema>;
 export const EditTask = () => {
     const navigate = useNavigate();
     const { taskId } = useParams<{ taskId: string }>();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
     const [task, setTask] = useState<Task | null>(null);
     const user = useAppSelector((state) => state.user.user);
 
     const [getTask] = useLazyGetTaskQuery();
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [updateTask, { isLoading }] = useUpdateTaskMutation();
     const uploadFile = useUploadFileToDrive({});
     const [isUploading, setIsUploading] = useState(false);
@@ -87,7 +87,7 @@ export const EditTask = () => {
             params.department_id = user.department?.id;
             params.year_id = user.year?.id;
 
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -112,7 +112,7 @@ export const EditTask = () => {
                 setValue("title", task.name || "");
                 setValue(
                     "description",
-                    (task.details as { description?: string })?.description ||
+                    task.details?.description ||
                         "",
                 );
                 setValue("submission_url", task.url || "");
@@ -179,15 +179,14 @@ export const EditTask = () => {
 
             const taskData = {
                 task_id: parseInt(taskId),
-                title: data.title,
-                description: data.description || undefined,
-                submission_url: data.submission_url || undefined,
+                name: data.title,
+                url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
                 deadline: mergeDateAndTime(
                     data.deadline_date,
                     data.deadline_time,
-                ),
-                urls: urls != "" ? urls.split(", ") : [],
+                )!,
+                urls: urls ? urls.split(", ") : [],
                 links: (() => {
                     const newLinks = data.links
                         ? data.links
@@ -203,6 +202,9 @@ export const EditTask = () => {
                         : [];
                     return newLinks.length > 0 ? newLinks : undefined;
                 })(),
+                details: data.description
+                    ? { description: data.description }
+                    : undefined,
             };
 
             await updateTask(taskData).unwrap();

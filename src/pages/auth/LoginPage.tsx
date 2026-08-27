@@ -2,7 +2,8 @@ import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
 import { usePageLoading } from "../../hooks/usePageLoading";
 
-import { GetWebLink, GetIcon } from "../../utils/LinkHandler";
+import { GetWebLink } from "../../utils/LinkHandler";
+import IconComponent from "../../components/IconComponent";
 
 import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
@@ -12,7 +13,7 @@ import styles from "./LoginPage.module.css";
 
 const LoginPage = () => {
     usePageLoading(true);
-    let path = "login-with-google";
+    let path = "auth/login-with-google";
     if (window.location.origin.includes("localhost")) {
         path += "?localhost=true";
     }
@@ -56,11 +57,9 @@ const LoginPage = () => {
                             href={GetWebLink(path)}
                             aria-label="Sign in with Google"
                         >
-                            <img
-                                src={GetIcon("google")}
-                                alt=""
+                            <IconComponent
+                                icon="google"
                                 className={styles.googleIcon}
-                                aria-hidden="true"
                             />
                             Sign up / in with Google
                         </a>

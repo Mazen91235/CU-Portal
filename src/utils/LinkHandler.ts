@@ -4,48 +4,83 @@ import type { IconType } from "react-icons";
 
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import {
-    FaGraduationCap, FaFacebook, FaGithub, 
-    FaLinkedin, FaLink, FaSpinner, FaUserCircle,
-    FaIdCard, FaScroll, FaArrowUp
+    FaGraduationCap,
+    FaFacebook,
+    FaGithub,
+    FaLinkedin,
+    FaLink,
+    FaSpinner,
+    FaUserCircle,
+    FaIdCard,
+    FaScroll,
+    FaArrowUp,
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { BsActivity, BsJournalBookmark } from "react-icons/bs";
 import { BiTrendingUp } from "react-icons/bi";
 import { TfiMenuAlt } from "react-icons/tfi";
 import {
-    LuBookOpen, LuMap, LuCalendar, LuClipboardList,
-    LuListTodo, LuMegaphone, LuBook, LuBadge, LuRadar,
-    LuCalendarDays, LuFileText, LuMapPin, LuMessageSquare,
-    LuLandmark, LuBuilding, LuUsers, LuShield,
-    LuActivity, LuChevronDown, LuChevronUp, LuLogOut, LuSettings,
-    LuBell, LuDownload, LuEye, LuUserCog, LuLifeBuoy,
-    LuUser, LuClock, LuPhone, LuMail, LuTarget, LuMonitor, LuPaperclip,
-    LuHexagon, LuLayoutDashboard, LuMessagesSquare,
+    LuBookOpen,
+    LuMap,
+    LuCalendar,
+    LuClipboardList,
+    LuListTodo,
+    LuMegaphone,
+    LuBook,
+    LuBadge,
+    LuRadar,
+    LuCalendarDays,
+    LuFileText,
+    LuMapPin,
+    LuMessageSquare,
+    LuLandmark,
+    LuBuilding,
+    LuUsers,
+    LuShield,
+    LuActivity,
+    LuChevronDown,
+    LuChevronUp,
+    LuLogOut,
+    LuSettings,
+    LuBell,
+    LuDownload,
+    LuEye,
+    LuUserCog,
+    LuLifeBuoy,
+    LuUser,
+    LuClock,
+    LuPhone,
+    LuMail,
+    LuTarget,
+    LuMonitor,
+    LuPaperclip,
+    LuHexagon,
+    LuLayoutDashboard,
+    LuMessagesSquare,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
 
-const apiDomain = "https://api.cu-portal.com";
-const version = "v1";
+const apiDomain = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const GetUserApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${apiDomain}/${version}/user/${path}`;
+    return `${apiDomain}/user/${path}`;
 };
 
 export const GetAdminApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${apiDomain}/${version}/admin/${path}`;
+    return `${apiDomain}/admin/${path}`;
 };
 
 export const GetApiLink = (path: string): string => {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    return `${apiDomain}/${version}/${path}`;
+    return `${apiDomain}/${path}`;
 };
 
 export const GetWebLink = (path: string): string => {
@@ -106,24 +141,24 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "checkmark-done": IoCheckmarkDoneSharp,
         notification: LuBell,
         help: LuLifeBuoy,
-        
+
         subject: LuBookOpen,
         "subjects-icon": LuBookOpen,
         target: LuTarget,
         task: LuClipboardList,
         "task-details-icon": LuFileText,
-        
+
         time: LuClock,
-        tracker: FaGraduationCap, 
+        tracker: FaGraduationCap,
         "view-icon": LuEye,
-        
+
         "spinner-ellipse-11": FaSpinner,
         "spinner-ellipse-12": FaSpinner,
         "spinner-ellipse-13": FaSpinner,
         "spinner-ellipse-14": FaSpinner,
         "spinner-ellipse-15": FaSpinner,
         "spinner-ellipse-16": FaSpinner,
-        
+
         "sidebar-dropdown": LuChevronDown,
         "sidebar-dropup": LuChevronUp,
 
@@ -139,14 +174,14 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-study-tracker": LuRadar,
         "sidebar-events": LuCalendarDays,
         "sidebar-cv-generator": LuFileText,
-        
+
         "sidebar-roadmaps": LuMapPin,
         "sidebar-discussion": LuMessagesSquare,
         "sidebar-profile-settings": LuUserCog,
         "sidebar-academic-settings": LuSettings,
         "sidebar-registered-courses": FiBookOpen,
         "sidebar-logout": LuLogOut,
-        
+
         "sidebar-admin-faculties": LuLandmark,
         "sidebar-admin-departments": LuBuilding,
         "sidebar-admin-years": LuCalendar,
@@ -169,7 +204,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "social-github": FaGithub,
         "social-linkedin": FaLinkedin,
         "social-linktree": FaLink,
-        "social-website": FcGoogle, 
+        "social-website": FcGoogle,
         "badge-department": FaGraduationCap,
         "building-faculty": LuLandmark,
         "building-department": LuBuilding,

@@ -16,17 +16,17 @@ export const handleErrors = <T extends Record<string, unknown>>(
             setError("root", { type: "server", message });
         } else {
             const res = data as GenericAPIResponse;
-            if (hasMissingProperties(res, ["status", "message"])) {
+            if (hasMissingProperties(res, ["success"])) {
                 setError("root", {
                     type: "server",
                     message: standardErrorMessage,
                 });
                 return;
             }
-            if (res.status == "error") {
+            if (res.success === false) {
                 setError("root", {
                     type: "server",
-                    message: res.message || standardErrorMessage,
+                    message: res.message || res.error || standardErrorMessage,
                 });
             }
         }
@@ -73,8 +73,8 @@ const ignoreUnknownError = (
         if (typeof data == "object" && data !== null) {
             const res = data as GenericAPIResponse;
             if (
-                res.status == "error" &&
-                res.message.toLowerCase() == unKnownError
+                res.success === false &&
+                (res.message || res.error || "").toLowerCase() == unKnownError
             ) {
                 return true;
             }
@@ -102,8 +102,8 @@ export const handlePopupErrors = (
         return;
     }
     const data = res.data as GenericAPIResponse;
-    if (data.status == "error") {
-        const message = data.message ?? "An Error Occurred. Please Try Again.";
+    if (data.success === false) {
+        const message = data.message ?? data.error ?? "An Error Occurred. Please Try Again.";
         showToast("error", "Error", message);
     } else {
         showToast("error", "Error", "An Error Occurred. Please Try Again.");

@@ -1,6 +1,6 @@
 import { DayEvent } from "./DayEvent";
 import { EmptySection } from "./EmptySection";
-
+import type { CalendarDayEventDto } from "../../types/dtos/CalendarDtos";
 import styles from "./FloatingDay.module.css";
 
 export const FloatingDay = ({
@@ -12,14 +12,7 @@ export const FloatingDay = ({
     isOpen: boolean;
     onClose: () => void;
     dateStr: string;
-    events: {
-        type: "exam" | "assignment" | "announcement";
-        title: string;
-        due?: string;
-        location?: string;
-        subject?: string;
-        id: number;
-    }[];
+    events: CalendarDayEventDto[];
 }) => {
     if (!isOpen) return null;
 
@@ -59,7 +52,7 @@ export const FloatingDay = ({
                         events.map((event, index) => (
                             <DayEvent
                                 key={`event-${index}`}
-                                type={event.type}
+                                event_type={event.event_type}
                                 title={event.title}
                                 subject={event.subject}
                                 due={event.due}

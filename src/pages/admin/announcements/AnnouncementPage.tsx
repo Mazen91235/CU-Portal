@@ -5,7 +5,7 @@ import {
   useLazyGetAnnouncementQuery,
   useDeleteAnnouncementMutation,
 } from "../../../services/apis/admin/AnnouncementAPIs";
-import type { Announcement } from "../../../types/entities/Announcement";
+import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -27,7 +27,7 @@ import styles from "./AnnouncementPage.module.css";
 export const AnnouncementPage = () => {
   const { announcementId } = useParams<{ announcementId: string }>();
   const navigate = useNavigate();
-  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const [announcement, setAnnouncement] = useState<AnnouncementResponseDto | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [getAnnouncement] = useLazyGetAnnouncementQuery();

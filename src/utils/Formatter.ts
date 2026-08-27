@@ -104,7 +104,10 @@ export const formatTimeAgo = (dateTimeString?: string | null): string => {
     return "Just now";
 };
 
-export const formatString = (str?: string, maxLength?: number): string => {
+export const formatString = (
+    str?: string | null,
+    maxLength?: number,
+): string => {
     if (!str) return "N/A";
     if (maxLength && str.length > maxLength) {
         return (
@@ -139,7 +142,10 @@ const parseDateValue = (dateTimeString?: string | null): Date | null => {
     }
 
     const dateParts = dateTimeString.split("-").map(Number);
-    if (dateParts.length !== 3 || dateParts.some((part) => Number.isNaN(part))) {
+    if (
+        dateParts.length !== 3 ||
+        dateParts.some((part) => Number.isNaN(part))
+    ) {
         return null;
     }
 

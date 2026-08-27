@@ -4,15 +4,15 @@ import {
     useLazyGetAnnouncementsQuery,
     useDeleteAnnouncementMutation,
 } from "../../../services/apis/admin/AnnouncementAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Announcement } from "../../../types/entities/Announcement";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -42,27 +42,27 @@ export const AnnouncementsPage = () => {
     const [subjectFilter, setSubjectFilter] = useState("");
     const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [announcements, setAnnouncements] = useState<AnnouncementResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedAnnouncement, setSelectedAnnouncement] =
-        useState<Announcement | null>(null);
+        useState<AnnouncementResponseDto | null>(null);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [getAnnouncements, { isFetching }] = useLazyGetAnnouncementsQuery();
     const [deleteAnnouncement] = useDeleteAnnouncementMutation();
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -75,10 +75,10 @@ export const AnnouncementsPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({
+            const result = await searchDepartments({ data: {
                 faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: "",
-            }).unwrap();
+                study_type: undefined,
+            } }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -87,7 +87,7 @@ export const AnnouncementsPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -118,7 +118,7 @@ export const AnnouncementsPage = () => {
                 return;
             }
 
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -136,16 +136,16 @@ export const AnnouncementsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                start_date: dateFromFilter || undefined,
-                end_date: dateToFilter || undefined,
-                page,
+                date_from: dateFromFilter || undefined,
+                date_to: dateToFilter || undefined,
+
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
                 params.department_id = undefined;
                 params.year_id = undefined;
             }
-            const result = await getAnnouncements(params).unwrap();
+            const result = await getAnnouncements({ data: params, page }).unwrap();
             setAnnouncements((prev) => {
                 const filteredPrev = prev.filter(
                     (announcement) =>
@@ -157,7 +157,7 @@ export const AnnouncementsPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -226,7 +226,7 @@ export const AnnouncementsPage = () => {
         navigate(`/admin/announcements/edit/${announcementId}`);
     };
 
-    const handleDeleteClick = (announcement: Announcement) => {
+    const handleDeleteClick = (announcement: AnnouncementResponseDto) => {
         setSelectedAnnouncement(announcement);
         setIsDeleteModalOpen(true);
     };

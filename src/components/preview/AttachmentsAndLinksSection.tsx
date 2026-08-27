@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Preview } from "./Preview";
-import type { FileData, LinkData } from "../../types/entities/Task";
+import type { FileData, LinkData } from "../../types/dtos/TaskDtos";
 import styles from "./AttachmentsAndLinksSection.module.css";
 import { downloadFile } from "../../utils/FileDownloader";
 import { handlePopupErrors } from "../../utils/ErrorHandling";

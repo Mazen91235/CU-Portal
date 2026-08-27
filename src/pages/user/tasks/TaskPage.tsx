@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useLazyGetTaskQuery } from "../../../services/apis/user/TaskAPIs";
-import type { Task } from "../../../types/entities/Task";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -20,7 +20,7 @@ import styles from "./TaskPage.module.css";
 export const TaskPage = () => {
     const { taskId } = useParams<{ taskId: string }>();
     const navigate = useNavigate();
-    const [task, setTask] = useState<Task | null>(null);
+    const [task, setTask] = useState<TaskResponseDto | null>(null);
 
     const [getTask] = useLazyGetTaskQuery();
 
@@ -101,7 +101,7 @@ export const TaskPage = () => {
 
                         <QuickInfoSection
                             items={[
-                                { label: "Type:", value: task.type || "N/A" },
+                                { label: "Type:", value: task.task_type || "N/A" },
                             ]}
                         />
                     </div>

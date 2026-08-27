@@ -7,8 +7,8 @@ import {
     useLazyGetAnnouncementQuery,
     useUpdateAnnouncementMutation,
 } from "../../../services/apis/admin/AnnouncementAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -22,8 +22,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { FileData, LinkData } from "../../../types/entities/Task";
-import type { Announcement } from "../../../types/entities/Announcement";
+import type { FileData, LinkData } from "../../../types/dtos/TaskDtos";
+import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
@@ -52,14 +52,14 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 export const EditAnnouncement = () => {
     const navigate = useNavigate();
     const { announcementId } = useParams<{ announcementId: string }>();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
-    const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+    const [announcement, setAnnouncement] = useState<AnnouncementResponseDto | null>(null);
     const user = useAppSelector((state) => state.user.user);
 
     const [getAnnouncement] = useLazyGetAnnouncementQuery();
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [updateAnnouncement, { isLoading }] = useUpdateAnnouncementMutation();
     const uploadFile = useUploadFileToDrive({});
     const [isUploading, setIsUploading] = useState(false);
@@ -87,7 +87,7 @@ export const EditAnnouncement = () => {
             params.department_id = user.department?.id;
             params.year_id = user.year?.id;
 
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;

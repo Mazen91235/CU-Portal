@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateTaskMutation } from "../../../services/apis/admin/TaskAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -43,10 +43,10 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 export const CreateTask = () => {
     const navigate = useNavigate();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [createTask, { isLoading }] = useCreateTaskMutation();
     const uploadFile = useUploadFileToDrive({});
     const [isUploading, setIsUploading] = useState(false);
@@ -72,7 +72,7 @@ export const CreateTask = () => {
             params.faculty_id = user.faculty?.id;
             params.department_id = user.department?.id;
             params.year_id = user.year?.id;
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -107,22 +107,26 @@ export const CreateTask = () => {
             }
 
             const taskData = {
-                title: data.title,
-                description: data.description,
-                submission_url: data.submission_url,
+                name: data.title,
+                url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
                 deadline: mergeDateAndTime(
                     data.deadline_date,
                     data.deadline_time,
-                ),
-                urls: urls != "" ? urls.split(", ") : [],
+                )!,
+                urls: urls ? urls.split(", ") : [],
                 links: data.links
                     ?.split(",")
                     .map((pair) => {
                         const [title, url] = pair.split("|");
                         return { title: title?.trim(), url: url?.trim() };
                     })
-                    .filter((link) => link.title && link.url),
+                    .filter((link): link is { title: string; url: string } =>
+                        Boolean(link.title && link.url),
+                    ),
+                details: data.description
+                    ? { description: data.description }
+                    : undefined,
             };
 
             await createTask(taskData).unwrap();

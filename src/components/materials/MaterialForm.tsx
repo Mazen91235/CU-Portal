@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import type { Material } from "../../types/entities/Material";
+import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
 import { Button } from "../forms/Button";
-import type { FileData } from "../../types/entities/Task";
+import type { FileDataWithExisting } from "../../types/dtos/TaskDtos";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { useAppDispatch } from "../../services/redux/Hooks";
 import { setProcess } from "../../services/redux/reducers/ProcessReducer";
@@ -11,7 +11,7 @@ import styles from "./MaterialForm.module.css";
 
 interface MaterialFormProps {
     materialType: "folder" | "file" | "drive" | "youtube" | "external" | null;
-    material: Material | null;
+    material: MaterialResponseDto | null;
     parentId: number | null;
     onClose: () => void;
     onSubmit: (data: FormData, uploadResult?: Process) => Promise<void>;
@@ -32,7 +32,7 @@ export function MaterialForm({
     const [link, setLink] = useState(material?.url || "");
     const [file, setFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [existingFileData, setExistingFileData] = useState<FileData | null>(
+    const [existingFileData, setExistingFileData] = useState<FileDataWithExisting | null>(
         null,
     );
     const [isDragOver, setIsDragOver] = useState(false);
@@ -43,7 +43,7 @@ export function MaterialForm({
         if (material) {
             setName(material.name || "");
             setMaterialType(
-                material.type as
+                material.material_type as
                     | "folder"
                     | "file"
                     | "drive"
@@ -51,11 +51,12 @@ export function MaterialForm({
                     | "external",
             );
             setLink(material.url || "");
-            if (material.type === "file" && material.details?.file_data) {
+            if (material.material_type === "file" && material.details?.file_data) {
                 setExistingFileData({
                     id: material.details.file_data.id || "",
                     name: material.details.file_data.name || "",
-                    mimeType: material.details.file_data.mimeType || "",
+                    mime_type: material.details.file_data.mime_type || "",
+                    url: material.url || "",
                 });
             }
         }
@@ -78,7 +79,7 @@ export function MaterialForm({
         try {
             const formData = new FormData();
             formData.append("name", name);
-            formData.append("type", materialType || "");
+            formData.append("material_type", materialType || "");
 
             if (parentId) {
                 formData.append("parent_id", parentId.toString());
@@ -172,19 +173,20 @@ export function MaterialForm({
         } else {
             setLink("");
         }
-        if (material && material.type === value && material.url) {
+        if (material && material.material_type === value && material.url) {
             setLink(material.url);
         }
         if (
             material &&
-            material.type === "file" &&
+            material.material_type === "file" &&
             value === "file" &&
             material.details?.file_data
         ) {
             setExistingFileData({
                 id: material.details.file_data.id || "",
                 name: material.details.file_data.name || "",
-                mimeType: material.details.file_data.mimeType || "",
+                mime_type: material.details.file_data.mime_type || "",
+                url: material.url || "",
             });
         }
     };

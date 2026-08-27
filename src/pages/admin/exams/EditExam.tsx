@@ -7,8 +7,8 @@ import {
     useLazyGetExamQuery,
     useUpdateExamMutation,
 } from "../../../services/apis/admin/ExamAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -20,7 +20,7 @@ import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { Task } from "../../../types/entities/Task";
+import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
@@ -31,6 +31,7 @@ import styles from "./EditExam.module.css";
 import {
     formatDateInputValue,
     formatTimeInputValue,
+    mergeDateAndTime,
 } from "../../../utils/Formatter";
 
 const examSchema = z.object({
@@ -52,12 +53,12 @@ type ExamFormData = z.infer<typeof examSchema>;
 export const EditExam = () => {
     const navigate = useNavigate();
     const { examId } = useParams<{ examId: string }>();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
-    const [exam, setExam] = useState<Task | null>(null);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const [exam, setExam] = useState<ExamResponseDto | null>(null);
     const user = useAppSelector((state) => state.user.user);
 
     const [getExam] = useLazyGetExamQuery();
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [updateExam, { isLoading }] = useUpdateExamMutation();
 
     const {
@@ -83,7 +84,7 @@ export const EditExam = () => {
             params.department_id = user.department?.id;
             params.year_id = user.year?.id;
 
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -144,24 +145,25 @@ export const EditExam = () => {
         try {
             const examData = {
                 exam_id: parseInt(examId),
-                title: data.title,
+                name: data.title,
                 subject_id: parseInt(data.subject_id),
-                exam_type: data.exam_type,
-                due_date: data.due_date,
-                start_time: data.start_time,
-                duration: data.duration ? parseFloat(data.duration) : undefined,
-                location: data.location,
-                exam_format: data.exam_format as
-                    | "MCQ"
-                    | "Written"
-                    | "Mixed"
-                    | "Practical"
-                    | "Oral"
-                    | "Other"
-                    | undefined,
-                exam_weight: data.exam_weight,
-                description: data.description,
-                instructions: data.instructions,
+                deadline: mergeDateAndTime(data.due_date, data.start_time || "00:00")!,
+                details: {
+                    exam_type: data.exam_type || undefined,
+                    duration: data.duration ? parseFloat(data.duration) : undefined,
+                    location: data.location || undefined,
+                    exam_format: data.exam_format as
+                        | "MCQ"
+                        | "Written"
+                        | "Mixed"
+                        | "Practical"
+                        | "Oral"
+                        | "Other"
+                        | undefined,
+                    exam_weight: data.exam_weight || undefined,
+                    description: data.description || undefined,
+                    instructions: data.instructions || undefined,
+                },
             };
 
             await updateExam(examData).unwrap();

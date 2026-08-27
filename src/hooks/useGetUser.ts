@@ -44,7 +44,16 @@ export default function useGetUser() {
                 if (!loggedIn) return;
             }
             try {
-                if (!validUserCached) await getUserData().unwrap();
+                if (!validUserCached)
+                    await getUserData({
+                        includes: [
+                            "faculty",
+                            "department",
+                            "year",
+                            "role",
+                            "user_subject_links.subject",
+                        ],
+                    }).unwrap();
                 if (!validPermissionsCached)
                     await getUserPermissions().unwrap();
             } catch {

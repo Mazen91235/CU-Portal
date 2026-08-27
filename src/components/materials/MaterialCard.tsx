@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import type { Material } from "../../types/entities/Material";
+import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { getFileIcon } from "../../utils/MaterialHelpers";
 import { formatTimeAgo } from "../../utils/Formatter";
 import { MaterialActionsDropdown } from "./MaterialActionsDropdown";
 import styles from "./MaterialCard.module.css";
 
 type MaterialCardProps = {
-    material: Material;
+    material: MaterialResponseDto;
     isSelected: boolean;
     onClick: (materialId: number) => void;
     onDoubleClick: (materialId: number) => void;
@@ -55,8 +55,8 @@ export const MaterialCard = ({
     const [isDragging, setIsDragging] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
 
-    const isFolder = material.type?.toLowerCase() === "folder";
-    const isFile = material.type?.toLowerCase() === "file";
+    const isFolder = material.material_type?.toLowerCase() === "folder";
+    const isFile = material.material_type?.toLowerCase() === "file";
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (e.button !== 0) return;
@@ -164,7 +164,7 @@ export const MaterialCard = ({
                 material.details.file_data.id,
                 material.name || "",
                 material.details.file_data.name || "",
-                material.details.file_data.mimeType || "",
+                material.details.file_data.mime_type || "",
             );
         }
     };
@@ -374,7 +374,7 @@ export const MaterialCard = ({
                             {material.subject?.code}
                         </span>
                         <span className={styles.folderDate}>
-                            {formatTimeAgo(material.modified_at || "")}
+                            {formatTimeAgo(material.updated_at || "")}
                         </span>
                     </div>
                     {showCount && (
@@ -457,7 +457,7 @@ export const MaterialCard = ({
                 <div className={styles.fileIcon}>
                     <img
                         src={getFileIcon(
-                            material.details?.file_data?.type || material.type,
+                            material.details?.file_data?.file_type || material.material_type || undefined,
                         )}
                         alt="File Icon"
                     />
@@ -470,7 +470,7 @@ export const MaterialCard = ({
                         {material.subject?.code}
                     </span>
                     <div className={styles.fileDate}>
-                        {formatTimeAgo(material.modified_at || "")}
+                        {formatTimeAgo(material.updated_at || "")}
                     </div>
                 </div>
             </div>
@@ -491,9 +491,9 @@ export const MaterialCard = ({
                         </button>
                     </>
                 )}
-                {(material.type === "drive" ||
-                    material.type === "youtube" ||
-                    material.type === "external") && (
+                {(material.material_type === "drive" ||
+                    material.material_type === "youtube" ||
+                    material.material_type === "external") && (
                     <button
                         className={styles.fileActionBtn}
                         onClick={handleOpenLink}

@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateExamMutation } from "../../../services/apis/admin/ExamAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -20,6 +20,7 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
+import { mergeDateAndTime } from "../../../utils/Formatter";
 
 import { GetIcon } from "../../../utils/LinkHandler";
 
@@ -43,10 +44,10 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 export const CreateExam = () => {
     const navigate = useNavigate();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [createExam, { isLoading }] = useCreateExamMutation();
 
     const {
@@ -71,7 +72,7 @@ export const CreateExam = () => {
             params.faculty_id = user.faculty?.id;
             params.department_id = user.department?.id;
             params.year_id = user.year?.id;
-            const result = await searchCourses(params).unwrap();
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -88,23 +89,25 @@ export const CreateExam = () => {
     const onSubmit = async (data: ExamFormData) => {
         try {
             const examData = {
-                title: data.title,
+                name: data.title,
                 subject_id: parseInt(data.subject_id),
-                exam_type: data.exam_type,
-                due_date: data.due_date,
-                start_time: data.start_time,
-                duration: data.duration ? parseFloat(data.duration) : undefined,
-                location: data.location,
-                exam_format: data.exam_format as
-                    | "MCQ"
-                    | "Written"
-                    | "Mixed"
-                    | "Practical"
-                    | "Oral"
-                    | "Other",
-                exam_weight: data.exam_weight,
-                description: data.description,
-                instructions: data.instructions,
+                deadline: mergeDateAndTime(data.due_date, data.start_time || "00:00")!,
+                details: {
+                    exam_type: data.exam_type || undefined,
+                    duration: data.duration ? parseFloat(data.duration) : undefined,
+                    location: data.location || undefined,
+                    exam_format: data.exam_format as
+                        | "MCQ"
+                        | "Written"
+                        | "Mixed"
+                        | "Practical"
+                        | "Oral"
+                        | "Other"
+                        | undefined,
+                    exam_weight: data.exam_weight || undefined,
+                    description: data.description || undefined,
+                    instructions: data.instructions || undefined,
+                },
             };
 
             await createExam(examData).unwrap();

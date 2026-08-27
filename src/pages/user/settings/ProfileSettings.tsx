@@ -14,7 +14,7 @@ import { useUpdateUserDataMutation } from "../../../services/apis/user/UserAPIs"
 import { usePageLoading } from "../../../hooks/usePageLoading";
 
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
-import { GetAvatarLink} from "../../../utils/LinkHandler";
+import { GetAvatarLink, GetWebLink } from "../../../utils/LinkHandler";
 import { showToast } from "../../../utils/ToastsManager";
 
 import styles from "./ProfileSettings.module.css";
@@ -74,12 +74,18 @@ export const ProfileSettings = () => {
             }
             await updateUser({
                 name: data.name,
-                url: url,
+                details: { avatar: url },
             }).unwrap();
             showToast("success", "Success", "Profile updated successfully.");
         } catch (error) {
             handleErrors(error, setError);
         }
+    };
+
+    const changeGoogleAccount = () => {
+        const path = "/user/change-google-account";
+        localStorage.removeItem("user");
+        window.location.href = GetWebLink(path);
     };
 
     const [currentImg, setCurrentImg] = useState(GetAvatarLink(""));
@@ -203,9 +209,12 @@ export const ProfileSettings = () => {
                                 <button
                                     type="button"
                                     className={styles.googleButton}
-                                    disabled
+                                    onClick={changeGoogleAccount}
                                 >
-                                    <IconComponent icon="google" className={styles.googleIcon} />
+                                    <IconComponent
+                                        icon="google"
+                                        className={styles.googleIcon}
+                                    />
                                     Change Google account
                                 </button>
                             </div>

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { User } from "../../types/entities/User";
+import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { GetAvatarLink } from "../../utils/LinkHandler";
 import styles from "./Avatar.module.css";
 
 type AvatarProps = {
-    user?: User | null;
+    user?: UserResponseDto | null;
     url?: string;
     size: "small" | "medium" | "large";
     className?: string;
@@ -24,7 +24,6 @@ export const Avatar = ({ user, url, size, className }: AvatarProps) => {
         setAvatarSrc(GetAvatarLink(link || ""));
     }, [links]);
     const [avatarSrc, setAvatarSrc] = useState(GetAvatarLink(""));
-
     useEffect(() => {
         handleError();
     }, [handleError]);

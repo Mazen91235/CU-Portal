@@ -8,9 +8,9 @@ import {
     useUpdateDepartmentMutation,
     useDeleteDepartmentMutation,
 } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import type { Department } from "../../../types/entities/Department";
-import type { Faculty } from "../../../types/entities/Faculty";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
@@ -40,16 +40,16 @@ export const DepartmentsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [studyTypeFilter, setStudyTypeFilter] = useState("");
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] =
-        useState<Department | null>(null);
+        useState<DepartmentResponseDto | null>(null);
     const [editMode, setEditMode] = useState(false);
 
     const [getDepartments] = useLazyGetDepartmentsQuery();
-    const [searchFaculties] = useLazySearchFacultiesQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
     const [createDepartment, { isLoading: isCreating }] =
         useCreateDepartmentMutation();
     const [updateDepartment, { isLoading: isUpdating }] =
@@ -68,7 +68,7 @@ export const DepartmentsPage = () => {
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -78,8 +78,10 @@ export const DepartmentsPage = () => {
     const fetchDepartments = useCallback(async () => {
         try {
             const result = await getDepartments({
-                faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: studyTypeFilter || "",
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: studyTypeFilter || undefined,
+                },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
@@ -108,7 +110,7 @@ export const DepartmentsPage = () => {
             }),
         [departments, searchQuery],
     );
-    const handleOpenForm = (department?: Department) => {
+    const handleOpenForm = (department?: DepartmentResponseDto) => {
         if (department) {
             setEditMode(true);
             setSelectedDepartment(department);
@@ -172,7 +174,7 @@ export const DepartmentsPage = () => {
         }
     };
 
-    const handleDeleteClick = (department: Department) => {
+    const handleDeleteClick = (department: DepartmentResponseDto) => {
         setSelectedDepartment(department);
         setIsDeleteModalOpen(true);
     };

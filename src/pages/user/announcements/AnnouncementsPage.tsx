@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useLazyGetAnnouncementsQuery } from "../../../services/apis/user/AnnouncementAPIs";
-import type { Announcement } from "../../../types/entities/Announcement";
+import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
@@ -15,7 +15,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import { formatDate, formatDateTime } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 
 import styles from "./AnnouncementsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -25,12 +25,12 @@ export const AnnouncementsPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [announcements, setAnnouncements] = useState<AnnouncementResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [searchParams] = useSearchParams();
@@ -50,10 +50,12 @@ export const AnnouncementsPage = () => {
         try {
             if (!hasNextPage) return;
             const result = await getAnnouncements({
-                query: searchQuery || undefined,
-                start_date: dateFromFilter || undefined,
-                end_date: dateToFilter || undefined,
-                subject_id: parseInt(subjectFilter) || undefined,
+                data: {
+                    query: searchQuery || undefined,
+                    date_from: dateFromFilter || undefined,
+                    date_to: dateToFilter || undefined,
+                    subject_id: parseInt(subjectFilter) || undefined,
+                },
                 page,
             }).unwrap();
             setAnnouncements((prev) => {
@@ -67,7 +69,7 @@ export const AnnouncementsPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }

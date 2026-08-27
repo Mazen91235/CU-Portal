@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import type { Material } from "../../types/entities/Material";
+import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./FloatingContainer.module.css";
 
 interface FloatingContainerProps {
     operation: "copy" | "move";
-    materials: Material[];
+    materials: MaterialResponseDto[];
     selectedMaterials: number[];
-    currentPath: Material[];
-    folders: Material[];
+    currentPath: MaterialResponseDto[];
+    folders: MaterialResponseDto[];
     initialTargetId: number | null | undefined;
     onClose: () => void;
     onConfirm: (targetId: number | null) => void;
@@ -103,7 +103,7 @@ export function FloatingContainer({
                 <div className={styles.header}>
                     <h3 className={styles.dialogTitle}>
                         {operation === "copy" ? "Copy" : "Move"}{" "}
-                        {selectedMaterials.length} Material
+                        {selectedMaterials.length} MaterialResponseDto
                         {selectedMaterials.length !== 1 ? "s" : ""} to...
                     </h3>
                     <button className={styles.closeButton} onClick={onClose}>
@@ -122,7 +122,7 @@ export function FloatingContainer({
                                 stroke="currentColor"
                                 strokeWidth="2"
                             >
-                                {material.type === "folder" ? (
+                                {material.material_type === "folder" ? (
                                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                                 ) : (
                                     <>

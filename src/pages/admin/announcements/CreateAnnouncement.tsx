@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateAnnouncementMutation } from "../../../services/apis/admin/AnnouncementAPIs";
-import { useLazySearchCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -22,8 +22,6 @@ import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-
-import { GetIcon } from "../../../utils/LinkHandler";
 import { mergeDateAndTime } from "../../../utils/Formatter";
 
 import styles from "./CreateAnnouncement.module.css";
@@ -42,10 +40,10 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 
 export const CreateAnnouncement = () => {
     const navigate = useNavigate();
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchCourses] = useLazySearchCoursesQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
     const [createAnnouncement, { isLoading }] = useCreateAnnouncementMutation();
     const uploadFile = useUploadFileToDrive({});
     const [isUploading, setIsUploading] = useState(false);
@@ -68,10 +66,10 @@ export const CreateAnnouncement = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id;
-            params.department_id = user.department?.id;
-            params.year_id = user.year?.id;
-            const result = await searchCourses(params).unwrap();
+            params.faculty_id = user.faculty?.id ?? undefined;
+            params.department_id = user.department?.id ?? undefined;
+            params.year_id = user.year?.id ?? undefined;
+            const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -107,10 +105,13 @@ export const CreateAnnouncement = () => {
 
             const announcementData = {
                 title: data.title,
-                content: data.content,
+                content: data.content ?? "",
                 subject_id: parseInt(data.subject_id),
                 date: data.date_date
-                    ? mergeDateAndTime(data.date_date, data.date_time || "00:00")
+                    ? mergeDateAndTime(
+                          data.date_date,
+                          data.date_time || "00:00",
+                      )
                     : undefined,
                 urls: urls != "" ? urls.split(", ") : [],
                 links: data.links
@@ -144,7 +145,7 @@ export const CreateAnnouncement = () => {
             <SubBanner
                 title="Create New Announcement"
                 description="Add a new announcement for students"
-                icon={GetIcon("announcements")}
+                icon="announcements"
                 linkText="Back to Announcements"
                 linkTo="/admin/announcements"
             />

@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-    useLazyGetVerificationDetailsQuery,
+    useLazyGetTokenDetailsQuery,
     useVerifyEmailMutation,
-    useResendVerificationCodeMutation,
+    useResendTokenMutation,
 } from "../../services/apis/AuthenticateAPIs";
 import { PageSeo } from "../../components/PageSeo";
 import Logo from "../../components/logo/Logo";
@@ -16,7 +16,7 @@ import type { DefaultAPIResponse } from "../../types/responses/GenericAPIRespons
 import { usePageLoading } from "../../hooks/usePageLoading";
 
 import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { GetIcon } from "../../utils/LinkHandler";
+import IconComponent from "../../components/IconComponent";
 import { showToast } from "../../utils/ToastsManager";
 
 import decorTop from "../../assets/decorations/bg-top.png";
@@ -39,9 +39,9 @@ export const VerifyEmailPage = () => {
     const navigate = useNavigate();
     const [userEmail, setUserEmail] = useState("");
     const [canResendAfter, setCanResendAfter] = useState(0);
-    const [getVerificationDetails] = useLazyGetVerificationDetailsQuery();
+    const [getVerificationDetails] = useLazyGetTokenDetailsQuery();
     const [verifyEmail] = useVerifyEmailMutation();
-    const [resendVerificationCode] = useResendVerificationCodeMutation();
+    const [resendVerificationCode] = useResendTokenMutation();
     usePageLoading(true);
     const {
         register,
@@ -87,7 +87,7 @@ export const VerifyEmailPage = () => {
 
     const onSubmit = async (data: VerifyEmailFormData) => {
         try {
-            await verifyEmail({ code: data.code }).unwrap();
+            await verifyEmail({ token: data.code }).unwrap();
             navigate("/user", {
                 state: { success: "Email verified successfully!" },
             });
@@ -106,7 +106,8 @@ export const VerifyEmailPage = () => {
             return;
         }
         try {
-            const response = await resendVerificationCode().unwrap();
+            await resendVerificationCode().unwrap();
+            const response = await getVerificationDetails().unwrap();
             showToast(
                 "success",
                 "Success",
@@ -148,7 +149,7 @@ export const VerifyEmailPage = () => {
                     </div>
                     <div className={styles.welcomeCard}>
                         <div className={styles.iconCircle}>
-                            <img src={GetIcon("verify")} alt="Verify icon" />
+                            <IconComponent icon="verify" />
                         </div>
                         <div className={styles.title}>EMAIL VERIFICATION</div>
                         <div className={styles.subtitle}>

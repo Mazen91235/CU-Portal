@@ -4,30 +4,31 @@ import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { SearchDto } from "./BaseDtos";
+import type { FileData, LinkData } from "./TaskDtos";
 
 export type AnnouncementCreateDto = {
     title: string;
     content: string;
-    date?: string | null;
+    date?: Date | null;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
     urls?: string[];
-    links?: Record<string, string>[];
-    details?: object;
+    links?: LinkData[];
+    details?: { files_data?: FileData[] };
 };
 
 export type AnnouncementResponseDto = {
     id?: number | null;
     title?: string | null;
     content?: string | null;
-    date?: string | null;
+    date?: Date | null;
     urls?: string[] | null;
-    links?: Record<string, string>[] | null;
-    details?: object | null;
-    created_at?: string | null;
-    updated_at?: string | null;
+    links?: LinkData[] | null;
+    details?: { files_data?: FileData[] } | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     faculty?: FacultyResponseDto | null;
@@ -38,14 +39,14 @@ export type AnnouncementResponseDto = {
 export type AnnouncementUpdateDto = {
     title: string;
     content: string;
-    date?: string | null;
+    date?: Date | null;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
     urls?: string[];
-    links?: Record<string, string>[];
-    details?: object;
+    links?: LinkData[];
+    details?: { files_data?: FileData[] };
 };
 
 export type AnnouncementDeleteDto = {
@@ -59,6 +60,6 @@ export type AnnouncementSearchDto = {
     department_id?: number | null;
     year_id?: number | null;
     author_id?: number | null;
-    date_from?: string | null;
-    date_to?: string | null;
+    date_from?: Date | null;
+    date_to?: Date | null;
 } & SearchDto;

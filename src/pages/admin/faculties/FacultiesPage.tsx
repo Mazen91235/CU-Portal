@@ -8,7 +8,7 @@ import {
     useUpdateFacultyMutation,
     useDeleteFacultyMutation,
 } from "../../../services/apis/admin/FacultyAPIs";
-import type { Faculty } from "../../../types/entities/Faculty";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
@@ -31,10 +31,10 @@ type FacultyFormData = z.infer<typeof facultySchema>;
 
 export const FacultiesPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(
+    const [selectedFaculty, setSelectedFaculty] = useState<FacultyResponseDto | null>(
         null,
     );
     const [editMode, setEditMode] = useState(false);
@@ -75,7 +75,7 @@ export const FacultiesPage = () => {
         [faculties, searchQuery],
     );
 
-    const handleOpenForm = (faculty?: Faculty) => {
+    const handleOpenForm = (faculty?: FacultyResponseDto) => {
         if (faculty) {
             setEditMode(true);
             setSelectedFaculty(faculty);
@@ -114,7 +114,7 @@ export const FacultiesPage = () => {
         }
     };
 
-    const handleDeleteClick = (faculty: Faculty) => {
+    const handleDeleteClick = (faculty: FacultyResponseDto) => {
         setSelectedFaculty(faculty);
         setIsDeleteModalOpen(true);
     };

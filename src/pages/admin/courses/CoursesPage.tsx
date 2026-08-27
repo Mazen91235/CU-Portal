@@ -4,13 +4,13 @@ import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
 } from "../../../services/apis/admin/CourseAPIs";
-import { useLazySearchFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
-import { useLazySearchDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
-import { useLazySearchYearsQuery } from "../../../services/apis/admin/YearAPIs";
-import type { Subject } from "../../../types/entities/Subject";
-import type { Faculty } from "../../../types/entities/Faculty";
-import type { Department } from "../../../types/entities/Department";
-import type { Year } from "../../../types/entities/Year";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -33,24 +33,24 @@ export const CoursesPage = () => {
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
-    const [courses, setCourses] = useState<Subject[]>([]);
-    const [faculties, setFaculties] = useState<Faculty[]>([]);
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [years, setYears] = useState<Year[]>([]);
+    const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState<Subject | null>(null);
+    const [selectedCourse, setSelectedCourse] = useState<SubjectResponseDto | null>(null);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
-    const [searchFaculties] = useLazySearchFacultiesQuery();
-    const [searchDepartments] = useLazySearchDepartmentsQuery();
-    const [searchYears] = useLazySearchYearsQuery();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
     const [getCourses, { isFetching }] = useLazyGetCoursesQuery();
     const [deleteCourse] = useDeleteCourseMutation();
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await searchFaculties({}).unwrap();
+            const result = await searchFaculties({ data: {} }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -63,10 +63,10 @@ export const CoursesPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({
+            const result = await searchDepartments({ data: {
                 faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: "",
-            }).unwrap();
+                study_type: undefined,
+            } }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -75,7 +75,7 @@ export const CoursesPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await searchYears({}).unwrap();
+            const result = await searchYears({ data: {} }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -90,14 +90,14 @@ export const CoursesPage = () => {
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
                 query: searchQuery || "",
-                page,
+
             };
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id;
                 params.department_id = user.department?.id;
                 params.year_id = user.year?.id;
             }
-            const result = await getCourses(params).unwrap();
+            const result = await getCourses({ data: params, page }).unwrap();
             setCourses((prev) => {
                 const filteredPrev = prev.filter(
                     (course) =>
@@ -108,7 +108,7 @@ export const CoursesPage = () => {
                 if (page == 1) return result.data || [];
                 return [...filteredPrev, ...(result.data || [])];
             });
-            setHasNextPage(result.next || false);
+            setHasNextPage(result.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -149,7 +149,7 @@ export const CoursesPage = () => {
         navigate(`/admin/courses/edit/${courseId}`);
     };
 
-    const handleDeleteClick = (course: Subject) => {
+    const handleDeleteClick = (course: SubjectResponseDto) => {
         setSelectedCourse(course);
         setIsDeleteModalOpen(true);
     };
@@ -285,7 +285,7 @@ export const CoursesPage = () => {
                                     icon: "user",
                                     label: "Students",
                                     value:
-                                        course.users_count?.toString() || "0",
+                                        course.users?.length?.toString() || "0",
                                 },
                             ]}
                             button="View Course"

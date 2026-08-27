@@ -6,7 +6,7 @@ import {
     useLazyGetRoleQuery,
     useUpdateRoleMutation,
 } from "../../../services/apis/admin/RoleAPIs";
-import type { Role } from "../../../types/entities/Role";
+import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -17,7 +17,7 @@ import { Banner } from "../../../components/banner/Banner";
 
 export const RolePage = () => {
     const { roleId } = useParams<{ roleId: string }>();
-    const [role, setRole] = useState<Role | null>(null);
+    const [role, setRole] = useState<RoleResponseDto | null>(null);
     const [allPermissions, setAllPermissions] = useState<string[]>([]);
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
         [],
@@ -238,7 +238,7 @@ export const RolePage = () => {
                         <div className={styles.roleUsersSubtitle}>
                             There Are Currently{" "}
                             <strong className={styles.userCount}>
-                                {role.users_count || 0}
+                                {role.users?.length || 0}
                             </strong>{" "}
                             Users Assigned To This Role
                         </div>

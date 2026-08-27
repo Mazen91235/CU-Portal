@@ -8,7 +8,7 @@ import {
     useUpdateYearMutation,
     useDeleteYearMutation,
 } from "../../../services/apis/admin/YearAPIs";
-import type { Year } from "../../../types/entities/Year";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
@@ -38,10 +38,10 @@ type YearFormData = z.infer<typeof yearSchema>;
 
 export const YearsPage = () => {
     const [yearFilter, setYearFilter] = useState("");
-    const [years, setYears] = useState<Year[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedYear, setSelectedYear] = useState<Year | null>(null);
+    const [selectedYear, setSelectedYear] = useState<YearResponseDto | null>(null);
     const [editMode, setEditMode] = useState(false);
 
     const [getYears] = useLazyGetYearsQuery();
@@ -77,7 +77,7 @@ export const YearsPage = () => {
         [years, yearFilter],
     );
 
-    const handleOpenForm = (year?: Year) => {
+    const handleOpenForm = (year?: YearResponseDto) => {
         if (year) {
             setEditMode(true);
             setSelectedYear(year);
@@ -118,7 +118,7 @@ export const YearsPage = () => {
         }
     };
 
-    const handleDeleteClick = (year: Year) => {
+    const handleDeleteClick = (year: YearResponseDto) => {
         setSelectedYear(year);
         setIsDeleteModalOpen(true);
     };

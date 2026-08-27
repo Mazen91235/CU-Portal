@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useLazyGetEnrolledCourseQuery } from "../../../services/apis/user/CourseAPIs";
-import type { Subject } from "../../../types/entities/Subject";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -16,7 +16,7 @@ import { Button } from "../../../components/forms/Button";
 export const CoursePage = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const navigate = useNavigate();
-    const [course, setCourse] = useState<Subject | null>(null);
+    const [course, setCourse] = useState<SubjectResponseDto | null>(null);
 
     const [getEnrolledCourse] = useLazyGetEnrolledCourseQuery();
 

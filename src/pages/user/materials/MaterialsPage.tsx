@@ -5,8 +5,8 @@ import {
     useLazyGetMaterialsQuery,
     useLazyGetMaterialParentsQuery,
 } from "../../../services/apis/user/MaterialAPIs";
-import type { Material } from "../../../types/entities/Material";
-import type { Subject } from "../../../types/entities/Subject";
+import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
+import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -33,9 +33,9 @@ export function MaterialsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [subjects, setSubjects] = useState<Subject[]>([]);
-    const [currentPath, setCurrentPath] = useState<Material[]>([]);
-    const [materials, setMaterials] = useState<Material[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
+    const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [previewFile, setPreviewFile] = useState<{
         id: string;
         name: string;
@@ -68,9 +68,11 @@ export function MaterialsPage() {
 
             try {
                 const response = await getMaterials({
+                    data: {
                     subject_id: parseInt(subjectFilter),
                     parent_id: parentId ?? undefined,
                     query: searchQuery || undefined,
+                    },
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
@@ -115,7 +117,7 @@ export function MaterialsPage() {
     );
 
     const handleNavigate = useCallback(
-        (material: Material | null) => {
+        (material: MaterialResponseDto | null) => {
             navigate(buildMaterialsPath(subjectFilter, material?.id ?? null));
         },
         [buildMaterialsPath, navigate, subjectFilter],
@@ -139,8 +141,8 @@ export function MaterialsPage() {
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
-    const handleCardClick = (material: Material) => {
-        if (material.type === "folder") {
+    const handleCardClick = (material: MaterialResponseDto) => {
+        if (material.material_type === "folder") {
             handleNavigate(material);
         }
     };
@@ -205,11 +207,11 @@ export function MaterialsPage() {
     }, [searchParams, materials, handlePreview, setSearchParams]);
 
     const folders = useMemo(
-        () => materials.filter((m) => m.type === "folder"),
+        () => materials.filter((m) => m.material_type === "folder"),
         [materials],
     );
     const files = useMemo(
-        () => materials.filter((m) => m.type !== "folder"),
+        () => materials.filter((m) => m.material_type !== "folder"),
         [materials],
     );
 
@@ -297,7 +299,7 @@ export function MaterialsPage() {
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     folderId,
-                                                    folder.type,
+                                                    folder.material_type,
                                                 );
                                             }}
                                             onPreview={handlePreview}
@@ -329,7 +331,7 @@ export function MaterialsPage() {
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     fileId,
-                                                    file.type,
+                                                    file.material_type,
                                                 );
                                             }}
                                             onPreview={handlePreview}
