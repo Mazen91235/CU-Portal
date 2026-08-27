@@ -82,6 +82,8 @@ export const DepartmentsPage = () => {
                     faculty_id: parseInt(facultyFilter) || undefined,
                     study_type: studyTypeFilter || undefined,
                 },
+                includes: ["faculty"],
+                limit: Infinity,
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {

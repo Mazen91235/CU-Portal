@@ -105,12 +105,16 @@ export const PendingUsersPage = () => {
             if (selectedYear) params.year_id = Number(selectedYear);
 
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
 
-            const result = await getPendingUsers({ data: params, page }).unwrap();
+            const result = await getPendingUsers({
+                data: params,
+                includes: ["pending_user", "faculty", "department", "year"],
+                page,
+            }).unwrap();
             setPendingUsers((prev) => {
                 const filteredPrev = prev.filter(
                     (user) =>
@@ -227,9 +231,9 @@ export const PendingUsersPage = () => {
                 year_id?: number;
             } = {};
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getPendingUsers({
                 data: { ...params, status: false },
@@ -412,7 +416,10 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeEngineering
                                                 }
                                             >
-                                                <IconComponent icon="badge-faculty" size={20} />
+                                                <IconComponent
+                                                    icon="badge-faculty"
+                                                    size={20}
+                                                />
                                                 <span>
                                                     {user.faculty?.name ||
                                                         "N/A"}
@@ -423,7 +430,10 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeSecondary
                                                 }
                                             >
-                                                <IconComponent icon="badge-department" size={20} />
+                                                <IconComponent
+                                                    icon="badge-department"
+                                                    size={20}
+                                                />
                                                 {user.department?.name || "N/A"}
                                             </span>
                                             <span
@@ -431,7 +441,10 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniBadgeYear
                                                 }
                                             >
-                                                <IconComponent icon="badge-year" size={20} />
+                                                <IconComponent
+                                                    icon="badge-year"
+                                                    size={20}
+                                                />
                                                 {user.year?.year || "N/A"}
                                             </span>
                                         </div>
@@ -443,7 +456,10 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniIdLabel
                                                 }
                                             >
-                                                <IconComponent icon="badge-id-card" size={20} />
+                                                <IconComponent
+                                                    icon="badge-id-card"
+                                                    size={20}
+                                                />
                                                 University ID Card
                                             </span>
                                             <button
@@ -457,7 +473,10 @@ export const PendingUsersPage = () => {
                                                     )
                                                 }
                                             >
-                                                <IconComponent icon="badge-view" size={20} />
+                                                <IconComponent
+                                                    icon="badge-view"
+                                                    size={20}
+                                                />
                                                 View Image
                                             </button>
                                         </div>

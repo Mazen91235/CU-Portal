@@ -20,8 +20,12 @@ export const CoursesPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
     const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
-    const [registeredCourses, setRegisteredCourses] = useState<SubjectResponseDto[]>([]);
-    const [availableCourses, setAvailableCourses] = useState<SubjectResponseDto[]>([]);
+    const [registeredCourses, setRegisteredCourses] = useState<
+        SubjectResponseDto[]
+    >([]);
+    const [availableCourses, setAvailableCourses] = useState<
+        SubjectResponseDto[]
+    >([]);
 
     const fetchData = useCallback(async () => {
         await Promise.all([
@@ -30,7 +34,7 @@ export const CoursesPage = () => {
                 .then((response) => {
                     setRegisteredCourses(response.data || []);
                 }),
-            getAvailableCourses({})
+            getAvailableCourses()
                 .unwrap()
                 .then((response) => {
                     setAvailableCourses(response.data || []);
@@ -122,13 +126,6 @@ export const CoursesPage = () => {
                         <span className={styles.courseBadge}>
                             {filteredAvailableCourses.length} Courses
                         </span>
-                    </div>
-
-                    <div className={styles.searchContainer}>
-                        <Search
-                            placeholder="Search by course name or code"
-                            setValue={setSearchQuery}
-                        />
                     </div>
 
                     <div className={styles.cardsGrid}>

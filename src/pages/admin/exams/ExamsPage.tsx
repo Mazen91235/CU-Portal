@@ -40,7 +40,9 @@ export const ExamsPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
@@ -48,7 +50,9 @@ export const ExamsPage = () => {
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedExam, setSelectedExam] = useState<ExamResponseDto | null>(null);
+    const [selectedExam, setSelectedExam] = useState<ExamResponseDto | null>(
+        null,
+    );
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -74,10 +78,12 @@ export const ExamsPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({ data: {
-                faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: undefined,
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -131,20 +137,23 @@ export const ExamsPage = () => {
                 query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
-                ? parseInt(departmentFilter)
-                : undefined,
+                    ? parseInt(departmentFilter)
+                    : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 deadline_from: dateFromFilter || undefined,
                 deadline_to: dateToFilter || undefined,
-
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
                 params.department_id = undefined;
                 params.year_id = undefined;
             }
-            const result = await getExams({ data: params, page }).unwrap();
+            const result = await getExams({
+                data: params,
+                includes: ["faculty", "department", "year", "subject"],
+                page,
+            }).unwrap();
             setExams((prev) => {
                 const filteredPrev = prev.filter(
                     (exam) =>

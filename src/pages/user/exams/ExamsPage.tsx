@@ -56,6 +56,7 @@ export const ExamsPage = () => {
                     deadline_to: dateToFilter || undefined,
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
+                includes: ["subject"],
                 page,
             }).unwrap();
             setExams((prev) => {

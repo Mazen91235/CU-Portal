@@ -34,9 +34,8 @@ export const FacultiesPage = () => {
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedFaculty, setSelectedFaculty] = useState<FacultyResponseDto | null>(
-        null,
-    );
+    const [selectedFaculty, setSelectedFaculty] =
+        useState<FacultyResponseDto | null>(null);
     const [editMode, setEditMode] = useState(false);
 
     const [getFaculties] = useLazyGetFacultiesQuery();
@@ -58,7 +57,7 @@ export const FacultiesPage = () => {
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await getFaculties({}).unwrap();
+            const result = await getFaculties({ limit: Infinity }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);

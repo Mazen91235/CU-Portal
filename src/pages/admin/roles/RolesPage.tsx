@@ -40,7 +40,10 @@ export const RolesPage = () => {
 
     const fetchRoles = useCallback(async () => {
         try {
-            const result = await getRoles({ data: { query: searchQuery } }).unwrap();
+            const result = await getRoles({
+                data: { query: searchQuery },
+                includes: ["role_links.exact_role"],
+            }).unwrap();
             setRoles(result.data || []);
             setFilteredRoles(result.data || []);
         } catch (error) {
@@ -170,7 +173,7 @@ export const RolesPage = () => {
                             {
                                 icon: "permissions",
                                 label: "Permissions",
-                                value: `${role.permissions_count || 0}/${permissionsCount}`,
+                                value: `${role.exact_roles?.length || 0}/${permissionsCount}`,
                             },
                         ]}
                         button="View Role"
@@ -178,7 +181,7 @@ export const RolesPage = () => {
                         hasOptions={true}
                         editable={true}
                         deletable={true}
-                        onEdit={() => openModal("edit", role.id)}
+                        onEdit={() => openModal("edit", role.id ?? 0)}
                         onDelete={() => handleDeleteRole(role.id!)}
                     />
                 ))}

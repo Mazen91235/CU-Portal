@@ -4,6 +4,7 @@ import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import {
     useLazyGetRoleQuery,
+    useLazyGetPermissionsQuery,
     useUpdateRoleMutation,
 } from "../../../services/apis/admin/RoleAPIs";
 import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
@@ -26,6 +27,7 @@ export const RolePage = () => {
     const [hasNoPermissions, setHasNoPermissions] = useState(false);
 
     const [getRole] = useLazyGetRoleQuery();
+    const [getPermissions] = useLazyGetPermissionsQuery();
     const [updateRole] = useUpdateRoleMutation();
     const navigate = useNavigate();
 
@@ -33,14 +35,13 @@ export const RolePage = () => {
         if (!roleId) return;
         try {
             const result = await getRole({ role_id: Number(roleId) }).unwrap();
-            const roleResponse = result.data || { role: {}, permissions: [] };
-            setRole(roleResponse.role || null);
-            setAllPermissions(roleResponse.permissions || []);
-            setSelectedPermissions(roleResponse.role?.permissions || []);
-            setHasNoPermissions(
-                (roleResponse.role?.permissions_count || 0) === 0,
+            const roleResponse = result.data;
+            setRole(roleResponse ?? null);
+            setSelectedPermissions(
+                roleResponse?.exact_roles?.map((r) => r.name ?? "") || [],
             );
-            if (roleResponse.role?.permissions_count === 0) {
+            setHasNoPermissions((roleResponse?.exact_roles?.length || 0) === 0);
+            if (roleResponse?.exact_roles?.length === 0) {
                 setIsEditing(true);
             }
         } catch (error) {
@@ -48,7 +49,19 @@ export const RolePage = () => {
         }
     }, [roleId, getRole]);
 
-    const authQueryParams = useCallback(() => fetchRole(), [fetchRole]);
+    const fetchAllPermissions = useCallback(async () => {
+        try {
+            const result = await getPermissions().unwrap();
+            setAllPermissions(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getPermissions]);
+
+    const authQueryParams = useCallback(
+        () => Promise.all([fetchRole(), fetchAllPermissions()]),
+        [fetchRole, fetchAllPermissions],
+    );
 
     useAuthQuery(authQueryParams);
 

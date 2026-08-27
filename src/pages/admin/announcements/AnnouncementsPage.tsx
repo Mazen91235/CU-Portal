@@ -40,9 +40,13 @@ export const AnnouncementsPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [announcements, setAnnouncements] = useState<AnnouncementResponseDto[]>([]);
+    const [announcements, setAnnouncements] = useState<
+        AnnouncementResponseDto[]
+    >([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
@@ -75,10 +79,12 @@ export const AnnouncementsPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({ data: {
-                faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: undefined,
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -138,14 +144,17 @@ export const AnnouncementsPage = () => {
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 date_from: dateFromFilter || undefined,
                 date_to: dateToFilter || undefined,
-
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
                 params.department_id = undefined;
                 params.year_id = undefined;
             }
-            const result = await getAnnouncements({ data: params, page }).unwrap();
+            const result = await getAnnouncements({
+                data: params,
+                includes: ["faculty", "department", "year", "subject"],
+                page,
+            }).unwrap();
             setAnnouncements((prev) => {
                 const filteredPrev = prev.filter(
                     (announcement) =>

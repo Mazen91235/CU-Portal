@@ -41,7 +41,9 @@ export const YearsPage = () => {
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedYear, setSelectedYear] = useState<YearResponseDto | null>(null);
+    const [selectedYear, setSelectedYear] = useState<YearResponseDto | null>(
+        null,
+    );
     const [editMode, setEditMode] = useState(false);
 
     const [getYears] = useLazyGetYearsQuery();
@@ -60,7 +62,7 @@ export const YearsPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await getYears({}).unwrap();
+            const result = await getYears({ limit: Infinity }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);

@@ -25,7 +25,7 @@ export const CoursePage = () => {
 
         try {
             const result = await getEnrolledCourse({
-                course_id: parseInt(courseId),
+                subject_id: parseInt(courseId),
             }).unwrap();
             setCourse(result.data || null);
         } catch (error) {

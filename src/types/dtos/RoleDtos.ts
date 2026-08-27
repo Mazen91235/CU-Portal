@@ -4,7 +4,6 @@ import type { SearchDto } from "./BaseDtos";
 
 export type RoleCreateDto = {
     name: string;
-    permissions?: string[];
 };
 
 export type RoleResponseDto = {

@@ -69,10 +69,11 @@ export function MaterialsPage() {
             try {
                 const response = await getMaterials({
                     data: {
-                    subject_id: parseInt(subjectFilter),
-                    parent_id: parentId ?? undefined,
-                    query: searchQuery || undefined,
+                        subject_id: parseInt(subjectFilter),
+                        parent_id: parentId ?? null,
+                        query: searchQuery || undefined,
                     },
+                    includes: ["subject", "children"],
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
@@ -169,7 +170,10 @@ export function MaterialsPage() {
         window.open(url, "_blank");
     };
 
-    const handleShareMaterials = (materialId?: number, type?: string) => {
+    const handleShareMaterials = (
+        materialId?: number,
+        type?: string | null,
+    ) => {
         const parentId =
             currentPath.length > 0
                 ? currentPath[currentPath.length - 1].id
@@ -285,12 +289,14 @@ export function MaterialsPage() {
                                         <MaterialCard
                                             key={folderId}
                                             material={folder}
-                                            showCount={false}
+                                            showCount={true}
                                             isSelected={false}
                                             onClick={() =>
                                                 handleCardClick(folder)
                                             }
-                                            onDoubleClick={() => {}}
+                                            onDoubleClick={() => {
+                                                handleCardClick(folder);
+                                            }}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
@@ -322,7 +328,9 @@ export function MaterialsPage() {
                                             onClick={() =>
                                                 handleCardClick(file)
                                             }
-                                            onDoubleClick={() => {}}
+                                            onDoubleClick={() => {
+                                                handleCardClick(file);
+                                            }}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}

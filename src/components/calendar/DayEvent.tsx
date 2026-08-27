@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import type { CalendarDayEventDto } from "../../types/dtos/CalendarDtos";
 import styles from "./DayEvent.module.css";
 import IconComponent from "../IconComponent";
+import { formatDateTime } from "../../utils/Formatter";
 
 export const DayEvent = ({
     event_type,
@@ -78,7 +79,9 @@ export const DayEvent = ({
                             icon="time"
                             className={styles["detail-icon"]}
                         />
-                        {due ? `${getDateLabel()}: ${due}` : ""}
+                        {due
+                            ? `${getDateLabel()}: ${formatDateTime(due, false)}`
+                            : ""}
                     </div>
                 )}
                 {location && (

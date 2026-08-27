@@ -41,7 +41,8 @@ export const UsersPage = () => {
     const [years, setYears] = useState<YearResponseDto[]>([]);
 
     const [getUsers, { isFetching }] = useLazyGetUsersQuery();
-    const [getUsersData, { data: usersStatsData }] = useLazyGetUserStatisticsQuery();
+    const [getUsersData, { data: usersStatsData }] =
+        useLazyGetUserStatisticsQuery();
     const [searchFaculties] = useLazyGetFacultiesQuery();
     const [searchDepartments] = useLazyGetDepartmentsQuery();
     const [searchYears] = useLazyGetYearsQuery();
@@ -59,9 +60,9 @@ export const UsersPage = () => {
                 year_id: selectedYear ? Number(selectedYear) : undefined,
             };
             if (!user?.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             await getUsersData({
                 data: params,
@@ -86,9 +87,11 @@ export const UsersPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({ data: {
-                faculty_id: Number(selectedFaculty),
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: Number(selectedFaculty),
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -112,8 +115,7 @@ export const UsersPage = () => {
                 faculty_id?: number;
                 department_id?: number;
                 year_id?: number;
-                page?: number;
-            } = { page };
+            } = { };
 
             if (searchQuery) params.query = searchQuery;
             if (selectedFaculty) params.faculty_id = Number(selectedFaculty);
@@ -122,12 +124,16 @@ export const UsersPage = () => {
             if (selectedYear) params.year_id = Number(selectedYear);
 
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
 
-            const result = await getUsers({ data: params, page }).unwrap();
+            const result = await getUsers({
+                data: params,
+                includes: ["role"],
+                page,
+            }).unwrap();
             setUsers((prev) => {
                 const filteredPrev = prev.filter(
                     (user) =>
@@ -267,7 +273,11 @@ export const UsersPage = () => {
                                 {stats?.users_count || 0}
                             </div>
                             <div className={styles.infoCardGrowth}>
-                                <IconComponent icon="arrow-up" color="green" size={16} />
+                                <IconComponent
+                                    icon="arrow-up"
+                                    color="green"
+                                    size={16}
+                                />
                                 <span className={styles.infoCardGrowthText}>
                                     {stats?.percentage_increase || 0}% This
                                     Month
@@ -316,7 +326,10 @@ export const UsersPage = () => {
                                 style={{ textDecoration: "none" }}
                             >
                                 <div className={styles.infoCardAction}>
-                                    <IconComponent icon="eye-review" className={styles.infoCardReviewEye}/>
+                                    <IconComponent
+                                        icon="eye-review"
+                                        className={styles.infoCardReviewEye}
+                                    />
                                     <span className={styles.infoCardReview}>
                                         Review Now
                                     </span>

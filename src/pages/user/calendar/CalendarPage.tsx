@@ -11,9 +11,6 @@ import { EmptySection } from "../../../components/calendar/EmptySection";
 import type { CalendarDayEventsDto } from "../../../types/dtos/CalendarDtos";
 
 import styles from "./CalendarPage.module.css";
-import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
-import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
-import { convertToDayEvent } from "../../../utils/CalendarHandler";
 
 export const CalendarPage = () => {
     const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
@@ -30,7 +27,7 @@ export const CalendarPage = () => {
                     date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
                 }).unwrap();
 
-                setEventsData(result.data || {});
+                setEventsData(result.data?.events || {});
             } catch (error) {
                 handlePopupErrors(error);
             }
@@ -67,11 +64,7 @@ export const CalendarPage = () => {
         setCurrentMonth(month);
     };
 
-    const selectedEvents: {
-        tasks: TaskResponseDto[];
-        exams: TaskResponseDto[];
-        announcements: AnnouncementResponseDto[];
-    } = selectedDate
+    const selectedEvents: CalendarDayEventsDto[string] = selectedDate
         ? eventsData[selectedDate] || {
               tasks: [],
               exams: [],
@@ -122,19 +115,13 @@ export const CalendarPage = () => {
                 </div>
                 <div className={styles["events-list"]}>
                     {[
-                        ...selectedEvents.tasks.map((event) =>
-                            convertToDayEvent(event, "assignment"),
-                        ),
-                        ...selectedEvents.exams.map((event) =>
-                            convertToDayEvent(event, "exam"),
-                        ),
-                        ...selectedEvents.announcements.map((announcement) =>
-                            convertToDayEvent(announcement, "announcement"),
-                        ),
+                        ...selectedEvents.tasks,
+                        ...selectedEvents.exams,
+                        ...selectedEvents.announcements,
                     ].map((event, index) => (
                         <DayEvent
                             key={`event-${index}`}
-                            type={event.type}
+                            event_type={event.event_type}
                             title={event.title}
                             subject={event.subject}
                             due={event.due}

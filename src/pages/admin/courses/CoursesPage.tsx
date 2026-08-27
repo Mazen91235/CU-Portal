@@ -38,7 +38,8 @@ export const CoursesPage = () => {
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState<SubjectResponseDto | null>(null);
+    const [selectedCourse, setSelectedCourse] =
+        useState<SubjectResponseDto | null>(null);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -63,10 +64,12 @@ export const CoursesPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({ data: {
-                faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: undefined,
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -90,14 +93,22 @@ export const CoursesPage = () => {
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
                 query: searchQuery || "",
-
             };
             if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id;
-                params.department_id = user.department?.id;
-                params.year_id = user.year?.id;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
-            const result = await getCourses({ data: params, page }).unwrap();
+            const result = await getCourses({
+                data: params,
+                includes: [
+                    "faculty",
+                    "department",
+                    "year",
+                    "user_subject_links.user",
+                ],
+                page,
+            }).unwrap();
             setCourses((prev) => {
                 const filteredPrev = prev.filter(
                     (course) =>

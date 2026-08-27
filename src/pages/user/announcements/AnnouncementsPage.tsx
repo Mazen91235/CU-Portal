@@ -30,7 +30,9 @@ export const AnnouncementsPage = () => {
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
-    const [announcements, setAnnouncements] = useState<AnnouncementResponseDto[]>([]);
+    const [announcements, setAnnouncements] = useState<
+        AnnouncementResponseDto[]
+    >([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [searchParams] = useSearchParams();
@@ -52,10 +54,11 @@ export const AnnouncementsPage = () => {
             const result = await getAnnouncements({
                 data: {
                     query: searchQuery || undefined,
-                    date_from: dateFromFilter || undefined,
-                    date_to: dateToFilter || undefined,
+                    date_from: new Date(dateFromFilter),
+                    date_to: new Date(dateToFilter),
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
+                includes: ["subject"],
                 page,
             }).unwrap();
             setAnnouncements((prev) => {

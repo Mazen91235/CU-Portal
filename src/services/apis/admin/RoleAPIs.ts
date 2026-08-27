@@ -58,6 +58,13 @@ export const AdminRoleAPI = createApi({
                 credentials: "include",
             }),
         }),
+        getPermissions: builder.query<GenericAPIResponse<string[]>, void>({
+            query: () => ({
+                url: `/permissions`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
         createRole: builder.mutation<
             GenericAPIResponse<RoleResponseDto>,
             RoleCreateDto
@@ -94,6 +101,7 @@ export const {
     useLazyGetRolesQuery,
     useLazyGetRoleQuery,
     useLazyCountPermissionsQuery,
+    useLazyGetPermissionsQuery,
     useCreateRoleMutation,
     useUpdateRoleMutation,
     useDeleteRoleMutation,

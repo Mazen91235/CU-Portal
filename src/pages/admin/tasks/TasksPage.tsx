@@ -40,7 +40,9 @@ export const TasksPage = () => {
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
     const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(new Date().toLocaleDateString("en-CA")); // Set default date to today's date in "YYYY-MM-DD" format
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    ); // Set default date to today's date in "YYYY-MM-DD" format
     const [dateToFilter, setDateToFilter] = useState("");
     const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
@@ -48,7 +50,9 @@ export const TasksPage = () => {
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(null);
+    const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(
+        null,
+    );
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -74,10 +78,12 @@ export const TasksPage = () => {
                 setDepartments([]);
                 return;
             }
-            const result = await searchDepartments({ data: {
-                faculty_id: parseInt(facultyFilter) || undefined,
-                study_type: undefined,
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -135,14 +141,17 @@ export const TasksPage = () => {
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 deadline_from: dateFromFilter || undefined,
                 deadline_to: dateToFilter || undefined,
-
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
                 params.department_id = undefined;
                 params.year_id = undefined;
             }
-            const result = await getTasks({ data: params, page }).unwrap();
+            const result = await getTasks({
+                data: params,
+                includes: ["faculty", "department", "year", "subject"],
+                page,
+            }).unwrap();
             setTasks((prev) => {
                 const filteredPrev = prev.filter(
                     (task) =>

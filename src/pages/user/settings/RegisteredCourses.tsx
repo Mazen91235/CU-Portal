@@ -159,13 +159,6 @@ export const RegisteredCourses = () => {
                                 </span>
                             </div>
 
-                            <div className={styles.searchContainer}>
-                                <Search
-                                    placeholder="Search by subject name, instructor, or code"
-                                    setValue={setSearchQuery}
-                                />
-                            </div>
-
                             <div className={styles.cardsGrid}>
                                 {filteredAvailableCourses.map((course) => (
                                     <Card

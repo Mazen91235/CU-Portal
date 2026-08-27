@@ -811,87 +811,6 @@ export const UserPage = () => {
 
             <div className={styles.sectionsRow}>
                 <section className={styles.section}>
-                    <div className={styles.gradesSection}>
-                        <div className={styles.gradesHeader}>
-                            <IconComponent
-                                icon="grades-icon"
-                                className={styles.gradesHeaderIcon}
-                            />
-                            <span className={styles.gradesHeaderTitle}>
-                                Grades
-                            </span>
-                        </div>
-                        <div className={styles.gradesList}>
-                            {user.grades_uploaded &&
-                            user.grades_uploaded.length > 0 ? (
-                                user.grades_uploaded.map((grade) => (
-                                    <div
-                                        key={grade.id}
-                                        className={styles.gradesCard}
-                                    >
-                                        <div className={styles.gradesCardIcon}>
-                                            <IconComponent
-                                                icon="grades-icon"
-                                                className={
-                                                    styles.gradesCircleIcon
-                                                }
-                                            />
-                                        </div>
-                                        <div className={styles.gradesCardInfo}>
-                                            <div
-                                                className={
-                                                    styles.gradesCardTitle
-                                                }
-                                            >
-                                                {grade.name}
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.gradesCardSubject
-                                                }
-                                            >
-                                                {grade.subject?.name || "N/A"}
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.gradesCardDateRow
-                                                }
-                                            >
-                                                <span
-                                                    className={
-                                                        styles.gradesCardDate
-                                                    }
-                                                >
-                                                    Uploaded{" "}
-                                                    {grade.created_at
-                                                        ? formatTimeAgo(
-                                                              grade.created_at,
-                                                          )
-                                                        : "N/A"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div
-                                            className={styles.gradesCardBadges}
-                                        >
-                                            <span
-                                                className={`${styles.gradesBadge} ${styles.gradesBadgePublisher}`}
-                                            >
-                                                Publisher
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className={styles.emptySection}>
-                                    No grades uploaded
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </section>
-
-                <section className={styles.section}>
                     <div className={styles.subjectsSection}>
                         <div className={styles.subjectsHeader}>
                             <IconComponent
@@ -954,63 +873,70 @@ export const UserPage = () => {
                         </div>
                     </div>
                 </section>
-            </div>
-
-            <section className={styles.activityLogsFullWidth}>
-                <div className={styles.activityLogsSection}>
-                    <div className={styles.activityLogsHeader}>
-                        <IconComponent
-                            icon="activity-logs-icon"
-                            className={styles.activityLogsHeaderIcon}
-                        />
-                        <span className={styles.activityLogsHeaderTitle}>
-                            Activity Logs
-                        </span>
-                    </div>
-                    <div className={styles.activityLogsList}>
-                        {user.logs && user.logs.length > 0 ? (
-                            user.logs.map((log) => (
-                                <div
-                                    key={log.id}
-                                    className={styles.activityLogCard}
-                                >
-                                    <div className={styles.activityLogCardInfo}>
-                                        <div
-                                            className={
-                                                styles.activityLogCardTitle
-                                            }
-                                        >
-                                            {`${log.action} ${log.entity}`}
-                                        </div>
-                                        <div
-                                            className={
-                                                styles.activityLogCardDate
-                                            }
-                                        >
-                                            {log.created_at
-                                                ? formatDateTime(log.created_at)
-                                                : "N/A"}
-                                        </div>
-                                    </div>
+                <section className={styles.section}>
+                    <div className={styles.activityLogsSection}>
+                        <div className={styles.activityLogsHeader}>
+                            <IconComponent
+                                icon="activity-logs-icon"
+                                className={styles.activityLogsHeaderIcon}
+                            />
+                            <span className={styles.activityLogsHeaderTitle}>
+                                Activity Logs
+                            </span>
+                        </div>
+                        <div className={styles.activityLogsList}>
+                            {user.logs && user.logs.length > 0 ? (
+                                user.logs.map((log) => (
                                     <div
-                                        className={styles.activityLogCardBadge}
+                                        key={log.id}
+                                        className={styles.activityLogCard}
                                     >
-                                        <span
-                                            className={`${styles.activityLogBadge} ${log.level === "error" ? styles.activityLogBadgeError : log.level === "warning" ? styles.activityLogBadgeWarning : styles.activityLogBadgeInfo}`}
+                                        <div
+                                            className={
+                                                styles.activityLogCardInfo
+                                            }
                                         >
-                                            {log.level || "info"}
-                                        </span>
+                                            <div
+                                                className={
+                                                    styles.activityLogCardTitle
+                                                }
+                                            >
+                                                {`${log.action} ${log.entity}`}
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.activityLogCardDate
+                                                }
+                                            >
+                                                {log.created_at
+                                                    ? formatDateTime(
+                                                          log.created_at,
+                                                      )
+                                                    : "N/A"}
+                                            </div>
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.activityLogCardBadge
+                                            }
+                                        >
+                                            <span
+                                                className={`${styles.activityLogBadge} ${log.level === "error" ? styles.activityLogBadgeError : log.level === "warning" ? styles.activityLogBadgeWarning : styles.activityLogBadgeInfo}`}
+                                            >
+                                                {log.level || "info"}
+                                            </span>
+                                        </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className={styles.emptySection}>
+                                    No activity logs
                                 </div>
-                            ))
-                        ) : (
-                            <div className={styles.emptySection}>
-                                No activity logs
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </Layout>
     );
 };

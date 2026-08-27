@@ -1,6 +1,7 @@
 export const formatDateTime = (
     dateTimeString?: string | null,
     toDate: boolean = false,
+    weekDay: boolean = true,
 ): string => {
     if (!dateTimeString) return "N/A";
     let date: Date;
@@ -18,6 +19,16 @@ export const formatDateTime = (
         date.setHours(date.getHours() + getDiffHours(date));
         return date.toISOString();
     }
+    if (weekDay)
+        return date.toLocaleDateString([], {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            hour12: true,
+            minute: "2-digit",
+        });
     return date.toLocaleTimeString([], {
         month: "short",
         day: "numeric",

@@ -206,9 +206,10 @@ export function MaterialsPage() {
                 const response = await getMaterials({
                     data: {
                         subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? undefined,
+                        parent_id: parentId ?? null,
                         query: searchQuery || undefined,
                     },
+                    includes: ["subject", "children"],
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
@@ -587,7 +588,10 @@ export function MaterialsPage() {
         });
     };
 
-    const handleShareMaterials = (materialId?: number, type?: string | null) => {
+    const handleShareMaterials = (
+        materialId?: number,
+        type?: string | null,
+    ) => {
         const parentId =
             currentPath.length > 0
                 ? currentPath[currentPath.length - 1].id
