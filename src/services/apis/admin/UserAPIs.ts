@@ -73,6 +73,23 @@ export const AdminUserAPI = createApi({
                 body: data,
             }),
         }),
+        suspendUser: builder.mutation<GenericAPIResponse, { user_id: number }>({
+            query: ({ user_id }) => ({
+                url: `/${user_id}/suspend`,
+                method: "PATCH",
+                credentials: "include",
+            }),
+        }),
+        unsuspendUser: builder.mutation<
+            GenericAPIResponse,
+            { user_id: number }
+        >({
+            query: ({ user_id }) => ({
+                url: `/${user_id}/unsuspend`,
+                method: "PATCH",
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
@@ -81,4 +98,6 @@ export const {
     useLazyGetUserStatisticsQuery,
     useLazyGetUserQuery,
     useUpdateUsersMutation,
+    useSuspendUserMutation,
+    useUnsuspendUserMutation,
 } = AdminUserAPI;
