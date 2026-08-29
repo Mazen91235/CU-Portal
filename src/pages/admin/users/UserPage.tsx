@@ -306,161 +306,89 @@ export const UserPage = () => {
                                 Exams
                             </span>
                         </div>
-                        {user.exams && user.exams.length > 0 && (
-                            <div className={styles.examsListPublished}>
-                                {user.exams.map((exam) => {
-                                    const deadline = new Date(
-                                        formatDateTime(exam.deadline, true),
-                                    );
-                                    const today = new Date();
-                                    const type =
-                                        deadline < today
-                                            ? "Complete"
-                                            : "Upcoming";
-                                    return (
-                                        <div
-                                            key={exam.id}
-                                            className={`${styles.examCard} ${styles.examCardWhiteBg}`}
-                                        >
+                        {user.exams_published &&
+                            user.exams_published.length > 0 && (
+                                <div className={styles.examsListPublished}>
+                                    {user.exams_published.map((exam) => {
+                                        const deadline = new Date(
+                                            formatDateTime(exam.deadline, true),
+                                        );
+                                        const today = new Date();
+                                        const type =
+                                            deadline < today
+                                                ? "Complete"
+                                                : "Upcoming";
+                                        return (
                                             <div
-                                                className={styles.examCardIcon}
-                                            >
-                                                <IconComponent
-                                                    icon="exam-icon"
-                                                    className={
-                                                        styles.examCircleIcon
-                                                    }
-                                                />
-                                            </div>
-                                            <div
-                                                className={styles.examCardInfo}
+                                                key={exam.id}
+                                                className={`${styles.examCard} ${styles.examCardWhiteBg}`}
                                             >
                                                 <div
                                                     className={
-                                                        styles.examCardTitle
+                                                        styles.examCardIcon
                                                     }
                                                 >
-                                                    {exam.name}
+                                                    <IconComponent
+                                                        icon="exam-icon"
+                                                        className={
+                                                            styles.examCircleIcon
+                                                        }
+                                                    />
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.examCardSubject
+                                                        styles.examCardInfo
                                                     }
                                                 >
-                                                    {exam.subject?.name ||
-                                                        "N/A"}
+                                                    <div
+                                                        className={
+                                                            styles.examCardTitle
+                                                        }
+                                                    >
+                                                        {exam.name}
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.examCardSubject
+                                                        }
+                                                    >
+                                                        {exam.subject?.name ||
+                                                            "N/A"}
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.examCardDate
+                                                        }
+                                                    >
+                                                        Due:{" "}
+                                                        {exam.deadline
+                                                            ? formatDateTime(
+                                                                  exam.deadline,
+                                                              )
+                                                            : "N/A"}
+                                                    </div>
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.examCardDate
+                                                        styles.examCardBadges
                                                     }
                                                 >
-                                                    Due:{" "}
-                                                    {exam.due_date
-                                                        ? formatDateTime(
-                                                              exam.deadline,
-                                                          )
-                                                        : "N/A"}
+                                                    <span
+                                                        className={`${styles.examBadge} ${styles.examBadgePublisher}`}
+                                                    >
+                                                        Publisher
+                                                    </span>
+                                                    <span
+                                                        className={`${styles.examBadge} ${type === "Complete" ? styles.examBadgeComplete : styles.examBadgeUpcoming}`}
+                                                    >
+                                                        {type || "Pending"}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={
-                                                    styles.examCardBadges
-                                                }
-                                            >
-                                                <span
-                                                    className={`${styles.examBadge} ${styles.examBadgePublisher}`}
-                                                >
-                                                    Publisher
-                                                </span>
-                                                <span
-                                                    className={`${styles.examBadge} ${type === "Complete" ? styles.examBadgeComplete : styles.examBadgeUpcoming}`}
-                                                >
-                                                    {type || "Pending"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                        <div className={styles.examsListGray}>
-                            {user.exams && user.exams.length > 0 ? (
-                                user.exams.map((exam) => {
-                                    const deadline = new Date(
-                                        formatDateTime(exam.deadline, true),
-                                    );
-                                    const today = new Date();
-                                    const type =
-                                        deadline < today
-                                            ? "Complete"
-                                            : "Upcoming";
-                                    return (
-                                        <div
-                                            key={exam.id}
-                                            className={styles.examCard}
-                                        >
-                                            <div
-                                                className={styles.examCardIcon}
-                                            >
-                                                <IconComponent
-                                                    icon="exam-icon"
-                                                    className={
-                                                        styles.examCircleIcon
-                                                    }
-                                                />
-                                            </div>
-                                            <div
-                                                className={styles.examCardInfo}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.examCardTitle
-                                                    }
-                                                >
-                                                    {exam.name}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.examCardSubject
-                                                    }
-                                                >
-                                                    {exam.subject?.name ||
-                                                        "N/A"}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.examCardDate
-                                                    }
-                                                >
-                                                    Due:{" "}
-                                                    {exam.deadline
-                                                        ? formatDateTime(
-                                                              exam.deadline,
-                                                          )
-                                                        : "N/A"}
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.examCardBadges
-                                                }
-                                            >
-                                                <span
-                                                    className={`${styles.examBadge} ${type === "Complete" ? styles.examBadgeComplete : styles.examBadgeUpcoming}`}
-                                                >
-                                                    {type || "Pending"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <div className={styles.emptySection}>
-                                    No exams
+                                        );
+                                    })}
                                 </div>
                             )}
-                        </div>
                     </div>
                 </section>
 
@@ -475,161 +403,89 @@ export const UserPage = () => {
                                 Tasks
                             </span>
                         </div>
-                        {user.tasks && user.tasks.length > 0 && (
-                            <div className={styles.tasksListPublished}>
-                                {user.tasks.map((task) => {
-                                    const deadline = new Date(
-                                        formatDateTime(task.deadline, true),
-                                    );
-                                    const today = new Date();
-                                    const type =
-                                        deadline < today
-                                            ? "Complete"
-                                            : "Upcoming";
-                                    return (
-                                        <div
-                                            key={task.id}
-                                            className={`${styles.taskCard} ${styles.taskCardWhiteBg}`}
-                                        >
+                        {user.tasks_published &&
+                            user.tasks_published.length > 0 && (
+                                <div className={styles.tasksListPublished}>
+                                    {user.tasks_published.map((task) => {
+                                        const deadline = new Date(
+                                            formatDateTime(task.deadline, true),
+                                        );
+                                        const today = new Date();
+                                        const type =
+                                            deadline < today
+                                                ? "Complete"
+                                                : "Upcoming";
+                                        return (
                                             <div
-                                                className={styles.taskCardIcon}
-                                            >
-                                                <IconComponent
-                                                    icon="task-details-icon"
-                                                    className={
-                                                        styles.taskCircleIcon
-                                                    }
-                                                />
-                                            </div>
-                                            <div
-                                                className={styles.taskCardInfo}
+                                                key={task.id}
+                                                className={`${styles.taskCard} ${styles.taskCardWhiteBg}`}
                                             >
                                                 <div
                                                     className={
-                                                        styles.taskCardTitle
+                                                        styles.taskCardIcon
                                                     }
                                                 >
-                                                    {task.name}
+                                                    <IconComponent
+                                                        icon="task-details-icon"
+                                                        className={
+                                                            styles.taskCircleIcon
+                                                        }
+                                                    />
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.taskCardSubject
+                                                        styles.taskCardInfo
                                                     }
                                                 >
-                                                    {task.subject?.name ||
-                                                        "N/A"}
+                                                    <div
+                                                        className={
+                                                            styles.taskCardTitle
+                                                        }
+                                                    >
+                                                        {task.name}
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.taskCardSubject
+                                                        }
+                                                    >
+                                                        {task.subject?.name ||
+                                                            "N/A"}
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.taskCardDate
+                                                        }
+                                                    >
+                                                        Due:{" "}
+                                                        {task.deadline
+                                                            ? formatDateTime(
+                                                                  task.deadline,
+                                                              )
+                                                            : "N/A"}
+                                                    </div>
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.taskCardDate
+                                                        styles.taskCardBadges
                                                     }
                                                 >
-                                                    Due:{" "}
-                                                    {task.deadline
-                                                        ? formatDateTime(
-                                                              task.deadline,
-                                                          )
-                                                        : "N/A"}
+                                                    <span
+                                                        className={`${styles.taskBadge} ${styles.taskBadgePublisher}`}
+                                                    >
+                                                        Publisher
+                                                    </span>
+                                                    <span
+                                                        className={`${styles.taskBadge} ${type === "Complete" ? styles.taskBadgeComplete : type === "Upcoming" ? styles.taskBadgeUpcoming : styles.taskBadgePending}`}
+                                                    >
+                                                        {type || "Pending"}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={
-                                                    styles.taskCardBadges
-                                                }
-                                            >
-                                                <span
-                                                    className={`${styles.taskBadge} ${styles.taskBadgePublisher}`}
-                                                >
-                                                    Publisher
-                                                </span>
-                                                <span
-                                                    className={`${styles.taskBadge} ${type === "Complete" ? styles.taskBadgeComplete : type === "Upcoming" ? styles.taskBadgeUpcoming : styles.taskBadgePending}`}
-                                                >
-                                                    {type || "Pending"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                        <div className={styles.tasksListGray}>
-                            {user.tasks && user.tasks.length > 0 ? (
-                                user.tasks.map((task) => {
-                                    const deadline = new Date(
-                                        formatDateTime(task.deadline, true),
-                                    );
-                                    const today = new Date();
-                                    const type =
-                                        deadline < today
-                                            ? "Complete"
-                                            : "Upcoming";
-                                    return (
-                                        <div
-                                            key={task.id}
-                                            className={styles.taskCard}
-                                        >
-                                            <div
-                                                className={styles.taskCardIcon}
-                                            >
-                                                <IconComponent
-                                                    icon="task-details-icon"
-                                                    className={
-                                                        styles.taskCircleIcon
-                                                    }
-                                                />
-                                            </div>
-                                            <div
-                                                className={styles.taskCardInfo}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.taskCardTitle
-                                                    }
-                                                >
-                                                    {task.name}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.taskCardSubject
-                                                    }
-                                                >
-                                                    {task.subject?.name ||
-                                                        "N/A"}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.taskCardDate
-                                                    }
-                                                >
-                                                    Due:{" "}
-                                                    {task.deadline
-                                                        ? formatDateTime(
-                                                              task.deadline,
-                                                          )
-                                                        : "N/A"}
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.taskCardBadges
-                                                }
-                                            >
-                                                <span
-                                                    className={`${styles.taskBadge} ${type === "Complete" ? styles.taskBadgeComplete : type === "Upcoming" ? styles.taskBadgeUpcoming : styles.taskBadgePending}`}
-                                                >
-                                                    {type || "Pending"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <div className={styles.emptySection}>
-                                    No tasks
+                                        );
+                                    })}
                                 </div>
                             )}
-                        </div>
                     </div>
                 </section>
             </div>
@@ -647,9 +503,9 @@ export const UserPage = () => {
                             </span>
                         </div>
                         <div className={styles.announcementList}>
-                            {user.announcements &&
-                            user.announcements.length > 0 ? (
-                                user.announcements.map(
+                            {user.announcements_published &&
+                            user.announcements_published.length > 0 ? (
+                                user.announcements_published.map(
                                     (announcement, index) => (
                                         <div
                                             key={announcement.id}
