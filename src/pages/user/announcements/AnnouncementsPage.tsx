@@ -54,8 +54,10 @@ export const AnnouncementsPage = () => {
             const result = await getAnnouncements({
                 data: {
                     query: searchQuery || undefined,
-                    date_from: new Date(dateFromFilter),
-                    date_to: new Date(dateToFilter),
+                    date_from: dateFromFilter
+                        ? new Date(dateFromFilter)
+                        : undefined,
+                    date_to: dateToFilter ? new Date(dateToFilter) : undefined,
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
