@@ -26,6 +26,7 @@ type MaterialCardProps = {
     onDownload?: (fileId: string, fileName: string) => void;
     onOpenLink?: (url: string) => void;
     showCount?: boolean;
+    showAll?: boolean;
     className?: string;
     isDraggingGlobal?: boolean;
 };
@@ -46,6 +47,7 @@ export const MaterialCard = ({
     onOpenLink,
     onDrop,
     showCount = true,
+    showAll = false,
     className = "",
     isDraggingGlobal = false,
 }: MaterialCardProps) => {
@@ -248,7 +250,7 @@ export const MaterialCard = ({
                         onCopy={handleCopy}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
-                        showAll={showCount}
+                        showAll={showAll}
                     />
                 </div>
                 <div className={styles.folderContent}>

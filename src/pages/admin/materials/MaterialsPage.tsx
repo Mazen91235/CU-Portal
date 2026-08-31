@@ -1180,6 +1180,8 @@ export function MaterialsPage() {
                                             isDraggingGlobal={
                                                 draggedFilesState.active
                                             }
+                                            showCount={true}
+                                            showAll={true}
                                         />
                                     );
                                 })}
