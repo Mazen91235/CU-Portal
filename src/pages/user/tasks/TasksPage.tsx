@@ -52,8 +52,12 @@ export const TasksPage = () => {
             const result = await getTasks({
                 data: {
                     query: searchQuery || undefined,
-                    deadline_from: new Date(dateFromFilter),
-                    deadline_to: new Date(dateToFilter),
+                    deadline_from: dateFromFilter
+                        ? new Date(dateFromFilter)
+                        : undefined,
+                    deadline_to: dateToFilter
+                        ? new Date(dateToFilter)
+                        : undefined,
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
