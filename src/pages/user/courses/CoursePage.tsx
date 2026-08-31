@@ -167,33 +167,7 @@ export const CoursePage = () => {
                                 text="View Materials"
                                 loadingText="Viewing Materials..."
                                 onClick={() =>
-                                    navigate(
-                                        "/user/materials?subject_id=" +
-                                            course.id,
-                                    )
-                                }
-                                type="button"
-                                isSubmitting={false}
-                                isOrange={false}
-                            />
-                        </div>
-
-                        <div className={styles.quickCard}>
-                            <IconComponent
-                                icon="sidebar-grades"
-                                className={styles.quickCardIcon}
-                            />
-                            <h5 className={styles.quickCardTitle}>Grades</h5>
-                            <p className={styles.quickCardDescription}>
-                                Check all grades in one place. Stay in the Top.
-                            </p>
-                            <Button
-                                text="View Grades"
-                                loadingText="Viewing Grades..."
-                                onClick={() =>
-                                    navigate(
-                                        "/user/grades?course_id=" + course.id,
-                                    )
+                                    navigate("/user/materials/" + course.id)
                                 }
                                 type="button"
                                 isSubmitting={false}
