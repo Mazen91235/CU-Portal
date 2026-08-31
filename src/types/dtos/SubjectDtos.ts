@@ -54,4 +54,5 @@ export type SubjectSearchDto = {
     department_id?: number | null;
     year_id?: number | null;
     is_old?: boolean | null;
+    user_id?: number | null;
 } & SearchDto;
