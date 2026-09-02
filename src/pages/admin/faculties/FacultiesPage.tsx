@@ -57,7 +57,7 @@ export const FacultiesPage = () => {
 
     const fetchFaculties = useCallback(async () => {
         try {
-            const result = await getFaculties({ limit: Infinity }).unwrap();
+            const result = await getFaculties({ limit: 1e6 }).unwrap();
             setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);

@@ -85,7 +85,7 @@ export const DepartmentsPage = () => {
                         (studyTypeFilter as DepartmentStudyType) || undefined,
                 },
                 includes: ["faculty"],
-                limit: Infinity,
+                limit: 1e6,
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {

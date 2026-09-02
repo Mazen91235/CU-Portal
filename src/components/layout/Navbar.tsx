@@ -68,7 +68,8 @@ export const Navbar = ({
             );
             await getNotifications({
                 data: { seen: false },
-                limit: Infinity,
+                page: 1,
+                limit: 1e6,
             }).unwrap();
             showToast("success", "Success", "All notifications marked as read");
         } catch (error) {

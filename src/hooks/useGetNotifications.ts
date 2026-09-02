@@ -6,7 +6,7 @@ import { useLogin } from "./useLogin";
 export default function useGetNotifications({
     seen = false,
     page = 1,
-    limit = Infinity,
+    limit = 1e6,
 }: { seen?: boolean; page?: number; limit?: number } = {}) {
     const location = useLocation();
     const isLoggedIn = useLogin();

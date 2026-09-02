@@ -62,7 +62,7 @@ export const YearsPage = () => {
 
     const fetchYears = useCallback(async () => {
         try {
-            const result = await getYears({ limit: Infinity }).unwrap();
+            const result = await getYears({ limit: 1e6 }).unwrap();
             setYears(result.data || []);
         } catch (error) {
             handlePopupErrors(error);

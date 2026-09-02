@@ -31,7 +31,7 @@ export const NotificationsPage = () => {
                 const unreadRes = await getNotifications({
                     data: { seen: false },
                     page: 1,
-                    limit: Infinity,
+                    limit: 1e6,
                 }).unwrap();
                 setUnreadNotifications(unreadRes?.data || []);
             }

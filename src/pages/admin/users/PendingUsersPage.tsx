@@ -237,7 +237,7 @@ export const PendingUsersPage = () => {
             }
             const result = await getPendingUsers({
                 data: { ...params, status: false },
-                limit: Infinity,
+                limit: 1e6,
             }).unwrap();
             const pendingUsers = result.data || [];
             await updateUsers({
@@ -269,7 +269,7 @@ export const PendingUsersPage = () => {
             }
             const result = await getPendingUsers({
                 data: { ...params, status: false },
-                limit: Infinity,
+                limit: 1e6,
             }).unwrap();
             const pendingUsers = result.data || [];
             await updateUsers({
