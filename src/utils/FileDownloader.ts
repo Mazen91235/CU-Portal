@@ -2,7 +2,7 @@ import { GetApiLink } from "./LinkHandler";
 import { GetCookie } from "./CookiesManager";
 
 export const downloadFile = async (fileId: string): Promise<string> => {
-    const response = await fetch(GetApiLink(`/${fileId}/download`), {
+    const response = await fetch(GetApiLink(`/files/${fileId}/download`), {
         method: "GET",
         headers: {
             Authorization: `Bearer ${GetCookie("access_token")}`,
