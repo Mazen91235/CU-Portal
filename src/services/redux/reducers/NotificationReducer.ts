@@ -24,7 +24,7 @@ const NotificationSlice = createSlice({
                 if (
                     payload.success === true &&
                     payload.data &&
-                    payload.data.every((n) => !n.seen)
+                    !payload.data.some((n) => n.seen)
                 ) {
                     state.notifications = payload.data || [];
                     state.hasMore = payload.next_page ?? false;
