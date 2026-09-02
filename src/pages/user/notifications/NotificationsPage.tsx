@@ -16,59 +16,43 @@ import styles from "./NotificationsPage.module.css";
 export const NotificationsPage = () => {
     const [getNotifications, { isFetching }] = useLazyGetNotificationsQuery();
     const [markNotificationAsSeen] = useMarkNotificationAsSeenMutation();
-    const [unReadPage, setUnReadPage] = useState(1);
     const [readPage, setReadPage] = useState(1);
-    const [hasUnReadNextPage, setHasUnReadNextPage] = useState(true);
     const [hasReadNextPage, setHasReadNextPage] = useState(true);
     const [unreadNotifications, setUnreadNotifications] = useState<
         NotificationResponseDto[]
     >([]);
-    const [readNotifications, setReadNotifications] = useState<NotificationResponseDto[]>(
-        [],
-    );
+    const [readNotifications, setReadNotifications] = useState<
+        NotificationResponseDto[]
+    >([]);
 
     const fetchNotifications = useCallback(async () => {
         try {
-            if (hasUnReadNextPage) {
+            if (!unreadNotifications.length) {
                 const unreadRes = await getNotifications({
                     data: { seen: false },
-                    page: unReadPage,
+                    page: 1,
+                    limit: Infinity,
                 }).unwrap();
-                setHasUnReadNextPage(unreadRes.next_page || false);
-                if (unReadPage === 1) {
-                    setUnreadNotifications(unreadRes?.data || []);
-                } else {
-                    setUnreadNotifications((prev) => [
-                        ...prev,
-                        ...(unreadRes?.data || []),
-                    ]);
-                }
+                setUnreadNotifications(unreadRes?.data || []);
             }
-            if (hasReadNextPage) {
-                const readRes = await getNotifications({
-                    data: { seen: true },
-                    page: readPage,
-                }).unwrap();
-                setHasReadNextPage(readRes.next_page || false);
-                if (readPage === 1) {
-                    setReadNotifications(readRes?.data || []);
-                } else {
-                    setReadNotifications((prev) => [
-                        ...prev,
-                        ...(readRes?.data || []),
-                    ]);
-                }
+            const readRes = await getNotifications({
+                data: { seen: true },
+                page: readPage,
+                limit: 50,
+            }).unwrap();
+            setHasReadNextPage(readRes.next_page || false);
+            if (readPage === 1) {
+                setReadNotifications(readRes?.data || []);
+            } else {
+                setReadNotifications((prev) => [
+                    ...prev,
+                    ...(readRes?.data || []),
+                ]);
             }
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [
-        getNotifications,
-        unReadPage,
-        readPage,
-        hasUnReadNextPage,
-        hasReadNextPage,
-    ]);
+    }, [getNotifications, unreadNotifications, readPage]);
 
     const authQueryParams = useCallback(
         () => fetchNotifications(),
@@ -104,17 +88,13 @@ export const NotificationsPage = () => {
             return;
         }
         try {
-            const result = await getNotifications({
-                data: { seen: false },
-                limit: Infinity,
-            }).unwrap();
-            const unreadIds = result.data?.map((n) => n.id || 0) || [];
+            const unreadIds = unreadNotifications.map((n) => n.id || 0) || [];
             await Promise.all(
                 unreadIds.map((id) =>
                     markNotificationAsSeen({ notification_id: id }).unwrap(),
                 ),
             );
-            setReadNotifications(result.data || []);
+            setReadNotifications(unreadNotifications.concat(readNotifications));
             setUnreadNotifications([]);
             showToast("success", "Success", "All notifications marked as read");
         } catch (error) {
@@ -123,13 +103,6 @@ export const NotificationsPage = () => {
     };
 
     const handlePagination = () => {
-        if (
-            hasUnReadNextPage &&
-            !isFetching &&
-            unreadNotifications.length > 0
-        ) {
-            setUnReadPage(unReadPage + 1);
-        }
         if (hasReadNextPage && !isFetching && readNotifications.length > 0) {
             setReadPage(readPage + 1);
         }
@@ -171,7 +144,9 @@ export const NotificationsPage = () => {
                                 notification={notification}
                                 isUnread={true}
                                 onMarkAsRead={() =>
-                                    handleMarkAsRead(notification.id ?? undefined)
+                                    handleMarkAsRead(
+                                        notification.id ?? undefined,
+                                    )
                                 }
                             />
                         ))

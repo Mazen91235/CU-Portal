@@ -5,6 +5,7 @@ import type { NotificationResponseDto } from "../../../types/dtos/NotificationDt
 
 const initialState = {
     notifications: [] as NotificationResponseDto[],
+    hasMore: true,
 };
 
 const NotificationSlice = createSlice({
@@ -16,11 +17,17 @@ const NotificationSlice = createSlice({
             NotificationAPI.endpoints.getNotifications.matchFulfilled,
             (
                 state,
-                { payload }: { payload: GenericAPIResponse<NotificationResponseDto[]> },
+                {
+                    payload,
+                }: { payload: GenericAPIResponse<NotificationResponseDto[]> },
             ) => {
-                if (payload.success === true) {
-                    state.notifications =
-                        payload.data || [];
+                if (
+                    payload.success === true &&
+                    payload.data &&
+                    payload.data.every((n) => !n.seen)
+                ) {
+                    state.notifications = payload.data || [];
+                    state.hasMore = payload.next_page ?? false;
                 }
             },
         );

@@ -3,11 +3,16 @@ import styles from "./Pagination.module.css";
 
 export const Pagination = ({ onReached }: { onReached: () => void }) => {
     const ref = useRef<HTMLDivElement | null>(null);
+    const delayRef = useRef<boolean>(false);
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
+                    if (entry.isIntersecting && !delayRef.current) {
+                        delayRef.current = true;
+                        setTimeout(() => {
+                            delayRef.current = false;
+                        }, 1000);
                         onReached();
                     }
                 });
