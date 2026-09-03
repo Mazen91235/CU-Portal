@@ -12,6 +12,7 @@ import type { NotificationResponseDto } from "./NotificationDtos";
 import type { LogResponseDto } from "./LogDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { SearchDto } from "./BaseDtos";
+import type { Note } from "../entities/Note";
 
 export type UserCreateDto = {
     name: string;
@@ -56,6 +57,7 @@ export type UserResponseDto = {
     notifications?: NotificationResponseDto[] | null;
     logs?: LogResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    notes?: Note[] | null;
     level?: number | null;
     canAccessAll?: boolean | null;
 };

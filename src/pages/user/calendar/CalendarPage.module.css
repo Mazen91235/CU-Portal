@@ -42,6 +42,22 @@
     font-weight: 600;
 }
 
+.add-note-btn {
+    margin-left: auto;
+    padding: 0.55rem 0.9rem;
+    border: 0;
+    border-radius: var(--primary-border-radius);
+    background: var(--primary-purple);
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.add-note-btn i {
+    margin-right: 0.35rem;
+    color: var(--white);
+}
+
 .events-list {
     margin-top: 1rem;
 }

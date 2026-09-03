@@ -52,6 +52,8 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
+import { NotePage as UserNotePage} from "./pages/user/notes/NotePage";
+import { NotesPage as UserNotesPage } from "./pages/user/notes/NotesPage";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
 
 import "./App.css";
@@ -81,6 +83,10 @@ function App() {
                     <Route path="profile" element={<ProfileSettings />} />
                     <Route path="academic" element={<AcademicSettings />} />
                     <Route path="courses" element={<RegisteredCourses />} />
+                </Route>
+                <Route path="notes">
+                    <Route index element={<UserNotesPage />} />
+                    <Route path=":noteId" element={<UserNotePage />} />
                 </Route>
                 <Route path="tasks">
                     <Route index element={<UserTasksPage />} />

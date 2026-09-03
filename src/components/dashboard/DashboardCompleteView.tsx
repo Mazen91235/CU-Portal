@@ -5,7 +5,10 @@ import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
 import type { AnnouncementResponseDto } from "../../types/dtos/AnnouncementDtos";
 import type { TaskResponseDto } from "../../types/dtos/TaskDtos";
 import type { ExamResponseDto } from "../../types/dtos/ExamDtos";
-import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
+import type {
+    CalendarDayEventDto,
+    CalendarDayEventsDto,
+} from "../../types/dtos/CalendarDtos";
 import { Calendar } from "../../components/calendar/Calendar";
 import { FloatingDay } from "../../components/calendar/FloatingDay";
 import { Card } from "../../components/card/Card";
@@ -31,6 +34,7 @@ import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
 import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
+import type { NoteFormData } from "../forms/NoteForm";
 
 export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
@@ -50,6 +54,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [isFloatingDayOpen, setIsFloatingDayOpen] = useState(false);
+    const [notes, setNotes] = useState<Record<string, CalendarDayEventDto[]>>({});
 
     const fetchExams = useCallback(async () => {
         try {
@@ -157,15 +162,39 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         setCurrentMonth(month);
     };
 
-    const selectedEvents =
-        selectedDate && eventsData[selectedDate]
+    // to be saved to API
+    const handleSaveNote = (
+        data: NoteFormData
+    ) => {
+        if (!selectedDate) return;
+        setNotes((currentNotes) => {
+            const dayNotes = currentNotes[selectedDate] || [];
+            const savedNote = {
+                      event_type: "note" as const,
+                      id: Date.now(),
+                      subject: "",
+                      due: "",
+                      ...data,
+                  };
+            return {
+                ...currentNotes,
+                [selectedDate]: [...dayNotes, savedNote],
+            };
+        });
+    };
+
+    const selectedEvents = {
+        ...(selectedDate && eventsData[selectedDate]
             ? eventsData[selectedDate]
-            : { tasks: [], exams: [], announcements: [] };
+            : { tasks: [], exams: [], announcements: [] }),
+        notes: notes[selectedDate || ""] || [],
+    };
 
     const formattedEvents = [
         ...(selectedEvents.exams || []),
         ...(selectedEvents.tasks || []),
         ...(selectedEvents.announcements || []),
+        ...(selectedEvents.notes || []),
     ];
 
     return (
@@ -191,6 +220,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         onClose={() => setIsFloatingDayOpen(false)}
                         dateStr={selectedDate}
                         events={formattedEvents}
+                        onSaveNote={handleSaveNote}
                     />
                 )}
 

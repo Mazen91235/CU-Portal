@@ -52,6 +52,11 @@ const navSectionsDefault: NavSection[] = [
                 icon: "sidebar-calendar",
             },
             {
+                label: "Notes",
+                path: "/user/notes",
+                icon: "note",
+            },
+            {
                 label: "Tasks",
                 path: "/user/tasks",
                 icon: "sidebar-tasks",

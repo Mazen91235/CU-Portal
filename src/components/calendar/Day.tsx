@@ -1,4 +1,5 @@
 import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
+import IconComponent from "../IconComponent";
 import styles from "./Day.module.css";
 
 export const Day = ({
@@ -20,6 +21,7 @@ export const Day = ({
         assignment: false,
         announcement: false,
         exam: false,
+        note: false,
     };
 
     let countExtra = 0;
@@ -42,11 +44,22 @@ export const Day = ({
         }
     });
 
+    (events.notes || []).forEach(() => {
+        if (!eventTypes.note) eventTypes.note = true;
+    });
+
     return (
         <button
             className={`${styles["day-btn"]} ${isSelected ? styles["selected"] : ""} ${isToday ? styles["today"] : ""}`}
             onClick={() => onSelect(dateStr)}
         >
+            {eventTypes.note && (
+                <div className={styles["note-icon"]}>
+                    <IconComponent icon="note" />
+                    <span className={styles["note-count"]}>{events.notes?.length}</span>
+                </div>
+                )
+            }
             <span className={styles["day-number"]}>{day}</span>
             <div className={styles["day-dots"]}>
                 {eventTypes.assignment && (

@@ -47,6 +47,11 @@
     color: var(--white);
 }
 
+.badge-note {
+    background: grey;
+    color: var(--white);
+}
+
 .event-detail {
     color: #757c8a;
     font-size: 0.9rem;

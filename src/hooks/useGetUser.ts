@@ -52,6 +52,7 @@ export default function useGetUser() {
                             "year",
                             "role",
                             "user_subject_links.subject",
+                            "notes",
                         ],
                     }).unwrap();
                 if (!validPermissionsCached)
