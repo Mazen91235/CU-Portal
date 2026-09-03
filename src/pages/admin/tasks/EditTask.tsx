@@ -22,8 +22,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { LinkData } from "../../../types/dtos/TaskDtos";
-import type { FileData } from "../../../types/entities/Task";
+import type { LinkData } from "../../../types/entities/Task";
+import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 
@@ -32,7 +32,6 @@ import {
     formatTimeInputValue,
     mergeDateAndTime,
 } from "../../../utils/Formatter";
-import { GetDriveUrl } from "../../../utils/DriveManager";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import styles from "./EditTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
@@ -54,7 +53,9 @@ export const EditTask = () => {
     const navigate = useNavigate();
     const { taskId } = useParams<{ taskId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
+    const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
+        [],
+    );
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
     const [task, setTask] = useState<TaskResponseDto | null>(null);
     const user = useAppSelector((state) => state.user.user);
@@ -84,10 +85,9 @@ export const EditTask = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
-            params.department_id =
-                user.department?.id ?? undefined ?? undefined;
-            params.year_id = user.year?.id ?? undefined ?? undefined;
+            params.faculty_id = user.faculty?.id ?? undefined;
+            params.department_id = user.department?.id ?? undefined;
+            params.year_id = user.year?.id ?? undefined;
 
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -127,19 +127,28 @@ export const EditTask = () => {
                     setValue("deadline_date", "");
                     setValue("deadline_time", "");
                 }
-                if (task.details?.files_data) {
-                    setExistingFiles(
-                        task.details.files_data.map((file, index) => {
+                setExistingFiles(
+                    task.attachments
+                        ?.filter((a) => a.is_file)
+                        .map((a) => {
                             return {
-                                ...file,
-                                url: task.urls ? task.urls[index] : "",
+                                ...(a.details?.file_data || {}),
+                                url: a.url || "",
                             };
-                        }),
-                    );
-                }
-                if (task.links && Array.isArray(task.links)) {
-                    setExistingLinks(task.links);
-                }
+                        })
+                        .filter((file) => !!file) || [],
+                );
+                setExistingLinks(
+                    task.attachments
+                        ?.filter((a) => !a.is_file)
+                        .map((a) => {
+                            return {
+                                title: a.details?.link_title || "Untitled Link",
+                                url: a.url || "",
+                            };
+                        })
+                        .filter((link) => !!link) || [],
+                );
             }
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -174,7 +183,7 @@ export const EditTask = () => {
 
         try {
             let urls = existingFiles
-                .map((file) => GetDriveUrl(file.id ?? ""))
+                .map((file) => file.url)
                 .join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
@@ -192,25 +201,25 @@ export const EditTask = () => {
                     data.deadline_date,
                     data.deadline_time,
                 )!,
-                urls: urls ? urls.split(", ") : [],
-                links: (() => {
-                    const newLinks = data.links
-                        ? data.links
-                              .split(",")
-                              .map((pair) => {
-                                  const [title, url] = pair.split("|");
-                                  return {
-                                      title: title?.trim(),
-                                      url: url?.trim(),
-                                  };
-                              })
-                              .filter((link) => link.title && link.url)
-                        : [];
-                    return newLinks.length > 0 ? newLinks : undefined;
-                })(),
-                details: data.description
-                    ? { description: data.description }
-                    : undefined,
+                details: {
+                    urls: urls ? urls.split(", ") : [],
+                    links: (() => {
+                        const newLinks = data.links
+                            ? data.links
+                                  .split(",")
+                                  .map((pair) => {
+                                      const [title, url] = pair.split("|");
+                                      return {
+                                          title: title?.trim(),
+                                          url: url?.trim(),
+                                      };
+                                  })
+                                  .filter((link) => link.title && link.url)
+                            : [];
+                        return newLinks.length > 0 ? newLinks : undefined;
+                    })(),
+                    description: data.description ?? undefined,
+                },
             };
 
             await updateTask(taskData).unwrap();
@@ -342,7 +351,7 @@ export const EditTask = () => {
                             existingFiles={existingFiles.map((file, index) => ({
                                 id: `existing-${index}`,
                                 name: file.name || `File ${index + 1}`,
-                                url: task?.urls?.[index] || "",
+                                url: file.url || "",
                                 isExisting: true,
                             }))}
                             setExistingFiles={(files) => {

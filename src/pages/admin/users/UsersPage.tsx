@@ -66,6 +66,7 @@ export const UsersPage = () => {
             }
             await getUsersData({
                 data: params,
+                includes: ["avatar"],
             }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
@@ -115,7 +116,7 @@ export const UsersPage = () => {
                 faculty_id?: number;
                 department_id?: number;
                 year_id?: number;
-            } = { };
+            } = {};
 
             if (searchQuery) params.query = searchQuery;
             if (selectedFaculty) params.faculty_id = Number(selectedFaculty);

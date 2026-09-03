@@ -28,9 +28,7 @@ export type User = {
     status?: boolean | null;
     is_early_access?: boolean | null;
     manages?: object;
-    details?: {
-        avatar?: Date | null;
-    };
+    details?: object;
     google_id?: string | null;
     google_name?: string | null;
     google_email?: string | null;
@@ -41,6 +39,8 @@ export type User = {
     refresh_expire_at?: Date | null;
     created_at?: Date | null;
     updated_at?: Date | null;
+    avatar_id?: number | null;
+    avatar?: Attachment | null;
     year_id?: number | null;
     year?: Year | null;
     department_id?: number | null;

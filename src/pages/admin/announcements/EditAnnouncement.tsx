@@ -22,8 +22,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
-import type { LinkData } from "../../../types/dtos/TaskDtos";
-import type { FileData } from "../../../types/entities/Task";
+import type { LinkData } from "../../../types/entities/Task";
+import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
@@ -33,7 +33,6 @@ import {
     formatTimeInputValue,
     mergeDateAndTime,
 } from "../../../utils/Formatter";
-import { GetDriveUrl } from "../../../utils/DriveManager";
 import styles from "./EditAnnouncement.module.css";
 
 const announcementSchema = z.object({
@@ -52,7 +51,9 @@ export const EditAnnouncement = () => {
     const navigate = useNavigate();
     const { announcementId } = useParams<{ announcementId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
+    const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
+        [],
+    );
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
     const [announcement, setAnnouncement] =
         useState<AnnouncementResponseDto | null>(null);
@@ -83,10 +84,9 @@ export const EditAnnouncement = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
-            params.department_id =
-                user.department?.id ?? undefined ?? undefined;
-            params.year_id = user.year?.id ?? undefined ?? undefined;
+            params.faculty_id = user.faculty?.id ?? undefined;
+            params.department_id = user.department?.id ?? undefined;
+            params.year_id = user.year?.id ?? undefined;
 
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -125,21 +125,28 @@ export const EditAnnouncement = () => {
                     setValue("date_date", "");
                     setValue("date_time", "");
                 }
-                if (announcement.details?.files_data) {
-                    setExistingFiles(
-                        announcement.details.files_data.map((file, index) => {
+                setExistingFiles(
+                    announcement.attachments
+                        ?.filter((a) => a.is_file)
+                        .map((a) => {
                             return {
-                                ...file,
-                                url: announcement.urls
-                                    ? announcement.urls[index]
-                                    : "",
+                                ...(a.details?.file_data || {}),
+                                url: a.url || "",
                             };
-                        }),
-                    );
-                }
-                if (announcement.links && Array.isArray(announcement.links)) {
-                    setExistingLinks(announcement.links);
-                }
+                        })
+                        .filter((file) => !!file) || [],
+                );
+                setExistingLinks(
+                    announcement.attachments
+                        ?.filter((a) => !a.is_file)
+                        .map((a) => {
+                            return {
+                                title: a.details?.link_title || "Untitled Link",
+                                url: a.url || "",
+                            };
+                        })
+                        .filter((link) => !!link.url) || [],
+                );
             }
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
@@ -173,9 +180,7 @@ export const EditAnnouncement = () => {
         if (!announcementId) return;
 
         try {
-            let urls = existingFiles
-                .map((file) => GetDriveUrl(file.id ?? ""))
-                .join(", ");
+            let urls = existingFiles.map((file) => file.url).join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
@@ -194,22 +199,24 @@ export const EditAnnouncement = () => {
                           data.date_time || "00:00",
                       )
                     : undefined,
-                urls: urls != "" ? urls.split(", ") : [],
-                links: (() => {
-                    const newLinks = data.links
-                        ? data.links
-                              .split(",")
-                              .map((pair) => {
-                                  const [title, url] = pair.split("|");
-                                  return {
-                                      title: title?.trim(),
-                                      url: url?.trim(),
-                                  };
-                              })
-                              .filter((link) => link.title && link.url)
-                        : [];
-                    return newLinks.length > 0 ? newLinks : undefined;
-                })(),
+                details: {
+                    urls: urls != "" ? urls.split(", ") : [],
+                    links: (() => {
+                        const newLinks = data.links
+                            ? data.links
+                                  .split(",")
+                                  .map((pair) => {
+                                      const [title, url] = pair.split("|");
+                                      return {
+                                          title: title?.trim(),
+                                          url: url?.trim(),
+                                      };
+                                  })
+                                  .filter((link) => link.title && link.url)
+                            : [];
+                        return newLinks.length > 0 ? newLinks : undefined;
+                    })(),
+                },
             };
 
             await updateAnnouncement(announcementData).unwrap();
@@ -330,7 +337,7 @@ export const EditAnnouncement = () => {
                             existingFiles={existingFiles.map((file, index) => ({
                                 id: `existing-${index}`,
                                 name: file.name || `File ${index + 1}`,
-                                url: announcement?.urls?.[index] || "",
+                                url: file.url || "",
                                 isExisting: true,
                             }))}
                             setExistingFiles={(files) => {

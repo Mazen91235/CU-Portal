@@ -55,7 +55,7 @@ export const ProfileSettings = () => {
             setValue("gender", (user?.gender as "male" | "female") || "male");
             setValue("googleAccount", user?.google_email || "");
             const avatarPath =
-                user?.details?.avatar || user?.google_avatar || "";
+                user?.avatar?.url || user?.google_avatar || "";
             setCurrentImg(GetAvatarLink(avatarPath));
         }
     }, [user, setValue]);
@@ -68,7 +68,7 @@ export const ProfileSettings = () => {
     const [updateUser] = useUpdateUserDataMutation();
     const onSubmit = async (data: ProfileFormData) => {
         try {
-            let url = user?.details?.avatar || user?.google_avatar || "";
+            let url = user?.avatar?.url || user?.google_avatar || "";
             if (data.avatar && data.avatar.length > 0) {
                 url = (await uploadFileToDrive(data.avatar[0])) || url;
             }

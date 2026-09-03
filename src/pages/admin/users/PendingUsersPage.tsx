@@ -112,7 +112,13 @@ export const PendingUsersPage = () => {
 
             const result = await getPendingUsers({
                 data: params,
-                includes: ["pending_user", "faculty", "department", "year"],
+                includes: [
+                    "pending_user.attachment",
+                    "attachment",
+                    "faculty",
+                    "department",
+                    "year",
+                ],
                 page,
             }).unwrap();
             setPendingUsers((prev) => {
@@ -389,7 +395,7 @@ export const PendingUsersPage = () => {
                                     <img
                                         className={styles.pendingMiniAvatar}
                                         src={
-                                            user.details?.avatar ||
+                                            user.avatar?.url ||
                                             user.google_avatar ||
                                             "https://via.placeholder.com/72"
                                         }
@@ -472,9 +478,11 @@ export const PendingUsersPage = () => {
                                                     styles.pendingMiniIdBtn
                                                 }
                                                 onClick={() =>
-                                                    user.pending_user?.url &&
+                                                    user.pending_user
+                                                        ?.attachment?.url &&
                                                     handleViewImage(
-                                                        user.pending_user.url,
+                                                        user.pending_user
+                                                            .attachment.url,
                                                     )
                                                 }
                                             >

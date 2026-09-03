@@ -3,29 +3,9 @@ import type { SubjectResponseDto } from "./SubjectDtos";
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
+import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { SearchDto } from "./BaseDtos";
-import type { FileData } from "../entities/Task";
-
-export type FileDataWithExisting = FileData & {
-    url?: string;
-    isExisting?: boolean;
-};
-
-export type LinkData = {
-    title: string;
-    url: string;
-};
-
-export type TaskDetails = {
-    description?: string;
-    instructions?: string;
-    location?: string;
-    exam_type?: string;
-    exam_format?: "MCQ" | "Written" | "Mixed" | "Practical" | "Oral" | "Other";
-    exam_weight?: string;
-    duration?: number;
-    files_data?: FileData[];
-};
+import type { TaskDetails } from "../entities/Task";
 
 export type TaskCreateDto = {
     name: string;
@@ -35,8 +15,6 @@ export type TaskCreateDto = {
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
-    urls?: string[];
-    links?: LinkData[];
     details?: TaskDetails;
 };
 
@@ -45,8 +23,6 @@ export type TaskResponseDto = {
     name?: string | null;
     task_type?: string | null;
     url?: string | null;
-    urls?: string[] | null;
-    links?: LinkData[] | null;
     details?: TaskDetails | null;
     deadline?: Date | null;
     due_date?: Date | null;
@@ -57,6 +33,7 @@ export type TaskResponseDto = {
     faculty?: FacultyResponseDto | null;
     department?: DepartmentResponseDto | null;
     year?: YearResponseDto | null;
+    attachments?: AttachmentResponseDto[] | null;
 };
 
 export type TaskUpdateDto = {
@@ -67,8 +44,6 @@ export type TaskUpdateDto = {
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
-    urls?: string[];
-    links?: LinkData[];
     details?: TaskDetails;
 };
 

@@ -1,34 +1,38 @@
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { SearchDto } from "./BaseDtos";
-import type { FileData } from "../entities/Task";
+import type { AttachmentResponseDto } from "./AttachmentDtos";
 
 export type MaterialCreateDto = {
     name: string;
     material_type: string;
-    url?: string | null;
     subject_id: number;
     parent_id?: number | null;
+    details?: {
+        url?: string | null;
+    };
 };
 
 export type MaterialResponseDto = {
     id?: number | null;
     name?: string | null;
     material_type?: string | null;
-    url?: string | null;
-    details?: { file_data?: FileData; fetched?: boolean; folders_count?: number; files_count?: number } | null;
+    details?: object | null;
     created_at?: string | null;
     updated_at?: string | null;
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     parent_id?: number | null;
     children?: MaterialResponseDto[] | null;
+    attachment?: AttachmentResponseDto | null;
 };
 
 export type MaterialUpdateDto = {
     name: string;
     material_type: string;
-    url?: string | null;
+    details?: {
+        url?: string | null;
+    };
 };
 
 export type MaterialsDeleteDto = {

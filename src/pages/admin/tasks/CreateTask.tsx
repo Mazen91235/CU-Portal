@@ -23,7 +23,6 @@ import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResp
 import { Form } from "../../../components/forms/Form";
 import { mergeDateAndTime } from "../../../utils/Formatter";
 
-
 import styles from "./CreateTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
 
@@ -69,7 +68,8 @@ export const CreateTask = () => {
             } = {};
             if (!user) return;
             params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
-            params.department_id = user.department?.id ?? undefined ?? undefined;
+            params.department_id =
+                user.department?.id ?? undefined ?? undefined;
             params.year_id = user.year?.id ?? undefined ?? undefined;
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -113,19 +113,20 @@ export const CreateTask = () => {
                     data.deadline_date,
                     data.deadline_time,
                 )!,
-                urls: urls ? urls.split(", ") : [],
-                links: data.links
-                    ?.split(",")
-                    .map((pair) => {
-                        const [title, url] = pair.split("|");
-                        return { title: title?.trim(), url: url?.trim() };
-                    })
-                    .filter((link): link is { title: string; url: string } =>
-                        Boolean(link.title && link.url),
-                    ),
-                details: data.description
-                    ? { description: data.description }
-                    : undefined,
+                details: {
+                    urls: urls ? urls.split(", ") : [],
+                    links: data.links
+                        ?.split(",")
+                        .map((pair) => {
+                            const [title, url] = pair.split("|");
+                            return { title: title?.trim(), url: url?.trim() };
+                        })
+                        .filter(
+                            (link): link is { title: string; url: string } =>
+                                Boolean(link.title && link.url),
+                        ),
+                    description: data.description ?? undefined,
+                },
             };
 
             await createTask(taskData).unwrap();

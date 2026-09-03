@@ -9,7 +9,7 @@ import {
     useLazyGetMaterialsQuery,
     useCreateMaterialMutation,
     useUpdateMaterialMutation,
-    useDeleteMaterialMutation,
+    useDeleteMaterialsMutation,
     useCopyMaterialsMutation,
     useMoveMaterialsMutation,
     useFetchMaterialsFromDriveMutation,
@@ -122,8 +122,8 @@ export function MaterialsPage() {
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
     const [updateMaterial] = useUpdateMaterialMutation();
-    const [deleteMaterial, { isLoading: isDeleting }] =
-        useDeleteMaterialMutation();
+    const [deleteMaterials, { isLoading: isDeleting }] =
+        useDeleteMaterialsMutation();
     const [copyMaterials] = useCopyMaterialsMutation();
     const [moveMaterials, { isLoading: isMoving }] = useMoveMaterialsMutation();
     const [getMaterialsFromDrive] = useFetchMaterialsFromDriveMutation();
@@ -209,7 +209,7 @@ export function MaterialsPage() {
                         parent_id: parentId ?? null,
                         query: searchQuery || undefined,
                     },
-                    includes: ["subject", "children"],
+                    includes: ["subject", "children", "attachment"],
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
@@ -451,9 +451,7 @@ export function MaterialsPage() {
         if (materialIds.length === 0) return;
 
         try {
-            for (const materialId of materialIds) {
-                await deleteMaterial({ material_id: materialId }).unwrap();
-            }
+            await deleteMaterials({ material_ids: materialIds }).unwrap();
             showToast(
                 "success",
                 "Success",
@@ -502,14 +500,18 @@ export function MaterialsPage() {
                         material_id: material.id,
                         name,
                         material_type,
-                        url: url || null,
+                        details: {
+                            url: url,
+                        },
                     }).unwrap();
                 } else {
                     result = await createMaterial({
                         subject_id: parseInt(subjectFilter),
                         name,
                         material_type,
-                        url: url || null,
+                        details: {
+                            url: url,
+                        },
                         parent_id: parent_id ? parseInt(parent_id) : null,
                     }).unwrap();
                 }
@@ -602,7 +604,9 @@ export function MaterialsPage() {
         } else if (type === "file") {
             url += `?material_id=${materialId}`;
         } else {
-            url = materials.find((m) => m.id === materialId)?.url || "";
+            url =
+                materials.find((m) => m.id === materialId)?.attachment?.url ||
+                "";
         }
         copyToClipboard(url);
         showToast(
@@ -741,7 +745,7 @@ export function MaterialsPage() {
             );
             if (material) {
                 handlePreview(
-                    material.details?.file_data?.id || "",
+                    material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
                 setSearchParams({}, { replace: true });
@@ -903,7 +907,9 @@ export function MaterialsPage() {
                 material_type: "file",
                 subject_id: parseInt(subjectFilter),
                 parent_id: parentId ?? undefined,
-                url: uploadResult.url,
+                details: {
+                    url: uploadResult.url,
+                },
             }).unwrap();
 
             const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;

@@ -5,13 +5,8 @@ import type {
     Path,
     UseFormSetValue,
 } from "react-hook-form";
-import type { FileData } from "../../types/entities/Task";
+import type { FileDataWithExisting } from "../../types/entities/Attachment";
 import styles from "./FilesInputContainer.module.css";
-
-export type FileDataWithExisting = FileData & {
-    url?: string;
-    isExisting?: boolean;
-};
 
 export const FilesInputContainer = <T extends Record<string, unknown>>({
     register,

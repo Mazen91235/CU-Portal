@@ -1,4 +1,3 @@
-import type { LinkData, FileData } from "./Task";
 import type { Department } from "./Department";
 import type { Faculty } from "./Faculty";
 import type { User } from "./User";
@@ -16,11 +15,8 @@ export type Event = {
     price?: number;
     location_type?: Date;
     location?: Date;
-    urls?: string[];
-    links?: LinkData[];
     details?: {
         description?: string;
-        files_data?: FileData[];
     };
     created_at?: Date | null;
     updated_at?: Date | null;

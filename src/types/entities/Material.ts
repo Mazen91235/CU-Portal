@@ -1,5 +1,4 @@
 import type { Subject } from "./Subject";
-import type { FileData } from "./Task";
 import type { User } from "./User";
 import type { Week } from "./Week";
 import type { Attachment } from "./Attachment";
@@ -8,11 +7,7 @@ export type Material = {
     id?: number;
     name?: string | null;
     material_type?: MaterialType;
-    url?: string | null;
-    details?: {
-        file_data?: FileData;
-        fetched?: boolean;
-    };
+    details?: object;
     created_at?: Date | null;
     updated_at?: Date | null;
     subject_id?: number | null;

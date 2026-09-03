@@ -155,7 +155,7 @@ const CreateProfilePage = () => {
                 agreed: data.agreed,
                 is_early_access: data.early_access || false,
                 google_details_token: googleDetailsToken,
-                url: fileUrl || undefined,
+                details: { url: fileUrl || undefined },
             }).unwrap();
 
             navigate("/verify-email", {

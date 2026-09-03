@@ -76,20 +76,21 @@ export const AdminMaterialAPI = createApi({
             { material_id: number } & MaterialUpdateDto
         >({
             query: ({ material_id, ...data }) => ({
-                url: `/update/${material_id}`,
+                url: `/${material_id}`,
                 method: "PATCH",
                 credentials: "include",
                 body: data,
             }),
         }),
-        deleteMaterial: builder.mutation<
+        deleteMaterials: builder.mutation<
             GenericAPIResponse,
-            { material_id: number }
+            { material_ids: number[] }
         >({
-            query: ({ material_id }) => ({
-                url: `/${material_id}`,
+            query: ({ material_ids }) => ({
+                url: `/`,
                 method: "DELETE",
                 credentials: "include",
+                body: material_ids,
             }),
         }),
         copyMaterials: builder.mutation<
@@ -123,7 +124,7 @@ export const {
     useFetchMaterialsFromDriveMutation,
     useCreateMaterialMutation,
     useUpdateMaterialMutation,
-    useDeleteMaterialMutation,
+    useDeleteMaterialsMutation,
     useCopyMaterialsMutation,
     useMoveMaterialsMutation,
 } = AdminMaterialAPI;

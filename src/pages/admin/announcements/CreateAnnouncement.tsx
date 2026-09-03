@@ -113,14 +113,16 @@ export const CreateAnnouncement = () => {
                           data.date_time || "00:00",
                       )
                     : undefined,
-                urls: urls != "" ? urls.split(", ") : [],
-                links: data.links
-                    ?.split(",")
-                    .map((pair) => {
-                        const [title, url] = pair.split("|");
-                        return { title: title?.trim(), url: url?.trim() };
-                    })
-                    .filter((link) => link.title && link.url),
+                details: {
+                    urls: urls != "" ? urls.split(", ") : [],
+                    links: data.links
+                        ?.split(",")
+                        .map((pair) => {
+                            const [title, url] = pair.split("|");
+                            return { title: title?.trim(), url: url?.trim() };
+                        })
+                        .filter((link) => link.title && link.url),
+                },
             };
 
             await createAnnouncement(announcementData).unwrap();

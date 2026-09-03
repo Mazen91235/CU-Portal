@@ -5,45 +5,29 @@ import type { Faculty } from "./Faculty";
 import type { Subject } from "./Subject";
 import type { Attachment } from "./Attachment";
 
-export type FileData = {
-    id?: string;
-    name?: string;
-    mime_type?: string;
-    file_type?: string;
-    type?: string;
-    size?: string;
-    web_content_link?: string;
-    web_view_link?: string;
-};
-
 export type LinkData = {
     title: string;
     url: string;
+};
+
+export type TaskDetails = {
+    description?: string;
+    instructions?: string;
+    location?: string;
+    exam_type?: string;
+    exam_format?: "MCQ" | "Written" | "Mixed" | "Practical" | "Oral" | "Other";
+    exam_weight?: string;
+    duration?: number;
+    urls?: string[] | null;
+    links?: LinkData[] | null;
 };
 
 export type Task = {
     id?: number;
     name?: string | null;
     task_type?: string | null;
-    urls?: string[] | null;
-    links?: Record<string, string>[] | null;
     url?: string | null;
-    details?: {
-        description?: string;
-        instructions?: string;
-        location?: Date;
-        exam_type?: string;
-        exam_format?:
-            | "MCQ"
-            | "Written"
-            | "Mixed"
-            | "Practical"
-            | "Oral"
-            | "Other";
-        exam_weight?: string;
-        duration?: number;
-        files_data?: FileData[];
-    };
+    details?: Omit<TaskDetails, 'urls' | 'links'> | null;
     deadline?: Date;
     due_date?: Date | null;
     created_at?: Date | null;

@@ -6,7 +6,7 @@ import type {
     UseFormSetValue,
 } from "react-hook-form";
 import { showToast } from "../../utils/ToastsManager";
-import type { LinkData } from "../../types/dtos/TaskDtos";
+import type { LinkData } from "../../types/entities/Task";
 import styles from "./LinksInputContainer.module.css";
 
 export type LinkDataWithExisting = LinkData & { isExisting?: boolean };

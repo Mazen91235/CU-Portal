@@ -18,7 +18,8 @@ import styles from "./AnnouncementPage.module.css";
 export const AnnouncementPage = () => {
     const { announcementId } = useParams<{ announcementId: string }>();
     const navigate = useNavigate();
-    const [announcement, setAnnouncement] = useState<AnnouncementResponseDto | null>(null);
+    const [announcement, setAnnouncement] =
+        useState<AnnouncementResponseDto | null>(null);
 
     const [getAnnouncement] = useLazyGetAnnouncementQuery();
 
@@ -92,16 +93,14 @@ export const AnnouncementPage = () => {
                                     <span>No content available</span>
                                 )}
 
-                                {((announcement.details?.files_data &&
-                                    announcement.details.files_data.length >
-                                        0) ||
-                                    (announcement.links &&
-                                        announcement.links.length > 0)) && (
-                                    <AttachmentsAndLinksSection
-                                        files={announcement.details?.files_data}
-                                        links={announcement.links || []}
-                                    />
-                                )}
+                                {announcement.attachments &&
+                                    announcement.attachments.length > 0 && (
+                                        <AttachmentsAndLinksSection
+                                            attachments={
+                                                announcement.attachments
+                                            }
+                                        />
+                                    )}
                             </div>
                         </LongSection>
                     </div>

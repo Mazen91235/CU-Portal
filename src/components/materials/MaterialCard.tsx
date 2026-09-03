@@ -161,29 +161,29 @@ export const MaterialCard = ({
 
     const handlePreview = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (material.details?.file_data?.id && onPreview) {
+        if (material.attachment && onPreview) {
             onPreview(
-                material.details.file_data.id,
+                material.attachment.details?.file_data?.id || "",
                 material.name || "",
-                material.details.file_data.name || "",
-                material.details.file_data.mime_type || "",
+                material.attachment.details?.file_data?.name || "",
+                material.attachment.details?.file_data?.mime_type || "",
             );
         }
     };
 
     const handleDownload = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (material.details?.file_data?.id && onDownload) {
+        if (material.attachment && onDownload) {
             const downloadName =
-                material.name || material.details.file_data.name || "download";
-            onDownload(material.details.file_data.id, downloadName);
+                material.name || material.attachment.details?.file_data?.name || "download";
+            onDownload(material.attachment.details?.file_data?.id || "", downloadName);
         }
     };
 
     const handleOpenLink = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (material.url && onOpenLink) {
-            onOpenLink(material.url);
+        if (material.attachment?.url && onOpenLink) {
+            onOpenLink(material.attachment.url);
         }
     };
 
@@ -467,8 +467,8 @@ export const MaterialCard = ({
                 <div className={styles.fileIcon}>
                     <img
                         src={getFileIcon(
-                            material.details?.file_data?.file_type ||
-                                material.details?.file_data?.type ||
+                            material.attachment?.details?.file_data?.file_type ||
+                                material.attachment?.details?.file_data?.type ||
                                 material.material_type ||
                                 undefined,
                         )}

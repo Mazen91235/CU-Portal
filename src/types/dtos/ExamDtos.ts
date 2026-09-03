@@ -1,10 +1,10 @@
+import type { TaskDetails } from "../entities/Task";
 import type { UserResponseDto } from "./UserDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { SearchDto } from "./BaseDtos";
-import type { TaskDetails } from "./TaskDtos";
 
 export type ExamCreateDto = {
     name: string;

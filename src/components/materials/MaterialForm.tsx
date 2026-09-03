@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
 import { Button } from "../forms/Button";
-import type { FileDataWithExisting } from "../../types/dtos/TaskDtos";
+import type { FileDataWithExisting } from "../../types/entities/Attachment";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { useAppDispatch } from "../../services/redux/Hooks";
 import { setProcess } from "../../services/redux/reducers/ProcessReducer";
@@ -29,7 +29,7 @@ export function MaterialForm({
     const [materialType, setMaterialType] = useState<
         "folder" | "file" | "drive" | "youtube" | "external" | null
     >(initialMaterialType);
-    const [link, setLink] = useState(material?.url || "");
+    const [link, setLink] = useState(material?.attachment?.url || "");
     const [file, setFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [existingFileData, setExistingFileData] = useState<FileDataWithExisting | null>(
@@ -50,13 +50,13 @@ export function MaterialForm({
                     | "youtube"
                     | "external",
             );
-            setLink(material.url || "");
-            if (material.material_type === "file" && material.details?.file_data) {
+            setLink(material.attachment?.url || "");
+            if (material.material_type === "file" && material.attachment) {
                 setExistingFileData({
-                    id: material.details.file_data.id || "",
-                    name: material.details.file_data.name || "",
-                    mime_type: material.details.file_data.mime_type || "",
-                    url: material.url || "",
+                    id: material.attachment.details?.file_data?.id || "",
+                    name: material.attachment.details?.file_data?.name || "",
+                    mime_type: material.attachment.details?.file_data?.mime_type || "",
+                    url: material.attachment.url || "",
                 });
             }
         }
@@ -173,20 +173,20 @@ export function MaterialForm({
         } else {
             setLink("");
         }
-        if (material && material.material_type === value && material.url) {
-            setLink(material.url);
+        if (material && material.material_type === value && material.attachment?.url) {
+            setLink(material.attachment.url);
         }
         if (
             material &&
             material.material_type === "file" &&
             value === "file" &&
-            material.details?.file_data
+            material.attachment
         ) {
             setExistingFileData({
-                id: material.details.file_data.id || "",
-                name: material.details.file_data.name || "",
-                mime_type: material.details.file_data.mime_type || "",
-                url: material.url || "",
+                id: material.attachment.details?.file_data?.id || "",
+                name: material.attachment.details?.file_data?.name || "",
+                mime_type: material.attachment.details?.file_data?.mime_type || "",
+                url: material.attachment.url || "",
             });
         }
     };

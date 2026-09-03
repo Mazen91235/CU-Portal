@@ -12,7 +12,7 @@ type AvatarProps = {
 
 export const Avatar = ({ user, url, size, className }: AvatarProps) => {
     const links = useMemo(() => {
-        const links = [user?.details?.avatar, user?.google_avatar, url].filter(
+        const links = [user?.avatar?.url, user?.google_avatar, url].filter(
             Boolean,
         ) as string[];
         links.push("");

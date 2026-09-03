@@ -73,7 +73,7 @@ export function MaterialsPage() {
                         parent_id: parentId ?? null,
                         query: searchQuery || undefined,
                     },
-                    includes: ["subject", "children"],
+                    includes: ["subject", "children", "attachment"],
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
@@ -184,7 +184,9 @@ export function MaterialsPage() {
         } else if (type === "file") {
             url += `?material_id=${materialId}`;
         } else {
-            url = materials.find((m) => m.id === materialId)?.url || "";
+            url =
+                materials.find((m) => m.id === materialId)?.attachment?.url ||
+                "";
         }
         copyToClipboard(url);
         showToast(
@@ -202,7 +204,7 @@ export function MaterialsPage() {
             );
             if (material) {
                 handlePreview(
-                    material.details?.file_data?.id || "",
+                    material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
                 setSearchParams({}, { replace: true });

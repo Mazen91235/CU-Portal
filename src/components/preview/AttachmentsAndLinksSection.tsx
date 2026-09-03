@@ -1,21 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Preview } from "./Preview";
-import type { FileDataWithExisting, LinkData } from "../../types/dtos/TaskDtos";
-import type { FileData } from "../../types/entities/Task";
+import type {
+    FileData,
+    FileDataWithExisting,
+} from "../../types/entities/Attachment";
+import type { AttachmentResponseDto } from "../../types/dtos/AttachmentDtos";
 import styles from "./AttachmentsAndLinksSection.module.css";
 import { downloadFile } from "../../utils/FileDownloader";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { Heading } from "../heading/Heading";
 
-type AttachmentsAndLinksSectionProps = {
-    files?: FileData[];
-    links?: LinkData[];
-};
-
 export const AttachmentsAndLinksSection = ({
-    files,
-    links,
-}: AttachmentsAndLinksSectionProps) => {
+    attachments,
+}: {
+    attachments?: AttachmentResponseDto[] | null;
+}) => {
+    const files = useMemo(() => {
+        return (
+            attachments
+                ?.filter((attachment) => attachment.is_file)
+                .map((attachment) => attachment.details?.file_data)
+                .filter((file) => !!file) || []
+        );
+    }, [attachments]);
+    const links = useMemo(() => {
+        return (
+            attachments
+                ?.filter((attachment) => !attachment.is_file)
+                .map((attachment) => ({
+                    title: attachment.details?.link_title || "Untitled Link",
+                    url: attachment.url || "",
+                })) || []
+        );
+    }, [attachments]);
     const [previewFile, setPreviewFile] = useState<FileData | null>(null);
     const [fileToDownload, setFileToDownload] =
         useState<FileDataWithExisting | null>(null);

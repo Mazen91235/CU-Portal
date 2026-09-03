@@ -11,6 +11,7 @@ import type { AnnouncementResponseDto } from "./AnnouncementDtos";
 import type { NotificationResponseDto } from "./NotificationDtos";
 import type { LogResponseDto } from "./LogDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
+import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type UserCreateDto = {
@@ -18,11 +19,12 @@ export type UserCreateDto = {
     email: string;
     phone: string;
     gender: string;
-    url?: string | null;
     is_early_access: boolean;
     agreed: boolean;
     google_details_token: string;
-    details?: object;
+    details?: {
+        url?: string | null;
+    };
 };
 
 export type UserResponseDto = {
@@ -36,15 +38,14 @@ export type UserResponseDto = {
     status?: boolean | null;
     is_early_access?: boolean | null;
     manages?: object | null;
-    details?: {
-        avatar?: string | null;
-    };
+    details?: object;
     google_id?: string | null;
     google_name?: string | null;
     google_email?: string | null;
     google_avatar?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
+    avatar?: AttachmentResponseDto | null;
     year?: YearResponseDto | null;
     department?: DepartmentResponseDto | null;
     faculty?: FacultyResponseDto | null;
@@ -54,8 +55,9 @@ export type UserResponseDto = {
     tasks?: TaskResponseDto[] | null;
     announcements?: AnnouncementResponseDto[] | null;
     notifications?: NotificationResponseDto[] | null;
-    logs?: LogResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    logs?: LogResponseDto[] | null;
+    attachments?: AttachmentResponseDto[] | null;
     level?: number | null;
     canAccessAll?: boolean | null;
 };
@@ -95,6 +97,7 @@ export type UserGetUserWithDetailsDto = {
     study_type?: UserStudyType | null;
     created_at?: string | null;
     updated_at?: string | null;
+    avatar?: AttachmentResponseDto | null;
     faculty?: FacultyResponseDto | null;
     department?: DepartmentResponseDto | null;
     year?: YearResponseDto | null;
@@ -108,6 +111,7 @@ export type UserGetUserWithDetailsDto = {
     materials?: MaterialResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
     logs?: LogResponseDto[] | null;
+    attachments?: AttachmentResponseDto[] | null;
 };
 
 export type UserSignUpResponseDto = {

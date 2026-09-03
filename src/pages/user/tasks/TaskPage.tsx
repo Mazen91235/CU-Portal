@@ -83,14 +83,12 @@ export const TaskPage = () => {
                                     <span>No description available</span>
                                 )}
 
-                                {((task.details?.files_data &&
-                                    task.details.files_data.length > 0) ||
-                                    (task.links && task.links.length > 0)) && (
-                                    <AttachmentsAndLinksSection
-                                        files={task.details?.files_data}
-                                        links={task.links || []}
-                                    />
-                                )}
+                                {task.attachments &&
+                                    task.attachments.length > 0 && (
+                                        <AttachmentsAndLinksSection
+                                            attachments={task.attachments}
+                                        />
+                                    )}
                             </div>
                         </LongSection>
                     </div>
@@ -100,7 +98,10 @@ export const TaskPage = () => {
 
                         <QuickInfoSection
                             items={[
-                                { label: "Type:", value: task.task_type || "N/A" },
+                                {
+                                    label: "Type:",
+                                    value: task.task_type || "N/A",
+                                },
                             ]}
                         />
                     </div>

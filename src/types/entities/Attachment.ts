@@ -1,4 +1,3 @@
-import type { FileData } from "./Task";
 import type { User } from "./User";
 import type { PendingUser } from "./PendingUser";
 import type { Material } from "./Material";
@@ -7,12 +6,30 @@ import type { Announcement } from "./Announcement";
 import type { Event } from "./Event";
 import type { EventOrganizer } from "./EventOrganizer";
 
+export type FileData = {
+    id?: string;
+    name?: string;
+    mime_type?: string;
+    file_type?: string;
+    type?: string;
+    size?: string;
+    web_content_link?: string;
+    web_view_link?: string;
+};
+
+export type FileDataWithExisting = FileData & {
+    url?: string;
+    isExisting?: boolean;
+};
+
 export type Attachment = {
     id?: number;
     is_file?: boolean;
     url?: string;
     details?: {
         file_data?: FileData;
+        fetched?: boolean;
+        link_title?: string;
     };
     author_google_refresh_token?: Date | null;
     created_at?: Date | null;
