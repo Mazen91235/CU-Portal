@@ -25,7 +25,6 @@ import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Heading } from "../../../components/heading/Heading";
 
-
 import styles from "./EditExam.module.css";
 import {
     formatDateInputValue,
@@ -79,9 +78,9 @@ export const EditExam = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
-            params.department_id = user.department?.id ?? undefined ?? undefined;
-            params.year_id = user.year?.id ?? undefined ?? undefined;
+            params.faculty_id = user.faculty?.id ?? undefined;
+            params.department_id = user.department?.id ?? undefined;
+            params.year_id = user.year?.id ?? undefined;
 
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
@@ -146,10 +145,15 @@ export const EditExam = () => {
                 exam_id: parseInt(examId),
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(data.due_date, data.start_time || "00:00")!.toISOString(),
+                deadline: mergeDateAndTime(
+                    data.due_date,
+                    data.start_time || "00:00",
+                )!.toISOString(),
                 details: {
                     exam_type: data.exam_type || undefined,
-                    duration: data.duration ? parseFloat(data.duration) : undefined,
+                    duration: data.duration
+                        ? parseFloat(data.duration)
+                        : undefined,
                     location: data.location || undefined,
                     exam_format: data.exam_format as
                         | "MCQ"

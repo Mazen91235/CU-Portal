@@ -64,8 +64,22 @@
     white-space: nowrap;
 }
 
-.searchContainer {
+.filtersContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
     margin-bottom: 1.5rem;
+}
+
+.searchContainer {
+    flex: 1;
+    min-width: 250px;
+}
+
+.filterSelect {
+    width: 200px;
+    flex: 0 0 200px;
 }
 
 .cardsGrid {
@@ -82,6 +96,18 @@
 
     .sectionTitle {
         font-size: 1.2rem;
+    }
+
+    .filtersContainer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchContainer,
+    .filterSelect {
+        width: 100%;
+        min-width: 0;
+        flex: initial;
     }
 
     .cardsGrid {

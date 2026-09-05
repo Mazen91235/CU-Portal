@@ -2,6 +2,7 @@ import type { UserResponseDto } from "./UserDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { TaskResponseDto } from "./TaskDtos";
 import type { AnnouncementResponseDto } from "./AnnouncementDtos";
+import type { WeekResponseDto } from "./WeekDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type YearCreateDto = {
@@ -18,6 +19,7 @@ export type YearResponseDto = {
     subjects?: SubjectResponseDto[] | null;
     tasks?: TaskResponseDto[] | null;
     announcements?: AnnouncementResponseDto[] | null;
+    weeks?: WeekResponseDto[] | null;
 };
 
 export type YearUpdateDto = {

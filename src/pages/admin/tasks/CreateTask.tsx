@@ -67,10 +67,9 @@ export const CreateTask = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
-            params.faculty_id = user.faculty?.id ?? undefined ?? undefined;
-            params.department_id =
-                user.department?.id ?? undefined ?? undefined;
-            params.year_id = user.year?.id ?? undefined ?? undefined;
+            params.faculty_id = user.faculty?.id ?? undefined;
+            params.department_id = user.department?.id ?? undefined;
+            params.year_id = user.year?.id ?? undefined;
             const result = await searchCourses({ data: params }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {

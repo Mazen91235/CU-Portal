@@ -7,7 +7,6 @@ export type Week = {
     id?: number;
     week_number?: number;
     start_date?: Date;
-    end_date?: Date;
     created_at?: Date | null;
     updated_at?: Date | null;
     faculty_id?: number;

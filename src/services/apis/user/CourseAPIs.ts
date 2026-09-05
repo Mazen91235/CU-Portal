@@ -1,7 +1,11 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
+import type {
+    SubjectResponseDto,
+    SubjectSearchAvailableDto,
+} from "../../../types/dtos/SubjectDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
     maxRetries,
@@ -44,12 +48,15 @@ export const CourseAPI = createApi({
         }),
         getAvailableCourses: builder.query<
             GenericAPIResponse<SubjectResponseDto[]>,
-            void
+            QueryModel<SubjectSearchAvailableDto>
         >({
-            query: () => ({
+            query: (query) => ({
                 url: "/",
                 method: "GET",
                 credentials: "include",
+                params: {
+                    query: JSON.stringify(query),
+                },
             }),
         }),
         registerCourse: builder.mutation<

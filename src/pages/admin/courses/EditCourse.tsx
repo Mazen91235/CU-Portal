@@ -79,9 +79,11 @@ export const EditCourse = () => {
     const fetchDepartments = useCallback(async () => {
         try {
             if (!selectedFacultyId) return;
-            const result = await searchDepartments({ data: {
-                faculty_id: parseInt(selectedFacultyId),
-            } }).unwrap();
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(selectedFacultyId),
+                },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -157,9 +159,9 @@ export const EditCourse = () => {
             if (data.year_id) params.year_id = parseInt(data.year_id);
 
             if (!user?.canAccessAll) {
-                params.faculty_id = user?.faculty?.id ?? undefined ?? undefined;
-                params.department_id = user?.department?.id ?? undefined ?? undefined;
-                params.year_id = user?.year?.id ?? undefined ?? undefined;
+                params.faculty_id = user?.faculty?.id ?? undefined;
+                params.department_id = user?.department?.id ?? undefined;
+                params.year_id = user?.year?.id ?? undefined;
             }
 
             const courseData = {

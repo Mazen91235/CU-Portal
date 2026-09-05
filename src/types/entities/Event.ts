@@ -11,7 +11,6 @@ export type Event = {
     title?: string;
     start_date?: Date;
     end_date?: Date | null;
-    url?: string | null;
     price?: number;
     location_type?: Date;
     location?: Date;

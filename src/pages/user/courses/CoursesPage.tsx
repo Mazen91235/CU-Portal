@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Card } from "../../../components/card/Card";
@@ -6,58 +6,209 @@ import {
     useLazyGetAvailableCoursesQuery,
     useLazyGetEnrolledCoursesQuery,
 } from "../../../services/apis/user/CourseAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/user/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/user/YearAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
+import { Search } from "../../../components/forms/Search";
+import { SelectFilter } from "../../../components/forms/SelectFilter";
+import { NoContentSection } from "../../../components/section/NoContentSection";
 import IconComponent from "../../../components/IconComponent";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./CoursesPage.module.css";
 
-const searchQuery = "";
-
 export const CoursesPage = () => {
     const navigate = useNavigate();
-        const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
-    const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
+    const user = useAppSelector((state) => state.user.user);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [departmentFilter, setDepartmentFilter] = useState("");
+    const [yearFilter, setYearFilter] = useState("");
+
     const [registeredCourses, setRegisteredCourses] = useState<
         SubjectResponseDto[]
     >([]);
     const [availableCourses, setAvailableCourses] = useState<
         SubjectResponseDto[]
     >([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
 
-    const fetchData = useCallback(async () => {
-        await Promise.all([
-            getEnrolledCourses()
-                .unwrap()
-                .then((response) => {
-                    setRegisteredCourses(response.data || []);
-                }),
-            getAvailableCourses()
-                .unwrap()
-                .then((response) => {
-                    setAvailableCourses(response.data || []);
-                }),
-        ]);
-    }, [getEnrolledCourses, getAvailableCourses]);
+    const [getEnrolledCourses] = useLazyGetEnrolledCoursesQuery();
+    const [getAvailableCourses] = useLazyGetAvailableCoursesQuery();
+    const [getDepartments] = useLazyGetDepartmentsQuery();
+    const [getYears] = useLazyGetYearsQuery();
 
-    useAuthQuery(fetchData);
+    const fetchEnrolledCourses = useCallback(async () => {
+        try {
+            const response = await getEnrolledCourses().unwrap();
+            setRegisteredCourses(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getEnrolledCourses]);
 
-    const filteredAvailableCourses = useMemo(() => {
-        return availableCourses.filter((course) => {
-            return (
-                course.name
-                    ?.toLowerCase()
-                    .includes(searchQuery.toLowerCase()) ||
-                course.code?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        });
-    }, [availableCourses, searchQuery]);
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!user?.faculty?.id || !user.study_type) {
+                setDepartments([]);
+                return;
+            }
+
+            const response = await getDepartments({
+                data: {
+                    faculty_id: user.faculty.id,
+                    study_type: user.study_type,
+                },
+            }).unwrap();
+
+            setDepartments(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getDepartments, user]);
+
+    const fetchYears = useCallback(async () => {
+        try {
+            const response = await getYears({ data: {} }).unwrap();
+            setYears(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getYears]);
+
+    const authQueryParams = useCallback(
+        () =>
+            Promise.all([
+                fetchEnrolledCourses(),
+                fetchDepartments(),
+                fetchYears(),
+            ]),
+        [fetchEnrolledCourses, fetchDepartments, fetchYears],
+    );
+
+    useAuthQuery(authQueryParams);
+
+    const generalDepartment = useMemo(
+        () =>
+            departments.find((department) =>
+                department.name?.toLowerCase().includes("general"),
+            ),
+        [departments],
+    );
+
+    const showDepartmentFilter = Boolean(
+        generalDepartment && user?.department?.id,
+    );
+
+    const departmentOptions = useMemo(() => {
+        if (!user?.department?.id) return [];
+
+        const options = [
+            {
+                value: user.department.id.toString(),
+                label: user.department.name || "My Department",
+            },
+        ];
+
+        if (
+            generalDepartment?.id &&
+            generalDepartment.id !== user.department.id
+        ) {
+            options.push({
+                value: generalDepartment.id.toString(),
+                label: generalDepartment.name || "General",
+            });
+        }
+
+        return options;
+    }, [generalDepartment, user?.department]);
+
+    const yearOptions = useMemo(() => {
+        const userYear = user?.year?.year;
+
+        if (userYear == null) return [];
+
+        const maxYear = userYear + 5;
+
+        return years
+            .filter(
+                (year) =>
+                    year.year != null &&
+                    year.year >= userYear &&
+                    year.year <= maxYear,
+            )
+            .sort((a, b) => (a.year || 0) - (b.year || 0))
+            .map((year) => ({
+                value: year.id?.toString() || "",
+                label: year.year?.toString() || "",
+            }))
+            .filter((option) => option.value);
+    }, [user?.year?.year, years]);
+
+    useEffect(() => {
+        if (!user?.department?.id) {
+            setDepartmentFilter("");
+            return;
+        }
+
+        setDepartmentFilter(
+            (current) => current || user.department?.id?.toString() || "",
+        );
+    }, [user?.department?.id]);
+
+    useEffect(() => {
+        const userYear = user?.year?.year;
+
+        if (userYear == null) {
+            setYearFilter("");
+            return;
+        }
+
+        const currentYear = years.find((year) => year.year === userYear);
+
+        setYearFilter(
+            (current) => current || currentYear?.id?.toString() || "",
+        );
+    }, [user?.year?.year, years]);
+
+    const fetchAvailableCourses = useCallback(async () => {
+        if (!departmentFilter || !yearFilter) {
+            setAvailableCourses([]);
+            return;
+        }
+
+        try {
+            const response = await getAvailableCourses({
+                data: {
+                    department_id: Number(departmentFilter),
+                    year_id: Number(yearFilter),
+                    query: searchQuery || undefined,
+                },
+            }).unwrap();
+
+            setAvailableCourses(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+            setAvailableCourses([]);
+        }
+    }, [departmentFilter, yearFilter, searchQuery, getAvailableCourses]);
+
+    useEffect(() => {
+        void fetchAvailableCourses();
+    }, [fetchAvailableCourses]);
 
     const handleViewCourse = (courseId: number) => {
         navigate(`/user/courses/${courseId}`);
     };
+
+    const showCourseFilterPrompt = !departmentFilter || !yearFilter;
 
     return (
         <Layout>
@@ -92,19 +243,24 @@ export const CoursesPage = () => {
                                     {
                                         icon: "subject",
                                         label: "Faculty",
-                                        value: course.faculty?.name || undefined,
+                                        value:
+                                            course.faculty?.name || undefined,
                                         color: "pink",
                                     },
                                     {
                                         icon: "location",
                                         label: "Department",
-                                        value: course.department?.name || undefined,
+                                        value:
+                                            course.department?.name ||
+                                            undefined,
                                         color: "yellow",
                                     },
                                     {
                                         icon: "calendar",
                                         label: "Year",
-                                        value: course.year?.year?.toString() || undefined,
+                                        value:
+                                            course.year?.year?.toString() ||
+                                            undefined,
                                         color: "green",
                                     },
                                 ]}
@@ -123,41 +279,90 @@ export const CoursesPage = () => {
                         <span className={styles.sectionTitle}>
                             Available Courses
                         </span>
-                        <span className={styles.courseBadge}>
-                            {filteredAvailableCourses.length} Courses
-                        </span>
+                        {!showCourseFilterPrompt && (
+                            <span className={styles.courseBadge}>
+                                {availableCourses.length} Courses
+                            </span>
+                        )}
                     </div>
 
-                    <div className={styles.cardsGrid}>
-                        {filteredAvailableCourses.map((course) => (
-                            <Card
-                                key={course.id}
-                                title={course.name || undefined}
-                                badge={course.code || undefined}
-                                secondaryBadge={`${course.credits?.toString()} Credits`}
-                                items={[
-                                    {
-                                        icon: "subject",
-                                        label: "Faculty",
-                                        value: course.faculty?.name || undefined,
-                                        color: "pink",
-                                    },
-                                    {
-                                        icon: "location",
-                                        label: "Department",
-                                        value: course.department?.name || undefined,
-                                        color: "yellow",
-                                    },
-                                    {
-                                        icon: "calendar",
-                                        label: "Year",
-                                        value: course.year?.year?.toString() || undefined,
-                                        color: "green",
-                                    },
-                                ]}
+                    <div className={styles.filtersContainer}>
+                        <div className={styles.searchContainer}>
+                            <Search
+                                placeholder="Search by course name or code"
+                                setValue={setSearchQuery}
                             />
-                        ))}
+                        </div>
+
+                        {showDepartmentFilter && (
+                            <div className={styles.filterSelect}>
+                                <SelectFilter
+                                    value={departmentFilter}
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                    placeholder="Department"
+                                />
+                            </div>
+                        )}
+
+                        <div className={styles.filterSelect}>
+                            <SelectFilter
+                                value={yearFilter}
+                                options={yearOptions}
+                                setValue={setYearFilter}
+                                placeholder="Year"
+                            />
+                        </div>
                     </div>
+
+                    {showCourseFilterPrompt ? (
+                        <NoContentSection
+                            icon="filter"
+                            label="Select a department and year to view available courses."
+                        />
+                    ) : availableCourses.length === 0 ? (
+                        <NoContentSection
+                            icon="book"
+                            label="No available courses found."
+                        />
+                    ) : (
+                        <div className={styles.cardsGrid}>
+                            {availableCourses.map((course) => (
+                                <Card
+                                    key={course.id}
+                                    title={course.name || undefined}
+                                    badge={course.code || undefined}
+                                    secondaryBadge={`${course.credits?.toString()} Credits`}
+                                    items={[
+                                        {
+                                            icon: "subject",
+                                            label: "Faculty",
+                                            value:
+                                                course.faculty?.name ||
+                                                undefined,
+                                            color: "pink",
+                                        },
+                                        {
+                                            icon: "location",
+                                            label: "Department",
+                                            value:
+                                                course.department?.name ||
+                                                undefined,
+                                            color: "yellow",
+                                        },
+                                        {
+                                            icon: "calendar",
+                                            label: "Year",
+                                            value:
+                                                course.year?.year?.toString() ||
+                                                undefined,
+                                            color: "green",
+                                        },
+                                    ]}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </Layout>
