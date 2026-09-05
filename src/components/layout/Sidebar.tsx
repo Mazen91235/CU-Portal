@@ -304,10 +304,8 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
-            // path: "/admin/logs",
-            path: "#!",
+            path: "/admin/logs",
             icon: "sidebar-admin-logs",
-            badge: "Soon",
             activatesPaths: ["/admin/logs/"],
         });
     }

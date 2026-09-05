@@ -53,6 +53,8 @@ import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
+import { LogsPage } from "./pages/admin/logs/LogsPage";
+import { LogPage } from "./pages/admin/logs/LogPage";
 
 import "./App.css";
 
@@ -254,6 +256,14 @@ function App() {
                         path=":subjectId/:parentId"
                         element={<MaterialsPage />}
                     />
+                </Route>
+
+                <Route
+                    path="logs"
+                    element={<ProtectedRoute permission="View Logs" /> }
+                >
+                    <Route index element={<LogsPage />} />
+                    <Route path=":logId" element={<LogPage />} />
                 </Route>
             </Route>
         </Routes>
