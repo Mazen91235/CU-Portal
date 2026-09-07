@@ -11,8 +11,8 @@ import {
     maxRetries,
     retryCondition,
 } from "../../../utils/APIHandling";
-export const UserYearAPI = createApi({
-    reducerPath: "userYearAPI",
+export const YearAPI = createApi({
+    reducerPath: "yearAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/years"),
@@ -53,4 +53,4 @@ export const UserYearAPI = createApi({
 });
 
 export const { useLazyGetYearsQuery, useLazyGetYearQuery } =
-    UserYearAPI;
+    YearAPI;

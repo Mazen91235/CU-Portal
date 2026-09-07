@@ -12,8 +12,8 @@ export type Event = {
     start_date?: Date;
     end_date?: Date | null;
     price?: number;
-    location_type?: Date;
-    location?: Date;
+    location_type?: EventLocationType;
+    location?: string;
     details?: {
         description?: string;
     };
@@ -35,3 +35,5 @@ export type Event = {
     logo?: Attachment | null;
     attachments?: Attachment[] | null;
 };
+
+export type EventLocationType = "Online" | "Offline";

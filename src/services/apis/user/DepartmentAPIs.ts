@@ -11,8 +11,8 @@ import {
     maxRetries,
     retryCondition,
 } from "../../../utils/APIHandling";
-export const UserDepartmentAPI = createApi({
-    reducerPath: "userDepartmentAPI",
+export const DepartmentAPI = createApi({
+    reducerPath: "departmentAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetUserApiLink("/departments"),
@@ -53,4 +53,4 @@ export const UserDepartmentAPI = createApi({
 });
 
 export const { useLazyGetDepartmentsQuery, useLazyGetDepartmentQuery } =
-    UserDepartmentAPI;
+    DepartmentAPI;

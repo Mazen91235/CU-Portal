@@ -13,12 +13,16 @@ import { CourseAPI } from "../apis/user/CourseAPIs";
 import { ExamAPI } from "../apis/user/ExamAPIs";
 import { MaterialAPI } from "../apis/user/MaterialAPIs";
 import { TaskAPI } from "../apis/user/TaskAPIs";
-import { UserFacultyAPI } from "../apis/user/FacultyAPIs";
-import { UserDepartmentAPI } from "../apis/user/DepartmentAPIs";
-import { UserYearAPI } from "../apis/user/YearAPIs";
+import { FacultyAPI } from "../apis/user/FacultyAPIs";
+import { DepartmentAPI } from "../apis/user/DepartmentAPIs";
+import { YearAPI } from "../apis/user/YearAPIs";
+import { EventAPI } from "../apis/user/EventAPIs";
+import { EventOrganizerAPI } from "../apis/user/EventOrganizerAPIs";
 
 import { AdminCourseAPI } from "../apis/admin/CourseAPIs";
 import { AdminDepartmentAPI } from "../apis/admin/DepartmentAPIs";
+import { AdminEventAPI } from "../apis/admin/EventAPIs";
+import { AdminEventOrganizerAPI } from "../apis/admin/EventOrganizerAPIs";
 import { AdminFacultyAPI } from "../apis/admin/FacultyAPIs";
 import { AdminMaterialAPI } from "../apis/admin/MaterialAPIs";
 import { AdminRoleAPI } from "../apis/admin/RoleAPIs";
@@ -47,12 +51,16 @@ const store = configureStore({
         [NotificationAPI.reducerPath]: NotificationAPI.reducer,
         [TaskAPI.reducerPath]: TaskAPI.reducer,
         [UserAPI.reducerPath]: UserAPI.reducer,
-        [UserFacultyAPI.reducerPath]: UserFacultyAPI.reducer,
-        [UserDepartmentAPI.reducerPath]: UserDepartmentAPI.reducer,
-        [UserYearAPI.reducerPath]: UserYearAPI.reducer,
+        [FacultyAPI.reducerPath]: FacultyAPI.reducer,
+        [DepartmentAPI.reducerPath]: DepartmentAPI.reducer,
+        [YearAPI.reducerPath]: YearAPI.reducer,
+        [EventAPI.reducerPath]: EventAPI.reducer,
+        [EventOrganizerAPI.reducerPath]: EventOrganizerAPI.reducer,
         [AdminAnnouncementAPI.reducerPath]: AdminAnnouncementAPI.reducer,
         [AdminCourseAPI.reducerPath]: AdminCourseAPI.reducer,
         [AdminDepartmentAPI.reducerPath]: AdminDepartmentAPI.reducer,
+        [AdminEventAPI.reducerPath]: AdminEventAPI.reducer,
+        [AdminEventOrganizerAPI.reducerPath]: AdminEventOrganizerAPI.reducer,
         [AdminExamAPI.reducerPath]: AdminExamAPI.reducer,
         [AdminFacultyAPI.reducerPath]: AdminFacultyAPI.reducer,
         [AdminLogAPI.reducerPath]: AdminLogAPI.reducer,
@@ -76,12 +84,16 @@ const store = configureStore({
             NotificationAPI.middleware,
             TaskAPI.middleware,
             UserAPI.middleware,
-            UserFacultyAPI.middleware,
-            UserDepartmentAPI.middleware,
-            UserYearAPI.middleware,
+            FacultyAPI.middleware,
+            DepartmentAPI.middleware,
+            YearAPI.middleware,
+            EventAPI.middleware,
+            EventOrganizerAPI.middleware,
             AdminAnnouncementAPI.middleware,
             AdminCourseAPI.middleware,
             AdminDepartmentAPI.middleware,
+            AdminEventAPI.middleware,
+            AdminEventOrganizerAPI.middleware,
             AdminExamAPI.middleware,
             AdminFacultyAPI.middleware,
             AdminLogAPI.middleware,
