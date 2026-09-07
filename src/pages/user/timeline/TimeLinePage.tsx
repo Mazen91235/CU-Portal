@@ -13,45 +13,16 @@ import { formatTime } from "../../../utils/Formatter";
 import styles from "./TimeLinePage.module.css";
 import { Banner } from "../../../components/banner/Banner";
 import { Link } from "react-router";
-import { MonthPicker } from "./MonthPicker";
-type EventType = "exam" | "assignment" | "announcement";
-
-type TimelineTask = {
-  id: number;
-  date: string;
-  title: string;
-  time?: string;
-  location?: string;
-  subject?: string;
-  type: EventType;
-};
+import { MonthPicker } from "../../../components/timeline/MonthPicker";
 
 const getTimelineDateLabel = (date: string) => {
-  const parsedDate = new Date(`${date}T00:00:00`);
+  const parsedDate = new Date(`${date}`);
 
   if (Number.isNaN(parsedDate.getTime())) {
     return date;
   }
 
-  return parsedDate.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-  });
-};
-
-const getTimelineType = (
-  eventType: CalendarDayEventDto["event_type"],
-): TimelineTask["type"] => {
-  switch (eventType) {
-    case "announcement":
-      return "announcement";
-    case "assignment":
-      return "assignment";
-    case "exam":
-      return "exam";
-    default:
-      return "assignment";
-  }
+  return `${parsedDate.getDate()} ${parsedDate.toLocaleString("en-US", { month: "short" })}`;
 };
 
 export const TimeLinePage = () => {
@@ -89,39 +60,18 @@ export const TimeLinePage = () => {
 
   useAuthQuery(authQueryParams);
 
-  const tasks: TimelineTask[] = Object.entries(eventsData)
-    .flatMap(([date, dayEvents]) => [
-      ...dayEvents.tasks.map((event) => ({
-        id: event.id,
-        date,
-        title: event.title,
-        time: event.due,
-        location: event.location,
-        subject: event.subject,
-        type: getTimelineType(event.event_type),
-      })),
-      ...dayEvents.exams.map((event) => ({
-        id: event.id,
-        date,
-        title: event.title,
-        time: event.due,
-        location: event.location,
-        subject: event.subject,
-        type: getTimelineType(event.event_type),
-      })),
-      ...dayEvents.announcements.map((event) => ({
-        id: event.id,
-        date,
-        title: event.title,
-        time: event.due,
-        location: event.location,
-        subject: event.subject,
-        type: getTimelineType(event.event_type),
-      })),
+  const tasks: CalendarDayEventDto[] = Object.entries(eventsData)
+    .flatMap(([_, dayEvents]) => [
+      ...dayEvents.tasks,
+      ...dayEvents.exams,
+      ...dayEvents.announcements,
     ])
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => b.due.localeCompare(a.due));
 
-  const getViewLink = (event_type: EventType, id: number): string => {
+  const getViewLink = (
+    event_type: CalendarDayEventDto["event_type"],
+    id: number,
+  ): string => {
     switch (event_type) {
       case "exam":
         return `/user/exams/${id}`;
@@ -176,18 +126,18 @@ export const TimeLinePage = () => {
             </div>
           ) : (
             tasks.map((task) => {
-              const showDate = previousDate !== task.date;
+              const showDate = previousDate !== task.due;
 
               if (showDate) {
-                previousDate = task.date;
+                previousDate = task.due;
               }
               return (
                 <div
                   className={styles.timelineItem}
-                  key={`${task.date}-${task.id}-${task.type}`}
+                  key={`${task.due}-${task.id}-${task.event_type}`}
                 >
                   <div className={styles.timelineDate}>
-                    {showDate && getTimelineDateLabel(task.date)}
+                    {showDate && getTimelineDateLabel(task.due)}
                   </div>
 
                   <div className={styles.timelineDot} />
@@ -202,7 +152,7 @@ export const TimeLinePage = () => {
                     </div>
 
                     <div className={styles.taskInfo}>
-                      {task.time && <span>◷ {formatTime(task.time)}</span>}
+                      {task.due && <span>◷ {formatTime(task.due)}</span>}
 
                       {task.location && <span>⌖ {task.location}</span>}
                     </div>
@@ -210,14 +160,14 @@ export const TimeLinePage = () => {
                     <div className={styles.cardFooter}>
                       <span
                         className={`${styles.badge} ${
-                          styles[task.type.toLowerCase()]
+                          styles[task.event_type.toLowerCase()]
                         }`}
                       >
-                        {task.type}
+                        {task.event_type}
                       </span>
 
                       <Link
-                        to={getViewLink(task.type, task.id)}
+                        to={getViewLink(task.event_type, task.id)}
                         className={styles.viewButton}
                       >
                         <div className={styles["view-btn"]}>View</div>

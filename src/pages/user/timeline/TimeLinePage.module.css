@@ -39,7 +39,7 @@
 .timeline::before {
   content: "";
   position: absolute;
-  left: 110px;
+  left: 80px;
   top: 0;
   bottom: 0;
   width: 1px;
@@ -50,15 +50,17 @@
   position: relative;
 
   display: grid;
-  grid-template-columns: 90px 40px 1fr;
+  grid-template-columns: 60px 70px 1fr;
 
   min-height: 140px;
 }
 
 /* Date */
 .timelineDate {
-  padding-top: 25px;
+  padding-top: 10px;
   font-weight: 600;
+  font-size: 20px;
+  width: 10px;
   color: #333;
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./MonthPicker.module.css";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { SlArrowUp, SlArrowDown } from "react-icons/sl";
+
 import { SlCalender } from "react-icons/sl";
 
 type MonthPickerProps = {
@@ -8,7 +9,7 @@ type MonthPickerProps = {
 };
 
 export const MonthPicker = ({ onMonthChange }: MonthPickerProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 9));
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const monthYear = currentDate.toLocaleDateString("en-US", {
     month: "short",
@@ -35,7 +36,7 @@ export const MonthPicker = ({ onMonthChange }: MonthPickerProps) => {
           onClick={() => changeMonth(-1)}
           aria-label="Previous month"
         >
-          <FaArrowUp size={13} />
+          <SlArrowUp size={13} />
         </button>
 
         <button
@@ -43,7 +44,7 @@ export const MonthPicker = ({ onMonthChange }: MonthPickerProps) => {
           onClick={() => changeMonth(1)}
           aria-label="Next month"
         >
-          <FaArrowDown size={13} />
+          <SlArrowDown size={13} />
         </button>
       </div>
     </div>
