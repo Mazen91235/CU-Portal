@@ -12,6 +12,7 @@ import { CalendarAPI } from "../apis/user/CalendarAPIs";
 import { CourseAPI } from "../apis/user/CourseAPIs";
 import { ExamAPI } from "../apis/user/ExamAPIs";
 import { MaterialAPI } from "../apis/user/MaterialAPIs";
+import { NoteAPI } from "../apis/user/NoteAPIs";
 import { TaskAPI } from "../apis/user/TaskAPIs";
 import { FacultyAPI } from "../apis/user/FacultyAPIs";
 import { DepartmentAPI } from "../apis/user/DepartmentAPIs";
@@ -33,6 +34,7 @@ import { AdminExamAPI } from "../apis/admin/ExamAPIs";
 import { AdminLogAPI } from "../apis/admin/LogAPIs";
 import { AdminMessageAPI } from "../apis/admin/MessageAPIs";
 import { AdminTaskAPI } from "../apis/admin/TaskAPIs";
+
 import { MessageAPI } from "../apis/MessageAPIs";
 
 const store = configureStore({
@@ -48,6 +50,7 @@ const store = configureStore({
         [CourseAPI.reducerPath]: CourseAPI.reducer,
         [ExamAPI.reducerPath]: ExamAPI.reducer,
         [MaterialAPI.reducerPath]: MaterialAPI.reducer,
+        [NoteAPI.reducerPath]: NoteAPI.reducer,
         [NotificationAPI.reducerPath]: NotificationAPI.reducer,
         [TaskAPI.reducerPath]: TaskAPI.reducer,
         [UserAPI.reducerPath]: UserAPI.reducer,
@@ -81,6 +84,7 @@ const store = configureStore({
             CourseAPI.middleware,
             ExamAPI.middleware,
             MaterialAPI.middleware,
+            NoteAPI.middleware,
             NotificationAPI.middleware,
             TaskAPI.middleware,
             UserAPI.middleware,
