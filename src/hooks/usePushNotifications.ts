@@ -17,7 +17,11 @@ export function usePushNotifications() {
     const syncToken = useCallback(async () => {
         if (!("Notification" in window)) return;
 
-        const permission = Notification.permission;
+        let permission = Notification.permission;
+
+        if (permission === "default") {
+            permission = await Notification.requestPermission();
+        }
 
         if (permission === "granted") {
             const token = await requestFcmToken();
