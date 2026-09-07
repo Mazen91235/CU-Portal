@@ -5,6 +5,7 @@ import type {
     UserUpdateDto,
     UserHasPermissionsDto,
     UserUpdateAcademicDataDto,
+    UserDeviceActionDto,
 } from "../../../types/dtos/UserDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
@@ -142,6 +143,28 @@ export const UserAPI = createApi({
                 }
             },
         }),
+        registerDevice: builder.mutation<
+            GenericAPIResponse,
+            UserDeviceActionDto
+        >({
+            query: (data) => ({
+                url: "/devices/register",
+                method: "POST",
+                credentials: "include",
+                body: data,
+            }),
+        }),
+        unregisterDevice: builder.mutation<
+            GenericAPIResponse,
+            UserDeviceActionDto
+        >({
+            query: (data) => ({
+                url: "/devices/unregister",
+                method: "POST",
+                credentials: "include",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -152,4 +175,6 @@ export const {
     useLazyChangeGoogleAccountQuery,
     useUpdateUserDataMutation,
     useUpdateUserAcademicDataMutation,
+    useRegisterDeviceMutation,
+    useUnregisterDeviceMutation,
 } = UserAPI;

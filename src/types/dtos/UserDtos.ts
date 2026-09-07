@@ -181,3 +181,7 @@ export type UserStatisticsResponseDto = {
     pending_users_count: number;
     last_five_users_active: string[];
 };
+
+export type UserDeviceActionDto = {
+    device_token: string;
+};

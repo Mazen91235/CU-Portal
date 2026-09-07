@@ -1,12 +1,16 @@
 import { Route, Routes } from "react-router";
+import useGetUser from "./hooks/useGetUser";
+import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
+import useRouteMessages from "./hooks/useRouteMessages";
+import useGetNotifications from "./hooks/useGetNotifications";
+import useAuth from "./hooks/useAuth";
+import { usePageLoading } from "./hooks/usePageLoading";
+import { usePushNotifications } from "./hooks/usePushNotifications";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { LandingPage } from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import LoginSuccessPage from "./pages/auth/LoginSuccessPage";
 import CreateProfilePage from "./pages/auth/CreateProfilePage";
-import useGetUser from "./hooks/useGetUser";
-import useRouteMessages from "./hooks/useRouteMessages";
-import useGetNotifications from "./hooks/useGetNotifications";
 import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
 import { DashboardPage } from "./pages/user/dashboard/DashboardPage";
 import { ProfileSettings } from "./pages/user/settings/ProfileSettings";
@@ -19,7 +23,6 @@ import { CoursesPage } from "./pages/admin/courses/CoursesPage";
 import { CoursePage } from "./pages/admin/courses/CoursePage";
 import { CreateCourse } from "./pages/admin/courses/CreateCourse";
 import { EditCourse } from "./pages/admin/courses/EditCourse";
-import { usePageLoading } from "./hooks/usePageLoading";
 import { CreateTask } from "./pages/admin/tasks/CreateTask";
 import { EditTask } from "./pages/admin/tasks/EditTask";
 import { TaskPage } from "./pages/admin/tasks/TaskPage";
@@ -42,7 +45,6 @@ import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
-import useAuth from "./hooks/useAuth";
 import { UsersPage } from "./pages/admin/users/UsersPage";
 import { UserPage } from "./pages/admin/users/UserPage";
 import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
@@ -52,7 +54,6 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
-import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
 
 import "./App.css";
 
@@ -63,6 +64,7 @@ function App() {
     useRouteMessages();
     useValidateUserLevel();
     usePageLoading();
+    usePushNotifications();
     return (
         <Routes>
             <Route index element={<LandingPage />} />

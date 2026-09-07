@@ -35,6 +35,7 @@ export type User = {
     google_avatar?: Date | null;
     google_refresh_token?: Date | null;
     ips?: string[] | null;
+    devices?: string[] | null;
     refresh_token?: Date | null;
     refresh_expire_at?: Date | null;
     created_at?: Date | null;
