@@ -25,7 +25,7 @@ export const Search = ({
                 if (timeout.current) {
                     clearTimeout(timeout.current);
                 }
-                timeout.current = setTimeout(() => {
+                timeout.current = window.setTimeout(() => {
                     setValue(value);
                 }, 300);
             }

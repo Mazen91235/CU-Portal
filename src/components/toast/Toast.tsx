@@ -11,11 +11,11 @@ const Toast = ({ toast, onRemove }: ToastProps) => {
     const [isHiding, setIsHiding] = useState(false);
 
     useEffect(() => {
-        const hideTimer = setTimeout(() => {
+        const hideTimer = window.setTimeout(() => {
             setIsHiding(true);
         }, 5000);
 
-        const removeTimer = setTimeout(() => {
+        const removeTimer = window.setTimeout(() => {
             onRemove(toast.id);
         }, 5300);
 
@@ -27,7 +27,7 @@ const Toast = ({ toast, onRemove }: ToastProps) => {
 
     const handleClose = () => {
         setIsHiding(true);
-        setTimeout(() => onRemove(toast.id), 300);
+        window.setTimeout(() => onRemove(toast.id), 300);
     };
 
     return (

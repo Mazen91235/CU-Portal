@@ -10,7 +10,7 @@ export const Pagination = ({ onReached }: { onReached: () => void }) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting && !delayRef.current) {
                         delayRef.current = true;
-                        setTimeout(() => {
+                        window.setTimeout(() => {
                             delayRef.current = false;
                         }, 1000);
                         onReached();

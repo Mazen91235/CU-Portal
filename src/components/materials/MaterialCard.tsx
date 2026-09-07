@@ -112,12 +112,12 @@ export const MaterialCard = ({
 
             if (isFolder) {
                 setClickCount((prev) => prev + 1);
-                clickTimeoutRef.current = setTimeout(() => {
+                clickTimeoutRef.current = window.setTimeout(() => {
                     setClickCount(0);
                     if (material.id) onClick(material.id);
                 }, 300);
             } else {
-                setTimeout(() => {
+                window.setTimeout(() => {
                     if (material.id) onClick(material.id);
                 }, 300);
             }

@@ -83,7 +83,7 @@ export const SearchableInput = <T extends Record<string, unknown>>({
         if (!isOpen && !disabled) {
             setIsOpen(true);
             setSearchTerm(displayValue);
-            setTimeout(() => inputRef.current?.focus(), 0);
+            window.setTimeout(() => inputRef.current?.focus(), 0);
         }
     };
 
