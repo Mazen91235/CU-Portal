@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { messaging, requestFcmToken } from "../utils/firebaseManager";
 import { onMessage } from "firebase/messaging";
 import {
@@ -13,51 +13,80 @@ export function usePushNotifications() {
     const [unregisterDevice] = useUnregisterDeviceMutation();
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
+    const [permission, setPermission] = useState<NotificationPermission>(
+        () =>
+            (typeof window !== "undefined" && "Notification" in window
+                ? Notification.permission
+                : "default"),
+    );
+    const [isRequestingPermission, setIsRequestingPermission] =
+        useState(false);
 
-    const syncToken = useCallback(async () => {
+    const syncToken = useCallback(async (currentPermission = permission) => {
         if (!("Notification" in window)) return;
 
-        let permission = Notification.permission;
-
-        if (permission === "default") {
-            permission = await Notification.requestPermission();
-        }
-
-        if (permission === "granted") {
+        if (currentPermission === "granted") {
             const token = await requestFcmToken();
             if (token) {
                 await registerDevice({ device_token: token }).unwrap();
                 localStorage.setItem("fcm_token", token);
             }
-        } else if (permission === "denied") {
+        } else if (currentPermission === "denied") {
             const savedToken = localStorage.getItem("fcm_token");
             if (savedToken) {
                 await unregisterDevice({ device_token: savedToken }).unwrap();
                 localStorage.removeItem("fcm_token");
             }
         }
-    }, [registerDevice, unregisterDevice]);
+    }, [permission, registerDevice, unregisterDevice]);
+
+    const requestNotificationPermission = useCallback(async () => {
+        if (!("Notification" in window) || isRequestingPermission) return;
+
+        setIsRequestingPermission(true);
+        try {
+            let nextPermission = Notification.permission;
+
+            if (nextPermission === "default") {
+                nextPermission = await Notification.requestPermission();
+            }
+
+            setPermission(nextPermission);
+            await syncToken(nextPermission);
+        } finally {
+            setIsRequestingPermission(false);
+        }
+    }, [isRequestingPermission, syncToken]);
 
     useEffect(() => {
         let unsubscribeOnMessage = () => {};
+        let permissionStatus: PermissionStatus | null = null;
 
         const initPush = async () => {
             const loggedIn = await isLoggedIn();
             if (!loggedIn || !user) return;
 
-            // 1. Sync token with backend
             await syncToken();
 
-            // 2. Setup permissions change listener
             if ("permissions" in navigator) {
-                navigator.permissions
-                    .query({ name: "notifications" })
-                    .then((status) => {
-                        status.onchange = () => syncToken();
+                try {
+                    permissionStatus = await navigator.permissions.query({
+                        name: "notifications" as PermissionName,
                     });
+                    permissionStatus.onchange = () => {
+                        const nextPermission = permissionStatus?.state === "prompt"
+                            ? "default"
+                            : permissionStatus?.state;
+                        if (!nextPermission) return;
+                        setPermission(nextPermission);
+                        syncToken(nextPermission);
+                    };
+                } catch {
+                    permissionStatus = null;
+                }
             }
 
-            // 3. Listen for foreground FCM messages (Returns cleanup function)
+            // Listen for foreground FCM messages
             unsubscribeOnMessage = onMessage(messaging, (payload) => {
                 const title =
                     payload.notification?.title ||
@@ -90,6 +119,13 @@ export function usePushNotifications() {
         // Cleanup foreground listener when unmounting or logging out
         return () => {
             unsubscribeOnMessage();
+            if (permissionStatus) permissionStatus.onchange = null;
         };
     }, [user, isLoggedIn, syncToken]);
+
+    return {
+        permission,
+        isRequestingPermission,
+        requestNotificationPermission,
+    };
 }
