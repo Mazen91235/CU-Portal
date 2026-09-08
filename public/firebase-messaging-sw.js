@@ -31,7 +31,11 @@ messaging.onBackgroundMessage((payload) => {
         "New Notification";
     const options = {
         body: payload.notification?.body || payload.data?.body || "",
-        icon: payload.data?.icon || "/logo.png",
+        icon:
+            payload.webpush?.notification?.icon ||
+            payload.notification?.icon ||
+            payload.data?.icon ||
+            "/logo.png",
         data: {
             url: payload.fcmOptions?.link || payload.data?.url || "/",
         },
