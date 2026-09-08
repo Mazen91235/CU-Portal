@@ -34,7 +34,7 @@ export function usePushNotifications() {
                     await registerDevice({ device_token: token }).unwrap();
                     localStorage.setItem("fcm_token", token);
                 }
-            } else if (currentPermission === "denied") {
+            } else {
                 const savedToken = localStorage.getItem("fcm_token");
                 if (savedToken) {
                     await unregisterDevice({
