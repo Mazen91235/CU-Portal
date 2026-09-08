@@ -27,6 +27,8 @@ export function usePushNotifications() {
             if (!("Notification" in window)) return;
 
             if (currentPermission === "granted") {
+                const savedToken = localStorage.getItem("fcm_token");
+                if (savedToken) return;
                 const token = await requestFcmToken();
                 if (token) {
                     await registerDevice({ device_token: token }).unwrap();
