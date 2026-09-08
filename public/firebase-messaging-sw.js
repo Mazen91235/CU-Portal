@@ -29,13 +29,15 @@ messaging.onBackgroundMessage((payload) => {
         payload.notification?.title ||
         payload.data?.title ||
         "New Notification";
+    const icon =
+        payload.webpush?.notification?.icon ||
+        payload.notification?.icon ||
+        payload.data?.icon ||
+        "/logo.png";
     const options = {
         body: payload.notification?.body || payload.data?.body || "",
-        icon:
-            payload.webpush?.notification?.icon ||
-            payload.notification?.icon ||
-            payload.data?.icon ||
-            "/logo.png",
+        icon: icon,
+        badge: icon,
         data: {
             url: payload.fcmOptions?.link || payload.data?.url || "/",
         },
