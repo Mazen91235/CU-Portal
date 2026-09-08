@@ -21,30 +21,36 @@ export function usePushNotifications() {
             : "default",
     );
     const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+    const [isSyncingToken, setIsSyncingToken] = useState(false);
 
     const syncToken = useCallback(
         async (currentPermission = permission) => {
-            if (!("Notification" in window)) return;
+            if (!("Notification" in window) || isSyncingToken) return;
 
-            if (currentPermission === "granted") {
-                const savedToken = localStorage.getItem("fcm_token");
-                if (savedToken) return;
-                const token = await requestFcmToken();
-                if (token) {
-                    await registerDevice({ device_token: token }).unwrap();
-                    localStorage.setItem("fcm_token", token);
+            setIsSyncingToken(true);
+            try {
+                if (currentPermission === "granted") {
+                    const savedToken = localStorage.getItem("fcm_token");
+                    if (savedToken) return;
+                    const token = await requestFcmToken();
+                    if (token) {
+                        await registerDevice({ device_token: token }).unwrap();
+                        localStorage.setItem("fcm_token", token);
+                    }
+                } else {
+                    const savedToken = localStorage.getItem("fcm_token");
+                    if (savedToken) {
+                        await unregisterDevice({
+                            device_token: savedToken,
+                        }).unwrap();
+                        localStorage.removeItem("fcm_token");
+                    }
                 }
-            } else {
-                const savedToken = localStorage.getItem("fcm_token");
-                if (savedToken) {
-                    await unregisterDevice({
-                        device_token: savedToken,
-                    }).unwrap();
-                    localStorage.removeItem("fcm_token");
-                }
+            } finally {
+                setIsSyncingToken(false);
             }
         },
-        [permission, registerDevice, unregisterDevice],
+        [permission, isSyncingToken, registerDevice, unregisterDevice],
     );
 
     const requestNotificationPermission = useCallback(async () => {
