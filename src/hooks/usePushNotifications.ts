@@ -29,7 +29,8 @@ export function usePushNotifications() {
     );
     const [isRequestingPermission, setIsRequestingPermission] = useState(false);
     const [isSyncingToken, setIsSyncingToken] = useState(false);
-    const [foregroundNotification, setForegroundNotification] = useState<ForegroundNotification | null>(null);
+    const [foregroundNotification, setForegroundNotification] =
+        useState<ForegroundNotification | null>(null);
 
     const getSavedTokenDetails = () => {
         try {
@@ -186,13 +187,15 @@ export function usePushNotifications() {
         setForegroundNotification(null);
 
         if (notificationId) {
-            try {
-                await markNotificationAsSeen({
-                    notification_id: notificationId,
-                }).unwrap();
-            } catch {
-                //
-            }
+            queueMicrotask(async () => {
+                try {
+                    await markNotificationAsSeen({
+                        notification_id: notificationId,
+                    }).unwrap();
+                } catch {
+                    //
+                }
+            });
         }
 
         window.focus();
