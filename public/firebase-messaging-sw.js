@@ -45,6 +45,25 @@ self.addEventListener("notificationclick", (event) => {
     event.notification.close();
 
     const targetUrl = event.notification.data?.url || "/";
+    const notificationId = parseInt(
+        event.notification.data?.notification_id || "0",
+    );
+
+    if (notificationId) {
+        (async () => {
+            let backendUrl = "https://api-cu-portal-dev.vercel.app";
+            if (!window.location.origin.includes("dev"))
+                backendUrl = "https://api.cu-portal.com";
+            await fetch(`${backendUrl}/user/notifications/${notificationId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+                credentials: "include",
+            });
+        })();
+    }
 
     event.waitUntil(
         clients
