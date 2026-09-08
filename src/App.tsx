@@ -56,6 +56,7 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
+import { TimeLinePage } from "./pages/user/timeline/TimeLinePage";
 
 import "./App.css";
 
@@ -138,6 +139,9 @@ function App() {
                     </Route>
                     <Route path="calendar">
                         <Route index element={<CalendarPage />} />
+                    </Route>
+                    <Route path="timeline">
+                        <Route index element={<TimeLinePage />} />
                     </Route>
                 </Route>
                 <Route path="/admin" element={<ProtectedRoute />}>
