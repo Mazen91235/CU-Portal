@@ -9,6 +9,13 @@ import { useMarkNotificationAsSeenMutation } from "../services/apis/user/Notific
 import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
 
+type ForegroundNotification = {
+    title: string;
+    content: string;
+    url: string;
+    notificationId: number;
+};
+
 export function usePushNotifications() {
     const [registerDevice] = useRegisterDeviceMutation();
     const [unregisterDevice] = useUnregisterDeviceMutation();
@@ -22,6 +29,7 @@ export function usePushNotifications() {
     );
     const [isRequestingPermission, setIsRequestingPermission] = useState(false);
     const [isSyncingToken, setIsSyncingToken] = useState(false);
+    const [foregroundNotification, setForegroundNotification] = useState<ForegroundNotification | null>(null);
 
     const getSavedTokenDetails = () => {
         try {
@@ -134,41 +142,27 @@ export function usePushNotifications() {
                 }
             }
 
-            // Listen for foreground FCM messages
             unsubscribeOnMessage = onMessage(messaging, (payload) => {
                 const title =
                     payload.notification?.title ||
                     payload.data?.title ||
                     "New Notification";
-                const body =
+                const content =
                     payload.notification?.body || payload.data?.body || "";
-                const icon = payload.data?.icon || "/logo.png";
                 const targetUrl = payload.data?.url || "/";
-                const notificationId = parseInt(
+                const parsedNotificationId = Number.parseInt(
                     payload.data?.notification_id || "0",
+                    10,
                 );
 
-                if (Notification.permission === "granted") {
-                    const notification = new Notification(title, {
-                        body,
-                        icon,
-                        data: payload.data || {},
-                    });
-
-                    notification.onclick = (event) => {
-                        event.preventDefault();
-                        window.focus();
-                        window.location.href = targetUrl;
-                        (async () => {
-                            if (notificationId) {
-                                await markNotificationAsSeen({
-                                    notification_id: notificationId,
-                                }).unwrap();
-                            }
-                        })();
-                        notification.close();
-                    };
-                }
+                setForegroundNotification({
+                    title,
+                    content,
+                    url: targetUrl,
+                    notificationId: Number.isNaN(parsedNotificationId)
+                        ? 0
+                        : parsedNotificationId,
+                });
             });
         };
 
@@ -181,9 +175,36 @@ export function usePushNotifications() {
         };
     }, [user, isLoggedIn, syncToken, markNotificationAsSeen]);
 
+    const dismissForegroundNotification = useCallback(() => {
+        setForegroundNotification(null);
+    }, []);
+
+    const viewForegroundNotification = useCallback(async () => {
+        if (!foregroundNotification) return;
+
+        const { notificationId, url } = foregroundNotification;
+        setForegroundNotification(null);
+
+        if (notificationId) {
+            try {
+                await markNotificationAsSeen({
+                    notification_id: notificationId,
+                }).unwrap();
+            } catch {
+                //
+            }
+        }
+
+        window.focus();
+        window.location.href = url;
+    }, [foregroundNotification, markNotificationAsSeen]);
+
     return {
         permission,
         isRequestingPermission,
         requestNotificationPermission,
+        foregroundNotification,
+        dismissForegroundNotification,
+        viewForegroundNotification,
     };
 }

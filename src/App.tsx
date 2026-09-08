@@ -7,6 +7,7 @@ import useAuth from "./hooks/useAuth";
 import { usePageLoading } from "./hooks/usePageLoading";
 import { usePushNotifications } from "./hooks/usePushNotifications";
 import { NotificationPermissionRequest } from "./components/notifications/NotificationPermissionRequest";
+import { ForegroundNotification } from "./components/notifications/ForegroundNotification";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { LandingPage } from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -72,6 +73,11 @@ function App() {
                 permission={pushNotifications.permission}
                 isRequesting={pushNotifications.isRequestingPermission}
                 onEnable={pushNotifications.requestNotificationPermission}
+            />
+            <ForegroundNotification
+                notification={pushNotifications.foregroundNotification}
+                onView={pushNotifications.viewForegroundNotification}
+                onDismiss={pushNotifications.dismissForegroundNotification}
             />
             <Routes>
                 <Route index element={<LandingPage />} />
