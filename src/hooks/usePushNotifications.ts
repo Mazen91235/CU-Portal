@@ -23,6 +23,34 @@ export function usePushNotifications() {
     const [isRequestingPermission, setIsRequestingPermission] = useState(false);
     const [isSyncingToken, setIsSyncingToken] = useState(false);
 
+    const getSavedTokenDetails = () => {
+        try {
+            const savedTokenDetails = JSON.parse(
+                localStorage.getItem("fcm_token") || "{}",
+            );
+            return {
+                token: savedTokenDetails.token,
+                timestamp: savedTokenDetails.timestamp,
+            };
+        } catch {
+            return {
+                token: null,
+                timestamp: null,
+            };
+        }
+    };
+
+    const setSavedTokenDetails = (token: string) => {
+        if (!token) localStorage.removeItem("fcm_token");
+        localStorage.setItem(
+            "fcm_token",
+            JSON.stringify({
+                token: token,
+                timestamp: Date.now(),
+            }),
+        );
+    };
+
     const syncToken = useCallback(
         async (currentPermission = permission) => {
             if (!("Notification" in window) || isSyncingToken) return;
@@ -30,20 +58,26 @@ export function usePushNotifications() {
             setIsSyncingToken(true);
             try {
                 if (currentPermission === "granted") {
-                    const savedToken = localStorage.getItem("fcm_token");
-                    if (savedToken) return;
+                    const savedTokenDetails = getSavedTokenDetails();
+                    if (
+                        savedTokenDetails.token &&
+                        savedTokenDetails.timestamp &&
+                        Date.now() - savedTokenDetails.timestamp <
+                            1 * 60 * 60 * 1000
+                    )
+                        return; // 1 hour valid
                     const token = await requestFcmToken();
                     if (token) {
                         await registerDevice({ device_token: token }).unwrap();
-                        localStorage.setItem("fcm_token", token);
+                        setSavedTokenDetails(token);
                     }
                 } else {
-                    const savedToken = localStorage.getItem("fcm_token");
-                    if (savedToken) {
+                    const savedTokenDetails = getSavedTokenDetails();
+                    if (savedTokenDetails.token) {
                         await unregisterDevice({
-                            device_token: savedToken,
+                            device_token: savedTokenDetails.token,
                         }).unwrap();
-                        localStorage.removeItem("fcm_token");
+                        setSavedTokenDetails("");
                     }
                 }
             } finally {
