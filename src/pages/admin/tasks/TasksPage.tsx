@@ -151,7 +151,11 @@ export const TasksPage = () => {
             }
             const result = await getTasks({
                 data: params,
-                includes: ["faculty", "department", "year", "subject"],
+                includes: [
+                    "subject.faculty",
+                    "subject.department",
+                    "subject.year",
+                ],
                 page,
             }).unwrap();
             setTasks((prev) => {
