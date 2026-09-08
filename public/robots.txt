@@ -5,5 +5,8 @@ Allow: /
 # Disallow admin pages
 Disallow: /admin/
 
+# Disallow authenticated user pages (no content for anonymous crawlers)
+Disallow: /user/
+
 # Sitemap location
 Sitemap: https://cu-portal.com/sitemap.xml
