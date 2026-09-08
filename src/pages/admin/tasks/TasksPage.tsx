@@ -375,12 +375,12 @@ export const TasksPage = () => {
                         <Card
                             key={task.id}
                             title={task.name || ""}
-                            badge={`${task.department?.code} ${task.year?.year}`}
+                            badge={`${task.subject?.department?.code} ${task.subject?.year?.year}`}
                             items={[
                                 {
                                     icon: "building",
                                     label: "Faculty",
-                                    value: task.faculty?.name || "N/A",
+                                    value: task.subject?.faculty?.name || "N/A",
                                 },
                                 {
                                     icon: "subject",

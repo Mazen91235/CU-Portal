@@ -1,7 +1,4 @@
 import type { User } from "./User";
-import type { Year } from "./Year";
-import type { Department } from "./Department";
-import type { Faculty } from "./Faculty";
 import type { Subject } from "./Subject";
 import type { Attachment } from "./Attachment";
 
@@ -32,12 +29,6 @@ export type Task = {
     due_date?: Date | null;
     created_at?: Date | null;
     updated_at?: Date | null;
-    year_id?: number | null;
-    year?: Year | null;
-    department_id?: number | null;
-    department?: Department | null;
-    faculty_id?: number | null;
-    faculty?: Faculty | null;
     subject_id?: number | null;
     subject?: Subject | null;
     author_id?: number;

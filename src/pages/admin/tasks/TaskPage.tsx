@@ -133,15 +133,17 @@ export const TaskPage = () => {
                                 },
                                 {
                                     label: "Faculty:",
-                                    value: task.faculty?.name || "N/A",
+                                    value: task.subject?.faculty?.name || "N/A",
                                 },
                                 {
                                     label: "Department:",
-                                    value: task.department?.name || "N/A",
+                                    value:
+                                        task.subject?.department?.name || "N/A",
                                 },
                                 {
                                     label: "Year:",
-                                    value: task.year?.year?.toString() || "N/A",
+                                    value:
+                                        task.subject?.year?.toString() || "N/A",
                                 },
                             ]}
                         />
