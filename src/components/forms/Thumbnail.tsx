@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import type {
     FieldErrors,
+    FieldValues,
     Path,
+    PathValue,
     UseFormRegister,
     UseFormSetValue,
 } from "react-hook-form";
 import styles from "./Thumbnail.module.css";
 
-type ThumbnailProps<T extends Record<string, unknown>> = {
+type ThumbnailProps<T extends FieldValues> = {
     register: UseFormRegister<T>;
     name: Path<T>;
     errors: FieldErrors<T>;
@@ -20,7 +22,7 @@ type ThumbnailProps<T extends Record<string, unknown>> = {
     logo?: boolean;
 };
 
-export const Thumbnail = <T extends Record<string, unknown>>({
+export const Thumbnail = <T extends FieldValues>({
     register,
     name,
     errors,
@@ -34,13 +36,13 @@ export const Thumbnail = <T extends Record<string, unknown>>({
 }: ThumbnailProps<T>) => {
     const [previewUrl, setPreviewUrl] = useState<string | null>(existingUrl || null);
     const hasPreviewRef = useRef(Boolean(existingUrl));
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
     const registration = register(name, {
         validate: (value) => {
             if (!required) return true;
             if (hasPreviewRef.current) return true;
-            if (value instanceof File) return true;
+            if ((value as unknown) instanceof File) return true;
             return Boolean(value && typeof value === "object" && "length" in value && Number(value.length) > 0) || `${label} is required`;
         },
     });
@@ -67,7 +69,7 @@ export const Thumbnail = <T extends Record<string, unknown>>({
         setPreviewUrl(objectUrlRef.current);
         hasPreviewRef.current = true;
         onRemoveExisting?.();
-        setValue(name, file as unknown as T[Path<T>], {
+        setValue(name, file as unknown as PathValue<T, Path<T>>, {
             shouldValidate: true,
             shouldDirty: true,
             shouldTouch: true,
@@ -82,13 +84,15 @@ export const Thumbnail = <T extends Record<string, unknown>>({
         }
         setPreviewUrl(null);
         hasPreviewRef.current = false;
-        setValue(name, undefined as T[Path<T>], {
+        setValue(name, undefined as PathValue<T, Path<T>>, {
             shouldValidate: true,
             shouldDirty: true,
         });
         if (fileInputRef.current) fileInputRef.current.value = "";
         onRemoveExisting?.();
     };
+
+    const errorMessage = (errors as Record<string, any>)[name]?.message as string | undefined;
 
     return (
         <div className={styles.thumbnailContainer}>
@@ -136,7 +140,7 @@ export const Thumbnail = <T extends Record<string, unknown>>({
                     </div>
                 )}
             </div>
-            {errors[name] && <span className={styles.error}>{errors[name]?.message as string}</span>}
+            {errorMessage && <span className={styles.error}>{errorMessage}</span>}
         </div>
     );
 };

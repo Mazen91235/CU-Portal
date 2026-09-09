@@ -134,11 +134,10 @@ export const EventsPage = () => {
         try {
             const params = {
                 query: searchQuery || undefined,
-                location_type:
-                    eventTypeFilter === "Online" ||
-                    eventTypeFilter === "Offline"
-                        ? eventTypeFilter
-                        : undefined,
+                location_type: (eventTypeFilter === "Online" ||
+                eventTypeFilter === "Offline"
+                    ? eventTypeFilter
+                    : undefined) as "Online" | "Offline" | undefined,
                 faculty_id:
                     user.canAccessAll && facultyFilter
                         ? parseInt(facultyFilter)

@@ -211,7 +211,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         {exams.map((exam) => (
                             <Card
                                 key={exam.id}
-                                title={exam.name}
+                                title={exam.name ?? "Untitled Exam"}
                                 badge="Exam"
                                 items={[
                                     {
@@ -267,7 +267,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         {tasks.map((task) => (
                             <Card
                                 key={task.id}
-                                title={task.name}
+                                title={task.name ?? "Untitled Task"}
                                 badge="Task"
                                 items={[
                                     {

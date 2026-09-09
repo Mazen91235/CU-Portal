@@ -160,7 +160,7 @@ export const FacultiesPage = () => {
                                 filteredFaculties.map((faculty) => (
                                     <Card
                                         key={faculty.id}
-                                        title={faculty.name}
+                                        title={faculty.name ?? "Untitled Faculty"}
                                         editable
                                         deletable
                                         hasOptions

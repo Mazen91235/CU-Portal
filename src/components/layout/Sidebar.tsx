@@ -119,7 +119,7 @@ const navSectionsDefault: NavSection[] = [
             {
                 label: "Events Organizers",
                 path: "/user/event-organizers",
-                icon: "sidebar-admin-users",
+                icon: "sidebar-event-organizers",
                 activatesPaths: ["/user/event-organizers/"],
             },
         ],
