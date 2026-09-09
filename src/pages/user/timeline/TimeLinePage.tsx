@@ -8,21 +8,33 @@ import type {
     CalendarDayEventDto,
     CalendarDayEventsDto,
 } from "../../../types/dtos/CalendarDtos";
-import { formatTime } from "../../../utils/Formatter";
 
 import styles from "./TimeLinePage.module.css";
 import { Banner } from "../../../components/banner/Banner";
-import { Link } from "react-router";
 import { MonthPicker } from "../../../components/timeline/MonthPicker";
+import { DayEvent } from "../../../components/calendar/DayEvent";
+import IconComponent from "../../../components/IconComponent";
 
 const getTimelineDateLabel = (date: string) => {
-    const parsedDate = new Date(`${date}`);
+    const parsedDate = new Date(date);
 
     if (Number.isNaN(parsedDate.getTime())) {
         return date;
     }
 
-    return `${parsedDate.getDate()} ${parsedDate.toLocaleString("en-US", { month: "short" })}`;
+    return `${parsedDate.getDate()} ${parsedDate.toLocaleString("en-US", {
+        month: "short",
+    })}`;
+};
+
+const getEventDay = (date: string) => {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+        return date;
+    }
+
+    return `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, "0")}-${String(parsedDate.getDate()).padStart(2, "0")}`;
 };
 
 export const TimeLinePage = () => {
@@ -60,31 +72,25 @@ export const TimeLinePage = () => {
 
     useAuthQuery(authQueryParams);
 
-    const tasks: CalendarDayEventDto[] = Object.entries(eventsData)
-        .flatMap(([_, dayEvents]) => [
+    const tasks: CalendarDayEventDto[] = Object.values(eventsData)
+        .flatMap((dayEvents) => [
             ...dayEvents.tasks,
             ...dayEvents.exams,
             ...dayEvents.announcements,
         ])
-        .sort((a, b) => b.due.localeCompare(a.due));
+        .sort((a, b) => {
+            const first = new Date(a.due).getTime();
+            const second = new Date(b.due).getTime();
 
-    const getViewLink = (
-        event_type: CalendarDayEventDto["event_type"],
-        id: number,
-    ): string => {
-        switch (event_type) {
-            case "exam":
-                return `/user/exams/${id}`;
-            case "assignment":
-                return `/user/tasks/${id}`;
-            case "announcement":
-                return `/user/announcements/${id}`;
-            default:
-                return "#";
-        }
-    };
+            if (Number.isNaN(first) || Number.isNaN(second)) {
+                return a.due.localeCompare(b.due);
+            }
 
-    let previousDate: string | null = null;
+            return first - second;
+        });
+
+    let previousDay: string | null = null;
+
     return (
         <Layout>
             <PageSeo
@@ -113,10 +119,17 @@ export const TimeLinePage = () => {
                     </label>
                 </div>
 
-                <div className={styles.timeline}>
+                <div
+                    className={`${styles.timeline} ${
+                        tasks.length === 0 ? styles["timeline-empty"] : ""
+                    }`}
+                >
                     {tasks.length === 0 ? (
                         <div className={styles.emptyState}>
-                            <div className={styles.emptyIcon}>📅</div>
+                            <IconComponent
+                                icon="calendar"
+                                className={styles.emptyIcon}
+                            />
                             <h3>No events for this month</h3>
                             <p>
                                 There are no announcements, assignments, or
@@ -133,11 +146,13 @@ export const TimeLinePage = () => {
                         </div>
                     ) : (
                         tasks.map((task) => {
-                            const showDate = previousDate !== task.due;
+                            const currentDay = getEventDay(task.due);
+                            const showDate = previousDay !== currentDay;
 
                             if (showDate) {
-                                previousDate = task.due;
+                                previousDay = currentDay;
                             }
+
                             return (
                                 <div
                                     className={styles.timelineItem}
@@ -151,54 +166,7 @@ export const TimeLinePage = () => {
                                     <div className={styles.timelineDot} />
 
                                     <div className={styles.timelineCard}>
-                                        <div className={styles.cardHeader}>
-                                            <h3>{task.title}</h3>
-
-                                            <span className={styles.course}>
-                                                {task.subject || "General"}
-                                            </span>
-                                        </div>
-
-                                        <div className={styles.taskInfo}>
-                                            {task.due && (
-                                                <span>
-                                                    ◷ {formatTime(task.due)}
-                                                </span>
-                                            )}
-
-                                            {task.location && (
-                                                <span>⌖ {task.location}</span>
-                                            )}
-                                        </div>
-
-                                        <div className={styles.cardFooter}>
-                                            <span
-                                                className={`${styles.badge} ${
-                                                    styles[
-                                                        task.event_type.toLowerCase()
-                                                    ]
-                                                }`}
-                                            >
-                                                {task.event_type}
-                                            </span>
-
-                                            <Link
-                                                to={getViewLink(
-                                                    task.event_type,
-                                                    task.id,
-                                                )}
-                                                className={styles.viewButton}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles["view-btn"]
-                                                    }
-                                                >
-                                                    View
-                                                </div>
-                                                {/* <div className={styles["view-btn"]}>View {getBadgeText()}</div> */}
-                                            </Link>
-                                        </div>
+                                        <DayEvent {...task} />
                                     </div>
                                 </div>
                             );
