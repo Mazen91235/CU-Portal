@@ -75,12 +75,6 @@ const navSectionsDefault: NavSection[] = [
                 activatesPaths: ["/user/announcements/"],
             },
             {
-                label: "Events",
-                path: "/user/events",
-                icon: "sidebar-events",
-                activatesPaths: ["/user/events/"],
-            },
-            {
                 label: "Materials",
                 path: "/user/materials",
                 icon: "sidebar-materials",
@@ -117,10 +111,9 @@ const navSectionsDefault: NavSection[] = [
             },
             {
                 label: "Events",
-                // path: "/user/events",
-                path: "#!",
+                path: "/user/events",
                 icon: "sidebar-events",
-                badge: "Soon",
+                badge: "New",
                 activatesPaths: ["/user/events/"],
             },
         ],
@@ -356,15 +349,6 @@ const showAdminLinks = (permissions: string[]) => {
         path: "#!",
         icon: "sidebar-admin-study-analysis",
         badge: "Soon",
-    });
-
-    section.links.push({
-        label: "Events",
-        // path: "/admin/events",
-        path: "#!",
-        icon: "sidebar-admin-events",
-        badge: "Soon",
-        activatesPaths: ["/admin/events/"],
     });
 
     section.links.push({

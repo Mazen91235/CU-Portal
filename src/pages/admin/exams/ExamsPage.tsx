@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
-  useLazyGetExamsQuery,
-  useDeleteExamMutation,
+    useLazyGetExamsQuery,
+    useDeleteExamMutation,
 } from "../../../services/apis/admin/ExamAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -33,83 +33,84 @@ import styles from "./ExamsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const ExamsPage = () => {
-  const navigate = useNavigate();
-  const user = useAppSelector((state) => state.user.user);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [facultyFilter, setFacultyFilter] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState("");
-  const [yearFilter, setYearFilter] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
-  const [dateFromFilter, setDateFromFilter] = useState(
-    new Date().toLocaleDateString("en-CA"),
-  ); // Set default date to today's date in "YYYY-MM-DD" format
-  const [dateToFilter, setDateToFilter] = useState("");
-  const [exams, setExams] = useState<ExamResponseDto[]>([]);
-  const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
-  const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
-  const [years, setYears] = useState<YearResponseDto[]>([]);
-  const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedExam, setSelectedExam] = useState<ExamResponseDto | null>(
-    null,
-  );
-  const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(true);
+    const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [facultyFilter, setFacultyFilter] = useState("");
+    const [departmentFilter, setDepartmentFilter] = useState("");
+    const [yearFilter, setYearFilter] = useState("");
+    const [subjectFilter, setSubjectFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    ); // Set default date to today's date in "YYYY-MM-DD" format
+    const [dateToFilter, setDateToFilter] = useState("");
+    const [exams, setExams] = useState<ExamResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedExam, setSelectedExam] = useState<ExamResponseDto | null>(
+        null,
+    );
+    const [page, setPage] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(true);
 
-  const [searchFaculties] = useLazyGetFacultiesQuery();
-  const [searchDepartments] = useLazyGetDepartmentsQuery();
-  const [searchYears] = useLazyGetYearsQuery();
-  const [searchCourses] = useLazyGetCoursesQuery();
-  const [getExams, { isFetching }] = useLazyGetExamsQuery();
-  const [deleteExam] = useDeleteExamMutation();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
+    const [getExams, { isFetching }] = useLazyGetExamsQuery();
+    const [deleteExam] = useDeleteExamMutation();
 
-  const fetchFaculties = useCallback(async () => {
-    try {
-      const result = await searchFaculties({ data: {} }).unwrap();
-      setFaculties(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchFaculties]);
+    const fetchFaculties = useCallback(async () => {
+        try {
+            const result = await searchFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchFaculties]);
 
-  const fetchDepartments = useCallback(async () => {
-    try {
-      if (!facultyFilter) {
-        setDepartments([]);
-        return;
-      }
-      const result = await searchDepartments({
-        data: {
-          faculty_id: parseInt(facultyFilter) || undefined,
-          study_type: undefined,
-        },
-      }).unwrap();
-      setDepartments(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchDepartments, facultyFilter]);
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchDepartments, facultyFilter]);
 
-  const fetchYears = useCallback(async () => {
-    try {
-      const result = await searchYears({ data: {} }).unwrap();
-      setYears(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchYears]);
+    const fetchYears = useCallback(async () => {
+        try {
+            const result = await searchYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchYears]);
 
-  const fetchSubjects = useCallback(async () => {
-    try {
-      if (!user) return;
-      const params: {
-        faculty_id?: number;
-        department_id?: number;
-        year_id?: number;
-      } = {};
-      if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-      if (departmentFilter) params.department_id = parseInt(departmentFilter);
-      if (yearFilter) params.year_id = parseInt(yearFilter);
+    const fetchSubjects = useCallback(async () => {
+        try {
+            if (!user) return;
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {};
+            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
+            if (departmentFilter)
+                params.department_id = parseInt(departmentFilter);
+            if (yearFilter) params.year_id = parseInt(yearFilter);
 
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
@@ -117,301 +118,321 @@ export const ExamsPage = () => {
                 params.year_id = user.year?.id ?? undefined;
             }
 
-      if (Object.keys(params).length < 3) {
-        setSubjects([]);
-        return;
-      }
+            if (Object.keys(params).length < 3) {
+                setSubjects([]);
+                return;
+            }
 
-      const result = await searchCourses({ data: params }).unwrap();
-      setSubjects(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+            const result = await searchCourses({ data: params }).unwrap();
+            setSubjects(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
 
-  const fetchExams = useCallback(async () => {
-    try {
-      if (!hasNextPage || !user) return;
-      const params = {
-        query: searchQuery || undefined,
-        faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
-        department_id: departmentFilter
-          ? parseInt(departmentFilter)
-          : undefined,
-        year_id: yearFilter ? parseInt(yearFilter) : undefined,
-        subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-        deadline_from: dateFromFilter || undefined,
-        deadline_to: dateToFilter || undefined,
-      };
-      if (!user.canAccessAll) {
-        params.faculty_id = undefined;
-        params.department_id = undefined;
-        params.year_id = undefined;
-      }
-      const result = await getExams({
-        data: params,
-        includes: ["faculty", "department", "year", "subject"],
+    const fetchExams = useCallback(async () => {
+        try {
+            if (!hasNextPage || !user) return;
+            const params = {
+                query: searchQuery || undefined,
+                faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
+                department_id: departmentFilter
+                    ? parseInt(departmentFilter)
+                    : undefined,
+                year_id: yearFilter ? parseInt(yearFilter) : undefined,
+                subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
+                deadline_from: dateFromFilter || undefined,
+                deadline_to: dateToFilter || undefined,
+            };
+            if (!user.canAccessAll) {
+                params.faculty_id = undefined;
+                params.department_id = undefined;
+                params.year_id = undefined;
+            }
+            const result = await getExams({
+                data: params,
+                includes: ["faculty", "department", "year", "subject"],
+                page,
+            }).unwrap();
+            setExams((prev) => {
+                const filteredPrev = prev.filter(
+                    (exam) =>
+                        !result.data?.some((newExam) => newExam.id === exam.id),
+                );
+                if (page == 1) return result.data || [];
+                return [...filteredPrev, ...(result.data || [])];
+            });
+            setHasNextPage(result.next_page || false);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [
+        getExams,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        searchQuery,
+        dateFromFilter,
+        dateToFilter,
         page,
-      }).unwrap();
-      setExams((prev) => {
-        const filteredPrev = prev.filter(
-          (exam) => !result.data?.some((newExam) => newExam.id === exam.id),
-        );
-        if (page == 1) return result.data || [];
-        return [...filteredPrev, ...(result.data || [])];
-      });
-      setHasNextPage(result.next_page || false);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [
-    getExams,
-    facultyFilter,
-    departmentFilter,
-    yearFilter,
-    subjectFilter,
-    searchQuery,
-    dateFromFilter,
-    dateToFilter,
-    page,
-    hasNextPage,
-    user,
-  ]);
+        hasNextPage,
+        user,
+    ]);
 
-  const authQueryParams = useCallback(
-    () =>
-      Promise.all([
-        fetchFaculties(),
-        fetchDepartments(),
-        fetchYears(),
-        fetchSubjects(),
-        fetchExams(),
-      ]),
-    [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects, fetchExams],
-  );
-
-  useAuthQuery(authQueryParams);
-
-  useEffect(() => {
-    setPage(1);
-    setHasNextPage(true);
-  }, [
-    facultyFilter,
-    departmentFilter,
-    yearFilter,
-    subjectFilter,
-    searchQuery,
-    dateFromFilter,
-    dateToFilter,
-  ]);
-
-  const handleAddExam = () => {
-    navigate("/admin/exams/create");
-  };
-
-  const handleShareExam = (examId: number) => {
-    const url = `${window.location.origin}/admin/exams/${examId}`;
-    copyToClipboard(url);
-    showToast(
-      "success",
-      "Success",
-      "Exam link copied to clipboard successfully",
+    const authQueryParams = useCallback(
+        () =>
+            Promise.all([
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchSubjects(),
+                fetchExams(),
+            ]),
+        [
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchSubjects,
+            fetchExams,
+        ],
     );
-  };
 
-  const handleEditExam = (examId: number) => {
-    navigate(`/admin/exams/edit/${examId}`);
-  };
+    useAuthQuery(authQueryParams);
 
-  const handleDeleteClick = (exam: ExamResponseDto) => {
-    setSelectedExam(exam);
-    setIsDeleteModalOpen(true);
-  };
+    useEffect(() => {
+        setPage(1);
+        setHasNextPage(true);
+    }, [
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        searchQuery,
+        dateFromFilter,
+        dateToFilter,
+    ]);
 
-  const handleDelete = async () => {
-    if (!selectedExam?.id) return;
+    const handleAddExam = () => {
+        navigate("/admin/exams/create");
+    };
 
-    try {
-      await deleteExam({
-        exam_id: selectedExam.id,
-      }).unwrap();
-      showToast("success", "Success", "Exam deleted successfully");
-      setIsDeleteModalOpen(false);
-      setSelectedExam(null);
-      setPage(1);
-      setHasNextPage(true);
-      await fetchExams();
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  };
+    const handleShareExam = (examId: number) => {
+        const url = `${window.location.origin}/admin/exams/${examId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Exam link copied to clipboard successfully",
+        );
+    };
 
-  const handleViewExam = (examId: number) => {
-    navigate(`/admin/exams/${examId}`);
-  };
+    const handleEditExam = (examId: number) => {
+        navigate(`/admin/exams/edit/${examId}`);
+    };
 
-  const handlePagination = () => {
-    if (hasNextPage && !isFetching && exams.length > 0) {
-      setPage(page + 1);
-    }
-  };
+    const handleDeleteClick = (exam: ExamResponseDto) => {
+        setSelectedExam(exam);
+        setIsDeleteModalOpen(true);
+    };
 
-  useEffect(() => {
-    setDepartmentFilter("");
-  }, [facultyFilter]);
+    const handleDelete = async () => {
+        if (!selectedExam?.id) return;
 
-  useEffect(() => {
-    setSubjectFilter("");
-  }, [departmentFilter, yearFilter]);
+        try {
+            await deleteExam({
+                exam_id: selectedExam.id,
+            }).unwrap();
+            showToast("success", "Success", "Exam deleted successfully");
+            setIsDeleteModalOpen(false);
+            setSelectedExam(null);
+            setPage(1);
+            setHasNextPage(true);
+            await fetchExams();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
 
-  const facultyOptions = useMemo(
-    () => [
-      { value: "", label: "Faculty" },
-      ...faculties.map((faculty) => ({
-        value: faculty.id?.toString() || "",
-        label: faculty.name || "",
-      })),
-    ],
-    [faculties],
-  );
+    const handleViewExam = (examId: number) => {
+        navigate(`/admin/exams/${examId}`);
+    };
 
-  const departmentOptions = useMemo(
-    () => [
-      { value: "", label: "Department" },
-      ...departments.map((department) => ({
-        value: department.id?.toString() || "",
-        label: department.name || "",
-      })),
-    ],
-    [departments],
-  );
+    const handlePagination = () => {
+        if (hasNextPage && !isFetching && exams.length > 0) {
+            setPage(page + 1);
+        }
+    };
 
-  const yearOptions = useMemo(
-    () => [
-      { value: "", label: "Year" },
-      ...years.map((year) => ({
-        value: year.id?.toString() || "",
-        label: year.year?.toString() || "",
-      })),
-    ],
-    [years],
-  );
+    useEffect(() => {
+        setDepartmentFilter("");
+    }, [facultyFilter]);
 
-  const subjectOptions = useMemo(
-    () => [
-      { value: "", label: "Subject" },
-      ...subjects.map((subject) => ({
-        value: subject.id?.toString() || "",
-        label: subject.name || "",
-      })),
-    ],
-    [subjects],
-  );
+    useEffect(() => {
+        setSubjectFilter("");
+    }, [departmentFilter, yearFilter]);
 
-  return (
-    <Layout>
-      <PageSeo
-        title="Exams Management | CU Portal"
-        description="Manage and view all exams in the university portal"
-      />
+    const facultyOptions = useMemo(
+        () => [
+            { value: "", label: "Faculty" },
+            ...faculties.map((faculty) => ({
+                value: faculty.id?.toString() || "",
+                label: faculty.name || "",
+            })),
+        ],
+        [faculties],
+    );
 
-      <Banner
-        title="Exams Management"
-        description="Manage and view all exams"
-        button="Add New Exam"
-        buttonAction={handleAddExam}
-      />
+    const departmentOptions = useMemo(
+        () => [
+            { value: "", label: "Department" },
+            ...departments.map((department) => ({
+                value: department.id?.toString() || "",
+                label: department.name || "",
+            })),
+        ],
+        [departments],
+    );
 
-      <div className={styles.container}>
-        <div className={styles.filtersContainer}>
-          <div className={styles.searchRow}>
-            <Search placeholder="Search exams..." setValue={setSearchQuery} />
-          </div>
+    const yearOptions = useMemo(
+        () => [
+            { value: "", label: "Year" },
+            ...years.map((year) => ({
+                value: year.id?.toString() || "",
+                label: year.year?.toString() || "",
+            })),
+        ],
+        [years],
+    );
 
-          <div className={styles.filtersRow}>
-            {user?.canAccessAll && (
-              <>
-                <SelectFilter
-                  options={facultyOptions}
-                  setValue={setFacultyFilter}
-                />
-                <SelectFilter
-                  options={departmentOptions}
-                  setValue={setDepartmentFilter}
-                />
-                <SelectFilter options={yearOptions} setValue={setYearFilter} />
-              </>
-            )}
-            <SelectFilter
-              options={subjectOptions}
-              setValue={setSubjectFilter}
+    const subjectOptions = useMemo(
+        () => [
+            { value: "", label: "Subject" },
+            ...subjects.map((subject) => ({
+                value: subject.id?.toString() || "",
+                label: subject.name || "",
+            })),
+        ],
+        [subjects],
+    );
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Exams Management | CU Portal"
+                description="Manage and view all exams in the university portal"
             />
-            <DateFilter
-              placeholder="Date From"
-              setValue={setDateFromFilter}
-              defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+
+            <Banner
+                title="Exams Management"
+                description="Manage and view all exams"
+                button="Add New Exam"
+                buttonAction={handleAddExam}
             />
-            <DateFilter placeholder="Date To" setValue={setDateToFilter} />
-          </div>
-        </div>
 
-        <div className={styles.examsGrid}>
-          {exams.map((exam) => (
-            <Card
-              key={exam.id}
-              title={exam.name || "Untitled Exam"}
-              badge={`${exam.department?.code} ${exam.year?.year}`}
-              items={[
-                {
-                  icon: "building",
-                  label: "Faculty",
-                  value: exam.faculty?.name || "N/A",
-                },
-                {
-                  icon: "subject",
-                  label: "Subject",
-                  value: exam.subject?.name || "N/A",
-                },
-                {
-                  icon: "time",
-                  label: "Due",
-                  value: formatDateTime(exam.deadline) || "N/A",
-                },
-                {
-                  icon: "location",
-                  label: "Location",
-                  value: exam.details?.location || "N/A",
-                },
-              ]}
-              button="View Exam"
-              buttonAction={() => handleViewExam(exam.id!)}
-              sharable
-              editable
-              deletable
-              hasOptions
-              onShare={() => handleShareExam(exam.id!)}
-              onEdit={() => handleEditExam(exam.id!)}
-              onDelete={() => handleDeleteClick(exam)}
+            <div className={styles.container}>
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchRow}>
+                        <Search
+                            placeholder="Search exams..."
+                            setValue={setSearchQuery}
+                        />
+                    </div>
+
+                    <div className={styles.filtersRow}>
+                        {user?.canAccessAll && (
+                            <>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={setFacultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={setYearFilter}
+                                />
+                            </>
+                        )}
+                        <SelectFilter
+                            options={subjectOptions}
+                            setValue={setSubjectFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date From"
+                            setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                        />
+                        <DateFilter
+                            placeholder="Date To"
+                            setValue={setDateToFilter}
+                        />
+                    </div>
+                </div>
+
+                <div className={styles.examsGrid}>
+                    {exams.map((exam) => (
+                        <Card
+                            key={exam.id}
+                            title={exam.name || "Untitled Exam"}
+                            badge={`${exam.department?.code} ${exam.year?.year}`}
+                            items={[
+                                {
+                                    icon: "building",
+                                    label: "Faculty",
+                                    value: exam.faculty?.name || "N/A",
+                                },
+                                {
+                                    icon: "subject",
+                                    label: "Subject",
+                                    value: exam.subject?.name || "N/A",
+                                },
+                                {
+                                    icon: "time",
+                                    label: "Due",
+                                    value:
+                                        formatDateTime(exam.deadline) || "N/A",
+                                },
+                                {
+                                    icon: "location",
+                                    label: "Location",
+                                    value: exam.details?.location || "N/A",
+                                },
+                            ]}
+                            button="View Exam"
+                            buttonAction={() => handleViewExam(exam.id!)}
+                            sharable
+                            editable
+                            deletable
+                            hasOptions
+                            onShare={() => handleShareExam(exam.id!)}
+                            onEdit={() => handleEditExam(exam.id!)}
+                            onDelete={() => handleDeleteClick(exam)}
+                        />
+                    ))}
+                </div>
+
+                {exams.length === 0 && !isFetching && (
+                    <NoContentSection
+                        icon="clipboard-list"
+                        label="No exams found"
+                    />
+                )}
+
+                <Pagination onReached={handlePagination} />
+            </div>
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                confirmText="Delete"
+                title="Delete Exam"
+                message={`Are you sure you want to delete "${selectedExam?.name}"? This action cannot be undone.`}
+                colorType="red"
             />
-          ))}
-        </div>
-
-        {exams.length === 0 && !isFetching && (
-          <NoContentSection icon="clipboard-list" label="No exams found" />
-        )}
-
-        <Pagination onReached={handlePagination} />
-      </div>
-
-      <ConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        confirmText="Delete"
-        title="Delete Exam"
-        message={`Are you sure you want to delete "${selectedExam?.name}"? This action cannot be undone.`}
-        colorType="red"
-      />
-    </Layout>
-  );
+        </Layout>
+    );
 };

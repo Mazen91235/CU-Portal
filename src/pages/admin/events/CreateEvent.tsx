@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,73 +12,349 @@ import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { GetIcon } from "../../../utils/LinkHandler";
 import { Thumbnail } from "../../../components/forms/Thumbnail";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
-
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import { useCreateEventMutation } from "../../../services/apis/admin/EventAPIs";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetEventOrganizersQuery } from "../../../services/apis/admin/EventOrganizerAPIs";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { mergeDateAndTime } from "../../../utils/Formatter";
 import styles from "./CreateEvent.module.css";
 
-const eventSchema = z.object({
-    title: z.string().min(1, "Event name is required"),
-    thumbnail: z.string().optional(),
-    description: z.string().min(1, "Description is required"),
-    instructions: z.string().min(1, "Instruction is required"),
-    event_date: z.string().min(1, "Event date is required"),
-    event_time: z.string().min(1, "Event time is required"),
-    event_type: z.string().min(1, "Event type is required"),
-    event_link: z.string().min(1, "Event link is required"),
-    price: z.string().min(1, "Price is required"),    
-    files: z.any().optional(),
-    links: z.string().optional(),
-    // Access Permissions
-    is_restricted: z.boolean().default(false),
-    faculty_id: z.string().optional(),
-    department_id: z.string().optional(),
-    year_level: z.string().optional(),
-});
+const eventSchema = z
+    .object({
+        title: z.string().min(1, "Event title is required"),
+        thumbnail: z.any().refine(
+            (value) => value instanceof FileList && value.length > 0,
+            "Thumbnail is required",
+        ),
+        description: z.string().min(1, "Description is required"),
+        start_date: z.string().min(1, "Start date is required"),
+        start_time: z.string().min(1, "Start time is required"),
+        end_date: z.string().optional(),
+        end_time: z.string().optional(),
+        location_type: z.enum(["Online", "Offline"]),
+        location: z.string().min(1, "Location is required"),
+        price: z.string().min(1, "Price is required"),
+        event_organizer_id: z.string().min(1, "Event organizer is required"),
+        files: z.any().optional(),
+        links: z.string().optional(),
+        is_restricted: z.boolean().default(false),
+        faculty_id: z.string().optional(),
+        department_id: z.string().optional(),
+        year_id: z.string().optional(),
+    })
+    .refine(
+        (data) => {
+            if (!data.end_date) return true;
+            const start = mergeDateAndTime(data.start_date, data.start_time);
+            const end = mergeDateAndTime(
+                data.end_date,
+                data.end_time || "00:00",
+            );
+            return !start || !end || end >= start;
+        },
+        {
+            message: "End date and time must be after the start date and time",
+            path: ["end_date"],
+        },
+    );
 
 type EventFormData = z.input<typeof eventSchema>;
 
 export const CreateEvent = () => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    const user = useAppSelector((state) => state.user.user);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [organizers, setOrganizers] = useState<EventOrganizerResponseDto[]>(
+        [],
+    );
     const [isUploading, setIsUploading] = useState(false);
+
+    const [createEvent, { isLoading }] = useCreateEventMutation();
+    const [getFaculties] = useLazyGetFacultiesQuery();
+    const [getDepartments] = useLazyGetDepartmentsQuery();
+    const [getYears] = useLazyGetYearsQuery();
+    const [getOrganizers] = useLazyGetEventOrganizersQuery();
+    const uploadFile = useUploadFileToDrive({});
 
     const {
         register,
         control,
         handleSubmit,
         formState: { errors },
+        setError,
         setValue,
         watch,
     } = useForm<EventFormData>({
         resolver: zodResolver(eventSchema),
+        defaultValues: {
+            price: "0",
+            location_type: "Offline",
+            is_restricted: false,
+        },
     });
 
     const isRestricted = watch("is_restricted");
+    const selectedFaculty = watch("faculty_id");
+
+    useEffect(() => {
+        if (!user?.canAccessAll && isRestricted) {
+            setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            setValue("department_id", user?.department?.id?.toString() || "");
+            setValue("year_id", user?.year?.id?.toString() || "");
+            setFaculties(user?.faculty ? [user.faculty] : []);
+            setDepartments(user?.department ? [user.department] : []);
+            setYears(user?.year ? [user.year] : []);
+            return;
+        }
+
+        if (!isRestricted) {
+            setValue("faculty_id", "");
+            setValue("department_id", "");
+            setValue("year_id", "");
+            if (!user?.canAccessAll) {
+                setFaculties([]);
+                setDepartments([]);
+                setYears([]);
+            }
+        }
+    }, [isRestricted, user, setValue]);
+
+    const fetchFaculties = useCallback(async () => {
+        if (!user?.canAccessAll) return;
+        try {
+            const result = await getFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getFaculties, user?.canAccessAll]);
+
+    const fetchDepartments = useCallback(async () => {
+        if (!user?.canAccessAll || !selectedFaculty) {
+            setDepartments([]);
+            return;
+        }
+
+        try {
+            const result = await getDepartments({
+                data: {
+                    faculty_id: parseInt(selectedFaculty),
+                    study_type: undefined,
+                },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getDepartments, selectedFaculty, user?.canAccessAll]);
+
+    const fetchYears = useCallback(async () => {
+        if (!user?.canAccessAll) return;
+        try {
+            const result = await getYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getYears, user?.canAccessAll]);
+
+    const fetchOrganizers = useCallback(async () => {
+        try {
+            const result = await getOrganizers({
+                data: {},
+            }).unwrap();
+            setOrganizers(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getOrganizers]);
+
+    const authQueryParams = useCallback(
+        () =>
+            Promise.all([
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchOrganizers(),
+            ]),
+        [fetchFaculties, fetchDepartments, fetchYears, fetchOrganizers],
+    );
+
+    useAuthQuery(authQueryParams);
+
+
+
+    const uploadFiles = async (files: FileList): Promise<string[]> => {
+        const urls: string[] = [];
+        for (const file of Array.from(files)) {
+            const url = await uploadFile(file);
+            if (url) urls.push(url);
+        }
+        return urls;
+    };
+
+    const parseLinks = (value?: string) =>
+        value
+            ? value
+                  .split(",")
+                  .map((pair) => {
+                      const [title, url] = pair.split("|");
+                      return {
+                          title: title?.trim(),
+                          url: url?.trim(),
+                      };
+                  })
+                  .filter((link) => link.title && link.url)
+            : [];
 
     const onSubmit = async (data: EventFormData) => {
+        if (!data.thumbnail || !(data.thumbnail as FileList).length) {
+            setError("thumbnail", {
+                type: "required",
+                message: "Thumbnail is required",
+            });
+            return;
+        }
+
         try {
-            setIsLoading(true);
             setIsUploading(true);
-            // Format data payload for API
-            console.log("Form Submitted:", data);            
+
+            const uploadedFiles =
+                data.files && (data.files as FileList).length > 0
+                    ? await uploadFiles(data.files as FileList)
+                    : [];
+
+            const thumbnailFile =
+                data.thumbnail && (data.thumbnail as FileList).length > 0
+                    ? (data.thumbnail as FileList)[0]
+                    : undefined;
+
+            const thumbnailUrl = thumbnailFile
+                ? await uploadFile(thumbnailFile)
+                : undefined;
+
+            const scopedIds = user?.canAccessAll
+                ? data.is_restricted
+                    ? {
+                          faculty_id: data.faculty_id
+                              ? parseInt(data.faculty_id)
+                              : undefined,
+                          department_id: data.department_id
+                              ? parseInt(data.department_id)
+                              : undefined,
+                          year_id: data.year_id
+                              ? parseInt(data.year_id)
+                              : undefined,
+                      }
+                    : {
+                          faculty_id: undefined,
+                          department_id: undefined,
+                          year_id: undefined,
+                      }
+                : data.is_restricted
+                  ? {
+                        faculty_id: user?.faculty?.id ?? undefined,
+                        department_id: user?.department?.id ?? undefined,
+                        year_id: user?.year?.id ?? undefined,
+                    }
+                  : {
+                        faculty_id: undefined,
+                        department_id: undefined,
+                        year_id: undefined,
+                    };
+
+            const payload = {
+                title: data.title,
+                start_date:
+                    mergeDateAndTime(data.start_date, data.start_time)?.toISOString() ||
+                    "",
+                end_date: data.end_date
+                    ? mergeDateAndTime(
+                          data.end_date,
+                          data.end_time || "00:00",
+                      )?.toISOString() || null
+                    : null,
+                price: parseFloat(data.price),
+                location_type: data.location_type,
+                location: data.location,
+                event_organizer_id: parseInt(data.event_organizer_id),
+                ...scopedIds,
+                details: {
+                    description: data.description || undefined,
+                    url: thumbnailUrl || undefined,
+                    urls: uploadedFiles.length ? uploadedFiles : undefined,
+                    links: parseLinks(data.links),
+                },
+            };
+
+            await createEvent(payload).unwrap();
+
             navigate("/admin/events", {
                 state: { success: "Event created successfully!" },
             });
         } catch (error) {
-            handlePopupErrors(error);
+            handleErrors(error, setError);
         } finally {
-            setIsLoading(false);
             setIsUploading(false);
         }
     };
 
-    const handleCancel = () => {
-        navigate("/admin/events");
-    };
+    const facultyOptions = useMemo(
+        () =>
+            faculties.map((faculty) => (
+                <option key={faculty.id} value={faculty.id || ""}>
+                    {faculty.name}
+                </option>
+            )),
+        [faculties],
+    );
+
+    const departmentOptions = useMemo(
+        () =>
+            departments.map((department) => (
+                <option key={department.id} value={department.id || ""}>
+                    {department.name}
+                </option>
+            )),
+        [departments],
+    );
+
+    const yearOptions = useMemo(
+        () =>
+            years.map((year) => (
+                <option key={year.id} value={year.id || ""}>
+                    {year.year}
+                </option>
+            )),
+        [years],
+    );
+
+    const organizerOptions = useMemo(
+        () =>
+            organizers.map((organizer) => (
+                <option key={organizer.id} value={organizer.id || ""}>
+                    {organizer.name}
+                </option>
+            )),
+        [organizers],
+    );
+
+    const busy = isLoading || isUploading;
+    const showScopeFields = isRestricted;
 
     return (
         <Layout>
@@ -89,10 +365,11 @@ export const CreateEvent = () => {
             <SubBanner
                 title="Create New Event"
                 description="Fill in the details to create your event"
-                icon={GetIcon("calendar")} 
+                icon="calendar"
                 linkText="Back to Events"
                 linkTo="/admin/events"
             />
+
             <main className={styles.container}>
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
@@ -100,207 +377,223 @@ export const CreateEvent = () => {
                     className={styles.formCard}
                 >
                     <div className={styles.formSection}>
-                        <Heading
-                            icon="calendar-alt" // Or "clipboard-list"
-                            content="Basic Information"
-                            size="medium"
-                        />
+                        <Heading icon="info-circle" content="Basic Information" size="medium" />
                         <Input
-                            label="Event Name *"
-                            placeholder="Enter event name"
+                            label="Event Title"
+                            placeholder="Enter event title"
                             register={register}
                             name="title"
                             type="text"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
-                        
-                        <Thumbnail />
+
+                        <Thumbnail
+                            register={register}
+                            name="thumbnail"
+                            required
+                            errors={errors}
+                            setValue={setValue}
+                            disabled={busy}
+                        />
 
                         <Input
-                            label="Description *"
+                            label="Description"
                             type="textarea"
-                            placeholder="Describe your event..."
+                            placeholder="Describe the event..."
                             register={register}
                             name="description"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                             isTextArea
                         />
-                        <Input
-                            label="Instruction *"
-                            type="textarea"
-                            placeholder="Write clear guidelines students must follow during the event"
+
+                        <Select
+                            label="Event Organizer"
                             register={register}
-                            name="instructions"
+                            name="event_organizer_id"
                             errors={errors}
-                            disabled={isLoading}
-                            isTextArea
-                        />
+                            disabled={busy}
+                        >
+                            <option value="">Select event organizer</option>
+                            {organizerOptions}
+                        </Select>
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading
-                            icon="clock"
-                            content="Date & Time"
-                            size="medium"
-                        />
+                        <Heading icon="clock" content="Date & Time" size="medium" />
                         <div className={styles.dateTimeGroup}>
                             <DateInput
-                                label="Event Date *"
+                                label="Start Date"
                                 register={register}
-                                name="event_date"
+                                name="start_date"
                                 errors={errors}
                                 setValue={setValue}
                                 control={control}
-                                disabled={isLoading}
+                                disabled={busy}
                             />
                             <Input
-                                label="Event Time *"
-                                type="time"
+                                label="Start Time"
                                 register={register}
-                                name="event_time"
+                                name="start_time"
+                                type="time"
                                 errors={errors}
-                                disabled={isLoading}
+                                disabled={busy}
+                            />
+                            <DateInput
+                                label="End Date"
+                                register={register}
+                                name="end_date"
+                                errors={errors}
+                                setValue={setValue}
+                                control={control}
+                                disabled={busy}
+                            />
+                            <Input
+                                label="End Time"
+                                register={register}
+                                name="end_time"
+                                type="time"
+                                errors={errors}
+                                disabled={busy}
                             />
                         </div>
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading
-                            icon="map-marker-alt"
-                            content="Location"
-                            size="medium"
-                        />
+                        <Heading icon="map-marker-alt" content="Location" size="medium" />
                         <Select
-                            label="Event Type *"
+                            label="Location Type"
                             register={register}
-                            name="event_type"
+                            name="location_type"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         >
-                            <option value="Online Event">Online Event</option>
-                            <option value="In-Person">Offline</option>
-                            <option value="Hybrid">Hybrid</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Online">Online</option>
                         </Select>
                         <Input
-                            label="Event Link *"
-                            placeholder="https://zoom.us/j/..."
+                            label="Location / Link"
+                            placeholder="Enter venue or online meeting link"
                             register={register}
-                            name="event_link"
-                            type="url"
+                            name="location"
+                            type="text"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading
-                            icon="dollar-sign"
-                            content="Pricing"
-                            size="medium"
-                        />
+                        <Heading icon="dollar-sign" content="Pricing" size="medium" />
                         <Input
-                            label="Price (EGP) *"
+                            label="Price (EGP)"
                             placeholder="Enter price (0 for free)"
                             register={register}
                             name="price"
                             type="number"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
                     </div>
 
-                    <div className={`${styles.attachmentsSection} ${styles.formSection}`}>
+                    <div className={`${styles.formSection} ${styles.attachmentsSection}`}>
                         <Heading
                             icon="paperclip"
                             content="Attachments & Links"
                             size="medium"
                         />
-
                         <FilesInputContainer
                             register={register}
                             name="files"
                             errors={errors}
                             setValue={setValue}
-                            disabled={isLoading || isUploading}
+                            disabled={busy}
                         />
-
                         <LinksInputContainer
                             register={register}
                             name="links"
                             errors={errors}
                             setValue={setValue}
-                            disabled={isLoading || isUploading}
+                            disabled={busy}
                         />
                     </div>
 
                     <div className={`${styles.formSection} ${styles.accessPermissionsSection}`}>
                         <Heading
                             icon="users"
-                            content="Access Permissions (Optional)"
+                            content="Access Permissions"
                             size="medium"
                         />
-                        
+
                         <div className={styles.toggleRow}>
-                            <label className={styles.customLabel}>Restricted Event?</label>
+                            <label className={styles.customLabel}>
+                                Restricted Event?
+                            </label>
                             <label className={styles.switch}>
-                                <input type="checkbox" {...register("is_restricted")} />
+                                <input
+                                    type="checkbox"
+                                    {...register("is_restricted")}
+                                    disabled={busy}
+                                />
                                 <span className={styles.slider}></span>
                             </label>
                         </div>
 
-                        {isRestricted &&
-                            <>
+                        {showScopeFields && (
+                            <div className={styles.scopeGrid}>
                                 <Select
-                                label="Faculty"
-                                register={register}
-                                name="faculty_id"
-                                errors={errors}
-                                disabled={isLoading}
+                                    label="Faculty"
+                                    register={register}
+                                    name="faculty_id"
+                                    errors={errors}
+                                    disabled={!user?.canAccessAll || busy}
                                 >
-                                    <option value="">e.g., Computer Science</option>
-                                    <option value="1">Computer Science</option>
+                                    <option value="">All Faculties</option>
+                                    {facultyOptions}
                                 </Select>
 
                                 <Select
-                                label="Department"
-                                register={register}
-                                name="department_id"
-                                errors={errors}
-                                disabled={isLoading}
+                                    label="Department"
+                                    register={register}
+                                    name="department_id"
+                                    errors={errors}
+                                    disabled={
+                                        !user?.canAccessAll ||
+                                        busy ||
+                                        !selectedFaculty
+                                    }
                                 >
-                                    <option value="">e.g., Software Engineering</option>
-                                    <option value="1">Software Engineering</option>
+                                    <option value="">All Departments</option>
+                                    {departmentOptions}
                                 </Select>
 
                                 <Select
-                                label="Year Level"
-                                register={register}
-                                name="year_level"
-                                errors={errors}
-                                disabled={isLoading}
+                                    label="Academic Year"
+                                    register={register}
+                                    name="year_id"
+                                    errors={errors}
+                                    disabled={!user?.canAccessAll || busy}
                                 >
-                                    <option value="">e.g., 3rd Year</option>
-                                    <option value="3">3rd Year</option>
+                                    <option value="">All Years</option>
+                                    {yearOptions}
                                 </Select>
-                            </>
-                        }
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.formActions}>
                         <Button
                             text="Cancel"
                             loadingText=""
+                            type="button"
                             isSubmitting={false}
-                            onClick={handleCancel}
-                            type="default"
-                            isDefault
+                            onClick={() => navigate("/admin/events")}
+                            isSecondary
                         />
                         <Button
                             text="Create Event"
                             loadingText="Creating..."
-                            isSubmitting={isLoading}
+                            isSubmitting={busy}
                             type="submit"
                             isOrange={false}
                         />

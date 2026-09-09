@@ -1,8 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import {
+    useLazyGetEventQuery,
+    useUpdateEventMutation,
+} from "../../../services/apis/admin/EventAPIs";
+import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
+import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
+import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetEventOrganizersQuery } from "../../../services/apis/admin/EventOrganizerAPIs";
+import type { EventResponseDto } from "../../../types/dtos/EventDtos";
+import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
+import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
+import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import type { LinkData } from "../../../types/entities/Task";
+import type { FileDataWithExisting } from "../../../types/entities/Attachment";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    formatDateInputValue,
+    formatTimeInputValue,
+    mergeDateAndTime,
+} from "../../../utils/Formatter";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
@@ -12,54 +36,84 @@ import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { GetIcon } from "../../../utils/LinkHandler";
 import { Thumbnail } from "../../../components/forms/Thumbnail";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
-import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { Event } from "../../../types/entities/Event";
-import type { FileData, LinkData } from "../../../types/entities/Task";
-import { showToast } from "../../../utils/ToastsManager";
-
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./EditEvent.module.css";
 
-const eventSchema = z.object({
-    title: z.string().min(1, "Event name is required"),
-    thumbnail: z.string().optional(),
-    description: z.string().min(1, "Description is required"),
-    instructions: z.string().min(1, "Instruction is required"),
-    event_date: z.string().min(1, "Event date is required"),
-    event_time: z.string().min(1, "Event time is required"),
-    event_type: z.string().min(1, "Event type is required"),
-    event_link: z
-        .string()
-        .min(1, "Event link is required"),
-    price: z.string().min(1, "Price is required"),
-    files: z.any().optional(),
-    links: z.string().optional(),
-    is_restricted: z.boolean().default(false),
-    faculty_id: z.string().optional(),
-    department_id: z.string().optional(),
-    year_level: z.string().optional(),
-});
+const eventSchema = z
+    .object({
+        title: z.string().min(1, "Event title is required"),
+        thumbnail: z.any().optional(),
+        description: z.string().min(1, "Description is required"),
+        start_date: z.string().min(1, "Start date is required"),
+        start_time: z.string().min(1, "Start time is required"),
+        end_date: z.string().optional(),
+        end_time: z.string().optional(),
+        location_type: z.enum(["Online", "Offline"]),
+        location: z.string().min(1, "Location is required"),
+        price: z.string().min(1, "Price is required"),
+        event_organizer_id: z.string().min(1, "Event organizer is required"),
+        files: z.any().optional(),
+        links: z.string().optional(),
+        is_restricted: z.boolean().default(false),
+        faculty_id: z.string().optional(),
+        department_id: z.string().optional(),
+        year_id: z.string().optional(),
+    })
+    .refine(
+        (data) => {
+            if (!data.end_date) return true;
+            const start = mergeDateAndTime(data.start_date, data.start_time);
+            const end = mergeDateAndTime(
+                data.end_date,
+                data.end_time || "00:00",
+            );
+            return !start || !end || end >= start;
+        },
+        {
+            message: "End date and time must be after the start date and time",
+            path: ["end_date"],
+        },
+    );
 
 type EventFormData = z.input<typeof eventSchema>;
 
 export const EditEvent = () => {
     const navigate = useNavigate();
     const { eventId } = useParams<{ eventId: string }>();
-    const [isLoading, setIsLoading] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-    const [event, setEvent] = useState<Event | null>(null);
-    const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
+    const user = useAppSelector((state) => state.user.user);
+
+    const [event, setEvent] = useState<EventResponseDto | null>(null);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [organizers, setOrganizers] = useState<EventOrganizerResponseDto[]>(
+        [],
+    );
+    const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
+        [],
+    );
     const [existingLinks, setExistingLinks] = useState<LinkData[]>([]);
+    const [existingThumbnailUrl, setExistingThumbnailUrl] = useState<
+        string | null
+    >(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const [getEvent] = useLazyGetEventQuery();
+    const [updateEvent, { isLoading }] = useUpdateEventMutation();
+    const [getFaculties] = useLazyGetFacultiesQuery();
+    const [getDepartments] = useLazyGetDepartmentsQuery();
+    const [getYears] = useLazyGetYearsQuery();
+    const [getOrganizers] = useLazyGetEventOrganizersQuery();
+    const uploadFile = useUploadFileToDrive({});
 
     const {
         register,
         control,
         handleSubmit,
         formState: { errors },
+        setError,
         setValue,
         watch,
     } = useForm<EventFormData>({
@@ -67,110 +121,389 @@ export const EditEvent = () => {
     });
 
     const isRestricted = watch("is_restricted");
+    const selectedFaculty = watch("faculty_id");
+    const busy = isLoading || isUploading;
+
+    const fetchFaculties = useCallback(async () => {
+        if (!user?.canAccessAll) return;
+        try {
+            const result = await getFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getFaculties, user?.canAccessAll]);
+
+    const fetchDepartments = useCallback(async () => {
+        if (!user?.canAccessAll || !selectedFaculty) {
+            setDepartments([]);
+            return;
+        }
+
+        try {
+            const result = await getDepartments({
+                data: {
+                    faculty_id: parseInt(selectedFaculty),
+                    study_type: undefined,
+                },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getDepartments, selectedFaculty, user?.canAccessAll]);
+
+    const fetchYears = useCallback(async () => {
+        if (!user?.canAccessAll) return;
+        try {
+            const result = await getYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getYears, user?.canAccessAll]);
+
+    const fetchOrganizers = useCallback(async () => {
+        try {
+            const result = await getOrganizers({ data: {} }).unwrap();
+            setOrganizers(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getOrganizers]);
 
     const fetchEvent = useCallback(async () => {
         if (!eventId) return;
 
-        const mockEvent: Event = {
-            id: Number(eventId),
-            name: `Sample Event ${eventId}`,
-            description: "This event is being edited from the admin panel.",
-            instructions: "Please arrive 10 minutes early.\nBring your student ID.",
-            img: "https://tse1.mm.bing.net/th/id/OIP.lZcTQuv69wOV10v9JtAc2wHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
-            price: 150,
-            start_time: "2026-08-15T10:30:00Z",
-            location: "Online",
-            urls: ["https://example.com/agenda", "https://example.com/resources"],
-            details: {},
-        };
+        try {
+            const result = await getEvent({
+                event_id: parseInt(eventId),
+            }).unwrap();
 
-        setEvent(mockEvent);
-    }, [eventId]);
+            const eventData = result.data || null;
+            setEvent(eventData);
 
-    const authQueryParams = useCallback(() => fetchEvent(), [fetchEvent]);
+            if (!eventData) return;
+
+            setValue("title", eventData.title || "");
+            setValue(
+                "description",
+                eventData.details?.description || "",
+            );
+            setValue(
+                "start_date",
+                formatDateInputValue(eventData.start_date),
+            );
+            setValue(
+                "start_time",
+                formatTimeInputValue(eventData.start_date),
+            );
+            setValue(
+                "end_date",
+                formatDateInputValue(eventData.end_date),
+            );
+            setValue(
+                "end_time",
+                formatTimeInputValue(eventData.end_date),
+            );
+            setValue(
+                "location_type",
+                eventData.location_type || "Offline",
+            );
+            setValue("location", eventData.location || "");
+            setValue("price", eventData.price?.toString() || "0");
+            setValue(
+                "event_organizer_id",
+                eventData.event_organizer?.id?.toString() || "",
+            );
+
+            const restricted = Boolean(
+                eventData.faculty?.id ||
+                    eventData.department?.id ||
+                    eventData.year?.id,
+            );
+            setValue("is_restricted", restricted);
+            setValue("faculty_id", eventData.faculty?.id?.toString() || "");
+            setValue(
+                "department_id",
+                eventData.department?.id?.toString() || "",
+            );
+            setValue("year_id", eventData.year?.id?.toString() || "");
+
+            setExistingThumbnailUrl(eventData.logo?.url || null);
+            setExistingFiles(
+                eventData.attachments
+                    ?.filter((attachment) => attachment.is_file)
+                    .map((attachment) => ({
+                        ...(attachment.details?.file_data || {}),
+                        url: attachment.url || "",
+                        isExisting: true,
+                    }))
+                    .filter((file) => !!file.url) || [],
+            );
+            setExistingLinks(
+                eventData.attachments
+                    ?.filter((attachment) => !attachment.is_file)
+                    .map((attachment) => ({
+                        title: attachment.details?.link_title || "Untitled Link",
+                        url: attachment.url || "",
+                    }))
+                    .filter((link) => !!link.url) || [],
+            );
+        } catch (error) {
+            const err = error as {
+                data?: { message?: string };
+            };
+            navigate("/admin/events", {
+                state: {
+                    error:
+                        err.data?.message ||
+                        "Failed to fetch event",
+                },
+            });
+        }
+    }, [eventId, getEvent, navigate, setValue, user?.canAccessAll]);
+
+    const authQueryParams = useCallback(
+        () =>
+            Promise.all([
+                fetchEvent(),
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchOrganizers(),
+            ]),
+        [
+            fetchEvent,
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchOrganizers,
+        ],
+    );
 
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
-        if (!event) return;
-
-        // to be fetched from api 
-        const eventDate = event.start_time
-            ? new Date(event.start_time).toISOString().split("T")[0]
-            : "";
-        const eventTime = event.start_time
-            ? new Date(event.start_time).toISOString().split("T")[1]?.slice(0, 5)
-            : "";
-
-        setValue("title", event.name || "");
-        setValue("description", event.description || "");
-        setValue("instructions", event.instructions || "");
-        setValue("event_date", eventDate);
-        setValue("event_time", eventTime);
-        setValue(
-            "event_type",
-            event.location === "Online" ? "Online Event" : "In-Person",
-        );
-        setValue(
-            "event_link",
-            event.location === "Online" ? "https://zoom.us/j/123456789" : "",
-        );
-        setValue("price", event.price?.toString() || "0");
-        setValue(
-            "is_restricted",
-            Boolean(event.faculty_id || event.department_id || event.year?.id),
-        );
-
-        if (event.urls && Array.isArray(event.urls)) {
-            setExistingLinks(
-                event.urls.map((url, index) => ({
-                    title: `Link ${index + 1}`,
-                    url: url,
-                }))
-            );
+        if (!user?.canAccessAll && isRestricted) {
+            setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            setValue("department_id", user?.department?.id?.toString() || "");
+            setValue("year_id", user?.year?.id?.toString() || "");
+            setFaculties(user?.faculty ? [user.faculty] : []);
+            setDepartments(user?.department ? [user.department] : []);
+            setYears(user?.year ? [user.year] : []);
+            return;
         }
-    }, [event, setValue]);
+
+        if (!isRestricted) {
+            setValue("faculty_id", "");
+            setValue("department_id", "");
+            setValue("year_id", "");
+            if (!user?.canAccessAll) {
+                setFaculties([]);
+                setDepartments([]);
+                setYears([]);
+            }
+        }
+    }, [isRestricted, user, setValue]);
+
+    useEffect(() => {
+        if (user?.canAccessAll) {
+            setValue("department_id", "");
+        }
+    }, [selectedFaculty, setValue, user?.canAccessAll]);
+
+    const uploadFiles = async (files: FileList): Promise<string[]> => {
+        const urls: string[] = [];
+
+        for (const file of Array.from(files)) {
+            const url = await uploadFile(file);
+            if (url) urls.push(url);
+        }
+
+        return urls;
+    };
+
+    const parseLinks = (value?: string): LinkData[] =>
+        value
+            ? value
+                  .split(",")
+                  .map((pair) => {
+                      const [title, url] = pair.split("|");
+                      return {
+                          title: title?.trim(),
+                          url: url?.trim(),
+                      };
+                  })
+                  .filter((link) => link.title && link.url) as LinkData[]
+            : [];
 
     const onSubmit = async (data: EventFormData) => {
+        if (!eventId) return;
+
+        const hasNewThumbnail =
+            data.thumbnail && (data.thumbnail as FileList).length > 0;
+        if (!hasNewThumbnail && !existingThumbnailUrl) {
+            setError("thumbnail", {
+                type: "required",
+                message: "Thumbnail is required",
+            });
+            return;
+        }
+
         try {
-            setIsLoading(true);
             setIsUploading(true);
 
-            // to be implemented: API call to update the event with the form data, existingFiles, and existingLinks
-            console.log("Updated event data:", data);
-            console.log("Retained Files:", existingFiles);
-            console.log("Retained Links:", existingLinks);
+            const uploadedFiles =
+                data.files && (data.files as FileList).length > 0
+                    ? await uploadFiles(data.files as FileList)
+                    : [];
 
-            showToast("success", "Success", "Event updated successfully!");
+            const thumbnailFile =
+                data.thumbnail && (data.thumbnail as FileList).length > 0
+                    ? (data.thumbnail as FileList)[0]
+                    : undefined;
+
+            const newThumbnailUrl = thumbnailFile
+                ? await uploadFile(thumbnailFile)
+                : undefined;
+
+            const fileUrls = [
+                ...existingFiles
+                    .map((file) => file.url)
+                    .filter((url): url is string => Boolean(url)),
+                ...uploadedFiles,
+            ];
+
+            const links = [
+                ...existingLinks,
+                ...parseLinks(data.links),
+            ];
+
+            const scopedIds = user?.canAccessAll
+                ? data.is_restricted
+                    ? {
+                          faculty_id: data.faculty_id
+                              ? parseInt(data.faculty_id)
+                              : undefined,
+                          department_id: data.department_id
+                              ? parseInt(data.department_id)
+                              : undefined,
+                          year_id: data.year_id
+                              ? parseInt(data.year_id)
+                              : undefined,
+                      }
+                    : {
+                          faculty_id: undefined,
+                          department_id: undefined,
+                          year_id: undefined,
+                      }
+                : data.is_restricted
+                  ? {
+                        faculty_id: user?.faculty?.id ?? undefined,
+                        department_id: user?.department?.id ?? undefined,
+                        year_id: user?.year?.id ?? undefined,
+                    }
+                  : {
+                        faculty_id: undefined,
+                        department_id: undefined,
+                        year_id: undefined,
+                    };
+
+            const payload = {
+                event_id: parseInt(eventId),
+                title: data.title,
+                start_date:
+                    mergeDateAndTime(data.start_date, data.start_time)?.toISOString() ||
+                    "",
+                end_date: data.end_date
+                    ? mergeDateAndTime(
+                          data.end_date,
+                          data.end_time || "00:00",
+                      )?.toISOString() || null
+                    : null,
+                price: parseFloat(data.price),
+                location_type: data.location_type,
+                location: data.location,
+                event_organizer_id: parseInt(data.event_organizer_id),
+                ...scopedIds,
+                details: {
+                    description: data.description || undefined,
+                    url: newThumbnailUrl || existingThumbnailUrl || undefined,
+                    urls: fileUrls.length ? fileUrls : undefined,
+                    links: links.length ? links : undefined,
+                },
+            };
+
+            await updateEvent(payload).unwrap();
+
             navigate("/admin/events", {
                 state: { success: "Event updated successfully!" },
             });
         } catch (error) {
-            handlePopupErrors(error);
+            handleErrors(error, setError);
         } finally {
-            setIsLoading(false);
             setIsUploading(false);
         }
     };
 
-    const handleCancel = () => {
-        navigate("/admin/events");
-    };
+    const facultyOptions = useMemo(
+        () =>
+            faculties.map((faculty) => (
+                <option key={faculty.id} value={faculty.id || ""}>
+                    {faculty.name}
+                </option>
+            )),
+        [faculties],
+    );
+
+    const departmentOptions = useMemo(
+        () =>
+            departments.map((department) => (
+                <option key={department.id} value={department.id || ""}>
+                    {department.name}
+                </option>
+            )),
+        [departments],
+    );
+
+    const yearOptions = useMemo(
+        () =>
+            years.map((year) => (
+                <option key={year.id} value={year.id || ""}>
+                    {year.year}
+                </option>
+            )),
+        [years],
+    );
+
+    const organizerOptions = useMemo(
+        () =>
+            organizers.map((organizer) => (
+                <option key={organizer.id} value={organizer.id || ""}>
+                    {organizer.name}
+                </option>
+            )),
+        [organizers],
+    );
+
+    if (!event) return null;
 
     return (
         <Layout>
             <PageSeo
-                title="Edit Event | CU Portal"
+                title={`Edit ${event.title || "Event"} | CU Portal`}
                 description="Update event information"
             />
             <SubBanner
-                title="Edit Event"
+                title={`Edit ${event.title || "Event"}`}
                 description="Update event information"
-                icon={GetIcon("calendar")}
-                img={event?.img || ""}
+                icon="calendar"
+                img={existingThumbnailUrl || undefined}
                 linkText="Back to Events"
                 linkTo="/admin/events"
             />
+
             <main className={styles.container}>
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
@@ -178,64 +511,87 @@ export const EditEvent = () => {
                     className={styles.formCard}
                 >
                     <div className={styles.formSection}>
-                        <Heading
-                            icon="calendar-alt"
-                            content="Basic Information"
-                            size="medium"
-                        />
+                        <Heading icon="info-circle" content="Basic Information" size="medium" />
                         <Input
-                            label="Event Name *"
-                            placeholder="Enter event name"
+                            label="Event Title"
+                            placeholder="Enter event title"
                             register={register}
                             name="title"
                             type="text"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
 
-                        <Thumbnail />
+                        <Thumbnail
+                            register={register}
+                            name="thumbnail"
+                            required
+                            errors={errors}
+                            setValue={setValue}
+                            existingUrl={existingThumbnailUrl}
+                            onRemoveExisting={() => setExistingThumbnailUrl(null)}
+                            disabled={busy}
+                        />
 
                         <Input
-                            label="Description *"
+                            label="Description"
                             type="textarea"
-                            placeholder="Describe your event..."
+                            placeholder="Describe the event..."
                             register={register}
                             name="description"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                             isTextArea
                         />
-                        <Input
-                            label="Instruction *"
-                            type="textarea"
-                            placeholder="Write clear guidelines students must follow during the event"
+
+                        <Select
+                            label="Event Organizer"
                             register={register}
-                            name="instructions"
+                            name="event_organizer_id"
                             errors={errors}
-                            disabled={isLoading}
-                            isTextArea
-                        />
+                            disabled={busy}
+                        >
+                            <option value="">Select event organizer</option>
+                            {organizerOptions}
+                        </Select>
                     </div>
 
                     <div className={styles.formSection}>
                         <Heading icon="clock" content="Date & Time" size="medium" />
                         <div className={styles.dateTimeGroup}>
                             <DateInput
-                                label="Event Date *"
+                                label="Start Date"
                                 register={register}
-                                name="event_date"
+                                name="start_date"
                                 errors={errors}
                                 setValue={setValue}
                                 control={control}
-                                disabled={isLoading}
+                                disabled={busy}
                             />
                             <Input
-                                label="Event Time *"
-                                type="time"
+                                label="Start Time"
                                 register={register}
-                                name="event_time"
+                                name="start_time"
+                                type="time"
                                 errors={errors}
-                                disabled={isLoading}
+                                disabled={busy}
+                            />
+                            <DateInput
+                                label="End Date"
+                                register={register}
+                                name="end_date"
+                                errors={errors}
+                                setValue={setValue}
+                                control={control}
+                                disabled={busy}
+                            />
+                            <Input
+                                label="End Time"
+                                register={register}
+                                name="end_time"
+                                type="time"
+                                errors={errors}
+                                disabled={busy}
                             />
                         </div>
                     </div>
@@ -243,114 +599,97 @@ export const EditEvent = () => {
                     <div className={styles.formSection}>
                         <Heading icon="map-marker-alt" content="Location" size="medium" />
                         <Select
-                            label="Event Type *"
+                            label="Location Type"
                             register={register}
-                            name="event_type"
+                            name="location_type"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         >
-                            <option value="Online Event">Online Event</option>
-                            <option value="In-Person">Offline</option>
-                            <option value="Hybrid">Hybrid</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Online">Online</option>
                         </Select>
                         <Input
-                            label="Event Link *"
-                            placeholder="https://zoom.us/j/..."
+                            label="Location / Link"
+                            placeholder="Enter venue or online meeting link"
                             register={register}
-                            name="event_link"
-                            type="url"
+                            name="location"
+                            type="text"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
                     </div>
 
                     <div className={styles.formSection}>
                         <Heading icon="dollar-sign" content="Pricing" size="medium" />
                         <Input
-                            label="Price (EGP) *"
+                            label="Price (EGP)"
                             placeholder="Enter price (0 for free)"
                             register={register}
                             name="price"
                             type="number"
                             errors={errors}
-                            disabled={isLoading}
+                            disabled={busy}
                         />
                     </div>
 
-                    <div className={`${styles.attachmentsSection} ${styles.formSection}`}>
+                    <div className={`${styles.formSection} ${styles.attachmentsSection}`}>
                         <Heading
                             icon="paperclip"
                             content="Attachments & Links"
                             size="medium"
                         />
-
                         <FilesInputContainer
                             register={register}
                             name="files"
                             errors={errors}
-                            disabled={isLoading || isUploading}
                             setValue={setValue}
-                            existingFiles={existingFiles.map((file, index) => ({
-                                id: `existing-file-${index}`,
-                                name: file.name || `File ${index + 1}`,
-                                url: file.url || "",
-                                isExisting: true,
-                            }))}
-                            setExistingFiles={(files) => {
-                                setExistingFiles(
-                                    files.map((file) => ({
-                                        name: file.name,
-                                        url: file.url,
-                                        size: file.size,
-                                    }))
-                                );
-                            }}
+                            disabled={busy}
+                            existingFiles={existingFiles}
+                            setExistingFiles={setExistingFiles}
                         />
-
                         <LinksInputContainer
                             register={register}
                             name="links"
                             errors={errors}
-                            disabled={isLoading || isUploading}
                             setValue={setValue}
-                            existingLinks={existingLinks.map((link) => ({
-                                title: link.title || "",
-                                url: link.url || "",
-                                isExisting: true,
-                            }))}
-                            setExistingLinks={(links) => {
-                                setExistingLinks(
-                                    links.map((link) => ({
-                                        title: link.title,
-                                        url: link.url,
-                                    }))
-                                );
-                            }}
+                            disabled={busy}
+                            existingLinks={existingLinks}
+                            setExistingLinks={setExistingLinks}
                         />
                     </div>
 
                     <div className={`${styles.formSection} ${styles.accessPermissionsSection}`}>
-                        <Heading icon="users" content="Access Permissions (Optional)" size="medium" />
+                        <Heading
+                            icon="users"
+                            content="Access Permissions"
+                            size="medium"
+                        />
 
                         <div className={styles.toggleRow}>
-                            <label className={styles.customLabel}>Restricted Event?</label>
+                            <label className={styles.customLabel}>
+                                Restricted Event?
+                            </label>
                             <label className={styles.switch}>
-                                <input type="checkbox" {...register("is_restricted")} />
+                                <input
+                                    type="checkbox"
+                                    {...register("is_restricted")}
+                                    disabled={busy}
+                                />
                                 <span className={styles.slider}></span>
                             </label>
                         </div>
 
                         {isRestricted && (
-                            <>
+                            <div className={styles.scopeGrid}>
                                 <Select
                                     label="Faculty"
                                     register={register}
                                     name="faculty_id"
                                     errors={errors}
-                                    disabled={isLoading}
+                                    disabled={!user?.canAccessAll || busy}
                                 >
-                                    <option value="">e.g., Computer Science</option>
-                                    <option value="1">Computer Science</option>
+                                    <option value="">All Faculties</option>
+                                    {facultyOptions}
                                 </Select>
 
                                 <Select
@@ -358,23 +697,27 @@ export const EditEvent = () => {
                                     register={register}
                                     name="department_id"
                                     errors={errors}
-                                    disabled={isLoading}
+                                    disabled={
+                                        !user?.canAccessAll ||
+                                        busy ||
+                                        !selectedFaculty
+                                    }
                                 >
-                                    <option value="">e.g., Software Engineering</option>
-                                    <option value="1">Software Engineering</option>
+                                    <option value="">All Departments</option>
+                                    {departmentOptions}
                                 </Select>
 
                                 <Select
-                                    label="Year Level"
+                                    label="Academic Year"
                                     register={register}
-                                    name="year_level"
+                                    name="year_id"
                                     errors={errors}
-                                    disabled={isLoading}
+                                    disabled={!user?.canAccessAll || busy}
                                 >
-                                    <option value="">e.g., 3rd Year</option>
-                                    <option value="3">3rd Year</option>
+                                    <option value="">All Years</option>
+                                    {yearOptions}
                                 </Select>
-                            </>
+                            </div>
                         )}
                     </div>
 
@@ -384,13 +727,13 @@ export const EditEvent = () => {
                             loadingText=""
                             type="button"
                             isSubmitting={false}
-                            onClick={handleCancel}
-                            isSecondary={true}
+                            onClick={() => navigate("/admin/events")}
+                            isSecondary
                         />
                         <Button
                             text="Update Event"
                             loadingText="Updating..."
-                            isSubmitting={isLoading || isUploading}
+                            isSubmitting={busy}
                             type="submit"
                             isOrange={false}
                         />

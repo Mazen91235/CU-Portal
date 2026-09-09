@@ -5,6 +5,7 @@ import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
+import type { EventOrganizerResponseDto } from "./EventOrganizerDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type EventCreateDto = {
@@ -44,6 +45,7 @@ export type EventResponseDto = {
     department?: DepartmentResponseDto | null;
     year?: YearResponseDto | null;
     attendees?: UserResponseDto[] | null;
+    event_organizer?: EventOrganizerResponseDto | null;
     logo?: AttachmentResponseDto | null;
     attachments?: AttachmentResponseDto[] | null;
 };

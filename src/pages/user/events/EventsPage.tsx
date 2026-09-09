@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
-import type { Event } from "../../../types/entities/Event";
+import { useNavigate } from "react-router";
+import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useLazyGetEventsQuery } from "../../../services/apis/user/EventAPIs";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -20,75 +22,78 @@ export const EventsPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [eventTypeFilter, setEventTypeFilter] = useState("");
-    const [freeFilter, setFreeFilter] = useState(false);
-    const [paidFilter, setPaidFilter] = useState(false);
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<EventResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
-    
-    // to be fetched from backend
-    const eventTypeOptions = [{label: "Event Type", value: ""}, { label: "Offline", value: "1" }, { label: "Online", value: "2" }]; 
 
-    // This will hold the list of events fetched from the backend
+    const [getEvents, { isFetching }] = useLazyGetEventsQuery();
+
+    const eventTypeOptions = [
+        { label: "Location Type", value: "" },
+        { label: "Offline", value: "Offline" },
+        { label: "Online", value: "Online" },
+    ];
+
     const fetchEvents = useCallback(async () => {
-        setEvents([{ id: 1, name: "Sample Event", 
-            start_time: "2023-10-10T10:00:00Z", 
-            location: "Location 1",
-            price: 0,
-            img: "https://tse1.mm.bing.net/th/id/OIP.lZcTQuv69wOV10v9JtAc2wHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
-        }]);
-    },  []);
+        if (!hasNextPage && page !== 1) return;
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchEvents()]),
-        [fetchEvents],
-    );
+        try {
+            const result = await getEvents({
+                data: {
+                    query: searchQuery || undefined,
+                    location_type:
+                        eventTypeFilter === "Online" ||
+                        eventTypeFilter === "Offline"
+                            ? eventTypeFilter
+                            : undefined,
+                },
+                includes: [
+                    "faculty",
+                    "department",
+                    "year",
+                    "event_organizer",
+                    "logo",
+                    "attachments",
+                ],
+                page,
+            }).unwrap();
 
+            setEvents((prev) => {
+                if (page === 1) return result.data || [];
+                const ids = new Set(
+                    (result.data || []).map((event) => event.id),
+                );
+                return [
+                    ...prev.filter((event) => !ids.has(event.id)),
+                    ...(result.data || []),
+                ];
+            });
+            setHasNextPage(result.next_page || false);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [eventTypeFilter, getEvents, hasNextPage, page, searchQuery]);
+
+    const authQueryParams = useCallback(() => fetchEvents(), [fetchEvents]);
     useAuthQuery(authQueryParams);
-
 
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
     }, [searchQuery, eventTypeFilter]);
 
-    useEffect(() => {
-        const event_type = searchParams.get("event_type") || "";
-        if (event_type && events.length > 0) {
-            setEventTypeFilter(event_type);
-        }
-    }, [searchParams, events]);
-
-    const handleViewEvent = (eventId: number) => {
-        navigate(`/user/events/${eventId}`);
-    };
-
-    // to be done with backend filtering
-    const handleFreeFilter = () => {
-        setFreeFilter(!freeFilter);
-        setPaidFilter(false);
-    };
-
-    // to be done with backend filtering
-    const handlePaidFilter = () => {
-        setPaidFilter(!paidFilter);
-        setFreeFilter(false);
-    };
-
     const handlePagination = () => {
-        if (hasNextPage && events.length > 0) {
-            setPage(page + 1);
+        if (hasNextPage && !isFetching && events.length > 0) {
+            setPage((current) => current + 1);
         }
     };
 
     const handleShareEvent = (eventId: number) => {
-        const url = `${window.location.origin}/user/events/${eventId}`;
-        copyToClipboard(url);
+        copyToClipboard(`${window.location.origin}/user/events/${eventId}`);
         showToast(
             "success",
             "Success",
-            "event link copied to clipboard successfully",
+            "Event link copied to clipboard successfully",
         );
     };
 
@@ -99,7 +104,7 @@ export const EventsPage = () => {
                 description="Discover amazing events happening on campus"
             />
             <Banner
-                title="My Events"
+                title="Events"
                 description="Discover amazing events happening on campus"
             />
             <div className={styles.container}>
@@ -115,26 +120,6 @@ export const EventsPage = () => {
                             options={eventTypeOptions}
                             setValue={setEventTypeFilter}
                         />
-                        <div className={styles.priceButtons}>
-                            <button
-                                    type="button"
-                                    className={`${styles.priceButton} ${freeFilter ? styles.priceButtonActive : ""}`}
-                                    onClick={() => {
-                                        handleFreeFilter();
-                                    }}
-                                >
-                                    Free
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`${styles.priceButton} ${paidFilter ? styles.priceButtonActive : ""}`}
-                                    onClick={() => {
-                                        handlePaidFilter();
-                                    }}
-                                >
-                                    Paid
-                                </button>
-                        </div>
                     </div>
                 </div>
 
@@ -142,14 +127,23 @@ export const EventsPage = () => {
                     {events.map((event) => (
                         <Card
                             key={event.id}
-                            title={event.name || ""}
-                            img={event.img || ""}
-                            badge={event.price !== undefined ? event.price === 0 ? "Free" : `$${event.price?.toFixed(2)}` : ""}
+                            title={event.title || ""}
+                            img={event.logo?.url || ""}
+                            badge={
+                                event.price !== undefined &&
+                                event.price !== null
+                                    ? event.price === 0
+                                        ? "Free"
+                                        : `${event.price.toFixed(2)} EGP`
+                                    : ""
+                            }
                             items={[
                                 {
                                     icon: "calendar",
                                     label: "Date",
-                                    value: formatDateTime(event.start_time),
+                                    value:
+                                        formatDateTime(event.start_date) ||
+                                        "N/A",
                                 },
                                 {
                                     icon: "location",
@@ -158,7 +152,9 @@ export const EventsPage = () => {
                                 },
                             ]}
                             button="View Details"
-                            buttonAction={() => handleViewEvent(event.id!)}
+                            buttonAction={() =>
+                                navigate(`/user/events/${event.id}`)
+                            }
                             hasOptions
                             sharable
                             onShare={() => handleShareEvent(event.id!)}
@@ -167,9 +163,8 @@ export const EventsPage = () => {
                 </div>
 
                 {events.length === 0 && (
-                    <NoContentSection icon="event" label="No events found" />
+                    <NoContentSection icon="calendar" label="No events found" />
                 )}
-
                 <Pagination onReached={handlePagination} />
             </div>
         </Layout>
