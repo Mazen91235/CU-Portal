@@ -34,10 +34,16 @@ import styles from "./CreateEvent.module.css";
 const eventSchema = z
     .object({
         title: z.string().min(1, "Event title is required"),
-        thumbnail: z.any().refine(
-            (value) => value instanceof FileList && value.length > 0,
-            "Thumbnail is required",
-        ),
+        thumbnail: z
+            .any()
+            .refine(
+                (value) =>
+                    value instanceof File ||
+                    (typeof FileList !== "undefined" &&
+                        value instanceof FileList &&
+                        value.length > 0),
+                "Thumbnail is required",
+            ),
         description: z.string().min(1, "Description is required"),
         start_date: z.string().min(1, "Start date is required"),
         start_time: z.string().min(1, "Start time is required"),
@@ -94,7 +100,7 @@ export const CreateEvent = () => {
         register,
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         watch,
@@ -196,8 +202,6 @@ export const CreateEvent = () => {
 
     useAuthQuery(authQueryParams);
 
-
-
     const uploadFiles = async (files: FileList): Promise<string[]> => {
         const urls: string[] = [];
         for (const file of Array.from(files)) {
@@ -221,8 +225,17 @@ export const CreateEvent = () => {
                   .filter((link) => link.title && link.url)
             : [];
 
+    const getThumbnailFile = (value: EventFormData["thumbnail"]): File | undefined => {
+        if (value instanceof File) return value;
+        if (typeof FileList !== "undefined" && value instanceof FileList && value.length > 0) {
+            return value[0];
+        }
+        return undefined;
+    };
+
     const onSubmit = async (data: EventFormData) => {
-        if (!data.thumbnail || !(data.thumbnail as FileList).length) {
+        const thumbnailFile = getThumbnailFile(data.thumbnail);
+        if (!thumbnailFile) {
             setError("thumbnail", {
                 type: "required",
                 message: "Thumbnail is required",
@@ -238,14 +251,7 @@ export const CreateEvent = () => {
                     ? await uploadFiles(data.files as FileList)
                     : [];
 
-            const thumbnailFile =
-                data.thumbnail && (data.thumbnail as FileList).length > 0
-                    ? (data.thumbnail as FileList)[0]
-                    : undefined;
-
-            const thumbnailUrl = thumbnailFile
-                ? await uploadFile(thumbnailFile)
-                : undefined;
+            const thumbnailUrl = await uploadFile(thumbnailFile);
 
             const scopedIds = user?.canAccessAll
                 ? data.is_restricted
@@ -280,8 +286,10 @@ export const CreateEvent = () => {
             const payload = {
                 title: data.title,
                 start_date:
-                    mergeDateAndTime(data.start_date, data.start_time)?.toISOString() ||
-                    "",
+                    mergeDateAndTime(
+                        data.start_date,
+                        data.start_time,
+                    )?.toISOString() || "",
                 end_date: data.end_date
                     ? mergeDateAndTime(
                           data.end_date,
@@ -353,7 +361,7 @@ export const CreateEvent = () => {
         [organizers],
     );
 
-    const busy = isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading;
     const showScopeFields = isRestricted;
 
     return (
@@ -374,10 +382,15 @@ export const CreateEvent = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formSection}>
-                        <Heading icon="info-circle" content="Basic Information" size="medium" />
+                        <Heading
+                            icon="info-circle"
+                            content="Basic Information"
+                            size="medium"
+                        />
                         <Input
                             label="Event Title"
                             placeholder="Enter event title"
@@ -421,7 +434,11 @@ export const CreateEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="clock" content="Date & Time" size="medium" />
+                        <Heading
+                            icon="clock"
+                            content="Date & Time"
+                            size="medium"
+                        />
                         <div className={styles.dateTimeGroup}>
                             <DateInput
                                 label="Start Date"
@@ -461,7 +478,11 @@ export const CreateEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="map-marker-alt" content="Location" size="medium" />
+                        <Heading
+                            icon="map-marker-alt"
+                            content="Location"
+                            size="medium"
+                        />
                         <Select
                             label="Location Type"
                             register={register}
@@ -484,7 +505,11 @@ export const CreateEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="dollar-sign" content="Pricing" size="medium" />
+                        <Heading
+                            icon="dollar-sign"
+                            content="Pricing"
+                            size="medium"
+                        />
                         <Input
                             label="Price (EGP)"
                             placeholder="Enter price (0 for free)"
@@ -496,7 +521,9 @@ export const CreateEvent = () => {
                         />
                     </div>
 
-                    <div className={`${styles.formSection} ${styles.attachmentsSection}`}>
+                    <div
+                        className={`${styles.formSection} ${styles.attachmentsSection}`}
+                    >
                         <Heading
                             icon="paperclip"
                             content="Attachments & Links"
@@ -518,7 +545,9 @@ export const CreateEvent = () => {
                         />
                     </div>
 
-                    <div className={`${styles.formSection} ${styles.accessPermissionsSection}`}>
+                    <div
+                        className={`${styles.formSection} ${styles.accessPermissionsSection}`}
+                    >
                         <Heading
                             icon="users"
                             content="Access Permissions"

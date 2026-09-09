@@ -8,7 +8,7 @@ import IconComponent from "../IconComponent";
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon: Icon;
+    icon: Icon | string;
     label?: string;
     value?: string;
     color?: CardItemColor;
@@ -240,7 +240,11 @@ export const Card = ({
                         >
                             <span className={styles.itemLabel}>
                                 <IconComponent
-                                    icon={item.icon}
+                                    icon={
+                                        typeof item.icon === "string"
+                                            ? "time"
+                                            : item.icon
+                                    }
                                     className={styles.itemIcon}
                                 />
                                 {item.label}

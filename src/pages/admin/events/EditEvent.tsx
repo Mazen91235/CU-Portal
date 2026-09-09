@@ -112,7 +112,7 @@ export const EditEvent = () => {
         register,
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         watch,
@@ -122,7 +122,7 @@ export const EditEvent = () => {
 
     const isRestricted = watch("is_restricted");
     const selectedFaculty = watch("faculty_id");
-    const busy = isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;
@@ -186,30 +186,12 @@ export const EditEvent = () => {
             if (!eventData) return;
 
             setValue("title", eventData.title || "");
-            setValue(
-                "description",
-                eventData.details?.description || "",
-            );
-            setValue(
-                "start_date",
-                formatDateInputValue(eventData.start_date),
-            );
-            setValue(
-                "start_time",
-                formatTimeInputValue(eventData.start_date),
-            );
-            setValue(
-                "end_date",
-                formatDateInputValue(eventData.end_date),
-            );
-            setValue(
-                "end_time",
-                formatTimeInputValue(eventData.end_date),
-            );
-            setValue(
-                "location_type",
-                eventData.location_type || "Offline",
-            );
+            setValue("description", eventData.details?.description || "");
+            setValue("start_date", formatDateInputValue(eventData.start_date));
+            setValue("start_time", formatTimeInputValue(eventData.start_date));
+            setValue("end_date", formatDateInputValue(eventData.end_date));
+            setValue("end_time", formatTimeInputValue(eventData.end_date));
+            setValue("location_type", eventData.location_type || "Offline");
             setValue("location", eventData.location || "");
             setValue("price", eventData.price?.toString() || "0");
             setValue(
@@ -219,8 +201,8 @@ export const EditEvent = () => {
 
             const restricted = Boolean(
                 eventData.faculty?.id ||
-                    eventData.department?.id ||
-                    eventData.year?.id,
+                eventData.department?.id ||
+                eventData.year?.id,
             );
             setValue("is_restricted", restricted);
             setValue("faculty_id", eventData.faculty?.id?.toString() || "");
@@ -245,7 +227,8 @@ export const EditEvent = () => {
                 eventData.attachments
                     ?.filter((attachment) => !attachment.is_file)
                     .map((attachment) => ({
-                        title: attachment.details?.link_title || "Untitled Link",
+                        title:
+                            attachment.details?.link_title || "Untitled Link",
                         url: attachment.url || "",
                     }))
                     .filter((link) => !!link.url) || [],
@@ -256,13 +239,11 @@ export const EditEvent = () => {
             };
             navigate("/admin/events", {
                 state: {
-                    error:
-                        err.data?.message ||
-                        "Failed to fetch event",
+                    error: err.data?.message || "Failed to fetch event",
                 },
             });
         }
-    }, [eventId, getEvent, navigate, setValue, user?.canAccessAll]);
+    }, [eventId, getEvent, navigate, setValue]);
 
     const authQueryParams = useCallback(
         () =>
@@ -326,7 +307,7 @@ export const EditEvent = () => {
 
     const parseLinks = (value?: string): LinkData[] =>
         value
-            ? value
+            ? (value
                   .split(",")
                   .map((pair) => {
                       const [title, url] = pair.split("|");
@@ -335,15 +316,28 @@ export const EditEvent = () => {
                           url: url?.trim(),
                       };
                   })
-                  .filter((link) => link.title && link.url) as LinkData[]
+                  .filter((link) => link.title && link.url) as LinkData[])
             : [];
+
+    const getThumbnailFile = (
+        value: EventFormData["thumbnail"],
+    ): File | undefined => {
+        if (value instanceof File) return value;
+        if (
+            typeof FileList !== "undefined" &&
+            value instanceof FileList &&
+            value.length > 0
+        ) {
+            return value[0];
+        }
+        return undefined;
+    };
 
     const onSubmit = async (data: EventFormData) => {
         if (!eventId) return;
 
-        const hasNewThumbnail =
-            data.thumbnail && (data.thumbnail as FileList).length > 0;
-        if (!hasNewThumbnail && !existingThumbnailUrl) {
+        const thumbnailFile = getThumbnailFile(data.thumbnail);
+        if (!thumbnailFile && !existingThumbnailUrl) {
             setError("thumbnail", {
                 type: "required",
                 message: "Thumbnail is required",
@@ -359,11 +353,6 @@ export const EditEvent = () => {
                     ? await uploadFiles(data.files as FileList)
                     : [];
 
-            const thumbnailFile =
-                data.thumbnail && (data.thumbnail as FileList).length > 0
-                    ? (data.thumbnail as FileList)[0]
-                    : undefined;
-
             const newThumbnailUrl = thumbnailFile
                 ? await uploadFile(thumbnailFile)
                 : undefined;
@@ -375,10 +364,7 @@ export const EditEvent = () => {
                 ...uploadedFiles,
             ];
 
-            const links = [
-                ...existingLinks,
-                ...parseLinks(data.links),
-            ];
+            const links = [...existingLinks, ...parseLinks(data.links)];
 
             const scopedIds = user?.canAccessAll
                 ? data.is_restricted
@@ -414,8 +400,10 @@ export const EditEvent = () => {
                 event_id: parseInt(eventId),
                 title: data.title,
                 start_date:
-                    mergeDateAndTime(data.start_date, data.start_time)?.toISOString() ||
-                    "",
+                    mergeDateAndTime(
+                        data.start_date,
+                        data.start_time,
+                    )?.toISOString() || "",
                 end_date: data.end_date
                     ? mergeDateAndTime(
                           data.end_date,
@@ -508,10 +496,15 @@ export const EditEvent = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formSection}>
-                        <Heading icon="info-circle" content="Basic Information" size="medium" />
+                        <Heading
+                            icon="info-circle"
+                            content="Basic Information"
+                            size="medium"
+                        />
                         <Input
                             label="Event Title"
                             placeholder="Enter event title"
@@ -529,7 +522,9 @@ export const EditEvent = () => {
                             errors={errors}
                             setValue={setValue}
                             existingUrl={existingThumbnailUrl}
-                            onRemoveExisting={() => setExistingThumbnailUrl(null)}
+                            onRemoveExisting={() =>
+                                setExistingThumbnailUrl(null)
+                            }
                             disabled={busy}
                         />
 
@@ -557,7 +552,11 @@ export const EditEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="clock" content="Date & Time" size="medium" />
+                        <Heading
+                            icon="clock"
+                            content="Date & Time"
+                            size="medium"
+                        />
                         <div className={styles.dateTimeGroup}>
                             <DateInput
                                 label="Start Date"
@@ -597,7 +596,11 @@ export const EditEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="map-marker-alt" content="Location" size="medium" />
+                        <Heading
+                            icon="map-marker-alt"
+                            content="Location"
+                            size="medium"
+                        />
                         <Select
                             label="Location Type"
                             register={register}
@@ -620,7 +623,11 @@ export const EditEvent = () => {
                     </div>
 
                     <div className={styles.formSection}>
-                        <Heading icon="dollar-sign" content="Pricing" size="medium" />
+                        <Heading
+                            icon="dollar-sign"
+                            content="Pricing"
+                            size="medium"
+                        />
                         <Input
                             label="Price (EGP)"
                             placeholder="Enter price (0 for free)"
@@ -632,7 +639,9 @@ export const EditEvent = () => {
                         />
                     </div>
 
-                    <div className={`${styles.formSection} ${styles.attachmentsSection}`}>
+                    <div
+                        className={`${styles.formSection} ${styles.attachmentsSection}`}
+                    >
                         <Heading
                             icon="paperclip"
                             content="Attachments & Links"
@@ -658,7 +667,9 @@ export const EditEvent = () => {
                         />
                     </div>
 
-                    <div className={`${styles.formSection} ${styles.accessPermissionsSection}`}>
+                    <div
+                        className={`${styles.formSection} ${styles.accessPermissionsSection}`}
+                    >
                         <Heading
                             icon="users"
                             content="Access Permissions"

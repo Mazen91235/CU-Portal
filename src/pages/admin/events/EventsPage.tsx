@@ -13,10 +13,13 @@ import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
+import { useLazyGetEventOrganizersQuery } from "../../../services/apis/admin/EventOrganizerAPIs";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
+import { DateFilter } from "../../../components/forms/DateFilter";
 import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
@@ -38,10 +41,18 @@ export const EventsPage = () => {
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [yearFilter, setYearFilter] = useState("");
+    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    );
+    const [dateToFilter, setDateToFilter] = useState("");
     const [events, setEvents] = useState<EventResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [eventOrganizers, setEventOrganizers] = useState<
+        EventOrganizerResponseDto[]
+    >([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<EventResponseDto | null>(
@@ -54,6 +65,7 @@ export const EventsPage = () => {
     const [getFaculties] = useLazyGetFacultiesQuery();
     const [getDepartments] = useLazyGetDepartmentsQuery();
     const [getYears] = useLazyGetYearsQuery();
+    const [getEventOrganizers] = useLazyGetEventOrganizersQuery();
 
     const eventTypeOptions = useMemo(
         () => [
@@ -107,6 +119,15 @@ export const EventsPage = () => {
         }
     }, [getYears, user?.canAccessAll]);
 
+    const fetchEventOrganizers = useCallback(async () => {
+        try {
+            const result = await getEventOrganizers({ data: {} }).unwrap();
+            setEventOrganizers(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getEventOrganizers]);
+
     const fetchEvents = useCallback(async () => {
         if (!hasNextPage || !user) return;
 
@@ -130,6 +151,11 @@ export const EventsPage = () => {
                     user.canAccessAll && yearFilter
                         ? parseInt(yearFilter)
                         : undefined,
+                event_organizer_id: eventOrganizerFilter
+                    ? parseInt(eventOrganizerFilter)
+                    : undefined,
+                start_date_from: dateFromFilter || undefined,
+                start_date_to: dateToFilter || undefined,
             };
 
             const result = await getEvents({
@@ -170,6 +196,9 @@ export const EventsPage = () => {
         facultyFilter,
         departmentFilter,
         yearFilter,
+        eventOrganizerFilter,
+        dateFromFilter,
+        dateToFilter,
         page,
     ]);
 
@@ -180,8 +209,15 @@ export const EventsPage = () => {
                 fetchFaculties(),
                 fetchDepartments(),
                 fetchYears(),
+                fetchEventOrganizers(),
             ]),
-        [fetchEvents, fetchFaculties, fetchDepartments, fetchYears],
+        [
+            fetchEvents,
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchEventOrganizers,
+        ],
     );
 
     useAuthQuery(authQueryParams);
@@ -195,6 +231,9 @@ export const EventsPage = () => {
         facultyFilter,
         departmentFilter,
         yearFilter,
+        eventOrganizerFilter,
+        dateFromFilter,
+        dateToFilter,
     ]);
 
     useEffect(() => {
@@ -274,6 +313,17 @@ export const EventsPage = () => {
         [years],
     );
 
+    const eventOrganizerOptions = useMemo(
+        () => [
+            { value: "", label: "Event Organizer" },
+            ...eventOrganizers.map((organizer) => ({
+                value: organizer.id?.toString() || "",
+                label: organizer.name || "",
+            })),
+        ],
+        [eventOrganizers],
+    );
+
     return (
         <Layout>
             <PageSeo
@@ -314,8 +364,21 @@ export const EventsPage = () => {
                             </>
                         )}
                         <SelectFilter
+                            options={eventOrganizerOptions}
+                            setValue={setEventOrganizerFilter}
+                        />
+                        <SelectFilter
                             options={eventTypeOptions}
                             setValue={setEventTypeFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date From"
+                            setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date To"
+                            setValue={setDateToFilter}
                         />
                     </div>
                 </div>
@@ -326,29 +389,39 @@ export const EventsPage = () => {
                             key={event.id}
                             title={event.title || ""}
                             img={event.logo?.url || ""}
-                            badge={`${event.department?.code || ""} ${event.year?.year || ""}`.trim()}
+                            badge={
+                                event.department && event.year
+                                    ? `${event.department?.code || ""} ${event.year?.year || ""}`.trim()
+                                    : undefined
+                            }
                             items={[
-                                {
-                                    icon: "building",
-                                    label: "Faculty",
-                                    value: event.faculty?.name || "N/A",
-                                },
+                                ...(event.faculty
+                                    ? [
+                                          {
+                                              icon: "building",
+                                              label: "Faculty",
+                                              value:
+                                                  event.faculty.name || "N/A",
+                                          },
+                                      ]
+                                    : []),
                                 {
                                     icon: "calendar",
-                                    label: "Date",
+                                    label: "Start Date",
                                     value:
                                         formatDateTime(event.start_date) ||
                                         "N/A",
                                 },
                                 {
+                                    icon: "calendar",
+                                    label: "End Date",
+                                    value:
+                                        formatDateTime(event.end_date) || "N/A",
+                                },
+                                {
                                     icon: "location",
                                     label: "Location",
                                     value: event.location || "N/A",
-                                },
-                                {
-                                    icon: "events",
-                                    label: "Type",
-                                    value: event.location_type || "N/A",
                                 },
                             ]}
                             button="View Event"

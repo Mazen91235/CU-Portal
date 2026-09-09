@@ -35,15 +35,6 @@ export const EventPage = () => {
         try {
             const result = await getEvent({
                 event_id: parseInt(eventId),
-                includes: [
-                    "faculty",
-                    "department",
-                    "year",
-                    "event_organizer",
-                    "logo",
-                    "attachments",
-                    "attendees",
-                ],
             }).unwrap();
             setEvent(result.data || null);
         } catch (error) {

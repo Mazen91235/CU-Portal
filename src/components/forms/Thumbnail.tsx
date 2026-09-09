@@ -16,6 +16,8 @@ type ThumbnailProps<T extends Record<string, unknown>> = {
     onRemoveExisting?: () => void;
     disabled?: boolean;
     required?: boolean;
+    label?: string;
+    logo?: boolean;
 };
 
 export const Thumbnail = <T extends Record<string, unknown>>({
@@ -25,77 +27,75 @@ export const Thumbnail = <T extends Record<string, unknown>>({
     setValue,
     existingUrl,
     onRemoveExisting,
-    disabled,
+    disabled = false,
     required = false,
+    label = "Thumbnail",
+    logo = false,
 }: ThumbnailProps<T>) => {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(
-        existingUrl || null,
-    );
+    const [previewUrl, setPreviewUrl] = useState<string | null>(existingUrl || null);
+    const hasPreviewRef = useRef(Boolean(existingUrl));
     const fileInputRef = useRef<HTMLInputElement>(null);
     const objectUrlRef = useRef<string | null>(null);
     const registration = register(name, {
-        required: required ? "Thumbnail is required" : false,
+        validate: (value) => {
+            if (!required) return true;
+            if (hasPreviewRef.current) return true;
+            if (value instanceof File) return true;
+            return Boolean(value && typeof value === "object" && "length" in value && Number(value.length) > 0) || `${label} is required`;
+        },
     });
 
     useEffect(() => {
-        setPreviewUrl(existingUrl || null);
+        const nextUrl = existingUrl || null;
+        setPreviewUrl(nextUrl);
+        hasPreviewRef.current = Boolean(nextUrl);
     }, [existingUrl]);
 
     useEffect(() => {
         return () => {
-            if (objectUrlRef.current) {
-                URL.revokeObjectURL(objectUrlRef.current);
-            }
+            if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
         };
     }, []);
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        registration.onChange(e);
+        if (disabled) return;
         const file = e.target.files?.[0];
-
         if (!file) return;
 
-        if (objectUrlRef.current) {
-            URL.revokeObjectURL(objectUrlRef.current);
-        }
-
+        if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
         objectUrlRef.current = URL.createObjectURL(file);
         setPreviewUrl(objectUrlRef.current);
+        hasPreviewRef.current = true;
         onRemoveExisting?.();
-        setValue(name, e.target.files as unknown as T[Path<T>], {
+        setValue(name, file as unknown as T[Path<T>], {
             shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true,
         });
     };
 
     const handleRemove = () => {
+        if (disabled) return;
         if (objectUrlRef.current) {
             URL.revokeObjectURL(objectUrlRef.current);
             objectUrlRef.current = null;
         }
         setPreviewUrl(null);
+        hasPreviewRef.current = false;
         setValue(name, undefined as T[Path<T>], {
             shouldValidate: true,
             shouldDirty: true,
         });
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
+        if (fileInputRef.current) fileInputRef.current.value = "";
         onRemoveExisting?.();
-    };
-
-    const triggerUpload = () => {
-        if (!disabled) {
-            fileInputRef.current?.click();
-        }
     };
 
     return (
         <div className={styles.thumbnailContainer}>
             <label className={styles.label}>
-                Thumbnail{required && <span className={styles.required}> *</span>}
+                {label}{required && <span className={styles.required}> *</span>}
             </label>
-
-            <div className={styles.uploadArea}>
+            <div className={`${styles.uploadArea} ${logo ? styles.logoUploadArea : ""}`}>
                 <input
                     {...registration}
                     type="file"
@@ -107,31 +107,20 @@ export const Thumbnail = <T extends Record<string, unknown>>({
                     }}
                     onChange={handleFileChange}
                     disabled={disabled}
-                    required={required && !previewUrl}
                 />
 
                 {previewUrl ? (
-                    <div className={styles.previewWrapper}>
+                    <div className={`${styles.previewWrapper} ${logo ? styles.logoPreviewWrapper : ""}`}>
                         <img
                             src={previewUrl}
-                            alt="Event thumbnail preview"
-                            className={styles.previewImage}
+                            alt={`${label} preview`}
+                            className={`${styles.previewImage} ${logo ? styles.logoPreviewImage : ""}`}
                         />
                         <div className={styles.actions}>
-                            <button
-                                type="button"
-                                onClick={handleRemove}
-                                className={styles.removeBtn}
-                                disabled={disabled}
-                            >
+                            <button type="button" onClick={handleRemove} className={styles.removeBtn} disabled={disabled}>
                                 Remove
                             </button>
-                            <button
-                                type="button"
-                                onClick={triggerUpload}
-                                className={styles.replaceBtn}
-                                disabled={disabled}
-                            >
+                            <button type="button" onClick={() => !disabled && fileInputRef.current?.click()} className={styles.replaceBtn} disabled={disabled}>
                                 Replace
                             </button>
                         </div>
@@ -141,23 +130,13 @@ export const Thumbnail = <T extends Record<string, unknown>>({
                         <div className={styles.iconPlaceholder}>
                             <i className="fas fa-image"></i>
                         </div>
-                        <button
-                            type="button"
-                            onClick={triggerUpload}
-                            className={styles.uploadBtn}
-                            disabled={disabled}
-                        >
+                        <button type="button" onClick={() => !disabled && fileInputRef.current?.click()} className={styles.uploadBtn} disabled={disabled}>
                             Upload
                         </button>
                     </div>
                 )}
             </div>
-
-            {errors[name] && (
-                <span className={styles.error}>
-                    {errors[name]?.message as string}
-                </span>
-            )}
+            {errors[name] && <span className={styles.error}>{errors[name]?.message as string}</span>}
         </div>
     );
 };

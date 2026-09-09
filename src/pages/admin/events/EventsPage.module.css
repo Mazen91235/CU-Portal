@@ -5,18 +5,11 @@
 }
 
 .filtersContainer {
-    width: 100%;
     margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    padding: 24px 16px;
 }
 
 .searchRow {
-    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .filtersRow {
@@ -38,7 +31,7 @@
     }
 
     .filtersRow {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 
     .eventsGrid {

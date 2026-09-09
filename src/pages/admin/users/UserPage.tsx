@@ -176,6 +176,7 @@ export const UserPage = () => {
                             <Form
                                 onSubmit={handleSubmit(onSubmit)}
                                 errors={errors}
+                                disabled={isSubmitting}
                                 className={styles.roleForm}
                                 containerClassName={styles.roleFormContainer}
                             >

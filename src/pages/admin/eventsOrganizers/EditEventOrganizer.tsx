@@ -1,194 +1,290 @@
+import { useCallback, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Layout } from "../../../components/layout/Layout";
-import styles from "./CreateEventOrganizer.module.css";
 import { PageSeo } from "../../../components/PageSeo";
-import { GetIcon } from "../../../utils/LinkHandler";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Form } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod/src/index.js";
-import { z } from "zod";
-import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
+import { Thumbnail } from "../../../components/forms/Thumbnail";
+import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
+import {
+    LinksInputContainer,
+    type LinkDataWithExisting,
+} from "../../../components/forms/LinksInputContainer";
 import { Heading } from "../../../components/heading/Heading";
 import { Button } from "../../../components/forms/Button";
-import { useNavigate, useParams } from "react-router";
-import { useState, useEffect } from "react";
-import { LogoInputContainer } from "../../../components/forms/LogoInputContainer";
+import { useAuthQuery } from "../../../hooks/useAuthQuery";
 import {
-  useLazyGetEventOrganizerQuery,
-  useUpdateEventOrganizerMutation,
-} from "../../../services/apis/admin/EventOrganizerAPI";
-import type { EventOrganizer } from "../../../types/entities/EventOrganizer";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+    useLazyGetEventOrganizerQuery,
+    useUpdateEventOrganizerMutation,
+} from "../../../services/apis/admin/EventOrganizerAPIs";
+import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import type { FileDataWithExisting } from "../../../types/entities/Attachment";
+import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import styles from "./EditEventOrganizer.module.css";
 
-const organizerSchema = z.object({
-  name: z.string().min(1, "Organizer name is required"),
-  logo: z.any().optional(),
-  links: z.string().optional(),
+const schema = z.object({
+    name: z.string().trim().min(1, "Organizer name is required"),
+    logo: z
+        .any()
+        .refine(
+            (value) =>
+                (typeof value === "string" && value.length > 0) ||
+                value instanceof File ||
+                Boolean(
+                    value &&
+                    typeof value === "object" &&
+                    "length" in value &&
+                    Number(value.length) > 0,
+                ),
+            "Logo is required",
+        ),
+    files: z.any().optional(),
+    links: z.string().optional(),
 });
 
-type OrganizerFormData = z.infer<typeof organizerSchema>;
+type FormData = z.infer<typeof schema>;
+
+const parseLinks = (value?: string) =>
+    value
+        ? value
+              .split(",")
+              .map((pair) => {
+                  const [title, url] = pair.split("|");
+                  return { title: title?.trim(), url: url?.trim() };
+              })
+              .filter((link): link is { title: string; url: string } =>
+                  Boolean(link.title && link.url),
+              )
+        : [];
 
 export const EditEventOrganizer = () => {
-  const { organizerId } = useParams<{ organizerId: string }>();
-  const navigate = useNavigate();
+    const { eventOrganizerId } = useParams<{ eventOrganizerId: string }>();
+    const navigate = useNavigate();
+    const [getEventOrganizer, { isFetching }] = useLazyGetEventOrganizerQuery();
+    const [updateEventOrganizer, { isLoading }] =
+        useUpdateEventOrganizerMutation();
+    const uploadFile = useUploadFileToDrive({});
+    const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
+    const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
+        [],
+    );
+    const [existingLinks, setExistingLinks] = useState<LinkDataWithExisting[]>(
+        [],
+    );
+    const [isUploading, setIsUploading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
-  } = useForm<OrganizerFormData>({
-    resolver: zodResolver(organizerSchema),
-    defaultValues: {
-      name: "",
-      links: "",
-    },
-  });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        setError,
+        setValue,
+    } = useForm<FormData>({ resolver: zodResolver(schema) });
+    const busy = isSubmitting || isLoading || isUploading || isFetching;
 
-  const [currentLogo, setCurrentLogo] = useState<string>("");
-  const [organizer, setOrganizer] = useState<EventOrganizer | null>(null);
-  const [getEventOrganizer] = useLazyGetEventOrganizerQuery();
-  const [updateEventOrganizer, { isLoading }] =
-    useUpdateEventOrganizerMutation();
+    const fetchOrganizer = useCallback(async () => {
+        if (!eventOrganizerId) return;
+        try {
+            const result = await getEventOrganizer({
+                event_organizer_id: Number(eventOrganizerId),
+            }).unwrap();
+            const data = result.data;
+            if (!data) return;
+            setValue("name", data.name || "");
+            const logoUrl = data.logo?.url || null;
+            setExistingLogoUrl(logoUrl);
+            if (logoUrl) setValue("logo", logoUrl, { shouldValidate: true });
+            const attachments = data.attachments || [];
+            setExistingFiles(
+                attachments
+                    .filter(
+                        (attachment) => attachment.is_file && attachment.url,
+                    )
+                    .map((attachment) => ({
+                        ...(attachment.details?.file_data || {}),
+                        url: attachment.url || "",
+                        isExisting: true,
+                    })),
+            );
+            setExistingLinks(
+                attachments
+                    .filter(
+                        (attachment) => !attachment.is_file && attachment.url,
+                    )
+                    .map((attachment) => ({
+                        title: attachment.details?.link_title || "Link",
+                        url: attachment.url || "",
+                        isExisting: true,
+                    })),
+            );
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getEventOrganizer, eventOrganizerId, setValue]);
 
-  // Load organizer data on mount
-  useEffect(() => {
-    if (organizerId) {
-      getEventOrganizer({ event_organizer_id: Number(organizerId) })
-        .unwrap()
-        .then((result) => {
-          const data = result.data;
-          setOrganizer(data || null);
-          setValue("name", data?.name || "");
-          setValue("links", data?.attached_links?.join(", ") || "");
-          setCurrentLogo(data?.logo || "");
-        })
-        .catch(handlePopupErrors);
-    }
-  }, [organizerId, getEventOrganizer, setValue]);
+    const authQueryParams = useCallback(
+        () => fetchOrganizer(),
+        [fetchOrganizer],
+    );
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setCurrentLogo(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    useAuthQuery(authQueryParams);
 
-  const handleCancel = () => {
-    navigate(`/admin/eventsOrganizers/${organizerId}`);
-  };
+    const onSubmit = async (data: FormData) => {
+        if (!eventOrganizerId) return;
+        try {
+            setIsUploading(true);
+            const logoValue = data.logo;
+            let logoUrl = typeof logoValue === "string" ? logoValue : "";
+            if (logoValue instanceof File) {
+                logoUrl = (await uploadFile(logoValue)) || "";
+            } else if (logoValue instanceof FileList && logoValue.length > 0) {
+                logoUrl = (await uploadFile(logoValue[0])) || "";
+            }
+            if (!logoUrl) {
+                setError("logo", {
+                    type: "required",
+                    message: "Logo is required",
+                });
+                return;
+            }
 
-  const onSubmit = async (data: OrganizerFormData) => {
-    if (!organizerId || !organizer) return;
-    try {
-      await updateEventOrganizer({
-        event_organizer_id: Number(organizerId),
-        name: data.name,
-        logo: currentLogo || undefined,
-        attached_links: data.links
-          ?.split(",")
-          .map((link) => link.trim())
-          .filter(Boolean),
-      }).unwrap();
-      navigate("/admin/eventsOrganizers");
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  };
+            const newUrls: string[] = [];
+            for (const file of Array.from((data.files as FileList) || [])) {
+                const url = await uploadFile(file);
+                if (url) newUrls.push(url);
+            }
+            const retainedUrls = existingFiles
+                .map((file) => file.url)
+                .filter(Boolean) as string[];
 
-  return (
-    <Layout>
-      <PageSeo
-        title="Edit Event Organizer - CU Portal"
-        description="Edit an existing event organizer in the CU Portal"
-      />
-      <SubBanner
-        title="Edit Event Organizer"
-        description="Update the details below to modify the event organizer"
-        icon={GetIcon("user")}
-        linkText="Back to Event Organizers"
-        linkTo="/admin/eventsOrganizers"
-      />
-      <main className={styles.container}>
-        <Form
-          onSubmit={handleSubmit(onSubmit)}
-          errors={errors}
-          className={styles.formCard}
-        >
-          {/* Basic Information Section */}
-          <div className={styles.formGroup}>
-            <Heading
-              icon="calendar"
-              content="Basic Information"
-              size="medium"
+            await updateEventOrganizer({
+                event_organizer_id: Number(eventOrganizerId),
+                name: data.name,
+                details: {
+                    url: logoUrl,
+                    urls: [...retainedUrls, ...newUrls],
+                    links: [
+                        ...existingLinks.map(({ title, url }) => ({
+                            title,
+                            url,
+                        })),
+                        ...parseLinks(data.links),
+                    ],
+                },
+            }).unwrap();
+            navigate(`/admin/event-organizers/${eventOrganizerId}`, {
+                state: { success: "Event organizer updated successfully!" },
+            });
+        } catch (error) {
+            handleErrors(error, setError);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Edit Event Organizer - CU Portal"
+                description="Edit an event organizer"
             />
-            <Input<OrganizerFormData>
-              label="Organizer Name "
-              register={register}
-              placeholder="Enter organizer name"
-              name="name"
-              type="text"
-              errors={errors}
-              registerOptions={{
-                required: "Name is required",
-              }}
+            <SubBanner
+                title="Edit Event Organizer"
+                description="Update the event organizer details"
+                icon="user"
+                linkText="Back to Event Organizer"
+                linkTo={`/admin/event-organizers/${eventOrganizerId}`}
             />
-          </div>
-
-          {/* Logo Section */}
-          <div className={styles.attachmentsSection}>
-            <Heading icon="image" content="Logo" size="medium" />
-            <LogoInputContainer
-              register={register}
-              name="logo"
-              currentLogo={currentLogo}
-              onChange={handleLogoChange}
-              disabled={isSubmitting}
-            />
-          </div>
-
-          {/* Attachments & Links Section */}
-          <div className={styles.attachmentsSection}>
-            <Heading
-              icon="paperclip"
-              content="Attachments & Links"
-              size="medium"
-            />
-            <LinksInputContainer
-              register={register}
-              name="links"
-              errors={errors}
-              setValue={setValue}
-              disabled={isSubmitting}
-              defaultValue={organizer?.attached_links?.join(", ")}
-              linkTitleOptions={["Facebook", "Twitter", "Instagram"]}
-            />
-          </div>
-
-          <div className={styles.formActions}>
-            <Button
-              text="Cancel"
-              loadingText="Cancelling..."
-              type="button"
-              isSubmitting={false}
-              onClick={handleCancel}
-              isSecondary={true}
-            />
-            <Button
-              text="Update Organizer"
-              loadingText="Updating..."
-              isSubmitting={isSubmitting || isLoading}
-              type="submit"
-              isOrange={false}
-            />
-          </div>
-        </Form>
-      </main>
-    </Layout>
-  );
+            <main className={styles.container}>
+                <Form
+                    onSubmit={handleSubmit(onSubmit)}
+                    errors={errors}
+                    className={styles.formCard}
+                    disabled={busy}
+                >
+                    <div className={styles.formGroup}>
+                        <Heading
+                            icon="calendar"
+                            content="Basic Information"
+                            size="medium"
+                        />
+                        <Input
+                            label="Event Organizer Name"
+                            register={register}
+                            name="name"
+                            type="text"
+                            placeholder="Enter organizer name"
+                            errors={errors}
+                            disabled={busy}
+                        />
+                    </div>
+                    <div className={styles.attachmentsSection}>
+                        <Heading icon="image" content="Logo" size="medium" />
+                        <Thumbnail
+                            register={register}
+                            name="logo"
+                            errors={errors}
+                            setValue={setValue}
+                            existingUrl={existingLogoUrl}
+                            onRemoveExisting={() => setExistingLogoUrl(null)}
+                            label="Logo"
+                            required
+                            logo
+                            disabled={busy}
+                        />
+                    </div>
+                    <div className={styles.attachmentsSection}>
+                        <Heading
+                            icon="paperclip"
+                            content="Attachments & Links"
+                            size="medium"
+                        />
+                        <FilesInputContainer
+                            register={register}
+                            name="files"
+                            errors={errors}
+                            setValue={setValue}
+                            existingFiles={existingFiles}
+                            setExistingFiles={setExistingFiles}
+                            disabled={busy}
+                        />
+                        <LinksInputContainer
+                            register={register}
+                            name="links"
+                            errors={errors}
+                            setValue={setValue}
+                            existingLinks={existingLinks}
+                            setExistingLinks={setExistingLinks}
+                            disabled={busy}
+                        />
+                    </div>
+                    <div className={styles.formActions}>
+                        <Button
+                            text="Cancel"
+                            loadingText="Cancelling..."
+                            type="button"
+                            isSubmitting={false}
+                            onClick={() =>
+                                navigate(
+                                    `/admin/event-organizers/${eventOrganizerId}`,
+                                )
+                            }
+                            isSecondary
+                        />
+                        <Button
+                            text="Update Organizer"
+                            loadingText="Updating..."
+                            isSubmitting={busy}
+                            type="submit"
+                            isOrange={false}
+                        />
+                    </div>
+                </Form>
+            </main>
+        </Layout>
+    );
 };

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -17,22 +17,43 @@ import styles from "./EventsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
+import { DateFilter } from "../../../components/forms/DateFilter";
+import { useLazyGetEventOrganizersQuery } from "../../../services/apis/user/EventOrganizerAPIs";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 
 export const EventsPage = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [eventTypeFilter, setEventTypeFilter] = useState("");
+    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    );
+    const [dateToFilter, setDateToFilter] = useState("");
+    const [eventOrganizers, setEventOrganizers] = useState<
+        EventOrganizerResponseDto[]
+    >([]);
     const [events, setEvents] = useState<EventResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
 
     const [getEvents, { isFetching }] = useLazyGetEventsQuery();
+    const [getEventOrganizers] = useLazyGetEventOrganizersQuery();
 
     const eventTypeOptions = [
         { label: "Location Type", value: "" },
         { label: "Offline", value: "Offline" },
         { label: "Online", value: "Online" },
     ];
+
+    const fetchEventOrganizers = useCallback(async () => {
+        try {
+            const result = await getEventOrganizers({ data: {} }).unwrap();
+            setEventOrganizers(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getEventOrganizers]);
 
     const fetchEvents = useCallback(async () => {
         if (!hasNextPage && page !== 1) return;
@@ -46,6 +67,11 @@ export const EventsPage = () => {
                         eventTypeFilter === "Offline"
                             ? eventTypeFilter
                             : undefined,
+                    event_organizer_id: eventOrganizerFilter
+                        ? parseInt(eventOrganizerFilter)
+                        : undefined,
+                    start_date_from: dateFromFilter || undefined,
+                    start_date_to: dateToFilter || undefined,
                 },
                 includes: [
                     "faculty",
@@ -72,15 +98,44 @@ export const EventsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [eventTypeFilter, getEvents, hasNextPage, page, searchQuery]);
+    }, [
+        eventOrganizerFilter,
+        eventTypeFilter,
+        dateFromFilter,
+        dateToFilter,
+        getEvents,
+        hasNextPage,
+        page,
+        searchQuery,
+    ]);
 
-    const authQueryParams = useCallback(() => fetchEvents(), [fetchEvents]);
+    const authQueryParams = useCallback(
+        () => Promise.all([fetchEvents(), fetchEventOrganizers()]),
+        [fetchEvents, fetchEventOrganizers],
+    );
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
-    }, [searchQuery, eventTypeFilter]);
+    }, [
+        searchQuery,
+        eventTypeFilter,
+        eventOrganizerFilter,
+        dateFromFilter,
+        dateToFilter,
+    ]);
+
+    const eventOrganizerOptions = useMemo(
+        () => [
+            { label: "Event Organizer", value: "" },
+            ...eventOrganizers.map((organizer) => ({
+                label: organizer.name || "",
+                value: organizer.id?.toString() || "",
+            })),
+        ],
+        [eventOrganizers],
+    );
 
     const handlePagination = () => {
         if (hasNextPage && !isFetching && events.length > 0) {
@@ -109,16 +164,29 @@ export const EventsPage = () => {
             />
             <div className={styles.container}>
                 <div className={styles.filtersContainer}>
-                    <div className={styles.search}>
+                    <div className={styles.searchRow}>
                         <Search
                             placeholder="Search events..."
                             setValue={setSearchQuery}
                         />
                     </div>
-                    <div className={styles.filters}>
+                    <div className={styles.filtersRow}>
+                        <SelectFilter
+                            options={eventOrganizerOptions}
+                            setValue={setEventOrganizerFilter}
+                        />
                         <SelectFilter
                             options={eventTypeOptions}
                             setValue={setEventTypeFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date From"
+                            setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date To"
+                            setValue={setDateToFilter}
                         />
                     </div>
                 </div>
@@ -140,10 +208,16 @@ export const EventsPage = () => {
                             items={[
                                 {
                                     icon: "calendar",
-                                    label: "Date",
+                                    label: "Start Date",
                                     value:
                                         formatDateTime(event.start_date) ||
                                         "N/A",
+                                },
+                                {
+                                    icon: "calendar",
+                                    label: "End Date",
+                                    value:
+                                        formatDateTime(event.end_date) || "N/A",
                                 },
                                 {
                                     icon: "location",

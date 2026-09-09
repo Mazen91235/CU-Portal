@@ -1,6 +1,5 @@
 import { Bordered } from "../bordered/Bordered";
 import { Button } from "../forms/Button";
-import IconComponent from "../IconComponent";
 import type { EventOrganizerResponseDto } from "../../types/dtos/EventOrganizerDtos";
 import styles from "./EventOrganizerCard.module.css";
 
@@ -55,10 +54,7 @@ export const EventOrganizerCard = ({
                         className={styles.viewButton}
                     />
                 ) : (
-                    <IconComponent
-                        icon="calendar"
-                        className={styles.decorativeIcon}
-                    />
+                    <></>
                 )}
             </div>
         </Bordered>

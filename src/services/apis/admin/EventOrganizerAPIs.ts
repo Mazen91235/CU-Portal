@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
     EventOrganizerCreateDto,
     EventOrganizerResponseDto,
@@ -8,11 +7,13 @@ import type {
     EventOrganizerUpdateDto,
 } from "../../../types/dtos/EventOrganizerDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
+import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import {
     timeout,
     maxRetries,
     retryCondition,
 } from "../../../utils/APIHandling";
+
 export const AdminEventOrganizerAPI = createApi({
     reducerPath: "adminEventOrganizerAPI",
     baseQuery: retry(
@@ -23,38 +24,43 @@ export const AdminEventOrganizerAPI = createApi({
         }),
         {
             maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
+            // @ts-expect-error RTK Query's types don't account for this parameter
             retryCondition,
         },
     ),
     endpoints: (builder) => ({
-        getEventOrganizers: builder.query<GenericAPIResponse<EventOrganizerResponseDto[]>, QueryModel<EventOrganizerSearchDto>>({
+        getEventOrganizers: builder.query<
+            GenericAPIResponse<EventOrganizerResponseDto[]>,
+            QueryModel<EventOrganizerSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
+                params: { query: JSON.stringify(query) },
                 credentials: "include",
-                params: {
-                    query: JSON.stringify(query),
-                },
             }),
         }),
-        getEventOrganizer: builder.query<GenericAPIResponse<EventOrganizerResponseDto>, { event_organizer_id: number }>({
+        getEventOrganizer: builder.query<
+            GenericAPIResponse<EventOrganizerResponseDto>,
+            { event_organizer_id: number }
+        >({
             query: ({ event_organizer_id }) => ({
                 url: `/${event_organizer_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        createEventOrganizer: builder.mutation<GenericAPIResponse<EventOrganizerResponseDto>, EventOrganizerCreateDto>(
-            {
-                query: (data) => ({
-                    url: `/`,
-                    method: "POST",
-                    credentials: "include",
-                    body: data,
-                }),
-            },
-        ),
+        createEventOrganizer: builder.mutation<
+            GenericAPIResponse<EventOrganizerResponseDto>,
+            EventOrganizerCreateDto
+        >({
+            query: (data) => ({
+                url: "/",
+                method: "POST",
+                body: data,
+                credentials: "include",
+            }),
+        }),
         updateEventOrganizer: builder.mutation<
             GenericAPIResponse<EventOrganizerResponseDto>,
             { event_organizer_id: number } & EventOrganizerUpdateDto
@@ -62,11 +68,14 @@ export const AdminEventOrganizerAPI = createApi({
             query: ({ event_organizer_id, ...data }) => ({
                 url: `/${event_organizer_id}`,
                 method: "PATCH",
-                credentials: "include",
                 body: data,
+                credentials: "include",
             }),
         }),
-        deleteEventOrganizer: builder.mutation<GenericAPIResponse, { event_organizer_id: number }>({
+        deleteEventOrganizer: builder.mutation<
+            GenericAPIResponse,
+            { event_organizer_id: number }
+        >({
             query: ({ event_organizer_id }) => ({
                 url: `/${event_organizer_id}`,
                 method: "DELETE",

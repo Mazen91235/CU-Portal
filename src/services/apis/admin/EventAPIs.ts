@@ -43,15 +43,12 @@ export const AdminEventAPI = createApi({
         }),
         getEvent: builder.query<
             GenericAPIResponse<EventResponseDto>,
-            { event_id: number; includes?: string[] }
+            { event_id: number }
         >({
-            query: ({ event_id, includes }) => ({
+            query: ({ event_id }) => ({
                 url: `/${event_id}`,
                 method: "GET",
                 credentials: "include",
-                params: includes?.length
-                    ? { query: JSON.stringify({ includes }) }
-                    : undefined,
             }),
         }),
         createEvent: builder.mutation<
@@ -76,7 +73,10 @@ export const AdminEventAPI = createApi({
                 body: data,
             }),
         }),
-        deleteEvent: builder.mutation<GenericAPIResponse<boolean>, { event_id: number }>({
+        deleteEvent: builder.mutation<
+            GenericAPIResponse<boolean>,
+            { event_id: number }
+        >({
             query: ({ event_id }) => ({
                 url: `/${event_id}`,
                 method: "DELETE",

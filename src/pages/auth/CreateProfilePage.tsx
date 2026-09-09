@@ -211,7 +211,7 @@ const CreateProfilePage = () => {
                             Don&apos;t miss out! Create your profile in minutes
                         </p>
 
-                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors}>
+                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors} disabled={isSubmitting}>
                             <div className={styles.inputRow}>
                                 <Input
                                     register={register}

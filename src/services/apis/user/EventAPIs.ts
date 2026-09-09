@@ -42,15 +42,12 @@ export const EventAPI = createApi({
         }),
         getEvent: builder.query<
             GenericAPIResponse<EventResponseDto>,
-            { event_id: number; includes?: string[] }
+            { event_id: number }
         >({
-            query: ({ event_id, includes }) => ({
+            query: ({ event_id }) => ({
                 url: `/${event_id}`,
                 method: "GET",
                 credentials: "include",
-                params: includes?.length
-                    ? { query: JSON.stringify({ includes }) }
-                    : undefined,
             }),
         }),
         registerEvent: builder.mutation<GenericAPIResponse, UserEventActionDto>(

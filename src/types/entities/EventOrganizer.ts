@@ -3,8 +3,7 @@ import type { Attachment } from "./Attachment";
 
 export type EventOrganizer = {
     id?: number;
-    name?: string;
-    details?: object | null;
+    name?: string | null;
     created_at?: Date | null;
     updated_at?: Date | null;
     events?: Event[] | null;

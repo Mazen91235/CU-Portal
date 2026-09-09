@@ -50,13 +50,15 @@ export const CreateAnnouncement = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<AnnouncementFormData>({
         resolver: zodResolver(announcementSchema),
     });
+
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -155,6 +157,7 @@ export const CreateAnnouncement = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formGroup}>

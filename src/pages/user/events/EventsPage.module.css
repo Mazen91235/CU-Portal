@@ -12,27 +12,17 @@
 }
 
 .filtersContainer {
-    width: 100%;
     margin-bottom: 2rem;
-    display: flex;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB;
-    padding: 24px 16px;
 }
 
-.search, .filters {
-    flex: 1;
+.searchRow {
+    margin-bottom: 1rem;
 }
 
-.search {
-    margin-right: 1rem;
-}
-
-.filters {
-    display: flex;
-    flex-direction: column;
+.filtersRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1rem;
-    align-items: start;
 }
 
 .priceButtons {
@@ -63,4 +53,14 @@
     background: rgba(126, 87, 194, 0.08);
     border-color: var(--primary-purple);
     color: var(--primary-purple);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .filtersRow {
+        grid-template-columns: 1fr;
+    }
 }

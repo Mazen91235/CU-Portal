@@ -7,6 +7,7 @@ type FormProps<T extends Record<string, unknown>> = {
     className?: string;
     containerClassName?: string;
     children: React.ReactNode;
+    disabled?: boolean;
 };
 
 export const Form = <T extends Record<string, unknown>>({
@@ -15,21 +16,15 @@ export const Form = <T extends Record<string, unknown>>({
     className,
     containerClassName,
     children,
+    disabled = false,
 }: FormProps<T>) => {
     return (
-        <div
-            className={`col-12 ${styles["form-container"]} ${containerClassName || ""}`}
-        >
-            <form
-                className={`${styles["form"]} ${className || ""}`}
-                onSubmit={onSubmit}
-            >
-                {errors.root && (
-                    <span className={styles["error"]}>
-                        {errors.root?.message}
-                    </span>
-                )}
-                {children}
+        <div className={`col-12 ${styles["form-container"]} ${containerClassName || ""}`}>
+            <form className={`${styles["form"]} ${className || ""}`} onSubmit={onSubmit}>
+                {errors.root && <span className={styles["error"]}>{errors.root?.message}</span>}
+                <fieldset className={styles.fieldset} disabled={disabled}>
+                    {children}
+                </fieldset>
             </form>
         </div>
     );

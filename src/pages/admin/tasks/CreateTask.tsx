@@ -51,13 +51,15 @@ export const CreateTask = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<TaskFormData>({
         resolver: zodResolver(taskSchema),
     });
+
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -158,6 +160,7 @@ export const CreateTask = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formGroup}>

@@ -142,7 +142,7 @@ function App() {
                         <Route index element={<UserEventsPage />} />
                         <Route path=":eventId" element={<UserEventPage />} />
                     </Route>
-                    <Route path="events-organizers">
+                    <Route path="event-organizers">
                         <Route index element={<UserEventsOrganizersPage />} />
                         <Route
                             path=":eventOrganizerId"
@@ -331,7 +331,7 @@ function App() {
                         <Route path=":eventId" element={<EventPage />} />
                     </Route>
 
-                    <Route path="eventsOrganizers">
+                    <Route path="event-organizers">
                         <Route index element={<EventOrganizersPage />} />
                         <Route path="create">
                             <Route index element={<CreateEventOrganizer />} />
