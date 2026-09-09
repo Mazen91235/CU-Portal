@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
-import styles from "./Card.module.css";
 import { Button } from "../forms/Button";
 import { formatString } from "../../utils/Formatter";
 import type { Icon } from "../../types/Icon";
 import IconComponent from "../IconComponent";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+import styles from "./Card.module.css";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
@@ -91,7 +92,9 @@ export const Card = ({
             {img && (
                 <div
                     className={styles.imageContainer}
-                    style={{ backgroundImage: `url(${img})` }}
+                    style={{
+                        backgroundImage: `url(${GetDrivePreviewUrlFromUrl(img) || img})`,
+                    }}
                 ></div>
             )}
 
@@ -218,7 +221,10 @@ export const Card = ({
                         <div>
                             <img
                                 className={styles.profileIcon}
-                                src={profileLogo}
+                                src={
+                                    GetDrivePreviewUrlFromUrl(profileLogo) ||
+                                    profileLogo
+                                }
                                 alt="Profile logo"
                             />
                         </div>

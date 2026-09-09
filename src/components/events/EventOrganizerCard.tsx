@@ -1,6 +1,7 @@
 import { Bordered } from "../bordered/Bordered";
 import { Button } from "../forms/Button";
 import type { EventOrganizerResponseDto } from "../../types/dtos/EventOrganizerDtos";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
 import styles from "./EventOrganizerCard.module.css";
 
 type EventOrganizerCardProps = {
@@ -30,7 +31,7 @@ export const EventOrganizerCard = ({
                 <div className={styles.logoWrapper}>
                     {logo ? (
                         <img
-                            src={logo}
+                            src={GetDrivePreviewUrlFromUrl(logo) || logo}
                             alt={`${name} logo`}
                             className={styles.logo}
                         />

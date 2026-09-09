@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { GetAvatarLink } from "../../utils/LinkHandler";
+import {GetDrivePreviewUrlFromUrl} from "../../utils/DriveManager";
 import styles from "./Avatar.module.css";
 
 type AvatarProps = {
@@ -37,7 +38,7 @@ export const Avatar = ({ user, url, size, className }: AvatarProps) => {
 
     return (
         <img
-            src={avatarSrc}
+            src={GetDrivePreviewUrlFromUrl(avatarSrc) || avatarSrc}
             alt={user?.name || "User"}
             className={`${styles.avatar} ${sizeClass} ${className || ""}`}
             onError={handleError}

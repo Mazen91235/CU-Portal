@@ -7,6 +7,7 @@ import type {
     UseFormRegister,
     UseFormSetValue,
 } from "react-hook-form";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
 import styles from "./Thumbnail.module.css";
 
 type ThumbnailProps<T extends FieldValues> = {
@@ -116,7 +117,7 @@ export const Thumbnail = <T extends FieldValues>({
                 {previewUrl ? (
                     <div className={`${styles.previewWrapper} ${logo ? styles.logoPreviewWrapper : ""}`}>
                         <img
-                            src={previewUrl}
+                            src={GetDrivePreviewUrlFromUrl(previewUrl) || previewUrl}
                             alt={`${label} preview`}
                             className={`${styles.previewImage} ${logo ? styles.logoPreviewImage : ""}`}
                         />
