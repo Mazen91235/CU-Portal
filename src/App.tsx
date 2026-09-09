@@ -37,6 +37,10 @@ import { CreateAnnouncement } from "./pages/admin/announcements/CreateAnnounceme
 import { EditAnnouncement } from "./pages/admin/announcements/EditAnnouncement";
 import { AnnouncementPage } from "./pages/admin/announcements/AnnouncementPage";
 import { AnnouncementsPage } from "./pages/admin/announcements/AnnouncementsPage";
+import { EventsPage } from "./pages/admin/events/EventsPage";
+import { EventPage } from "./pages/admin/events/EventPage";
+import { CreateEvent } from "./pages/admin/events/CreateEvent";
+import { EditEvent } from "./pages/admin/events/EditEvent";
 import { TasksPage as UserTasksPage } from "./pages/user/tasks/TasksPage";
 import { TaskPage as UserTaskPage } from "./pages/user/tasks/TaskPage";
 import { ExamsPage as UserExamsPage } from "./pages/user/exams/ExamsPage";
@@ -45,6 +49,8 @@ import { AnnouncementsPage as UserAnnouncementsPage } from "./pages/user/announc
 import { AnnouncementPage as UserAnnouncementPage } from "./pages/user/announcements/AnnouncementPage";
 import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage";
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
+import { EventsPage as UserEventsPage } from "./pages/user/events/EventsPage";
+import { EventPage as UserEventPage } from "./pages/user/events/EventPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
@@ -126,6 +132,12 @@ function App() {
                         <Route index element={<UserCoursesPage />} />
                         <Route path=":courseId" element={<UserCoursePage />} />
                     </Route>
+
+                    <Route path="events">
+                        <Route index element={<UserEventsPage />} />
+                        <Route path=":eventId" element={<UserEventPage />} />
+                    </Route>
+
                     <Route path="materials">
                         <Route index element={<UserMaterialsPage />} />
                         <Route
@@ -283,6 +295,28 @@ function App() {
                             path=":announcementId"
                             element={<AnnouncementPage />}
                         />
+                    </Route>
+
+                    <Route
+                        path="events"
+                        element={<ProtectedRoute permission="View Events" />}
+                    >
+                        <Route index element={<EventsPage />} />
+                        <Route
+                            path="create"
+                            element={<ProtectedRoute permission="Add Events" />}
+                        >
+                            <Route index element={<CreateEvent />} />
+                        </Route>
+                        <Route
+                            path="edit/:eventId"
+                            element={
+                                <ProtectedRoute permission="Edit Events" />
+                            }
+                        >
+                            <Route index element={<EditEvent />} />
+                        </Route>
+                        <Route path=":eventId" element={<EventPage />} />
                     </Route>
 
                     <Route
