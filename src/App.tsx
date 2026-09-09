@@ -52,6 +52,7 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
+import { TeamPage } from "./pages/landing/TeamPage";
 import { useValidateUserLevel } from "./hooks/useValidateUserLevel";
 
 import "./App.css";
@@ -68,6 +69,7 @@ function App() {
             <Route index element={<LandingPage />} />
             <Route path="privacy_policy" element={<PrivacyPolicy />} />
             <Route path="terms_of_service" element={<TermsOfService />} />
+            <Route path="our-team" element={<TeamPage />} />
             <Route path="" element={<ProtectedRoute reverse={true} />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/login-success" element={<LoginSuccessPage />} />
