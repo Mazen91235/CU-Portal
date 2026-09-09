@@ -1,8 +1,9 @@
 import { Link } from "react-router";
 
-import styles from "./SubBanner.module.css";
 import IconComponent from "../IconComponent";
 import { type Icon } from "../../types/Icon";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+import styles from "./SubBanner.module.css";
 
 type SubBannerProps = {
     title: string;
@@ -35,11 +36,7 @@ export const SubBanner = ({
             style={
                 img
                     ? {
-                          backgroundImage: `url(${img})`,
-                          height: "320px",
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          alignItems: "normal",
+                          backgroundImage: `url(${GetDrivePreviewUrlFromUrl(img) || img})`,
                       }
                     : {}
             }
