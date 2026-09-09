@@ -41,6 +41,10 @@ import { EventsPage } from "./pages/admin/events/EventsPage";
 import { EventPage } from "./pages/admin/events/EventPage";
 import { CreateEvent } from "./pages/admin/events/CreateEvent";
 import { EditEvent } from "./pages/admin/events/EditEvent";
+import { EventOrganizersPage } from "./pages/admin/eventsOrganizers/EventOrganizersPage";
+import { CreateEventOrganizer } from "./pages/admin/eventsOrganizers/CreateEventOrganizer";
+import { EventOrganizerPage } from "./pages/admin/eventsOrganizers/EventOrganizerPage";
+import { EditEventOrganizer } from "./pages/admin/eventsOrganizers/EditEventOrganizer";
 import { TasksPage as UserTasksPage } from "./pages/user/tasks/TasksPage";
 import { TaskPage as UserTaskPage } from "./pages/user/tasks/TaskPage";
 import { ExamsPage as UserExamsPage } from "./pages/user/exams/ExamsPage";
@@ -51,7 +55,8 @@ import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
 import { EventsPage as UserEventsPage } from "./pages/user/events/EventsPage";
 import { EventPage as UserEventPage } from "./pages/user/events/EventPage";
-import { EventOrganizerPage } from "./pages/user/event-organizers/EventOrganizerPage";
+import { EventsOrganizersPage as UserEventsOrganizersPage } from "./pages/user/eventOrganizers/EventOrganizersPage";
+import { EventOrganizerPage as UserEventOrganizerPage } from "./pages/user/eventOrganizers/EventOrganizerPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
@@ -66,7 +71,6 @@ import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { TimeLinePage } from "./pages/user/timeline/TimeLinePage";
 
 import "./App.css";
-
 function App() {
     useAuth({ shouldNavigate: false });
     useGetUser();
@@ -138,8 +142,12 @@ function App() {
                         <Route index element={<UserEventsPage />} />
                         <Route path=":eventId" element={<UserEventPage />} />
                     </Route>
-                    <Route path="event-organizers">
-                        <Route path=":eventOrganizerId" element={<EventOrganizerPage />} />
+                    <Route path="events-organizers">
+                        <Route index element={<UserEventsOrganizersPage />} />
+                        <Route
+                            path=":eventOrganizerId"
+                            element={<UserEventOrganizerPage />}
+                        />
                     </Route>
 
                     <Route path="materials">
@@ -321,6 +329,21 @@ function App() {
                             <Route index element={<EditEvent />} />
                         </Route>
                         <Route path=":eventId" element={<EventPage />} />
+                    </Route>
+
+                    <Route path="eventsOrganizers">
+                        <Route index element={<EventOrganizersPage />} />
+                        <Route path="create">
+                            <Route index element={<CreateEventOrganizer />} />
+                        </Route>
+                        <Route
+                            path=":eventOrganizerId"
+                            element={<EventOrganizerPage />}
+                        />
+                        <Route
+                            path="edit/:eventOrganizerId"
+                            element={<EditEventOrganizer />}
+                        />
                     </Route>
 
                     <Route

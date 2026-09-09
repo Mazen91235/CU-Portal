@@ -116,6 +116,12 @@ const navSectionsDefault: NavSection[] = [
                 badge: "New",
                 activatesPaths: ["/user/events/"],
             },
+            {
+                label: "Events Organizers",
+                path: "/user/events-organizers",
+                icon: "sidebar-admin-users",
+                activatesPaths: ["/user/events-organizers/"],
+            },
         ],
     },
     {
@@ -314,6 +320,15 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
+    if (permissions.includes("View EventOrganizers")) {
+        section.links.push({
+            label: "Event Organizers",
+            path: "/admin/event-organizers",
+            icon: "sidebar-admin-event-organizers",
+            activatesPaths: ["/admin/event-organizers/"],
+        });
+    }
+
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
@@ -362,7 +377,6 @@ const showAdminLinks = (permissions: string[]) => {
 
     return section.links.length > 0 ? section : null;
 };
-
 export const Sidebar = ({
     isOpen,
     onClose,
@@ -379,6 +393,7 @@ export const Sidebar = ({
     const [navSections, setNavSections] = useState<NavSection[]>([
         ...navSectionsDefault,
     ]);
+
     useEffect(() => {
         if (permissions) {
             const section = showAdminLinks(permissions);
