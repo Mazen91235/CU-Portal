@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, Link } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -7,6 +7,8 @@ import { Button } from "../../../components/forms/Button";
 import {
     useLazyGetUserQuery,
     useUpdateUsersMutation,
+    useSuspendUserMutation,
+    useUnsuspendUserMutation,
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
@@ -28,6 +30,7 @@ import { Avatar } from "../../../components/avatar/Avatar";
 import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { useAppSelector } from "../../../services/redux/Hooks";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
 
 export const UserPage = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -41,6 +44,29 @@ export const UserPage = () => {
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
     const [updateUser] = useUpdateUsersMutation();
+    const [suspendUser, { isLoading: isSuspending }] = useSuspendUserMutation();
+    const [unsuspendUser, { isLoading: isUnsuspending }] = useUnsuspendUserMutation();
+
+    const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false);
+    const isSuspended = user.status === false;
+
+    const handleConfirmSuspend = async () => {
+        if (!userId) return;
+        try {
+            if (isSuspended) {
+                await unsuspendUser({ user_id: Number(userId) }).unwrap();
+                showToast("success", "Success", "User unsuspended successfully");
+            } else {
+                await suspendUser({ user_id: Number(userId) }).unwrap();
+                showToast("success", "Success", "User suspended successfully");
+            }
+            setIsSuspendModalOpen(false);
+            await fetchUserData(); 
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+    // ===============================================
 
     const schema = z.object({
         roleId: z.string().min(1, "Role is required"),
@@ -157,18 +183,20 @@ export const UserPage = () => {
                                     <div className={styles.userRoleActions}>
                                         <button
                                             type="button"
-                                            className={styles.suspendUserBtn}
-                                            onClick={() => null}
+                                            className={isSuspended ? styles.unsuspendUserBtn : styles.suspendUserBtn}
+                                            onClick={() => setIsSuspendModalOpen(true)}
                                         >
-                                            Suspend User
+                                            {isSuspended ? "Unsuspend User" : "Suspend User"}
                                         </button>
-                                        <button
-                                            type="button"
-                                            className={styles.editRoleBtn}
-                                            onClick={handleEditRole}
-                                        >
-                                            Edit Role
-                                        </button>
+                                        {!isSuspended && (
+                                            <button
+                                                type="button"
+                                                className={styles.editRoleBtn}
+                                                onClick={handleEditRole}
+                                            >
+                                                Edit Role
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </>
@@ -305,6 +333,9 @@ export const UserPage = () => {
                             <span className={styles.examsHeaderTitle}>
                                 Exams
                             </span>
+                            <Link to={`/admin/exams?author_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         {user.exams_published &&
                             user.exams_published.length > 0 && (
@@ -402,6 +433,9 @@ export const UserPage = () => {
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
+                            <Link to={`/admin/tasks?author_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         {user.tasks_published &&
                             user.tasks_published.length > 0 && (
@@ -501,6 +535,9 @@ export const UserPage = () => {
                             <span className={styles.announcementHeaderTitle}>
                                 Announcement
                             </span>
+                            <Link to={`/admin/announcements?author_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.announcementList}>
                             {user.announcements_published &&
@@ -582,6 +619,9 @@ export const UserPage = () => {
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
+                            <Link to={`/admin/materials?author_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.materialsList}>
                             {user.materials && user.materials.length > 0 ? (
@@ -671,6 +711,9 @@ export const UserPage = () => {
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
+                            <Link to={`/admin/subjects?user_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.subjectsList}>
                             {user.subjects && user.subjects.length > 0 ? (
@@ -734,6 +777,9 @@ export const UserPage = () => {
                             <span className={styles.activityLogsHeaderTitle}>
                                 Activity Logs
                             </span>
+                            <Link to={`/admin/logs?user_id=${userId}`} className={styles.viewAllLink}>
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.activityLogsList}>
                             {user.logs && user.logs.length > 0 ? (
@@ -788,6 +834,21 @@ export const UserPage = () => {
                     </div>
                 </section>
             </div>
+
+            <ConfirmModal
+                isOpen={isSuspendModalOpen}
+                onClose={() => setIsSuspendModalOpen(false)}
+                onConfirm={handleConfirmSuspend}
+                confirmText={isSuspending || isUnsuspending ? (isSuspended ? "Unsuspending..." : "Suspending...") : (isSuspended ? "Unsuspend" : "Suspend")}
+                title={isSuspended ? "Unsuspend User?" : "Suspend User?"}
+                message={
+                    isSuspended
+                        ? `Are you sure you want to unsuspend ${user.name || "this user"}? They will regain access to the platform.`
+                        : `Are you sure you want to suspend ${user.name || "this user"}? They will lose access to the platform.`
+                }
+                colorType={isSuspended ? "green" : "red"}
+                disabled={isSuspending || isUnsuspending}
+            />
         </Layout>
     );
 };

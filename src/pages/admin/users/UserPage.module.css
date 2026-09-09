@@ -102,6 +102,22 @@
     opacity: 0.9;
 }
 
+.unsuspendUserBtn {
+    background: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.unsuspendUserBtn:hover {
+    opacity: 0.9;
+}
+
 .roleFormContainer {
     width: 100%;
     padding: 0;
@@ -227,6 +243,21 @@
     margin-bottom: 24px;
     display: flex;
     justify-content: center;
+}
+
+/* View All Link */
+.viewAllLink {
+    margin-left: auto; 
+    color: var(--slate-500, #64748b);
+    font-size: 15px; 
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.viewAllLink:hover {
+    color: #7b1684;
 }
 
 /* Exams Section */
@@ -1175,6 +1206,11 @@
         margin-left: auto;
         margin-right: auto;
     }
+    /* ====== تعديل: تعديل زر فك الإيقاف للشاشات الصغيرة ====== */
+    .userRoleActions .unsuspendUserBtn {
+        width: 100%;
+    }
+    /* ====================================================== */
 }
 
 @media (max-width: 1200px) {

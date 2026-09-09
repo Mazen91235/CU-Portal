@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
     useLazyGetTasksQuery,
     useDeleteTaskMutation,
@@ -34,6 +34,8 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const authorId = searchParams.get("author_id");
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
@@ -131,7 +133,7 @@ export const TasksPage = () => {
     const fetchTasks = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params = {
+            const params: any = {
                 query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
@@ -141,6 +143,7 @@ export const TasksPage = () => {
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 deadline_from: dateFromFilter ? new Date(dateFromFilter) : undefined,
                 deadline_to: dateToFilter ? new Date(dateToFilter) : undefined,
+                author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
@@ -176,6 +179,7 @@ export const TasksPage = () => {
         page,
         hasNextPage,
         user,
+        authorId, 
     ]);
 
     const authQueryParams = useCallback(
@@ -209,6 +213,7 @@ export const TasksPage = () => {
         searchQuery,
         dateFromFilter,
         dateToFilter,
+        authorId, 
     ]);
 
     const handleAddTask = () => {

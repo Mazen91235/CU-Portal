@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
@@ -28,6 +28,9 @@ import styles from "./CoursesPage.module.css";
 
 export const CoursesPage = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const userId = searchParams.get("user_id");
+
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
@@ -88,11 +91,12 @@ export const CoursesPage = () => {
     const fetchCourses = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params = {
+            const params: any = {
                 faculty_id: parseInt(facultyFilter) || undefined,
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
                 query: searchQuery || "",
+                user_id: userId ? parseInt(userId) : undefined,
             };
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
@@ -100,7 +104,7 @@ export const CoursesPage = () => {
                 params.year_id = user.year?.id ?? undefined;
             }
             const result = await getCourses({
-                data: params,
+                data: params as any,
                 includes: [
                     "faculty",
                     "department",
@@ -132,6 +136,7 @@ export const CoursesPage = () => {
         page,
         hasNextPage,
         user,
+        userId,
     ]);
 
     const authQueryParams = useCallback(
@@ -150,7 +155,7 @@ export const CoursesPage = () => {
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
-    }, [facultyFilter, departmentFilter, yearFilter, searchQuery]);
+    }, [facultyFilter, departmentFilter, yearFilter, searchQuery, userId]);
 
     const handleAddCourse = () => {
         navigate("/admin/courses/create");
