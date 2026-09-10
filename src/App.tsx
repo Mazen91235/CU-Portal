@@ -94,8 +94,8 @@ function App() {
             />
             <Routes>
                 <Route index element={<LandingPage />} />
-                <Route path="privacy_policy" element={<PrivacyPolicy />} />
-                <Route path="terms_of_service" element={<TermsOfService />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="terms-of-service" element={<TermsOfService />} />
                 <Route path="" element={<ProtectedRoute reverse={true} />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route
