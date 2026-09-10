@@ -9,6 +9,7 @@ export type CalendarDayEventsDto = Record<
         tasks: CalendarDayEventDto[];
         exams: CalendarDayEventDto[];
         announcements: CalendarDayEventDto[];
+        notes?: CalendarDayEventDto[];
     }
 >;
 
@@ -17,10 +18,13 @@ export type CalendarResponseDto = {
 };
 
 export type CalendarDayEventDto = {
-    event_type: "assignment" | "exam" | "announcement";
+    event_type: "assignment" | "exam" | "announcement" | "note";
     title: string;
     subject: string;
     due: string;
     location?: string;
     id: number;
+    content?: string;
+    created_at?: string;
+    date?: string;
 };

@@ -8,7 +8,11 @@ import { Layout } from "../../../components/layout/Layout";
 import { Calendar } from "../../../components/calendar/Calendar";
 import { DayEvent } from "../../../components/calendar/DayEvent";
 import { EmptySection } from "../../../components/calendar/EmptySection";
-import type { CalendarDayEventsDto } from "../../../types/dtos/CalendarDtos";
+import { NoteForm } from "../../../components/forms/NoteForm";
+import type {
+    CalendarDayEventDto,
+    CalendarDayEventsDto,
+} from "../../../types/dtos/CalendarDtos";
 
 import styles from "./CalendarPage.module.css";
 
@@ -17,6 +21,8 @@ export const CalendarPage = () => {
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [notes, setNotes] = useState<Record<string, CalendarDayEventDto[]>>({});
+    const [isNoteFormOpen, setIsNoteFormOpen] = useState(false);
     const [getCalendar] = useLazyGetCalendarTasksQuery();
 
     const fetchCalendar = useCallback(
@@ -64,13 +70,39 @@ export const CalendarPage = () => {
         setCurrentMonth(month);
     };
 
-    const selectedEvents: CalendarDayEventsDto[string] = selectedDate
-        ? eventsData[selectedDate] || {
-              tasks: [],
-              exams: [],
-              announcements: [],
-          }
-        : { tasks: [], exams: [], announcements: [] };
+    // to be saved using API
+    const handleSaveNote = (
+        data: { title: string; content: string },
+    ) => {
+        if (!selectedDate) return;
+        setNotes((currentNotes) => {
+            const dayNotes = currentNotes[selectedDate] || [];
+            const savedNote = {
+                      event_type: "note" as const,
+                      id: Date.now(),
+                      subject: "",
+                      due: "",
+                      ...data,
+                  };
+
+            return {
+                ...currentNotes,
+                [selectedDate]: [...dayNotes, savedNote],
+            };
+        });
+        setIsNoteFormOpen(false);
+    };
+
+    const selectedEvents: CalendarDayEventsDto[string] = {
+        ...(selectedDate
+            ? eventsData[selectedDate] || {
+                  tasks: [],
+                  exams: [],
+                  announcements: [],
+              }
+            : { tasks: [], exams: [], announcements: [] }),
+        notes: notes[selectedDate || ""] || [],
+    };
 
     const renderDetailsSection = () => {
         if (!selectedDate) {
@@ -92,43 +124,51 @@ export const CalendarPage = () => {
         };
         const dateStr = dateObj.toLocaleDateString(undefined, options);
 
-        if (
-            !selectedEvents ||
-            (!selectedEvents.tasks.length &&
-                !selectedEvents.exams.length &&
-                !selectedEvents.announcements.length)
-        ) {
-            return (
-                <EmptySection
-                    icon="calendar"
-                    title={`Nothing scheduled for ${dateStr}`}
-                    description="You're all clear. Enjoy your day off! 🎉"
-                />
-            );
-        }
-
         return (
             <div className={styles["details-section"]}>
                 <div className={styles["details-header"]}>
                     <i className="far fa-calendar"></i>
                     <span>{dateStr}</span>
+                    <button
+                        type="button"
+                        className={styles["add-note-btn"]}
+                        onClick={() => {
+                            setIsNoteFormOpen(true);
+                        }}
+                    >
+                        <i className="fas fa-plus"></i> Add Note
+                    </button>
                 </div>
                 <div className={styles["events-list"]}>
-                    {[
-                        ...selectedEvents.tasks,
-                        ...selectedEvents.exams,
-                        ...selectedEvents.announcements,
-                    ].map((event, index) => (
-                        <DayEvent
-                            key={`event-${index}`}
-                            event_type={event.event_type}
-                            title={event.title}
-                            subject={event.subject}
-                            due={event.due}
-                            location={event.location}
-                            id={event.id}
+                    {selectedEvents.tasks.length ||
+                    selectedEvents.exams.length ||
+                    selectedEvents.announcements.length ||
+                    (selectedEvents.notes || []).length ? (
+                        [
+                            ...selectedEvents.tasks,
+                            ...selectedEvents.exams,
+                            ...selectedEvents.announcements,
+                            ...(selectedEvents.notes || []),
+                        ].map((event, index) => (
+                            <DayEvent
+                                key={`event-${index}`}
+                                event_type={event.event_type}
+                                title={event.title}
+                                subject={event.subject}
+                                due={event.due}
+                                location={event.location}
+                                id={event.id}
+                                created_at={event.created_at}
+                                date={event.date}
+                            />
+                        ))
+                    ) : (
+                        <EmptySection
+                            icon="calendar"
+                            title={`Nothing scheduled for ${dateStr}`}
+                            description="You're all clear. Enjoy your day off! 🎉"
                         />
-                    ))}
+                    )}
                 </div>
             </div>
         );
@@ -160,6 +200,12 @@ export const CalendarPage = () => {
 
                 {renderDetailsSection()}
             </div>
+            <NoteForm
+                isOpen={isNoteFormOpen}
+                dateStr={selectedDate || ""}
+                onClose={() => setIsNoteFormOpen(false)}
+                onSave={(data) => handleSaveNote(data)}
+            />
         </Layout>
     );
 };

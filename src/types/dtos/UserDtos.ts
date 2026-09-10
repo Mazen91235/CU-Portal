@@ -13,6 +13,7 @@ import type { LogResponseDto } from "./LogDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { SearchDto } from "./BaseDtos";
+import type { Note } from "../entities/Note";
 
 export type UserCreateDto = {
     name: string;

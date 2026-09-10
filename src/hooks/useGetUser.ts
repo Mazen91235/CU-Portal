@@ -53,6 +53,7 @@ export default function useGetUser() {
                             "role",
                             "user_subject_links.subject",
                             "avatar",
+                            "notes",
                         ],
                     }).unwrap();
                 if (!validPermissionsCached)

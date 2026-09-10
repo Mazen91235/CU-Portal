@@ -128,6 +128,12 @@ const navSectionsDefault: NavSection[] = [
         title: "Personal",
         links: [
             {
+                label: "Notes",
+                path: "/user/notes",
+                icon: "note",
+                badge: "New",
+            },
+            {
                 label: "CV Generator",
                 // path: "/user/cv-generator",
                 path: "#!",

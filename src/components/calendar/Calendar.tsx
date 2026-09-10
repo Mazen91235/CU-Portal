@@ -89,6 +89,7 @@ export const Calendar = ({
                         tasks: [],
                         exams: [],
                         announcements: [],
+                        notes: [],
                     };
                     const isSelected = selectedDate === dateStr;
 

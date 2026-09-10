@@ -60,6 +60,7 @@ import {
     LuChartNetwork,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
+import { FaRegNoteSticky } from "react-icons/fa6";
 
 const apiDomain = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -230,6 +231,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "badge-id-card": FaIdCard,
         "badge-view": LuEye,
         "badge-year": FaScroll,
+        note: FaRegNoteSticky,
     };
 
     // Fallback to FiFileText if the icon key isn't found

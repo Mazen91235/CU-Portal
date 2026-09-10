@@ -1,19 +1,28 @@
+import { useState } from "react";
 import { DayEvent } from "./DayEvent";
 import { EmptySection } from "./EmptySection";
 import type { CalendarDayEventDto } from "../../types/dtos/CalendarDtos";
 import styles from "./FloatingDay.module.css";
+import { NoteForm } from "../forms/NoteForm";
+import type { NoteFormData } from "../forms/NoteForm";
 
 export const FloatingDay = ({
     isOpen,
     onClose,
     dateStr,
     events,
+    onSaveNote,
 }: {
     isOpen: boolean;
     onClose: () => void;
     dateStr: string;
     events: CalendarDayEventDto[];
+    onSaveNote: (
+        data: NoteFormData
+    ) => void;
 }) => {
+    const [isNoteFormOpen, setIsNoteFormOpen] = useState(false);
+
     if (!isOpen) return null;
 
     const dateObj = new Date(dateStr);
@@ -43,13 +52,37 @@ export const FloatingDay = ({
 
                 <div className={styles["popup-content"]}>
                     {events.length === 0 ? (
-                        <EmptySection
-                            icon="calendar"
-                            title={`Nothing scheduled for ${formattedDate}`}
-                            description="You're all clear. Enjoy your day off! 🎉"
-                        />
+                        <div className={styles["popup-empty"]}>
+                            <EmptySection
+                                icon="calendar"
+                                title={`Nothing scheduled for ${formattedDate}`}
+                                description="You're all clear. Enjoy your day off! 🎉"
+                            />
+                            <button
+                                type="button"
+                                className={styles["add-note-btn"]}
+                                onClick={() => {
+                                    setIsNoteFormOpen(true);
+                                }}
+                            >
+                                <i className="fas fa-plus"></i> Add Note
+                            </button>
+                        </div>
                     ) : (
-                        events.map((event, index) => (
+                        <>
+                        <div className={styles["add-note-container"]}>
+                            <button
+                                type="button"
+                                className={styles["add-note-btn"]}
+                                onClick={() => {
+                                    setIsNoteFormOpen(true);
+                                }}
+                            >
+                                <i className="fas fa-plus"></i> Add Note
+                            </button>
+                        </div>
+
+                        {events.map((event, index) => (
                             <DayEvent
                                 key={`event-${index}`}
                                 event_type={event.event_type}
@@ -58,11 +91,25 @@ export const FloatingDay = ({
                                 due={event.due}
                                 location={event.location}
                                 id={event.id}
-                            />
-                        ))
+                                created_at={event.created_at}
+                                date={event.date}
+                                />
+                        ))}
+                        </>
                     )}
                 </div>
             </div>
+
+            <NoteForm
+                isOpen={isNoteFormOpen}
+                dateStr={formattedDate}
+                created_at={new Date().toISOString().split("T")[0]} // Pass the current date as created_at
+                onClose={() => setIsNoteFormOpen(false)}
+                onSave={(data) => {
+                    onSaveNote(data);
+                    setIsNoteFormOpen(false);
+                }}
+            />
         </div>
     );
 };

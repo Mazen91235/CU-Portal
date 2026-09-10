@@ -105,4 +105,5 @@ export type Icon =
     | "monitor"
     | "eye-review"
     | "users-total"
-    | "pending-clock-new";
+    | "pending-clock-new"
+    | "note";
