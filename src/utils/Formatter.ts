@@ -192,6 +192,23 @@ export const mergeDateAndTime = (
     return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
+
+export const toIsoFormat = (
+    dateValue?: string | Date | null,
+): string | undefined => {
+    if (!dateValue) return undefined;
+
+    const date =
+        dateValue instanceof Date
+            ? new Date(dateValue.getTime())
+            : /^\d{4}-\d{2}-\d{2}$/.test(dateValue)
+              ? new Date(`${dateValue}T00:00:00`)
+              : new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) return undefined;
+    return date.toISOString();
+};
+
 export const parseDateString = (dateStr: string): Date | null => {
     const parts = dateStr.split("-");
     if (parts.length !== 3) return null;

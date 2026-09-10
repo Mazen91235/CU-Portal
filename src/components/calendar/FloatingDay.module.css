@@ -128,3 +128,8 @@
         max-height: 400px;
     }
 }
+
+.sections { display: flex; flex-direction: column; gap: 1.25rem; }
+.section { display: flex; flex-direction: column; gap: 0.7rem; }
+.sectionTitle { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--dark-text); }
+.sectionCards { display: flex; flex-direction: column; gap: 0.75rem; }

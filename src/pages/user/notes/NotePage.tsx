@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useAppSelector } from "../../../services/redux/Hooks";
-import { NoteForm, type NoteFormData } from "../../../components/forms/NoteForm";
+import {
+    NoteForm,
+    type NoteFormData,
+} from "../../../components/notes/NoteForm";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
@@ -13,10 +16,7 @@ import type { Note } from "../../../types/entities/Note";
 import { formatDate, formatDateInputValue } from "../../../utils/Formatter";
 import styles from "./NotePage.module.css";
 
-const mapNote = (
-    note: Note,
-    index: number,
-): CalendarDayEventDto => ({
+const mapNote = (note: Note, index: number): CalendarDayEventDto => ({
     event_type: "note",
     id: note.id || index + 1,
     title: note.title || "Untitled note",
@@ -61,7 +61,7 @@ export const NotePage = () => {
         setIsNoteFormOpen(false);
     };
 
-    // to be implemented: delete note functionality using API 
+    // to be implemented: delete note functionality using API
     const handleDeleteNote = () => {
         setIsDeleteModalOpen(false);
         navigate("/user/notes");

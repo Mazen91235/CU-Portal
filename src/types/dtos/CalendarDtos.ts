@@ -1,3 +1,6 @@
+import type { NoteResponseDto } from "./NoteDtos";
+import type { EventResponseDto } from "./EventDtos";
+
 export type CalendarSearchDto = {
     date_from: string;
     date_to: string;
@@ -9,7 +12,8 @@ export type CalendarDayEventsDto = Record<
         tasks: CalendarDayEventDto[];
         exams: CalendarDayEventDto[];
         announcements: CalendarDayEventDto[];
-        notes?: CalendarDayEventDto[];
+        events?: EventResponseDto[];
+        notes?: NoteResponseDto[];
     }
 >;
 

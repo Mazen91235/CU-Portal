@@ -21,7 +21,10 @@ import {
     useLazyGetEventOrganizerQuery,
     useUpdateEventOrganizerMutation,
 } from "../../../services/apis/admin/EventOrganizerAPIs";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./EditEventOrganizer.module.css";
@@ -68,6 +71,7 @@ export const EditEventOrganizer = () => {
     const [updateEventOrganizer, { isLoading }] =
         useUpdateEventOrganizerMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
         [],
@@ -141,8 +145,10 @@ export const EditEventOrganizer = () => {
             let logoUrl = typeof logoValue === "string" ? logoValue : "";
             if (logoValue instanceof File) {
                 logoUrl = (await uploadFile(logoValue)) || "";
+                if (logoUrl) uploadedUrls.push(logoUrl);
             } else if (logoValue instanceof FileList && logoValue.length > 0) {
                 logoUrl = (await uploadFile(logoValue[0])) || "";
+                if (logoUrl) uploadedUrls.push(logoUrl);
             }
             if (!logoUrl) {
                 setError("logo", {
@@ -155,7 +161,10 @@ export const EditEventOrganizer = () => {
             const newUrls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
                 const url = await uploadFile(file);
-                if (url) newUrls.push(url);
+                if (url) {
+                    newUrls.push(url);
+                    uploadedUrls.push(url);
+                }
             }
             const retainedUrls = existingFiles
                 .map((file) => file.url)
@@ -180,6 +189,7 @@ export const EditEventOrganizer = () => {
                 state: { success: "Event organizer updated successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         } finally {
             setIsUploading(false);

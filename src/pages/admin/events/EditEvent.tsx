@@ -20,7 +20,10 @@ import type { LinkData } from "../../../types/entities/Task";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
 import {
     formatDateInputValue,
@@ -107,6 +110,7 @@ export const EditEvent = () => {
     const [getYears] = useLazyGetYearsQuery();
     const [getOrganizers] = useLazyGetEventOrganizersQuery();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
 
     const {
         register,
@@ -335,6 +339,7 @@ export const EditEvent = () => {
 
     const onSubmit = async (data: EventFormData) => {
         if (!eventId) return;
+        const uploadedUrls: string[] = [];
 
         const thumbnailFile = getThumbnailFile(data.thumbnail);
         if (!thumbnailFile && !existingThumbnailUrl) {
@@ -352,10 +357,12 @@ export const EditEvent = () => {
                 data.files && (data.files as FileList).length > 0
                     ? await uploadFiles(data.files as FileList)
                     : [];
+            uploadedFiles.forEach((url) => uploadedUrls.push(url));
 
             const newThumbnailUrl = thumbnailFile
                 ? await uploadFile(thumbnailFile)
                 : undefined;
+            if (newThumbnailUrl) uploadedUrls.push(newThumbnailUrl);
 
             const fileUrls = [
                 ...existingFiles
@@ -429,6 +436,7 @@ export const EditEvent = () => {
                 state: { success: "Event updated successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         } finally {
             setIsUploading(false);

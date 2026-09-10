@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDriveChunked,
+    useRemoveUploadedFiles,
+} from "../../hooks/useHandleProcesses";
 import { formatFileSize } from "../../utils/Formatter";
-import { useAppDispatch } from "../../services/redux/Hooks";
-import { setProcess } from "../../services/redux/reducers/ProcessReducer";
 import type { Process } from "../../types/Process";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./BulkUploadModal.module.css";
 
 type BulkUploadModalProps = {
@@ -18,8 +20,9 @@ export function BulkUploadModal({
     onMaterialCreate,
 }: BulkUploadModalProps) {
     const [files, setFiles] = useState<File[]>(initialFiles);
-    const dispatch = useAppDispatch();
     const uploadFileToDrive = useUploadFileToDriveChunked({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
+    const [isUploading, setIsUploading] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
 
     const handleRemoveFile = (index: number) => {
@@ -65,29 +68,27 @@ export function BulkUploadModal({
     };
 
     const handleSubmit = async () => {
-        if (files.length === 0) return;
+        if (files.length === 0 || isUploading) return;
 
+        setIsUploading(true);
         onClose();
-        // Upload files sequentially
-        for (const file of files) {
-            // Upload file to Google Drive
-            uploadFileToDrive(file, file.name).then((result) => {
-                if (!result) return;
-                if (!result.url) {
-                    dispatch(
-                        setProcess({
-                            ...result,
-                            status: "failed",
-                            reason: "Failed to upload file",
-                        }),
-                    );
-                    return;
+        try {
+            for (const file of files) {
+                const result = await uploadFileToDrive(file, file.name);
+                if (!result?.url) continue;
+                try {
+                    await onMaterialCreate(result);
+                } catch (error) {
+                    await removeUploadedFiles([result.url]);
+                    throw error;
                 }
-                // Create material with the uploaded file URL
-                onMaterialCreate(result);
-            });
+            }
+        } catch (error) {
+            handlePopupErrors(error);
+        } finally {
+            setIsUploading(false);
         }
-    };
+    }
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -154,14 +155,14 @@ export function BulkUploadModal({
                     <button
                         className={styles.cancelBtn}
                         onClick={onClose}
-                        disabled={false}
+                        disabled={isUploading}
                     >
                         Cancel
                     </button>
                     <button
                         className={styles.submitBtn}
                         onClick={handleSubmit}
-                        disabled={files.length === 0}
+                        disabled={files.length === 0 || isUploading}
                     >
                         <i className="fa-solid fa-upload me-2"></i>
                         Upload {files.length} file

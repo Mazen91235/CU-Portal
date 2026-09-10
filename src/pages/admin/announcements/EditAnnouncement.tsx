@@ -21,7 +21,10 @@ import { DateInput } from "../../../components/forms/DateInput";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import type { LinkData } from "../../../types/entities/Task";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
@@ -63,6 +66,7 @@ export const EditAnnouncement = () => {
     const [searchCourses] = useLazyGetCoursesQuery();
     const [updateAnnouncement, { isLoading }] = useUpdateAnnouncementMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
 
     const {
@@ -186,6 +190,7 @@ export const EditAnnouncement = () => {
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
+                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -226,7 +231,10 @@ export const EditAnnouncement = () => {
                 state: { success: "Announcement updated successfully" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
+        } finally {
+            setIsUploading(false);
         }
     };
 

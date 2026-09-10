@@ -58,7 +58,6 @@ import { EventPage as UserEventPage } from "./pages/user/events/EventPage";
 import { EventsOrganizersPage as UserEventsOrganizersPage } from "./pages/user/eventOrganizers/EventOrganizersPage";
 import { EventOrganizerPage as UserEventOrganizerPage } from "./pages/user/eventOrganizers/EventOrganizerPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
-import { NotePage as UserNotePage } from "./pages/user/notes/NotePage";
 import { NotesPage as UserNotesPage } from "./pages/user/notes/NotesPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
@@ -120,10 +119,7 @@ function App() {
                         <Route path="academic" element={<AcademicSettings />} />
                         <Route path="courses" element={<RegisteredCourses />} />
                     </Route>
-                    <Route path="notes">
-                        <Route index element={<UserNotesPage />} />
-                        <Route path=":noteId" element={<UserNotePage />} />
-                    </Route>
+                    <Route path="notes" element={<UserNotesPage />} />
                     <Route path="tasks">
                         <Route index element={<UserTasksPage />} />
                         <Route path=":taskId" element={<UserTaskPage />} />

@@ -14,7 +14,10 @@ import { LinksInputContainer } from "../../../components/forms/LinksInputContain
 import { Heading } from "../../../components/heading/Heading";
 import { Button } from "../../../components/forms/Button";
 import { useCreateEventOrganizerMutation } from "../../../services/apis/admin/EventOrganizerAPIs";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import { handleErrors } from "../../../utils/ErrorHandling";
 import styles from "./CreateEventOrganizer.module.css";
 
@@ -48,6 +51,7 @@ export const CreateEventOrganizer = () => {
     const navigate = useNavigate();
     const [createEventOrganizer, { isLoading }] = useCreateEventOrganizerMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const {
         register,
         handleSubmit,
@@ -59,6 +63,7 @@ export const CreateEventOrganizer = () => {
     const busy = isSubmitting || isLoading || isUploading;
 
     const onSubmit = async (data: FormData) => {
+        const uploadedUrls: string[] = [];
         try {
             setIsUploading(true);
             const logoFile = data.logo instanceof File
@@ -69,6 +74,7 @@ export const CreateEventOrganizer = () => {
                 return;
             }
             const logoUrl = await uploadFile(logoFile);
+            if (logoUrl) uploadedUrls.push(logoUrl);
             if (!logoUrl) {
                 setError("logo", { type: "upload", message: "Failed to upload logo" });
                 return;
@@ -77,7 +83,10 @@ export const CreateEventOrganizer = () => {
             const urls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
                 const url = await uploadFile(file);
-                if (url) urls.push(url);
+                if (url) {
+                    urls.push(url);
+                    uploadedUrls.push(url);
+                }
             }
 
             await createEventOrganizer({
@@ -92,6 +101,7 @@ export const CreateEventOrganizer = () => {
                 state: { success: "Event organizer created successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         } finally {
             setIsUploading(false);

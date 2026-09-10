@@ -17,7 +17,10 @@ import { FilesInputContainer } from "../../../components/forms/FilesInputContain
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import { useCreateEventMutation } from "../../../services/apis/admin/EventAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -95,6 +98,7 @@ export const CreateEvent = () => {
     const [getYears] = useLazyGetYearsQuery();
     const [getOrganizers] = useLazyGetEventOrganizersQuery();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
 
     const {
         register,
@@ -234,6 +238,7 @@ export const CreateEvent = () => {
     };
 
     const onSubmit = async (data: EventFormData) => {
+        const uploadedUrls: string[] = [];
         const thumbnailFile = getThumbnailFile(data.thumbnail);
         if (!thumbnailFile) {
             setError("thumbnail", {
@@ -250,8 +255,10 @@ export const CreateEvent = () => {
                 data.files && (data.files as FileList).length > 0
                     ? await uploadFiles(data.files as FileList)
                     : [];
+            uploadedFiles.forEach((url) => uploadedUrls.push(url));
 
             const thumbnailUrl = await uploadFile(thumbnailFile);
+            if (thumbnailUrl) uploadedUrls.push(thumbnailUrl);
 
             const scopedIds = user?.canAccessAll
                 ? data.is_restricted
@@ -315,6 +322,7 @@ export const CreateEvent = () => {
                 state: { success: "Event created successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         } finally {
             setIsUploading(false);

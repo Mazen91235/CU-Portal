@@ -1,0 +1,92 @@
+.card {
+    border-radius: var(--primary-border-radius);
+    border: 1px solid #dddfe3;
+    background: var(--white);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.content {
+    min-width: 0;
+}
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.55rem;
+}
+.titleRow h3 {
+    margin: 0;
+    color: var(--dark-text);
+    font-family: var(--primary-font-family);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+.badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 3px 10px;
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1;
+}
+.noteBadge {
+    background: var(--dark-grey);
+}
+.eventBadge {
+    background: var(--primary-blue);
+}
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.35rem;
+    color: var(--dark-grey);
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+.icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+}
+.preview {
+    margin: 0.55rem 0 0;
+    color: var(--dark-grey);
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+.viewButton {
+    flex: 0 0 auto;
+    text-decoration: none;
+    border: 0;
+    border-radius: var(--primary-border-radius);
+    background: var(--primary-purple);
+    color: var(--white);
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.viewButton:hover {
+    background: #4b0f51;
+}
+
+@media (max-width: 768px) {
+    .card {
+        align-items: flex-start;
+        padding: 0.9rem;
+    }
+    .titleRow {
+        flex-wrap: wrap;
+    }
+    .viewButton {
+        margin-top: 0.2rem;
+    }
+}

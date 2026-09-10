@@ -22,30 +22,22 @@ export const Day = ({
         announcement: false,
         exam: false,
         note: false,
+        event: false,
     };
 
     let countExtra = 0;
 
-    events.tasks.forEach(() => {
-        if (eventTypes.assignment) countExtra++;
-        else eventTypes.assignment = true;
-    });
+    const markType = (type: keyof typeof eventTypes) => {
+        if (eventTypes[type]) countExtra++;
+        else eventTypes[type] = true;
+    };
 
-    events.exams.forEach(() => {
-        if (eventTypes.exam) countExtra++;
-        else eventTypes.exam = true;
-    });
-
-    events.announcements.forEach(() => {
-        if (eventTypes.announcement) {
-            countExtra++;
-        } else {
-            eventTypes.announcement = true;
-        }
-    });
-
+    events.tasks.forEach(() => markType("assignment"));
+    events.exams.forEach(() => markType("exam"));
+    events.announcements.forEach(() => markType("announcement"));
+    (events.events || []).forEach(() => markType("event"));
     (events.notes || []).forEach(() => {
-        if (!eventTypes.note) eventTypes.note = true;
+        eventTypes.note = true;
     });
 
     return (
@@ -75,6 +67,11 @@ export const Day = ({
                 {eventTypes.exam && (
                     <span
                         className={`${styles["event-dot"]} ${styles["dot-exam"]}`}
+                    ></span>
+                )}
+                {eventTypes.event && (
+                    <span
+                        className={`${styles["event-dot"]} ${styles["dot-event"]}`}
                     ></span>
                 )}
                 {countExtra > 0 && (
