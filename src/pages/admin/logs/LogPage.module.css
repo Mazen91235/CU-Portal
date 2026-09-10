@@ -1,0 +1,217 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.mainContent,
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.user-card {
+    background: var(--white);
+    border-radius: var(--primary-border-radius);
+    padding: 24px;
+    box-shadow: var(--dark-box-shadow);
+    width: 100%;
+}
+
+.user-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.user-role {
+    font-size: 12px;
+    color: var(--primary-purple);
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 4px 12px;
+    border: 1px solid #8c0dab33;
+    text-transform: capitalize;
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 16px auto;
+    display: block;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    margin: 12px auto;
+    display: block;
+    color: var(--dark-text);
+}
+
+.user-academic-details {
+    width: 100%;
+    margin: 16px 0;
+    border: 1px solid #8c0dab33;
+    border-radius: var(--primary-border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+}
+
+.user-academic-details div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-academic-details .separator {
+    min-height: 30px;
+    width: 1px;
+    background: #8c0dab33;
+}
+
+.user-academic-details div span:nth-child(1) {
+    font-size: var(--secondary-font-size);
+    color: var(--medium-grey);
+}
+
+.user-academic-details div span:nth-child(2) {
+    font-size: var(--secondary-font-size);
+    background: linear-gradient(0deg, #520e58, #7b1684);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+}
+
+.user-details {
+    width: 100%;
+    margin: 16px 0 0 0;
+}
+
+.user-details h5 {
+    width: 100%;
+    border: 1px solid #8c0dab33;
+    border-radius: var(--primary-border-radius);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 12px;
+    font-size: var(--secondary-font-size);
+    margin: 8px 0;
+}
+
+.user-details h5 img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.user-details h5 span {
+    color: var(--medium-grey);
+}
+
+.view-profile-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--primary-border-radius);
+    background: var(--primary-purple);
+    color: var(--white);
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+}
+
+.message {
+    margin: 0;
+    color: var(--text-primary);
+    line-height: 1.7;
+}
+
+.levelBadge {
+    display: inline-block;
+    padding: 0.3rem 0.65rem;
+    border-radius: 7px;
+    font-size: 0.8rem;
+}
+
+.levelInfo {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.levelWarning {
+    color: #a16207;
+    background: rgba(234, 179, 8, 0.16);
+}
+
+.levelError {
+    color: #b91c1c;
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.jsonContainer {
+    border-radius: 10px;
+    overflow: auto;
+    border: 1px solid rgba(123, 21, 132, 0.16);
+    background: #211d2b;
+    text-align: left !important;
+}
+
+.jsonContainer * {
+    text-align: left !important;
+}
+
+.jsonContainer div {
+    display: block !important;
+}
+
+.jsonContainer span {
+    display: inline-block !important;
+    line-height: 1.5;
+}
+
+@media (max-width: 992px) {
+    .statsRow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contentGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .statsRow {
+        grid-template-columns: 1fr;
+    }
+}
