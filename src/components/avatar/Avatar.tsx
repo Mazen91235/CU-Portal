@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { GetAvatarLink } from "../../utils/LinkHandler";
-import {GetDrivePreviewUrlFromUrl} from "../../utils/DriveManager";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
 import styles from "./Avatar.module.css";
 
 type AvatarProps = {
@@ -12,22 +12,30 @@ type AvatarProps = {
 };
 
 export const Avatar = ({ user, url, size, className }: AvatarProps) => {
-    const links = useMemo(() => {
-        const links = [user?.avatar?.url, user?.google_avatar, url].filter(
-            Boolean,
-        ) as string[];
-        links.push("");
-        return links;
-    }, [user, url]);
-    const handleError = useCallback(() => {
-        if (links.length === 0) return;
-        const link = links.shift();
-        setAvatarSrc(GetAvatarLink(link || ""));
-    }, [links]);
-    const [avatarSrc, setAvatarSrc] = useState(GetAvatarLink(""));
+    const candidates = useMemo(
+        () =>
+            [user?.avatar?.url, user?.google_avatar, url].filter(
+                (value): value is string => Boolean(value?.trim()),
+            ),
+        [user?.avatar?.url, user?.google_avatar, url],
+    );
+
+    const candidateKey = candidates.join("\u0000");
+    const [fallbackIndex, setFallbackIndex] = useState(0);
+
     useEffect(() => {
-        handleError();
-    }, [handleError]);
+        setFallbackIndex(0);
+    }, [candidateKey]);
+
+    const currentSource = candidates[fallbackIndex] || "";
+    const avatarSrc = GetAvatarLink(currentSource);
+    const previewSrc = GetDrivePreviewUrlFromUrl(avatarSrc) || avatarSrc;
+
+    const handleError = () => {
+        setFallbackIndex((current) =>
+            current + 1 < candidates.length ? current + 1 : current,
+        );
+    };
 
     const sizeClass =
         size === "small"
@@ -38,7 +46,7 @@ export const Avatar = ({ user, url, size, className }: AvatarProps) => {
 
     return (
         <img
-            src={GetDrivePreviewUrlFromUrl(avatarSrc) || avatarSrc}
+            src={previewSrc}
             alt={user?.name || "User"}
             className={`${styles.avatar} ${sizeClass} ${className || ""}`}
             onError={handleError}

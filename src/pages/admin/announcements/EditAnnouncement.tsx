@@ -185,6 +185,8 @@ export const EditAnnouncement = () => {
     const onSubmit = async (data: AnnouncementFormData) => {
         if (!announcementId) return;
 
+        const uploadedUrls: string[] = [];
+
         try {
             let urls = existingFiles.map((file) => file.url).join(", ");
             if (data.files && (data.files as FileList).length > 0) {

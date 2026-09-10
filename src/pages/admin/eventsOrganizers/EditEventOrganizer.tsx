@@ -139,6 +139,8 @@ export const EditEventOrganizer = () => {
 
     const onSubmit = async (data: FormData) => {
         if (!eventOrganizerId) return;
+        const uploadedUrls: string[] = [];
+
         try {
             setIsUploading(true);
             const logoValue = data.logo;
