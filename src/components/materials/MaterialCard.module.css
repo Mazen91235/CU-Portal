@@ -23,7 +23,9 @@
 }
 
 .folderCard.selected,
-.fileCard.selected {
+.fileCard.selected,
+.folderCard.selectionMode,
+.fileCard.selectionMode {
     border: 1px solid var(--primary-purple);
 }
 

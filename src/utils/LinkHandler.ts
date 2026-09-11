@@ -58,6 +58,13 @@ import {
     LuLayoutDashboard,
     LuMessagesSquare,
     LuChartNetwork,
+    LuCircleCheck,
+    LuShare2,
+    LuCopy,
+    LuMove,
+    LuSquarePen,
+    LuTrash,
+    LuX,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
 import { FaRegNoteSticky } from "react-icons/fa6";
@@ -232,6 +239,14 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "badge-view": LuEye,
         "badge-year": FaScroll,
         note: FaRegNoteSticky,
+        select: LuCircleCheck,
+        "select-all": LuCircleCheck,
+        share: LuShare2,
+        copy: LuCopy,
+        move: LuMove,
+        edit: LuSquarePen,
+        delete: LuTrash,
+        close: LuX,
     };
 
     // Fallback to FiFileText if the icon key isn't found

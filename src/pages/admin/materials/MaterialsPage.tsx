@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import type { MaterialType } from "../../../types/entities/Material";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
@@ -22,7 +22,7 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
-import { downloadFile } from "../../../utils/FileDownloader";
+import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
@@ -39,6 +39,7 @@ import { Preview } from "../../../components/preview/Preview";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { DropZone } from "../../../components/materials/DropZone";
 import { BulkUploadModal } from "../../../components/materials/BulkUploadModal";
+import { MaterialSelectionMenu } from "../../../components/materials/MaterialSelectionMenu";
 
 import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
 import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
@@ -96,12 +97,6 @@ export function MaterialsPage() {
         id: string;
         name: string;
     } | null>(null);
-    const [fileToDownload, setFileToDownload] = useState<{
-        url: string;
-        name: string;
-    } | null>(null);
-    const [shouldDownload, setShouldDownload] = useState(false);
-    const downloadLink = useRef<HTMLAnchorElement>(null);
     const [confirmModal, setConfirmModal] = useState<{
         isOpen: boolean;
         action: "delete" | "bulkDelete" | "move" | null;
@@ -624,15 +619,27 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
-    const handleDownload = async (fileId: string, fileName: string) => {
-        try {
-            const url = await downloadFile(fileId);
-            setFileToDownload({ url, name: fileName });
-            setShouldDownload(true);
-        } catch (error) {
-            handlePopupErrors(error);
+    const handleDownloadMaterial = useCallback((materialId: number) => {
+        const material = materials.find((item) => item.id === materialId);
+        if (!material) return;
+        if (material.material_type?.toLowerCase() === "file") {
+            const fileId = material.attachment?.details?.file_data?.id;
+            if (fileId) {
+                downloadFile(fileId);
+                return;
+            }
         }
-    };
+        downloadMaterials([materialId]);
+    }, [materials]);
+
+    const handleDownloadSelected = useCallback(() => {
+        if (selectedMaterials.length === 0) return;
+        if (selectedMaterials.length === 1) {
+            handleDownloadMaterial(selectedMaterials[0]);
+            return;
+        }
+        downloadMaterials(selectedMaterials);
+    }, [selectedMaterials, handleDownloadMaterial]);
 
     const handleOpenLink = (url: string) => {
         window.open(url, "_blank");
@@ -806,12 +813,6 @@ export function MaterialsPage() {
         [subjects],
     );
 
-    useEffect(() => {
-        if (shouldDownload && downloadLink.current) {
-            downloadLink.current.click();
-            setShouldDownload(false);
-        }
-    }, [shouldDownload]);
 
     // Handle global drag events for file upload
     useEffect(() => {
@@ -1084,52 +1085,6 @@ export function MaterialsPage() {
 
                 {showContentPage && (
                     <>
-                        {isSelectionMode && selectedMaterials.length > 0 && (
-                            <div className={styles.selectionBtns}>
-                                <span className={styles.selectedCount}>
-                                    {selectedMaterials.length} item
-                                    {selectedMaterials.length > 1
-                                        ? "s"
-                                        : ""}{" "}
-                                    selected
-                                </span>
-                                <button
-                                    className={`${styles.selectionBtn} ${styles.copyBtn}`}
-                                    onClick={handleSelectAll}
-                                >
-                                    <i className="fa-regular fa-circle-check me-2"></i>
-                                    Select All
-                                </button>
-                                <button
-                                    className={`${styles.selectionBtn} ${styles.copyBtn}`}
-                                    onClick={() => handleCopyMaterials()}
-                                >
-                                    <i className="fa fa-link me-2"></i>
-                                    Copy to
-                                </button>
-                                <button
-                                    className={`${styles.selectionBtn} ${styles.moveBtn}`}
-                                    onClick={() => handleMoveMaterials()}
-                                >
-                                    <i className="fa fa-folder me-2"></i>
-                                    Move to
-                                </button>
-                                <button
-                                    className={`${styles.selectionBtn} ${styles.deleteBtn}`}
-                                    onClick={() => handleDeleteMaterials()}
-                                >
-                                    <i className="fa fa-trash me-2"></i>
-                                    Delete
-                                </button>
-                                <button
-                                    className={`${styles.selectionBtn} ${styles.cancelBtn}`}
-                                    onClick={handleCancelSelection}
-                                >
-                                    <i className="fa fa-times me-2"></i>
-                                    Cancel
-                                </button>
-                            </div>
-                        )}
 
                         <Navigator
                             path={currentPath}
@@ -1150,6 +1105,7 @@ export function MaterialsPage() {
                                             isSelected={selectedMaterials.includes(
                                                 folderId,
                                             )}
+                                            isSelectionMode={isSelectionMode}
                                             onClick={() =>
                                                 handleCardClick(folderId)
                                             }
@@ -1181,7 +1137,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownload}
+                                            onDownload={handleDownloadMaterial}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1201,6 +1157,7 @@ export function MaterialsPage() {
                                             isSelected={selectedMaterials.includes(
                                                 fileId,
                                             )}
+                                            isSelectionMode={isSelectionMode}
                                             onClick={() =>
                                                 handleCardClick(fileId)
                                             }
@@ -1229,7 +1186,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownload}
+                                            onDownload={handleDownloadMaterial}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1274,6 +1231,22 @@ export function MaterialsPage() {
                             what you need.
                         </div>
                     </div>
+                )}
+
+                {showContentPage && (
+                    <MaterialSelectionMenu
+                        isSelectionMode={isSelectionMode}
+                        selectedCount={selectedMaterials.length}
+                        totalCount={materials.length}
+                        isAdmin
+                        onEnter={() => setIsSelectionMode(true)}
+                        onCancel={handleCancelSelection}
+                        onSelectAll={handleSelectAll}
+                        onDownload={handleDownloadSelected}
+                        onCopy={() => handleCopyMaterials()}
+                        onMove={() => handleMoveMaterials()}
+                        onDelete={() => handleDeleteMaterials()}
+                    />
                 )}
 
                 {showFetchFromDriveForm && (
@@ -1343,9 +1316,7 @@ export function MaterialsPage() {
                         file_id={previewFile.id}
                         fileName={previewFile.name}
                         onClose={handleClosePreview}
-                        onDownload={() =>
-                            handleDownload(previewFile.id, previewFile.name)
-                        }
+                        onDownload={() => downloadFile(previewFile.id)}
                     />
                 )}
 
@@ -1370,13 +1341,6 @@ export function MaterialsPage() {
                         </div>
                     </div>
                 )}
-
-                <a
-                    href={fileToDownload?.url}
-                    className="d-none"
-                    download={fileToDownload?.name || "download"}
-                    ref={downloadLink}
-                />
 
                 <ConfirmModal
                     isOpen={confirmModal.isOpen}

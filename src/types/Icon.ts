@@ -106,4 +106,13 @@ export type Icon =
     | "eye-review"
     | "users-total"
     | "pending-clock-new"
-    | "note";
+    | "note"
+    | "select"
+    | "select-all"
+    | "share"
+    | "download"
+    | "copy"
+    | "move"
+    | "edit"
+    | "delete"
+    | "close";
