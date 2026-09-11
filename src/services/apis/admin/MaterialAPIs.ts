@@ -10,13 +10,17 @@ import type {
     MaterialsCopyOrMoveDto,
 } from "../../../types/dtos/MaterialDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
-import { maxRetries, retryCondition } from "../../../utils/APIHandling";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
 export const AdminMaterialAPI = createApi({
     reducerPath: "adminMaterialAPI",
     baseQuery: retry(
         fetchBaseQuery({
             baseUrl: GetAdminApiLink("/materials"),
-            timeout: 60000,
+            timeout,
             credentials: "include",
         }),
         {
