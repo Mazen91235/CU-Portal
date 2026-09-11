@@ -8,13 +8,14 @@ import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import type { Icon } from "../../../types/Icon";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { useLazyGetEventOrganizersQuery } from "../../../services/apis/admin/EventOrganizerAPIs";
-import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -397,7 +398,7 @@ export const EventsPage = () => {
                                 ...(event.faculty
                                     ? [
                                           {
-                                              icon: "building",
+                                              icon: "building" as Icon,
                                               label: "Faculty",
                                               value:
                                                   event.faculty.name || "N/A",
