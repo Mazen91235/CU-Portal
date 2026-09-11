@@ -151,7 +151,7 @@ export const ExamsPage = () => {
             }
             const result = await getExams({
                 data: params,
-                includes: ["faculty", "department", "year", "subject"],
+                includes: ["subject"],
                 page,
             }).unwrap();
             setExams((prev) => {
@@ -377,12 +377,12 @@ export const ExamsPage = () => {
                         <Card
                             key={exam.id}
                             title={exam.name || "Untitled Exam"}
-                            badge={`${exam.department?.code} ${exam.year?.year}`}
+                            badge={`${exam.subject?.department?.code} ${exam.subject?.year?.year}`}
                             items={[
                                 {
                                     icon: "building",
                                     label: "Faculty",
-                                    value: exam.faculty?.name || "N/A",
+                                    value: exam.subject?.faculty?.name || "N/A",
                                 },
                                 {
                                     icon: "subject",
