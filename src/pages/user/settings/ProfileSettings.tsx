@@ -9,7 +9,10 @@ import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { FileInputContainer } from "../../../components/forms/FileInputContainer";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import { useUpdateUserDataMutation } from "../../../services/apis/user/UserAPIs";
 import { usePageLoading } from "../../../hooks/usePageLoading";
 
@@ -65,12 +68,17 @@ export const ProfileSettings = () => {
             handlePopupErrors(error);
         },
     });
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [updateUser] = useUpdateUserDataMutation();
     const onSubmit = async (data: ProfileFormData) => {
+        const uploadedUrls: string[] = [];
         try {
             let url = user?.avatar?.url || user?.google_avatar || "";
             if (data.avatar && data.avatar.length > 0) {
                 url = (await uploadFileToDrive(data.avatar[0])) || url;
+                if (url && url !== (user?.avatar?.url || user?.google_avatar || "")) {
+                    uploadedUrls.push(url);
+                }
             }
             await updateUser({
                 name: data.name,
@@ -78,6 +86,7 @@ export const ProfileSettings = () => {
             }).unwrap();
             showToast("success", "Success", "Profile updated successfully.");
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         }
     };

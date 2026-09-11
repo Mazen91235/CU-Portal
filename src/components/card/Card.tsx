@@ -1,24 +1,26 @@
 import { useRef, useState } from "react";
-import styles from "./Card.module.css";
 import { Button } from "../forms/Button";
 import { formatString } from "../../utils/Formatter";
 import type { Icon } from "../../types/Icon";
 import IconComponent from "../IconComponent";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+import styles from "./Card.module.css";
 
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon: Icon;
+    icon: Icon | string;
     label?: string;
     value?: string;
     color?: CardItemColor;
 };
 
 type CardProps = {
-    title?: string | null;
+    title?: string;
     badge?: string;
     secondaryBadge?: string;
     items?: CardItem[];
+    img?: string;
     button?: string;
     buttonAction?: () => void;
     hasOptions?: boolean;
@@ -30,6 +32,8 @@ type CardProps = {
     onDelete?: () => void;
     onView?: () => void;
     onShare?: () => void;
+    profile?: string;
+    profileLogo?: string;
 };
 
 const getColorClass = (color?: CardItemColor, index?: number): string => {
@@ -46,6 +50,7 @@ export const Card = ({
     badge,
     secondaryBadge,
     items = [],
+    img,
     button,
     buttonAction,
     hasOptions = false,
@@ -57,6 +62,8 @@ export const Card = ({
     onDelete,
     onView,
     onShare,
+    profile,
+    profileLogo,
 }: CardProps) => {
     const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
@@ -82,8 +89,20 @@ export const Card = ({
         <article
             className={`${styles.card} ${showOptionsMenu ? styles.cardWithMenu : ""}`}
         >
+            {img && (
+                <div
+                    className={styles.imageContainer}
+                    style={{
+                        backgroundImage: `url(${GetDrivePreviewUrlFromUrl(img) || img})`,
+                    }}
+                ></div>
+            )}
+
             {badge && (
-                <div className={styles.badgeContainer}>
+                <div
+                    className={styles.badgeContainer}
+                    style={img ? { position: "absolute", margin: "1rem" } : {}}
+                >
                     <span className={styles.badge}>{badge}</span>
                     {secondaryBadge && (
                         <span className={styles.secondaryBadge}>
@@ -93,12 +112,20 @@ export const Card = ({
                 </div>
             )}
 
-            <div className={styles.titleRow}>
-                <h3 className={styles.title}>{formatString(title, 30)}</h3>
+            {img && <h3 className={styles.title}>{formatString(title, 30)}</h3>}
+
+            <div
+                className={styles.titleRow}
+                style={img ? { position: "absolute", margin: "1rem" } : {}}
+            >
+                {!img && (
+                    <h3 className={styles.title}>{formatString(title, 30)}</h3>
+                )}
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>
                         <button
                             className={styles.optionsButton}
+                            style={img ? { opacity: 1 } : {}}
                             onClick={() => {
                                 if (!showOptionsMenu)
                                     document.addEventListener(
@@ -120,9 +147,24 @@ export const Card = ({
                                 viewBox="0 0 20 20"
                                 fill="none"
                             >
-                                <circle cx="10" cy="4" r="1.5" fill="#666" />
-                                <circle cx="10" cy="10" r="1.5" fill="#666" />
-                                <circle cx="10" cy="16" r="1.5" fill="#666" />
+                                <circle
+                                    cx="10"
+                                    cy="4"
+                                    r="1.5"
+                                    fill={img ? "white" : "#666"}
+                                />
+                                <circle
+                                    cx="10"
+                                    cy="10"
+                                    r="1.5"
+                                    fill={img ? "white" : "#666"}
+                                />
+                                <circle
+                                    cx="10"
+                                    cy="16"
+                                    r="1.5"
+                                    fill={img ? "white" : "#666"}
+                                />
                             </svg>
                         </button>
                         {showOptionsMenu && (
@@ -173,6 +215,28 @@ export const Card = ({
                 )}
             </div>
 
+            {profile && (
+                <div className={styles.profileContainer}>
+                    {profileLogo ? (
+                        <div>
+                            <img
+                                className={styles.profileIcon}
+                                src={
+                                    GetDrivePreviewUrlFromUrl(profileLogo) ||
+                                    profileLogo
+                                }
+                                alt="Profile logo"
+                            />
+                        </div>
+                    ) : (
+                        <div className={styles.profileIcon}>
+                            {profile.slice(0, 1).toUpperCase()}
+                        </div>
+                    )}
+                    <span className={styles.profileText}>{profile}</span>
+                </div>
+            )}
+
             {items.length > 0 && (
                 <div className={styles.itemsContainer}>
                     {items.slice(0, 4).map((item, index) => (
@@ -181,7 +245,14 @@ export const Card = ({
                             className={`${styles.item} ${getColorClass(item.color, index)}`}
                         >
                             <span className={styles.itemLabel}>
-                                <IconComponent icon={item.icon} className={styles.itemIcon} />
+                                <IconComponent
+                                    icon={
+                                        typeof item.icon === "string"
+                                            ? "time"
+                                            : item.icon
+                                    }
+                                    className={styles.itemIcon}
+                                />
                                 {item.label}
                             </span>
                             <span className={styles.itemValue}>

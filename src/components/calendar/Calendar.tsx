@@ -89,6 +89,8 @@ export const Calendar = ({
                         tasks: [],
                         exams: [],
                         announcements: [],
+                        events: [],
+                        notes: [],
                     };
                     const isSelected = selectedDate === dateStr;
 
@@ -176,6 +178,12 @@ export const Calendar = ({
                         className={`${styles["legend-dot"]} ${styles["dot-announcement"]}`}
                     ></span>{" "}
                     Announcements
+                </span>
+                <span>
+                    <span
+                        className={`${styles["legend-dot"]} ${styles["dot-event"]}`}
+                    ></span>{" "}
+                    Events
                 </span>
             </div>
         </div>

@@ -18,7 +18,10 @@ import { LinksInputContainer } from "../../../components/forms/LinksInputContain
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { mergeDateAndTime } from "../../../utils/Formatter";
@@ -47,17 +50,20 @@ export const CreateTask = () => {
     const [searchCourses] = useLazyGetCoursesQuery();
     const [createTask, { isLoading }] = useCreateTaskMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<TaskFormData>({
         resolver: zodResolver(taskSchema),
     });
+
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -96,11 +102,14 @@ export const CreateTask = () => {
     };
 
     const onSubmit = async (data: TaskFormData) => {
+        const uploadedUrls: string[] = [];
         try {
             let urls = "";
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
-                urls = await uploadFiles(data.files as FileList);
+                const uploaded = await uploadFiles(data.files as FileList);
+                urls = uploaded;
+                uploaded.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -133,7 +142,10 @@ export const CreateTask = () => {
                 state: { success: "Task created successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -158,6 +170,7 @@ export const CreateTask = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formGroup}>

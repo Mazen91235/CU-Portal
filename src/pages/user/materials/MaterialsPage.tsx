@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import {
@@ -8,7 +8,7 @@ import {
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
-import { downloadFile } from "../../../utils/FileDownloader";
+import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -17,6 +17,7 @@ import { Search } from "../../../components/forms/Search";
 import { EmptySection } from "../../../components/materials/EmptySection";
 import { MaterialCard } from "../../../components/materials/MaterialCard";
 import { Navigator } from "../../../components/materials/Navigator";
+import { MaterialSelectionMenu } from "../../../components/materials/MaterialSelectionMenu";
 import { Preview } from "../../../components/preview/Preview";
 
 import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
@@ -40,12 +41,8 @@ export function MaterialsPage() {
         id: string;
         name: string;
     } | null>(null);
-    const [fileToDownload, setFileToDownload] = useState<{
-        url: string;
-        name: string;
-    } | null>(null);
-    const [shouldDownload, setShouldDownload] = useState(false);
-    const downloadLink = useRef<HTMLAnchorElement>(null);
+    const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
+    const [isSelectionMode, setIsSelectionMode] = useState(false);
     const subjectFilter = routeSubjectId ?? "";
     const currentParentId = routeParentId ? Number(routeParentId) : null;
 
@@ -120,6 +117,8 @@ export function MaterialsPage() {
     const handleNavigate = useCallback(
         (material: MaterialResponseDto | null) => {
             navigate(buildMaterialsPath(subjectFilter, material?.id ?? null));
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
         },
         [buildMaterialsPath, navigate, subjectFilter],
     );
@@ -133,6 +132,9 @@ export function MaterialsPage() {
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+
         if (!subjectFilter) {
             setCurrentPath([]);
             setMaterials([]);
@@ -142,12 +144,6 @@ export function MaterialsPage() {
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
-    const handleCardClick = (material: MaterialResponseDto) => {
-        if (material.material_type === "folder") {
-            handleNavigate(material);
-        }
-    };
-
     const handlePreview = useCallback((fileId: string, fileName: string) => {
         setPreviewFile({ id: fileId, name: fileName });
     }, []);
@@ -156,15 +152,51 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
-    const handleDownload = async (fileId: string, fileName: string) => {
-        try {
-            const url = await downloadFile(fileId);
-            setFileToDownload({ url, name: fileName });
-            setShouldDownload(true);
-        } catch (error) {
-            handlePopupErrors(error);
+    const handleDownloadMaterial = useCallback((materialId: number) => {
+        const material = materials.find((item) => item.id === materialId);
+        if (!material) return;
+        if (material.material_type?.toLowerCase() === "file") {
+            const fileId = material.attachment?.details?.file_data?.id;
+            if (fileId) {
+                downloadFile(fileId);
+                return;
+            }
         }
-    };
+        downloadMaterials([materialId]);
+    }, [materials]);
+
+    const handleDownloadSelected = useCallback(() => {
+        if (selectedMaterials.length === 0) return;
+        if (selectedMaterials.length === 1) {
+            handleDownloadMaterial(selectedMaterials[0]);
+            return;
+        }
+        downloadMaterials(selectedMaterials);
+    }, [selectedMaterials, handleDownloadMaterial]);
+
+    const handleCardClick = useCallback((material: MaterialResponseDto) => {
+        if (!material.id) return;
+        if (isSelectionMode) {
+            setSelectedMaterials((prev) => prev.includes(material.id!) ? prev.filter((id) => id !== material.id) : [...prev, material.id!]);
+        } else {
+            setIsSelectionMode(true);
+            setSelectedMaterials([material.id]);
+        }
+    }, [isSelectionMode]);
+
+    const handleCardDoubleClick = useCallback((material: MaterialResponseDto) => {
+        if (material.material_type === "folder") handleNavigate(material);
+    }, [handleNavigate]);
+
+    const handleSelectAll = useCallback(() => {
+        const ids = materials.map((item) => item.id).filter((id): id is number => id !== undefined);
+        setSelectedMaterials((prev) => prev.length === ids.length ? [] : ids);
+    }, [materials]);
+
+    const handleCancelSelection = useCallback(() => {
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+    }, []);
 
     const handleOpenLink = (url: string) => {
         window.open(url, "_blank");
@@ -232,12 +264,6 @@ export function MaterialsPage() {
         [subjects],
     );
 
-    useEffect(() => {
-        if (shouldDownload && downloadLink.current) {
-            downloadLink.current.click();
-            setShouldDownload(false);
-        }
-    }, [shouldDownload]);
 
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
@@ -292,13 +318,10 @@ export function MaterialsPage() {
                                             key={folderId}
                                             material={folder}
                                             showCount={true}
-                                            isSelected={false}
-                                            onClick={() =>
-                                                handleCardClick(folder)
-                                            }
-                                            onDoubleClick={() => {
-                                                handleCardClick(folder);
-                                            }}
+                                            isSelected={selectedMaterials.includes(folderId)}
+                                            isSelectionMode={isSelectionMode}
+                                            onClick={() => handleCardClick(folder)}
+                                            onDoubleClick={() => handleCardDoubleClick(folder)}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
@@ -311,7 +334,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownload}
+                                            onDownload={handleDownloadMaterial}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
@@ -326,13 +349,10 @@ export function MaterialsPage() {
                                             key={fileId}
                                             material={file}
                                             showCount={false}
-                                            isSelected={false}
-                                            onClick={() =>
-                                                handleCardClick(file)
-                                            }
-                                            onDoubleClick={() => {
-                                                handleCardClick(file);
-                                            }}
+                                            isSelected={selectedMaterials.includes(fileId)}
+                                            isSelectionMode={isSelectionMode}
+                                            onClick={() => handleCardClick(file)}
+                                            onDoubleClick={() => handleCardDoubleClick(file)}
                                             onDragStart={() => {}}
                                             onEdit={() => {}}
                                             onDelete={() => {}}
@@ -345,7 +365,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownload}
+                                            onDownload={handleDownloadMaterial}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
@@ -388,23 +408,26 @@ export function MaterialsPage() {
                     </div>
                 )}
 
+                {showContentPage && (
+                    <MaterialSelectionMenu
+                        isSelectionMode={isSelectionMode}
+                        selectedCount={selectedMaterials.length}
+                        totalCount={materials.length}
+                        onEnter={() => setIsSelectionMode(true)}
+                        onCancel={handleCancelSelection}
+                        onSelectAll={handleSelectAll}
+                        onDownload={handleDownloadSelected}
+                    />
+                )}
+
                 {previewFile && (
                     <Preview
                         file_id={previewFile.id}
                         fileName={previewFile.name}
                         onClose={handleClosePreview}
-                        onDownload={() =>
-                            handleDownload(previewFile.id, previewFile.name)
-                        }
+                        onDownload={() => downloadFile(previewFile.id)}
                     />
                 )}
-
-                <a
-                    href={fileToDownload?.url}
-                    className="d-none"
-                    download={fileToDownload?.name || "download"}
-                    ref={downloadLink}
-                />
             </div>
         </Layout>
     );

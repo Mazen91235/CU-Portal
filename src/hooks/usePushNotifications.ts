@@ -9,6 +9,13 @@ import { useMarkNotificationAsSeenMutation } from "../services/apis/user/Notific
 import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
 
+type ForegroundNotification = {
+    title: string;
+    content: string;
+    url: string;
+    notificationId: number;
+};
+
 export function usePushNotifications() {
     const [registerDevice] = useRegisterDeviceMutation();
     const [unregisterDevice] = useUnregisterDeviceMutation();
@@ -22,6 +29,36 @@ export function usePushNotifications() {
     );
     const [isRequestingPermission, setIsRequestingPermission] = useState(false);
     const [isSyncingToken, setIsSyncingToken] = useState(false);
+    const [foregroundNotification, setForegroundNotification] =
+        useState<ForegroundNotification | null>(null);
+
+    const getSavedTokenDetails = () => {
+        try {
+            const savedTokenDetails = JSON.parse(
+                localStorage.getItem("fcm_token") || "{}",
+            );
+            return {
+                token: savedTokenDetails.token,
+                timestamp: savedTokenDetails.timestamp,
+            };
+        } catch {
+            return {
+                token: null,
+                timestamp: null,
+            };
+        }
+    };
+
+    const setSavedTokenDetails = (token: string) => {
+        if (!token) localStorage.removeItem("fcm_token");
+        localStorage.setItem(
+            "fcm_token",
+            JSON.stringify({
+                token: token,
+                timestamp: Date.now(),
+            }),
+        );
+    };
 
     const syncToken = useCallback(
         async (currentPermission = permission) => {
@@ -30,20 +67,26 @@ export function usePushNotifications() {
             setIsSyncingToken(true);
             try {
                 if (currentPermission === "granted") {
-                    const savedToken = localStorage.getItem("fcm_token");
-                    if (savedToken) return;
+                    const savedTokenDetails = getSavedTokenDetails();
+                    if (
+                        savedTokenDetails.token &&
+                        savedTokenDetails.timestamp &&
+                        Date.now() - savedTokenDetails.timestamp <
+                            1 * 60 * 60 * 1000
+                    )
+                        return; // 1 hour valid
                     const token = await requestFcmToken();
                     if (token) {
                         await registerDevice({ device_token: token }).unwrap();
-                        localStorage.setItem("fcm_token", token);
+                        setSavedTokenDetails(token);
                     }
                 } else {
-                    const savedToken = localStorage.getItem("fcm_token");
-                    if (savedToken) {
+                    const savedTokenDetails = getSavedTokenDetails();
+                    if (savedTokenDetails.token) {
                         await unregisterDevice({
-                            device_token: savedToken,
+                            device_token: savedTokenDetails.token,
                         }).unwrap();
-                        localStorage.removeItem("fcm_token");
+                        setSavedTokenDetails("");
                     }
                 }
             } finally {
@@ -100,41 +143,27 @@ export function usePushNotifications() {
                 }
             }
 
-            // Listen for foreground FCM messages
             unsubscribeOnMessage = onMessage(messaging, (payload) => {
                 const title =
                     payload.notification?.title ||
                     payload.data?.title ||
                     "New Notification";
-                const body =
+                const content =
                     payload.notification?.body || payload.data?.body || "";
-                const icon = payload.data?.icon || "/logo.png";
                 const targetUrl = payload.data?.url || "/";
-                const notificationId = parseInt(
+                const parsedNotificationId = Number.parseInt(
                     payload.data?.notification_id || "0",
+                    10,
                 );
 
-                if (Notification.permission === "granted") {
-                    const notification = new Notification(title, {
-                        body,
-                        icon,
-                        data: payload.data || {},
-                    });
-
-                    notification.onclick = (event) => {
-                        event.preventDefault();
-                        window.focus();
-                        window.location.href = targetUrl;
-                        (async () => {
-                            if (notificationId) {
-                                await markNotificationAsSeen({
-                                    notification_id: notificationId,
-                                }).unwrap();
-                            }
-                        })();
-                        notification.close();
-                    };
-                }
+                setForegroundNotification({
+                    title,
+                    content,
+                    url: targetUrl,
+                    notificationId: Number.isNaN(parsedNotificationId)
+                        ? 0
+                        : parsedNotificationId,
+                });
             });
         };
 
@@ -147,9 +176,38 @@ export function usePushNotifications() {
         };
     }, [user, isLoggedIn, syncToken, markNotificationAsSeen]);
 
+    const dismissForegroundNotification = useCallback(() => {
+        setForegroundNotification(null);
+    }, []);
+
+    const viewForegroundNotification = useCallback(async () => {
+        if (!foregroundNotification) return;
+
+        const { notificationId, url } = foregroundNotification;
+        setForegroundNotification(null);
+
+        if (notificationId) {
+            queueMicrotask(async () => {
+                try {
+                    await markNotificationAsSeen({
+                        notification_id: notificationId,
+                    }).unwrap();
+                } catch {
+                    //
+                }
+            });
+        }
+
+        window.focus();
+        window.location.href = url;
+    }, [foregroundNotification, markNotificationAsSeen]);
+
     return {
         permission,
         isRequestingPermission,
         requestNotificationPermission,
+        foregroundNotification,
+        dismissForegroundNotification,
+        viewForegroundNotification,
     };
 }

@@ -57,8 +57,17 @@ import {
     LuHexagon,
     LuLayoutDashboard,
     LuMessagesSquare,
+    LuChartNetwork,
+    LuCircleCheck,
+    LuShare2,
+    LuCopy,
+    LuMove,
+    LuSquarePen,
+    LuTrash,
+    LuX,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
+import { FaRegNoteSticky } from "react-icons/fa6";
 
 const apiDomain = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -165,14 +174,16 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-courses": LuBookOpen,
         "sidebar-coursemap": LuMap,
         "sidebar-calendar": LuCalendar,
+        "sidebar-timeline": LuChartNetwork,
         "sidebar-tasks": LuClipboardList,
         "sidebar-exams": LuListTodo,
         "sidebar-announcements": LuMegaphone,
+        "sidebar-events": LuCalendarDays,
+        "sidebar-event-organizers": LuUsers,
         "sidebar-materials": LuBookOpen,
         "sidebar-other-materials": LuBook,
         "sidebar-grades": LuBadge,
         "sidebar-study-tracker": LuRadar,
-        "sidebar-events": LuCalendarDays,
         "sidebar-cv-generator": LuFileText,
 
         "sidebar-roadmaps": LuMapPin,
@@ -194,9 +205,10 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-admin-tasks": LuClipboardList,
         "sidebar-admin-exams": LuListTodo,
         "sidebar-admin-announcements": LuMegaphone,
+        "sidebar-admin-events": LuCalendarDays,
+        "sidebar-admin-event-organizers": LuUsers,
         "sidebar-admin-roadmaps": LuMapPin,
         "sidebar-admin-study-maps": LuMap,
-        "sidebar-admin-events": LuCalendarDays,
         "sidebar-admin-discussions": LuMessagesSquare,
         "sidebar-admin-logs": LuActivity,
         "sidebar-home": FiHome,
@@ -226,6 +238,15 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "badge-id-card": FaIdCard,
         "badge-view": LuEye,
         "badge-year": FaScroll,
+        note: FaRegNoteSticky,
+        select: LuCircleCheck,
+        "select-all": LuCircleCheck,
+        share: LuShare2,
+        copy: LuCopy,
+        move: LuMove,
+        edit: LuSquarePen,
+        delete: LuTrash,
+        close: LuX,
     };
 
     // Fallback to FiFileText if the icon key isn't found

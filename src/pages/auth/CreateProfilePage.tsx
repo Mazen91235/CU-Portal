@@ -17,7 +17,10 @@ import decorTop from "../../assets/decorations/bg-top.png";
 import decorBottom from "../../assets/decorations/bg-bottom.png";
 import illustrationImg from "../../assets/decorations/create-profile-illustration.png";
 import styles from "./CreateProfilePage.module.css";
-import { useUploadFileToDrive } from "../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../hooks/useHandleProcesses";
 import { InputError } from "../../components/forms/InputError";
 import { usePageLoading } from "../../hooks/usePageLoading";
 
@@ -127,8 +130,10 @@ const CreateProfilePage = () => {
             showToast("error", "Error", error);
         },
     });
+    const removeUploadedFiles = useRemoveUploadedFiles();
 
     const onSubmit = async (data: FormData) => {
+        const uploadedUrls: string[] = [];
         try {
             const googleDetailsToken = GetCookie("google_details_token");
             if (!googleDetailsToken) {
@@ -142,6 +147,7 @@ const CreateProfilePage = () => {
             let fileUrl: string | null = null;
             if (selectedFile) {
                 fileUrl = (await uploadFile(selectedFile)) || "";
+                if (fileUrl) uploadedUrls.push(fileUrl);
                 if (!fileUrl) {
                     return;
                 }
@@ -165,6 +171,7 @@ const CreateProfilePage = () => {
                 },
             });
         } catch (error: unknown) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
         }
     };
@@ -211,7 +218,7 @@ const CreateProfilePage = () => {
                             Don&apos;t miss out! Create your profile in minutes
                         </p>
 
-                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors}>
+                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors} disabled={isSubmitting}>
                             <div className={styles.inputRow}>
                                 <Input
                                     register={register}

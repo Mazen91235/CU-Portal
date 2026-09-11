@@ -9,6 +9,7 @@ import type { TaskResponseDto } from "./TaskDtos";
 import type { ExamResponseDto } from "./ExamDtos";
 import type { AnnouncementResponseDto } from "./AnnouncementDtos";
 import type { NotificationResponseDto } from "./NotificationDtos";
+import type { NoteResponseDto } from "./NoteDtos";
 import type { LogResponseDto } from "./LogDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
@@ -56,6 +57,7 @@ export type UserResponseDto = {
     announcements?: AnnouncementResponseDto[] | null;
     notifications?: NotificationResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    notes?: NoteResponseDto[] | null;
     logs?: LogResponseDto[] | null;
     attachments?: AttachmentResponseDto[] | null;
     level?: number | null;

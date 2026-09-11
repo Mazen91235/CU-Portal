@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.title {
+    align-self: flex-start;
+    margin: 0 0 1.5rem;
+    color: var(--dark-text);
+    font-size: 1.45rem;
+    font-weight: 700;
+}
+
+.logoWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.logo,
+.fallbackLogo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--background-white);
+}
+
+.fallbackLogo {
+    display: grid;
+    place-items: center;
+    background: var(--primary-purple);
+    color: var(--white);
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.name {
+    margin: 0 0 1.4rem;
+    color: var(--dark-text);
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.viewButton {
+    width: 100%;
+}
+
+.decorativeIcon {
+    color: var(--primary-purple);
+    font-size: 1.2rem;
+}

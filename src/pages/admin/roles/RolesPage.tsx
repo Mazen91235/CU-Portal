@@ -163,7 +163,7 @@ export const RolesPage = () => {
                 {filteredRoles.map((role) => (
                     <Card
                         key={role.id}
-                        title={role.name}
+                        title={role.name ?? "Untitled Role"}
                         items={[
                             {
                                 icon: "users-assigned",

@@ -52,6 +52,11 @@ const navSectionsDefault: NavSection[] = [
                 icon: "sidebar-calendar",
             },
             {
+                label: "Timeline",
+                path: "/user/timeline",
+                icon: "sidebar-timeline",
+            },
+            {
                 label: "Tasks",
                 path: "/user/tasks",
                 icon: "sidebar-tasks",
@@ -106,17 +111,28 @@ const navSectionsDefault: NavSection[] = [
             },
             {
                 label: "Events",
-                // path: "/user/events",
-                path: "#!",
+                path: "/user/events",
                 icon: "sidebar-events",
-                badge: "Soon",
+                badge: "New",
                 activatesPaths: ["/user/events/"],
+            },
+            {
+                label: "Events Organizers",
+                path: "/user/event-organizers",
+                icon: "sidebar-event-organizers",
+                activatesPaths: ["/user/event-organizers/"],
             },
         ],
     },
     {
         title: "Personal",
         links: [
+            {
+                label: "Notes",
+                path: "/user/notes",
+                icon: "note",
+                badge: "New",
+            },
             {
                 label: "CV Generator",
                 // path: "/user/cv-generator",
@@ -301,6 +317,24 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
+    if (permissions.includes("View Events")) {
+        section.links.push({
+            label: "Events",
+            path: "/admin/events",
+            icon: "sidebar-admin-events",
+            activatesPaths: ["/admin/events/"],
+        });
+    }
+
+    if (permissions.includes("View EventOrganizers")) {
+        section.links.push({
+            label: "Event Organizers",
+            path: "/admin/event-organizers",
+            icon: "sidebar-admin-event-organizers",
+            activatesPaths: ["/admin/event-organizers/"],
+        });
+    }
+
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
@@ -339,15 +373,6 @@ const showAdminLinks = (permissions: string[]) => {
     });
 
     section.links.push({
-        label: "Events",
-        // path: "/admin/events",
-        path: "#!",
-        icon: "sidebar-admin-events",
-        badge: "Soon",
-        activatesPaths: ["/admin/events/"],
-    });
-
-    section.links.push({
         label: "Discussions",
         // path: "/admin/discussions",
         path: "#!",
@@ -358,7 +383,6 @@ const showAdminLinks = (permissions: string[]) => {
 
     return section.links.length > 0 ? section : null;
 };
-
 export const Sidebar = ({
     isOpen,
     onClose,
@@ -375,6 +399,7 @@ export const Sidebar = ({
     const [navSections, setNavSections] = useState<NavSection[]>([
         ...navSectionsDefault,
     ]);
+
     useEffect(() => {
         if (permissions) {
             const section = showAdminLinks(permissions);
@@ -471,10 +496,7 @@ export const Sidebar = ({
                             className={styles.sectionButton}
                         >
                             <span>{section.title}</span>
-                            <IconComponent
-                                icon="sidebar-dropdown"
-                                size={20}
-                            />
+                            <IconComponent icon="sidebar-dropdown" size={20} />
                         </button>
                         <ul className={styles.subNav}>
                             {section.links.map((link, index) => (
@@ -488,7 +510,10 @@ export const Sidebar = ({
                                         }
                                     >
                                         <div className={styles.linkContent}>
-                                            <IconComponent icon={link.icon} size={20} />
+                                            <IconComponent
+                                                icon={link.icon}
+                                                size={20}
+                                            />
                                             {link.label}
                                         </div>
                                         {link.badge && (

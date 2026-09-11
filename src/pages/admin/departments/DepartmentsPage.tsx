@@ -271,7 +271,7 @@ export const DepartmentsPage = () => {
                                     <Card
                                         key={dept.id}
                                         badge={dept.code ?? "N/A"}
-                                        title={dept.name}
+                                        title={dept.name ?? "Untitled Department"}
                                         items={[
                                             {
                                                 icon: "subject",

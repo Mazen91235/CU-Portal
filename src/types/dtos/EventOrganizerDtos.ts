@@ -6,16 +6,15 @@ import type { SearchDto } from "./BaseDtos";
 export type EventOrganizerCreateDto = {
     name: string;
     details?: {
-        url?: string; // logo
-        urls?: string[]; // files
-        links?: LinkData[]; // links
+        url?: string;
+        urls?: string[];
+        links?: LinkData[];
     };
 };
 
 export type EventOrganizerResponseDto = {
     id?: number | null;
     name?: string | null;
-    details?: object | null;
     created_at?: string | null;
     updated_at?: string | null;
     events?: EventResponseDto[] | null;
@@ -26,20 +25,18 @@ export type EventOrganizerResponseDto = {
 export type EventOrganizerUpdateDto = {
     name: string;
     details?: {
-        url?: string; // logo
-        urls?: string[]; // files
-        links?: LinkData[]; // links
-    };
+        url?: string;
+        urls?: string[];
+        links?: LinkData[];
+    } | null;
 };
 
-export type EventOrganizerDeleteDto = {
-    id: number;
-};
+export type EventOrganizerDeleteDto = { id: number };
 
-export type EventOrganizerSearchDto = {
+export type EventOrganizerSearchDto = SearchDto & {
     id?: number | null;
     created_at_from?: string | null;
     created_at_to?: string | null;
     updated_at_from?: string | null;
     updated_at_to?: string | null;
-} & SearchDto;
+};

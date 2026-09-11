@@ -8,6 +8,7 @@ import styles from "./MaterialCard.module.css";
 type MaterialCardProps = {
     material: MaterialResponseDto;
     isSelected: boolean;
+    isSelectionMode?: boolean;
     onClick: (materialId: number) => void;
     onDoubleClick: (materialId: number) => void;
     onDragStart: (materialId: number) => void;
@@ -23,7 +24,7 @@ type MaterialCardProps = {
         realFileName: string,
         mimeType: string,
     ) => void;
-    onDownload?: (fileId: string, fileName: string) => void;
+    onDownload?: (materialId: number) => void;
     onOpenLink?: (url: string) => void;
     showCount?: boolean;
     showAll?: boolean;
@@ -34,6 +35,7 @@ type MaterialCardProps = {
 export const MaterialCard = ({
     material,
     isSelected,
+    isSelectionMode = false,
     onClick,
     onDoubleClick,
     onDragStart,
@@ -173,10 +175,8 @@ export const MaterialCard = ({
 
     const handleDownload = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (material.attachment && onDownload) {
-            const downloadName =
-                material.name || material.attachment.details?.file_data?.name || "download";
-            onDownload(material.attachment.details?.file_data?.id || "", downloadName);
+        if (material.id && onDownload) {
+            onDownload(material.id);
         }
     };
 
@@ -200,7 +200,7 @@ export const MaterialCard = ({
     if (isFolder) {
         return (
             <div
-                className={`${styles.folderCard} ${isSelected ? styles.selected : ""} ${isDragOver ? styles.dragOver : ""} ${className}`}
+                className={`${styles.folderCard} ${isSelectionMode ? styles.selectionMode : ""} ${isSelected ? styles.selected : ""} ${isDragOver ? styles.dragOver : ""} ${className}`}
                 data-id={material.id}
                 onMouseDown={handleMouseDown}
                 onMouseEnter={() => {
@@ -214,7 +214,8 @@ export const MaterialCard = ({
                 onMouseUp={handleMouseUpInDrag}
                 onDrop={handleDrop}
             >
-                <span className={styles.materialSelectedIcon}>
+                {isSelected && (
+                    <span className={styles.materialSelectedIcon}>
                     <svg
                         width="24"
                         height="25"
@@ -242,10 +243,12 @@ export const MaterialCard = ({
                             fill="white"
                         />
                     </svg>
-                </span>
+                    </span>
+                )}
                 <div className={styles.folderHeader}>
                     <MaterialActionsDropdown
                         onShare={handleShare}
+                        onDownload={material.id ? () => onDownload?.(material.id!) : undefined}
                         onMove={handleMove}
                         onCopy={handleCopy}
                         onEdit={handleEdit}
@@ -420,11 +423,12 @@ export const MaterialCard = ({
 
     return (
         <div
-            className={`${styles.fileCard} ${isSelected ? styles.selected : ""} ${className}`}
+            className={`${styles.fileCard} ${isSelectionMode ? styles.selectionMode : ""} ${isSelected ? styles.selected : ""} ${className}`}
             data-id={material.id}
             onMouseDown={handleMouseDown}
         >
-            <span className={styles.materialSelectedIcon}>
+            {isSelected && (
+                <span className={styles.materialSelectedIcon}>
                 <svg
                     width="24"
                     height="25"
@@ -452,10 +456,12 @@ export const MaterialCard = ({
                         fill="white"
                     />
                 </svg>
-            </span>
+                </span>
+            )}
             <div className={styles.fileHeader}>
                 <MaterialActionsDropdown
                     onShare={handleShare}
+                    onDownload={material.id ? () => onDownload?.(material.id!) : undefined}
                     onMove={handleMove}
                     onCopy={handleCopy}
                     onEdit={handleEdit}

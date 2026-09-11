@@ -18,7 +18,10 @@ import { DateInput } from "../../../components/forms/DateInput";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
@@ -46,17 +49,20 @@ export const CreateAnnouncement = () => {
     const [searchCourses] = useLazyGetCoursesQuery();
     const [createAnnouncement, { isLoading }] = useCreateAnnouncementMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<AnnouncementFormData>({
         resolver: zodResolver(announcementSchema),
     });
+
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -95,11 +101,13 @@ export const CreateAnnouncement = () => {
     };
 
     const onSubmit = async (data: AnnouncementFormData) => {
+        const uploadedUrls: string[] = [];
         try {
             let urls = "";
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 urls = await uploadFiles(data.files as FileList);
+                urls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -130,7 +138,10 @@ export const CreateAnnouncement = () => {
                 state: { success: "Announcement created successfully!" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -155,6 +166,7 @@ export const CreateAnnouncement = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formGroup}>

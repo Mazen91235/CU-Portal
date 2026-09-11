@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
-import { useUploadFileToDriveChunked } from "../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDriveChunked,
+    useRemoveUploadedFiles,
+} from "../../hooks/useHandleProcesses";
 import { Button } from "../forms/Button";
 import type { FileDataWithExisting } from "../../types/entities/Attachment";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
@@ -38,6 +41,7 @@ export function MaterialForm({
     const [isDragOver, setIsDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const uploadFile = useUploadFileToDriveChunked({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
 
     useEffect(() => {
         if (material) {
@@ -75,6 +79,7 @@ export function MaterialForm({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        const uploadedUrls: string[] = [];
 
         try {
             const formData = new FormData();
@@ -90,22 +95,22 @@ export function MaterialForm({
             }
             if (materialType === "file") {
                 if (file) {
+                    const result = await uploadFile(file, name);
+                    if (!result) return;
+                    if (!result.url) {
+                        dispatch(
+                            setProcess({
+                                ...result,
+                                status: "failed",
+                                reason: "Failed to upload file",
+                            }),
+                        );
+                        return;
+                    }
+                    uploadedUrls.push(result.url);
+                    formData.append("url", result.url);
+                    await onSubmit(formData, result);
                     onClose();
-                    uploadFile(file, name).then((result) => {
-                        if (!result) return;
-                        if (!result.url) {
-                            dispatch(
-                                setProcess({
-                                    ...result,
-                                    status: "failed",
-                                    reason: "Failed to upload file",
-                                }),
-                            );
-                            return;
-                        }
-                        formData.append("url", result.url);
-                        onSubmit(formData, result);
-                    });
                 } else if (existingFileData) {
                     formData.append("url", existingFileData.url || "");
                     await onSubmit(formData);
@@ -124,6 +129,7 @@ export function MaterialForm({
                 onClose();
             }
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handlePopupErrors(error);
         } finally {
             setIsLoading(false);
@@ -235,12 +241,14 @@ export function MaterialForm({
                         type="button"
                         className={styles.closeButton}
                         onClick={onClose}
+                        disabled={isLoading}
                     >
                         ×
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
+                    <fieldset disabled={isLoading} className={styles.fieldset}>
                     <div className={styles.fileInputRow}>
                         <div className={styles.formGroup}>
                             <label htmlFor="name" className={styles.label}>
@@ -415,6 +423,7 @@ export function MaterialForm({
                             isOrange={false}
                         />
                     </div>
+                    </fieldset>
                 </form>
             </div>
         </div>

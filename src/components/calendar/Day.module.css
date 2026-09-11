@@ -93,6 +93,14 @@
   vertical-align: middle;
 }
 
+.note-icon {
+  position: absolute;
+  top: 0px;
+  right: 3px;
+  font-size: 13px;
+  color: grey;
+}
+
 .dot-exam {
   background: var(--error-red);
 }
@@ -145,3 +153,5 @@
     font-size: 8px;
   }
 }
+
+.dot-event { background: #3b82f6; }

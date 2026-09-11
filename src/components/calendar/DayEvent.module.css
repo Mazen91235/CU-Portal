@@ -28,7 +28,12 @@
     font-weight: 500;
     padding: 4px 12px;
     height: 25px;
-    display: inline-block;
+    min-width: max-content;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    vertical-align: middle;
     margin-left: 0.5rem;
 }
 
@@ -44,6 +49,11 @@
 
 .badge-announcement {
     background: var(--success-green);
+    color: var(--white);
+}
+
+.badge-note {
+    background: var(--dark-grey);
     color: var(--white);
 }
 

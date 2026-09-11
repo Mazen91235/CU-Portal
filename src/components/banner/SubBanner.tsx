@@ -1,8 +1,9 @@
 import { Link } from "react-router";
 
-import styles from "./SubBanner.module.css";
 import IconComponent from "../IconComponent";
 import { type Icon } from "../../types/Icon";
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+import styles from "./SubBanner.module.css";
 
 type SubBannerProps = {
     title: string;
@@ -14,6 +15,7 @@ type SubBannerProps = {
     icon?: Icon;
     linkText?: string;
     linkTo?: string;
+    img?: string;
 };
 
 export const SubBanner = ({
@@ -26,9 +28,19 @@ export const SubBanner = ({
     icon,
     linkText,
     linkTo,
+    img,
 }: SubBannerProps) => {
     return (
-        <header className={styles["subBanner"]}>
+        <header
+            className={`${styles["subBanner"]} ${img ? styles["subBannerWithImage"] : ""}`}
+            style={
+                img
+                    ? {
+                          backgroundImage: `url(${GetDrivePreviewUrlFromUrl(img) || img})`,
+                      }
+                    : {}
+            }
+        >
             <div className={styles["leftSection"]}>
                 {linkTo && linkText && (
                     <Link to={linkTo} className={styles["backLink"]}>
@@ -57,6 +69,7 @@ export const SubBanner = ({
                             ? styles["buttonGroup"]
                             : styles["buttonWrapper"]
                     }
+                    style={img ? { alignItems: "end" } : {}}
                 >
                     <button className={styles["button"]} onClick={buttonAction}>
                         {button}

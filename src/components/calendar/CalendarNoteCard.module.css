@@ -1,0 +1,169 @@
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    padding: 1rem;
+    border: 1px solid #dddfe3;
+    border-radius: var(--primary-border-radius);
+    background: var(--white);
+}
+
+.content {
+    min-width: 0;
+    padding-right: 0;
+}
+
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.4rem;
+    padding-right: 0.25rem;
+}
+
+.title {
+    margin: 0;
+    min-width: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-height: 25px;
+    height: 25px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    background: var(--dark-grey);
+    color: var(--white);
+    font-size: 0.85rem;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.preview {
+    margin: 0;
+    color: #757c8a;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+}
+
+.footerInline {
+    justify-content: space-between;
+}
+
+.footerCenter {
+    justify-content: center;
+}
+
+.date {
+    color: #8a909b;
+    font-size: 0.8rem;
+}
+
+.viewButton {
+    min-width: 76px;
+    border: none;
+    border-radius: var(--primary-border-radius);
+    padding: 0.5rem 1rem;
+    background: var(--primary-purple);
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.viewButton:hover:not(:disabled) {
+    background: #4a0c50;
+    transform: translateY(-1px);
+}
+
+.viewButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.optionsContainer {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+}
+
+.optionsButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.optionsButton:hover:not(:disabled) {
+    background: #f1f2f4;
+}
+
+.optionsButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.optionsMenu {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    min-width: 120px;
+    padding: 0.4rem;
+    border: 1px solid #e3e5e8;
+    border-radius: var(--primary-border-radius);
+    background: var(--white);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.optionItem {
+    width: 100%;
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    text-align: left;
+    color: var(--dark-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.optionItem:hover {
+    background: #f4f4f6;
+}
+
+@media (max-width: 600px) {
+    .card {
+        padding: 0.9rem;
+    }
+
+    .content {
+        padding-right: 0;
+    }
+}

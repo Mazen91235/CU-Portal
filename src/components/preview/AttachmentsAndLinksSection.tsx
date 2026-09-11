@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { Preview } from "./Preview";
 import type {
     FileData,
-    FileDataWithExisting,
 } from "../../types/entities/Attachment";
 import type { AttachmentResponseDto } from "../../types/dtos/AttachmentDtos";
 import styles from "./AttachmentsAndLinksSection.module.css";
@@ -34,8 +33,6 @@ export const AttachmentsAndLinksSection = ({
         );
     }, [attachments]);
     const [previewFile, setPreviewFile] = useState<FileData | null>(null);
-    const [fileToDownload, setFileToDownload] =
-        useState<FileDataWithExisting | null>(null);
     const [shouldDownload, setShouldDownload] = useState(false);
     const downloadLink = useRef<HTMLAnchorElement>(null);
 
@@ -49,13 +46,7 @@ export const AttachmentsAndLinksSection = ({
 
     const handleDownload = async (file_id: string) => {
         try {
-            const url = await downloadFile(file_id);
-            const fileToDownload = files?.find((file) => file.id == file_id);
-            setFileToDownload({
-                ...(fileToDownload || {}),
-                url,
-            });
-            setShouldDownload(true);
+            downloadFile(file_id);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -117,12 +108,6 @@ export const AttachmentsAndLinksSection = ({
                                 </div>
                             ))}
                         </div>
-                        <a
-                            href={fileToDownload?.url}
-                            className={styles.hiddenDownloadLink}
-                            download={fileToDownload?.name || "download"}
-                            ref={downloadLink}
-                        />
                     </>
                 )}
 

@@ -8,6 +8,7 @@ type FloatingFormProps<T extends Record<string, unknown>> = {
     title?: string;
     onClose?: () => void;
     isOpen: boolean;
+    className?: string;
 };
 
 export const FloatingForm = <T extends Record<string, unknown>>({
@@ -17,13 +18,14 @@ export const FloatingForm = <T extends Record<string, unknown>>({
     title,
     onClose,
     isOpen,
+    className,
 }: FloatingFormProps<T>) => {
     if (!isOpen) return null;
 
     return (
         <div className={styles["overlay"]} onClick={onClose}>
             <div
-                className={styles["modal"]}
+                className={`${styles["modal"]} ${className || ""}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {title && <h2 className={styles["title"]}>{title}</h2>}

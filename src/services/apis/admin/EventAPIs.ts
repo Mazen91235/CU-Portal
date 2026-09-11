@@ -73,7 +73,10 @@ export const AdminEventAPI = createApi({
                 body: data,
             }),
         }),
-        deleteEvent: builder.mutation<GenericAPIResponse, { event_id: number }>({
+        deleteEvent: builder.mutation<
+            GenericAPIResponse<boolean>,
+            { event_id: number }
+        >({
             query: ({ event_id }) => ({
                 url: `/${event_id}`,
                 method: "DELETE",

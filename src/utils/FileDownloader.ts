@@ -1,20 +1,11 @@
-import { GetApiLink } from "./LinkHandler";
-import { GetCookie } from "./CookiesManager";
+import { GetApiLink, GetUserApiLink } from "./LinkHandler";
 
-export const downloadFile = async (fileId: string): Promise<string> => {
-    const response = await fetch(GetApiLink(`/files/${fileId}/download`), {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${GetCookie("access_token")}`,
-        },
-        credentials: "include",
-    });
+export const downloadFile = (fileId: string): void => {
+    window.location.href = GetApiLink(`/files/${fileId}/download`);
+};
 
-    if (!response.ok) {
-        throw new Error("Failed to download file");
-    }
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    return url;
+export const downloadMaterials = (materialIds: number[]): void => {
+    if (materialIds.length === 0) return;
+    const ids = materialIds.join(",");
+    window.location.href = `${GetUserApiLink("/materials/download-many")}?material_ids=${ids}`;
 };

@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import type { CalendarDayEventDto } from "../../types/dtos/CalendarDtos";
 import styles from "./DayEvent.module.css";
 import IconComponent from "../IconComponent";
-import { formatDateTime } from "../../utils/Formatter";
+import { formatDate, formatDateTime } from "../../utils/Formatter";
 
 export const DayEvent = ({
     event_type,
@@ -11,7 +11,12 @@ export const DayEvent = ({
     due,
     location,
     id,
-}: CalendarDayEventDto) => {
+    created_at,
+    date,
+}: CalendarDayEventDto & {
+    onEdit?: () => void;
+    onDelete?: () => void;
+}) => {
     const getBadgeClass = () => {
         switch (event_type) {
             case "exam":
@@ -20,6 +25,8 @@ export const DayEvent = ({
                 return styles["badge-assignment"];
             case "announcement":
                 return styles["badge-announcement"];
+            case "note":
+                return styles["badge-note"];
             default:
                 return "";
         }
@@ -33,6 +40,8 @@ export const DayEvent = ({
                 return `/user/tasks/${id}`;
             case "announcement":
                 return `/user/announcements/${id}`;
+            case "note":
+                return `/user/notes/${id}`;
             default:
                 return "#";
         }
@@ -46,6 +55,8 @@ export const DayEvent = ({
                 return "Assignment";
             case "announcement":
                 return "Announcement";
+            case "note":
+                return "Note";
             default:
                 return "";
         }
@@ -91,6 +102,24 @@ export const DayEvent = ({
                             className={styles["detail-icon"]}
                         />
                         {location}
+                    </div>
+                )}
+                {created_at && (
+                    <div className={styles["event-detail"]}>
+                        <IconComponent
+                            icon="calendar"
+                            className={styles["detail-icon"]}
+                        />
+                        Created at: {formatDate(created_at)} 
+                    </div>
+                )}
+                {date && (
+                    <div className={styles["event-detail"]}>
+                        <IconComponent
+                            icon="time"
+                            className={styles["detail-icon"]}
+                        />
+                        Date: {formatDate(date)}
                     </div>
                 )}
             </div>

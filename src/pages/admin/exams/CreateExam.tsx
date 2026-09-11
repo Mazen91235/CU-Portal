@@ -51,13 +51,15 @@ export const CreateExam = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<ExamFormData>({
         resolver: zodResolver(examSchema),
     });
+
+    const busy = isSubmitting || isLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -143,6 +145,7 @@ export const CreateExam = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formSection}>

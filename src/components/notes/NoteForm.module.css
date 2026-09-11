@@ -1,0 +1,10 @@
+.note-modal {
+    width: min(620px, calc(100vw - 2rem));
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .note-modal {
+        width: calc(100vw - 2rem);
+    }
+}

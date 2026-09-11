@@ -17,6 +17,7 @@ type InputProps<T extends Record<string, unknown>> = {
     placeholder?: string;
     errors: FieldErrors<T>;
     label?: string;
+    value?: string | number | readonly string[] | undefined;
     id?: string;
     onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     registerOptions?: Parameters<UseFormRegister<T>>[1];
@@ -24,6 +25,7 @@ type InputProps<T extends Record<string, unknown>> = {
     isTextArea?: boolean;
     hasNoMarginOrBorder?: boolean;
     className?: string;
+    maxLength?: number;
 };
 
 function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
@@ -47,6 +49,7 @@ const InputInner = <T extends Record<string, unknown>>(
         placeholder,
         errors,
         label,
+        value,
         id,
         onChange,
         registerOptions,
@@ -54,6 +57,7 @@ const InputInner = <T extends Record<string, unknown>>(
         isTextArea,
         hasNoMarginOrBorder,
         className,
+        maxLength,
     }: InputProps<T>,
     forwardedRef: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
 ) => {
@@ -90,9 +94,11 @@ const InputInner = <T extends Record<string, unknown>>(
                     name={registration.name}
                     onBlur={registration.onBlur}
                     ref={mergeRefs(registration.ref, forwardedRef)}
+                    value={value}
                     className={errors[name] ? styles["error"] : undefined}
                     onChange={handleChange}
                     disabled={disabled}
+                    maxLength={maxLength}
                     style={hasNoMarginOrBorder ? { border: "none" } : undefined}
                 />
             ) : (
@@ -102,9 +108,11 @@ const InputInner = <T extends Record<string, unknown>>(
                     name={registration.name}
                     onBlur={registration.onBlur}
                     ref={mergeRefs(registration.ref, forwardedRef)}
+                    value={value}
                     className={errors[name] ? styles["error"] : undefined}
                     onChange={handleChange}
                     disabled={disabled}
+                    maxLength={maxLength}
                     rows={8}
                     style={hasNoMarginOrBorder ? { border: "none" } : undefined}
                 />

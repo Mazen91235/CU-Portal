@@ -68,6 +68,8 @@ export const Navbar = ({
             );
             await getNotifications({
                 data: { seen: false },
+                order_by: ["id"],
+                descending: true,
                 page: 1,
                 limit: 1e6,
             }).unwrap();

@@ -1,0 +1,38 @@
+.thumbnailContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.label { font-size: 0.875rem; font-weight: 500; color: var(--dark-text); }
+.required { color: #dc3545; }
+
+.uploadArea {
+    min-height: 220px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.logoUploadArea { min-height: 170px; }
+.hiddenInput { display: none; }
+.emptyState { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; padding: 2rem; color: var(--dark-grey); }
+.iconPlaceholder { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: rgba(90, 15, 97, 0.08); color: var(--primary-purple); font-size: 1.35rem; }
+.uploadBtn, .removeBtn, .replaceBtn { border: none; border-radius: 7px; padding: 0.65rem 1rem; font-family: var(--primary-font-family); font-weight: 500; cursor: pointer; transition: 0.2s; }
+.uploadBtn, .replaceBtn { background: var(--primary-purple); color: var(--white); }
+.uploadBtn:hover, .replaceBtn:hover { opacity: 0.92; }
+.removeBtn { background: rgba(220, 53, 69, 0.08); color: #dc3545; }
+.removeBtn:hover { background: rgba(220, 53, 69, 0.14); }
+.previewWrapper { width: 100%; height: 100%; display: flex; flex-direction: column; }
+.previewImage { width: 100%; height: 220px; object-fit: cover; display: block; }
+.logoPreviewWrapper { align-items: center; padding: 1.25rem 1rem 0; gap: 1rem; }
+.logoPreviewImage { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.actions { display: flex; justify-content: flex-end; gap: 0.6rem; padding: 0.8rem; background: transparent; }
+.logoPreviewWrapper .actions { width: 100%; }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+.error { color: #dc3545; font-size: 0.8rem; }

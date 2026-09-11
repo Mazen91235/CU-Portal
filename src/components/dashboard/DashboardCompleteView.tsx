@@ -5,7 +5,9 @@ import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
 import type { AnnouncementResponseDto } from "../../types/dtos/AnnouncementDtos";
 import type { TaskResponseDto } from "../../types/dtos/TaskDtos";
 import type { ExamResponseDto } from "../../types/dtos/ExamDtos";
-import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
+import type {
+    CalendarDayEventsDto,
+} from "../../types/dtos/CalendarDtos";
 import { Calendar } from "../../components/calendar/Calendar";
 import { FloatingDay } from "../../components/calendar/FloatingDay";
 import { Card } from "../../components/card/Card";
@@ -31,6 +33,10 @@ import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
 import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
+import type { NoteFormData } from "../notes/NoteForm";
+import { useCreateNoteMutation, useUpdateNoteMutation, useDeleteNoteMutation } from "../../services/apis/user/NoteAPIs";
+import type { NoteResponseDto, NoteUpdateDto } from "../../types/dtos/NoteDtos";
+import { normalizeCalendarEvents } from "../../utils/CalendarHandler";
 
 export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
@@ -38,6 +44,9 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getAnnouncements] = useLazyGetAnnouncementsQuery();
     const [getCourses] = useLazyGetEnrolledCoursesQuery();
     const [getCalendar] = useLazyGetCalendarTasksQuery();
+    const [createNote, { isLoading: isCreatingNote }] = useCreateNoteMutation();
+    const [updateNote, { isLoading: isUpdatingNote }] = useUpdateNoteMutation();
+    const [deleteNote, { isLoading: isDeletingNote }] = useDeleteNoteMutation();
     const navigate = useNavigate();
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
@@ -104,7 +113,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                     date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
                 }).unwrap();
 
-                setEventsData(result.data?.events || {});
+                setEventsData(normalizeCalendarEvents(result.data?.events || {}));
             } catch (error) {
                 handlePopupErrors(error);
             }
@@ -157,16 +166,29 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         setCurrentMonth(month);
     };
 
-    const selectedEvents =
-        selectedDate && eventsData[selectedDate]
-            ? eventsData[selectedDate]
-            : { tasks: [], exams: [], announcements: [] };
+    const handleSaveNote = async (data: NoteFormData) => {
+        if (!selectedDate) return;
+        await createNote({ ...data, date: data.date || selectedDate }).unwrap();
+        await fetchCalendar(currentYear, currentMonth);
+    };
 
-    const formattedEvents = [
-        ...(selectedEvents.exams || []),
-        ...(selectedEvents.tasks || []),
-        ...(selectedEvents.announcements || []),
-    ];
+    const handleUpdateNote = async (note: NoteResponseDto, data: NoteUpdateDto) => {
+        if (!note.id) return;
+        await updateNote({ note_id: note.id, ...data }).unwrap();
+        await fetchCalendar(currentYear, currentMonth);
+    };
+
+    const handleDeleteNote = async (note: NoteResponseDto) => {
+        if (!note.id) return;
+        await deleteNote({ note_id: note.id }).unwrap();
+        await fetchCalendar(currentYear, currentMonth);
+    };
+
+    const notesBusy = isCreatingNote || isUpdatingNote || isDeletingNote;
+
+    const selectedEvents = selectedDate && eventsData[selectedDate]
+        ? eventsData[selectedDate]
+        : { tasks: [], exams: [], announcements: [], events: [], notes: [] };
 
     return (
         <div className={styles["dashboard-container"]}>
@@ -190,7 +212,11 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         isOpen={isFloatingDayOpen}
                         onClose={() => setIsFloatingDayOpen(false)}
                         dateStr={selectedDate}
-                        events={formattedEvents}
+                        events={selectedEvents}
+                        onSaveNote={handleSaveNote}
+                        onUpdateNote={handleUpdateNote}
+                        onDeleteNote={handleDeleteNote}
+                        busy={notesBusy}
                     />
                 )}
 
@@ -211,7 +237,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         {exams.map((exam) => (
                             <Card
                                 key={exam.id}
-                                title={exam.name}
+                                title={exam.name ?? "Untitled Exam"}
                                 badge="Exam"
                                 items={[
                                     {
@@ -267,7 +293,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         {tasks.map((task) => (
                             <Card
                                 key={task.id}
-                                title={task.name}
+                                title={task.name ?? "Untitled Task"}
                                 badge="Task"
                                 items={[
                                     {

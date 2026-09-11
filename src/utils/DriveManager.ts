@@ -2,6 +2,15 @@ export function GetDriveUrl(fileId: string) {
     return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
+export function GetDrivePreviewUrlFromId(fileId: string) {
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+}
+
+export function GetDrivePreviewUrlFromUrl(url: string) {
+    const fileId = GetDriveIdFromUrl(url);
+    return fileId ? GetDrivePreviewUrlFromId(fileId) : null;
+}
+
 export function GetDriveIdFromUrl(url: string) {
     try {
         if (!url) return null;

@@ -1,3 +1,5 @@
+import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+
 type ImgPreviewerProps = {
     isOpen: boolean;
     imageSrc: string;
@@ -77,7 +79,7 @@ export const ImgPreviewer = ({
                     {title}
                 </div>
                 <img
-                    src={imageSrc}
+                    src={GetDrivePreviewUrlFromUrl(imageSrc) || imageSrc}
                     alt={title}
                     style={{
                         maxWidth: "100%",

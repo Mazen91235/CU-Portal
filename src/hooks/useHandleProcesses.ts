@@ -9,7 +9,7 @@ import {
 } from "../services/apis/DriveAPIs";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import { useGetGoogleAccessToken } from "./useAuth";
-import { GetDriveUrl } from "../utils/DriveManager";
+import { GetDriveIdFromUrl, GetDriveUrl } from "../utils/DriveManager";
 import type { Process } from "../types/Process";
 import { GenerateRandomString } from "../utils/RandomGenerators";
 import { setProcess } from "../services/redux/reducers/ProcessReducer";
@@ -225,6 +225,27 @@ export function useUploadFileToDrive({
         ],
     );
     return uploadFileToDrive;
+}
+
+export function useRemoveUploadedFiles() {
+    const removeFileFromDrive = useRemoveFileFromDrive({});
+
+    return useCallback(
+        async (fileUrls: string[]) => {
+            const uniqueIds = [
+                ...new Set(
+                    fileUrls
+                        .map((url) => GetDriveIdFromUrl(url))
+                        .filter((id): id is string => Boolean(id)),
+                ),
+            ];
+
+            await Promise.allSettled(
+                uniqueIds.map((fileId) => removeFileFromDrive(fileId)),
+            );
+        },
+        [removeFileFromDrive],
+    );
 }
 
 export function useRemoveFileFromDrive({

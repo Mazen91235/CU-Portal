@@ -1,4 +1,5 @@
 import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
+import IconComponent from "../IconComponent";
 import styles from "./Day.module.css";
 
 export const Day = ({
@@ -20,26 +21,23 @@ export const Day = ({
         assignment: false,
         announcement: false,
         exam: false,
+        note: false,
+        event: false,
     };
 
     let countExtra = 0;
 
-    events.tasks.forEach(() => {
-        if (eventTypes.assignment) countExtra++;
-        else eventTypes.assignment = true;
-    });
+    const markType = (type: keyof typeof eventTypes) => {
+        if (eventTypes[type]) countExtra++;
+        else eventTypes[type] = true;
+    };
 
-    events.exams.forEach(() => {
-        if (eventTypes.exam) countExtra++;
-        else eventTypes.exam = true;
-    });
-
-    events.announcements.forEach(() => {
-        if (eventTypes.announcement) {
-            countExtra++;
-        } else {
-            eventTypes.announcement = true;
-        }
+    events.tasks.forEach(() => markType("assignment"));
+    events.exams.forEach(() => markType("exam"));
+    events.announcements.forEach(() => markType("announcement"));
+    (events.events || []).forEach(() => markType("event"));
+    (events.notes || []).forEach(() => {
+        eventTypes.note = true;
     });
 
     return (
@@ -47,6 +45,13 @@ export const Day = ({
             className={`${styles["day-btn"]} ${isSelected ? styles["selected"] : ""} ${isToday ? styles["today"] : ""}`}
             onClick={() => onSelect(dateStr)}
         >
+            {eventTypes.note && (
+                <div className={styles["note-icon"]}>
+                    <IconComponent icon="note" />
+                    <span className={styles["note-count"]}>{events.notes?.length}</span>
+                </div>
+                )
+            }
             <span className={styles["day-number"]}>{day}</span>
             <div className={styles["day-dots"]}>
                 {eventTypes.assignment && (
@@ -62,6 +67,11 @@ export const Day = ({
                 {eventTypes.exam && (
                     <span
                         className={`${styles["event-dot"]} ${styles["dot-exam"]}`}
+                    ></span>
+                )}
+                {eventTypes.event && (
+                    <span
+                        className={`${styles["event-dot"]} ${styles["dot-event"]}`}
                     ></span>
                 )}
                 {countExtra > 0 && (

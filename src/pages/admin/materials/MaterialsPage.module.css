@@ -98,91 +98,6 @@
     background-color: var(--grey-background);
 }
 
-.selectionBtns {
-    display: flex;
-    align-items: center;
-    margin: 1.5rem 0;
-    border: 1px solid var(--light-grey);
-    border-radius: var(--primary-border-radius);
-    padding: var(--primary-padding);
-    background: var(--white);
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.selectedCount {
-    font-weight: var(--primary-font-weight);
-    color: var(--dark-text);
-}
-
-.selectionBtn {
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--primary-border-radius);
-    font-size: 15px;
-    font-weight: var(--primary-font-weight);
-    cursor: pointer;
-    transition: all var(--transition-duration) ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-width: 150px;
-    justify-content: center;
-    border: 1px solid var(--light-grey);
-    background: var(--grey-background);
-}
-
-.selectionBtn:hover {
-    background: var(--light-grey);
-    border-color: #d1d5db;
-}
-
-.copyBtn {
-    background: var(--grey-background);
-    color: var(--dark-text);
-    border: 1px solid var(--light-grey);
-}
-
-.copyBtn:hover {
-    background: var(--light-grey);
-    color: var(--primary-purple);
-    border-color: #d1d5db;
-}
-
-.moveBtn {
-    background: var(--grey-background);
-    color: var(--dark-text);
-    border: 1px solid var(--light-grey);
-}
-
-.moveBtn:hover {
-    background: var(--light-grey);
-    color: var(--primary-purple);
-    border-color: #d1d5db;
-}
-
-.deleteBtn {
-    background: #ef4444;
-    color: var(--white);
-    border: 1px solid #ef4444;
-}
-
-.deleteBtn:hover {
-    background: #dc2626;
-    border-color: #dc2626;
-    color: var(--white);
-}
-
-.cancelBtn {
-    background: var(--grey-background);
-    color: var(--dark-text);
-    border: 1px solid var(--light-grey);
-}
-
-.cancelBtn:hover {
-    background: var(--light-grey);
-    color: var(--primary-purple);
-    border-color: #d1d5db;
-}
 
 .contentSection {
     margin-bottom: 2rem;
@@ -227,10 +142,6 @@
 }
 
 @media (max-width: 992px) {
-    .selectionBtn {
-        min-width: 0;
-    }
-
     .explorerTitle {
         font-size: 28px;
     }
@@ -259,15 +170,6 @@
         min-width: 0;
     }
 
-    .selectionBtns {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .selectionBtn {
-        width: 100%;
-    }
-
     .contentGrid {
         grid-template-columns: 1fr;
     }
@@ -282,11 +184,6 @@
 }
 
 @media (max-width: 600px) {
-    .selectionBtn {
-        min-width: 0;
-        margin-bottom: 0;
-    }
-
     .filterPageTitle {
         font-size: 1.5rem;
     }

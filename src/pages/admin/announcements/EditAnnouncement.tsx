@@ -21,7 +21,10 @@ import { DateInput } from "../../../components/forms/DateInput";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useUploadFileToDrive } from "../../../hooks/useHandleProcesses";
+import {
+    useUploadFileToDrive,
+    useRemoveUploadedFiles,
+} from "../../../hooks/useHandleProcesses";
 import type { LinkData } from "../../../types/entities/Task";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
@@ -63,18 +66,21 @@ export const EditAnnouncement = () => {
     const [searchCourses] = useLazyGetCoursesQuery();
     const [updateAnnouncement, { isLoading }] = useUpdateAnnouncementMutation();
     const uploadFile = useUploadFileToDrive({});
+    const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setError,
         setValue,
         control,
     } = useForm<AnnouncementFormData>({
         resolver: zodResolver(announcementSchema),
     });
+
+    const busy = isSubmitting || isLoading || isUploading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -179,11 +185,14 @@ export const EditAnnouncement = () => {
     const onSubmit = async (data: AnnouncementFormData) => {
         if (!announcementId) return;
 
+        const uploadedUrls: string[] = [];
+
         try {
             let urls = existingFiles.map((file) => file.url).join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
+                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -224,7 +233,10 @@ export const EditAnnouncement = () => {
                 state: { success: "Announcement updated successfully" },
             });
         } catch (error) {
+            await removeUploadedFiles(uploadedUrls);
             handleErrors(error, setError);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -255,6 +267,7 @@ export const EditAnnouncement = () => {
                 <Form
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
+                    disabled={busy}
                     className={styles.formCard}
                 >
                     <div className={styles.formGroup}>
