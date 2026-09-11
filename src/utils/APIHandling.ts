@@ -1,5 +1,5 @@
 export const maxRetries = 3;
-export const timeout = 30000; // 30 seconds
+export const timeout = parseInt(import.meta.env.VITE_API_TIMEOUT) || 60000; // 60 seconds
 export const retryCondition = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error: any,
