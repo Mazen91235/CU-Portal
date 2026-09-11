@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -28,11 +28,16 @@ import styles from "./UsersPage.module.css";
 
 export const UsersPage = () => {
     const navigate = useNavigate();
+    const {
+        facultyId: routeFacultyId,
+        departmentId: routeDepartmentId,
+        yearId: routeYearId,
+    } = useParams();
+    const selectedFaculty = routeFacultyId ?? "";
+    const selectedDepartment = routeDepartmentId ?? "";
+    const selectedYear = routeYearId ?? "";
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedFaculty, setSelectedFaculty] = useState("");
-    const [selectedDepartment, setSelectedDepartment] = useState("");
-    const [selectedYear, setSelectedYear] = useState("");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [users, setUsers] = useState<UserResponseDto[]>([]);
@@ -50,16 +55,18 @@ export const UsersPage = () => {
     const fetchUsersData = useCallback(async () => {
         try {
             if (!user) return;
-            const params = {
-                faculty_id: selectedFaculty
-                    ? Number(selectedFaculty)
-                    : undefined,
-                department_id: selectedDepartment
-                    ? Number(selectedDepartment)
-                    : undefined,
-                year_id: selectedYear ? Number(selectedYear) : undefined,
+            if (!selectedFaculty || !selectedDepartment || !selectedYear)
+                return;
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+            } = {
+                faculty_id: Number(selectedFaculty),
+                department_id: Number(selectedDepartment),
+                year_id: Number(selectedYear),
             };
-            if (!user?.canAccessAll) {
+            if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
                 params.department_id = user.department?.id ?? undefined;
                 params.year_id = user.year?.id ?? undefined;
@@ -111,24 +118,28 @@ export const UsersPage = () => {
     const fetchUsers = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
+            if (!selectedFaculty || !selectedDepartment || !selectedYear) {
+                setUsers([]);
+                return;
+            }
             const params: {
                 query?: string;
                 faculty_id?: number;
                 department_id?: number;
                 year_id?: number;
-            } = {};
-
-            if (searchQuery) params.query = searchQuery;
-            if (selectedFaculty) params.faculty_id = Number(selectedFaculty);
-            if (selectedDepartment)
-                params.department_id = Number(selectedDepartment);
-            if (selectedYear) params.year_id = Number(selectedYear);
+            } = {
+                faculty_id: Number(selectedFaculty),
+                department_id: Number(selectedDepartment),
+                year_id: Number(selectedYear),
+            };
 
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
                 params.department_id = user.department?.id ?? undefined;
                 params.year_id = user.year?.id ?? undefined;
             }
+
+            if (searchQuery) params.query = searchQuery;
 
             const result = await getUsers({
                 data: params,
@@ -178,39 +189,69 @@ export const UsersPage = () => {
 
     useAuthQuery(authQueryParams);
 
+    const buildUsersPath = useCallback(
+        (
+            facultyValue?: string | number | null,
+            departmentValue?: string | number | null,
+            yearValue?: string | number | null,
+        ) => {
+            if (!facultyValue) return "/admin/users";
+            if (!departmentValue) return `/admin/users/filter/${facultyValue}`;
+            if (!yearValue)
+                return `/admin/users/filter/${facultyValue}/${departmentValue}`;
+            return `/admin/users/filter/${facultyValue}/${departmentValue}/${yearValue}`;
+        },
+        [],
+    );
+
+    useEffect(() => {
+        if (!user || user.canAccessAll) return;
+        const ownFacultyId = user.faculty?.id?.toString() ?? "";
+        const ownDepartmentId = user.department?.id?.toString() ?? "";
+        const ownYearId = user.year?.id?.toString() ?? "";
+        if (
+            selectedFaculty !== ownFacultyId ||
+            selectedDepartment !== ownDepartmentId ||
+            selectedYear !== ownYearId
+        ) {
+            navigate(
+                buildUsersPath(ownFacultyId, ownDepartmentId, ownYearId),
+                { replace: true },
+            );
+        }
+    }, [
+        user,
+        selectedFaculty,
+        selectedDepartment,
+        selectedYear,
+        navigate,
+        buildUsersPath,
+    ]);
+
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
     }, [searchQuery, selectedFaculty, selectedDepartment, selectedYear]);
 
     const facultyOptions = useMemo(() => {
-        return [
-            { value: "", label: "All Faculties" },
-            ...faculties.map((f: FacultyResponseDto) => ({
-                value: String(f.id),
-                label: f.name || "",
-            })),
-        ];
+        return faculties.map((f: FacultyResponseDto) => ({
+            value: String(f.id),
+            label: f.name || "",
+        }));
     }, [faculties]);
 
     const departmentOptions = useMemo(() => {
-        return [
-            { value: "", label: "All Departments" },
-            ...departments.map((d: DepartmentResponseDto) => ({
-                value: String(d.id),
-                label: d.name || "",
-            })),
-        ];
+        return departments.map((d: DepartmentResponseDto) => ({
+            value: String(d.id),
+            label: d.name || "",
+        }));
     }, [departments]);
 
     const yearOptions = useMemo(() => {
-        return [
-            { value: "", label: "All Years" },
-            ...years.map((y: YearResponseDto) => ({
-                value: String(y.id),
-                label: y.year?.toString() || "",
-            })),
-        ];
+        return years.map((y: YearResponseDto) => ({
+            value: String(y.id),
+            label: y.year?.toString() || "",
+        }));
     }, [years]);
 
     const stats = useMemo(() => {
@@ -354,22 +395,46 @@ export const UsersPage = () => {
                             <div className={styles.filterItem}>
                                 <SelectFilter
                                     value={selectedFaculty}
-                                    setValue={setSelectedFaculty}
+                                    setValue={(value) =>
+                                        navigate(buildUsersPath(value))
+                                    }
                                     options={facultyOptions}
+                                    placeholder="Select Faculty"
                                 />
                             </div>
                             <div className={styles.filterItem}>
                                 <SelectFilter
                                     value={selectedDepartment}
-                                    setValue={setSelectedDepartment}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildUsersPath(
+                                                selectedFaculty,
+                                                value,
+                                            ),
+                                        )
+                                    }
                                     options={departmentOptions}
+                                    disabled={!selectedFaculty}
+                                    placeholder="Select Department"
                                 />
                             </div>
                             <div className={styles.filterItem}>
                                 <SelectFilter
                                     value={selectedYear}
-                                    setValue={setSelectedYear}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildUsersPath(
+                                                selectedFaculty,
+                                                selectedDepartment,
+                                                value,
+                                            ),
+                                        )
+                                    }
                                     options={yearOptions}
+                                    disabled={
+                                        !selectedFaculty || !selectedDepartment
+                                    }
+                                    placeholder="Select Year"
                                 />
                             </div>
                         </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -38,8 +39,10 @@ const departmentSchema = z.object({
 type DepartmentFormData = z.infer<typeof departmentSchema>;
 
 export const DepartmentsPage = () => {
+    const navigate = useNavigate();
+    const { facultyId: routeFacultyId } = useParams();
+    const facultyFilter = routeFacultyId ?? "";
     const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
     const [studyTypeFilter, setStudyTypeFilter] = useState<string>("");
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
@@ -99,6 +102,14 @@ export const DepartmentsPage = () => {
     );
 
     useAuthQuery(authQueryParams);
+
+    const buildDepartmentsPath = useCallback(
+        (facultyValue?: string | number | null) => {
+            if (!facultyValue) return "/admin/departments";
+            return `/admin/departments/${facultyValue}`;
+        },
+        [],
+    );
 
     const filteredDepartments = useMemo(
         () =>
@@ -255,12 +266,16 @@ export const DepartmentsPage = () => {
                             </div>
                             <div className={styles["filters-wrapper"]}>
                                 <SelectFilter
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        navigate(buildDepartmentsPath(value))
+                                    }
                                     options={facultyOptions}
+                                    value={facultyFilter}
                                 />
                                 <SelectFilter
                                     setValue={setStudyTypeFilter}
                                     options={studyTypeOptions}
+                                    value={studyTypeFilter}
                                 />
                             </div>
                         </div>

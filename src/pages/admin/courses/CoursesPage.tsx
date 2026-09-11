@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
@@ -28,11 +28,16 @@ import styles from "./CoursesPage.module.css";
 
 export const CoursesPage = () => {
     const navigate = useNavigate();
+    const {
+        facultyId: routeFacultyId,
+        departmentId: routeDepartmentId,
+        yearId: routeYearId,
+    } = useParams();
+    const facultyFilter = routeFacultyId ?? "";
+    const departmentFilter = routeDepartmentId ?? "";
+    const yearFilter = routeYearId ?? "";
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
     const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -88,10 +93,19 @@ export const CoursesPage = () => {
     const fetchCourses = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params = {
-                faculty_id: parseInt(facultyFilter) || undefined,
-                department_id: parseInt(departmentFilter) || undefined,
-                year_id: parseInt(yearFilter) || undefined,
+            if (!facultyFilter || !departmentFilter || !yearFilter) {
+                setCourses([]);
+                return;
+            }
+            const params: {
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+                query: string;
+            } = {
+                faculty_id: parseInt(facultyFilter),
+                department_id: parseInt(departmentFilter),
+                year_id: parseInt(yearFilter),
                 query: searchQuery || "",
             };
             if (!user.canAccessAll) {
@@ -147,6 +161,46 @@ export const CoursesPage = () => {
 
     useAuthQuery(authQueryParams);
 
+    const buildCoursesPath = useCallback(
+        (
+            facultyValue?: string | number | null,
+            departmentValue?: string | number | null,
+            yearValue?: string | number | null,
+        ) => {
+            if (!facultyValue) return "/admin/courses";
+            if (!departmentValue)
+                return `/admin/courses/filter/${facultyValue}`;
+            if (!yearValue)
+                return `/admin/courses/filter/${facultyValue}/${departmentValue}`;
+            return `/admin/courses/filter/${facultyValue}/${departmentValue}/${yearValue}`;
+        },
+        [],
+    );
+
+    useEffect(() => {
+        if (!user || user.canAccessAll) return;
+        const ownFacultyId = user.faculty?.id?.toString() ?? "";
+        const ownDepartmentId = user.department?.id?.toString() ?? "";
+        const ownYearId = user.year?.id?.toString() ?? "";
+        if (
+            facultyFilter !== ownFacultyId ||
+            departmentFilter !== ownDepartmentId ||
+            yearFilter !== ownYearId
+        ) {
+            navigate(
+                buildCoursesPath(ownFacultyId, ownDepartmentId, ownYearId),
+                { replace: true },
+            );
+        }
+    }, [
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        navigate,
+        buildCoursesPath,
+    ]);
+
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
@@ -193,40 +247,30 @@ export const CoursesPage = () => {
         }
     };
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
     const facultyOptions = useMemo(
-        () => [
-            { value: "", label: "Faculty" },
-            ...faculties.map((faculty) => ({
+        () =>
+            faculties.map((faculty) => ({
                 value: faculty.id?.toString() || "",
                 label: faculty.name || "",
             })),
-        ],
         [faculties],
     );
 
     const departmentOptions = useMemo(
-        () => [
-            { value: "", label: "Department" },
-            ...departments.map((dept) => ({
+        () =>
+            departments.map((dept) => ({
                 value: dept.id?.toString() || "",
                 label: dept.name || "",
             })),
-        ],
         [departments],
     );
 
     const yearOptions = useMemo(
-        () => [
-            { value: "", label: "Academic Year" },
-            ...years.map((year) => ({
+        () =>
+            years.map((year) => ({
                 value: year.id?.toString() || "",
                 label: year.year?.toString() || "",
             })),
-        ],
         [years],
     );
 
@@ -254,15 +298,40 @@ export const CoursesPage = () => {
                         <div className={styles.filtersRow}>
                             <SelectFilter
                                 options={facultyOptions}
-                                setValue={setFacultyFilter}
+                                setValue={(value) =>
+                                    navigate(buildCoursesPath(value))
+                                }
+                                value={facultyFilter}
+                                placeholder="Select Faculty"
                             />
                             <SelectFilter
                                 options={departmentOptions}
-                                setValue={setDepartmentFilter}
+                                setValue={(value) =>
+                                    navigate(
+                                        buildCoursesPath(
+                                            facultyFilter,
+                                            value,
+                                        ),
+                                    )
+                                }
+                                value={departmentFilter}
+                                disabled={!facultyFilter}
+                                placeholder="Select Department"
                             />
                             <SelectFilter
                                 options={yearOptions}
-                                setValue={setYearFilter}
+                                setValue={(value) =>
+                                    navigate(
+                                        buildCoursesPath(
+                                            facultyFilter,
+                                            departmentFilter,
+                                            value,
+                                        ),
+                                    )
+                                }
+                                value={yearFilter}
+                                disabled={!facultyFilter || !departmentFilter}
+                                placeholder="Select Year"
                             />
                         </div>
                     )}

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
     useLazyGetTasksQuery,
     useDeleteTaskMutation,
@@ -34,12 +34,18 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
+    const {
+        facultyId: routeFacultyId,
+        departmentId: routeDepartmentId,
+        yearId: routeYearId,
+        subjectId: routeSubjectId,
+    } = useParams();
+    const facultyFilter = routeFacultyId ?? "";
+    const departmentFilter = routeDepartmentId ?? "";
+    const yearFilter = routeYearId ?? "";
+    const subjectFilter = routeSubjectId ?? "";
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
@@ -131,13 +137,23 @@ export const TasksPage = () => {
     const fetchTasks = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params = {
+            if (!facultyFilter || !departmentFilter || !yearFilter) {
+                setTasks([]);
+                return;
+            }
+            const params: {
+                query?: string;
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+                subject_id?: number;
+                deadline_from?: Date;
+                deadline_to?: Date;
+            } = {
                 query: searchQuery || undefined,
-                faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
-                department_id: departmentFilter
-                    ? parseInt(departmentFilter)
-                    : undefined,
-                year_id: yearFilter ? parseInt(yearFilter) : undefined,
+                faculty_id: parseInt(facultyFilter),
+                department_id: parseInt(departmentFilter),
+                year_id: parseInt(yearFilter),
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 deadline_from: dateFromFilter
                     ? new Date(dateFromFilter)
@@ -145,9 +161,9 @@ export const TasksPage = () => {
                 deadline_to: dateToFilter ? new Date(dateToFilter) : undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getTasks({
                 data: params,
@@ -203,6 +219,53 @@ export const TasksPage = () => {
     );
 
     useAuthQuery(authQueryParams);
+
+    const buildTasksPath = useCallback(
+        (
+            facultyValue?: string | number | null,
+            departmentValue?: string | number | null,
+            yearValue?: string | number | null,
+            subjectValue?: string | number | null,
+        ) => {
+            if (!facultyValue) return "/admin/tasks";
+            if (!departmentValue) return `/admin/tasks/filter/${facultyValue}`;
+            if (!yearValue)
+                return `/admin/tasks/filter/${facultyValue}/${departmentValue}`;
+            if (!subjectValue)
+                return `/admin/tasks/filter/${facultyValue}/${departmentValue}/${yearValue}`;
+            return `/admin/tasks/filter/${facultyValue}/${departmentValue}/${yearValue}/${subjectValue}`;
+        },
+        [],
+    );
+
+    useEffect(() => {
+        if (!user || user.canAccessAll) return;
+        const ownFacultyId = user.faculty?.id?.toString() ?? "";
+        const ownDepartmentId = user.department?.id?.toString() ?? "";
+        const ownYearId = user.year?.id?.toString() ?? "";
+        if (
+            facultyFilter !== ownFacultyId ||
+            departmentFilter !== ownDepartmentId ||
+            yearFilter !== ownYearId
+        ) {
+            navigate(
+                buildTasksPath(
+                    ownFacultyId,
+                    ownDepartmentId,
+                    ownYearId,
+                    null,
+                ),
+                { replace: true },
+            );
+        }
+    }, [
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        navigate,
+        buildTasksPath,
+    ]);
 
     useEffect(() => {
         setPage(1);
@@ -268,50 +331,36 @@ export const TasksPage = () => {
         }
     };
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
-    useEffect(() => {
-        setSubjectFilter("");
-    }, [departmentFilter, yearFilter]);
-
     const facultyOptions = useMemo(
-        () => [
-            { value: "", label: "Faculty" },
-            ...faculties.map((faculty) => ({
+        () =>
+            faculties.map((faculty) => ({
                 value: faculty.id?.toString() || "",
                 label: faculty.name || "",
             })),
-        ],
         [faculties],
     );
 
     const departmentOptions = useMemo(
-        () => [
-            { value: "", label: "Department" },
-            ...departments.map((dept) => ({
+        () =>
+            departments.map((dept) => ({
                 value: dept.id?.toString() || "",
                 label: dept.name || "",
             })),
-        ],
         [departments],
     );
 
     const yearOptions = useMemo(
-        () => [
-            { value: "", label: "Academic Year" },
-            ...years.map((year) => ({
+        () =>
+            years.map((year) => ({
                 value: year.id?.toString() || "",
                 label: year.year?.toString() || "",
             })),
-        ],
         [years],
     );
 
     const subjectOptions = useMemo(
         () => [
-            { value: "", label: "Subject" },
+            { value: "", label: "All Subjects" },
             ...subjects.map((subject) => ({
                 value: subject.id?.toString() || "",
                 label: subject.name || "",
@@ -346,21 +395,63 @@ export const TasksPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        navigate(buildTasksPath(value))
+                                    }
+                                    value={facultyFilter}
+                                    placeholder="Select Faculty"
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildTasksPath(
+                                                facultyFilter,
+                                                value,
+                                            ),
+                                        )
+                                    }
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
+                                    placeholder="Select Department"
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildTasksPath(
+                                                facultyFilter,
+                                                departmentFilter,
+                                                value,
+                                            ),
+                                        )
+                                    }
+                                    value={yearFilter}
+                                    disabled={
+                                        !facultyFilter || !departmentFilter
+                                    }
+                                    placeholder="Select Year"
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={(value) =>
+                                navigate(
+                                    buildTasksPath(
+                                        facultyFilter,
+                                        departmentFilter,
+                                        yearFilter,
+                                        value,
+                                    ),
+                                )
+                            }
+                            value={subjectFilter}
+                            disabled={
+                                !facultyFilter ||
+                                !departmentFilter ||
+                                !yearFilter
+                            }
                         />
                         <DateFilter
                             placeholder="Date From"

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
     useLazyGetExamsQuery,
     useDeleteExamMutation,
@@ -34,12 +34,18 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
+    const {
+        facultyId: routeFacultyId,
+        departmentId: routeDepartmentId,
+        yearId: routeYearId,
+        subjectId: routeSubjectId,
+    } = useParams();
+    const facultyFilter = routeFacultyId ?? "";
+    const departmentFilter = routeDepartmentId ?? "";
+    const yearFilter = routeYearId ?? "";
+    const subjectFilter = routeSubjectId ?? "";
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
     ); // Set default date to today's date in "YYYY-MM-DD" format
@@ -111,7 +117,6 @@ export const ExamsPage = () => {
             if (departmentFilter)
                 params.department_id = parseInt(departmentFilter);
             if (yearFilter) params.year_id = parseInt(yearFilter);
-
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
                 params.department_id = user.department?.id ?? undefined;
@@ -133,21 +138,31 @@ export const ExamsPage = () => {
     const fetchExams = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params = {
+            if (!facultyFilter || !departmentFilter || !yearFilter) {
+                setExams([]);
+                return;
+            }
+            const params: {
+                query?: string;
+                faculty_id?: number;
+                department_id?: number;
+                year_id?: number;
+                subject_id?: number;
+                deadline_from?: string;
+                deadline_to?: string;
+            } = {
                 query: searchQuery || undefined,
-                faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
-                department_id: departmentFilter
-                    ? parseInt(departmentFilter)
-                    : undefined,
-                year_id: yearFilter ? parseInt(yearFilter) : undefined,
+                faculty_id: parseInt(facultyFilter),
+                department_id: parseInt(departmentFilter),
+                year_id: parseInt(yearFilter),
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 deadline_from: dateFromFilter || undefined,
                 deadline_to: dateToFilter || undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getExams({
                 data: params,
@@ -199,6 +214,53 @@ export const ExamsPage = () => {
     );
 
     useAuthQuery(authQueryParams);
+
+    const buildExamsPath = useCallback(
+        (
+            facultyValue?: string | number | null,
+            departmentValue?: string | number | null,
+            yearValue?: string | number | null,
+            subjectValue?: string | number | null,
+        ) => {
+            if (!facultyValue) return "/admin/exams";
+            if (!departmentValue) return `/admin/exams/filter/${facultyValue}`;
+            if (!yearValue)
+                return `/admin/exams/filter/${facultyValue}/${departmentValue}`;
+            if (!subjectValue)
+                return `/admin/exams/filter/${facultyValue}/${departmentValue}/${yearValue}`;
+            return `/admin/exams/filter/${facultyValue}/${departmentValue}/${yearValue}/${subjectValue}`;
+        },
+        [],
+    );
+
+    useEffect(() => {
+        if (!user || user.canAccessAll) return;
+        const ownFacultyId = user.faculty?.id?.toString() ?? "";
+        const ownDepartmentId = user.department?.id?.toString() ?? "";
+        const ownYearId = user.year?.id?.toString() ?? "";
+        if (
+            facultyFilter !== ownFacultyId ||
+            departmentFilter !== ownDepartmentId ||
+            yearFilter !== ownYearId
+        ) {
+            navigate(
+                buildExamsPath(
+                    ownFacultyId,
+                    ownDepartmentId,
+                    ownYearId,
+                    null,
+                ),
+                { replace: true },
+            );
+        }
+    }, [
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        navigate,
+        buildExamsPath,
+    ]);
 
     useEffect(() => {
         setPage(1);
@@ -264,50 +326,36 @@ export const ExamsPage = () => {
         }
     };
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
-    useEffect(() => {
-        setSubjectFilter("");
-    }, [departmentFilter, yearFilter]);
-
     const facultyOptions = useMemo(
-        () => [
-            { value: "", label: "Faculty" },
-            ...faculties.map((faculty) => ({
+        () =>
+            faculties.map((faculty) => ({
                 value: faculty.id?.toString() || "",
                 label: faculty.name || "",
             })),
-        ],
         [faculties],
     );
 
     const departmentOptions = useMemo(
-        () => [
-            { value: "", label: "Department" },
-            ...departments.map((department) => ({
+        () =>
+            departments.map((department) => ({
                 value: department.id?.toString() || "",
                 label: department.name || "",
             })),
-        ],
         [departments],
     );
 
     const yearOptions = useMemo(
-        () => [
-            { value: "", label: "Year" },
-            ...years.map((year) => ({
+        () =>
+            years.map((year) => ({
                 value: year.id?.toString() || "",
                 label: year.year?.toString() || "",
             })),
-        ],
         [years],
     );
 
     const subjectOptions = useMemo(
         () => [
-            { value: "", label: "Subject" },
+            { value: "", label: "All Subjects" },
             ...subjects.map((subject) => ({
                 value: subject.id?.toString() || "",
                 label: subject.name || "",
@@ -344,21 +392,63 @@ export const ExamsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        navigate(buildExamsPath(value))
+                                    }
+                                    value={facultyFilter}
+                                    placeholder="Select Faculty"
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildExamsPath(
+                                                facultyFilter,
+                                                value,
+                                            ),
+                                        )
+                                    }
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
+                                    placeholder="Select Department"
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={(value) =>
+                                        navigate(
+                                            buildExamsPath(
+                                                facultyFilter,
+                                                departmentFilter,
+                                                value,
+                                            ),
+                                        )
+                                    }
+                                    value={yearFilter}
+                                    disabled={
+                                        !facultyFilter || !departmentFilter
+                                    }
+                                    placeholder="Select Year"
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={(value) =>
+                                navigate(
+                                    buildExamsPath(
+                                        facultyFilter,
+                                        departmentFilter,
+                                        yearFilter,
+                                        value,
+                                    ),
+                                )
+                            }
+                            value={subjectFilter}
+                            disabled={
+                                !facultyFilter ||
+                                !departmentFilter ||
+                                !yearFilter
+                            }
                         />
                         <DateFilter
                             placeholder="Date From"

@@ -55,14 +55,17 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
+    const {
+        facultyId: routeFacultyId,
+        departmentId: routeDepartmentId,
+        yearId: routeYearId,
+        subjectId: routeSubjectId,
+        parentId: routeParentId,
+    } = useParams();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -111,6 +114,9 @@ export function MaterialsPage() {
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
+    const facultyFilter = routeFacultyId ?? "";
+    const departmentFilter = routeDepartmentId ?? "";
+    const yearFilter = routeYearId ?? "";
     const subjectFilter = routeSubjectId ?? "";
     const currentParentId = routeParentId ? Number(routeParentId) : null;
 
@@ -176,14 +182,10 @@ export function MaterialsPage() {
             if (departmentFilter)
                 params.department_id = parseInt(departmentFilter);
             if (yearFilter) params.year_id = parseInt(yearFilter);
-
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
-                setFacultyFilter(user.faculty?.id?.toString() || "");
                 params.department_id = user.department?.id ?? undefined;
-                setDepartmentFilter(user.department?.id?.toString() || "");
                 params.year_id = user.year?.id ?? undefined;
-                setYearFilter(user.year?.id?.toString() || "");
             }
 
             if (Object.keys(params).length < 3) {
@@ -241,15 +243,30 @@ export function MaterialsPage() {
 
     const buildMaterialsPath = useCallback(
         (
+            facultyValue?: string | number | null,
+            departmentValue?: string | number | null,
+            yearValue?: string | number | null,
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!subjectValue) return "/admin/materials";
+            if (!facultyValue) return "/admin/materials";
+            const facultySegment = String(facultyValue);
+            if (!departmentValue) {
+                return `/admin/materials/${facultySegment}`;
+            }
+            const departmentSegment = String(departmentValue);
+            if (!yearValue) {
+                return `/admin/materials/${facultySegment}/${departmentSegment}`;
+            }
+            const yearSegment = String(yearValue);
+            if (!subjectValue) {
+                return `/admin/materials/${facultySegment}/${departmentSegment}/${yearSegment}`;
+            }
             const subjectSegment = String(subjectValue);
             if (!parentValue) {
-                return `/admin/materials/${subjectSegment}`;
+                return `/admin/materials/${facultySegment}/${departmentSegment}/${yearSegment}/${subjectSegment}`;
             }
-            return `/admin/materials/${subjectSegment}/${parentValue}`;
+            return `/admin/materials/${facultySegment}/${departmentSegment}/${yearSegment}/${subjectSegment}/${parentValue}`;
         },
         [],
     );
@@ -280,11 +297,26 @@ export function MaterialsPage() {
 
     const handleNavigate = useCallback(
         (material: MaterialResponseDto | null) => {
-            navigate(buildMaterialsPath(subjectFilter, material?.id ?? null));
+            navigate(
+                buildMaterialsPath(
+                    facultyFilter,
+                    departmentFilter,
+                    yearFilter,
+                    subjectFilter,
+                    material?.id ?? null,
+                ),
+            );
             setSelectedMaterials([]);
             setIsSelectionMode(false);
         },
-        [buildMaterialsPath, navigate, subjectFilter],
+        [
+            buildMaterialsPath,
+            navigate,
+            facultyFilter,
+            departmentFilter,
+            yearFilter,
+            subjectFilter,
+        ],
     );
 
     const authQueryParams = useCallback(
@@ -309,6 +341,36 @@ export function MaterialsPage() {
     );
 
     useAuthQuery(authQueryParams);
+
+    useEffect(() => {
+        if (!user || user.canAccessAll) return;
+        const ownFacultyId = user.faculty?.id?.toString() ?? "";
+        const ownDepartmentId = user.department?.id?.toString() ?? "";
+        const ownYearId = user.year?.id?.toString() ?? "";
+        if (
+            facultyFilter !== ownFacultyId ||
+            departmentFilter !== ownDepartmentId ||
+            yearFilter !== ownYearId
+        ) {
+            navigate(
+                buildMaterialsPath(
+                    ownFacultyId,
+                    ownDepartmentId,
+                    ownYearId,
+                    null,
+                    null,
+                ),
+                { replace: true },
+            );
+        }
+    }, [
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        navigate,
+        buildMaterialsPath,
+    ]);
 
     useEffect(() => {
         if (!subjectFilter) {
@@ -524,7 +586,7 @@ export function MaterialsPage() {
                             : "Material created successfully",
                     );
                 } else {
-                    const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+                    const url = `${buildMaterialsPath(facultyFilter, departmentFilter, yearFilter, subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
                     dispatch(
                         setProcess({
                             ...uploadResult,
@@ -549,6 +611,9 @@ export function MaterialsPage() {
             dispatch,
             fetchMaterials,
             buildMaterialsPath,
+            facultyFilter,
+            departmentFilter,
+            yearFilter,
             subjectFilter,
             currentPath,
             updateMaterial,
@@ -598,9 +663,9 @@ export function MaterialsPage() {
             currentPath.length > 0
                 ? currentPath[currentPath.length - 1].id
                 : null;
-        let url = `${window.location.origin}${buildMaterialsPath(subjectFilter, parentId)}`;
+        let url = `${window.location.origin}${buildMaterialsPath(facultyFilter, departmentFilter, yearFilter, subjectFilter, parentId)}`;
         if (type === "folder") {
-            url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
+            url = `${window.location.origin}${buildMaterialsPath(facultyFilter, departmentFilter, yearFilter, subjectFilter, materialId)}`;
         } else if (type === "file") {
             url += `?material_id=${materialId}`;
         } else {
@@ -763,35 +828,29 @@ export function MaterialsPage() {
     );
 
     const facultyOptions = useMemo(
-        () => [
-            { value: "", label: "All Faculties" },
-            ...faculties.map((faculty) => ({
+        () =>
+            faculties.map((faculty) => ({
                 value: faculty.id?.toString() || "",
                 label: faculty.name || "",
             })),
-        ],
         [faculties],
     );
 
     const departmentOptions = useMemo(
-        () => [
-            { value: "", label: "All Departments" },
-            ...departments.map((dept) => ({
+        () =>
+            departments.map((dept) => ({
                 value: dept.id?.toString() || "",
                 label: dept.name || "",
             })),
-        ],
         [departments],
     );
 
     const yearOptions = useMemo(
-        () => [
-            { value: "", label: "All Years" },
-            ...years.map((year) => ({
+        () =>
+            years.map((year) => ({
                 value: year.id?.toString() || "",
                 label: year.year?.toString() || "",
             })),
-        ],
         [years],
     );
 
@@ -912,7 +971,7 @@ export function MaterialsPage() {
                 },
             }).unwrap();
 
-            const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+            const url = `${buildMaterialsPath(facultyFilter, departmentFilter, yearFilter, subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
 
             dispatch(setProcess({ ...uploadResult, status: "completed", url }));
             setCurrentPath((prev) => {
@@ -928,6 +987,9 @@ export function MaterialsPage() {
             dispatch,
             fetchMaterials,
             buildMaterialsPath,
+            facultyFilter,
+            departmentFilter,
+            yearFilter,
             subjectFilter,
             currentPath,
         ],
@@ -998,53 +1060,73 @@ export function MaterialsPage() {
                         <>
                             <SelectFilter
                                 options={facultyOptions}
-                                setValue={(value) => {
-                                    if (
-                                        facultyFilter &&
-                                        value != facultyFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setFacultyFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    navigate(
+                                        buildMaterialsPath(
+                                            value,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                        ),
+                                    )
+                                }
                                 value={facultyFilter}
+                                placeholder="Select Faculty"
                             />
                             <SelectFilter
                                 options={departmentOptions}
-                                setValue={(value) => {
-                                    if (
-                                        departmentFilter &&
-                                        value != departmentFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setDepartmentFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    navigate(
+                                        buildMaterialsPath(
+                                            facultyFilter,
+                                            value,
+                                            null,
+                                            null,
+                                            null,
+                                        ),
+                                    )
+                                }
                                 value={departmentFilter}
+                                disabled={!facultyFilter}
+                                placeholder="Select Department"
                             />
                             <SelectFilter
                                 options={yearOptions}
-                                setValue={(value) => {
-                                    if (yearFilter && value != yearFilter) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setYearFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    navigate(
+                                        buildMaterialsPath(
+                                            facultyFilter,
+                                            departmentFilter,
+                                            value,
+                                            null,
+                                            null,
+                                        ),
+                                    )
+                                }
                                 value={yearFilter}
+                                disabled={!facultyFilter || !departmentFilter}
+                                placeholder="Select Year"
                             />
                         </>
                     )}
                     <SelectFilter
                         options={subjectOptions}
-                        setValue={(value) => {
+                        setValue={(value) =>
                             navigate(
                                 buildMaterialsPath(
-                                    typeof value === "string" ? value : "",
+                                    facultyFilter,
+                                    departmentFilter,
+                                    yearFilter,
+                                    value,
                                     null,
                                 ),
-                            );
-                        }}
+                            )
+                        }
                         value={subjectFilter}
+                        disabled={
+                            !facultyFilter || !departmentFilter || !yearFilter
+                        }
                     />
                 </div>
 
@@ -1187,7 +1269,10 @@ export function MaterialsPage() {
                                                 draggedFilesState.active
                                             }
                                             showCount={true}
-                                            showAll={true}
+                                            showCopy
+                                            showMove
+                                            showEdit
+                                            showDelete
                                         />
                                     );
                                 })}
@@ -1234,6 +1319,10 @@ export function MaterialsPage() {
                                             isDraggingGlobal={
                                                 draggedFilesState.active
                                             }
+                                            showCopy
+                                            showMove
+                                            showEdit
+                                            showDelete
                                         />
                                     );
                                 })}

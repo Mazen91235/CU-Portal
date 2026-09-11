@@ -108,14 +108,26 @@ function App() {
                     </Route>
                     <Route path="tasks">
                         <Route index element={<UserTasksPage />} />
+                        <Route
+                            path="filter/:subjectId"
+                            element={<UserTasksPage />}
+                        />
                         <Route path=":taskId" element={<UserTaskPage />} />
                     </Route>
                     <Route path="exams">
                         <Route index element={<UserExamsPage />} />
+                        <Route
+                            path="filter/:subjectId"
+                            element={<UserExamsPage />}
+                        />
                         <Route path=":examId" element={<UserExamPage />} />
                     </Route>
                     <Route path="announcements">
                         <Route index element={<UserAnnouncementsPage />} />
+                        <Route
+                            path="filter/:subjectId"
+                            element={<UserAnnouncementsPage />}
+                        />
                         <Route
                             path=":announcementId"
                             element={<UserAnnouncementPage />}
@@ -184,6 +196,10 @@ function App() {
                         }
                     >
                         <Route index element={<DepartmentsPage />} />
+                        <Route
+                            path=":facultyId"
+                            element={<DepartmentsPage />}
+                        />
                     </Route>
 
                     <Route
@@ -198,8 +214,32 @@ function App() {
                         element={<ProtectedRoute permission="View Users" />}
                     >
                         <Route index element={<UsersPage />} />
+                        <Route
+                            path="filter/:facultyId"
+                            element={<UsersPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId"
+                            element={<UsersPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId"
+                            element={<UsersPage />}
+                        />
                         <Route path=":userId" element={<UserPage />} />
                         <Route path="pending" element={<PendingUsersPage />} />
+                        <Route
+                            path="pending/:facultyId"
+                            element={<PendingUsersPage />}
+                        />
+                        <Route
+                            path="pending/:facultyId/:departmentId"
+                            element={<PendingUsersPage />}
+                        />
+                        <Route
+                            path="pending/:facultyId/:departmentId/:yearId"
+                            element={<PendingUsersPage />}
+                        />
                     </Route>
 
                     <Route
@@ -215,6 +255,18 @@ function App() {
                         element={<ProtectedRoute permission="View Courses" />}
                     >
                         <Route index element={<CoursesPage />} />
+                        <Route
+                            path="filter/:facultyId"
+                            element={<CoursesPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId"
+                            element={<CoursesPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId"
+                            element={<CoursesPage />}
+                        />
                         <Route
                             path="create"
                             element={
@@ -240,6 +292,22 @@ function App() {
                     >
                         <Route index element={<TasksPage />} />
                         <Route
+                            path="filter/:facultyId"
+                            element={<TasksPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId"
+                            element={<TasksPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId"
+                            element={<TasksPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId/:subjectId"
+                            element={<TasksPage />}
+                        />
+                        <Route
                             path="create"
                             element={<ProtectedRoute permission="Add Tasks" />}
                         >
@@ -259,6 +327,22 @@ function App() {
                         element={<ProtectedRoute permission="View Exams" />}
                     >
                         <Route index element={<ExamsPage />} />
+                        <Route
+                            path="filter/:facultyId"
+                            element={<ExamsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId"
+                            element={<ExamsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId"
+                            element={<ExamsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId/:subjectId"
+                            element={<ExamsPage />}
+                        />
                         <Route
                             path="create"
                             element={<ProtectedRoute permission="Add Exams" />}
@@ -281,6 +365,22 @@ function App() {
                         }
                     >
                         <Route index element={<AnnouncementsPage />} />
+                        <Route
+                            path="filter/:facultyId"
+                            element={<AnnouncementsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId"
+                            element={<AnnouncementsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId"
+                            element={<AnnouncementsPage />}
+                        />
+                        <Route
+                            path="filter/:facultyId/:departmentId/:yearId/:subjectId"
+                            element={<AnnouncementsPage />}
+                        />
                         <Route
                             path="create"
                             element={
@@ -308,10 +408,47 @@ function App() {
                         element={<ProtectedRoute permission="View Materials" />}
                     >
                         <Route index element={<MaterialsPage />} />
-                        <Route path=":subjectId" element={<MaterialsPage />} />
+                        <Route path=":facultyId" element={<MaterialsPage />} />
                         <Route
-                            path=":subjectId/:parentId"
+                            path=":facultyId/:departmentId"
                             element={<MaterialsPage />}
+                        />
+                        <Route
+                            path=":facultyId/:departmentId/:yearId"
+                            element={<MaterialsPage />}
+                        />
+                        <Route
+                            path=":facultyId/:departmentId/:yearId/:subjectId"
+                            element={<MaterialsPage />}
+                        />
+                        <Route
+                            path=":facultyId/:departmentId/:yearId/:subjectId/:parentId"
+                            element={<MaterialsPage />}
+                        />
+                    </Route>
+                    <Route
+                        path="other-materials"
+                        element={<ProtectedRoute permission="View Materials" />}
+                    >
+                        <Route
+                            index
+                            element={<AdminOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":departmentId"
+                            element={<AdminOtherMaterialsYearsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId"
+                            element={<AdminOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId"
+                            element={<AdminOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId/:parentId"
+                            element={<AdminOtherMaterialsPage />}
                         />
                     </Route>
                     <Route

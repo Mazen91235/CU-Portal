@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useLazyGetAnnouncementsQuery } from "../../../services/apis/user/AnnouncementAPIs";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
@@ -23,8 +23,9 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
+    const { subjectId: routeSubjectId } = useParams();
+    const subjectFilter = routeSubjectId ?? "";
     const [searchQuery, setSearchQuery] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
@@ -35,7 +36,6 @@ export const AnnouncementsPage = () => {
     >([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getAnnouncements, { isFetching }] = useLazyGetAnnouncementsQuery();
 
@@ -100,12 +100,13 @@ export const AnnouncementsPage = () => {
         setHasNextPage(true);
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
-    useEffect(() => {
-        const subject_id = searchParams.get("subject_id") || "";
-        if (subject_id && subjects.length > 0) {
-            setSubjectFilter(subject_id);
-        }
-    }, [searchParams, subjects]);
+    const buildAnnouncementsPath = useCallback(
+        (subjectValue?: string | null) => {
+            if (!subjectValue) return "/user/announcements";
+            return `/user/announcements/filter/${subjectValue}`;
+        },
+        [],
+    );
 
     const handleViewAnnouncement = (announcementId: number) => {
         navigate(`/user/announcements/${announcementId}`);
@@ -160,7 +161,9 @@ export const AnnouncementsPage = () => {
                         <SelectFilter
                             value={subjectFilter}
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={(value) =>
+                                navigate(buildAnnouncementsPath(value))
+                            }
                         />
                         <DateFilter
                             placeholder="Start Date"

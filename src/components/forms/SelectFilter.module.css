@@ -27,6 +27,11 @@
     box-shadow: 0 0 0 0.2rem rgba(90, 15, 97, 0.25);
 }
 
+.select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .select {
         width: 100%;

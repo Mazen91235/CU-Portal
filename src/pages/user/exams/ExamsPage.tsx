@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useLazyGetExamsQuery } from "../../../services/apis/user/ExamAPIs";
 import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
@@ -23,8 +23,9 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
+    const { subjectId: routeSubjectId } = useParams();
+    const subjectFilter = routeSubjectId ?? "";
     const [searchQuery, setSearchQuery] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState<string>(
         new Date().toLocaleDateString("en-CA"),
@@ -33,7 +34,6 @@ export const ExamsPage = () => {
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getExams, { isFetching }] = useLazyGetExamsQuery();
 
@@ -93,12 +93,10 @@ export const ExamsPage = () => {
         setHasNextPage(true);
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
-    useEffect(() => {
-        const subject_id = searchParams.get("subject_id") || "";
-        if (subject_id && subjects.length > 0) {
-            setSubjectFilter(subject_id);
-        }
-    }, [searchParams, subjects]);
+    const buildExamsPath = useCallback((subjectValue?: string | null) => {
+        if (!subjectValue) return "/user/exams";
+        return `/user/exams/filter/${subjectValue}`;
+    }, []);
 
     const handleViewExam = (examId: number) => {
         navigate(`/user/exams/${examId}`);
@@ -156,7 +154,9 @@ export const ExamsPage = () => {
                         <SelectFilter
                             value={subjectFilter}
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={(value) =>
+                                navigate(buildExamsPath(value))
+                            }
                         />
                         <DateFilter
                             placeholder="Date From"

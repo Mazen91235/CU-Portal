@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useLazyGetTasksQuery } from "../../../services/apis/user/TaskAPIs";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
@@ -23,8 +23,9 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
+    const { subjectId: routeSubjectId } = useParams();
+    const subjectFilter = routeSubjectId ?? "";
     const [searchQuery, setSearchQuery] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [dateFromFilter, setDateFromFilter] = useState(
         new Date().toLocaleDateString("en-CA"),
@@ -33,7 +34,6 @@ export const TasksPage = () => {
     const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getTasks, { isFetching }] = useLazyGetTasksQuery();
 
@@ -97,12 +97,10 @@ export const TasksPage = () => {
         setHasNextPage(true);
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
-    useEffect(() => {
-        const subject_id = searchParams.get("subject_id") || "";
-        if (subject_id && subjects.length > 0) {
-            setSubjectFilter(subject_id);
-        }
-    }, [searchParams, subjects]);
+    const buildTasksPath = useCallback((subjectValue?: string | null) => {
+        if (!subjectValue) return "/user/tasks";
+        return `/user/tasks/filter/${subjectValue}`;
+    }, []);
 
     const handleViewTask = (taskId: number) => {
         navigate(`/user/tasks/${taskId}`);
@@ -158,7 +156,9 @@ export const TasksPage = () => {
                         <SelectFilter
                             value={subjectFilter}
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={(value) =>
+                                navigate(buildTasksPath(value))
+                            }
                         />
                         <DateFilter
                             placeholder="Date From"
