@@ -63,6 +63,7 @@ export type Icon =
     | "sidebar-admin-roles"
     | "sidebar-admin-courses"
     | "sidebar-admin-materials"
+    | "sidebar-admin-other-materials"
     | "sidebar-admin-grades"
     | "sidebar-admin-tasks"
     | "sidebar-admin-exams"

@@ -300,10 +300,6 @@ export function MaterialsPage() {
                                                 handleCardClick(folder);
                                             }}
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     folderId,
@@ -334,10 +330,6 @@ export function MaterialsPage() {
                                                 handleCardClick(file);
                                             }}
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     fileId,

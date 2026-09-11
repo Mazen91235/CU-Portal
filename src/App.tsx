@@ -45,6 +45,9 @@ import { AnnouncementPage as UserAnnouncementPage } from "./pages/user/announcem
 import { CoursesPage as UserCoursesPage } from "./pages/user/courses/CoursesPage";
 import { CoursePage as UserCoursePage } from "./pages/user/courses/CoursePage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
+import { OtherMaterialsDepartmentsPage as UserOtherMaterialsDepartmentsPage } from "./pages/user/otherMaterials/OtherMaterialsDepartmentsPage";
+import { OtherMaterialsYearsPage as UserOtherMaterialsYearsPage } from "./pages/user/otherMaterials/OtherMaterialsYearsPage";
+import { OtherMaterialsPage as UserOtherMaterialsPage } from "./pages/user/otherMaterials/OtherMaterialsPage";
 import { CalendarPage } from "./pages/user/calendar/CalendarPage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
 import { UserPage } from "./pages/admin/users/UserPage";
@@ -53,6 +56,9 @@ import { RolePage } from "./pages/admin/roles/RolePage";
 import { RolesPage } from "./pages/admin/roles/RolesPage";
 import { NotificationsPage } from "./pages/user/notifications/NotificationsPage";
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
+import { OtherMaterialsDepartmentsPage as AdminOtherMaterialsDepartmentsPage } from "./pages/admin/otherMaterials/OtherMaterialsDepartmentsPage";
+import { OtherMaterialsYearsPage as AdminOtherMaterialsYearsPage } from "./pages/admin/otherMaterials/OtherMaterialsYearsPage";
+import { OtherMaterialsPage as AdminOtherMaterialsPage } from "./pages/admin/otherMaterials/OtherMaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
 
@@ -128,6 +134,28 @@ function App() {
                         <Route
                             path=":subjectId/:parentId"
                             element={<UserMaterialsPage />}
+                        />
+                    </Route>
+                    <Route path="other-materials">
+                        <Route
+                            index
+                            element={<UserOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":departmentId"
+                            element={<UserOtherMaterialsYearsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId"
+                            element={<UserOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId"
+                            element={<UserOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId/:parentId"
+                            element={<UserOtherMaterialsPage />}
                         />
                     </Route>
                     <Route path="calendar">
@@ -284,6 +312,31 @@ function App() {
                         <Route
                             path=":subjectId/:parentId"
                             element={<MaterialsPage />}
+                        />
+                    </Route>
+                    <Route
+                        path="other-materials"
+                        element={<ProtectedRoute permission="View Materials" />}
+                    >
+                        <Route
+                            index
+                            element={<AdminOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":departmentId"
+                            element={<AdminOtherMaterialsYearsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId"
+                            element={<AdminOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId"
+                            element={<AdminOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":departmentId/:yearId/:subjectId/:parentId"
+                            element={<AdminOtherMaterialsPage />}
                         />
                     </Route>
                 </Route>
