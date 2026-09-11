@@ -146,15 +146,15 @@ export const ExamPage = () => {
                 },
                 {
                   label: "Faculty:",
-                  value: exam.faculty?.name || "N/A",
+                  value: exam.subject?.faculty?.name || "N/A",
                 },
                 {
                   label: "Department:",
-                  value: exam.department?.name || "N/A",
+                  value: exam.subject?.department?.name || "N/A",
                 },
                 {
                   label: "Year:",
-                  value: exam.year?.year?.toString() || "N/A",
+                  value: exam.subject?.year?.year?.toString() || "N/A",
                 },
                 {
                   label: "Exam Type:",

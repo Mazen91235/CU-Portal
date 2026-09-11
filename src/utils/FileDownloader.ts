@@ -1,7 +1,9 @@
-import { GetApiLink, GetUserApiLink } from "./LinkHandler";
+import { GetDriveDownloadUrl } from "./DriveManager";
+import { GetUserApiLink } from "./LinkHandler";
 
 export const downloadFile = (fileId: string): void => {
-    window.location.href = GetApiLink(`/files/${fileId}/download`);
+    // window.location.href = GetApiLink(`/files/${fileId}/download`);
+    window.location.href = GetDriveDownloadUrl(fileId);
 };
 
 export const downloadMaterials = (materialIds: number[]): void => {

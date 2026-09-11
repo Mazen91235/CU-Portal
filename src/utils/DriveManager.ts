@@ -2,6 +2,10 @@ export function GetDriveUrl(fileId: string) {
     return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
+export function GetDriveDownloadUrl(fileId: string) {
+    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+
 export function GetDrivePreviewUrlFromId(fileId: string) {
     return `https://lh3.googleusercontent.com/d/${fileId}`;
 }
