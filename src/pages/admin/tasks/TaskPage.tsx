@@ -143,7 +143,8 @@ export const TaskPage = () => {
                                 {
                                     label: "Year:",
                                     value:
-                                        task.subject?.year?.toString() || "N/A",
+                                        task.subject?.year?.year?.toString() ||
+                                        "N/A",
                                 },
                             ]}
                         />
