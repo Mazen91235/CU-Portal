@@ -18,6 +18,8 @@ export default function useGetNotifications({
                 if (!loggedIn) return;
                 await getNotifications({
                     data: { seen },
+                    order_by: ["id"],
+                    descending: true,
                     page,
                     limit,
                 }).unwrap();

@@ -30,6 +30,8 @@ export const NotificationsPage = () => {
             if (!unreadNotifications.length) {
                 const unreadRes = await getNotifications({
                     data: { seen: false },
+                    order_by: ["id"],
+                    descending: true,
                     page: 1,
                     limit: 1e6,
                 }).unwrap();
@@ -37,6 +39,8 @@ export const NotificationsPage = () => {
             }
             const readRes = await getNotifications({
                 data: { seen: true },
+                order_by: ["id"],
+                descending: true,
                 page: readPage,
                 limit: 50,
             }).unwrap();
