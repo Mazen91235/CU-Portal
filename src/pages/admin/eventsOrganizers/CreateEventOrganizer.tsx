@@ -60,7 +60,7 @@ export const CreateEventOrganizer = () => {
         setValue,
     } = useForm<FormData>({ resolver: zodResolver(schema) });
     const [isUploading, setIsUploading] = useState(false);
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
 
     const onSubmit = async (data: FormData) => {
         const uploadedUrls: string[] = [];

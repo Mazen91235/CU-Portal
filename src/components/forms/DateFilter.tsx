@@ -25,6 +25,36 @@ export const DateFilter = ({
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{
+        left: number;
+        top: number;
+    } | null>(null);
+    const VIEWPORT_MARGIN = 16;
+    const DROPDOWN_WIDTH = 280;
+
+    const updateDropdownPosition = () => {
+        const trigger = containerRef.current;
+        if (!trigger) return;
+        const rect = trigger.getBoundingClientRect();
+        const maxLeft = Math.max(
+            VIEWPORT_MARGIN,
+            window.innerWidth - DROPDOWN_WIDTH - VIEWPORT_MARGIN,
+        );
+        setDropdownPosition({
+            left: Math.min(Math.max(rect.left, VIEWPORT_MARGIN), maxLeft),
+            top: rect.bottom + 8,
+        });
+    };
+
+    const toggleDropdown = () => {
+        setIsOpen((open) => {
+            const next = !open;
+            if (next) {
+                requestAnimationFrame(updateDropdownPosition);
+            }
+            return next;
+        });
+    };
 
     const handleDateSelect = (date: Date) => {
         const nextDay = new Date(
@@ -126,6 +156,10 @@ export const DateFilter = ({
     }, [defaultDate]);
 
     useEffect(() => {
+        const handleViewportChange = () => {
+            if (isOpen) updateDropdownPosition();
+        };
+
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 containerRef.current &&
@@ -136,16 +170,24 @@ export const DateFilter = ({
         };
 
         document.addEventListener("mousedown", handleClickOutside);
+        window.addEventListener("resize", handleViewportChange);
+        window.addEventListener("scroll", handleViewportChange, true);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            window.removeEventListener("resize", handleViewportChange);
+            window.removeEventListener("scroll", handleViewportChange, true);
         };
-    }, []);
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) updateDropdownPosition();
+    }, [isOpen]);
 
     return (
         <div className={styles.container} ref={containerRef}>
             <button
                 className={`${styles.dateFilter} ${isOpen ? styles.active : ""}`}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={toggleDropdown}
             >
                 <svg
                     className={styles.calendarIcon}
@@ -173,6 +215,7 @@ export const DateFilter = ({
             {isOpen && (
                 <div
                     className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""}`}
+                    style={dropdownPosition ? { left: dropdownPosition.left, top: dropdownPosition.top } : undefined}
                 >
                     <div className={styles.calendarHeader}>
                         <button

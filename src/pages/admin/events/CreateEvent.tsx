@@ -369,7 +369,7 @@ export const CreateEvent = () => {
         [organizers],
     );
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
     const showScopeFields = isRestricted;
 
     return (

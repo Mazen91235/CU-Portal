@@ -157,7 +157,7 @@ export const VerifyEmailPage = () => {
                         </div>
                         <div className={styles.emailContainer}>{userEmail}</div>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={styles.inputGroup}>
+                            <fieldset disabled={isSubmitting} className={styles.inputGroup}>
                                 <Input
                                     register={register}
                                     name="code"
@@ -166,13 +166,13 @@ export const VerifyEmailPage = () => {
                                     errors={errors}
                                     disabled={isSubmitting}
                                 />
-                            </div>
                             <Button
                                 text="Verify Email"
                                 loadingText="Verifying..."
                                 isSubmitting={isSubmitting}
                                 isOrange={false}
                             />
+                            </fieldset>
                         </form>
                         <div className={styles.resendContainer}>
                             <span>Didn't receive the code?</span>

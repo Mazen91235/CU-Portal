@@ -500,7 +500,7 @@ export const UserPage = () => {
                                 className={styles.announcementHeaderIcon}
                             />
                             <span className={styles.announcementHeaderTitle}>
-                                Announcement
+                                Announcements
                             </span>
                         </div>
                         <div className={styles.announcementList}>
@@ -572,7 +572,120 @@ export const UserPage = () => {
                         </div>
                     </div>
                 </section>
-
+                <section className={styles.section}>
+                    <div className={styles.eventsSection}>
+                        <div className={styles.eventsHeader}>
+                            <span className={styles.eventsHeaderIcon}>
+                                <IconComponent icon="calendar" />
+                            </span>
+                            <span className={styles.eventsHeaderTitle}>
+                                Events
+                            </span>
+                        </div>
+                        <div className={styles.eventsListPublished}>
+                            {user.events && user.events.length > 0 ? (
+                                user.events.map((event) => {
+                                    const now = new Date();
+                                    const startDate = event.start_date
+                                        ? new Date(event.start_date)
+                                        : null;
+                                    const endDate = event.end_date
+                                        ? new Date(event.end_date)
+                                        : null;
+                                    const state =
+                                        !startDate || !endDate
+                                            ? "Pending"
+                                            : now < startDate
+                                              ? "Upcoming"
+                                              : now <= endDate
+                                                ? "Ongoing"
+                                                : "Complete";
+                                    return (
+                                        <div
+                                            key={event.id}
+                                            className={`${styles.eventCard} ${styles.eventCardWhiteBg}`}
+                                        >
+                                            <div
+                                                className={styles.eventCardIcon}
+                                            >
+                                                <IconComponent
+                                                    icon="calendar"
+                                                    className={
+                                                        styles.eventCircleIcon
+                                                    }
+                                                />
+                                            </div>
+                                            <div
+                                                className={styles.eventCardInfo}
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.eventCardTitle
+                                                    }
+                                                >
+                                                    {event.title || "N/A"}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    Start:{" "}
+                                                    {event.start_date
+                                                        ? formatDateTime(
+                                                              event.start_date,
+                                                          )
+                                                        : "N/A"}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    End:{" "}
+                                                    {event.end_date
+                                                        ? formatDateTime(
+                                                              event.end_date,
+                                                          )
+                                                        : "N/A"}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    Organizer:{" "}
+                                                    {event.event_organizer
+                                                        ?.name ?? "N/A"}
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.eventCardBadges
+                                                }
+                                            >
+                                                <span
+                                                    className={`${styles.eventBadge} ${styles.eventBadgePublished}`}
+                                                >
+                                                    Published
+                                                </span>
+                                                <span
+                                                    className={`${styles.eventBadge} ${state === "Complete" ? styles.eventBadgeComplete : state === "Ongoing" ? styles.eventBadgeOngoing : state === "Upcoming" ? styles.eventBadgeUpcoming : styles.eventBadgePending}`}
+                                                >
+                                                    {state}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className={styles.emptySection}>
+                                    No events
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
                 <section className={styles.section}>
                     <div className={styles.materialsSection}>
                         <div className={styles.materialsHeader}>
@@ -659,9 +772,6 @@ export const UserPage = () => {
                         </div>
                     </div>
                 </section>
-            </div>
-
-            <div className={styles.sectionsRow}>
                 <section className={styles.section}>
                     <div className={styles.subjectsSection}>
                         <div className={styles.subjectsHeader}>
@@ -707,13 +817,15 @@ export const UserPage = () => {
                                             >
                                                 {subject.code || "N/A"}
                                             </div>
-                                            <div
-                                                className={
-                                                    styles.subjectsCardCredit
-                                                }
-                                            >
-                                                {`${subject.credits} Credit Hours`}
-                                            </div>
+                                            {subject.credits && (
+                                                <div
+                                                    className={
+                                                        styles.subjectsCardCredit
+                                                    }
+                                                >
+                                                    {`${subject.credits} Credit Hours`}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))
@@ -725,6 +837,9 @@ export const UserPage = () => {
                         </div>
                     </div>
                 </section>
+            </div>
+
+            <div className={styles.activityLogsFullWidth}>
                 <section className={styles.section}>
                     <div className={styles.activityLogsSection}>
                         <div className={styles.activityLogsHeader}>

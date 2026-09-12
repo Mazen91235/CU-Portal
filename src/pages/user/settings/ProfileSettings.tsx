@@ -69,6 +69,7 @@ export const ProfileSettings = () => {
         },
     });
     const removeUploadedFiles = useRemoveUploadedFiles();
+    const formDisabled = isSubmitting || uploadFileToDrive.isGoogleAccessTokenLoading;
     const [updateUser] = useUpdateUserDataMutation();
     const onSubmit = async (data: ProfileFormData) => {
         const uploadedUrls: string[] = [];
@@ -149,11 +150,11 @@ export const ProfileSettings = () => {
                                 }
                                 currentImg={currentImg}
                                 onChange={ImgChanged}
-                                disabled={isSubmitting}
+                                disabled={formDisabled}
                             />
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={styles.form}>
+                            <fieldset disabled={formDisabled} className={styles.form}>
                                 <div className={styles.inputGroup}>
                                     <Input
                                         register={register}
@@ -162,7 +163,7 @@ export const ProfileSettings = () => {
                                         placeholder="somia ali mohmad"
                                         errors={errors}
                                         label="Name"
-                                        disabled={isSubmitting}
+                                        disabled={formDisabled}
                                     />
                                     <Input
                                         register={register}
@@ -206,19 +207,20 @@ export const ProfileSettings = () => {
                                         disabled
                                     />
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <div className={styles.buttonGroup}>
                                 <Button
                                     text="Save Changes"
                                     loadingText="Saving..."
-                                    isSubmitting={isSubmitting}
+                                    isSubmitting={formDisabled}
                                     isOrange={false}
                                 />
                                 <button
                                     type="button"
                                     className={styles.googleButton}
                                     onClick={changeGoogleAccount}
+                                    disabled={formDisabled}
                                 >
                                     <IconComponent
                                         icon="google"

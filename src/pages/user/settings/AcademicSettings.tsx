@@ -182,7 +182,7 @@ export const AcademicSettings = () => {
                         </div>
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={styles.form}>
+                            <fieldset disabled={isSubmitting} className={styles.form}>
                                 <div className={styles.selectGroup}>
                                     <Select
                                         register={register}
@@ -263,7 +263,7 @@ export const AcademicSettings = () => {
                                         ))}
                                     </Select>
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <div className={styles.buttonContainer}>
                                 <Button

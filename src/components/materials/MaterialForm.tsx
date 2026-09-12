@@ -42,6 +42,7 @@ export function MaterialForm({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const uploadFile = useUploadFileToDriveChunked({});
     const removeUploadedFiles = useRemoveUploadedFiles();
+    const formDisabled = isLoading || uploadFile.isGoogleAccessTokenLoading;
 
     useEffect(() => {
         if (material) {
@@ -233,7 +234,7 @@ export function MaterialForm({
     ];
 
     return (
-        <div className={styles.modalOverlay} onClick={onClose}>
+        <div className={styles.modalOverlay} onClick={formDisabled ? undefined : onClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
                     <h2>{getTitle()}</h2>
@@ -241,14 +242,14 @@ export function MaterialForm({
                         type="button"
                         className={styles.closeButton}
                         onClick={onClose}
-                        disabled={isLoading}
+                        disabled={formDisabled}
                     >
                         ×
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    <fieldset disabled={isLoading} className={styles.fieldset}>
+                    <fieldset disabled={formDisabled} className={styles.fieldset}>
                     <div className={styles.fileInputRow}>
                         <div className={styles.formGroup}>
                             <label htmlFor="name" className={styles.label}>
@@ -405,7 +406,7 @@ export function MaterialForm({
                     <div className={styles.formActions}>
                         <Button
                             type="button"
-                            isSubmitting={isLoading}
+                            isSubmitting={formDisabled}
                             text="Cancel"
                             loadingText="Canceling..."
                             className={styles.cancelButton}
@@ -414,7 +415,7 @@ export function MaterialForm({
                         />
                         <Button
                             type="submit"
-                            isSubmitting={isLoading}
+                            isSubmitting={formDisabled}
                             text={material ? "Update" : "Create"}
                             loadingText={
                                 material ? "Updating..." : "Creating..."
