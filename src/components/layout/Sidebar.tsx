@@ -196,9 +196,9 @@ const showAdminLinks = (permissions: string[]) => {
         links: [],
     };
 
-    if (!permissions.includes("View Admin Links")) return null;
+    if (!permissions.includes("View AdminLinks")) return null;
 
-    if (permissions.includes("View Admin Panel")) {
+    if (permissions.includes("View AdminPanel")) {
         section.links.push({
             label: "Dashboard",
             // path: "/admin",

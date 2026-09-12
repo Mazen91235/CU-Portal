@@ -174,7 +174,7 @@ function App() {
                     <Route
                         path=""
                         element={
-                            <ProtectedRoute permission="View Admin Panel" />
+                            <ProtectedRoute permission="View AdminPanel" />
                         }
                     >
                         <Route index element={<div>Admin Dashboard</div>} />
