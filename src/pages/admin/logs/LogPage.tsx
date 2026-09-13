@@ -1,85 +1,51 @@
-import { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router";
-import ReactJson from "react-json-view";
+import { useCallback, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
-import { Avatar } from "../../../components/avatar/Avatar";
+import { UserCard } from "../../../components/user/UserCard";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useLazyGetLogQuery } from "../../../services/apis/admin/LogAPIs";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import type { LogResponseDto } from "../../../types/dtos/LogDtos";
-import { captitalize, formatDateTime } from "../../../utils/Formatter";
-import { staticLogs } from "./logData";
-import emailIcon from "../../../assets/icons/email.svg";
-import phoneIcon from "../../../assets/icons/phone.svg";
+import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./LogPage.module.css";
 
 const getLevelClass = (level?: string | null) => {
-    if (level === "Error") return styles.levelError;
-    if (level === "Warning") return styles.levelWarning;
-    return styles.levelInfo;
+    const normalizedLevel = level?.toLowerCase();
+    if (normalizedLevel === "error") return styles.levelError;
+    if (normalizedLevel === "warning") return styles.levelWarning;
+    if (normalizedLevel === "info") return styles.levelInfo;
+    return styles.levelDefault;
 };
-
-const UserCard = ({
-    user,
-}: {
-    user: NonNullable<LogResponseDto["user"]>;
-}) => (
-    <div className={styles["user-card"]}>
-        <div className={styles["user-card-header"]}>
-            <span className={styles["user-role"]}>
-                {captitalize(user.role?.name || undefined)}
-            </span>
-        </div>
-        <Avatar
-            user={user}
-            size="large"
-            className={styles["user-avatar"]}
-        />
-        <h3 className={styles["user-name"]}>{user.name}</h3>
-        <div className={styles["user-academic-details"]}>
-            <div>
-                <span>Faculty</span>
-                <span>{user.faculty?.name || "N/A"}</span>
-            </div>
-            <div className={styles["separator"]}></div>
-            <div>
-                <span>Department</span>
-                <span>{user.department?.name || "N/A"}</span>
-            </div>
-            <div className={styles["separator"]}></div>
-            <div>
-                <span>Year</span>
-                <span>{user.year?.year || "N/A"}</span>
-            </div>
-        </div>
-        <div className={styles["user-details"]}>
-            <h5>
-                <img src={emailIcon} alt="Email" />
-                <span>{user.email}</span>
-            </h5>
-            <h5>
-                <img src={phoneIcon} alt="Phone" />
-                <span>{user.phone || "N/A"}</span>
-            </h5>
-        </div>
-        <button className={styles["view-profile-button"]}>
-            <Link to={`/admin/users/${user.id}`} className={styles.userLink}>
-                View user profile
-            </Link>
-        </button>
-    </div>
-);
 
 export const LogPage = () => {
     const { logId } = useParams<{ logId: string }>();
     const navigate = useNavigate();
-    const log = staticLogs.find((item) => String(item.id) === logId);
+    const [getLog] = useLazyGetLogQuery();
+    const [log, setLog] = useState<LogResponseDto | null>(null);
 
-    useEffect(() => {
-        if (!log) navigate("/admin/logs");
-    }, [log, navigate]);
+    const fetchLog = useCallback(async () => {
+        if (!logId) {
+            navigate("/admin/logs");
+            return;
+        }
+        try {
+            const result = await getLog({ log_id: Number(logId) }).unwrap();
+            if (result.data) setLog(result.data);
+            else navigate("/admin/logs");
+        } catch (error) {
+            handlePopupErrors(error);
+            navigate("/admin/logs");
+        }
+    }, [getLog, logId, navigate]);
+
+    const authQueryParams = useCallback(() => fetchLog(), [fetchLog]);
+
+    useAuthQuery(authQueryParams);
 
     if (!log) return null;
 
@@ -98,12 +64,22 @@ export const LogPage = () => {
             />
             <div className={styles.container}>
                 <div className={styles.statsRow}>
-                    <StatCard type="Action" value={log.action || "N/A"} icon="tag" />
-                    <StatCard type="Entity" value={log.entity || "N/A"} icon="book" />
+                    <StatCard
+                        type="Action"
+                        value={log.action || "N/A"}
+                        icon="tag"
+                    />
+                    <StatCard
+                        type="Entity"
+                        value={log.entity || "N/A"}
+                        icon="book"
+                    />
                     <StatCard
                         type="Level"
                         value={
-                            <span className={`${styles.levelBadge} ${getLevelClass(log.level)}`}>
+                            <span
+                                className={`${styles.levelBadge} ${getLevelClass(log.level)}`}
+                            >
                                 {log.level || "N/A"}
                             </span>
                         }
@@ -125,27 +101,26 @@ export const LogPage = () => {
                         </LongSection>
                         <LongSection title="Log Details" icon="code">
                             <div className={styles.jsonContainer}>
-                                <ReactJson 
-                                    src={log.details || {}} 
-                                    theme="twilight" 
-                                    collapsed={2} 
-                                    displayDataTypes={false} 
-                                    enableClipboard={false} 
-                                    style={{ padding: '1rem', background: 'transparent' }} 
-                                />
+                                <pre className={styles.jsonContent}>
+                                    {JSON.stringify(log.details || {}, null, 2)}
+                                </pre>
                             </div>
                         </LongSection>
                     </div>
 
                     <aside className={styles.sidebar}>
-                        {log.user && <UserCard user={log.user} />}
+                        {log.user && <UserCard user={log.user} button />}
                         <QuickInfoSection
                             items={[
                                 { label: "Route:", value: log.route || "N/A" },
-                                { label: "IP Address:", value: log.ip || "N/A" },
+                                {
+                                    label: "IP Address:",
+                                    value: log.ip || "N/A",
+                                },
                                 {
                                     label: "Created At:",
-                                    value: formatDateTime(log.created_at) || "N/A",
+                                    value:
+                                        formatDateTime(log.created_at) || "N/A",
                                 },
                             ]}
                         />
