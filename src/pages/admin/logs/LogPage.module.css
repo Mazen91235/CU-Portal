@@ -58,19 +58,13 @@
     border-radius: 10px;
     overflow: auto;
     border: 1px solid rgba(123, 21, 132, 0.16);
-    background: #211d2b;
-    text-align: left !important;
 }
 
-.jsonContent {
+.jsonContainer > div {
     margin: 0;
     padding: 1rem;
-    color: #f8fafc;
-    font-family: monospace;
     font-size: 0.9rem;
     line-height: 1.6;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
 }
 
 @media (max-width: 992px) {

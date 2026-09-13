@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import ReactJson from "@microlink/react-json-view";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -101,9 +102,16 @@ export const LogPage = () => {
                         </LongSection>
                         <LongSection title="Log Details" icon="code">
                             <div className={styles.jsonContainer}>
-                                <pre className={styles.jsonContent}>
-                                    {JSON.stringify(log.details || {}, null, 2)}
-                                </pre>
+                                <ReactJson
+                                    src={log.details || {}}
+                                    name={false}
+                                    collapsed={false}
+                                    indentWidth={4}
+                                    displayObjectSize={true}
+                                    displayDataTypes={false}
+                                    enableClipboard={true}
+                                    theme="monokai"
+                                />
                             </div>
                         </LongSection>
                     </div>
