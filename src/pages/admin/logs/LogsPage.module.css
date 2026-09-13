@@ -1,0 +1,87 @@
+.filtersSection {
+    margin: 1.5rem 2rem 0;
+    padding: 1.25rem;
+    background: var(--background-light-gray);
+    border-radius: 12px;
+}
+
+.searchRow {
+    margin-bottom: 1rem;
+}
+
+.filtersRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.tableSection {
+    padding: 1.5rem 2rem 2rem;
+}
+
+.badge {
+    display: inline-block;
+    min-width: 68px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.levelInfo{
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+.code2xx {
+    color: #166534;
+    background: rgba(22, 163, 74, 0.12);
+}
+
+.levelWarning, .code3xx {
+    color: #a16207;
+    background: rgba(234, 179, 8, 0.16);
+}
+
+.code4xx {
+    color: #9a3412;
+    background: rgba(249, 115, 22, 0.16);
+}
+
+.levelError,
+.code5xx {
+    color: #b91c1c;
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.levelDefault,
+.codeDefault {
+    color: var(--text-secondary);
+    background: var(--background-light-gray);
+}
+
+.userCell {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+@media (max-width: 900px) {
+    .filtersRow {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .filtersSection {
+        margin: 1rem;
+    }
+
+    .tableSection {
+        padding: 1rem;
+    }
+
+    .filtersRow {
+        grid-template-columns: 1fr;
+    }
+}

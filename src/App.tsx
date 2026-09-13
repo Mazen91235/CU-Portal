@@ -59,7 +59,8 @@ import { EventsOrganizersPage as UserEventsOrganizersPage } from "./pages/user/e
 import { EventOrganizerPage as UserEventOrganizerPage } from "./pages/user/eventOrganizers/EventOrganizerPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { NotesPage as UserNotesPage } from "./pages/user/notes/NotesPage";
-import { CalendarPage } from "./pages/user/calendar/CalendarPage";
+import { CalendarPage as UserCalendarPage } from "./pages/user/calendar/CalendarPage";
+import { TimeLinePage as UserTimelinePage } from "./pages/user/timeline/TimeLinePage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
 import { UserPage } from "./pages/admin/users/UserPage";
 import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
@@ -69,7 +70,8 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
-import { TimeLinePage } from "./pages/user/timeline/TimeLinePage";
+import { LogsPage } from "./pages/admin/logs/LogsPage";
+import { LogPage } from "./pages/admin/logs/LogPage";
 
 import "./App.css";
 function App() {
@@ -164,10 +166,10 @@ function App() {
                         />
                     </Route>
                     <Route path="calendar">
-                        <Route index element={<CalendarPage />} />
+                        <Route index element={<UserCalendarPage />} />
                     </Route>
                     <Route path="timeline">
-                        <Route index element={<TimeLinePage />} />
+                        <Route index element={<UserTimelinePage />} />
                     </Route>
                 </Route>
                 <Route path="/admin" element={<ProtectedRoute />}>
@@ -358,6 +360,14 @@ function App() {
                             path=":subjectId/:parentId"
                             element={<MaterialsPage />}
                         />
+                    </Route>
+
+                    <Route
+                        path="logs"
+                        element={<ProtectedRoute permission="View Logs" />}
+                    >
+                        <Route index element={<LogsPage />} />
+                        <Route path=":logId" element={<LogPage />} />
                     </Route>
                 </Route>
             </Routes>
