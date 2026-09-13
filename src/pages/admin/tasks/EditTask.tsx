@@ -34,6 +34,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import styles from "./EditTask.module.css";
@@ -81,7 +82,11 @@ export const EditTask = () => {
         resolver: zodResolver(taskSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -189,13 +194,14 @@ export const EditTask = () => {
         const uploadedUrls: string[] = [];
 
         try {
-            let urls = existingFiles
-                .map((file) => file.url)
-                .join(", ");
+            let urls = existingFiles.map((file) => file.url).join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
-                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                newUrls
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -205,9 +211,8 @@ export const EditTask = () => {
                 name: data.title,
                 url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.deadline_date,
-                    data.deadline_time,
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.deadline_date, data.deadline_time),
                 )!,
                 details: {
                     urls: urls ? urls.split(", ") : [],

@@ -29,6 +29,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -126,7 +127,11 @@ export const EditEvent = () => {
 
     const isRestricted = watch("is_restricted");
     const selectedFaculty = watch("faculty_id");
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;
@@ -407,15 +412,16 @@ export const EditEvent = () => {
                 event_id: parseInt(eventId),
                 title: data.title,
                 start_date:
-                    mergeDateAndTime(
-                        data.start_date,
-                        data.start_time,
-                    )?.toISOString() || "",
+                    toIsoFormat(
+                        mergeDateAndTime(data.start_date, data.start_time),
+                    ) || "",
                 end_date: data.end_date
-                    ? mergeDateAndTime(
-                          data.end_date,
-                          data.end_time || "00:00",
-                      )?.toISOString() || null
+                    ? toIsoFormat(
+                          mergeDateAndTime(
+                              data.end_date,
+                              data.end_time || "00:00",
+                          ),
+                      ) || null
                     : null,
                 price: parseFloat(data.price),
                 location_type: data.location_type,

@@ -35,6 +35,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import styles from "./EditAnnouncement.module.css";
 
@@ -80,7 +81,11 @@ export const EditAnnouncement = () => {
         resolver: zodResolver(announcementSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -192,7 +197,10 @@ export const EditAnnouncement = () => {
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
-                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                newUrls
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -202,12 +210,14 @@ export const EditAnnouncement = () => {
                 title: data.title,
                 content: data.content || "",
                 subject_id: parseInt(data.subject_id),
-                date: data.date_date
-                    ? mergeDateAndTime(
-                          data.date_date,
-                          data.date_time || "00:00",
-                      )
-                    : undefined,
+                date: toIsoFormat(
+                    data.date_date
+                        ? mergeDateAndTime(
+                              data.date_date,
+                              data.date_time || "00:00",
+                          )
+                        : undefined,
+                ),
                 details: {
                     urls: urls != "" ? urls.split(", ") : [],
                     links: (() => {

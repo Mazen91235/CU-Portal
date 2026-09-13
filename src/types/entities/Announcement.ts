@@ -9,10 +9,10 @@ export type Announcement = {
     id?: number;
     title?: string | null;
     content?: string | null;
-    date?: Date | null;
+    date?: string | null;
     details?: object | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     faculty_id?: number | null;
     faculty?: Faculty | null;
     department_id?: number | null;

@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
-  useLazyGetTasksQuery,
-  useDeleteTaskMutation,
+    useLazyGetTasksQuery,
+    useDeleteTaskMutation,
 } from "../../../services/apis/admin/TaskAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -26,78 +26,78 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./TasksPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const TasksPage = () => {
-  const navigate = useNavigate();
-  const user = useAppSelector((state) => state.user.user);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [facultyFilter, setFacultyFilter] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState("");
-  const [yearFilter, setYearFilter] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
-  const [dateFromFilter, setDateFromFilter] = useState(
-    new Date().toLocaleDateString("en-CA"),
-  ); // Set default date to today's date in "YYYY-MM-DD" format
-  const [dateToFilter, setDateToFilter] = useState("");
-  const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
-  const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
-  const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
-  const [years, setYears] = useState<YearResponseDto[]>([]);
-  const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(
-    null,
-  );
-  const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(true);
+    const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [facultyFilter, setFacultyFilter] = useState("");
+    const [departmentFilter, setDepartmentFilter] = useState("");
+    const [yearFilter, setYearFilter] = useState("");
+    const [subjectFilter, setSubjectFilter] = useState("");
+    const [dateFromFilter, setDateFromFilter] = useState(
+        new Date().toLocaleDateString("en-CA"),
+    ); // Set default date to today's date in "YYYY-MM-DD" format
+    const [dateToFilter, setDateToFilter] = useState("");
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(
+        null,
+    );
+    const [page, setPage] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(true);
 
-  const [searchFaculties] = useLazyGetFacultiesQuery();
-  const [searchDepartments] = useLazyGetDepartmentsQuery();
-  const [searchYears] = useLazyGetYearsQuery();
-  const [searchCourses] = useLazyGetCoursesQuery();
-  const [getTasks, { isFetching }] = useLazyGetTasksQuery();
-  const [deleteTask] = useDeleteTaskMutation();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
+    const [getTasks, { isFetching }] = useLazyGetTasksQuery();
+    const [deleteTask] = useDeleteTaskMutation();
 
-  const fetchFaculties = useCallback(async () => {
-    try {
-      const result = await searchFaculties({ data: {} }).unwrap();
-      setFaculties(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchFaculties]);
+    const fetchFaculties = useCallback(async () => {
+        try {
+            const result = await searchFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchFaculties]);
 
-  const fetchDepartments = useCallback(async () => {
-    try {
-      if (!facultyFilter) {
-        setDepartments([]);
-        return;
-      }
-      const result = await searchDepartments({
-        data: {
-          faculty_id: parseInt(facultyFilter) || undefined,
-          study_type: undefined,
-        },
-      }).unwrap();
-      setDepartments(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchDepartments, facultyFilter]);
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: {
+                    faculty_id: parseInt(facultyFilter) || undefined,
+                    study_type: undefined,
+                },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchDepartments, facultyFilter]);
 
-  const fetchYears = useCallback(async () => {
-    try {
-      const result = await searchYears({ data: {} }).unwrap();
-      setYears(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchYears]);
+    const fetchYears = useCallback(async () => {
+        try {
+            const result = await searchYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchYears]);
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -121,12 +121,12 @@ export const TasksPage = () => {
                 return;
             }
 
-      const result = await searchCourses({ data: params }).unwrap();
-      setSubjects(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+            const result = await searchCourses({ data: params }).unwrap();
+            setSubjects(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
 
     const fetchTasks = useCallback(async () => {
         try {
@@ -139,10 +139,8 @@ export const TasksPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                deadline_from: dateFromFilter
-                    ? new Date(dateFromFilter)
-                    : undefined,
-                deadline_to: dateToFilter ? new Date(dateToFilter) : undefined,
+                deadline_from: toIsoFormat(dateFromFilter),
+                deadline_to: toIsoFormat(dateToFilter),
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
@@ -184,180 +182,195 @@ export const TasksPage = () => {
         user,
     ]);
 
-  const authQueryParams = useCallback(
-    () =>
-      Promise.all([
-        fetchFaculties(),
-        fetchDepartments(),
-        fetchYears(),
-        fetchSubjects(),
-        fetchTasks(),
-      ]),
-    [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects, fetchTasks],
-  );
-
-  useAuthQuery(authQueryParams);
-
-  useEffect(() => {
-    setPage(1);
-    setHasNextPage(true);
-  }, [
-    facultyFilter,
-    departmentFilter,
-    yearFilter,
-    subjectFilter,
-    searchQuery,
-    dateFromFilter,
-    dateToFilter,
-  ]);
-
-  const handleAddTask = () => {
-    navigate("/admin/tasks/create");
-  };
-
-  const handleShareTask = (taskId: number) => {
-    const url = `${window.location.origin}/admin/tasks/${taskId}`;
-    copyToClipboard(url);
-    showToast(
-      "success",
-      "Success",
-      "Task link copied to clipboard successfully",
+    const authQueryParams = useCallback(
+        () =>
+            Promise.all([
+                fetchFaculties(),
+                fetchDepartments(),
+                fetchYears(),
+                fetchSubjects(),
+                fetchTasks(),
+            ]),
+        [
+            fetchFaculties,
+            fetchDepartments,
+            fetchYears,
+            fetchSubjects,
+            fetchTasks,
+        ],
     );
-  };
 
-  const handleEditTask = (taskId: number) => {
-    navigate(`/admin/tasks/edit/${taskId}`);
-  };
+    useAuthQuery(authQueryParams);
 
-  const handleDeleteClick = (task: TaskResponseDto) => {
-    setSelectedTask(task);
-    setIsDeleteModalOpen(true);
-  };
+    useEffect(() => {
+        setPage(1);
+        setHasNextPage(true);
+    }, [
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        searchQuery,
+        dateFromFilter,
+        dateToFilter,
+    ]);
 
-  const handleDelete = async () => {
-    if (!selectedTask?.id) return;
+    const handleAddTask = () => {
+        navigate("/admin/tasks/create");
+    };
 
-    try {
-      await deleteTask({
-        task_id: selectedTask.id,
-      }).unwrap();
-      showToast("success", "Success", "Task deleted successfully");
-      setIsDeleteModalOpen(false);
-      setSelectedTask(null);
-      setPage(1);
-      setHasNextPage(true);
-      await fetchTasks();
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  };
+    const handleShareTask = (taskId: number) => {
+        const url = `${window.location.origin}/admin/tasks/${taskId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Task link copied to clipboard successfully",
+        );
+    };
 
-  const handleViewTask = (taskId: number) => {
-    navigate(`/admin/tasks/${taskId}`);
-  };
+    const handleEditTask = (taskId: number) => {
+        navigate(`/admin/tasks/edit/${taskId}`);
+    };
 
-  const handlePagination = () => {
-    if (hasNextPage && !isFetching && tasks.length > 0) {
-      setPage(page + 1);
-    }
-  };
+    const handleDeleteClick = (task: TaskResponseDto) => {
+        setSelectedTask(task);
+        setIsDeleteModalOpen(true);
+    };
 
-  useEffect(() => {
-    setDepartmentFilter("");
-  }, [facultyFilter]);
+    const handleDelete = async () => {
+        if (!selectedTask?.id) return;
 
-  useEffect(() => {
-    setSubjectFilter("");
-  }, [departmentFilter, yearFilter]);
+        try {
+            await deleteTask({
+                task_id: selectedTask.id,
+            }).unwrap();
+            showToast("success", "Success", "Task deleted successfully");
+            setIsDeleteModalOpen(false);
+            setSelectedTask(null);
+            setPage(1);
+            setHasNextPage(true);
+            await fetchTasks();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
 
-  const facultyOptions = useMemo(
-    () => [
-      { value: "", label: "Faculty" },
-      ...faculties.map((faculty) => ({
-        value: faculty.id?.toString() || "",
-        label: faculty.name || "",
-      })),
-    ],
-    [faculties],
-  );
+    const handleViewTask = (taskId: number) => {
+        navigate(`/admin/tasks/${taskId}`);
+    };
 
-  const departmentOptions = useMemo(
-    () => [
-      { value: "", label: "Department" },
-      ...departments.map((dept) => ({
-        value: dept.id?.toString() || "",
-        label: dept.name || "",
-      })),
-    ],
-    [departments],
-  );
+    const handlePagination = () => {
+        if (hasNextPage && !isFetching && tasks.length > 0) {
+            setPage(page + 1);
+        }
+    };
 
-  const yearOptions = useMemo(
-    () => [
-      { value: "", label: "Academic Year" },
-      ...years.map((year) => ({
-        value: year.id?.toString() || "",
-        label: year.year?.toString() || "",
-      })),
-    ],
-    [years],
-  );
+    useEffect(() => {
+        setDepartmentFilter("");
+    }, [facultyFilter]);
 
-  const subjectOptions = useMemo(
-    () => [
-      { value: "", label: "Subject" },
-      ...subjects.map((subject) => ({
-        value: subject.id?.toString() || "",
-        label: subject.name || "",
-      })),
-    ],
-    [subjects],
-  );
+    useEffect(() => {
+        setSubjectFilter("");
+    }, [departmentFilter, yearFilter]);
 
-  return (
-    <Layout>
-      <PageSeo
-        title="Tasks Management - CU Portal"
-        description="Manage all university tasks and assignments"
-      />
-      <Banner
-        title="Tasks Management"
-        description="Manage all university tasks and assignments"
-        button="Add New Task"
-        buttonAction={handleAddTask}
-      />
-      <div className={styles.container}>
-        <div className={styles.filtersContainer}>
-          <div className={styles.searchRow}>
-            <Search placeholder="Search tasks..." setValue={setSearchQuery} />
-          </div>
+    const facultyOptions = useMemo(
+        () => [
+            { value: "", label: "Faculty" },
+            ...faculties.map((faculty) => ({
+                value: faculty.id?.toString() || "",
+                label: faculty.name || "",
+            })),
+        ],
+        [faculties],
+    );
 
-          <div className={styles.filtersRow}>
-            {user?.canAccessAll && (
-              <>
-                <SelectFilter
-                  options={facultyOptions}
-                  setValue={setFacultyFilter}
-                />
-                <SelectFilter
-                  options={departmentOptions}
-                  setValue={setDepartmentFilter}
-                />
-                <SelectFilter options={yearOptions} setValue={setYearFilter} />
-              </>
-            )}
-            <SelectFilter
-              options={subjectOptions}
-              setValue={setSubjectFilter}
+    const departmentOptions = useMemo(
+        () => [
+            { value: "", label: "Department" },
+            ...departments.map((dept) => ({
+                value: dept.id?.toString() || "",
+                label: dept.name || "",
+            })),
+        ],
+        [departments],
+    );
+
+    const yearOptions = useMemo(
+        () => [
+            { value: "", label: "Academic Year" },
+            ...years.map((year) => ({
+                value: year.id?.toString() || "",
+                label: year.year?.toString() || "",
+            })),
+        ],
+        [years],
+    );
+
+    const subjectOptions = useMemo(
+        () => [
+            { value: "", label: "Subject" },
+            ...subjects.map((subject) => ({
+                value: subject.id?.toString() || "",
+                label: subject.name || "",
+            })),
+        ],
+        [subjects],
+    );
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Tasks Management - CU Portal"
+                description="Manage all university tasks and assignments"
             />
-            <DateFilter
-              placeholder="Date From"
-              setValue={setDateFromFilter}
-              defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+            <Banner
+                title="Tasks Management"
+                description="Manage all university tasks and assignments"
+                button="Add New Task"
+                buttonAction={handleAddTask}
             />
-            <DateFilter placeholder="Date To" setValue={setDateToFilter} />
-          </div>
-        </div>
+            <div className={styles.container}>
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchRow}>
+                        <Search
+                            placeholder="Search tasks..."
+                            setValue={setSearchQuery}
+                        />
+                    </div>
+
+                    <div className={styles.filtersRow}>
+                        {user?.canAccessAll && (
+                            <>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={setFacultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={setYearFilter}
+                                />
+                            </>
+                        )}
+                        <SelectFilter
+                            options={subjectOptions}
+                            setValue={setSubjectFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date From"
+                            setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                        />
+                        <DateFilter
+                            placeholder="Date To"
+                            setValue={setDateToFilter}
+                        />
+                    </div>
+                </div>
 
                 <div className={styles.tasksGrid}>
                     {tasks.map((task) => (
@@ -395,22 +408,22 @@ export const TasksPage = () => {
                     ))}
                 </div>
 
-        {tasks.length === 0 && !isFetching && (
-          <NoContentSection icon="tasks" label="No tasks found" />
-        )}
+                {tasks.length === 0 && !isFetching && (
+                    <NoContentSection icon="tasks" label="No tasks found" />
+                )}
 
-        <Pagination onReached={handlePagination} />
-      </div>
+                <Pagination onReached={handlePagination} />
+            </div>
 
-      <ConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        title="Delete Task"
-        message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        colorType="red"
-      />
-    </Layout>
-  );
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                title="Delete Task"
+                message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                colorType="red"
+            />
+        </Layout>
+    );
 };

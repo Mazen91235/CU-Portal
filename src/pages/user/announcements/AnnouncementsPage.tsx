@@ -12,7 +12,11 @@ import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDate, formatDateTime } from "../../../utils/Formatter";
+import {
+    formatDate,
+    formatDateTime,
+    toIsoFormat,
+} from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
@@ -54,10 +58,8 @@ export const AnnouncementsPage = () => {
             const result = await getAnnouncements({
                 data: {
                     query: searchQuery || undefined,
-                    date_from: dateFromFilter
-                        ? new Date(dateFromFilter)
-                        : undefined,
-                    date_to: dateToFilter ? new Date(dateToFilter) : undefined,
+                    date_from: toIsoFormat(dateFromFilter),
+                    date_to: toIsoFormat(dateToFilter),
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],

@@ -10,8 +10,8 @@ export type Faculty = {
     id?: number;
     name?: string;
     details?: object;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     users?: User[] | null;
     departments?: Department[] | null;
     announcements?: Announcement[] | null;

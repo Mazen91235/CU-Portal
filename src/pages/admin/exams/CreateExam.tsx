@@ -20,7 +20,7 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateExam.module.css";
 
@@ -91,10 +91,9 @@ export const CreateExam = () => {
             const examData = {
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.due_date,
-                    data.start_time || "00:00",
-                )!.toISOString(),
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.due_date, data.start_time || "00:00"),
+                )!,
                 details: {
                     exam_type: data.exam_type || undefined,
                     duration: data.duration

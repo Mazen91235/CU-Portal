@@ -26,7 +26,11 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDate, formatDateTime } from "../../../utils/Formatter";
+import {
+    formatDate,
+    formatDateTime,
+    toIsoFormat,
+} from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./AnnouncementsPage.module.css";
@@ -142,10 +146,8 @@ export const AnnouncementsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                date_from: dateFromFilter
-                    ? new Date(dateFromFilter)
-                    : undefined,
-                date_to: dateToFilter ? new Date(dateToFilter) : undefined,
+                date_from: toIsoFormat(dateFromFilter),
+                date_to: toIsoFormat(dateToFilter),
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
