@@ -13,7 +13,10 @@ interface FloatingContainerProps {
     onClose: () => void;
     onConfirm: (targetId: number | null) => void;
     onNavigate: (folderId: number | null) => void;
-    onCreateFolder: (name: string, parentId: number | null) => Promise<void>;
+    onCreateFolder?: (name: string, parentId: number | null) => Promise<void>;
+    allowCreateFolder?: boolean;
+    rootLabel?: string;
+    onHomeClick?: () => void;
 }
 
 export function FloatingContainer({
@@ -27,6 +30,9 @@ export function FloatingContainer({
     onConfirm,
     onNavigate,
     onCreateFolder,
+    allowCreateFolder = true,
+    rootLabel = "Subject Root",
+    onHomeClick,
 }: FloatingContainerProps) {
     const [selectedTarget, setSelectedTarget] = useState<number | null>(null);
     const [isCreatingFolder, setIsCreatingFolder] = useState(false);
@@ -66,7 +72,7 @@ export function FloatingContainer({
     };
 
     const handleCreateFolder = async () => {
-        if (!newFolderName.trim()) {
+        if (!newFolderName.trim() || !onCreateFolder) {
             return;
         }
         try {
@@ -103,41 +109,22 @@ export function FloatingContainer({
                 <div className={styles.header}>
                     <h3 className={styles.dialogTitle}>
                         {operation === "copy" ? "Copy" : "Move"}{" "}
-                        {selectedMaterials.length} MaterialResponseDto
-                        {selectedMaterials.length !== 1 ? "s" : ""} to...
+                        {selectedMaterialsData.length === 1
+                            ? `"${selectedMaterialsData[0].name}"`
+                            : `${selectedMaterials.length} items`}{" "}
+                        to...
                     </h3>
                     <button className={styles.closeButton} onClick={onClose}>
                         ×
                     </button>
                 </div>
 
-                <div className={styles.selectedItems}>
-                    {selectedMaterialsData.map((material) => (
-                        <div key={material.id} className={styles.selectedItem}>
-                            <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                {material.material_type === "folder" ? (
-                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                                ) : (
-                                    <>
-                                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                                        <polyline points="13 2 13 9 20 9" />
-                                    </>
-                                )}
-                            </svg>
-                            <span>{material.name}</span>
-                        </div>
-                    ))}
-                </div>
-
                 <div className={styles.navigationPath}>
-                    <div className={styles.pathSegment}>
+                    <div
+                        className={styles.pathSegment}
+                        onClick={onHomeClick}
+                        style={{ cursor: onHomeClick ? "pointer" : "default" }}
+                    >
                         <svg
                             width="18"
                             height="18"
@@ -161,7 +148,7 @@ export function FloatingContainer({
                                     : "pointer",
                         }}
                     >
-                        Subject Root
+                        {rootLabel}
                     </div>
                     {currentPath.map((folder, index) => (
                         <React.Fragment key={folder.id}>
@@ -184,26 +171,28 @@ export function FloatingContainer({
                             </div>
                         </React.Fragment>
                     ))}
-                    <button
-                        className={styles.newFolderBtn}
-                        onClick={() => setIsCreatingFolder(true)}
-                    >
-                        <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
+                    {allowCreateFolder && (
+                        <button
+                            className={styles.newFolderBtn}
+                            onClick={() => setIsCreatingFolder(true)}
                         >
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                        New Folder
-                    </button>
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                            >
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            New Folder
+                        </button>
+                    )}
                 </div>
 
-                {isCreatingFolder && (
+                {allowCreateFolder && isCreatingFolder && (
                     <div className={styles.addFolderContainer}>
                         <input
                             type="text"
@@ -249,8 +238,9 @@ export function FloatingContainer({
                             </svg>
                             <h3>No Folders Found.</h3>
                             <p>
-                                Create a new folder or just leave materials
-                                here.
+                                {allowCreateFolder
+                                    ? "Create a new folder or just leave materials here."
+                                    : "Navigate into an existing folder to copy here."}
                             </p>
                         </div>
                     ) : (

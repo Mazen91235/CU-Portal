@@ -323,10 +323,6 @@ export function MaterialsPage() {
                                             onClick={() => handleCardClick(folder)}
                                             onDoubleClick={() => handleCardDoubleClick(folder)}
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     folderId,
@@ -354,10 +350,6 @@ export function MaterialsPage() {
                                             onClick={() => handleCardClick(file)}
                                             onDoubleClick={() => handleCardDoubleClick(file)}
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     fileId,

@@ -203,6 +203,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-admin-roles": LuShield,
         "sidebar-admin-courses": LuBookOpen,
         "sidebar-admin-materials": LuBookOpen,
+        "sidebar-admin-other-materials": LuBook,
         "sidebar-admin-grades": LuBadge,
         "sidebar-admin-tasks": LuClipboardList,
         "sidebar-admin-exams": LuListTodo,

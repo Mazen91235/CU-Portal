@@ -83,10 +83,9 @@ const navSectionsDefault: NavSection[] = [
             },
             {
                 label: "Other Materials",
-                // path: "/user/other-materials",
-                path: "#!",
+                path: "/user/other-materials",
                 icon: "sidebar-other-materials",
-                badge: "Soon",
+                badge: "Beta",
                 activatesPaths: ["/user/other-materials/"],
             },
             {
@@ -276,6 +275,13 @@ const showAdminLinks = (permissions: string[]) => {
             icon: "sidebar-admin-materials",
             badge: "Beta",
             activatesPaths: ["/admin/materials/"],
+        });
+        section.links.push({
+            label: "Other Materials",
+            path: "/admin/other-materials",
+            icon: "sidebar-admin-other-materials",
+            badge: "Beta",
+            activatesPaths: ["/admin/other-materials/"],
         });
     }
 
