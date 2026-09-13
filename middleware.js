@@ -33,6 +33,13 @@ export default async function middleware(request) {
     const userAgent = (request.headers.get("user-agent") || "").toLowerCase();
     const url = new URL(request.url);
 
+    const isPrerenderServer =
+        request.headers.get("x-prerender") === "1" ||
+        request.headers.get("X-Prerender") === "1";
+    if (isPrerenderServer) {
+        return; // Pass through to serve raw React HTML shell
+    }
+
     // Skip static assets so bots download JS/CSS/Images directly
     const isStaticAsset =
         /\.(js|css|xml|png|jpg|jpeg|gif|pdf|doc|txt|ico|rss|zip|mp3|mp4|woff|woff2|ttf|eot|svg|json)$/i.test(
