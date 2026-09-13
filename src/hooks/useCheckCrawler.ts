@@ -3,7 +3,7 @@ import { useCallback } from "react";
 export const useCheckCrawler = () => {
     const checkCrawler = useCallback(() => {
         const userAgent = navigator.userAgent.toLowerCase();
-        const crawlerKeywords = [
+        const crawlerKeywordsSet = new Set([
             // Generic crawler terms
             "bot",
             "crawl",
@@ -66,7 +66,36 @@ export const useCheckCrawler = () => {
             "applebot",
             "petalbot",
             "seznambot",
-        ];
+            "googlebot",
+            "bingbot",
+            "yandex",
+            "baiduspider",
+            "facebookexternalhit",
+            "twitterbot",
+            "rogerbot",
+            "linkedinbot",
+            "embedly",
+            "quora link preview",
+            "showyoubot",
+            "outbrain",
+            "pinterest/0.",
+            "developers.google.com/+/web/snippet",
+            "slackbot",
+            "vkShare",
+            "w3c_validator",
+            "redditbot",
+            "applebot",
+            "whatsapp",
+            "flipboard",
+            "tumblr",
+            "bitlybot",
+            "skypeuripreview",
+            "nuzzel",
+            "discordbot",
+            "google page speed",
+            "qwantify",
+        ]);
+        const crawlerKeywords = Array.from(crawlerKeywordsSet);
         return crawlerKeywords.some((keyword) => userAgent.includes(keyword));
     }, []);
     return checkCrawler;
