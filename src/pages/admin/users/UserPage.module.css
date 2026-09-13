@@ -1350,3 +1350,26 @@
         padding-left: 16px;
     }
 }
+
+
+.unsuspendUserBtn {
+    background: var(--success-green, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.unsuspendUserBtn:hover {
+    opacity: 0.9;
+}
+
+.suspendUserBtn:disabled,
+.unsuspendUserBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

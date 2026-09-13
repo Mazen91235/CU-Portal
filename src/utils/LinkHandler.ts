@@ -49,6 +49,7 @@ import {
     LuLifeBuoy,
     LuUser,
     LuClock,
+    LuCircleAlert,
     LuPhone,
     LuMail,
     LuTarget,
@@ -159,6 +160,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
 
         time: LuClock,
         tracker: FaGraduationCap,
+        "warning-circle": LuCircleAlert,
         "view-icon": LuEye,
 
         "spinner-ellipse-11": FaSpinner,

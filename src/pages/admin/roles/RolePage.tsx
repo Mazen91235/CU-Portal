@@ -28,7 +28,7 @@ export const RolePage = () => {
 
     const [getRole] = useLazyGetRoleQuery();
     const [getPermissions] = useLazyGetPermissionsQuery();
-    const [updateRole] = useUpdateRoleMutation();
+    const [updateRole, { isLoading: isUpdatingRole }] = useUpdateRoleMutation();
     const navigate = useNavigate();
 
     const fetchRole = useCallback(async () => {
@@ -136,15 +136,20 @@ export const RolePage = () => {
                             <button
                                 className={styles.saveButton}
                                 onClick={handleSave}
+                                disabled={isUpdatingRole}
                             >
-                                Save Changes
+                                {isUpdatingRole ? "Saving..." : "Save Changes"}
                             </button>
                         </div>
                     </div>
 
-                    <div className={styles.permissionsList}>
-                        {allPermissions.map((permission) => (
-                            <div
+                    <fieldset
+                        className={styles.permissionsFieldset}
+                        disabled={isUpdatingRole}
+                    >
+                        <div className={styles.permissionsList}>
+                            {allPermissions.map((permission) => (
+                                <div
                                 key={permission}
                                 className={styles.permissionRow}
                             >
@@ -163,9 +168,10 @@ export const RolePage = () => {
                                     />
                                     <span className={styles.slider}></span>
                                 </label>
-                            </div>
-                        ))}
-                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </fieldset>
                 </>
             ) : (
                 <>
@@ -181,8 +187,9 @@ export const RolePage = () => {
                                 <button
                                     className={styles.saveButton}
                                     onClick={handleSave}
+                                    disabled={isUpdatingRole}
                                 >
-                                    Save Changes
+                                    {isUpdatingRole ? "Saving..." : "Save Changes"}
                                 </button>
                             ) : (
                                 <button
@@ -196,32 +203,37 @@ export const RolePage = () => {
                     </div>
 
                     {isEditing ? (
-                        <div className={styles.permissionsList}>
-                            {allPermissions.map((permission) => (
-                                <div
-                                    key={permission}
-                                    className={styles.permissionRow}
-                                >
-                                    <span className={styles.permissionLabel}>
-                                        {permission}
-                                    </span>
-                                    <label className={styles.switch}>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPermissions.includes(
-                                                permission,
-                                            )}
-                                            onChange={() =>
-                                                handleTogglePermission(
+                        <fieldset
+                            className={styles.permissionsFieldset}
+                            disabled={isUpdatingRole}
+                        >
+                            <div className={styles.permissionsList}>
+                                {allPermissions.map((permission) => (
+                                    <div
+                                        key={permission}
+                                        className={styles.permissionRow}
+                                    >
+                                        <span className={styles.permissionLabel}>
+                                            {permission}
+                                        </span>
+                                        <label className={styles.switch}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPermissions.includes(
                                                     permission,
-                                                )
-                                            }
-                                        />
-                                        <span className={styles.slider}></span>
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
+                                                )}
+                                                onChange={() =>
+                                                    handleTogglePermission(
+                                                        permission,
+                                                    )
+                                                }
+                                            />
+                                            <span className={styles.slider}></span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </fieldset>
                     ) : (
                         <div className={styles.permissionsGrid}>
                             {selectedPermissions.map((permission) => (

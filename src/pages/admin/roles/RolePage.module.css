@@ -320,3 +320,16 @@
         font-weight: 100;
     }
 }
+
+
+.permissionsFieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+.saveButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
