@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
@@ -102,14 +102,17 @@ export default function useAuth({
 
 export function useGetGoogleAccessToken() {
     useAuth({ shouldNavigate: false });
+    const [isLoading, setIsLoading] = useState(true);
     const [getGoogleStoredTokenMutation] = useGetGoogleStoredTokenMutation();
     const [getGoogleAccessTokenMutation] = useLazyGetGoogleAccessTokenQuery();
     const isLoggedIn = useLogin();
 
     useEffect(() => {
         (async () => {
-            const loggedIn = await isLoggedIn();
+            setIsLoading(true);
+            let loggedIn = false;
             try {
+                loggedIn = await isLoggedIn();
                 if (
                     GetCookie("oauth_state") &&
                     GetCookie("google_details_token") &&
@@ -124,6 +127,8 @@ export function useGetGoogleAccessToken() {
                 if (loggedIn) await getGoogleAccessTokenMutation().unwrap();
             } catch {
                 return;
+            } finally {
+                setIsLoading(false);
             }
         })();
     }, [
@@ -131,4 +136,6 @@ export function useGetGoogleAccessToken() {
         getGoogleAccessTokenMutation,
         isLoggedIn,
     ]);
+
+    return isLoading;
 }

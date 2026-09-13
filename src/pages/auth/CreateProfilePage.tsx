@@ -131,6 +131,7 @@ const CreateProfilePage = () => {
         },
     });
     const removeUploadedFiles = useRemoveUploadedFiles();
+    const formDisabled = isSubmitting || uploadFile.isGoogleAccessTokenLoading;
 
     const onSubmit = async (data: FormData) => {
         const uploadedUrls: string[] = [];
@@ -218,7 +219,7 @@ const CreateProfilePage = () => {
                             Don&apos;t miss out! Create your profile in minutes
                         </p>
 
-                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors} disabled={isSubmitting}>
+                        <Form onSubmit={handleSubmit(onSubmit)} errors={errors} disabled={formDisabled}>
                             <div className={styles.inputRow}>
                                 <Input
                                     register={register}
@@ -352,7 +353,7 @@ const CreateProfilePage = () => {
                             <Button
                                 text="Create Profile Now!"
                                 loadingText="Creating Profile..."
-                                isSubmitting={isSubmitting}
+                                isSubmitting={formDisabled}
                             />
                         </Form>
                     </div>

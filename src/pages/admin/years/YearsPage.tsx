@@ -198,7 +198,8 @@ export const YearsPage = () => {
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
                     title={editMode ? "Edit Year" : "Add A New Year"}
-                    onClose={handleCloseForm}
+                    onClose={isCreating || isUpdating ? undefined : handleCloseForm}
+                    disabled={isCreating || isUpdating}
                 >
                     <Input
                         register={register}

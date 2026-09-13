@@ -168,7 +168,7 @@ function App() {
         <Route path="/admin" element={<ProtectedRoute />}>
           <Route
             path=""
-            element={<ProtectedRoute permission="View Admin Panel" />}
+            element={<ProtectedRoute permission="View AdminPanel" />}
           >
             <Route index element={<div>Admin Dashboard</div>} />
           </Route>

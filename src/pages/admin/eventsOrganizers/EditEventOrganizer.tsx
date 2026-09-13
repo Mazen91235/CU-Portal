@@ -88,7 +88,7 @@ export const EditEventOrganizer = () => {
         setError,
         setValue,
     } = useForm<FormData>({ resolver: zodResolver(schema) });
-    const busy = isSubmitting || isLoading || isUploading || isFetching;
+    const busy = isSubmitting || isLoading || isUploading || isFetching || uploadFile.isGoogleAccessTokenLoading;
 
     const fetchOrganizer = useCallback(async () => {
         if (!eventOrganizerId) return;

@@ -81,7 +81,7 @@ export const EditTask = () => {
         resolver: zodResolver(taskSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {

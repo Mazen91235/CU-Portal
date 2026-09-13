@@ -28,7 +28,10 @@ export const AdminTaskAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
-        getTasks: builder.query<GenericAPIResponse<TaskResponseDto[]>, QueryModel<TaskSearchDto>>({
+        getTasks: builder.query<
+            GenericAPIResponse<TaskResponseDto[]>,
+            QueryModel<TaskSearchDto>
+        >({
             query: (query) => ({
                 url: "/",
                 method: "GET",
@@ -38,23 +41,27 @@ export const AdminTaskAPI = createApi({
                 },
             }),
         }),
-        getTask: builder.query<GenericAPIResponse<TaskResponseDto>, { task_id: number }>({
+        getTask: builder.query<
+            GenericAPIResponse<TaskResponseDto>,
+            { task_id: number }
+        >({
             query: ({ task_id }) => ({
                 url: `/${task_id}`,
                 method: "GET",
                 credentials: "include",
             }),
         }),
-        createTask: builder.mutation<GenericAPIResponse<TaskResponseDto>, TaskCreateDto>(
-            {
-                query: (data) => ({
-                    url: `/`,
-                    method: "POST",
-                    credentials: "include",
-                    body: data,
-                }),
-            },
-        ),
+        createTask: builder.mutation<
+            GenericAPIResponse<TaskResponseDto>,
+            TaskCreateDto
+        >({
+            query: (data) => ({
+                url: `/`,
+                method: "POST",
+                credentials: "include",
+                body: data,
+            }),
+        }),
         updateTask: builder.mutation<
             GenericAPIResponse<TaskResponseDto>,
             { task_id: number } & TaskUpdateDto

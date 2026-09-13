@@ -9,7 +9,7 @@ import styles from "./Card.module.css";
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon: Icon | string;
+    icon: Icon;
     label?: string;
     value?: string;
     color?: CardItemColor;
@@ -246,11 +246,7 @@ export const Card = ({
                         >
                             <span className={styles.itemLabel}>
                                 <IconComponent
-                                    icon={
-                                        typeof item.icon === "string"
-                                            ? "time"
-                                            : item.icon
-                                    }
+                                    icon={item.icon}
                                     className={styles.itemIcon}
                                 />
                                 {item.label}

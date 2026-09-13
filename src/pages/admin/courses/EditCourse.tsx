@@ -201,6 +201,7 @@ export const EditCourse = () => {
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                    <fieldset disabled={isLoading} className={styles.formFieldset}>
                     <section className={styles["formSection"]}>
                         <Heading
                             icon="info-circle"
@@ -318,6 +319,7 @@ export const EditCourse = () => {
                             isOrange={false}
                         />
                     </div>
+                    </fieldset>
                 </form>
             </main>
         </Layout>

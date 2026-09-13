@@ -310,7 +310,8 @@ export const DepartmentsPage = () => {
                             ? "Edit Department"
                             : "Let's Add a New Department"
                     }
-                    onClose={handleCloseForm}
+                    onClose={isCreating || isUpdating ? undefined : handleCloseForm}
+                    disabled={isCreating || isUpdating}
                 >
                     <Input
                         register={register}

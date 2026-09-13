@@ -42,6 +42,12 @@ export const DateInput = <T extends Record<string, unknown>>({
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{
+        left: number;
+        top: number;
+    } | null>(null);
+    const VIEWPORT_MARGIN = 16;
+    const DROPDOWN_WIDTH = 280;
     const formValue = useWatch({ control, name });
 
     useEffect(() => {
@@ -58,6 +64,31 @@ export const DateInput = <T extends Record<string, unknown>>({
         setDisplayDate(formatDateWithWeekday(value));
         setCurrentMonth(selected);
     }, [formValue]);
+
+    const updateDropdownPosition = () => {
+        const trigger = containerRef.current;
+        if (!trigger) return;
+        const rect = trigger.getBoundingClientRect();
+        const maxLeft = Math.max(
+            VIEWPORT_MARGIN,
+            window.innerWidth - DROPDOWN_WIDTH - VIEWPORT_MARGIN,
+        );
+        setDropdownPosition({
+            left: Math.min(Math.max(rect.left, VIEWPORT_MARGIN), maxLeft),
+            top: rect.bottom + 8,
+        });
+    };
+
+    const toggleDropdown = () => {
+        if (disabled) return;
+        setIsOpen((open) => {
+            const next = !open;
+            if (next) {
+                requestAnimationFrame(updateDropdownPosition);
+            }
+            return next;
+        });
+    };
 
     const handleDateSelect = (date: Date) => {
         const dateString = formatCalendarDay(date);
@@ -139,6 +170,10 @@ export const DateInput = <T extends Record<string, unknown>>({
     };
 
     useEffect(() => {
+        const handleViewportChange = () => {
+            if (isOpen) updateDropdownPosition();
+        };
+
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 containerRef.current &&
@@ -149,10 +184,18 @@ export const DateInput = <T extends Record<string, unknown>>({
         };
 
         document.addEventListener("mousedown", handleClickOutside);
+        window.addEventListener("resize", handleViewportChange);
+        window.addEventListener("scroll", handleViewportChange, true);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            window.removeEventListener("resize", handleViewportChange);
+            window.removeEventListener("scroll", handleViewportChange, true);
         };
-    }, []);
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) updateDropdownPosition();
+    }, [isOpen]);
 
     return (
         <div className={styles.container} ref={containerRef}>
@@ -162,7 +205,7 @@ export const DateInput = <T extends Record<string, unknown>>({
             <button
                 type="button"
                 className={`${styles.dateFilter} ${isOpen ? styles.active : ""}`}
-                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onClick={toggleDropdown}
                 disabled={disabled}
             >
                 <svg
@@ -190,6 +233,7 @@ export const DateInput = <T extends Record<string, unknown>>({
             {isOpen && (
                 <div
                     className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""}`}
+                    style={dropdownPosition ? { left: dropdownPosition.left, top: dropdownPosition.top } : undefined}
                 >
                     <div className={styles.calendarHeader}>
                         <button

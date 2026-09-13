@@ -62,7 +62,7 @@ export const CreateAnnouncement = () => {
         resolver: zodResolver(announcementSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {

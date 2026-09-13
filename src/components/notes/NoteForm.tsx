@@ -68,6 +68,7 @@ export const NoteForm = ({
             title={note ? "Edit Note" : `Add Note ${dateStr ? `for ${dateStr}` : ""}`}
             onClose={isSubmitting ? undefined : onClose}
             className={styles["note-modal"]}
+            disabled={isSubmitting}
         >
             <Input
                 register={register}

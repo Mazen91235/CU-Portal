@@ -126,7 +126,7 @@ export const EditEvent = () => {
 
     const isRestricted = watch("is_restricted");
     const selectedFaculty = watch("faculty_id");
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
 
     const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;
