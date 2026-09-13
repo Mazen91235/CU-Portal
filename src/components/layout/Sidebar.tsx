@@ -16,16 +16,16 @@ import { captitalize } from "../../utils/Formatter";
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
 type NavLink = {
-    label: string;
-    path: string;
-    icon: Icon;
-    badge?: BadgeType;
-    activatesPaths?: string[];
+  label: string;
+  path: string;
+  icon: Icon;
+  badge?: BadgeType;
+  activatesPaths?: string[];
 };
 
 type NavSection = {
-    title: string;
-    links: NavLink[];
+  title: string;
+  links: NavLink[];
 };
 
 const navSectionsDefault: NavSection[] = [
@@ -56,6 +56,11 @@ const navSectionsDefault: NavSection[] = [
                 path: "/user/timeline",
                 icon: "sidebar-timeline",
             },
+            {
+        label: "Weekly Guide",
+        path: "/user/week-guide",
+        icon: "sidebar-weekly-guide",
+      },
             {
                 label: "Tasks",
                 path: "/user/tasks",
@@ -191,10 +196,10 @@ const navSectionsDefault: NavSection[] = [
 ];
 
 const showAdminLinks = (permissions: string[]) => {
-    const section: NavSection = {
-        title: "Admin Pages",
-        links: [],
-    };
+  const section: NavSection = {
+    title: "Admin Pages",
+    links: [],
+  };
 
     if (!permissions.includes("View AdminLinks")) return null;
 
@@ -269,26 +274,36 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
-    if (permissions.includes("View Materials")) {
-        section.links.push({
-            label: "Materials",
-            path: "/admin/materials",
-            icon: "sidebar-admin-materials",
-            badge: "Beta",
-            activatesPaths: ["/admin/materials/"],
-        });
-    }
+  if (permissions.includes("View Materials")) {
+    section.links.push({
+      label: "Materials",
+      path: "/admin/materials",
+      icon: "sidebar-admin-materials",
+      badge: "Beta",
+      activatesPaths: ["/admin/materials/"],
+    });
+  }
 
-    if (permissions.includes("View Grades")) {
-        section.links.push({
-            label: "Grades",
-            // path: "/admin/grades",
-            path: "#!",
-            icon: "sidebar-admin-grades",
-            badge: "Soon",
-            activatesPaths: ["/admin/grades/"],
-        });
-    }
+  if (permissions.includes("View Weekly Guide")) {
+    section.links.push({
+      label: "Weekly Guide",
+      path: "/admin/week-guide",
+      icon: "sidebar-admin-materials",
+      badge: "Beta",
+      activatesPaths: ["/admin/week-guide/"],
+    });
+  }
+
+  if (permissions.includes("View Grades")) {
+    section.links.push({
+      label: "Grades",
+      // path: "/admin/grades",
+      path: "#!",
+      icon: "sidebar-admin-grades",
+      badge: "Soon",
+      activatesPaths: ["/admin/grades/"],
+    });
+  }
 
     if (permissions.includes("View Tasks")) {
         section.links.push({
@@ -346,32 +361,33 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
+  if (permissions.includes("View Admin Panel")) {
     section.links.push({
-        label: "Roadmaps",
-        // path: "/admin/roadmaps",
-        path: "#!",
-        icon: "sidebar-admin-roadmaps",
-        badge: "Soon",
-        activatesPaths: ["/admin/roadmaps/"],
+      label: "Dashboard",
+      // path: "/admin",
+      path: "#!",
+      icon: "sidebar-admin-dashboard",
+      badge: "Soon",
     });
+  }
 
+  if (permissions.includes("View Faculties")) {
     section.links.push({
-        label: "Study Maps",
-        // path: "/admin/study-maps",
-        path: "#!",
-        icon: "sidebar-admin-study-maps",
-        badge: "Soon",
-        activatesPaths: ["/admin/study-maps/"],
+      label: "Faculties",
+      path: "/admin/faculties",
+      icon: "sidebar-admin-faculties",
     });
+  }
 
+  if (permissions.includes("View Departments")) {
     section.links.push({
-        label: "Study Analysis",
-        // path: "/admin/study-analysis",
-        path: "#!",
-        icon: "sidebar-admin-study-analysis",
-        badge: "Soon",
+      label: "Departments",
+      path: "/admin/departments",
+      icon: "sidebar-admin-departments",
     });
+  }
 
+  if (permissions.includes("View Years")) {
     section.links.push({
         label: "Discussions",
         // path: "/admin/discussions",
@@ -380,15 +396,156 @@ const showAdminLinks = (permissions: string[]) => {
         badge: "Soon",
         activatesPaths: ["/admin/discussions/"],
     });
+  }
 
-    return section.links.length > 0 ? section : null;
+  if (permissions.includes("View Users")) {
+    section.links.push({
+      label: "Users",
+      path: "/admin/users",
+      icon: "sidebar-admin-users",
+      activatesPaths: ["/admin/users/"],
+    });
+  }
+
+  if (permissions.includes("View Roles")) {
+    section.links.push({
+      label: "Roles",
+      path: "/admin/roles",
+      icon: "sidebar-admin-roles",
+      activatesPaths: ["/admin/roles/"],
+    });
+  }
+
+  if (permissions.includes("View Courses")) {
+    section.links.push({
+      label: "Courses",
+      path: "/admin/courses",
+      icon: "sidebar-admin-courses",
+      activatesPaths: ["/admin/courses/"],
+    });
+  }
+
+  if (permissions.includes("View Materials")) {
+    section.links.push({
+      label: "Materials",
+      path: "/admin/materials",
+      icon: "sidebar-admin-materials",
+      badge: "Beta",
+      activatesPaths: ["/admin/materials/"],
+    });
+  }
+
+  if (permissions.includes("View Weekly Guide")) {
+    section.links.push({
+      label: "Weekly Guide",
+      path: "/admin/week-guide",
+      icon: "sidebar-admin-materials",
+      badge: "Beta",
+      activatesPaths: ["/admin/week-guide/"],
+    });
+  }
+
+  if (permissions.includes("View Grades")) {
+    section.links.push({
+      label: "Grades",
+      // path: "/admin/grades",
+      path: "#!",
+      icon: "sidebar-admin-grades",
+      badge: "Soon",
+      activatesPaths: ["/admin/grades/"],
+    });
+  }
+
+  if (permissions.includes("View Tasks")) {
+    section.links.push({
+      label: "Tasks",
+      path: "/admin/tasks",
+      icon: "sidebar-admin-tasks",
+      activatesPaths: ["/admin/tasks/"],
+    });
+  }
+
+  if (permissions.includes("View Exams")) {
+    section.links.push({
+      label: "Exams",
+      path: "/admin/exams",
+      icon: "sidebar-admin-exams",
+      activatesPaths: ["/admin/exams/"],
+    });
+  }
+
+  if (permissions.includes("View Announcements")) {
+    section.links.push({
+      label: "Announcements",
+      path: "/admin/announcements",
+      icon: "sidebar-admin-announcements",
+      activatesPaths: ["/admin/announcements/"],
+    });
+  }
+
+  if (permissions.includes("View Logs")) {
+    section.links.push({
+      label: "Logs",
+      // path: "/admin/logs",
+      path: "#!",
+      icon: "sidebar-admin-logs",
+      badge: "Soon",
+      activatesPaths: ["/admin/logs/"],
+    });
+  }
+
+  section.links.push({
+    label: "Roadmaps",
+    // path: "/admin/roadmaps",
+    path: "#!",
+    icon: "sidebar-admin-roadmaps",
+    badge: "Soon",
+    activatesPaths: ["/admin/roadmaps/"],
+  });
+
+  section.links.push({
+    label: "Study Maps",
+    // path: "/admin/study-maps",
+    path: "#!",
+    icon: "sidebar-admin-study-maps",
+    badge: "Soon",
+    activatesPaths: ["/admin/study-maps/"],
+  });
+
+  section.links.push({
+    label: "Study Analysis",
+    // path: "/admin/study-analysis",
+    path: "#!",
+    icon: "sidebar-admin-study-analysis",
+    badge: "Soon",
+  });
+
+  section.links.push({
+    label: "Events",
+    // path: "/admin/events",
+    path: "#!",
+    icon: "sidebar-admin-events",
+    badge: "Soon",
+    activatesPaths: ["/admin/events/"],
+  });
+
+  section.links.push({
+    label: "Discussions",
+    // path: "/admin/discussions",
+    path: "#!",
+    icon: "sidebar-admin-discussions",
+    badge: "Soon",
+    activatesPaths: ["/admin/discussions/"],
+  });
+
+  return section.links.length > 0 ? section : null;
 };
 export const Sidebar = ({
-    isOpen,
-    onClose,
+  isOpen,
+  onClose,
 }: {
-    isOpen: boolean;
-    onClose?: () => void;
+  isOpen: boolean;
+  onClose?: () => void;
 }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -412,13 +569,11 @@ export const Sidebar = ({
         }
     }, [permissions]);
 
-    const toggleSection = (title: string) => {
-        setExpandedSections((prev) =>
-            prev.includes(title)
-                ? prev.filter((t) => t !== title)
-                : [...prev, title],
-        );
-    };
+  const toggleSection = (title: string) => {
+    setExpandedSections((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
+    );
+  };
 
     const isLinkActive = (link: NavLink) => {
         if (location.pathname === link.path) return true;
