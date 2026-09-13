@@ -6,97 +6,55 @@ import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import type { Release } from "../../../types/entities/Release";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./ReleasesPage.module.css";
 import { useNavigate } from "react-router";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
-const fakeReleases: Release[] = [
-  {
-    id: 1,
-    title: "CU Portal v1.0.0",
-    date: "2024-06-01",
-    description:
-      "Initial release of CU Portal with core features and improvements.",
-    release_number: "v1.0.0",
-    release_items: [
-      ...Array.from({ length: 5 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 3 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Security Fix" as const,
-      })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Refactoring" as const,
-      })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Improvement" as const,
-      })),
-    ],
-  },
-  {
-    id: 2,
-    title: "Infrastructure Resilience Update",
-    date: "2024-09-12",
-    description:
-      "Major improvements to database clustering and auto-scaling for busy periods.",
-    release_number: "v1.1.0",
-    release_items: [
-      ...Array.from({ length: 2 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Improvement" as const,
-      })),
-      { item_type: "Security Fix" as const },
-    ],
-  },
-  {
-    id: 3,
-    title: "Faster Materials and Search",
-    date: "2025-02-18",
-    description:
-      "Improved material loading, search results, and navigation across courses.",
-    release_number: "v1.2.0",
-    release_items: [
-      ...Array.from({ length: 4 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 2 }, () => ({
-        item_type: "Refactoring" as const,
-      })),
-    ],
-  },
-  {
-    id: 4,
-    title: "Account Security Improvements",
-    date: "2025-08-05",
-    description:
-      "Strengthened account protection and simplified the sign-in experience.",
-    release_number: "v1.3.0",
-    release_items: [
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Security Fix" as const,
-      })),
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      { item_type: "Improvement" as const },
-    ],
-  },
-];
-
-const versionsOptions = fakeReleases.map((release) => ({
-  value: release.release_number ?? "",
-  label: release.release_number ?? "Unknown version",
-}));
+import {
+  useDeleteReleaseMutation,
+  useLazyGetReleasesQuery,
+} from "../../../services/apis/admin/ReleaseAPIs";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { mapReleaseResponse } from "../../../utils/ReleaseHelpers";
+import { showToast } from "../../../utils/ToastsManager";
+import { NoContentSection } from "../../../components/section/NoContentSection";
 
 export function ReleasesPage() {
-  const [releases, setReleases] = useState(fakeReleases);
+  const [releases, setReleases] = useState<Release[]>([]);
   const [versionsFilter, setVersionsFilter] = useState("");
   const [dateFromFilter, setDateFromFilter] = useState("");
   const [dateToFilter, setDateToFilter] = useState("");
   const [releaseToDelete, setReleaseToDelete] = useState<Release | null>(null);
   const navigation = useNavigate();
+  const [getReleases] = useLazyGetReleasesQuery();
+  const [deleteRelease] = useDeleteReleaseMutation();
+
+  const fetchReleases = useCallback(async () => {
+    try {
+      const result = await getReleases({
+        data: {},
+        order_by: ["date"],
+        descending: true,
+        limit: 1000,
+      }).unwrap();
+      setReleases((result.data ?? []).map(mapReleaseResponse));
+    } catch (error) {
+      handlePopupErrors(error);
+    }
+  }, [getReleases]);
+
+  useAuthQuery(fetchReleases);
 
   const latestRelease = useMemo(
     () =>
-      releases.reduce((latest, release) =>
-        (release.date ?? "") > (latest.date ?? "") ? release : latest,
+      releases.reduce<Release | null>(
+        (latest, release) =>
+          !latest || (release.date ?? "") > (latest.date ?? "")
+            ? release
+            : latest,
+        null,
       ),
     [releases],
   );
@@ -123,11 +81,6 @@ export function ReleasesPage() {
         .filter((itemType): itemType is ReleaseItemType => Boolean(itemType)),
     ).size;
 
-  const handleViewRelease = () => {
-    // Implement the logic to view the release details
-    navigation("/admin/releases/1"); // Replace with the actual release ID
-  };
-
   const handleEditRelease = (release: Release) => {
     navigation(`/admin/releases/edit/${release.id}`);
   };
@@ -136,13 +89,18 @@ export function ReleasesPage() {
     setReleaseToDelete(release);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!releaseToDelete?.id) return;
-
-    setReleases((currentReleases) =>
-      currentReleases.filter((release) => release.id !== releaseToDelete.id),
-    );
-    setReleaseToDelete(null);
+    try {
+      await deleteRelease({ release_id: releaseToDelete.id }).unwrap();
+      showToast("success", "Success", "Release deleted successfully");
+      setReleases((currentReleases) =>
+        currentReleases.filter((release) => release.id !== releaseToDelete.id),
+      );
+      setReleaseToDelete(null);
+    } catch (error) {
+      handlePopupErrors(error);
+    }
   };
 
   const handleAddNewRelease = () => {
@@ -166,7 +124,10 @@ export function ReleasesPage() {
           <div className={styles.filtersRow}>
             <SelectFilter
               placeholder="Versions"
-              options={versionsOptions}
+              options={releases.map((release) => ({
+                value: release.release_number ?? "",
+                label: release.release_number ?? "Unknown version",
+              }))}
               setValue={setVersionsFilter}
             />
             <DateFilter
@@ -178,40 +139,55 @@ export function ReleasesPage() {
           </div>
         </div>
         <div className={styles.releasesGrid}>
-          {filteredReleases.map((release) => (
-            <Card
-              key={release.id}
-              title={release.title}
-              badge={release.release_number}
-              secondaryBadge={
-                release.id === latestRelease.id ? "Latest Release " : undefined
-              }
-              items={[
-                {
-                  icon: "calendar",
-                  label: "Release Date",
-                  value: formatDateTime(release.date),
-                },
-                {
-                  icon: "checkmark-done",
-                  label: "Updates",
-                  value: String(release.release_items?.length ?? 0),
-                },
-                {
-                  icon: "book-saved",
-                  label: "Categories",
-                  value: String(getReleaseCategoryCount(release)),
-                },
-              ]}
-              button="View Release"
-              buttonAction={() => handleViewRelease()}
-              editable
-              deletable
-              hasOptions
-              onEdit={() => handleEditRelease(release)}
-              onDelete={() => handleDeleteClick(release)}
-            />
-          ))}
+          {filteredReleases.length > 0 ? (
+            filteredReleases.map((release) => (
+              <Card
+                key={release.id}
+                title={release.title}
+                badge={release.release_number}
+                secondaryBadge={
+                  release.id === latestRelease?.id
+                    ? "Latest Release "
+                    : undefined
+                }
+                items={[
+                  {
+                    icon: "calendar",
+                    label: "Release Date",
+                    value: formatDateTime(release.date),
+                  },
+                  {
+                    icon: "checkmark-done",
+                    label: "Updates",
+                    value: String(release.release_items?.length ?? 0),
+                  },
+                  {
+                    icon: "book-saved",
+                    label: "Categories",
+                    value: String(getReleaseCategoryCount(release)),
+                  },
+                ]}
+                button="View Release"
+                buttonAction={() => navigation(`/admin/releases/${release.id}`)}
+                editable
+                deletable
+                hasOptions
+                onEdit={() => handleEditRelease(release)}
+                onDelete={() => handleDeleteClick(release)}
+              />
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              <NoContentSection
+                icon="file-text"
+                label={
+                  releases.length
+                    ? "No releases match the selected filters"
+                    : "No releases found"
+                }
+              />
+            </div>
+          )}
         </div>
       </div>
       <ConfirmModal

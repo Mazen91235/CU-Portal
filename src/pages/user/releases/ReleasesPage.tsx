@@ -4,109 +4,15 @@ import { PageSeo } from "../../../components/PageSeo";
 import { ReleaseCard } from "../../../components/releases/ReleaseCard";
 import { ReleaseCardHeader } from "../../../components/releases/ReleaseCardHeader";
 import { VersionPicker } from "../../../components/releases/VersionPicker";
+import { useLazyGetReleasesQuery } from "../../../services/apis/user/ReleaseAPIs";
 import type { Release } from "../../../types/entities/Release";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { mapReleaseResponse } from "../../../utils/ReleaseHelpers";
+import { NoContentSection } from "../../../components/section/NoContentSection";
 import styles from "./ReleasesPage.module.css";
-const fakeReleases: Release[] = [
-  {
-    id: 1,
-    title: "CU Portal v1.0.0",
-    date: "2024-06-01",
-    description:
-      "Initial release of CU Portal with core features and improvements.",
-    release_number: "v1.0.0",
-    release_items: [
-      ...Array.from({ length: 5 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 3 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Security Fix" as const,
-      })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Refactoring" as const,
-      })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Improvement" as const,
-      })),
-    ],
-  },
-  {
-    id: 2,
-    title: "Infrastructure Resilience Update",
-    date: "2024-09-12",
-    description:
-      "Major improvements to database clustering and auto-scaling for busy periods.",
-    release_number: "v1.1.0",
-    release_items: [
-      ...Array.from({ length: 2 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Improvement" as const,
-      })),
-      { item_type: "Security Fix" as const },
-    ],
-  },
-  {
-    id: 3,
-    title: "Faster Materials and Search",
-    date: "2025-02-18",
-    description:
-      "Improved material loading, search results, and navigation across courses.",
-    release_number: "v1.2.0",
-    release_items: [
-      ...Array.from({ length: 4 }, () => ({ item_type: "Feature" as const })),
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 2 }, () => ({
-        item_type: "Refactoring" as const,
-      })),
-    ],
-  },
-  {
-    id: 4,
-    title: "Account Security Improvements",
-    date: "2025-08-05",
-    description:
-      "Strengthened account protection and simplified the sign-in experience.",
-    release_number: "v1.3.0",
-    release_items: [
-      ...Array.from({ length: 3 }, () => ({
-        item_type: "Security Fix" as const,
-      })),
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      { item_type: "Improvement" as const },
-    ],
-  },
-  {
-    id: 5,
-    title: "Faster Materials and Search 2",
-    date: "2025-02-18",
-    description:
-      "Improved material loading, search results, and navigation across courses.",
-    release_number: "v1.2.1",
-    release_items: [
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 2 }, () => ({
-        item_type: "Refactoring" as const,
-      })),
-    ],
-  },
-  {
-    id: 6,
-    title: "Faster Materials and Search 3",
-    date: "2025-02-18",
-    description:
-      "Improved material loading, search results, and navigation across courses.",
-    release_number: "v2.0.0",
-    release_items: [
-      ...Array.from({ length: 2 }, () => ({ item_type: "Bug Fix" as const })),
-      ...Array.from({ length: 2 }, () => ({
-        item_type: "Refactoring" as const,
-        ...Array.from({ length: 3 }, () => ({
-          item_type: "Security Fix" as const,
-        })),
-      })),
-    ],
-  },
-];
 
 const getMajorVersion = (release: Release) => {
   const match = release.release_number?.match(/v?(\d+)/i);
@@ -146,18 +52,40 @@ type ReleaseDateGroup = {
 export function ReleasesPage() {
   const navigate = useNavigate();
   const [versionFilter, setVersionFilter] = useState("");
+  const [releases, setReleases] = useState<Release[]>([]);
+  const [getReleases] = useLazyGetReleasesQuery();
+
+  const fetchReleases = useCallback(async () => {
+    try {
+      const result = await getReleases({
+        data: {},
+        order_by: ["date"],
+        descending: true,
+        limit: 1000,
+      }).unwrap();
+      setReleases((result.data ?? []).map(mapReleaseResponse));
+    } catch (error) {
+      handlePopupErrors(error);
+    }
+  }, [getReleases]);
+
+  useAuthQuery(fetchReleases);
 
   const latestRelease = useMemo(
     () =>
-      fakeReleases.reduce((latest, release) =>
-        (release.date ?? "") > (latest.date ?? "") ? release : latest,
+      releases.reduce<Release | null>(
+        (latest, release) =>
+          !latest || (release.date ?? "") > (latest.date ?? "")
+            ? release
+            : latest,
+        null,
       ),
-    [],
+    [releases],
   );
 
   const releasesWithoutLatest = useMemo(
-    () => fakeReleases.filter((release) => release.id !== latestRelease.id),
-    [latestRelease.id],
+    () => releases.filter((release) => release.id !== latestRelease?.id),
+    [latestRelease?.id, releases],
   );
 
   const versionOptions = useMemo(
@@ -216,10 +144,14 @@ export function ReleasesPage() {
         title="Releases"
         description="Browse and access the latest releases of CU Portal"
       />
-      <ReleaseCardHeader
-        release={latestRelease}
-        onViewAllReleases={() => navigate("/user/system/releases/1")}
-      />
+      {latestRelease && (
+        <ReleaseCardHeader
+          release={latestRelease}
+          onViewAllReleases={() =>
+            navigate(`/user/system/releases/${latestRelease.id}`)
+          }
+        />
+      )}
 
       <div className={styles.container}>
         <div className={styles.filtersContainer}>
@@ -230,41 +162,54 @@ export function ReleasesPage() {
           />
         </div>
         <div className={styles.timeline}>
-          {releaseGroups.map(([version, dateGroups]) => (
-            <section className={styles.versionGroup} key={version}>
-              <div className={styles.versionHeading}>
-                <div />
-                <div className={styles.timelineMarker}>
-                  <span className={styles.timelineDot} />
-                </div>
-                <h2 className={styles.versionTitle}>V{version}</h2>
-              </div>
-              {dateGroups.map(({ date, releases }) => (
-                <article
-                  className={styles.timelineRelease}
-                  key={`${version}-${date}`}
-                >
-                  <div className={styles.timelineDate}>
-                    {getTimelineDateLabel(date)}
-                  </div>
+          {releaseGroups.length > 0 ? (
+            releaseGroups.map(([version, dateGroups]) => (
+              <section className={styles.versionGroup} key={version}>
+                <div className={styles.versionHeading}>
+                  <div />
                   <div className={styles.timelineMarker}>
                     <span className={styles.timelineDot} />
                   </div>
-                  <div className={styles.timelineCard}>
-                    {releases.map((release) => (
-                      <ReleaseCard
-                        key={release.id}
-                        release={release}
-                        onViewDetails={() =>
-                          navigate(`/user/system/releases/${release.id}`)
-                        }
-                      />
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </section>
-          ))}
+                  <h2 className={styles.versionTitle}>V{version}</h2>
+                </div>
+                {dateGroups.map(({ date, releases }) => (
+                  <article
+                    className={styles.timelineRelease}
+                    key={`${version}-${date}`}
+                  >
+                    <div className={styles.timelineDate}>
+                      {getTimelineDateLabel(date)}
+                    </div>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.timelineDot} />
+                    </div>
+                    <div className={styles.timelineCard}>
+                      {releases.map((release) => (
+                        <ReleaseCard
+                          key={release.id}
+                          release={release}
+                          onViewDetails={() =>
+                            navigate(`/user/system/releases/${release.id}`)
+                          }
+                        />
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </section>
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              <NoContentSection
+                icon="file-text"
+                label={
+                  releases.length
+                    ? "No releases match the selected version"
+                    : "No releases found"
+                }
+              />
+            </div>
+          )}
         </div>
       </div>
     </Layout>

@@ -10,6 +10,9 @@ import { Input } from "../../../components/forms/Input";
 import { Heading } from "../../../components/heading/Heading";
 import { ReleaseItems } from "../../../components/releases/ReleaseItems";
 import type { ReleaseItemMutationDto } from "../../../types/dtos/ReleaseItemDtos";
+import { useCreateReleaseMutation } from "../../../services/apis/admin/ReleaseAPIs";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { showToast } from "../../../utils/ToastsManager";
 import styles from "./CreateRelease.module.css";
 
 type ReleaseFormData = Record<string, unknown> & {
@@ -22,6 +25,7 @@ type ReleaseFormData = Record<string, unknown> & {
 
 export const CreateRelease = () => {
   const navigate = useNavigate();
+  const [createRelease, { isLoading }] = useCreateReleaseMutation();
   const {
     register,
     control,
@@ -37,9 +41,16 @@ export const CreateRelease = () => {
       release_items: [{ item_type: "Feature", content: "" }],
     },
   });
+  const busy = isSubmitting || isLoading;
 
-  const onSubmit = (data: ReleaseFormData) => {
-    console.log("Release form data", data);
+  const onSubmit = async (data: ReleaseFormData) => {
+    try {
+      await createRelease(data).unwrap();
+      showToast("success", "Success", "Release created successfully");
+      navigate("/admin/releases");
+    } catch (error) {
+      handlePopupErrors(error);
+    }
   };
 
   return (
@@ -60,7 +71,7 @@ export const CreateRelease = () => {
           onSubmit={handleSubmit(onSubmit)}
           errors={errors}
           className={styles.formCard}
-          disabled={isSubmitting}
+          disabled={busy}
         >
           <Heading icon="edit" content="Release Information" size="medium" />
           <div className={styles.formGrid}>
@@ -69,9 +80,9 @@ export const CreateRelease = () => {
               register={register}
               name="release_number"
               type="text"
-              placeholder="e.g. v1.0.0"
+              placeholder="e.g. 1.0.0"
               errors={errors}
-              disabled={isSubmitting}
+              disabled={busy}
             />
             <Input
               label="Title"
@@ -80,7 +91,7 @@ export const CreateRelease = () => {
               type="text"
               placeholder="Release title"
               errors={errors}
-              disabled={isSubmitting}
+              disabled={busy}
             />
             <DateInput
               label="Release Date"
@@ -89,10 +100,9 @@ export const CreateRelease = () => {
               errors={errors}
               setValue={setValue}
               control={control}
-              disabled={isSubmitting}
+              disabled={busy}
             />
           </div>
-
           <div className={styles.descriptionSection}>
             <Input
               label="Description"
@@ -101,19 +111,17 @@ export const CreateRelease = () => {
               type="text"
               placeholder="Describe this release..."
               errors={errors}
-              disabled={isSubmitting}
+              disabled={busy}
               isTextArea
             />
           </div>
-
           <ReleaseItems
             register={register}
             name="release_items"
             errors={errors}
             setValue={setValue}
-            disabled={isSubmitting}
+            disabled={busy}
           />
-
           <div className={styles.formActions}>
             <Button
               text="Cancel"
@@ -126,7 +134,7 @@ export const CreateRelease = () => {
             <Button
               text="Create Release"
               loadingText="Creating..."
-              isSubmitting={isSubmitting}
+              isSubmitting={busy}
               type="submit"
               isOrange={false}
             />

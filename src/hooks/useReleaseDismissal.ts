@@ -5,7 +5,7 @@ import {
   shouldShowBanner,
   getLocalDate,
   RELEASE_DISMISSAL_LIMIT,
-} from "../utils/releaseDismissal";
+} from "../utils/ReleaseDismissal";
 
 export const useReleaseDismissal = (
   storageKey: string,

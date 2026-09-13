@@ -1,30 +1,16 @@
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
+import { useLazyGetReleaseQuery } from "../../../services/apis/user/ReleaseAPIs";
 import type { Release } from "../../../types/entities/Release";
 import { StatCard } from "../../../components/card/StatCard";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
+import { useCallback, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { mapReleaseResponse } from "../../../utils/ReleaseHelpers";
 import styles from "./ReleasePage.module.css";
-const fakeReleases: Release = {
-  id: 1,
-  title: "CU Portal v1.0.0",
-  date: "2024-06-01",
-  description:
-    "Initial release of CU Portal with core features and improvements.",
-  release_number: "v1.0.0",
-  version: 1,
-  release_items: [
-    ...Array.from({ length: 2 }, () => ({
-      item_type: "Feature" as const,
-      content: "Added new feature to enhance user experience.",
-    })),
-    ...Array.from({ length: 3 }, () => ({
-      item_type: "Improvement" as const,
-      content: "Improved performance and stability of the application.",
-    })),
-    { item_type: "Security Fix" as const },
-  ],
-};
 
 const getReleaseCategories = (release: Release) => {
   const categoryCounts = new Map<string, number>();
@@ -57,6 +43,28 @@ const releaseItemTypes: ReleaseItemType[] = [
 ];
 
 export function ReleasePage() {
+  const { releaseId } = useParams<{ releaseId: string }>();
+  const navigate = useNavigate();
+  const [release, setRelease] = useState<Release | null>(null);
+  const [getRelease] = useLazyGetReleaseQuery();
+
+  const fetchRelease = useCallback(async () => {
+    if (!releaseId) return;
+    try {
+      const result = await getRelease({
+        release_id: Number(releaseId),
+      }).unwrap();
+      setRelease(result.data ? mapReleaseResponse(result.data) : null);
+    } catch (error) {
+      handlePopupErrors(error);
+      navigate("/user/system/releases");
+    }
+  }, [getRelease, navigate, releaseId]);
+
+  useAuthQuery(fetchRelease);
+
+  if (!release) return null;
+
   return (
     <Layout>
       <PageSeo
@@ -64,8 +72,8 @@ export function ReleasePage() {
         description="View release information for CU Portal"
       />
       <SubBanner
-        title={fakeReleases.title ?? "Release"}
-        description={fakeReleases.description ?? undefined}
+        title={release.title ?? "Release"}
+        description={release.description ?? undefined}
         icon="user"
         linkText="Back to all releases"
         linkTo="/user/system/releases"
@@ -74,34 +82,30 @@ export function ReleasePage() {
         <div className={styles.statsRow}>
           <StatCard
             type="Version"
-            value={fakeReleases.release_number ?? fakeReleases.version ?? "-"}
+            value={release.release_number ?? release.version ?? "-"}
             icon="tag"
           />
-          <StatCard
-            type="Release Date"
-            value={fakeReleases.date}
-            icon="calendar"
-          />
+          <StatCard type="Release Date" value={release.date} icon="calendar" />
           <StatCard
             type="Total Updates"
-            value={fakeReleases.release_items?.length ?? 0}
+            value={release.release_items?.length ?? 0}
             icon="check"
           />
           <StatCard
             type="Categories"
-            value={getReleaseCategories(fakeReleases).length}
+            value={getReleaseCategories(release).length}
             icon="book"
           />
         </div>
 
         <section className={styles.descriptionSection}>
           <h2 className={styles.sectionTitle}>Description</h2>
-          <p className={styles.description}>{fakeReleases.description}</p>
+          <p className={styles.description}>{release.description}</p>
         </section>
 
         <div className={styles.categorySections}>
           {releaseItemTypes.map((type) => {
-            const items = fakeReleases.release_items?.filter(
+            const items = release.release_items?.filter(
               (item) => item.item_type === type,
             );
 

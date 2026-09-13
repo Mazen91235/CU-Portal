@@ -17,6 +17,14 @@
   width: 100%;
 }
 
+.emptyState {
+  display: grid;
+  min-height: 280px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--white);
+}
+
 .timeline::before {
   position: absolute;
   top: 0;

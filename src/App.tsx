@@ -74,10 +74,9 @@ import { ReleasePage as UserReleasePage } from "./pages/user/releases/ReleasePag
 import { ReleasesPage as UserReleasesPage } from "./pages/user/releases/ReleasesPage";
 import { ReleasePage } from "./pages/admin/releases/ReleasePage";
 import { ReleasesPage } from "./pages/admin/releases/ReleasesPage";
-
-import "./App.css";
 import { CreateRelease } from "./pages/admin/releases/CreateRelease";
 import { EditRelease } from "./pages/admin/releases/EditRelease";
+import "./App.css";
 function App() {
   useAuth({ shouldNavigate: false });
   useGetUser();

@@ -6,28 +6,16 @@ import { StatCard } from "../../../components/card/StatCard";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
 import styles from "./ReleasePage.module.css";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
-const fakeReleases: Release = {
-  id: 1,
-  title: "CU Portal v1.0.0",
-  date: "2024-06-01",
-  description:
-    "Initial release of CU Portal with core features and improvements.",
-  release_number: "v1.0.0",
-  version: 1,
-  release_items: [
-    ...Array.from({ length: 2 }, () => ({
-      item_type: "Feature" as const,
-      content: "Added new feature to enhance user experience.",
-    })),
-    ...Array.from({ length: 3 }, () => ({
-      item_type: "Improvement" as const,
-      content: "Improved performance and stability of the application.",
-    })),
-    { item_type: "Security Fix" as const },
-  ],
-};
+import { useParams } from "react-router";
+import {
+  useLazyGetReleaseQuery,
+  useDeleteReleaseMutation,
+} from "../../../services/apis/admin/ReleaseAPIs";
+import useAuthQuery from "../../../hooks/useAuthQuery";
+import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { mapReleaseResponse } from "../../../utils/ReleaseHelpers";
 
 const getReleaseCategories = (release: Release) => {
   const categoryCounts = new Map<string, number>();
@@ -61,18 +49,44 @@ const releaseItemTypes: ReleaseItemType[] = [
 
 export function ReleasePage() {
   const navigate = useNavigate();
+  const { releaseId } = useParams<{ releaseId: string }>();
+  const [release, setRelease] = useState<Release | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [getRelease] = useLazyGetReleaseQuery();
+  const [deleteRelease] = useDeleteReleaseMutation();
+
+  const fetchRelease = useCallback(async () => {
+    if (!releaseId) return;
+    try {
+      const result = await getRelease({
+        release_id: Number(releaseId),
+      }).unwrap();
+      setRelease(result.data ? mapReleaseResponse(result.data) : null);
+    } catch (error) {
+      handlePopupErrors(error);
+      navigate("/admin/releases");
+    }
+  }, [getRelease, navigate, releaseId]);
+
+  useAuthQuery(fetchRelease);
 
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDelete = () => {
-    setIsDeleteModalOpen(false);
-    navigate("/admin/releases", {
-      state: { success: "Release deleted successfully" },
-    });
+  const handleDelete = async () => {
+    if (!release?.id) return;
+    try {
+      await deleteRelease({ release_id: release.id }).unwrap();
+      navigate("/admin/releases", {
+        state: { success: "Release deleted successfully" },
+      });
+    } catch (error) {
+      handlePopupErrors(error);
+    }
   };
+
+  if (!release) return null;
 
   return (
     <Layout>
@@ -81,13 +95,13 @@ export function ReleasePage() {
         description="View release information for CU Portal"
       />
       <SubBanner
-        title={fakeReleases.title ?? "Release"}
-        description={fakeReleases.description ?? undefined}
+        title={release.title ?? "Release"}
+        description={release.description ?? undefined}
         icon="user"
         linkText="Back to all releases"
         linkTo="/admin/releases"
         button="Edit Release"
-        buttonAction={() => navigate(`/admin/releases/edit/${fakeReleases.id}`)}
+        buttonAction={() => navigate(`/admin/releases/edit/${release.id}`)}
         deleteButton="Delete Release"
         deleteAction={handleDeleteClick}
       />
@@ -95,34 +109,30 @@ export function ReleasePage() {
         <div className={styles.statsRow}>
           <StatCard
             type="Version"
-            value={fakeReleases.release_number ?? fakeReleases.version ?? "-"}
+            value={release.release_number ?? release.version ?? "-"}
             icon="tag"
           />
-          <StatCard
-            type="Release Date"
-            value={fakeReleases.date}
-            icon="calendar"
-          />
+          <StatCard type="Release Date" value={release.date} icon="calendar" />
           <StatCard
             type="Total Updates"
-            value={fakeReleases.release_items?.length ?? 0}
+            value={release.release_items?.length ?? 0}
             icon="check"
           />
           <StatCard
             type="Categories"
-            value={getReleaseCategories(fakeReleases).length}
+            value={getReleaseCategories(release).length}
             icon="book"
           />
         </div>
 
         <section className={styles.descriptionSection}>
           <h2 className={styles.sectionTitle}>Description</h2>
-          <p className={styles.description}>{fakeReleases.description}</p>
+          <p className={styles.description}>{release.description}</p>
         </section>
 
         <div className={styles.categorySections}>
           {releaseItemTypes.map((type) => {
-            const items = fakeReleases.release_items?.filter(
+            const items = release.release_items?.filter(
               (item) => item.item_type === type,
             );
 

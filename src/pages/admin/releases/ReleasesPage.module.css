@@ -20,6 +20,15 @@
   margin-bottom: 2rem;
 }
 
+.emptyState {
+  grid-column: 1 / -1;
+  display: grid;
+  min-height: 280px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--white);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem 1rem;
