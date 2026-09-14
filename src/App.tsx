@@ -73,6 +73,7 @@ import { TermsOfService } from "./pages/user/terms/TermsOfService";
 import { WeeklyGuidePage } from "./pages/user/weeklyGuide/weeklyGuide";
 import { LogsPage } from "./pages/admin/logs/LogsPage";
 import { LogPage } from "./pages/admin/logs/LogPage";
+import { WeeklyGuidePage as AdminWeeklyGuidePage } from "./pages/admin/weeklyGuide/WeeklyGuide";
 
 import "./App.css";
 function App() {
@@ -400,6 +401,14 @@ function App() {
           >
             <Route index element={<LogsPage />} />
             <Route path=":logId" element={<LogPage />} />
+          </Route>
+
+          <Route
+            path="week-guide"
+            element={<ProtectedRoute permission="View Weeks" />}
+          >
+            <Route index element={<AdminWeeklyGuidePage />} />
+            <Route path=":weekNumber" element={<AdminWeeklyGuidePage />} />
           </Route>
         </Route>
       </Routes>

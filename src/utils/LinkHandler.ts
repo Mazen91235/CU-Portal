@@ -161,7 +161,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
 
     time: LuClock,
     tracker: FaGraduationCap,
-  "warning-circle": LuCircleAlert,
+    "warning-circle": LuCircleAlert,
     "view-icon": LuEye,
 
     "spinner-ellipse-11": FaSpinner,

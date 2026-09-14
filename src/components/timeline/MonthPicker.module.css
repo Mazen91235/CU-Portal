@@ -60,3 +60,12 @@
 .arrowButton:hover {
   color: #6b176f;
 }
+
+.arrowButton:disabled {
+  color: #c7c9cf;
+  cursor: not-allowed;
+}
+
+.arrowButton:disabled:hover {
+  color: #c7c9cf;
+}
