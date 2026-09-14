@@ -187,6 +187,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-grades": LuBadge,
         "sidebar-study-tracker": LuRadar,
         "sidebar-cv-generator": LuFileText,
+        "sidebar-releases": LuFileText,
 
         "sidebar-roadmaps": LuMapPin,
         "sidebar-discussion": LuMessagesSquare,
@@ -214,6 +215,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-admin-study-maps": LuMap,
         "sidebar-admin-discussions": LuMessagesSquare,
         "sidebar-admin-logs": LuActivity,
+        "sidebar-admin-releases": LuFileText,
         "sidebar-home": FiHome,
         "social-facebook": FaFacebook,
         "social-github": FaGithub,
