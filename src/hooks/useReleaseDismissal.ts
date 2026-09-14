@@ -1,48 +1,53 @@
 import { useEffect, useState, useCallback } from "react";
 import {
-  readDismissal,
-  writeDismissal,
-  shouldShowBanner,
-  getLocalDate,
-  RELEASE_DISMISSAL_LIMIT,
+    readDismissal,
+    writeDismissal,
+    shouldShowBanner,
+    getLocalDate,
+    RELEASE_DISMISSAL_LIMIT,
 } from "../utils/ReleaseDismissal";
 
 export const useReleaseDismissal = (
-  storageKey: string,
-  releaseVersion: string,
-  dismissLimit = RELEASE_DISMISSAL_LIMIT,
+    storageKey: string,
+    releaseVersion: string,
+    dismissLimit = RELEASE_DISMISSAL_LIMIT,
 ) => {
-  const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const dismissal = readDismissal(storageKey);
+    useEffect(() => {
+        if (!releaseVersion) {
+            setIsVisible(false);
+            return;
+        }
 
-    if (shouldShowBanner(dismissal, releaseVersion, dismissLimit)) {
-      if (!dismissal || dismissal.version !== releaseVersion) {
-        writeDismissal(storageKey, {
-          version: releaseVersion,
-          dismissedDates: [],
-        });
-      }
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  }, [storageKey, releaseVersion, dismissLimit]);
+        const dismissal = readDismissal(storageKey);
 
-  const dismiss = useCallback(() => {
-    const existing = readDismissal(storageKey);
-    const base =
-      existing?.version === releaseVersion
-        ? existing
-        : { version: releaseVersion, dismissedDates: [] as string[] };
+        if (shouldShowBanner(dismissal, releaseVersion, dismissLimit)) {
+            if (!dismissal || dismissal.version !== releaseVersion) {
+                writeDismissal(storageKey, {
+                    version: releaseVersion,
+                    dismissedDates: [],
+                });
+            }
+            setIsVisible(true);
+        } else {
+            setIsVisible(false);
+        }
+    }, [storageKey, releaseVersion, dismissLimit]);
 
-    const dismissedDates = Array.from(
-      new Set([...base.dismissedDates, getLocalDate()]),
-    );
-    writeDismissal(storageKey, { version: releaseVersion, dismissedDates });
-    setIsVisible(false);
-  }, [storageKey, releaseVersion]);
+    const dismiss = useCallback(() => {
+        const existing = readDismissal(storageKey);
+        const base =
+            existing?.version === releaseVersion
+                ? existing
+                : { version: releaseVersion, dismissedDates: [] as string[] };
 
-  return { isVisible, dismiss };
+        const dismissedDates = Array.from(
+            new Set([...base.dismissedDates, getLocalDate()]),
+        );
+        writeDismissal(storageKey, { version: releaseVersion, dismissedDates });
+        setIsVisible(false);
+    }, [storageKey, releaseVersion]);
+
+    return { isVisible, dismiss };
 };

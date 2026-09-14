@@ -5,6 +5,7 @@ import type {
     ReleaseResponseDto,
     ReleaseSearchDto,
 } from "../../../types/dtos/ReleaseDtos";
+import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
 import {
     timeout,
@@ -49,7 +50,21 @@ export const ReleaseAPI = createApi({
                 credentials: "include",
             }),
         }),
+        getVersions: builder.query<
+            GenericAPIResponse<VersionResponseDto[]>,
+            void
+        >({
+            query: () => ({
+                url: `/versions`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
-export const { useLazyGetReleasesQuery, useLazyGetReleaseQuery } = ReleaseAPI;
+export const {
+    useLazyGetReleasesQuery,
+    useLazyGetReleaseQuery,
+    useLazyGetVersionsQuery,
+} = ReleaseAPI;
