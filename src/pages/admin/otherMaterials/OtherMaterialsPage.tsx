@@ -14,8 +14,11 @@ import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
-import { handlePopupErrors, getErrorMessage } from "../../../utils/ErrorHandling";
-import { downloadFile } from "../../../utils/FileDownloader";
+import {
+    handlePopupErrors,
+    getErrorMessage,
+} from "../../../utils/ErrorHandling";
+import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppDispatch } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
@@ -25,6 +28,7 @@ import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { Search } from "../../../components/forms/Search";
 import { EmptySection } from "../../../components/materials/EmptySection";
 import { MaterialCard } from "../../../components/materials/MaterialCard";
+import { MaterialSelectionMenu } from "../../../components/materials/MaterialSelectionMenu";
 import { Navigator } from "../../../components/materials/Navigator";
 import { CrossSubjectDestinationPicker } from "../../../components/materials/CrossSubjectDestinationPicker";
 import { OtherMaterialsScopeHeader } from "../../../components/materials/OtherMaterialsScopeHeader";
@@ -132,6 +136,7 @@ export function OtherMaterialsPage() {
             handlePopupErrors(error);
         }
     }, [getEnrolledSubjects]);
+    const [isSelectionMode, setIsSelectionMode] = useState(false);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -237,7 +242,20 @@ export function OtherMaterialsPage() {
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
-    const handleCardClick = (material: MaterialResponseDto) => {
+    const handleCardClick = (materialId: number) => {
+        if (isSelectionMode) {
+            setSelectedMaterials((prev) =>
+                prev.includes(materialId)
+                    ? prev.filter((id) => id !== materialId)
+                    : [...prev, materialId],
+            );
+        } else {
+            setIsSelectionMode(true);
+            setSelectedMaterials([materialId]);
+        }
+    };
+
+    const handleCardDoubleClick = (material: MaterialResponseDto) => {
         if (material.material_type === "folder") {
             handleNavigate(material);
         }
@@ -260,9 +278,33 @@ export function OtherMaterialsPage() {
     };
 
     const handleCopyMaterials = (materialId?: number) => {
-        if (!materialId) return;
-        setSelectedMaterials([materialId]);
+        if (materialId && !selectedMaterials.includes(materialId)) {
+            setSelectedMaterials((prev) => [...prev, materialId]);
+        }
+        if (!materialId && selectedMaterials.length === 0) return;
         setShowDestinationPicker(true);
+    };
+
+    const handleDownloadSelected = useCallback(() => {
+        if (selectedMaterials.length === 0) return;
+        downloadMaterials(selectedMaterials);
+    }, [selectedMaterials]);
+
+    const handleSelectAll = () => {
+        if (selectedMaterials.length === materials.length) {
+            setSelectedMaterials([]);
+        } else {
+            setSelectedMaterials(
+                materials
+                    .map((material) => material.id)
+                    .filter((id): id is number => id !== undefined),
+            );
+        }
+    };
+
+    const handleCancelSelection = () => {
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
     };
 
     const fetchDestinationFolders = useCallback(
@@ -318,8 +360,10 @@ export function OtherMaterialsPage() {
                         subject_id: subjectId,
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
+                    await fetchMaterials(currentParentId);
                 } catch (error) {
-                    const errorMessage = getErrorMessage(error) || "Operation failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Operation failed";
                     dispatch(
                         setProcess({
                             ...process,
@@ -423,6 +467,17 @@ export function OtherMaterialsPage() {
 
                 {showContentPage && (
                     <>
+                        <MaterialSelectionMenu
+                            isSelectionMode={isSelectionMode}
+                            selectedCount={selectedMaterials.length}
+                            totalCount={materials.length}
+                            showCopy
+                            onEnter={() => setIsSelectionMode(true)}
+                            onCancel={handleCancelSelection}
+                            onSelectAll={handleSelectAll}
+                            onDownload={handleDownloadSelected}
+                            onCopy={() => handleCopyMaterials()}
+                        />
                         <Navigator
                             path={currentPath}
                             onNavigate={handleNavigate}
@@ -438,13 +493,14 @@ export function OtherMaterialsPage() {
                                             key={folderId}
                                             material={folder}
                                             showCount={true}
-                                            isSelected={false}
-                                            onClick={() =>
-                                                handleCardClick(folder)
+                                            isSelected={selectedMaterials.includes(
+                                                folderId,
+                                            )}
+                                            isSelectionMode={isSelectionMode}
+                                            onClick={handleCardClick}
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(folder)
                                             }
-                                            onDoubleClick={() => {
-                                                handleCardClick(folder);
-                                            }}
                                             onDragStart={() => {}}
                                             onCopy={() =>
                                                 handleCopyMaterials(folderId)
@@ -467,13 +523,14 @@ export function OtherMaterialsPage() {
                                             key={fileId}
                                             material={file}
                                             showCount={false}
-                                            isSelected={false}
-                                            onClick={() =>
-                                                handleCardClick(file)
+                                            isSelected={selectedMaterials.includes(
+                                                fileId,
+                                            )}
+                                            isSelectionMode={isSelectionMode}
+                                            onClick={handleCardClick}
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(file)
                                             }
-                                            onDoubleClick={() => {
-                                                handleCardClick(file);
-                                            }}
                                             onDragStart={() => {}}
                                             onCopy={() =>
                                                 handleCopyMaterials(fileId)

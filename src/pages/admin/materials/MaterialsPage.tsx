@@ -1228,7 +1228,9 @@ export function MaterialsPage() {
                         isSelectionMode={isSelectionMode}
                         selectedCount={selectedMaterials.length}
                         totalCount={materials.length}
-                        isAdmin
+                        showCopy
+                        showMove
+                        showDelete
                         onEnter={() => setIsSelectionMode(true)}
                         onCancel={handleCancelSelection}
                         onSelectAll={handleSelectAll}
