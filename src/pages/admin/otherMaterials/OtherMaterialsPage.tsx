@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import { useLazyGetDepartmentQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -9,14 +9,15 @@ import {
     useCopyMaterialsMutation,
 } from "../../../services/apis/admin/MaterialAPIs";
 import { useLazyGetMaterialParentsQuery } from "../../../services/apis/user/MaterialAPIs";
+import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handlePopupErrors, getErrorMessage } from "../../../utils/ErrorHandling";
 import { downloadFile } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
+import { useAppDispatch } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -35,14 +36,13 @@ import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import styles from "./OtherMaterialsPage.module.css";
 import { showToast } from "../../../utils/ToastsManager";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
 
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const user = useAppSelector((state) => state.user.user);
     const {
+        studyType,
         departmentId,
         yearId,
         subjectId: routeSubjectId,
@@ -51,8 +51,9 @@ export function OtherMaterialsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [department, setDepartment] =
-        useState<DepartmentResponseDto | null>(null);
+    const [department, setDepartment] = useState<DepartmentResponseDto | null>(
+        null,
+    );
     const [year, setYear] = useState<YearResponseDto | null>(null);
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [destinationSubjects, setDestinationSubjects] = useState<
@@ -66,18 +67,13 @@ export function OtherMaterialsPage() {
         id: string;
         name: string;
     } | null>(null);
-    const [fileToDownload, setFileToDownload] = useState<{
-        url: string;
-        name: string;
-    } | null>(null);
-    const [shouldDownload, setShouldDownload] = useState(false);
-    const downloadLink = useRef<HTMLAnchorElement>(null);
     const subjectFilter = routeSubjectId ?? "";
     const currentParentId = routeParentId ? Number(routeParentId) : null;
 
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
+    const [getEnrolledSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
@@ -129,19 +125,13 @@ export function OtherMaterialsPage() {
     // The subjects the admin can actually copy into — their own department,
     // regardless of the foreign department/year currently being browsed.
     const fetchDestinationSubjects = useCallback(async () => {
-        if (!user?.department?.id) {
-            setDestinationSubjects([]);
-            return;
-        }
         try {
-            const result = await getSubjects({
-                data: { department_id: user.department.id },
-            }).unwrap();
+            const result = await getEnrolledSubjects().unwrap();
             setDestinationSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getSubjects, user]);
+    }, [getEnrolledSubjects]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -169,17 +159,19 @@ export function OtherMaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!departmentId || !yearId) return "/admin/other-materials";
+            if (!studyType || !departmentId || !yearId) {
+                return "/admin/other-materials";
+            }
             if (!subjectValue) {
-                return `/admin/other-materials/${departmentId}/${yearId}`;
+                return `/admin/other-materials/${studyType}/${departmentId}/${yearId}`;
             }
             const subjectSegment = String(subjectValue);
             if (!parentValue) {
-                return `/admin/other-materials/${departmentId}/${yearId}/${subjectSegment}`;
+                return `/admin/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}`;
             }
-            return `/admin/other-materials/${departmentId}/${yearId}/${subjectSegment}/${parentValue}`;
+            return `/admin/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}/${parentValue}`;
         },
-        [departmentId, yearId],
+        [studyType, departmentId, yearId],
     );
 
     const loadCurrentPath = useCallback(
@@ -230,10 +222,10 @@ export function OtherMaterialsPage() {
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
-        if (!departmentId || !yearId) {
+        if (!studyType || !departmentId || !yearId) {
             navigate("/admin/other-materials", { replace: true });
         }
-    }, [departmentId, yearId, navigate]);
+    }, [studyType, departmentId, yearId, navigate]);
 
     useEffect(() => {
         if (!subjectFilter) {
@@ -259,14 +251,8 @@ export function OtherMaterialsPage() {
         setPreviewFile(null);
     };
 
-    const handleDownload = async (fileId: string, fileName: string) => {
-        try {
-            const url = await downloadFile(fileId);
-            setFileToDownload({ url, name: fileName });
-            setShouldDownload(true);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
+    const handleDownload = (fileId: string) => {
+        downloadFile(fileId);
     };
 
     const handleOpenLink = (url: string) => {
@@ -310,7 +296,10 @@ export function OtherMaterialsPage() {
         setShowDestinationPicker(false);
     };
 
-    const handleDestinationPickerConfirm = async (targetId: number) => {
+    const handleDestinationPickerConfirm = async (
+        targetId: number | null,
+        subjectId: number,
+    ) => {
         if (selectedMaterials.length === 0) return;
         const processName = `Copying ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
         const copiedMaterials = selectedMaterials;
@@ -326,18 +315,16 @@ export function OtherMaterialsPage() {
                     await copyMaterials({
                         material_ids: copiedMaterials,
                         destination_id: targetId,
+                        subject_id: subjectId,
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Operation failed";
+                    const errorMessage = getErrorMessage(error) || "Operation failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -383,13 +370,6 @@ export function OtherMaterialsPage() {
         [subjects],
     );
 
-    useEffect(() => {
-        if (shouldDownload && downloadLink.current) {
-            downloadLink.current.click();
-            setShouldDownload(false);
-        }
-    }, [shouldDownload]);
-
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
     const showContentPage = subjectFilter && materials.length > 0;
@@ -406,13 +386,17 @@ export function OtherMaterialsPage() {
             />
             <div className={styles.container}>
                 <OtherMaterialsScopeHeader
+                    studyTypeName={studyType}
                     departmentName={department?.name}
                     yearName={year?.year?.toString()}
-                    onChangeDepartment={() =>
-                        navigate("/admin/other-materials")
+                    onChangeHome={() => navigate("/admin/other-materials")}
+                    onChangeStudyType={() =>
+                        navigate(`/admin/other-materials/${studyType}`)
                     }
-                    onChangeYear={() =>
-                        navigate(`/admin/other-materials/${departmentId}`)
+                    onChangeDepartment={() =>
+                        navigate(
+                            `/admin/other-materials/${studyType}/${departmentId}`,
+                        )
                     }
                 />
 
@@ -544,9 +528,7 @@ export function OtherMaterialsPage() {
                         file_id={previewFile.id}
                         fileName={previewFile.name}
                         onClose={handleClosePreview}
-                        onDownload={() =>
-                            handleDownload(previewFile.id, previewFile.name)
-                        }
+                        onDownload={() => handleDownload(previewFile.id)}
                     />
                 )}
 
@@ -561,13 +543,6 @@ export function OtherMaterialsPage() {
                         createFolder={createDestinationFolder}
                     />
                 )}
-
-                <a
-                    href={fileToDownload?.url}
-                    className="d-none"
-                    download={fileToDownload?.name || "download"}
-                    ref={downloadLink}
-                />
             </div>
         </Layout>
     );

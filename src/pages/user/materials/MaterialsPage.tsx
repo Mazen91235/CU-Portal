@@ -152,18 +152,13 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
+    const handleDownloadFile = useCallback((fileId: string) => {
+        if (fileId) downloadFile(fileId);
+    }, []);
+
     const handleDownloadMaterial = useCallback((materialId: number) => {
-        const material = materials.find((item) => item.id === materialId);
-        if (!material) return;
-        if (material.material_type?.toLowerCase() === "file") {
-            const fileId = material.attachment?.details?.file_data?.id;
-            if (fileId) {
-                downloadFile(fileId);
-                return;
-            }
-        }
         downloadMaterials([materialId]);
-    }, [materials]);
+    }, []);
 
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
@@ -174,23 +169,35 @@ export function MaterialsPage() {
         downloadMaterials(selectedMaterials);
     }, [selectedMaterials, handleDownloadMaterial]);
 
-    const handleCardClick = useCallback((material: MaterialResponseDto) => {
-        if (!material.id) return;
-        if (isSelectionMode) {
-            setSelectedMaterials((prev) => prev.includes(material.id!) ? prev.filter((id) => id !== material.id) : [...prev, material.id!]);
-        } else {
-            setIsSelectionMode(true);
-            setSelectedMaterials([material.id]);
-        }
-    }, [isSelectionMode]);
+    const handleCardClick = useCallback(
+        (material: MaterialResponseDto) => {
+            if (!material.id) return;
+            if (isSelectionMode) {
+                setSelectedMaterials((prev) =>
+                    prev.includes(material.id!)
+                        ? prev.filter((id) => id !== material.id)
+                        : [...prev, material.id!],
+                );
+            } else {
+                setIsSelectionMode(true);
+                setSelectedMaterials([material.id]);
+            }
+        },
+        [isSelectionMode],
+    );
 
-    const handleCardDoubleClick = useCallback((material: MaterialResponseDto) => {
-        if (material.material_type === "folder") handleNavigate(material);
-    }, [handleNavigate]);
+    const handleCardDoubleClick = useCallback(
+        (material: MaterialResponseDto) => {
+            if (material.material_type === "folder") handleNavigate(material);
+        },
+        [handleNavigate],
+    );
 
     const handleSelectAll = useCallback(() => {
-        const ids = materials.map((item) => item.id).filter((id): id is number => id !== undefined);
-        setSelectedMaterials((prev) => prev.length === ids.length ? [] : ids);
+        const ids = materials
+            .map((item) => item.id)
+            .filter((id): id is number => id !== undefined);
+        setSelectedMaterials((prev) => (prev.length === ids.length ? [] : ids));
     }, [materials]);
 
     const handleCancelSelection = useCallback(() => {
@@ -264,7 +271,6 @@ export function MaterialsPage() {
         [subjects],
     );
 
-
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
     const showContentPage = subjectFilter && materials.length > 0;
@@ -318,10 +324,16 @@ export function MaterialsPage() {
                                             key={folderId}
                                             material={folder}
                                             showCount={true}
-                                            isSelected={selectedMaterials.includes(folderId)}
+                                            isSelected={selectedMaterials.includes(
+                                                folderId,
+                                            )}
                                             isSelectionMode={isSelectionMode}
-                                            onClick={() => handleCardClick(folder)}
-                                            onDoubleClick={() => handleCardDoubleClick(folder)}
+                                            onClick={() =>
+                                                handleCardClick(folder)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(folder)
+                                            }
                                             onDragStart={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
@@ -330,7 +342,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={handleDownloadFile}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
@@ -345,10 +357,16 @@ export function MaterialsPage() {
                                             key={fileId}
                                             material={file}
                                             showCount={false}
-                                            isSelected={selectedMaterials.includes(fileId)}
+                                            isSelected={selectedMaterials.includes(
+                                                fileId,
+                                            )}
                                             isSelectionMode={isSelectionMode}
-                                            onClick={() => handleCardClick(file)}
-                                            onDoubleClick={() => handleCardDoubleClick(file)}
+                                            onClick={() =>
+                                                handleCardClick(file)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(file)
+                                            }
                                             onDragStart={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
@@ -357,7 +375,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={handleDownloadFile}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}

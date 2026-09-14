@@ -17,10 +17,11 @@ import styles from "./OtherMaterialsYearsPage.module.css";
 
 export function OtherMaterialsYearsPage() {
     const navigate = useNavigate();
-    const { departmentId } = useParams();
+    const { studyType, departmentId } = useParams();
 
-    const [department, setDepartment] =
-        useState<DepartmentResponseDto | null>(null);
+    const [department, setDepartment] = useState<DepartmentResponseDto | null>(
+        null,
+    );
     const [years, setYears] = useState<YearResponseDto[]>([]);
 
     const [getDepartment] = useLazyGetDepartmentQuery();
@@ -55,10 +56,10 @@ export function OtherMaterialsYearsPage() {
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
-        if (!departmentId) {
+        if (!studyType || !departmentId) {
             navigate("/admin/other-materials", { replace: true });
         }
-    }, [departmentId, navigate]);
+    }, [studyType, departmentId, navigate]);
 
     return (
         <Layout>
@@ -72,9 +73,11 @@ export function OtherMaterialsYearsPage() {
             />
             <div className={styles.container}>
                 <OtherMaterialsScopeHeader
+                    studyTypeName={studyType}
                     departmentName={department?.name}
-                    onChangeDepartment={() =>
-                        navigate("/admin/other-materials")
+                    onChangeHome={() => navigate("/admin/other-materials")}
+                    onChangeStudyType={() =>
+                        navigate(`/admin/other-materials/${studyType}`)
                     }
                 />
                 {years.length === 0 ? (
@@ -87,7 +90,7 @@ export function OtherMaterialsYearsPage() {
                                 title={year.year?.toString()}
                                 onClick={() =>
                                     navigate(
-                                        `/admin/other-materials/${departmentId}/${year.id}`,
+                                        `/admin/other-materials/${studyType}/${departmentId}/${year.id}`,
                                     )
                                 }
                             />

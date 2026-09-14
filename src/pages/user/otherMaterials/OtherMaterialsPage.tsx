@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { useLazyGetAvailableCoursesQuery } from "../../../services/apis/user/CourseAPIs";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import { useLazyGetCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import { useLazyGetDepartmentQuery } from "../../../services/apis/user/DepartmentAPIs";
 import { useLazyGetYearQuery } from "../../../services/apis/user/YearAPIs";
 import {
@@ -35,6 +36,7 @@ import { showToast } from "../../../utils/ToastsManager";
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
     const {
+        studyType,
         departmentId,
         yearId,
         subjectId: routeSubjectId,
@@ -43,18 +45,17 @@ export function OtherMaterialsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [department, setDepartment] =
-        useState<DepartmentResponseDto | null>(null);
+    const user = useAppSelector((state) => state.user.user);
+
+    const [department, setDepartment] = useState<DepartmentResponseDto | null>(
+        null,
+    );
     const [year, setYear] = useState<YearResponseDto | null>(null);
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
     const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [previewFile, setPreviewFile] = useState<{
         id: string;
-        name: string;
-    } | null>(null);
-    const [fileToDownload, setFileToDownload] = useState<{
-        url: string;
         name: string;
     } | null>(null);
     const [shouldDownload, setShouldDownload] = useState(false);
@@ -64,7 +65,7 @@ export function OtherMaterialsPage() {
 
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
-    const [getSubjects] = useLazyGetAvailableCoursesQuery();
+    const [getSubjects] = useLazyGetCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
 
@@ -93,13 +94,14 @@ export function OtherMaterialsPage() {
     }, [getYear, yearId]);
 
     const fetchSubjects = useCallback(async () => {
-        if (!departmentId || !yearId) {
+        if (!departmentId || !yearId || !user) {
             setSubjects([]);
             return;
         }
         try {
             const result = await getSubjects({
                 data: {
+                    faculty_id: user.faculty?.id ?? undefined,
                     department_id: Number(departmentId),
                     year_id: Number(yearId),
                 },
@@ -108,7 +110,7 @@ export function OtherMaterialsPage() {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getSubjects, departmentId, yearId]);
+    }, [getSubjects, departmentId, yearId, user]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -136,17 +138,19 @@ export function OtherMaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!departmentId || !yearId) return "/user/other-materials";
+            if (!studyType || !departmentId || !yearId) {
+                return "/user/other-materials";
+            }
             if (!subjectValue) {
-                return `/user/other-materials/${departmentId}/${yearId}`;
+                return `/user/other-materials/${studyType}/${departmentId}/${yearId}`;
             }
             const subjectSegment = String(subjectValue);
             if (!parentValue) {
-                return `/user/other-materials/${departmentId}/${yearId}/${subjectSegment}`;
+                return `/user/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}`;
             }
-            return `/user/other-materials/${departmentId}/${yearId}/${subjectSegment}/${parentValue}`;
+            return `/user/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}/${parentValue}`;
         },
-        [departmentId, yearId],
+        [studyType, departmentId, yearId],
     );
 
     const loadCurrentPath = useCallback(
@@ -195,10 +199,10 @@ export function OtherMaterialsPage() {
     useAuthQuery(authQueryParams);
 
     useEffect(() => {
-        if (!departmentId || !yearId) {
+        if (!studyType || !departmentId || !yearId) {
             navigate("/user/other-materials", { replace: true });
         }
-    }, [departmentId, yearId, navigate]);
+    }, [studyType, departmentId, yearId, navigate]);
 
     useEffect(() => {
         if (!subjectFilter) {
@@ -224,11 +228,9 @@ export function OtherMaterialsPage() {
         setPreviewFile(null);
     };
 
-    const handleDownload = async (fileId: string, fileName: string) => {
+    const handleDownload = async (fileId: string) => {
         try {
-            const url = await downloadFile(fileId);
-            setFileToDownload({ url, name: fileName });
-            setShouldDownload(true);
+            downloadFile(fileId);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -323,13 +325,17 @@ export function OtherMaterialsPage() {
             />
             <div className={styles.container}>
                 <OtherMaterialsScopeHeader
+                    studyTypeName={studyType}
                     departmentName={department?.name}
                     yearName={year?.year?.toString()}
-                    onChangeDepartment={() =>
-                        navigate("/user/other-materials")
+                    onChangeHome={() => navigate("/user/other-materials")}
+                    onChangeStudyType={() =>
+                        navigate(`/user/other-materials/${studyType}`)
                     }
-                    onChangeYear={() =>
-                        navigate(`/user/other-materials/${departmentId}`)
+                    onChangeDepartment={() =>
+                        navigate(
+                            `/user/other-materials/${studyType}/${departmentId}`,
+                        )
                     }
                 />
 
@@ -463,18 +469,9 @@ export function OtherMaterialsPage() {
                         file_id={previewFile.id}
                         fileName={previewFile.name}
                         onClose={handleClosePreview}
-                        onDownload={() =>
-                            handleDownload(previewFile.id, previewFile.name)
-                        }
+                        onDownload={() => handleDownload(previewFile.id)}
                     />
                 )}
-
-                <a
-                    href={fileToDownload?.url}
-                    className="d-none"
-                    download={fileToDownload?.name || "download"}
-                    ref={downloadLink}
-                />
             </div>
         </Layout>
     );

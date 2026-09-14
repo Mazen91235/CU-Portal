@@ -1,6 +1,4 @@
-import type {
-    DefaultAPIResponse,
-} from "../types/responses/GenericAPIResponse";
+import type { DefaultAPIResponse } from "../types/responses/GenericAPIResponse";
 import type { UseFormSetError } from "react-hook-form";
 import { showToast } from "./ToastsManager";
 
@@ -77,13 +75,20 @@ const getErrorDetails = (response: unknown): ExtractedError[] => {
     return details.length ? details : [{ message: standardErrorMessage }];
 };
 
+export const getErrorMessage = (response: unknown): string => {
+    const details = getErrorDetails(response);
+    return [...new Set(details.map((detail) => detail.message))].join("\n");
+};
+
 export const handleErrors = <T extends Record<string, unknown>>(
     response: DefaultAPIResponse | unknown,
     setError: UseFormSetError<T>,
     fallbackMessage = standardErrorMessage,
 ) => {
     const details = getErrorDetails(response);
-    const uniqueMessages = [...new Set(details.map((detail) => detail.message))];
+    const uniqueMessages = [
+        ...new Set(details.map((detail) => detail.message)),
+    ];
 
     details.forEach(({ field, message }) => {
         if (field) {
@@ -115,7 +120,8 @@ export const hasMissingProperties = (
         return false;
     }
     return requiredProps.some(
-        (prop) => !(prop in obj) || obj[prop] === undefined || obj[prop] === null,
+        (prop) =>
+            !(prop in obj) || obj[prop] === undefined || obj[prop] === null,
     );
 };
 

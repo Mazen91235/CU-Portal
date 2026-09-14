@@ -3,7 +3,6 @@ import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
 import { useLazyGetMaterialParentsQuery } from "../../services/apis/user/MaterialAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { showToast } from "../../utils/ToastsManager";
 import { FloatingContainer } from "./FloatingContainer";
 import styles from "./CrossSubjectDestinationPicker.module.css";
 
@@ -12,7 +11,7 @@ type CrossSubjectDestinationPickerProps = {
     selectedMaterials: number[];
     destinationSubjects: SubjectResponseDto[];
     onClose: () => void;
-    onConfirm: (targetId: number) => void;
+    onConfirm: (targetId: number | null, subjectId: number) => void;
     // Role-specific data access: admin and user hit different API modules
     // (different base URLs, and users can't create folders at all today),
     // so the picker takes these as injected functions rather than importing
@@ -101,15 +100,8 @@ export function CrossSubjectDestinationPicker({
         : undefined;
 
     const handleConfirm = (targetId: number | null) => {
-        if (targetId === null) {
-            showToast(
-                "error",
-                "Select a folder",
-                "Pick or create a folder inside this subject first — copying straight to a subject's root isn't supported yet.",
-            );
-            return;
-        }
-        onConfirm(targetId);
+        if (selectedSubjectId === null) return;
+        onConfirm(targetId, selectedSubjectId);
     };
 
     if (!selectedSubjectId) {
@@ -145,8 +137,8 @@ export function CrossSubjectDestinationPicker({
                                 </svg>
                                 <h3>No Subjects Found.</h3>
                                 <p>
-                                    You don&apos;t have any subjects of your
-                                    own to copy into.
+                                    You don&apos;t have any subjects of your own
+                                    to copy into.
                                 </p>
                             </div>
                         ) : (

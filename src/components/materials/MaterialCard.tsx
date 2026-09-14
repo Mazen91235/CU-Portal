@@ -24,7 +24,7 @@ type MaterialCardProps = {
         realFileName: string,
         mimeType: string,
     ) => void;
-    onDownload?: (materialId: number) => void;
+    onDownload?: (fileId: string) => void;
     onOpenLink?: (url: string) => void;
     showCount?: boolean;
     showAll?: boolean;
@@ -185,8 +185,8 @@ export const MaterialCard = ({
 
     const handleDownload = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (material.id && onDownload) {
-            onDownload(material.id);
+        if (material && onDownload) {
+            onDownload(material.attachment?.details?.file_data?.id ?? "");
         }
     };
 
@@ -226,39 +226,44 @@ export const MaterialCard = ({
             >
                 {isSelected && (
                     <span className={styles.materialSelectedIcon}>
-                    <svg
-                        width="24"
-                        height="25"
-                        viewBox="0 0 24 25"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <rect
-                            y="0.400391"
-                            width="23.4839"
-                            height="24"
-                            rx="11.7419"
-                            fill="#5A0F61"
-                        />
-                        <rect
-                            x="6.5"
-                            y="6.90039"
-                            width="11"
-                            height="11"
-                            rx="5.5"
-                            stroke="white"
-                        />
-                        <path
-                            d="M10.9789 13.7129L14.5102 10.1816C14.5935 10.0983 14.6907 10.0566 14.8018 10.0566C14.9129 10.0566 15.0102 10.0983 15.0935 10.1816C15.1768 10.265 15.2185 10.364 15.2185 10.4787C15.2185 10.5934 15.1768 10.6923 15.0935 10.7754L11.2706 14.6087C11.1872 14.6921 11.09 14.7337 10.9789 14.7337C10.8678 14.7337 10.7706 14.6921 10.6872 14.6087L8.89558 12.8171C8.81225 12.7337 8.77225 12.6348 8.77558 12.5204C8.77892 12.4059 8.82239 12.3069 8.906 12.2233C8.98961 12.1397 9.08864 12.098 9.20308 12.0983C9.31753 12.0986 9.41642 12.1403 9.49975 12.2233L10.9789 13.7129Z"
-                            fill="white"
-                        />
-                    </svg>
+                        <svg
+                            width="24"
+                            height="25"
+                            viewBox="0 0 24 25"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <rect
+                                y="0.400391"
+                                width="23.4839"
+                                height="24"
+                                rx="11.7419"
+                                fill="#5A0F61"
+                            />
+                            <rect
+                                x="6.5"
+                                y="6.90039"
+                                width="11"
+                                height="11"
+                                rx="5.5"
+                                stroke="white"
+                            />
+                            <path
+                                d="M10.9789 13.7129L14.5102 10.1816C14.5935 10.0983 14.6907 10.0566 14.8018 10.0566C14.9129 10.0566 15.0102 10.0983 15.0935 10.1816C15.1768 10.265 15.2185 10.364 15.2185 10.4787C15.2185 10.5934 15.1768 10.6923 15.0935 10.7754L11.2706 14.6087C11.1872 14.6921 11.09 14.7337 10.9789 14.7337C10.8678 14.7337 10.7706 14.6921 10.6872 14.6087L8.89558 12.8171C8.81225 12.7337 8.77225 12.6348 8.77558 12.5204C8.77892 12.4059 8.82239 12.3069 8.906 12.2233C8.98961 12.1397 9.08864 12.098 9.20308 12.0983C9.31753 12.0986 9.41642 12.1403 9.49975 12.2233L10.9789 13.7129Z"
+                                fill="white"
+                            />
+                        </svg>
                     </span>
                 )}
                 <div className={styles.folderHeader}>
                     <MaterialActionsDropdown
                         onShare={handleShare}
-                        onDownload={material.id ? () => onDownload?.(material.id!) : undefined}
+                        onDownload={() =>
+                            onDownload?.(
+                                material.attachment?.details?.file_data?.id ??
+                                    "",
+                            )
+                        }
                         onMove={handleMove}
                         onCopy={handleCopy}
                         onEdit={handleEdit}
@@ -443,39 +448,43 @@ export const MaterialCard = ({
         >
             {isSelected && (
                 <span className={styles.materialSelectedIcon}>
-                <svg
-                    width="24"
-                    height="25"
-                    viewBox="0 0 24 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <rect
-                        y="0.400391"
-                        width="23.4839"
-                        height="24"
-                        rx="11.7419"
-                        fill="#5A0F61"
-                    />
-                    <rect
-                        x="6.5"
-                        y="6.90039"
-                        width="11"
-                        height="11"
-                        rx="5.5"
-                        stroke="white"
-                    />
-                    <path
-                        d="M10.9789 13.7129L14.5102 10.1816C14.5935 10.0983 14.6907 10.0566 14.8018 10.0566C14.9129 10.0566 15.0102 10.0983 15.0935 10.1816C15.1768 10.265 15.2185 10.364 15.2185 10.4787C15.2185 10.5934 15.1768 10.6923 15.0935 10.7754L11.2706 14.6087C11.1872 14.6921 11.09 14.7337 10.9789 14.7337C10.8678 14.7337 10.7706 14.6921 10.6872 14.6087L8.89558 12.8171C8.81225 12.7337 8.77225 12.6348 8.77558 12.5204C8.77892 12.4059 8.82239 12.3069 8.906 12.2233C8.98961 12.1397 9.08864 12.098 9.20308 12.0983C9.31753 12.0986 9.41642 12.1403 9.49975 12.2233L10.9789 13.7129Z"
-                        fill="white"
-                    />
-                </svg>
+                    <svg
+                        width="24"
+                        height="25"
+                        viewBox="0 0 24 25"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect
+                            y="0.400391"
+                            width="23.4839"
+                            height="24"
+                            rx="11.7419"
+                            fill="#5A0F61"
+                        />
+                        <rect
+                            x="6.5"
+                            y="6.90039"
+                            width="11"
+                            height="11"
+                            rx="5.5"
+                            stroke="white"
+                        />
+                        <path
+                            d="M10.9789 13.7129L14.5102 10.1816C14.5935 10.0983 14.6907 10.0566 14.8018 10.0566C14.9129 10.0566 15.0102 10.0983 15.0935 10.1816C15.1768 10.265 15.2185 10.364 15.2185 10.4787C15.2185 10.5934 15.1768 10.6923 15.0935 10.7754L11.2706 14.6087C11.1872 14.6921 11.09 14.7337 10.9789 14.7337C10.8678 14.7337 10.7706 14.6921 10.6872 14.6087L8.89558 12.8171C8.81225 12.7337 8.77225 12.6348 8.77558 12.5204C8.77892 12.4059 8.82239 12.3069 8.906 12.2233C8.98961 12.1397 9.08864 12.098 9.20308 12.0983C9.31753 12.0986 9.41642 12.1403 9.49975 12.2233L10.9789 13.7129Z"
+                            fill="white"
+                        />
+                    </svg>
                 </span>
             )}
             <div className={styles.fileHeader}>
                 <MaterialActionsDropdown
                     onShare={handleShare}
-                    onDownload={material.id ? () => onDownload?.(material.id!) : undefined}
+                    onDownload={() =>
+                        onDownload?.(
+                            material.attachment?.details?.file_data?.id ?? "",
+                        )
+                    }
                     onMove={handleMove}
                     onCopy={handleCopy}
                     onEdit={handleEdit}
@@ -491,7 +500,8 @@ export const MaterialCard = ({
                 <div className={styles.fileIcon}>
                     <img
                         src={getFileIcon(
-                            material.attachment?.details?.file_data?.file_type ||
+                            material.attachment?.details?.file_data
+                                ?.file_type ||
                                 material.attachment?.details?.file_data?.type ||
                                 material.material_type ||
                                 undefined,

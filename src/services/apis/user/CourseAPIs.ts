@@ -3,6 +3,7 @@ import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResp
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type {
     SubjectResponseDto,
+    SubjectSearchDto,
     SubjectSearchAvailableDto,
 } from "../../../types/dtos/SubjectDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
@@ -26,6 +27,29 @@ export const CourseAPI = createApi({
         },
     ),
     endpoints: (builder) => ({
+        getCourses: builder.query<
+            GenericAPIResponse<SubjectResponseDto[]>,
+            QueryModel<SubjectSearchDto>
+        >({
+            query: (query) => ({
+                url: "/",
+                method: "GET",
+                credentials: "include",
+                params: {
+                    query: JSON.stringify(query),
+                },
+            }),
+        }),
+        getCourse: builder.query<
+            GenericAPIResponse<SubjectResponseDto>,
+            { subject_id: number }
+        >({
+            query: ({ subject_id }) => ({
+                url: `/${subject_id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
         getEnrolledCourses: builder.query<
             GenericAPIResponse<SubjectResponseDto[]>,
             void
@@ -105,6 +129,8 @@ export const CourseAPI = createApi({
 });
 
 export const {
+    useLazyGetCoursesQuery,
+    useLazyGetCourseQuery,
     useLazyGetEnrolledCoursesQuery,
     useLazyGetEnrolledCourseQuery,
     useLazyGetAvailableCoursesQuery,

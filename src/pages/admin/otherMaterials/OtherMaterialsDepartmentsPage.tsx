@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -10,35 +10,38 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useAppSelector } from "../../../services/redux/Hooks";
+import type { DepartmentStudyType } from "../../../types/entities/Department";
 
 import styles from "./OtherMaterialsDepartmentsPage.module.css";
 
 export function OtherMaterialsDepartmentsPage() {
     const navigate = useNavigate();
+    const { studyType } = useParams();
     const user = useAppSelector((state) => state.user.user);
 
-    const [departments, setDepartments] = useState<DepartmentResponseDto[]>(
-        [],
-    );
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
 
     const [getDepartments] = useLazyGetDepartmentsQuery();
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!user?.faculty?.id) {
+            if (!studyType || !user?.faculty?.id) {
                 setDepartments([]);
                 return;
             }
 
             const response = await getDepartments({
-                data: { faculty_id: user.faculty.id },
+                data: {
+                    faculty_id: user.faculty.id,
+                    study_type: studyType as DepartmentStudyType,
+                },
             }).unwrap();
 
             setDepartments(response.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, user]);
+    }, [getDepartments, studyType, user]);
 
     useAuthQuery(fetchDepartments);
 
@@ -50,10 +53,26 @@ export function OtherMaterialsDepartmentsPage() {
             />
             <Banner
                 title="Other Materials"
-                description="Pick a department to browse its materials"
+                description={
+                    studyType
+                        ? `Pick a department for ${studyType} materials`
+                        : "Choose a study type to browse its materials"
+                }
             />
             <div className={styles.container}>
-                {departments.length === 0 ? (
+                {!studyType ? (
+                    <div className={styles.cardsGrid}>
+                        {(["Mainstream", "Credit"] as const).map((type) => (
+                            <BrowseCard
+                                key={type}
+                                title={type}
+                                onClick={() =>
+                                    navigate(`/admin/other-materials/${type}`)
+                                }
+                            />
+                        ))}
+                    </div>
+                ) : departments.length === 0 ? (
                     <NoContentSection
                         icon="building"
                         label="No other departments found in your faculty."
@@ -66,7 +85,7 @@ export function OtherMaterialsDepartmentsPage() {
                                 title={department.name}
                                 onClick={() =>
                                     navigate(
-                                        `/admin/other-materials/${department.id}`,
+                                        `/admin/other-materials/${studyType}/${department.id}`,
                                     )
                                 }
                             />

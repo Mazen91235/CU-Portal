@@ -180,19 +180,23 @@ function App() {
                             element={<UserOtherMaterialsDepartmentsPage />}
                         />
                         <Route
-                            path=":departmentId"
+                            path=":studyType"
+                            element={<UserOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId"
                             element={<UserOtherMaterialsYearsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId"
+                            path=":studyType/:departmentId/:yearId"
                             element={<UserOtherMaterialsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId/:subjectId"
+                            path=":studyType/:departmentId/:yearId/:subjectId"
                             element={<UserOtherMaterialsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId/:subjectId/:parentId"
+                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
                             element={<UserOtherMaterialsPage />}
                         />
                     </Route>
@@ -409,19 +413,23 @@ function App() {
                             element={<OtherMaterialsDepartmentsPage />}
                         />
                         <Route
-                            path=":departmentId"
+                            path=":studyType"
+                            element={<OtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId"
                             element={<OtherMaterialsYearsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId"
+                            path=":studyType/:departmentId/:yearId"
                             element={<OtherMaterialsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId/:subjectId"
+                            path=":studyType/:departmentId/:yearId/:subjectId"
                             element={<OtherMaterialsPage />}
                         />
                         <Route
-                            path=":departmentId/:yearId/:subjectId/:parentId"
+                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
                             element={<OtherMaterialsPage />}
                         />
                     </Route>

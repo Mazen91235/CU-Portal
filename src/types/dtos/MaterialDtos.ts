@@ -52,7 +52,8 @@ export type MaterialSearchDto = {
 
 export type MaterialsCopyOrMoveDto = {
     material_ids: number[];
-    destination_id?: number | null;
+    destination_id: number | null;
+    subject_id: number;
 };
 
 export type MaterialsFetchFromDriveDto = {
