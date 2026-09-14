@@ -30,6 +30,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 
 const examSchema = z.object({
@@ -147,10 +148,9 @@ export const EditExam = () => {
                 exam_id: parseInt(examId),
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.due_date,
-                    data.start_time || "00:00",
-                )!.toISOString(),
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.due_date, data.start_time || "00:00"),
+                )!,
                 details: {
                     exam_type: data.exam_type || undefined,
                     duration: data.duration

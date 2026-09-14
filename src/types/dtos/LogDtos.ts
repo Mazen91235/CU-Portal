@@ -19,6 +19,8 @@ export type LogResponseDto = {
 
 export type LogSearchDto = {
     id?: number | null;
+    action?: string | null;
+    entity?: string | null;
     level?: string | null;
     response_code?: number | null;
     source?: string | null;

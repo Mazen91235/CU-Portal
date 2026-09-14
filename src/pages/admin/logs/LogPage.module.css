@@ -1,0 +1,88 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.mainContent,
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.message {
+    margin: 0;
+    color: var(--text-primary);
+    line-height: 1.7;
+}
+
+.levelBadge {
+    display: inline-block;
+    padding: 0.3rem 0.65rem;
+    border-radius: 7px;
+    font-size: 0.8rem;
+}
+
+.levelInfo {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.levelWarning {
+    color: #a16207;
+    background: rgba(234, 179, 8, 0.16);
+}
+
+.levelError {
+    color: #b91c1c;
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.jsonContainer {
+    border-radius: 10px;
+    overflow: auto;
+    border: 1px solid rgba(123, 21, 132, 0.16);
+}
+
+.jsonContainer > div {
+    margin: 0;
+    padding: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+    .statsRow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contentGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .statsRow {
+        grid-template-columns: 1fr;
+    }
+}

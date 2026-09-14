@@ -202,6 +202,153 @@ const showAdminLinks = (permissions: string[]) => {
   };
 
   if (!permissions.includes("View AdminLinks")) return null;
+    if (!permissions.includes("View AdminLinks")) return null;
+
+    if (permissions.includes("View AdminPanel")) {
+        section.links.push({
+            label: "Dashboard",
+            // path: "/admin",
+            path: "#!",
+            icon: "sidebar-admin-dashboard",
+            badge: "Soon",
+        });
+    }
+
+    if (permissions.includes("View Faculties")) {
+        section.links.push({
+            label: "Faculties",
+            path: "/admin/faculties",
+            icon: "sidebar-admin-faculties",
+        });
+    }
+
+    if (permissions.includes("View Departments")) {
+        section.links.push({
+            label: "Departments",
+            path: "/admin/departments",
+            icon: "sidebar-admin-departments",
+        });
+    }
+
+    if (permissions.includes("View Years")) {
+        section.links.push({
+            label: "Years",
+            path: "/admin/years",
+            icon: "sidebar-admin-years",
+        });
+    }
+
+    if (permissions.includes("View Course Maps")) {
+        section.links.push({
+            label: "Course Maps",
+            // path: "/admin/course-maps",
+            path: "#!",
+            icon: "sidebar-admin-course-maps",
+            badge: "Soon",
+        });
+    }
+
+    if (permissions.includes("View Users")) {
+        section.links.push({
+            label: "Users",
+            path: "/admin/users",
+            icon: "sidebar-admin-users",
+            activatesPaths: ["/admin/users/"],
+        });
+    }
+
+    if (permissions.includes("View Roles")) {
+        section.links.push({
+            label: "Roles",
+            path: "/admin/roles",
+            icon: "sidebar-admin-roles",
+            activatesPaths: ["/admin/roles/"],
+        });
+    }
+
+    if (permissions.includes("View Courses")) {
+        section.links.push({
+            label: "Courses",
+            path: "/admin/courses",
+            icon: "sidebar-admin-courses",
+            activatesPaths: ["/admin/courses/"],
+        });
+    }
+
+    if (permissions.includes("View Materials")) {
+        section.links.push({
+            label: "Materials",
+            path: "/admin/materials",
+            icon: "sidebar-admin-materials",
+            badge: "Beta",
+            activatesPaths: ["/admin/materials/"],
+        });
+    }
+
+    if (permissions.includes("View Grades")) {
+        section.links.push({
+            label: "Grades",
+            // path: "/admin/grades",
+            path: "#!",
+            icon: "sidebar-admin-grades",
+            badge: "Soon",
+            activatesPaths: ["/admin/grades/"],
+        });
+    }
+
+    if (permissions.includes("View Tasks")) {
+        section.links.push({
+            label: "Tasks",
+            path: "/admin/tasks",
+            icon: "sidebar-admin-tasks",
+            activatesPaths: ["/admin/tasks/"],
+        });
+    }
+
+    if (permissions.includes("View Exams")) {
+        section.links.push({
+            label: "Exams",
+            path: "/admin/exams",
+            icon: "sidebar-admin-exams",
+            activatesPaths: ["/admin/exams/"],
+        });
+    }
+
+    if (permissions.includes("View Announcements")) {
+        section.links.push({
+            label: "Announcements",
+            path: "/admin/announcements",
+            icon: "sidebar-admin-announcements",
+            activatesPaths: ["/admin/announcements/"],
+        });
+    }
+
+    if (permissions.includes("View Events")) {
+        section.links.push({
+            label: "Events",
+            path: "/admin/events",
+            icon: "sidebar-admin-events",
+            activatesPaths: ["/admin/events/"],
+        });
+    }
+
+    if (permissions.includes("View EventOrganizers")) {
+        section.links.push({
+            label: "Event Organizers",
+            path: "/admin/event-organizers",
+            icon: "sidebar-admin-event-organizers",
+            activatesPaths: ["/admin/event-organizers/"],
+        });
+    }
+
+    if (permissions.includes("View Logs")) {
+        section.links.push({
+            label: "Logs",
+            path: "/admin/logs",
+            icon: "sidebar-admin-logs",
+            activatesPaths: ["/admin/logs/"],
+        });
+    }
 
   if (permissions.includes("View AdminPanel")) {
     section.links.push({

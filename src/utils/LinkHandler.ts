@@ -65,6 +65,7 @@ import {
   LuSquarePen,
   LuTrash,
   LuX,
+  LuCircleAlert,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
 import { FaRegNoteSticky } from "react-icons/fa6";
@@ -160,6 +161,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
 
     time: LuClock,
     tracker: FaGraduationCap,
+  "warning-circle": LuCircleAlert,
     "view-icon": LuEye,
 
     "spinner-ellipse-11": FaSpinner,

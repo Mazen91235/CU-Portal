@@ -25,7 +25,7 @@ import {
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateAnnouncement.module.css";
 
@@ -62,7 +62,11 @@ export const CreateAnnouncement = () => {
         resolver: zodResolver(announcementSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -107,7 +111,9 @@ export const CreateAnnouncement = () => {
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 urls = await uploadFiles(data.files as FileList);
-                urls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                urls.split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -115,12 +121,14 @@ export const CreateAnnouncement = () => {
                 title: data.title,
                 content: data.content ?? "",
                 subject_id: parseInt(data.subject_id),
-                date: data.date_date
-                    ? mergeDateAndTime(
-                          data.date_date,
-                          data.date_time || "00:00",
-                      )
-                    : undefined,
+                date: toIsoFormat(
+                    data.date_date
+                        ? mergeDateAndTime(
+                              data.date_date,
+                              data.date_time || "00:00",
+                          )
+                        : undefined,
+                ),
                 details: {
                     urls: urls != "" ? urls.split(", ") : [],
                     links: data.links

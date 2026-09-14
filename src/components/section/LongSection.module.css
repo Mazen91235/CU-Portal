@@ -6,8 +6,12 @@
     white-space: pre-wrap;
 }
 
-.content span {
+.content > span {
     width: 100%;
     display: block;
     text-align: center;
+}
+
+.content a {
+    display: inline;
 }

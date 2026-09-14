@@ -7,6 +7,8 @@ import { Button } from "../../../components/forms/Button";
 import {
     useLazyGetUserQuery,
     useUpdateUsersMutation,
+    useSuspendUserMutation,
+    useUnsuspendUserMutation,
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
@@ -21,6 +23,7 @@ import IconComponent from "../../../components/IconComponent";
 import styles from "./UserPage.module.css";
 import z from "zod";
 import { Form } from "../../../components/forms/Form";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Select } from "../../../components/forms/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -41,6 +44,13 @@ export const UserPage = () => {
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
     const [updateUser] = useUpdateUsersMutation();
+    const [suspendUser, { isLoading: isSuspendingUser }] =
+        useSuspendUserMutation();
+    const [unsuspendUser, { isLoading: isUnsuspendingUser }] =
+        useUnsuspendUserMutation();
+    const [userStatusAction, setUserStatusAction] = useState<
+        "suspend" | "unsuspend" | null
+    >(null);
 
     const schema = z.object({
         roleId: z.string().min(1, "Role is required"),
@@ -122,6 +132,28 @@ export const UserPage = () => {
         }
     };
 
+    const handleUserStatusConfirm = async () => {
+        if (!userId || !userStatusAction) return;
+
+        try {
+            if (userStatusAction === "suspend") {
+                await suspendUser({ user_id: Number(userId) }).unwrap();
+                showToast("success", "Success", "User suspended successfully");
+            } else {
+                await unsuspendUser({ user_id: Number(userId) }).unwrap();
+                showToast(
+                    "success",
+                    "Success",
+                    "User unsuspended successfully",
+                );
+            }
+            setUserStatusAction(null);
+            await fetchUserData();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
     return (
         <Layout>
             <PageSeo
@@ -153,24 +185,49 @@ export const UserPage = () => {
                                         </span>
                                     )}
                                 </div>
-                                {canManageUsers && (
-                                    <div className={styles.userRoleActions}>
-                                        <button
-                                            type="button"
-                                            className={styles.suspendUserBtn}
-                                            onClick={() => null}
-                                        >
-                                            Suspend User
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={styles.editRoleBtn}
-                                            onClick={handleEditRole}
-                                        >
-                                            Edit Role
-                                        </button>
-                                    </div>
-                                )}
+                                {canManageUsers &&
+                                    (user.status ? (
+                                        <div className={styles.userRoleActions}>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    styles.suspendUserBtn
+                                                }
+                                                onClick={() =>
+                                                    setUserStatusAction(
+                                                        "suspend",
+                                                    )
+                                                }
+                                                disabled={isSuspendingUser}
+                                            >
+                                                Suspend User
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={styles.editRoleBtn}
+                                                onClick={handleEditRole}
+                                            >
+                                                Edit Role
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className={styles.userRoleActions}>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    styles.unsuspendUserBtn
+                                                }
+                                                onClick={() =>
+                                                    setUserStatusAction(
+                                                        "unsuspend",
+                                                    )
+                                                }
+                                                disabled={isUnsuspendingUser}
+                                            >
+                                                Unsuspend User
+                                            </button>
+                                        </div>
+                                    ))}
                             </>
                         ) : (
                             <Form
@@ -904,6 +961,29 @@ export const UserPage = () => {
                     </div>
                 </section>
             </div>
+
+            <ConfirmModal
+                isOpen={userStatusAction !== null}
+                onClose={() => setUserStatusAction(null)}
+                onConfirm={handleUserStatusConfirm}
+                confirmText={
+                    userStatusAction === "suspend"
+                        ? "Suspend User"
+                        : "Unsuspend User"
+                }
+                title={
+                    userStatusAction === "suspend"
+                        ? "Suspend User?"
+                        : "Unsuspend User?"
+                }
+                message={
+                    userStatusAction === "suspend"
+                        ? "This will prevent the user from accessing their account until they are unsuspended."
+                        : "This will restore the user's account access."
+                }
+                colorType={userStatusAction === "suspend" ? "red" : "green"}
+                disabled={isSuspendingUser || isUnsuspendingUser}
+            />
         </Layout>
     );
 };

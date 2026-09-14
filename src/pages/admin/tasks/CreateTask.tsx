@@ -24,7 +24,7 @@ import {
 } from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
@@ -63,7 +63,11 @@ export const CreateTask = () => {
         resolver: zodResolver(taskSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -109,7 +113,10 @@ export const CreateTask = () => {
                 setIsUploading(true);
                 const uploaded = await uploadFiles(data.files as FileList);
                 urls = uploaded;
-                uploaded.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                uploaded
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -117,9 +124,8 @@ export const CreateTask = () => {
                 name: data.title,
                 url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.deadline_date,
-                    data.deadline_time,
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.deadline_date, data.deadline_time),
                 )!,
                 details: {
                     urls: urls ? urls.split(", ") : [],

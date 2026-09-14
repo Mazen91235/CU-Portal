@@ -31,7 +31,7 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 import styles from "./CreateEvent.module.css";
 
 const eventSchema = z
@@ -229,9 +229,15 @@ export const CreateEvent = () => {
                   .filter((link) => link.title && link.url)
             : [];
 
-    const getThumbnailFile = (value: EventFormData["thumbnail"]): File | undefined => {
+    const getThumbnailFile = (
+        value: EventFormData["thumbnail"],
+    ): File | undefined => {
         if (value instanceof File) return value;
-        if (typeof FileList !== "undefined" && value instanceof FileList && value.length > 0) {
+        if (
+            typeof FileList !== "undefined" &&
+            value instanceof FileList &&
+            value.length > 0
+        ) {
             return value[0];
         }
         return undefined;
@@ -293,15 +299,16 @@ export const CreateEvent = () => {
             const payload = {
                 title: data.title,
                 start_date:
-                    mergeDateAndTime(
-                        data.start_date,
-                        data.start_time,
-                    )?.toISOString() || "",
+                    toIsoFormat(
+                        mergeDateAndTime(data.start_date, data.start_time),
+                    ) || "",
                 end_date: data.end_date
-                    ? mergeDateAndTime(
-                          data.end_date,
-                          data.end_time || "00:00",
-                      )?.toISOString() || null
+                    ? toIsoFormat(
+                          mergeDateAndTime(
+                              data.end_date,
+                              data.end_time || "00:00",
+                          ),
+                      ) || null
                     : null,
                 price: parseFloat(data.price),
                 location_type: data.location_type,
@@ -369,7 +376,11 @@ export const CreateEvent = () => {
         [organizers],
     );
 
-    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
     const showScopeFields = isRestricted;
 
     return (

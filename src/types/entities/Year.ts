@@ -9,8 +9,8 @@ export type Year = {
     id?: number;
     year?: number;
     details?: object;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     users?: User[] | null;
     subjects?: Subject[] | null;
     tasks?: Task[] | null;

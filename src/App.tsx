@@ -59,7 +59,8 @@ import { EventsOrganizersPage as UserEventsOrganizersPage } from "./pages/user/e
 import { EventOrganizerPage as UserEventOrganizerPage } from "./pages/user/eventOrganizers/EventOrganizerPage";
 import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/MaterialsPage";
 import { NotesPage as UserNotesPage } from "./pages/user/notes/NotesPage";
-import { CalendarPage } from "./pages/user/calendar/CalendarPage";
+import { CalendarPage as UserCalendarPage } from "./pages/user/calendar/CalendarPage";
+import { TimeLinePage as UserTimelinePage } from "./pages/user/timeline/TimeLinePage";
 import { UsersPage } from "./pages/admin/users/UsersPage";
 import { UserPage } from "./pages/admin/users/UserPage";
 import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
@@ -69,8 +70,9 @@ import { NotificationsPage } from "./pages/user/notifications/NotificationsPage"
 import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
 import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService } from "./pages/user/terms/TermsOfService";
-import { TimeLinePage } from "./pages/user/timeline/TimeLinePage";
 import { WeeklyGuidePage } from "./pages/user/weeklyGuide/weeklyGuide";
+import { LogsPage } from "./pages/admin/logs/LogsPage";
+import { LogPage } from "./pages/admin/logs/LogPage";
 
 import "./App.css";
 function App() {
@@ -150,10 +152,10 @@ function App() {
             />
           </Route>
           <Route path="calendar">
-            <Route index element={<CalendarPage />} />
+            <Route index element={<UserCalendarPage />} />
           </Route>
           <Route path="timeline">
-            <Route index element={<TimeLinePage />} />
+            <Route index element={<UserTimelinePage />} />
           </Route>
           <Route path="week-guide">
             <Route index element={<WeeklyGuidePage />} />
@@ -185,6 +187,41 @@ function App() {
             element={<ProtectedRoute permission="View Years" />}
           >
             <Route index element={<YearsPage />} />
+          </Route>
+
+          <Route path="materials">
+            <Route index element={<UserMaterialsPage />} />
+            <Route path=":subjectId" element={<UserMaterialsPage />} />
+            <Route
+              path=":subjectId/:parentId"
+              element={<UserMaterialsPage />}
+            />
+          </Route>
+          <Route path="calendar">
+            <Route index element={<UserCalendarPage />} />
+          </Route>
+          <Route path="timeline">
+            <Route index element={<UserTimelinePage />} />
+          </Route>
+        </Route>
+        <Route path="/admin" element={<ProtectedRoute />}>
+          <Route
+            path=""
+            element={<ProtectedRoute permission="View AdminPanel" />}
+          >
+            <Route index element={<div>Admin Dashboard</div>} />
+          </Route>
+          <Route
+            path="faculties"
+            element={<ProtectedRoute permission="View Faculties" />}
+          >
+            <Route index element={<FacultiesPage />} />
+          </Route>
+          <Route
+            path="departments"
+            element={<ProtectedRoute permission="View Departments" />}
+          >
+            <Route index element={<DepartmentsPage />} />
           </Route>
 
           <Route
@@ -317,12 +354,52 @@ function App() {
           </Route>
 
           <Route
+            path="events"
+            element={<ProtectedRoute permission="View Events" />}
+          >
+            <Route index element={<EventsPage />} />
+            <Route
+              path="create"
+              element={<ProtectedRoute permission="Add Events" />}
+            >
+              <Route index element={<CreateEvent />} />
+            </Route>
+            <Route
+              path="edit/:eventId"
+              element={<ProtectedRoute permission="Edit Events" />}
+            >
+              <Route index element={<EditEvent />} />
+            </Route>
+            <Route path=":eventId" element={<EventPage />} />
+          </Route>
+
+          <Route path="event-organizers">
+            <Route index element={<EventOrganizersPage />} />
+            <Route path="create">
+              <Route index element={<CreateEventOrganizer />} />
+            </Route>
+            <Route path=":eventOrganizerId" element={<EventOrganizerPage />} />
+            <Route
+              path="edit/:eventOrganizerId"
+              element={<EditEventOrganizer />}
+            />
+          </Route>
+
+          <Route
             path="materials"
             element={<ProtectedRoute permission="View Materials" />}
           >
             <Route index element={<MaterialsPage />} />
             <Route path=":subjectId" element={<MaterialsPage />} />
             <Route path=":subjectId/:parentId" element={<MaterialsPage />} />
+          </Route>
+
+          <Route
+            path="logs"
+            element={<ProtectedRoute permission="View Logs" />}
+          >
+            <Route index element={<LogsPage />} />
+            <Route path=":logId" element={<LogPage />} />
           </Route>
         </Route>
       </Routes>

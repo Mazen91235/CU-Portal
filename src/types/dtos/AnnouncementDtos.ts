@@ -10,7 +10,7 @@ import type { LinkData } from "../entities/Task";
 export type AnnouncementCreateDto = {
     title: string;
     content: string;
-    date?: Date | null;
+    date?: string | null;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
@@ -22,10 +22,10 @@ export type AnnouncementResponseDto = {
     id?: number | null;
     title?: string | null;
     content?: string | null;
-    date?: Date | null;
+    date?: string | null;
     details?: { urls?: string[] | null; links?: LinkData[] | null } | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     faculty?: FacultyResponseDto | null;
@@ -37,7 +37,7 @@ export type AnnouncementResponseDto = {
 export type AnnouncementUpdateDto = {
     title: string;
     content: string;
-    date?: Date | null;
+    date?: string | null;
     subject_id: number;
     faculty_id?: number | null;
     department_id?: number | null;
@@ -56,6 +56,6 @@ export type AnnouncementSearchDto = {
     department_id?: number | null;
     year_id?: number | null;
     author_id?: number | null;
-    date_from?: Date | null;
-    date_to?: Date | null;
+    date_from?: string | null;
+    date_to?: string | null;
 } & SearchDto;

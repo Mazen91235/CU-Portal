@@ -4,8 +4,8 @@ import type { RoleLink } from "./RoleLink";
 export type ExactRole = {
     id?: number;
     name?: string;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     roles?: Role[] | null;
     role_links?: RoleLink[] | null;
 };

@@ -1,0 +1,55 @@
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { GetUserApiLink } from "../../../utils/LinkHandler";
+import type {
+    WeekResponseDto,
+    WeekSearchDto,
+} from "../../../types/dtos/WeekDtos";
+import type { QueryModel } from "../../../types/models/QueryModel";
+import {
+    timeout,
+    maxRetries,
+    retryCondition,
+} from "../../../utils/APIHandling";
+export const WeekAPI = createApi({
+    reducerPath: "weekAPI",
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: GetUserApiLink("/weeks"),
+            timeout,
+            credentials: "include",
+        }),
+        {
+            maxRetries,
+            //@ts-expect-error RTK Query's types don't account for this parameter
+            retryCondition,
+        },
+    ),
+    endpoints: (builder) => ({
+        getWeeks: builder.query<
+            GenericAPIResponse<WeekResponseDto[]>,
+            QueryModel<WeekSearchDto>
+        >({
+            query: (query) => ({
+                url: "/",
+                method: "GET",
+                credentials: "include",
+                params: {
+                    query: JSON.stringify(query),
+                },
+            }),
+        }),
+        getWeek: builder.query<
+            GenericAPIResponse<WeekResponseDto>,
+            { week_id: number }
+        >({
+            query: ({ week_id }) => ({
+                url: `/${week_id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
+    }),
+});
+
+export const { useLazyGetWeeksQuery, useLazyGetWeekQuery } = WeekAPI;
