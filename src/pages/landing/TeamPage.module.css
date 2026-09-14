@@ -1,3 +1,10 @@
+.teamPage {
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-top: 88px;
+    background: var(--grey-background);
+}
+
 .container {
     width: 100%;
     max-width: 1400px;
@@ -19,7 +26,7 @@
     font-family: var(--primary-font-family);
     font-size: 32px;
     font-weight: var(--primary-font-weight-heavy, 800);
-    color: var(--primary-purple, #7b1684); 
+    color: var(--primary-purple, #7b1684);
     text-align: center;
     margin-bottom: 3rem;
     letter-spacing: 0.5px;
@@ -61,7 +68,7 @@
     flex-direction: column;
     align-items: center;
     min-width: 0;
-    transition: box-shadow 0.3s ease; 
+    transition: box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -106,6 +113,12 @@
     line-height: 1.6;
 }
 
+.role {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #9d25a8;
+}
+
 .roleTitle {
     font-weight: 700;
     font-size: 1.1rem;
@@ -140,7 +153,7 @@
     height: 32px;
     border-radius: 8px;
     background: var(--white, #ffffff);
-    box-shadow: var(--light-box-shadow, 0 2px 4px rgba(0,0,0,0.05));
+    box-shadow: var(--light-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
     transition: transform 0.2s ease;
 }
 
@@ -162,7 +175,7 @@
         gap: 1.5rem;
     }
     .teamCard {
-        width: 45%; 
+        width: 45%;
         max-width: 350px;
     }
 }

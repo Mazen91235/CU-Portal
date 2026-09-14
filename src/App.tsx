@@ -76,8 +76,8 @@ import { OtherMaterialsDepartmentsPage as UserOtherMaterialsDepartmentsPage } fr
 import { OtherMaterialsYearsPage as UserOtherMaterialsYearsPage } from "./pages/user/otherMaterials/OtherMaterialsYearsPage";
 import { OtherMaterialsPage as UserOtherMaterialsPage } from "./pages/user/otherMaterials/OtherMaterialsPage";
 import { NotificationsPage as UserNotificationsPage } from "./pages/user/notifications/NotificationsPage";
-import { PrivacyPolicy as PrivacyPolicyPage } from "./pages/user/terms/PrivacyPolicy";
-import { TermsOfService as TermsOfServicePage } from "./pages/user/terms/TermsOfService";
+import { PrivacyPolicyPage } from "./pages/landing/terms/PrivacyPolicyPage";
+import { TermsOfServicePage } from "./pages/landing/terms/TermsOfServicePage";
 import { TeamPage } from "./pages/landing/TeamPage";
 
 import "./App.css";

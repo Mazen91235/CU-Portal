@@ -558,7 +558,7 @@ export const Sidebar = ({
             </ul>
 
             <div className={styles.endingSidebar}>
-                <span>CU Portal</span>
+                <span>CU-Portal</span>
                 <span>© 2026 All Rights Reserved</span>
             </div>
         </div>

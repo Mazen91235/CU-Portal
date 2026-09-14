@@ -1,9 +1,9 @@
 import { PageSeo } from "../../../components/PageSeo";
 import { usePageLoading } from "../../../hooks/usePageLoading";
 
-import styles from "./PrivacyPolicy.module.css";
+import styles from "./PrivacyPolicyPage.module.css";
 
-export const PrivacyPolicy = () => {
+export const PrivacyPolicyPage = () => {
     usePageLoading(true);
     return (
         <>

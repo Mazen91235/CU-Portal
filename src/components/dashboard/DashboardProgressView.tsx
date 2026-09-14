@@ -39,7 +39,7 @@ export const DashboardProgressView = ({
                                     Your Account Is Suspended
                                 </h3>
                                 <p className={styles["progress-subtitle"]}>
-                                    Access to your CU Portal account is currently suspended.
+                                    Access to your CU-Portal account is currently suspended.
                                 </p>
                             </div>
                             <div className={styles["progress-stats"]}>
@@ -169,7 +169,7 @@ export const DashboardProgressView = ({
                         </div>
                         <p className={styles["welcome-description"]}>
                             Complete these smart steps to unlock the full
-                            potential of your CU Portal experience.
+                            potential of your CU-Portal experience.
                         </p>
                     </div>
                 </div>

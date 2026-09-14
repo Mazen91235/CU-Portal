@@ -6,24 +6,25 @@ import hadeerImg from "../assets/team/hadeer-khalil.jpg";
 import somiaImg from "../assets/team/somia-ali.jpg";
 import marwaImg from "../assets/team/marwa-mohamed.jpg";
 import websiteIcon from "../assets/icons/social-website.png";
-import facebookIcon from "../assets/icons/social-facebook.png";
+// import facebookIcon from "../assets/icons/social-facebook.png";
 import linkedinIcon from "../assets/icons/social-linkedin.png";
 import githubIcon from "../assets/icons/social-github.png";
 import linktreeIcon from "../assets/icons/social-linktree.png";
+import type { MemberProps } from "../types/props/MemberProps";
 
-export const teamMembers = [
+export const teamMembers: MemberProps[] = [
     {
         name: "Mazen Mohsen",
-        role: "Computer Engineer",
-        roleTitle: "Full Stack Developer",
+        title: "Computer Engineer",
+        role: "Full Stack Developer",
         university: "Cairo University",
         badge: "Founder & Team Lead",
         image: mazenImg,
         socials: [
-            { icon: websiteIcon, url: "https://www.mazen4dev.cu-portal.com" },
+            { icon: websiteIcon, url: "https://www.mazen4dev.vercel.app" },
             {
-                icon: facebookIcon,
-                url: "https://www.facebook.com/TechnoArab.TA",
+                icon: githubIcon,
+                url: "https://github.com/Mazen91235",
             },
             {
                 icon: linkedinIcon,
@@ -33,10 +34,10 @@ export const teamMembers = [
     },
     {
         name: "Mohamed Ahmed",
-        role: "Computer engineer",
-        roleTitle: "Frontend Developer",
+        title: "Computer Engineer",
+        role: "Frontend Developer",
         university: "Cairo University",
-        badge: "Contributor",
+        badge: "Partner",
         image: mohamedImg,
         socials: [
             {
@@ -52,8 +53,8 @@ export const teamMembers = [
     },
     {
         name: "Yasmin Tharwat",
-        role: "Software Engineer",
-        roleTitle: "Frontend Developer",
+        title: "Software Engineer",
+        role: "Frontend Developer",
         university: "South Valley University",
         image: yasmineImg,
         socials: [
@@ -62,8 +63,8 @@ export const teamMembers = [
     },
     {
         name: "Jana Nour",
-        role: "Biomedical engineer",
-        roleTitle: "Frontend Developer",
+        title: "Biomedical Engineer",
+        role: "Frontend Developer",
         university: "Cairo University",
         image: janaImg,
         socials: [
@@ -76,8 +77,8 @@ export const teamMembers = [
     },
     {
         name: "Hadeer Khalil",
-        role: "Faculty of commerce",
-        roleTitle: "UI/UX Designer",
+        title: "Faculty of Commerce",
+        role: "UI/UX Designer",
         university: "MIS department",
         image: hadeerImg,
         socials: [
@@ -89,16 +90,16 @@ export const teamMembers = [
     },
     {
         name: "Somia Ali",
-        role: "Kindergarten",
-        roleTitle: "UI/UX Designer",
+        title: "Kindergarten",
+        role: "UI/UX Designer",
         university: "Al-Azhar University",
         image: somiaImg,
         socials: [],
     },
     {
         name: "Marwa Mohamed",
-        role: "Commerce english sector",
-        roleTitle: "UI/UX Designer",
+        title: "Commerce English Sector",
+        role: "UI/UX Designer",
         university: "cairo university",
         image: marwaImg,
         socials: [],

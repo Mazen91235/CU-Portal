@@ -1,45 +1,42 @@
-import { useMemo } from "react";
-import { Layout } from "../../components/layout/Layout";
+import { useMemo, useState } from "react";
 import { PageSeo } from "../../components/PageSeo";
 import { Banner } from "../../components/banner/Banner";
+import { Header } from "../../components/landing/Header";
+import { Footer } from "../../components/landing/Footer";
 import { teamMembers } from "../../data/TeamData";
 import { TeamSection } from "../../components/landing/TeamSection";
+import {
+    type MemberProps,
+    type SocialLink,
+    memberRoles,
+} from "../../types/props/MemberProps";
 import styles from "./TeamPage.module.css";
 
 export const TeamPage = () => {
+    const [, setActiveSection] = useState("team");
     const founders = teamMembers.filter(
-        (m) => m.badge === "Founder & Team Lead" || m.badge === "Founder"
+        (m) => m.badge === "Founder & Team Lead" || m.badge === "Founder",
     );
 
-    const contributors = teamMembers.filter(
-        (m) => m.badge === "Contributor" || m.badge === "Contributer"
+    const partners = teamMembers.filter(
+        (m) => m.badge === "Partner" || m.badge === "Contributor",
     );
 
     const groupedMembers = useMemo(() => {
-        return teamMembers.reduce((acc, member) => {
-            const group = member.roleTitle || "Other";
-            if (!acc[group]) {
-                acc[group] = [];
-            }
-            acc[group].push(member);
-            return acc;
-        }, {} as Record<string, typeof teamMembers>);
+        return teamMembers.reduce(
+            (acc, member) => {
+                const group = member.role || "Other";
+                if (!acc[group]) {
+                    acc[group] = [];
+                }
+                acc[group].push(member);
+                return acc;
+            },
+            {} as Record<MemberProps["role"], typeof teamMembers>,
+        );
     }, []);
 
-    const categoriesToRender = [
-        "Full Stack Developer",
-        "Backend Developer",
-        "Frontend Developer",
-        "UI/UX Designer",
-    ];
-    
-    Object.keys(groupedMembers).forEach((role) => {
-        if (!categoriesToRender.includes(role)) {
-            categoriesToRender.push(role);
-        }
-    });
-
-    const renderTeamCard = (member: any, index: number) => (
+    const renderTeamCard = (member: MemberProps, index: number) => (
         <div key={index} className={styles.teamCard}>
             {member.badge && (
                 <div>
@@ -54,16 +51,19 @@ export const TeamPage = () => {
                 />
             </div>
             <div className={styles.teamName}>{member.name}</div>
-            
+
+            {(founders.includes(member) || partners.includes(member)) && (
+                <span className={styles.role}>{member.role}</span>
+            )}
             <div className={styles.teamRole}>
-                {member.role}
+                {member.title}
                 <br />
                 {member.university}
             </div>
 
             {member.socials && member.socials.length > 0 && (
                 <div className={styles.teamSocials}>
-                    {member.socials.map((social: any, idx: number) => (
+                    {member.socials.map((social: SocialLink, idx: number) => (
                         <a
                             key={idx}
                             href={social.url}
@@ -79,45 +79,60 @@ export const TeamPage = () => {
     );
 
     return (
-        <Layout>
+        <>
             <PageSeo
-                title="Our Team - CU Portal"
-                description="Meet the brilliant minds and contributors behind CU Portal."
+                title="Our Team - CUPortal"
+                description="Meet the brilliant minds and contributors behind CU-Portal."
             />
-            <Banner
-                title="Our Team"
-                description="Meet the brilliant minds and contributors behind CU Portal"
-            />
+            <div className={styles.teamPage}>
+                <Header
+                    activeSection="team"
+                    setActiveSection={setActiveSection}
+                    variant="team"
+                />
+                <Banner
+                    title="Our Team"
+                    description="Meet the brilliant minds and contributors behind CU-Portal"
+                />
 
-            <div className={styles.container}>
-                {founders.length > 0 && (
-                    <TeamSection
-                        title="Founder"
-                        members={founders}
-                        renderCard={renderTeamCard}
-                    />
-                )}
-
-                {contributors.length > 0 && (
-                    <TeamSection
-                        title="Contributor"
-                        members={contributors}
-                        renderCard={renderTeamCard}
-                    />
-                )}
-
-                {categoriesToRender.map((roleTitle) => {
-                    const members = groupedMembers[roleTitle] || [];
-                    return (
+                <div className={styles.container}>
+                    {founders.length > 0 && (
                         <TeamSection
-                            key={roleTitle}
-                            title={roleTitle}
-                            members={members}
+                            title="Founders"
+                            members={founders}
                             renderCard={renderTeamCard}
                         />
-                    );
-                })}
+                    )}
+
+                    {partners.length > 0 && (
+                        <TeamSection
+                            title="Partners"
+                            members={partners}
+                            renderCard={renderTeamCard}
+                        />
+                    )}
+
+                    {Object.keys(groupedMembers).map((role, idx) => {
+                        const members =
+                            groupedMembers[
+                                role as (typeof memberRoles)[number]
+                            ] || [];
+                        return (
+                            <TeamSection
+                                key={`${role}-${idx}`}
+                                title={role}
+                                members={members.filter(
+                                    (member) =>
+                                        !founders.includes(member) &&
+                                        !partners.includes(member),
+                                )}
+                                renderCard={renderTeamCard}
+                            />
+                        );
+                    })}
+                </div>
+                <Footer compact />
             </div>
-        </Layout>
+        </>
     );
 };

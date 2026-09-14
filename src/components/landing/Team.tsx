@@ -6,8 +6,9 @@ export const Team = () => {
     const navigate = useNavigate();
     const displayedMembers = teamMembers.filter(
         (member) =>
-            member.badge === "Founder & Team Lead" ||
-            member.badge === "Contributor"
+            member.badge?.includes("Founder") ||
+            member.badge?.includes("Partner") ||
+            member.badge?.includes("Contributor"),
     );
 
     return (
@@ -32,11 +33,9 @@ export const Team = () => {
                         </div>
                         <div className={styles.teamName}>{member.name}</div>
                         <div className={styles.teamRole}>
-                            <span className={styles.roleTitle}>
-                                {member.roleTitle}
-                            </span>
+                            <span className={styles.role}>{member.role}</span>
                             <br />
-                            {member.role}
+                            {member.title}
                             <br />
                             {member.university}
                         </div>
