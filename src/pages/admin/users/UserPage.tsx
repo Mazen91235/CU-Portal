@@ -363,7 +363,10 @@ export const UserPage = () => {
                             <span className={styles.examsHeaderTitle}>
                                 Exams
                             </span>
-                            <Link to={`/admin/exams?author_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/exams?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>
@@ -463,7 +466,10 @@ export const UserPage = () => {
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
-                            <Link to={`/admin/tasks?author_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/tasks?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>
@@ -565,7 +571,10 @@ export const UserPage = () => {
                             <span className={styles.announcementHeaderTitle}>
                                 Announcements
                             </span>
-                            <Link to={`/admin/announcements?author_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/announcements?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>
@@ -647,6 +656,12 @@ export const UserPage = () => {
                             <span className={styles.eventsHeaderTitle}>
                                 Events
                             </span>
+                            <Link
+                                to={`/admin/events?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.eventsListPublished}>
                             {user.events && user.events.length > 0 ? (
@@ -762,7 +777,10 @@ export const UserPage = () => {
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
-                            <Link to={`/admin/materials?author_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/materials?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>
@@ -851,7 +869,10 @@ export const UserPage = () => {
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
-                            <Link to={`/admin/subjects?user_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/courses?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>
@@ -922,7 +943,10 @@ export const UserPage = () => {
                             <span className={styles.activityLogsHeaderTitle}>
                                 Activity Logs
                             </span>
-                            <Link to={`/admin/logs?user_id=${userId}`} className={styles.viewAllLink}>
+                            <Link
+                                to={`/admin/logs?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
                                 View All
                             </Link>
                         </div>

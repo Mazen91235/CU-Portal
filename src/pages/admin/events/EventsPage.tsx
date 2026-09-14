@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
     useLazyGetEventsQuery,
     useDeleteEventMutation,
@@ -35,6 +35,8 @@ import styles from "./EventsPage.module.css";
 
 export const EventsPage = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const authorId = searchParams.get("author_id");
     const user = useAppSelector((state) => state.user.user);
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -154,6 +156,7 @@ export const EventsPage = () => {
                 event_organizer_id: eventOrganizerFilter
                     ? parseInt(eventOrganizerFilter)
                     : undefined,
+                author_id: authorId ? parseInt(authorId) : undefined,
                 start_date_from: dateFromFilter || undefined,
                 start_date_to: dateToFilter || undefined,
             };
@@ -197,6 +200,7 @@ export const EventsPage = () => {
         departmentFilter,
         yearFilter,
         eventOrganizerFilter,
+        authorId,
         dateFromFilter,
         dateToFilter,
         page,

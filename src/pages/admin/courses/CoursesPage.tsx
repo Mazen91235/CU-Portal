@@ -248,30 +248,32 @@ export const CoursesPage = () => {
                 buttonAction={handleAddCourse}
             />
             <div className={styles.container}>
-                <div className={styles.filtersContainer}>
-                    <div className={styles.searchRow}>
-                        <Search
-                            placeholder="Search by course name or code"
-                            setValue={setSearchQuery}
-                        />
-                    </div>
-                    {user?.canAccessAll && (
-                        <div className={styles.filtersRow}>
-                            <SelectFilter
-                                options={facultyOptions}
-                                setValue={setFacultyFilter}
-                            />
-                            <SelectFilter
-                                options={departmentOptions}
-                                setValue={setDepartmentFilter}
-                            />
-                            <SelectFilter
-                                options={yearOptions}
-                                setValue={setYearFilter}
+                {!userId && (
+                    <div className={styles.filtersContainer}>
+                        <div className={styles.searchRow}>
+                            <Search
+                                placeholder="Search by course name or code"
+                                setValue={setSearchQuery}
                             />
                         </div>
-                    )}
-                </div>
+                        {user?.canAccessAll && (
+                            <div className={styles.filtersRow}>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={setFacultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={setYearFilter}
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div className={styles.courseGrid}>
                     {courses.map((course) => (

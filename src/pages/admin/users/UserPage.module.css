@@ -244,9 +244,9 @@
 
 /* View All Link */
 .viewAllLink {
-    margin-left: auto; 
+    margin-left: auto;
     color: var(--slate-500, #64748b);
-    font-size: 15px; 
+    font-size: 15px;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
@@ -571,7 +571,7 @@
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
     padding: 24px 18px 18px 18px;
-    width: 100%;
+    width: 90%;
     margin: 32px auto 0 auto;
 }
 
@@ -922,132 +922,6 @@
     color: #7b1684;
 }
 
-/* Grades Section */
-.gradesSection {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
-    padding: 24px 18px 18px 18px;
-    width: 90%;
-    margin: 32px auto 0 auto;
-}
-
-.gradesHeader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.gradesHeaderIcon {
-    width: 57px;
-    height: 57px;
-    border-radius: 50%;
-    background: #fef6ee;
-    padding: 8px;
-    object-fit: contain;
-}
-
-.gradesHeaderTitle {
-    color: var(--slate-700, #334155);
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: capitalize;
-}
-
-.gradesList {
-    background: #fef6ee;
-    border-radius: 16px;
-    padding: 18px 12px 12px 12px;
-}
-
-.gradesCard {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
-    position: relative;
-    min-height: 90px;
-    padding: 10px 12px;
-}
-
-.gradesCardIcon {
-    margin-right: 12px;
-}
-
-.gradesCircleIcon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #fef6ee;
-    padding: 8px;
-    object-fit: contain;
-    display: block;
-    overflow: visible;
-}
-
-.gradesCardInfo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.gradesCardTitle {
-    font-size: 15px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 2px;
-}
-
-.gradesCardSubject {
-    font-size: 14px;
-    font-weight: 500;
-    color: #f97316;
-    margin-bottom: 2px;
-}
-
-.gradesCardDateRow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 2px;
-}
-
-.gradesCardDate {
-    font-size: 13px;
-    color: #64748b;
-}
-
-.gradesCardBadges {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-end;
-    margin-left: 12px;
-}
-
-.gradesBadge {
-    display: inline-block;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 4px 14px;
-    margin-bottom: 2px;
-    text-align: center;
-    min-width: 70px;
-}
-
-.gradesBadgePublisher {
-    background: #e6d6f3;
-    color: #7b1684;
-}
-
 /* Subjects Section */
 .subjectsSection {
     background: #fff;
@@ -1318,11 +1192,6 @@
         margin-left: auto;
         margin-right: auto;
     }
-    /* ====== تعديل: تعديل زر فك الإيقاف للشاشات الصغيرة ====== */
-    .userRoleActions .unsuspendUserBtn {
-        width: 100%;
-    }
-    /* ====================================================== */
 }
 
 @media (max-width: 1200px) {
@@ -1385,27 +1254,4 @@
     .userDetailsInfoTableWrapper {
         padding-left: 16px;
     }
-}
-
-
-.unsuspendUserBtn {
-    background: var(--success-green, #16a34a);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.unsuspendUserBtn:hover {
-    opacity: 0.9;
-}
-
-.suspendUserBtn:disabled,
-.unsuspendUserBtn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
