@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
     useLazyGetAnnouncementsQuery,
     useDeleteAnnouncementMutation,
@@ -38,6 +38,8 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const authorId = searchParams.get("author_id");
     const user = useAppSelector((state) => state.user.user);
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
@@ -148,6 +150,7 @@ export const AnnouncementsPage = () => {
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
                 date_from: toIsoFormat(dateFromFilter),
                 date_to: toIsoFormat(dateToFilter),
+                author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
                 params.faculty_id = undefined;
@@ -186,6 +189,7 @@ export const AnnouncementsPage = () => {
         page,
         hasNextPage,
         user,
+        authorId,
     ]);
 
     const authQueryParams = useCallback(
@@ -219,6 +223,7 @@ export const AnnouncementsPage = () => {
         searchQuery,
         dateFromFilter,
         dateToFilter,
+        authorId,
     ]);
 
     const handleAddAnnouncement = () => {

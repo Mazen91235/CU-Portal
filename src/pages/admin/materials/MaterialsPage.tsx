@@ -21,7 +21,10 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    handlePopupErrors,
+    getErrorMessage,
+} from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
@@ -45,11 +48,8 @@ import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
 import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import { Banner } from "../../../components/banner/Banner";
 import type { Process } from "../../../types/Process";
+import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
-import type {
-    DefaultAPIResponse,
-    GenericAPIResponse,
-} from "../../../types/responses/GenericAPIResponse";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
 import styles from "./MaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -60,6 +60,7 @@ export function MaterialsPage() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const [searchParams, setSearchParams] = useSearchParams();
+    const authorId = searchParams.get("author_id");
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -203,6 +204,7 @@ export function MaterialsPage() {
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? null,
                         query: searchQuery || undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                     includes: ["subject", "children", "attachment"],
                 }).unwrap();
@@ -211,7 +213,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, searchQuery, getMaterials, authorId], 
     );
 
     const fetchFolders = useCallback(
@@ -224,6 +226,7 @@ export function MaterialsPage() {
                         material_type: "folder",
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                 }).unwrap();
                 setFloatingFolders(response.data || []);
@@ -231,7 +234,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, getMaterials],
+        [subjectFilter, getMaterials, authorId],
     );
 
     const buildMaterialsPath = useCallback(
@@ -378,7 +381,8 @@ export function MaterialsPage() {
                 try {
                     await moveMaterials({
                         material_ids: selectedMaterials,
-                        destination_id: targetId ?? undefined,
+                        destination_id: targetId,
+                        subject_id: parseInt(subjectFilter),
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
                     setCurrentPath((prev) => {
@@ -388,15 +392,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Move failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Move failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -619,18 +621,13 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
+    const handleDownloadFile = useCallback((fileId: string) => {
+        if (fileId) downloadFile(fileId);
+    }, []);
+
     const handleDownloadMaterial = useCallback((materialId: number) => {
-        const material = materials.find((item) => item.id === materialId);
-        if (!material) return;
-        if (material.material_type?.toLowerCase() === "file") {
-            const fileId = material.attachment?.details?.file_data?.id;
-            if (fileId) {
-                downloadFile(fileId);
-                return;
-            }
-        }
         downloadMaterials([materialId]);
-    }, [materials]);
+    }, []);
 
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
@@ -684,12 +681,14 @@ export function MaterialsPage() {
                     if (floatingContainer.operation === "copy") {
                         await copyMaterials({
                             material_ids: selectedMaterials,
-                            destination_id: targetId ?? undefined,
+                            destination_id: targetId,
+                            subject_id: parseInt(subjectFilter),
                         }).unwrap();
                     } else {
                         await moveMaterials({
                             material_ids: selectedMaterials,
-                            destination_id: targetId ?? undefined,
+                            destination_id: targetId,
+                            subject_id: parseInt(subjectFilter),
                         }).unwrap();
                     }
                     dispatch(setProcess({ ...process, status: "completed" }));
@@ -700,15 +699,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Operation failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Operation failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -731,7 +728,6 @@ export function MaterialsPage() {
             }).unwrap();
 
             showToast("success", "Success", "Folder created successfully");
-
             // Refresh the materials list in the floating container
             if (parentId === null) {
                 setFloatingContainer((prev) => ({ ...prev, targetPath: [] }));
@@ -813,7 +809,6 @@ export function MaterialsPage() {
         [subjects],
     );
 
-
     // Handle global drag events for file upload
     useEffect(() => {
         const handleDocumentDragOver = (e: DragEvent) => {
@@ -828,7 +823,6 @@ export function MaterialsPage() {
                 formData.show
             )
                 return;
-
             // Check if dragging files
             if (
                 e.dataTransfer?.items &&
@@ -840,7 +834,6 @@ export function MaterialsPage() {
                 setIsDraggingExternal(true);
             }
         };
-
         const handleDocumentMouseLeave = (e: MouseEvent) => {
             e.preventDefault();
             // Check if actually leaving the document
@@ -955,15 +948,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Fetch failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Fetch failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -1085,7 +1076,6 @@ export function MaterialsPage() {
 
                 {showContentPage && (
                     <>
-
                         <Navigator
                             path={currentPath}
                             onNavigate={handleNavigate}
@@ -1137,7 +1127,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={handleDownloadFile}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1186,7 +1176,7 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={handleDownloadFile}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1238,7 +1228,9 @@ export function MaterialsPage() {
                         isSelectionMode={isSelectionMode}
                         selectedCount={selectedMaterials.length}
                         totalCount={materials.length}
-                        isAdmin
+                        showCopy
+                        showMove
+                        showDelete
                         onEnter={() => setIsSelectionMode(true)}
                         onCancel={handleCancelSelection}
                         onSelectAll={handleSelectAll}

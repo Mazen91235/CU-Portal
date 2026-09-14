@@ -13,21 +13,26 @@ type MaterialCardProps = {
   onDoubleClick: (materialId: number) => void;
   onDragStart: (materialId: number) => void;
   onDrop?: (targetId: number | null) => void;
-  onEdit: (materialId: number) => void;
-  onDelete: (materialId: number) => void;
-  onCopy: (materialId: number) => void;
-  onMove: (materialId: number) => void;
-  onShare: (materialId: number) => void;
+  onEdit?: (materialId: number) => void;
+  onDelete?: (materialId: number) => void;
+  onCopy?: (materialId: number) => void;
+  onMove?: (materialId: number) => void;
+  onShare?: (materialId: number) => void;
   onPreview?: (
     fileId: string,
     fileName: string,
     realFileName: string,
     mimeType: string,
   ) => void;
-  onDownload?: (materialId: number) => void;
+  onDownload?: (fileId: string) => void;
   onOpenLink?: (url: string) => void;
   showCount?: boolean;
   showAll?: boolean;
+  showShare?: boolean;
+  showCopy?: boolean;
+  showMove?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
   className?: string;
   isDraggingGlobal?: boolean;
 };
@@ -49,7 +54,12 @@ export const MaterialCard = ({
   onOpenLink,
   onDrop,
   showCount = true,
-  showAll = false,
+  showAll,
+  showShare = true,
+  showCopy = showAll ?? false,
+  showMove = showAll ?? false,
+  showEdit = showAll ?? false,
+  showDelete = showAll ?? false,
   className = "",
   isDraggingGlobal = false,
 }: MaterialCardProps) => {
@@ -131,27 +141,27 @@ export const MaterialCard = ({
   };
 
   const handleEdit = () => {
-    if (material.id) onEdit(material.id);
+    if (material.id) onEdit?.(material.id);
   };
 
   const handleDelete = () => {
-    if (material.id) onDelete(material.id);
+    if (material.id) onDelete?.(material.id);
   };
 
   const handleCopy = () => {
     if (material.id) {
-      onCopy(material.id);
+      onCopy?.(material.id);
     }
   };
 
   const handleMove = () => {
     if (material.id) {
-      onMove(material.id);
+      onMove?.(material.id);
     }
   };
 
   const handleShare = () => {
-    if (material.id) onShare(material.id);
+    if (material.id) onShare?.(material.id);
   };
 
   const handlePreview = (e: React.MouseEvent) => {
@@ -168,8 +178,8 @@ export const MaterialCard = ({
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (material.id && onDownload) {
-      onDownload(material.id);
+    if (material && onDownload) {
+      onDownload(material.attachment?.details?.file_data?.id ?? "");
     }
   };
 
@@ -241,14 +251,18 @@ export const MaterialCard = ({
         <div className={styles.folderHeader}>
           <MaterialActionsDropdown
             onShare={handleShare}
-            onDownload={
-              material.id ? () => onDownload?.(material.id!) : undefined
+            onDownload={() =>
+              onDownload?.(material.attachment?.details?.file_data?.id ?? "")
             }
             onMove={handleMove}
             onCopy={handleCopy}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            showAll={showAll}
+            showShare={showShare}
+            showCopy={showCopy}
+            showMove={showMove}
+            showEdit={showEdit}
+            showDelete={showDelete}
           />
         </div>
         <div className={styles.folderContent}>
@@ -441,14 +455,18 @@ export const MaterialCard = ({
       <div className={styles.fileHeader}>
         <MaterialActionsDropdown
           onShare={handleShare}
-          onDownload={
-            material.id ? () => onDownload?.(material.id!) : undefined
+          onDownload={() =>
+            onDownload?.(material.attachment?.details?.file_data?.id ?? "")
           }
           onMove={handleMove}
           onCopy={handleCopy}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          showAll={showCount}
+          showShare={showShare}
+          showCopy={showCopy}
+          showMove={showMove}
+          showEdit={showEdit}
+          showDelete={showDelete}
         />
       </div>
       <div className={styles.fileContent}>

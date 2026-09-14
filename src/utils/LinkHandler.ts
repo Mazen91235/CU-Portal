@@ -195,6 +195,7 @@ export const GetIcon = (icon: Icon | string): IconType => {
     "sidebar-academic-settings": LuSettings,
     "sidebar-registered-courses": FiBookOpen,
     "sidebar-logout": LuLogOut,
+    "sidebar-releases": LuFileText,
 
     "sidebar-admin-faculties": LuLandmark,
     "sidebar-admin-departments": LuBuilding,

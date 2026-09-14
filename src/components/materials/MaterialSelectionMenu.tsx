@@ -5,7 +5,9 @@ type MaterialSelectionMenuProps = {
     isSelectionMode: boolean;
     selectedCount: number;
     totalCount: number;
-    isAdmin?: boolean;
+    showCopy?: boolean;
+    showMove?: boolean;
+    showDelete?: boolean;
     onSelectAll: () => void;
     onDownload: () => void;
     onCopy?: () => void;
@@ -19,7 +21,9 @@ export const MaterialSelectionMenu = ({
     isSelectionMode,
     selectedCount,
     totalCount,
-    isAdmin = false,
+    showCopy = false,
+    showMove = false,
+    showDelete = false,
     onSelectAll,
     onDownload,
     onCopy,
@@ -42,7 +46,9 @@ export const MaterialSelectionMenu = ({
                         title={allSelected ? "Clear selection" : "Select all"}
                     >
                         <IconComponent icon="select-all" size={20} />
-                        <span>{allSelected ? "Clear selection" : "Select all"}</span>
+                        <span>
+                            {allSelected ? "Clear selection" : "Select all"}
+                        </span>
                     </button>
                     <button
                         type="button"
@@ -54,38 +60,46 @@ export const MaterialSelectionMenu = ({
                         <IconComponent icon="download" size={20} />
                         <span>Download</span>
                     </button>
-                    {isAdmin && (
+                    {(showCopy || showMove || showDelete) && (
                         <>
-                            <button
-                                type="button"
-                                className={`${styles.action} ${!hasSelection ? styles.disabled : ""}`}
-                                onClick={hasSelection ? onCopy : undefined}
-                                disabled={!hasSelection}
-                                title="Copy"
-                            >
-                                <IconComponent icon="copy" size={20} />
-                                <span>Copy</span>
-                            </button>
-                            <button
-                                type="button"
-                                className={`${styles.action} ${!hasSelection ? styles.disabled : ""}`}
-                                onClick={hasSelection ? onMove : undefined}
-                                disabled={!hasSelection}
-                                title="Move"
-                            >
-                                <IconComponent icon="move" size={20} />
-                                <span>Move</span>
-                            </button>
-                            <button
-                                type="button"
-                                className={`${styles.action} ${!hasSelection ? styles.disabled : styles.danger}`}
-                                onClick={hasSelection ? onDelete : undefined}
-                                disabled={!hasSelection}
-                                title="Delete"
-                            >
-                                <IconComponent icon="delete" size={20} />
-                                <span>Delete</span>
-                            </button>
+                            {showCopy && (
+                                <button
+                                    type="button"
+                                    className={`${styles.action} ${!hasSelection ? styles.disabled : ""}`}
+                                    onClick={hasSelection ? onCopy : undefined}
+                                    disabled={!hasSelection}
+                                    title="Copy"
+                                >
+                                    <IconComponent icon="copy" size={20} />
+                                    <span>Copy</span>
+                                </button>
+                            )}
+                            {showMove && (
+                                <button
+                                    type="button"
+                                    className={`${styles.action} ${!hasSelection ? styles.disabled : ""}`}
+                                    onClick={hasSelection ? onMove : undefined}
+                                    disabled={!hasSelection}
+                                    title="Move"
+                                >
+                                    <IconComponent icon="move" size={20} />
+                                    <span>Move</span>
+                                </button>
+                            )}
+                            {showDelete && (
+                                <button
+                                    type="button"
+                                    className={`${styles.action} ${!hasSelection ? styles.disabled : styles.danger}`}
+                                    onClick={
+                                        hasSelection ? onDelete : undefined
+                                    }
+                                    disabled={!hasSelection}
+                                    title="Delete"
+                                >
+                                    <IconComponent icon="delete" size={20} />
+                                    <span>Delete</span>
+                                </button>
+                            )}
                         </>
                     )}
                 </div>
@@ -99,8 +113,12 @@ export const MaterialSelectionMenu = ({
                 type="button"
                 className={`${styles.trigger} ${isSelectionMode ? styles.cancel : ""}`}
                 onClick={isSelectionMode ? onCancel : onEnter}
-                title={isSelectionMode ? "Cancel selection" : "Select materials"}
-                aria-label={isSelectionMode ? "Cancel selection" : "Select materials"}
+                title={
+                    isSelectionMode ? "Cancel selection" : "Select materials"
+                }
+                aria-label={
+                    isSelectionMode ? "Cancel selection" : "Select materials"
+                }
             >
                 <IconComponent
                     icon={isSelectionMode ? "close" : "select"}

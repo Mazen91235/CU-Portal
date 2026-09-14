@@ -1,0 +1,148 @@
+.container {
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  color: #1f2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: var(--primary-font-family);
+}
+
+.count {
+  display: block;
+  margin-top: 0.25rem;
+  color: #9ca3af;
+  font-family: var(--primary-font-family);
+}
+
+.addItemButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f2937;
+  cursor: pointer;
+  font-family: var(--primary-font-family);
+  font-size: 1rem;
+}
+
+.addItemButton:hover,
+.addItemButton:focus {
+  border-color: var(--primary-purple);
+  color: var(--primary-purple);
+}
+
+.addItemButton:disabled,
+.removeItemButton:disabled,
+.contentInput:disabled,
+.typeSelect:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.contentInput,
+.typeSelect {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1f2937;
+  font-family: var(--primary-font-family);
+  font-size: 1rem;
+}
+
+.contentInput {
+  flex: 1;
+}
+
+.typeSelect {
+  flex: 1;
+}
+
+.contentInput:focus,
+.typeSelect:focus {
+  border: 1.5px solid var(--primary-purple);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(123, 22, 132, 0.08);
+}
+
+.removeItemButton {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.removeItemButton:hover {
+  border-color: #ef4444;
+  background: #f3f4f6;
+  color: #ef4444;
+}
+
+.error {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--error-red);
+  font-family: var(--primary-font-family);
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .header,
+  .itemRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .addItemButton {
+    align-self: flex-start;
+  }
+
+  .contentInput,
+  .typeSelect {
+    width: 100%;
+  }
+
+  .removeItemButton {
+    align-self: center;
+  }
+}

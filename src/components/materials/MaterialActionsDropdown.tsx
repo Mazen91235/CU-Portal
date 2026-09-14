@@ -3,8 +3,6 @@ import type { MaterialActionsDropdownProps } from "./types";
 import IconComponent from "../IconComponent";
 import styles from "./MaterialActionsDropdown.module.css";
 
-export type { MaterialActionsDropdownProps } from "./types";
-
 export const MaterialActionsDropdown = ({
   onShare,
   onDownload,
@@ -13,13 +11,20 @@ export const MaterialActionsDropdown = ({
   onEdit,
   onDelete,
   onView,
-  showAll = true,
+  showAll,
+  showShare = true,
+  showDownload = true,
+  showCopy = showAll ?? false,
+  showMove = showAll ?? false,
+  showEdit = showAll ?? false,
+  showDelete = showAll ?? false,
 }: MaterialActionsDropdownProps) => {
   const [show, setShow] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!show) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -28,8 +33,12 @@ export const MaterialActionsDropdown = ({
         setShow(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [show]);
 
   const handleToggle = (e: React.MouseEvent) => {
@@ -38,8 +47,8 @@ export const MaterialActionsDropdown = ({
     setShow((value) => !value);
   };
 
-  const handleAction = (action: () => void) => {
-    action();
+  const handleAction = (action?: () => void) => {
+    action?.();
     setShow(false);
   };
 
@@ -57,8 +66,9 @@ export const MaterialActionsDropdown = ({
       >
         <i className="fas fa-ellipsis-v"></i>
       </button>
+
       <div className={`${styles.dropdownMenu} ${show ? styles.show : ""}`}>
-        {onShare && (
+        {showShare && onShare && (
           <a
             href="#!"
             title="Share"
@@ -71,7 +81,8 @@ export const MaterialActionsDropdown = ({
             <IconComponent icon="share" />
           </a>
         )}
-        {onDownload && (
+
+        {showDownload && onDownload && (
           <a
             href="#!"
             title="Download"
@@ -84,6 +95,7 @@ export const MaterialActionsDropdown = ({
             <IconComponent icon="download" />
           </a>
         )}
+
         {onView && (
           <a
             href="#!"
@@ -97,53 +109,61 @@ export const MaterialActionsDropdown = ({
             <IconComponent icon="eye-review" />
           </a>
         )}
-        {showAll && (
-          <>
-            <a
-              href="#!"
-              title="Copy"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAction(onCopy);
-              }}
-            >
-              <IconComponent icon="copy" />
-            </a>
-            <a
-              href="#!"
-              title="Move"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAction(onMove);
-              }}
-            >
-              <IconComponent icon="move" />
-            </a>
-            <a
-              href="#!"
-              title="Edit"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAction(onEdit);
-              }}
-            >
-              <IconComponent icon="edit" />
-            </a>
-            <a
-              href="#!"
-              title="Delete"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAction(onDelete);
-              }}
-            >
-              <IconComponent icon="delete" />
-            </a>
-          </>
+
+        {showMove && onMove && (
+          <a
+            href="#!"
+            title="Move"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAction(onMove);
+            }}
+          >
+            <IconComponent icon="move" />
+          </a>
+        )}
+
+        {showCopy && onCopy && (
+          <a
+            href="#!"
+            title="Copy"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAction(onCopy);
+            }}
+          >
+            <IconComponent icon="copy" />
+          </a>
+        )}
+
+        {showEdit && onEdit && (
+          <a
+            href="#!"
+            title="Edit"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAction(onEdit);
+            }}
+          >
+            <IconComponent icon="edit" />
+          </a>
+        )}
+
+        {showDelete && onDelete && (
+          <a
+            href="#!"
+            title="Delete"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAction(onDelete);
+            }}
+          >
+            <IconComponent icon="delete" />
+          </a>
         )}
       </div>
     </div>

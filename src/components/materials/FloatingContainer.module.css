@@ -59,29 +59,6 @@
     background: var(--grey-background);
 }
 
-.selectedItems {
-    padding: 1rem 1.5rem;
-    background: var(--grey-background);
-    border-bottom: 1px solid var(--light-grey);
-    max-height: 150px;
-    overflow-y: auto;
-    cursor: default;
-    user-select: none;
-}
-
-.selectedItem {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    font-size: var(--secondary-font-size);
-    color: var(--dark-text);
-}
-
-.selectedItem svg {
-    color: var(--primary-purple);
-}
-
 .navigationPath {
     display: flex;
     align-items: center;

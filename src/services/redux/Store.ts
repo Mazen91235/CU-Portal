@@ -36,8 +36,10 @@ import { AdminMessageAPI } from "../apis/admin/MessageAPIs";
 import { AdminTaskAPI } from "../apis/admin/TaskAPIs";
 import { AdminWeekAPI } from "../apis/admin/WeekAPIs";
 import { WeekAPI } from "../apis/user/WeekAPIs";
+import { AdminReleaseAPI } from "../apis/admin/ReleaseAPIs";
 
 import { MessageAPI } from "../apis/MessageAPIs";
+import { ReleaseAPI } from "../apis/user/ReleaseAPIs";
 
 const store = configureStore({
   reducer: {
@@ -77,6 +79,8 @@ const store = configureStore({
     [AdminUserAPI.reducerPath]: AdminUserAPI.reducer,
     [AdminYearAPI.reducerPath]: AdminYearAPI.reducer,
     [AdminWeekAPI.reducerPath]: AdminWeekAPI.reducer,
+    [AdminReleaseAPI.reducerPath]: AdminReleaseAPI.reducer,
+    [ReleaseAPI.reducerPath]: ReleaseAPI.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -113,6 +117,8 @@ const store = configureStore({
       AdminUserAPI.middleware,
       AdminYearAPI.middleware,
       AdminWeekAPI.middleware,
+      AdminReleaseAPI.middleware,
+      ReleaseAPI.middleware,
     ),
 });
 

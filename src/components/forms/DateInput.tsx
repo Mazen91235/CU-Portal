@@ -42,9 +42,11 @@ export const DateInput = <T extends Record<string, unknown>>({
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const [dropdownPosition, setDropdownPosition] = useState<{
         left: number;
         top: number;
+        placement: "above" | "below";
     } | null>(null);
     const VIEWPORT_MARGIN = 16;
     const DROPDOWN_WIDTH = 280;
@@ -73,9 +75,21 @@ export const DateInput = <T extends Record<string, unknown>>({
             VIEWPORT_MARGIN,
             window.innerWidth - DROPDOWN_WIDTH - VIEWPORT_MARGIN,
         );
+        const dropdownHeight = dropdownRef.current?.offsetHeight || 360;
+        const spaceBelow = window.innerHeight - rect.bottom - VIEWPORT_MARGIN;
+        const spaceAbove = rect.top - VIEWPORT_MARGIN;
+        const placement =
+            spaceBelow < dropdownHeight + 8 && spaceAbove > spaceBelow
+                ? "above"
+                : "below";
+
         setDropdownPosition({
             left: Math.min(Math.max(rect.left, VIEWPORT_MARGIN), maxLeft),
-            top: rect.bottom + 8,
+            top:
+                placement === "above"
+                    ? Math.max(VIEWPORT_MARGIN, rect.top - dropdownHeight - 8)
+                    : rect.bottom + 8,
+            placement,
         });
     };
 
@@ -232,8 +246,16 @@ export const DateInput = <T extends Record<string, unknown>>({
 
             {isOpen && (
                 <div
-                    className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""}`}
-                    style={dropdownPosition ? { left: dropdownPosition.left, top: dropdownPosition.top } : undefined}
+                    ref={dropdownRef}
+                    className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""} ${dropdownPosition?.placement === "above" ? styles.openAbove : ""}`}
+                    style={
+                        dropdownPosition
+                            ? {
+                                  left: dropdownPosition.left,
+                                  top: dropdownPosition.top,
+                              }
+                            : undefined
+                    }
                 >
                     <div className={styles.calendarHeader}>
                         <button

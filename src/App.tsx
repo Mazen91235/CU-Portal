@@ -45,6 +45,21 @@ import { EventOrganizersPage } from "./pages/admin/eventsOrganizers/EventOrganiz
 import { CreateEventOrganizer } from "./pages/admin/eventsOrganizers/CreateEventOrganizer";
 import { EventOrganizerPage } from "./pages/admin/eventsOrganizers/EventOrganizerPage";
 import { EditEventOrganizer } from "./pages/admin/eventsOrganizers/EditEventOrganizer";
+import { UsersPage } from "./pages/admin/users/UsersPage";
+import { UserPage } from "./pages/admin/users/UserPage";
+import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
+import { RolePage } from "./pages/admin/roles/RolePage";
+import { RolesPage } from "./pages/admin/roles/RolesPage";
+import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
+import { OtherMaterialsDepartmentsPage } from "./pages/admin/otherMaterials/OtherMaterialsDepartmentsPage";
+import { OtherMaterialsYearsPage } from "./pages/admin/otherMaterials/OtherMaterialsYearsPage";
+import { OtherMaterialsPage } from "./pages/admin/otherMaterials/OtherMaterialsPage";
+import { LogsPage } from "./pages/admin/logs/LogsPage";
+import { LogPage } from "./pages/admin/logs/LogPage";
+import { ReleasesPage } from "./pages/admin/releases/ReleasesPage";
+import { ReleasePage } from "./pages/admin/releases/ReleasePage";
+import { CreateRelease } from "./pages/admin/releases/CreateRelease";
+import { EditRelease } from "./pages/admin/releases/EditRelease";
 import { TasksPage as UserTasksPage } from "./pages/user/tasks/TasksPage";
 import { TaskPage as UserTaskPage } from "./pages/user/tasks/TaskPage";
 import { ExamsPage as UserExamsPage } from "./pages/user/exams/ExamsPage";
@@ -61,21 +76,19 @@ import { MaterialsPage as UserMaterialsPage } from "./pages/user/materials/Mater
 import { NotesPage as UserNotesPage } from "./pages/user/notes/NotesPage";
 import { CalendarPage as UserCalendarPage } from "./pages/user/calendar/CalendarPage";
 import { TimeLinePage as UserTimelinePage } from "./pages/user/timeline/TimeLinePage";
-import { UsersPage } from "./pages/admin/users/UsersPage";
-import { UserPage } from "./pages/admin/users/UserPage";
-import { PendingUsersPage } from "./pages/admin/users/PendingUsersPage";
-import { RolePage } from "./pages/admin/roles/RolePage";
-import { RolesPage } from "./pages/admin/roles/RolesPage";
-import { NotificationsPage } from "./pages/user/notifications/NotificationsPage";
-import { MaterialsPage } from "./pages/admin/materials/MaterialsPage";
-import { PrivacyPolicy } from "./pages/user/terms/PrivacyPolicy";
-import { TermsOfService } from "./pages/user/terms/TermsOfService";
-import { WeeklyGuidePage } from "./pages/user/weeklyGuide/weeklyGuide";
-import { LogsPage } from "./pages/admin/logs/LogsPage";
-import { LogPage } from "./pages/admin/logs/LogPage";
-import { WeeklyGuidePage as AdminWeeklyGuidePage } from "./pages/admin/weeklyGuide/WeeklyGuide";
+import { OtherMaterialsDepartmentsPage as UserOtherMaterialsDepartmentsPage } from "./pages/user/otherMaterials/OtherMaterialsDepartmentsPage";
+import { OtherMaterialsYearsPage as UserOtherMaterialsYearsPage } from "./pages/user/otherMaterials/OtherMaterialsYearsPage";
+import { OtherMaterialsPage as UserOtherMaterialsPage } from "./pages/user/otherMaterials/OtherMaterialsPage";
+import { NotificationsPage as UserNotificationsPage } from "./pages/user/notifications/NotificationsPage";
+import { ReleasesPage as UserReleasesPage } from "./pages/user/releases/ReleasesPage";
+import { ReleasePage as UserReleasePage } from "./pages/user/releases/ReleasePage";
+import { PrivacyPolicyPage } from "./pages/landing/terms/PrivacyPolicyPage";
+import { TermsOfServicePage } from "./pages/landing/terms/TermsOfServicePage";
+import { TeamPage } from "./pages/landing/TeamPage";
 
 import "./App.css";
+import { WeeklyGuidePage as AdminWeeklyGuide } from "./pages/admin/weeklyGuide/WeeklyGuide";
+import { WeeklyGuidePage } from "./pages/user/weeklyGuide/weeklyGuide";
 function App() {
   useAuth({ shouldNavigate: false });
   useGetUser();
@@ -98,8 +111,9 @@ function App() {
       />
       <Routes>
         <Route index element={<LandingPage />} />
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="terms-of-service" element={<TermsOfService />} />
+        <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="our-team" element={<TeamPage />} />
         <Route path="" element={<ProtectedRoute reverse={true} />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/login-success" element={<LoginSuccessPage />} />
@@ -108,11 +122,15 @@ function App() {
         </Route>
         <Route path="/user" element={<ProtectedRoute />}>
           <Route index element={<DashboardPage />} />
-          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="notifications" element={<UserNotificationsPage />} />
           <Route path="settings">
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="academic" element={<AcademicSettings />} />
             <Route path="courses" element={<RegisteredCourses />} />
+          </Route>
+          <Route path="system">
+            <Route path="releases" index element={<UserReleasesPage />} />
+            <Route path="releases/:releaseId" element={<UserReleasePage />} />
           </Route>
           <Route path="notes" element={<UserNotesPage />} />
           <Route path="tasks">
@@ -131,7 +149,6 @@ function App() {
             <Route index element={<UserCoursesPage />} />
             <Route path=":courseId" element={<UserCoursePage />} />
           </Route>
-
           <Route path="events">
             <Route index element={<UserEventsPage />} />
             <Route path=":eventId" element={<UserEventPage />} />
@@ -150,6 +167,29 @@ function App() {
             <Route
               path=":subjectId/:parentId"
               element={<UserMaterialsPage />}
+            />
+          </Route>
+          <Route path="other-materials">
+            <Route index element={<UserOtherMaterialsDepartmentsPage />} />
+            <Route
+              path=":studyType"
+              element={<UserOtherMaterialsDepartmentsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId"
+              element={<UserOtherMaterialsYearsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId"
+              element={<UserOtherMaterialsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId/:subjectId"
+              element={<UserOtherMaterialsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+              element={<UserOtherMaterialsPage />}
             />
           </Route>
           <Route path="calendar">
@@ -182,56 +222,19 @@ function App() {
           >
             <Route index element={<DepartmentsPage />} />
           </Route>
-
-          <Route
-            path="years"
-            element={<ProtectedRoute permission="View Years" />}
-          >
-            <Route index element={<YearsPage />} />
-          </Route>
-
-          <Route path="materials">
-            <Route index element={<UserMaterialsPage />} />
-            <Route path=":subjectId" element={<UserMaterialsPage />} />
-            <Route
-              path=":subjectId/:parentId"
-              element={<UserMaterialsPage />}
-            />
-          </Route>
-          <Route path="calendar">
-            <Route index element={<UserCalendarPage />} />
-          </Route>
-          <Route path="timeline">
-            <Route index element={<UserTimelinePage />} />
-          </Route>
-        </Route>
-        <Route path="/admin" element={<ProtectedRoute />}>
-          <Route
-            path=""
-            element={<ProtectedRoute permission="View AdminPanel" />}
-          >
-            <Route index element={<div>Admin Dashboard</div>} />
-          </Route>
-          <Route
-            path="faculties"
-            element={<ProtectedRoute permission="View Faculties" />}
-          >
-            <Route index element={<FacultiesPage />} />
-          </Route>
-          <Route
-            path="departments"
-            element={<ProtectedRoute permission="View Departments" />}
-          >
-            <Route index element={<DepartmentsPage />} />
-          </Route>
-
           <Route
             path="users"
             element={<ProtectedRoute permission="View Users" />}
           >
             <Route index element={<UsersPage />} />
-            <Route path=":userId" element={<UserPage />} />
             <Route path="pending" element={<PendingUsersPage />} />
+            <Route path=":userId" element={<UserPage />} />
+          </Route>
+          <Route
+            path="years"
+            element={<ProtectedRoute permission="View Years" />}
+          >
+            <Route index element={<YearsPage />} />
           </Route>
 
           <Route
@@ -353,39 +356,23 @@ function App() {
               element={<EditEventOrganizer />}
             />
           </Route>
-
           <Route
-            path="events"
-            element={<ProtectedRoute permission="View Events" />}
+            path="week-guide"
+            element={<ProtectedRoute permission="View Weeks" />}
           >
-            <Route index element={<EventsPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Events" />}
-            >
-              <Route index element={<CreateEvent />} />
-            </Route>
-            <Route
-              path="edit/:eventId"
-              element={<ProtectedRoute permission="Edit Events" />}
-            >
-              <Route index element={<EditEvent />} />
-            </Route>
-            <Route path=":eventId" element={<EventPage />} />
+            <Route index element={<AdminWeeklyGuide />} />
+            <Route path=":weekNumber" element={<AdminWeeklyGuide />} />
           </Route>
-
-          <Route path="event-organizers">
-            <Route index element={<EventOrganizersPage />} />
+          <Route path="releases">
+            <Route index element={<ReleasesPage />} />
+            <Route path=":releaseId" element={<ReleasePage />} />
             <Route path="create">
-              <Route index element={<CreateEventOrganizer />} />
+              <Route index element={<CreateRelease />} />
             </Route>
-            <Route path=":eventOrganizerId" element={<EventOrganizerPage />} />
-            <Route
-              path="edit/:eventOrganizerId"
-              element={<EditEventOrganizer />}
-            />
+            <Route path="edit/:releaseId">
+              <Route index element={<EditRelease />} />
+            </Route>
           </Route>
-
           <Route
             path="materials"
             element={<ProtectedRoute permission="View Materials" />}
@@ -402,13 +389,31 @@ function App() {
             <Route index element={<LogsPage />} />
             <Route path=":logId" element={<LogPage />} />
           </Route>
-
           <Route
-            path="week-guide"
-            element={<ProtectedRoute permission="View Weeks" />}
+            path="other-materials"
+            element={<ProtectedRoute permission="View Materials" />}
           >
-            <Route index element={<AdminWeeklyGuidePage />} />
-            <Route path=":weekNumber" element={<AdminWeeklyGuidePage />} />
+            <Route index element={<OtherMaterialsDepartmentsPage />} />
+            <Route
+              path=":studyType"
+              element={<OtherMaterialsDepartmentsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId"
+              element={<OtherMaterialsYearsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId"
+              element={<OtherMaterialsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId/:subjectId"
+              element={<OtherMaterialsPage />}
+            />
+            <Route
+              path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+              element={<OtherMaterialsPage />}
+            />
           </Route>
         </Route>
       </Routes>

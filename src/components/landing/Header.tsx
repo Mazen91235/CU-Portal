@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useAppSelector } from "../../services/redux/Hooks";
 import Logo from "../logo/Logo";
 import styles from "./Header.module.css";
@@ -7,12 +7,16 @@ import styles from "./Header.module.css";
 export const Header = ({
     activeSection,
     setActiveSection,
+    variant = "landing",
 }: {
     activeSection: string;
     setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+    variant?: "landing" | "team";
 }) => {
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const user = useAppSelector((state) => state.user.user);
+    const isTeamPage = variant === "team";
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -46,72 +50,102 @@ export const Header = ({
                     <Logo
                         width={60}
                         height={60}
-                        onClick={() => handleNavClick("hero")}
+                        onClick={() => {
+                            if (isTeamPage) {
+                                navigate("/");
+                            } else {
+                                handleNavClick("hero");
+                            }
+                        }}
                     />
                 </div>
                 <nav className={styles.headerCenter}>
-                    <a
-                        href="#hero"
-                        className={`${styles.navLink} ${
-                            activeSection === "hero" ? styles.active : ""
-                        }`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("hero");
-                        }}
-                    >
-                        Home
-                    </a>
-                    <a
-                        href="#features"
-                        className={`${styles.navLink} ${
-                            activeSection === "features" ? styles.active : ""
-                        }`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("features");
-                        }}
-                    >
-                        Features
-                    </a>
-                    <a
-                        href="#how-it-work"
-                        className={`${styles.navLink} ${
-                            activeSection === "how-it-work" ? styles.active : ""
-                        }`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("how-it-work");
-                        }}
-                    >
-                        How to Start
-                    </a>
-                    <a
-                        href="#snapshots"
-                        className={`${styles.navLink} ${
-                            activeSection === "snapshots" ? styles.active : ""
-                        }`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("snapshots");
-                        }}
-                    >
-                        Snapshots
-                    </a>
-                    <a
-                        href="#beginning-card"
-                        className={`${styles.navLink} ${
-                            activeSection === "beginning-card"
-                                ? styles.active
-                                : ""
-                        }`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("beginning-card");
-                        }}
-                    >
-                        How We Started
-                    </a>
+                    {isTeamPage ? (
+                        <>
+                            <Link to="/" className={styles.navLink}>
+                                Home
+                            </Link>
+                            <Link
+                                to="/our-team"
+                                className={`${styles.navLink} ${styles.active}`}
+                            >
+                                Our Team
+                            </Link>
+                        </>
+                    ) : (
+                        <a
+                            href="#hero"
+                            className={`${styles.navLink} ${
+                                activeSection === "hero" ? styles.active : ""
+                            }`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleNavClick("hero");
+                            }}
+                        >
+                            Home
+                        </a>
+                    )}
+                    {!isTeamPage && (
+                        <>
+                            <a
+                                href="#features"
+                                className={`${styles.navLink} ${
+                                    activeSection === "features"
+                                        ? styles.active
+                                        : ""
+                                }`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick("features");
+                                }}
+                            >
+                                Features
+                            </a>
+                            <a
+                                href="#how-it-work"
+                                className={`${styles.navLink} ${
+                                    activeSection === "how-it-work"
+                                        ? styles.active
+                                        : ""
+                                }`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick("how-it-work");
+                                }}
+                            >
+                                How to Start
+                            </a>
+                            <a
+                                href="#snapshots"
+                                className={`${styles.navLink} ${
+                                    activeSection === "snapshots"
+                                        ? styles.active
+                                        : ""
+                                }`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick("snapshots");
+                                }}
+                            >
+                                Snapshots
+                            </a>
+                            <a
+                                href="#beginning-card"
+                                className={`${styles.navLink} ${
+                                    activeSection === "beginning-card"
+                                        ? styles.active
+                                        : ""
+                                }`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick("beginning-card");
+                                }}
+                            >
+                                How We Started
+                            </a>
+                        </>
+                    )}
                 </nav>
                 <div className={styles.headerRight}>
                     {!user ? (
@@ -151,84 +185,113 @@ export const Header = ({
                     </button>
                 </div>
                 <ul>
-                    <li>
-                        <a
-                            href="#hero"
-                            className={`${styles.sidebarLink} ${
-                                activeSection === "hero" ? styles.active : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("hero");
-                            }}
-                        >
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#features"
-                            className={`${styles.sidebarLink} ${
-                                activeSection === "features"
-                                    ? styles.active
-                                    : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("features");
-                            }}
-                        >
-                            Features
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#how-it-work"
-                            className={`${styles.sidebarLink} ${
-                                activeSection === "how-it-work"
-                                    ? styles.active
-                                    : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("how-it-work");
-                            }}
-                        >
-                            How It Works
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#snapshots"
-                            className={`${styles.sidebarLink} ${
-                                activeSection === "snapshots"
-                                    ? styles.active
-                                    : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("snapshots");
-                            }}
-                        >
-                            Snapshots
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#beginning-card"
-                            className={`${styles.sidebarLink} ${
-                                activeSection === "beginning-card"
-                                    ? styles.active
-                                    : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick("beginning-card");
-                            }}
-                        >
-                            How We Started
-                        </a>
-                    </li>
+                    {isTeamPage ? (
+                        <>
+                            <li>
+                                <Link
+                                    to="/"
+                                    className={styles.sidebarLink}
+                                    onClick={closeSidebar}
+                                >
+                                    Home
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/our-team"
+                                    className={`${styles.sidebarLink} ${styles.active}`}
+                                    onClick={closeSidebar}
+                                >
+                                    Our Team
+                                </Link>
+                            </li>
+                        </>
+                    ) : (
+                        <li>
+                            <a
+                                href="#hero"
+                                className={`${styles.sidebarLink} ${
+                                    activeSection === "hero"
+                                        ? styles.active
+                                        : ""
+                                }`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick("hero");
+                                }}
+                            >
+                                Home
+                            </a>
+                        </li>
+                    )}
+                    {!isTeamPage && (
+                        <>
+                            <li>
+                                <a
+                                    href="#features"
+                                    className={`${styles.sidebarLink} ${
+                                        activeSection === "features"
+                                            ? styles.active
+                                            : ""
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleNavClick("features");
+                                    }}
+                                >
+                                    Features
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#how-it-work"
+                                    className={`${styles.sidebarLink} ${
+                                        activeSection === "how-it-work"
+                                            ? styles.active
+                                            : ""
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleNavClick("how-it-work");
+                                    }}
+                                >
+                                    How It Works
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#snapshots"
+                                    className={`${styles.sidebarLink} ${
+                                        activeSection === "snapshots"
+                                            ? styles.active
+                                            : ""
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleNavClick("snapshots");
+                                    }}
+                                >
+                                    Snapshots
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#beginning-card"
+                                    className={`${styles.sidebarLink} ${
+                                        activeSection === "beginning-card"
+                                            ? styles.active
+                                            : ""
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleNavClick("beginning-card");
+                                    }}
+                                >
+                                    How We Started
+                                </a>
+                            </li>
+                        </>
+                    )}
                     <hr />
                     {!user ? (
                         <>

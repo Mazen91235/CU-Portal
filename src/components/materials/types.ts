@@ -1,5 +1,5 @@
 export type MaterialActionsDropdownProps = {
-  onShare?: () => void;
+  onShare: () => void;
   onDownload?: () => void;
   onMove: () => void;
   onCopy: () => void;
@@ -7,4 +7,10 @@ export type MaterialActionsDropdownProps = {
   onDelete: () => void;
   onView?: () => void;
   showAll?: boolean;
+  showShare?: boolean;
+  showDownload?: boolean;
+  showMove?: boolean;
+  showCopy?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
 };

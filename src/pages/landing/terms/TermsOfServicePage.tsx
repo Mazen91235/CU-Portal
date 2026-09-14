@@ -1,9 +1,9 @@
 import { PageSeo } from "../../../components/PageSeo";
 import { usePageLoading } from "../../../hooks/usePageLoading";
 
-import styles from "./TermsOfService.module.css";
+import styles from "./TermsOfServicePage.module.css";
 
-export const TermsOfService = () => {
+export const TermsOfServicePage = () => {
     usePageLoading(true);
     return (
         <>

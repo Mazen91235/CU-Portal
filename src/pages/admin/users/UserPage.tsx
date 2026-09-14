@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, Link } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -363,6 +363,12 @@ export const UserPage = () => {
                             <span className={styles.examsHeaderTitle}>
                                 Exams
                             </span>
+                            <Link
+                                to={`/admin/exams?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.examsListPublished}>
                             {user.exams_published &&
@@ -460,6 +466,12 @@ export const UserPage = () => {
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
+                            <Link
+                                to={`/admin/tasks?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.tasksListPublished}>
                             {user.tasks_published &&
@@ -559,6 +571,12 @@ export const UserPage = () => {
                             <span className={styles.announcementHeaderTitle}>
                                 Announcements
                             </span>
+                            <Link
+                                to={`/admin/announcements?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.announcementList}>
                             {user.announcements_published &&
@@ -638,6 +656,12 @@ export const UserPage = () => {
                             <span className={styles.eventsHeaderTitle}>
                                 Events
                             </span>
+                            <Link
+                                to={`/admin/events?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.eventsListPublished}>
                             {user.events && user.events.length > 0 ? (
@@ -753,6 +777,12 @@ export const UserPage = () => {
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
+                            <Link
+                                to={`/admin/materials?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.materialsList}>
                             {user.materials && user.materials.length > 0 ? (
@@ -839,6 +869,12 @@ export const UserPage = () => {
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
+                            <Link
+                                to={`/admin/courses?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.subjectsList}>
                             {user.subjects && user.subjects.length > 0 ? (
@@ -907,6 +943,12 @@ export const UserPage = () => {
                             <span className={styles.activityLogsHeaderTitle}>
                                 Activity Logs
                             </span>
+                            <Link
+                                to={`/admin/logs?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.activityLogsList}>
                             {user.logs && user.logs.length > 0 ? (

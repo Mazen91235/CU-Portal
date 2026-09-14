@@ -12,6 +12,7 @@ import IconComponent from "../IconComponent";
 
 import styles from "./Sidebar.module.css";
 import { captitalize } from "../../utils/Formatter";
+import { useLazyGetReleasesQuery } from "../../services/apis/user/ReleaseAPIs";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
@@ -57,11 +58,6 @@ const navSectionsDefault: NavSection[] = [
         icon: "sidebar-timeline",
       },
       {
-        label: "Weekly Guide",
-        path: "/user/week-guide",
-        icon: "sidebar-weekly-guide",
-      },
-      {
         label: "Tasks",
         path: "/user/tasks",
         icon: "sidebar-tasks",
@@ -88,10 +84,9 @@ const navSectionsDefault: NavSection[] = [
       },
       {
         label: "Other Materials",
-        // path: "/user/other-materials",
-        path: "#!",
+        path: "/user/other-materials",
         icon: "sidebar-other-materials",
-        badge: "Soon",
+        badge: "Beta",
         activatesPaths: ["/user/other-materials/"],
       },
       {
@@ -193,6 +188,18 @@ const navSectionsDefault: NavSection[] = [
       },
     ],
   },
+  {
+    title: "System",
+    links: [
+      {
+        label: "Releases",
+        path: "/user/system/releases",
+        icon: "sidebar-releases",
+        badge: "New",
+        activatesPaths: ["/user/system/releases/"],
+      },
+    ],
+  },
 ];
 
 const showAdminLinks = (permissions: string[]) => {
@@ -282,6 +289,13 @@ const showAdminLinks = (permissions: string[]) => {
       badge: "Beta",
       activatesPaths: ["/admin/materials/"],
     });
+    section.links.push({
+      label: "Other Materials",
+      path: "/admin/other-materials",
+      icon: "sidebar-admin-other-materials",
+      badge: "Beta",
+      activatesPaths: ["/admin/other-materials/"],
+    });
   }
 
   if (permissions.includes("View Grades")) {
@@ -349,16 +363,15 @@ const showAdminLinks = (permissions: string[]) => {
     });
   }
 
-  if (permissions.includes("View Weeks")) {
+  if (permissions.includes("View Releases")) {
     section.links.push({
-      label: "Weekly Guide",
-      path: "/admin/week-guide",
-      icon: "sidebar-weekly-guide",
-      badge: "Beta",
-      activatesPaths: ["/admin/week-guide/"],
+      label: "Releases",
+      path: "/admin/releases",
+      icon: "sidebar-admin-releases",
+      badge: "New",
+      activatesPaths: ["/admin/releases/"],
     });
   }
-
   section.links.push({
     label: "Roadmaps",
     // path: "/admin/roadmaps",
@@ -383,15 +396,6 @@ const showAdminLinks = (permissions: string[]) => {
     path: "#!",
     icon: "sidebar-admin-study-analysis",
     badge: "Soon",
-  });
-
-  section.links.push({
-    label: "Events",
-    // path: "/admin/events",
-    path: "#!",
-    icon: "sidebar-admin-events",
-    badge: "Soon",
-    activatesPaths: ["/admin/events/"],
   });
 
   section.links.push({
@@ -423,9 +427,25 @@ export const Sidebar = ({
   const permissions = useAppSelector((state) => state.user.permissions);
   const [logout] = useLazyLogoutQuery();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [latestVersion, setLatestVersion] = useState<null | string>(null);
+  const [getReleases] = useLazyGetReleasesQuery();
   const [navSections, setNavSections] = useState<NavSection[]>([
     ...navSectionsDefault,
   ]);
+
+  useEffect(() => {
+    getReleases({
+      data: {},
+      order_by: ["date"],
+      descending: true,
+      limit: 1,
+    })
+      .unwrap()
+      .then((result) => {
+        setLatestVersion(result.data?.[0]?.release_number ?? null);
+      })
+      .catch(() => undefined);
+  }, [getReleases]);
 
   useEffect(() => {
     if (permissions) {
@@ -438,12 +458,6 @@ export const Sidebar = ({
       }
     }
   }, [permissions]);
-
-  const toggleSection = (title: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
-    );
-  };
 
   const isLinkActive = (link: NavLink) => {
     if (location.pathname === link.path) return true;
@@ -479,6 +493,14 @@ export const Sidebar = ({
       return newExpanded;
     });
   }, [location.pathname, navSections]);
+
+  const toggleSection = (title: string) => {
+    setExpandedSections((previous) =>
+      previous.includes(title)
+        ? previous.filter((sectionTitle) => sectionTitle !== title)
+        : [...previous, title],
+    );
+  };
 
   const handleLogout = async () => {
     try {
@@ -569,8 +591,10 @@ export const Sidebar = ({
       </ul>
 
       <div className={styles.endingSidebar}>
-        <span>CU Portal</span>
+        <span>CU-Portal</span>
         <span>© 2026 All Rights Reserved</span>
+        <hr />
+        <span>{`V${latestVersion ?? "N/A"}`}</span>
       </div>
     </div>
   );

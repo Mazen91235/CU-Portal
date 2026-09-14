@@ -90,6 +90,7 @@ function WeeklyMaterialCard({ item }: { item: MaterialResponseDto }) {
         {fileData?.id && (
           <div className={styles.fileActionsMobile}>
             <MaterialActionsDropdown
+              onShare={() => {}}
               onDownload={handleDownload}
               onMove={() => {}}
               onCopy={() => {}}
