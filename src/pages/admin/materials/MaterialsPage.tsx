@@ -60,6 +60,7 @@ export function MaterialsPage() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const [searchParams, setSearchParams] = useSearchParams();
+    const authorId = searchParams.get("author_id");
     const [searchQuery, setSearchQuery] = useState("");
     const [facultyFilter, setFacultyFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -203,6 +204,7 @@ export function MaterialsPage() {
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? null,
                         query: searchQuery || undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                     includes: ["subject", "children", "attachment"],
                 }).unwrap();
@@ -211,7 +213,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, searchQuery, getMaterials, authorId], 
     );
 
     const fetchFolders = useCallback(
@@ -224,6 +226,7 @@ export function MaterialsPage() {
                         material_type: "folder",
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                 }).unwrap();
                 setFloatingFolders(response.data || []);
@@ -231,7 +234,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, getMaterials],
+        [subjectFilter, getMaterials, authorId],
     );
 
     const buildMaterialsPath = useCallback(
@@ -725,7 +728,6 @@ export function MaterialsPage() {
             }).unwrap();
 
             showToast("success", "Success", "Folder created successfully");
-
             // Refresh the materials list in the floating container
             if (parentId === null) {
                 setFloatingContainer((prev) => ({ ...prev, targetPath: [] }));
@@ -821,7 +823,6 @@ export function MaterialsPage() {
                 formData.show
             )
                 return;
-
             // Check if dragging files
             if (
                 e.dataTransfer?.items &&
@@ -833,7 +834,6 @@ export function MaterialsPage() {
                 setIsDraggingExternal(true);
             }
         };
-
         const handleDocumentMouseLeave = (e: MouseEvent) => {
             e.preventDefault();
             // Check if actually leaving the document
