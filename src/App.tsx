@@ -78,6 +78,7 @@ import { OtherMaterialsPage as UserOtherMaterialsPage } from "./pages/user/other
 import { NotificationsPage as UserNotificationsPage } from "./pages/user/notifications/NotificationsPage";
 import { PrivacyPolicy as PrivacyPolicyPage } from "./pages/user/terms/PrivacyPolicy";
 import { TermsOfService as TermsOfServicePage } from "./pages/user/terms/TermsOfService";
+import { TeamPage } from "./pages/landing/TeamPage";
 
 import "./App.css";
 function App() {
@@ -107,6 +108,7 @@ function App() {
                     path="terms-of-service"
                     element={<TermsOfServicePage />}
                 />
+                <Route path="our-team" element={<TeamPage />} />
                 <Route path="" element={<ProtectedRoute reverse={true} />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route

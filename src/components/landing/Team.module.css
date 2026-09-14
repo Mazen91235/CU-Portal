@@ -10,7 +10,7 @@
 
 .teamTitle {
     font-family: var(--primary-font-family);
-    font-size: 38px;
+    font-size: 42px;
     font-weight: var(--primary-font-weight-heavy);
     color: var(--primary-purple);
     text-align: center;
@@ -19,14 +19,14 @@
 }
 
 .teamMembers {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 2.5rem;
     justify-content: center;
     align-items: stretch;
     width: 100%;
     max-width: 1400px;
-    grid-auto-flow: row;
+    margin: 0 auto;
     position: relative;
     z-index: 1;
 }
@@ -185,4 +185,30 @@
         max-width: 300px;
         padding: 1.5rem 0.5rem;
     }
+}
+
+.viewAllContainer {
+    margin-top: 3.5rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.viewAllBtn {
+    background-color: var(--primary-purple, #7b1684);
+    color: white;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.viewAllBtn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }

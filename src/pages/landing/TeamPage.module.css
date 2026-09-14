@@ -1,0 +1,181 @@
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
+}
+
+.roleSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.roleCategoryTitle {
+    font-family: var(--primary-font-family);
+    font-size: 32px;
+    font-weight: var(--primary-font-weight-heavy, 800);
+    color: var(--primary-purple, #7b1684); 
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    width: 100%;
+}
+
+.roleCategoryTitle::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background-color: var(--primary-purple, #7b1684);
+    border-radius: 2px;
+}
+
+.teamMembers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.teamCard {
+    background: var(--white, #ffffff);
+    border-radius: var(--primary-border-radius, 12px);
+    height: auto;
+    width: 300px;
+    box-shadow: var(--dark-box-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+    padding: 3rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    transition: box-shadow 0.3s ease; 
+    position: relative;
+    overflow: hidden;
+}
+
+.teamCardSemicircle {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.teamIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: auto;
+}
+
+.teamName {
+    font-family: var(--primary-font-family);
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--primary-purple, #7b1684);
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.teamRole {
+    font-family: var(--primary-font-family);
+    font-size: var(--primary-font-size, 16px);
+    font-weight: 500;
+    color: var(--primary-purple, #7b1684);
+    text-align: center;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.8px;
+    line-height: 1.6;
+}
+
+.roleTitle {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #9d25a8;
+}
+
+.teamBadge {
+    font-size: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--primary-purple, #7b1684);
+    border: solid 1px var(--primary-purple, #7b1684);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--primary-border-radius, 8px);
+    font-weight: 600;
+    display: inline-block;
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    margin: 0;
+}
+
+.teamSocials {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+}
+
+.teamSocials a img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--white, #ffffff);
+    box-shadow: var(--light-box-shadow, 0 2px 4px rgba(0,0,0,0.05));
+    transition: transform 0.2s ease;
+}
+
+.teamSocials a img:hover {
+    transform: scale(1.15);
+}
+
+@media (max-width: 1280px) {
+    .teamMembers {
+        gap: 2rem;
+    }
+    .teamCard {
+        width: 260px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .teamMembers {
+        gap: 1.5rem;
+    }
+    .teamCard {
+        width: 45%; 
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem 1rem;
+    }
+    .teamMembers {
+        gap: 1.5rem;
+    }
+    .teamCard {
+        width: 100%;
+        max-width: 320px;
+    }
+}
