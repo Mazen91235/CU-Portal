@@ -13,6 +13,7 @@ import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 import { getCalendarDateKey } from "../../../utils/CalendarHandler";
@@ -54,7 +55,9 @@ type ReleaseDateGroup = {
 
 export function ReleasesPage() {
     const navigate = useNavigate();
-    const [versionFilter, setVersionFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const versionFilter = getFilter("version", "");
+    const setVersionFilter = getFilterSetter("version");
     const [releases, setReleases] = useState<ReleaseResponseDto[]>([]);
     const [versions, setVersions] = useState<VersionResponseDto[]>([]);
     const [latestRelease, setLatestRelease] =
@@ -62,34 +65,11 @@ export function ReleasesPage() {
     const [getReleases] = useLazyGetReleasesQuery();
     const [getVersions] = useLazyGetVersionsQuery();
 
-    const fetchReleases = useCallback(async () => {
+    const fetchVersions = useCallback(async () => {
         try {
-            const [releasesResult, latestResult, versionsResult] =
-                await Promise.all([
-                    getReleases({
-                        data: {
-                            release_version_id: versionFilter
-                                ? Number(versionFilter)
-                                : undefined,
-                        },
-                        includes: ["release_version", "release_items"],
-                        order_by: ["date"],
-                        descending: true,
-                        limit: 1000,
-                    }).unwrap(),
-                    getReleases({
-                        data: {},
-                        includes: ["release_version", "release_items"],
-                        order_by: ["date"],
-                        descending: true,
-                        limit: 1,
-                    }).unwrap(),
-                    getVersions().unwrap(),
-                ]);
-            setReleases(releasesResult.data ?? []);
-            setLatestRelease(latestResult.data?.[0] ?? null);
+            const result = await getVersions().unwrap();
             setVersions(
-                [...(versionsResult.data ?? [])].sort(
+                [...(result.data ?? [])].sort(
                     (first, second) =>
                         (second.version_number ?? 0) -
                         (first.version_number ?? 0),
@@ -98,8 +78,38 @@ export function ReleasesPage() {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getReleases, getVersions, versionFilter]);
+    }, [getVersions]);
 
+    const fetchReleases = useCallback(async () => {
+        try {
+            const [releasesResult, latestResult] = await Promise.all([
+                getReleases({
+                    data: {
+                        release_version_id: versionFilter
+                            ? Number(versionFilter)
+                            : undefined,
+                    },
+                    includes: ["release_version", "release_items"],
+                    order_by: ["date"],
+                    descending: true,
+                    limit: 1000,
+                }).unwrap(),
+                getReleases({
+                    data: {},
+                    includes: ["release_version", "release_items"],
+                    order_by: ["date"],
+                    descending: true,
+                    limit: 1,
+                }).unwrap(),
+            ]);
+            setReleases(releasesResult.data ?? []);
+            setLatestRelease(latestResult.data?.[0] ?? null);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getReleases, versionFilter]);
+
+    useAuthQuery(fetchVersions);
     useAuthQuery(fetchReleases);
 
     const releasesWithoutLatest = useMemo(

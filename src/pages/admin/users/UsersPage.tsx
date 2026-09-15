@@ -20,6 +20,7 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import IconComponent from "../../../components/IconComponent";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
@@ -29,10 +30,15 @@ import styles from "./UsersPage.module.css";
 export const UsersPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedFaculty, setSelectedFaculty] = useState("");
-    const [selectedDepartment, setSelectedDepartment] = useState("");
-    const [selectedYear, setSelectedYear] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query");
+    const setSearchQuery = getFilterSetter("query");
+    const selectedFaculty = getFilter("faculty_id");
+    const setSelectedFaculty = getFilterSetter("faculty_id");
+    const selectedDepartment = getFilter("department_id");
+    const setSelectedDepartment = getFilterSetter("department_id");
+    const selectedYear = getFilter("year_id");
+    const setSelectedYear = getFilterSetter("year_id");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [users, setUsers] = useState<UserResponseDto[]>([]);
@@ -84,20 +90,12 @@ export const UsersPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!selectedFaculty) {
-                setDepartments([]);
-                return;
-            }
-            const result = await searchDepartments({
-                data: {
-                    faculty_id: Number(selectedFaculty),
-                },
-            }).unwrap();
+            const result = await searchDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, selectedFaculty]);
+    }, [searchDepartments]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -158,25 +156,19 @@ export const UsersPage = () => {
         user,
     ]);
 
-    const authQueryParams = useCallback(
+    const authFilterQuery = useCallback(
         () =>
-            Promise.all([
-                fetchUsers(),
-                fetchUsersData(),
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-            ]),
-        [
-            fetchUsers,
-            fetchUsersData,
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-        ],
+            Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
+        [fetchFaculties, fetchDepartments, fetchYears],
     );
 
-    useAuthQuery(authQueryParams);
+    const authUsersQuery = useCallback(
+        () => Promise.all([fetchUsers(), fetchUsersData()]),
+        [fetchUsers, fetchUsersData],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authUsersQuery);
 
     useEffect(() => {
         setPage(1);
@@ -346,7 +338,7 @@ export const UsersPage = () => {
                     <div className={styles.filterSearch}>
                         <Search
                             placeholder="Search by name, email or phone number..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
                     {user?.canAccessAll && (

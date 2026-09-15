@@ -18,6 +18,7 @@ import {
     useLazyGetVersionsQuery,
 } from "../../../services/apis/admin/ReleaseAPIs";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import { NoContentSection } from "../../../components/section/NoContentSection";
@@ -25,10 +26,15 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 export function ReleasesPage() {
     const [releases, setReleases] = useState<ReleaseResponseDto[]>([]);
     const [versions, setVersions] = useState<VersionResponseDto[]>([]);
-    const [queryFilter, setQueryFilter] = useState("");
-    const [versionsFilter, setVersionsFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState("");
-    const [dateToFilter, setDateToFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const queryFilter = getFilter("query", "");
+    const setQueryFilter = getFilterSetter("query");
+    const versionsFilter = getFilter("release_version_id", "");
+    const setVersionsFilter = getFilterSetter("release_version_id");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [releaseToDelete, setReleaseToDelete] =
         useState<ReleaseResponseDto | null>(null);
     const navigation = useNavigate();
@@ -36,30 +42,36 @@ export function ReleasesPage() {
     const [getVersions] = useLazyGetVersionsQuery();
     const [deleteRelease] = useDeleteReleaseMutation();
 
-    const fetchReleases = useCallback(async () => {
+    const fetchVersions = useCallback(async () => {
         try {
-            const [releasesResult, versionsResult] = await Promise.all([
-                getReleases({
-                    data: {
-                        query: queryFilter || undefined,
-                        release_version_id: versionsFilter
-                            ? Number(versionsFilter)
-                            : undefined,
-                    },
-                    includes: ["release_version", "release_items"],
-                    order_by: ["date"],
-                    descending: true,
-                    limit: 1000,
-                }).unwrap(),
-                getVersions().unwrap(),
-            ]);
-            setReleases(releasesResult.data ?? []);
-            setVersions(versionsResult.data ?? []);
+            const result = await getVersions().unwrap();
+            setVersions(result.data ?? []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getReleases, getVersions, queryFilter, versionsFilter]);
+    }, [getVersions]);
 
+    const fetchReleases = useCallback(async () => {
+        try {
+            const result = await getReleases({
+                data: {
+                    query: queryFilter || undefined,
+                    release_version_id: versionsFilter
+                        ? Number(versionsFilter)
+                        : undefined,
+                },
+                includes: ["release_version", "release_items"],
+                order_by: ["date"],
+                descending: true,
+                limit: 1000,
+            }).unwrap();
+            setReleases(result.data ?? []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getReleases, queryFilter, versionsFilter]);
+
+    useAuthQuery(fetchVersions);
     useAuthQuery(fetchReleases);
 
     const latestRelease = useMemo(
@@ -173,10 +185,12 @@ export function ReleasesPage() {
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter}
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>

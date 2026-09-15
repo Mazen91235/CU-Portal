@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -8,6 +8,7 @@ import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { DateFilter } from "../../../components/forms/DateFilter";
 import { Table } from "../../../components/table/Table";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import {
     useLazyGetLogActionsQuery,
     useLazyGetLogEntitiesQuery,
@@ -43,16 +44,20 @@ const getLevelClass = (level?: string | null) => {
 
 export const LogsPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const { getFilter, getFilterSetter, searchParams } = useFilterSearchParams();
     const userId = searchParams.get("user_id");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [actionFilter, setActionFilter] = useState("");
-    const [entityFilter, setEntityFilter] = useState("");
-    const [levelFilter, setLevelFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    );
-    const [dateToFilter, setDateToFilter] = useState("");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const actionFilter = getFilter("action", "");
+    const setActionFilter = getFilterSetter("action");
+    const entityFilter = getFilter("entity", "");
+    const setEntityFilter = getFilterSetter("entity");
+    const levelFilter = getFilter("level", "");
+    const setLevelFilter = getFilterSetter("level");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [logs, setLogs] = useState<LogResponseDto[]>([]);
     const [getLogs] = useLazyGetLogsQuery();
     const [getLogActions] = useLazyGetLogActionsQuery();
@@ -178,7 +183,7 @@ export const LogsPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search logs by action, entity, user or code..."
-                        setValue={setSearchQuery}
+                        setValue={setSearchQuery} value={searchQuery}
                     />
                 </div>
                 <div className={styles.filtersRow}>
@@ -201,11 +206,13 @@ export const LogsPage = () => {
                         placeholder="Date From"
                         setValue={setDateFromFilter}
                         defaultDate={dateFromFilter}
-                    />
+                            value={dateFromFilter}
+                        />
                     <DateFilter
                         placeholder="Date To"
                         setValue={setDateToFilter}
-                    />
+                            value={dateToFilter}
+                        />
                 </div>
             </section>
             <section className={styles.tableSection}>

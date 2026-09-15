@@ -9,6 +9,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { PageSeo } from "../../../components/PageSeo";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
@@ -39,11 +40,17 @@ export function WeeksPage() {
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [dateFrom, setDateFrom] = useState("");
-    const [dateTo, setDateTo] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
+    const dateFrom = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFrom = getFilterSetter("date_from", true);
+    const dateTo = getFilter("date_to", "");
+    const setDateTo = getFilterSetter("date_to", true);
     const [weekToDelete, setWeekToDelete] = useState<WeekResponseDto | null>(
         null,
     );
@@ -91,16 +98,18 @@ export function WeeksPage() {
     const loadFilters = useCallback(async () => {
         if (!user?.canAccessAll) return;
         try {
-            const [facultyResult, yearResult] = await Promise.all([
+            const [facultyResult, departmentResult, yearResult] = await Promise.all([
                 getFaculties({ data: {} }).unwrap(),
+                getDepartments({ data: {} }).unwrap(),
                 getYears({ data: {} }).unwrap(),
             ]);
             setFaculties(facultyResult.data || []);
+            setDepartments(departmentResult.data || []);
             setYears(yearResult.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getFaculties, getYears, user?.canAccessAll]);
+    }, [getDepartments, getFaculties, getYears, user?.canAccessAll]);
 
     useEffect(() => {
         if (!user?.canAccessAll) {
@@ -110,25 +119,18 @@ export function WeeksPage() {
         }
     }, [user]);
 
-    useEffect(() => {
-        if (!user?.canAccessAll || !facultyFilter) {
-            setDepartments([]);
-            setDepartmentFilter("");
-            return;
-        }
-        setDepartmentFilter("");
-        void getDepartments({ data: { faculty_id: Number(facultyFilter) } })
-            .unwrap()
-            .then((result) => setDepartments(result.data || []))
-            .catch(handlePopupErrors);
-    }, [getDepartments, facultyFilter, user?.canAccessAll]);
-
-    const authQuery = useCallback(
-        () => Promise.all([fetch(), loadFilters()]),
-        [fetch, loadFilters],
+    const authFilterQuery = useCallback(
+        () => loadFilters(),
+        [loadFilters],
     );
 
-    useAuthQuery(authQuery);
+    const authWeeksQuery = useCallback(
+        () => fetch(),
+        [fetch],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authWeeksQuery);
 
     const removeWeek = async () => {
         if (!weekToDelete?.id) return;
@@ -196,10 +198,12 @@ export function WeeksPage() {
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFrom}
+                            value={dateFrom}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateTo}
+                            value={dateTo}
                         />
                     </div>
                 </div>

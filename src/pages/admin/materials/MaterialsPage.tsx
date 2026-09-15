@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import type { MaterialType } from "../../../types/entities/Material";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -27,6 +27,7 @@ import {
 } from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -56,15 +57,18 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
     const authorId = searchParams.get("author_id");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -107,8 +111,9 @@ export function MaterialsPage() {
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
-    const subjectFilter = routeSubjectId ?? "";
-    const currentParentId = routeParentId ? Number(routeParentId) : null;
+    const subjectFilter = getFilter("subject_id");
+    const parentFilter = getFilter("parent_id");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
     const selectedSubject = useMemo(
         () =>
             subjects.find((subject) => String(subject.id) === subjectFilter) ??
@@ -142,20 +147,12 @@ export function MaterialsPage() {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!facultyFilter) {
-                setDepartments([]);
-                return;
-            }
-            const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                },
-            }).unwrap();
+            const result = await searchDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -169,36 +166,19 @@ export function MaterialsPage() {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            const params: {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-            } = {};
-            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-            if (departmentFilter)
-                params.department_id = parseInt(departmentFilter);
-            if (yearFilter) params.year_id = parseInt(yearFilter);
-
-            if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id ?? undefined;
-                setFacultyFilter(user.faculty?.id?.toString() || "");
-                params.department_id = user.department?.id ?? undefined;
-                setDepartmentFilter(user.department?.id?.toString() || "");
-                params.year_id = user.year?.id ?? undefined;
-                setYearFilter(user.year?.id?.toString() || "");
-            }
-
-            if (Object.keys(params).length < 3) {
-                setSubjects([]);
-                return;
-            }
-
-            const result = await searchCourses({ data: params }).unwrap();
+            const data = user.canAccessAll
+                ? {}
+                : {
+                      faculty_id: user.faculty?.id ?? undefined,
+                      department_id: user.department?.id ?? undefined,
+                      year_id: user.year?.id ?? undefined,
+                  };
+            const result = await searchCourses({ data }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+    }, [searchCourses, user]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -248,14 +228,16 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!subjectValue) return "/admin/materials";
-            const subjectSegment = String(subjectValue);
-            if (!parentValue) {
-                return `/admin/materials/${subjectSegment}`;
-            }
-            return `/admin/materials/${subjectSegment}/${parentValue}`;
+            const params = new URLSearchParams(searchParams);
+            if (subjectValue) params.set("subject_id", String(subjectValue));
+            else params.delete("subject_id");
+            if (parentValue) params.set("parent_id", String(parentValue));
+            else params.delete("parent_id");
+            params.delete("material_id");
+            const query = params.toString();
+            return `/admin/materials${query ? `?${query}` : ""}`;
         },
-        [],
+        [searchParams],
     );
 
     const loadCurrentPath = useCallback(
@@ -291,28 +273,18 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authQueryParams = useCallback(
-        async () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchSubjects(),
-                fetchMaterials(currentParentId),
-                fetchFolders(currentParentId),
-            ]),
-        [
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchSubjects,
-            fetchMaterials,
-            fetchFolders,
-            currentParentId,
-        ],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears(), fetchSubjects()]),
+        [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authMaterialsQuery = useCallback(
+        () => Promise.all([fetchMaterials(currentParentId), fetchFolders(currentParentId)]),
+        [fetchMaterials, fetchFolders, currentParentId],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
         if (!subjectFilter) {
@@ -553,12 +525,19 @@ export function MaterialsPage() {
                             : "Material created successfully",
                     );
                 } else {
-                    const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+                    const url = new URL(
+                        buildMaterialsPath(
+                            subjectFilter,
+                            currentPath[currentPath.length - 1]?.id ?? null,
+                        ),
+                        window.location.origin,
+                    );
+                    url.searchParams.set("material_id", String(result.data?.id ?? ""));
                     dispatch(
                         setProcess({
                             ...uploadResult,
                             status: "completed",
-                            url,
+                            url: `${url.pathname}${url.search}`,
                         }),
                     );
                 }
@@ -631,7 +610,9 @@ export function MaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `?material_id=${materialId}`;
+            const previewUrl = new URL(url, window.location.origin);
+            previewUrl.searchParams.set("material_id", String(materialId ?? ""));
+            url = previewUrl.toString();
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -783,7 +764,9 @@ export function MaterialsPage() {
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setSearchParams({}, { replace: true });
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.delete("material_id");
+                setSearchParams(nextParams, { replace: true });
             }
         }
     }, [searchParams, materials, handlePreview, setSearchParams]);
@@ -811,12 +794,18 @@ export function MaterialsPage() {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "All Departments" },
-            ...departments.map((dept) => ({
-                value: dept.id?.toString() || "",
-                label: dept.name || "",
-            })),
+            ...departments
+                .filter(
+                    (dept) =>
+                        !facultyFilter ||
+                        dept.faculty?.id?.toString() === facultyFilter,
+                )
+                .map((dept) => ({
+                    value: dept.id?.toString() || "",
+                    label: dept.name || "",
+                })),
         ],
-        [departments],
+        [departments, facultyFilter],
     );
 
     const yearOptions = useMemo(
@@ -833,12 +822,22 @@ export function MaterialsPage() {
     const subjectOptions = useMemo(
         () => [
             { value: "", label: "All Courses" },
-            ...subjects.map((subject) => ({
-                value: subject.id?.toString() || "",
-                label: subject.name || "",
-            })),
+            ...subjects
+                .filter(
+                    (subject) =>
+                        (!facultyFilter ||
+                            subject.faculty?.id?.toString() === facultyFilter) &&
+                        (!departmentFilter ||
+                            subject.department?.id?.toString() === departmentFilter) &&
+                        (!yearFilter ||
+                            subject.year?.id?.toString() === yearFilter),
+                )
+                .map((subject) => ({
+                    value: subject.id?.toString() || "",
+                    label: subject.name || "",
+                })),
         ],
-        [subjects],
+        [subjects, facultyFilter, departmentFilter, yearFilter],
     );
 
     // Handle global drag events for file upload
@@ -938,9 +937,22 @@ export function MaterialsPage() {
                 },
             }).unwrap();
 
-            const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+            const url = new URL(
+                buildMaterialsPath(
+                    subjectFilter,
+                    currentPath[currentPath.length - 1]?.id ?? null,
+                ),
+                window.location.origin,
+            );
+            url.searchParams.set("material_id", String(result.data?.id ?? ""));
 
-            dispatch(setProcess({ ...uploadResult, status: "completed", url }));
+            dispatch(
+                setProcess({
+                    ...uploadResult,
+                    status: "completed",
+                    url: `${url.pathname}${url.search}`,
+                }),
+            );
             setCurrentPath((prev) => {
                 const latestParentId =
                     (prev.length > 0 ? prev[prev.length - 1] : null)?.id ??
@@ -1077,7 +1089,7 @@ export function MaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
                         <div className={styles.actionsContainer}>

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import { useLazyGetDepartmentQuery } from "../../../services/apis/user/DepartmentAPIs";
@@ -15,6 +15,7 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -36,15 +37,16 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
-    const {
-        studyType,
-        departmentId,
-        yearId,
-        subjectId: routeSubjectId,
-        parentId: routeParentId,
-    } = useParams();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const studyType = getFilter("study_type", "");
+    const departmentId = getFilter("department_id", "");
+    const yearId = getFilter("year_id", "");
+    const subjectFilter = getFilter("subject_id", "");
+    const currentParentId = getFilter("parent_id", "")
+        ? Number(getFilter("parent_id"))
+        : null;
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
 
     const user = useAppSelector((state) => state.user.user);
 
@@ -63,9 +65,6 @@ export function OtherMaterialsPage() {
     } | null>(null);
     const [shouldDownload, setShouldDownload] = useState(false);
     const downloadLink = useRef<HTMLAnchorElement>(null);
-    const subjectFilter = routeSubjectId ?? "";
-    const currentParentId = routeParentId ? Number(routeParentId) : null;
-
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
@@ -144,16 +143,18 @@ export function OtherMaterialsPage() {
             if (!studyType || !departmentId || !yearId) {
                 return "/user/other-materials";
             }
-            if (!subjectValue) {
-                return `/user/other-materials/${studyType}/${departmentId}/${yearId}`;
-            }
-            const subjectSegment = String(subjectValue);
-            if (!parentValue) {
-                return `/user/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}`;
-            }
-            return `/user/other-materials/${studyType}/${departmentId}/${yearId}/${subjectSegment}/${parentValue}`;
+            const params = new URLSearchParams(searchParams);
+            params.set("study_type", studyType);
+            params.set("department_id", departmentId);
+            params.set("year_id", yearId);
+            if (subjectValue) params.set("subject_id", String(subjectValue));
+            else params.delete("subject_id");
+            if (parentValue) params.set("parent_id", String(parentValue));
+            else params.delete("parent_id");
+            params.delete("material_id");
+            return `/user/other-materials/materials?${params.toString()}`;
         },
-        [studyType, departmentId, yearId],
+        [studyType, departmentId, yearId, searchParams],
     );
 
     const loadCurrentPath = useCallback(
@@ -184,24 +185,18 @@ export function OtherMaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authQueryParams = useCallback(
-        async () =>
-            Promise.all([
-                fetchDepartment(),
-                fetchYear(),
-                fetchSubjects(),
-                fetchMaterials(currentParentId),
-            ]),
-        [
-            fetchDepartment,
-            fetchYear,
-            fetchSubjects,
-            fetchMaterials,
-            currentParentId,
-        ],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchDepartment(), fetchYear(), fetchSubjects()]),
+        [fetchDepartment, fetchYear, fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authMaterialsQuery = useCallback(
+        () => fetchMaterials(currentParentId),
+        [fetchMaterials, currentParentId],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
         if (!studyType || !departmentId || !yearId) {
@@ -299,7 +294,9 @@ export function OtherMaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `?material_id=${materialId}`;
+            const params = new URLSearchParams(searchParams);
+            if (materialId !== undefined) params.set("material_id", String(materialId));
+            url = `${window.location.origin}${url.split("?")[0]}?${params.toString()}`;
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -324,7 +321,9 @@ export function OtherMaterialsPage() {
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setSearchParams({}, { replace: true });
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.delete("material_id");
+                setSearchParams(nextParams, { replace: true });
             }
         }
     }, [searchParams, materials, handlePreview, setSearchParams]);
@@ -377,11 +376,11 @@ export function OtherMaterialsPage() {
                     yearName={year?.year?.toString()}
                     onChangeHome={() => navigate("/user/other-materials")}
                     onChangeStudyType={() =>
-                        navigate(`/user/other-materials/${studyType}`)
+                        navigate(`/user/other-materials?study_type=${studyType}`)
                     }
                     onChangeDepartment={() =>
                         navigate(
-                            `/user/other-materials/${studyType}/${departmentId}`,
+                            `/user/other-materials/years?study_type=${studyType}&department_id=${departmentId}`,
                         )
                     }
                 />
@@ -401,7 +400,7 @@ export function OtherMaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
                     </div>

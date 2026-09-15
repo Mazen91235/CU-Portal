@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useLazyGetTasksQuery } from "../../../services/apis/user/TaskAPIs";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -23,17 +24,19 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export const TasksPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const subjectFilter = getFilter("subject_id", "");
+    const setSubjectFilter = getFilterSetter("subject_id");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    ); // Set default date to today's date in "YYYY-MM-DD" format
-    const [dateToFilter, setDateToFilter] = useState("");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getTasks, { isFetching }] = useLazyGetTasksQuery();
 
@@ -81,24 +84,23 @@ export const TasksPage = () => {
         hasNextPage,
     ]);
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchSubjects(), fetchTasks()]),
-        [fetchSubjects, fetchTasks],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchSubjects()]),
+        [fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchTasksQuery = useCallback(
+        () => fetchTasks(),
+        [fetchTasks],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchTasksQuery);
 
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
-
-    useEffect(() => {
-        const subject_id = searchParams.get("subject_id") || "";
-        if (subject_id && subjects.length > 0) {
-            setSubjectFilter(subject_id);
-        }
-    }, [searchParams, subjects]);
 
     const handleViewTask = (taskId: number) => {
         navigate(`/user/tasks/${taskId}`);
@@ -146,7 +148,7 @@ export const TasksPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search tasks..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
 
@@ -160,10 +162,12 @@ export const TasksPage = () => {
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>

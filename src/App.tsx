@@ -186,40 +186,18 @@ function App() {
                         />
                     </Route>
 
-                    <Route path="materials">
-                        <Route index element={<UserMaterialsPage />} />
-                        <Route
-                            path=":subjectId"
-                            element={<UserMaterialsPage />}
-                        />
-                        <Route
-                            path=":subjectId/:parentId"
-                            element={<UserMaterialsPage />}
-                        />
-                    </Route>
+                    <Route path="materials" element={<UserMaterialsPage />} />
                     <Route path="other-materials">
                         <Route
                             index
                             element={<UserOtherMaterialsDepartmentsPage />}
                         />
                         <Route
-                            path=":studyType"
-                            element={<UserOtherMaterialsDepartmentsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId"
+                            path="years"
                             element={<UserOtherMaterialsYearsPage />}
                         />
                         <Route
-                            path=":studyType/:departmentId/:yearId"
-                            element={<UserOtherMaterialsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId/:yearId/:subjectId"
-                            element={<UserOtherMaterialsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+                            path="materials"
                             element={<UserOtherMaterialsPage />}
                         />
                     </Route>
@@ -443,11 +421,6 @@ function App() {
                         element={<ProtectedRoute permission="View Materials" />}
                     >
                         <Route index element={<MaterialsPage />} />
-                        <Route path=":subjectId" element={<MaterialsPage />} />
-                        <Route
-                            path=":subjectId/:parentId"
-                            element={<MaterialsPage />}
-                        />
                     </Route>
 
                     <Route
@@ -466,23 +439,11 @@ function App() {
                             element={<OtherMaterialsDepartmentsPage />}
                         />
                         <Route
-                            path=":studyType"
-                            element={<OtherMaterialsDepartmentsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId"
+                            path="years"
                             element={<OtherMaterialsYearsPage />}
                         />
                         <Route
-                            path=":studyType/:departmentId/:yearId"
-                            element={<OtherMaterialsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId/:yearId/:subjectId"
-                            element={<OtherMaterialsPage />}
-                        />
-                        <Route
-                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+                            path="materials"
                             element={<OtherMaterialsPage />}
                         />
                     </Route>

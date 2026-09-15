@@ -22,6 +22,7 @@ import styles from "./YearsPage.module.css";
 import { Layout } from "../../../components/layout/Layout";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 
 const yearSchema = z.object({
     year: z
@@ -37,7 +38,9 @@ const yearSchema = z.object({
 type YearFormData = z.infer<typeof yearSchema>;
 
 export const YearsPage = () => {
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -145,7 +148,7 @@ export const YearsPage = () => {
 
     const yearOptions = [
         { value: "", label: "Academic Year" },
-        ...uniqueYears.map((year) => ({ value: year, label: year })),
+        ...uniqueYears.map((year) => ({ value: String(year), label: String(year) })),
     ];
 
     return (
@@ -167,6 +170,7 @@ export const YearsPage = () => {
                         <div className={styles["filter-section"]}>
                             <SelectFilter
                                 setValue={setYearFilter}
+                                value={yearFilter}
                                 options={yearOptions}
                             />
                         </div>

@@ -15,13 +15,16 @@ import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import styles from "./RolesPage.module.css";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
 
 export const RolesPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [roles, setRoles] = useState<RoleResponseDto[]>([]);
     const [permissionsCount, setPermissionsCount] = useState<number>(0);
     const [filteredRoles, setFilteredRoles] = useState<RoleResponseDto[]>([]);
@@ -155,7 +158,7 @@ export const RolesPage = () => {
             <div className={styles.searchSection}>
                 <Search
                     placeholder="Search roles..."
-                    setValue={setSearchQuery}
+                    setValue={setSearchQuery} value={searchQuery}
                 />
             </div>
 

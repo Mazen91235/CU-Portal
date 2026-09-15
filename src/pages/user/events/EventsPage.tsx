@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useLazyGetEventsQuery } from "../../../services/apis/user/EventAPIs";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
@@ -23,13 +24,17 @@ import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganiz
 
 export const EventsPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [eventTypeFilter, setEventTypeFilter] = useState("");
-    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    );
-    const [dateToFilter, setDateToFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const eventTypeFilter = getFilter("event_type", "");
+    const setEventTypeFilter = getFilterSetter("event_type");
+    const eventOrganizerFilter = getFilter("event_organizer_id", "");
+    const setEventOrganizerFilter = getFilterSetter("event_organizer_id");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [eventOrganizers, setEventOrganizers] = useState<
         EventOrganizerResponseDto[]
     >([]);
@@ -109,11 +114,18 @@ export const EventsPage = () => {
         searchQuery,
     ]);
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchEvents(), fetchEventOrganizers()]),
-        [fetchEvents, fetchEventOrganizers],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchEventOrganizers()]),
+        [fetchEventOrganizers],
     );
-    useAuthQuery(authQueryParams);
+
+    const authFetchEventsQuery = useCallback(
+        () => fetchEvents(),
+        [fetchEvents],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchEventsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -167,26 +179,28 @@ export const EventsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search events..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
                     <div className={styles.filtersRow}>
                         <SelectFilter
                             options={eventOrganizerOptions}
-                            setValue={setEventOrganizerFilter}
+                            setValue={setEventOrganizerFilter} value={eventOrganizerFilter}
                         />
                         <SelectFilter
                             options={eventTypeOptions}
-                            setValue={setEventTypeFilter}
+                            setValue={setEventTypeFilter} value={eventTypeFilter}
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter}
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>

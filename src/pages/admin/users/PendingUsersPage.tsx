@@ -22,16 +22,22 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { GetDriveIdFromUrl } from "../../../utils/DriveManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import IconComponent from "../../../components/IconComponent";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./PendingUsersPage.module.css";
 
 export const PendingUsersPage = () => {
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const user = useAppSelector((state) => state.user.user);
-    const [selectedFaculty, setSelectedFaculty] = useState("");
-    const [selectedDepartment, setSelectedDepartment] = useState("");
-    const [selectedYear, setSelectedYear] = useState("");
+    const selectedFaculty = getFilter("faculty_id", "");
+    const setSelectedFaculty = getFilterSetter("faculty_id");
+    const selectedDepartment = getFilter("department_id", "");
+    const setSelectedDepartment = getFilterSetter("department_id");
+    const selectedYear = getFilter("year_id", "");
+    const setSelectedYear = getFilterSetter("year_id");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [pendingUsers, setPendingUsers] = useState<UserResponseDto[]>([]);
@@ -65,18 +71,12 @@ export const PendingUsersPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const params: { faculty_id?: number } = {};
-            if (!selectedFaculty) {
-                setDepartments([]);
-                return;
-            }
-            params.faculty_id = Number(selectedFaculty);
-            const result = await searchDepartments({ data: params }).unwrap();
+            const result = await searchDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, selectedFaculty]);
+    }, [searchDepartments]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -144,18 +144,18 @@ export const PendingUsersPage = () => {
         user,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchPendingUsers(),
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-            ]),
-        [fetchPendingUsers, fetchFaculties, fetchDepartments, fetchYears],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
+        [fetchFaculties, fetchDepartments, fetchYears],
     );
 
-    useAuthQuery(authQueryParams);
+    const authPendingUsersQuery = useCallback(
+        () => fetchPendingUsers(),
+        [fetchPendingUsers],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authPendingUsersQuery);
 
     useEffect(() => {
         setPage(1);
@@ -175,12 +175,18 @@ export const PendingUsersPage = () => {
     const departmentOptions = useMemo(() => {
         return [
             { value: "", label: "All Departments" },
-            ...departments.map((d: DepartmentResponseDto) => ({
-                value: String(d.id),
-                label: d.name || "",
-            })),
+            ...departments
+                .filter(
+                    (department: DepartmentResponseDto) =>
+                        !selectedFaculty ||
+                        department.faculty?.id?.toString() === selectedFaculty,
+                )
+                .map((department: DepartmentResponseDto) => ({
+                    value: String(department.id),
+                    label: department.name || "",
+                })),
         ];
-    }, [departments]);
+    }, [departments, selectedFaculty]);
 
     const yearOptions = useMemo(() => {
         return [
@@ -321,7 +327,7 @@ export const PendingUsersPage = () => {
                     <div className={styles.filterSearch}>
                         <Search
                             placeholder="Search by name, email or phone number..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
                     {user?.canAccessAll && (

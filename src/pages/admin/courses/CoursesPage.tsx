@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
@@ -14,6 +14,7 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -28,14 +29,18 @@ import styles from "./CoursesPage.module.css";
 
 export const CoursesPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const userId = searchParams.get("user_id");
 
     const user = useAppSelector((state) => state.user.user);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setFilters } = useFilterSearchParams();
+    const userId = searchParams.get("user_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -63,21 +68,12 @@ export const CoursesPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!facultyFilter) {
-                setDepartments([]);
-                return;
-            }
-            const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type: undefined,
-                },
-            }).unwrap();
+            const result = await searchDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -91,7 +87,7 @@ export const CoursesPage = () => {
     const fetchCourses = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params: any = {
+            const params = {
                 faculty_id: parseInt(facultyFilter) || undefined,
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
@@ -104,7 +100,7 @@ export const CoursesPage = () => {
                 params.year_id = user.year?.id ?? undefined;
             }
             const result = await getCourses({
-                data: params as any,
+                data: params,
                 includes: [
                     "faculty",
                     "department",
@@ -139,18 +135,18 @@ export const CoursesPage = () => {
         userId,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchCourses(),
-            ]),
-        [fetchFaculties, fetchDepartments, fetchYears, fetchCourses],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
+        [fetchFaculties, fetchDepartments, fetchYears],
     );
 
-    useAuthQuery(authQueryParams);
+    const authCoursesQuery = useCallback(
+        () => fetchCourses(),
+        [fetchCourses],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authCoursesQuery);
 
     useEffect(() => {
         setPage(1);
@@ -198,10 +194,6 @@ export const CoursesPage = () => {
         }
     };
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
     const facultyOptions = useMemo(
         () => [
             { value: "", label: "Faculty" },
@@ -216,12 +208,18 @@ export const CoursesPage = () => {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "Department" },
-            ...departments.map((dept) => ({
+            ...departments
+                .filter(
+                    (dept) =>
+                        !facultyFilter ||
+                        dept.faculty?.id?.toString() === facultyFilter,
+                )
+                .map((dept) => ({
                 value: dept.id?.toString() || "",
                 label: dept.name || "",
-            })),
+                })),
         ],
-        [departments],
+        [departments, facultyFilter],
     );
 
     const yearOptions = useMemo(
@@ -253,22 +251,22 @@ export const CoursesPage = () => {
                         <div className={styles.searchRow}>
                             <Search
                                 placeholder="Search by course name or code"
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
                         {user?.canAccessAll && (
                             <div className={styles.filtersRow}>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) => setFilters({ faculty_id: value as string, department_id: null })} value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={setDepartmentFilter} value={departmentFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={setYearFilter} value={yearFilter}
                                 />
                             </div>
                         )}

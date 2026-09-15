@@ -167,7 +167,7 @@ export const CoursePage = () => {
                                 text="View Materials"
                                 loadingText="Viewing Materials..."
                                 onClick={() =>
-                                    navigate("/user/materials/" + course.id)
+                                    navigate(`/user/materials?subject_id=${course.id}`)
                                 }
                                 type="button"
                                 isSubmitting={false}

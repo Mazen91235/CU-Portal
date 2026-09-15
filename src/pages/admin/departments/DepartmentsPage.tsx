@@ -26,6 +26,7 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import styles from "./DepartmentsPage.module.css";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { Layout } from "../../../components/layout/Layout";
 
 const departmentSchema = z.object({
@@ -38,9 +39,13 @@ const departmentSchema = z.object({
 type DepartmentFormData = z.infer<typeof departmentSchema>;
 
 export const DepartmentsPage = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [studyTypeFilter, setStudyTypeFilter] = useState<string>("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const studyTypeFilter = getFilter("study_type", "");
+    const setStudyTypeFilter = getFilterSetter("study_type");
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -79,11 +84,7 @@ export const DepartmentsPage = () => {
     const fetchDepartments = useCallback(async () => {
         try {
             const result = await getDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type:
-                        (studyTypeFilter as DepartmentStudyType) || undefined,
-                },
+                data: {},
                 includes: ["faculty"],
                 limit: 1e6,
             }).unwrap();
@@ -91,14 +92,20 @@ export const DepartmentsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, facultyFilter, studyTypeFilter]);
+    }, [getDepartments]);
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments()]),
-        [fetchFaculties, fetchDepartments],
+    const authFilterQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
     );
 
-    useAuthQuery(authQueryParams);
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authDepartmentsQuery);
 
     const filteredDepartments = useMemo(
         () =>
@@ -110,9 +117,13 @@ export const DepartmentsPage = () => {
                     dept.code
                         ?.toLowerCase()
                         .includes(searchQuery.toLowerCase());
-                return matchesSearch;
+                const matchesFaculty =
+                    !facultyFilter || dept.faculty?.id?.toString() === facultyFilter;
+                const matchesStudyType =
+                    !studyTypeFilter || dept.study_type === studyTypeFilter;
+                return matchesSearch && matchesFaculty && matchesStudyType;
             }),
-        [departments, searchQuery],
+        [departments, searchQuery, facultyFilter, studyTypeFilter],
     );
     const handleOpenForm = (department?: DepartmentResponseDto) => {
         if (department) {
@@ -250,16 +261,18 @@ export const DepartmentsPage = () => {
                             <div className={styles["search-wrapper"]}>
                                 <Search
                                     placeholder="Search departments..."
-                                    setValue={setSearchQuery}
+                                    setValue={setSearchQuery} value={searchQuery}
                                 />
                             </div>
                             <div className={styles["filters-wrapper"]}>
                                 <SelectFilter
                                     setValue={setFacultyFilter}
+                                    value={facultyFilter}
                                     options={facultyOptions}
                                 />
                                 <SelectFilter
                                     setValue={setStudyTypeFilter}
+                                    value={studyTypeFilter}
                                     options={studyTypeOptions}
                                 />
                             </div>

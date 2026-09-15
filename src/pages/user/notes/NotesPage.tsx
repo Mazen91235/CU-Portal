@@ -20,16 +20,19 @@ import {
 } from "../../../services/apis/user/NoteAPIs";
 import type { NoteResponseDto } from "../../../types/dtos/NoteDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDate } from "../../../utils/Formatter";
 import styles from "./NotesPage.module.css";
 
 export const NotesPage = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [dateFrom, setDateFrom] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    );
-    const [dateTo, setDateTo] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const dateFrom = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFrom = getFilterSetter("date_from", true);
+    const dateTo = getFilter("date_to", "");
+    const setDateTo = getFilterSetter("date_to", true);
     const [notes, setNotes] = useState<NoteResponseDto[]>([]);
     const [editingNote, setEditingNote] = useState<NoteResponseDto | null>(
         null,
@@ -124,7 +127,7 @@ export const NotesPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search notes..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
                     <div className={styles.filtersRow}>
@@ -132,10 +135,12 @@ export const NotesPage = () => {
                             placeholder="Date From"
                             setValue={setDateFrom}
                             defaultDate={dateFrom}
+                            value={dateFrom}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateTo}
+                            value={dateTo}
                         />
                     </div>
                 </div>

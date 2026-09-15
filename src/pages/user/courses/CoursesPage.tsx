@@ -12,6 +12,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -27,9 +28,13 @@ export const CoursesPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
 
     const [registeredCourses, setRegisteredCourses] = useState<
         SubjectResponseDto[]
@@ -83,17 +88,18 @@ export const CoursesPage = () => {
         }
     }, [getYears]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchEnrolledCourses(),
-                fetchDepartments(),
-                fetchYears(),
-            ]),
-        [fetchEnrolledCourses, fetchDepartments, fetchYears],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchDepartments(), fetchYears()]),
+        [fetchDepartments, fetchYears],
     );
 
-    useAuthQuery(authQueryParams);
+    const authCoursesQuery = useCallback(
+        () => fetchEnrolledCourses(),
+        [fetchEnrolledCourses],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authCoursesQuery);
 
     const generalDepartment = useMemo(
         () =>
@@ -290,7 +296,7 @@ export const CoursesPage = () => {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search by course name or code"
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
 

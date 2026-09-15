@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import {
     useLazyGetMaterialsQuery,
@@ -10,6 +10,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
@@ -30,9 +31,9 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
 
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
@@ -43,8 +44,9 @@ export function MaterialsPage() {
     } | null>(null);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
-    const subjectFilter = routeSubjectId ?? "";
-    const currentParentId = routeParentId ? Number(routeParentId) : null;
+    const subjectFilter = getFilter("subject_id");
+    const parentFilter = getFilter("parent_id");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
 
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
@@ -85,14 +87,16 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!subjectValue) return "/user/materials";
-            const subjectSegment = String(subjectValue);
-            if (!parentValue) {
-                return `/user/materials/${subjectSegment}`;
-            }
-            return `/user/materials/${subjectSegment}/${parentValue}`;
+            const params = new URLSearchParams(searchParams);
+            if (subjectValue) params.set("subject_id", String(subjectValue));
+            else params.delete("subject_id");
+            if (parentValue) params.set("parent_id", String(parentValue));
+            else params.delete("parent_id");
+            params.delete("material_id");
+            const query = params.toString();
+            return `/user/materials${query ? `?${query}` : ""}`;
         },
-        [],
+        [searchParams],
     );
 
     const loadCurrentPath = useCallback(
@@ -123,13 +127,18 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authQueryParams = useCallback(
-        async () =>
-            Promise.all([fetchSubjects(), fetchMaterials(currentParentId)]),
-        [fetchSubjects, fetchMaterials, currentParentId],
+    const authFilterQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authMaterialsQuery = useCallback(
+        () => fetchMaterials(currentParentId),
+        [fetchMaterials, currentParentId],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
         setSelectedMaterials([]);
@@ -221,7 +230,9 @@ export function MaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `?material_id=${materialId}`;
+            const previewUrl = new URL(url, window.location.origin);
+            previewUrl.searchParams.set("material_id", String(materialId ?? ""));
+            url = previewUrl.toString();
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -246,7 +257,9 @@ export function MaterialsPage() {
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setSearchParams({}, { replace: true });
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.delete("material_id");
+                setSearchParams(nextParams, { replace: true });
             }
         }
     }, [searchParams, materials, handlePreview, setSearchParams]);
@@ -301,7 +314,7 @@ export function MaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
                     </div>

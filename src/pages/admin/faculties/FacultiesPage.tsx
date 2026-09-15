@@ -22,6 +22,7 @@ import { Layout } from "../../../components/layout/Layout";
 import styles from "./FacultiesPage.module.css";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 
 const facultySchema = z.object({
     name: z.string().min(1, "Faculty name is required"),
@@ -30,7 +31,9 @@ const facultySchema = z.object({
 type FacultyFormData = z.infer<typeof facultySchema>;
 
 export const FacultiesPage = () => {
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -151,7 +154,7 @@ export const FacultiesPage = () => {
                         <div className={styles["search-section"]}>
                             <Search
                                 placeholder="Search faculties"
-                                setValue={setSearchQuery}
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
 

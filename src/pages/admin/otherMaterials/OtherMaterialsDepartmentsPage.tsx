@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -8,6 +8,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import type { DepartmentStudyType } from "../../../types/entities/Department";
@@ -16,7 +17,8 @@ import styles from "./OtherMaterialsDepartmentsPage.module.css";
 
 export function OtherMaterialsDepartmentsPage() {
     const navigate = useNavigate();
-    const { studyType } = useParams();
+    const { getFilter } = useFilterSearchParams();
+    const studyType = getFilter("study_type", "");
     const user = useAppSelector((state) => state.user.user);
 
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -67,7 +69,7 @@ export function OtherMaterialsDepartmentsPage() {
                                 key={type}
                                 title={type}
                                 onClick={() =>
-                                    navigate(`/admin/other-materials/${type}`)
+                                    navigate(`/admin/other-materials?study_type=${type}`)
                                 }
                             />
                         ))}
@@ -85,7 +87,7 @@ export function OtherMaterialsDepartmentsPage() {
                                 title={department.name}
                                 onClick={() =>
                                     navigate(
-                                        `/admin/other-materials/${studyType}/${department.id}`,
+                                        `/admin/other-materials/years?study_type=${studyType}&department_id=${department.id}`,
                                     )
                                 }
                             />

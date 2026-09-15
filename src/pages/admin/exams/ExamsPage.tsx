@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import {
     useLazyGetExamsQuery,
     useDeleteExamMutation,
@@ -16,6 +16,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -34,18 +35,23 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const authorId = searchParams.get("author_id");
     const user = useAppSelector((state) => state.user.user);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    ); // Set default date to today's date in "YYYY-MM-DD" format
-    const [dateToFilter, setDateToFilter] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setFilters } = useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
+    const subjectFilter = getFilter("subject_id", "");
+    const setSubjectFilter = getFilterSetter("subject_id");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -76,21 +82,12 @@ export const ExamsPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!facultyFilter) {
-                setDepartments([]);
-                return;
-            }
-            const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type: undefined,
-                },
-            }).unwrap();
+            const result = await searchDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -104,33 +101,19 @@ export const ExamsPage = () => {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            const params: {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-            } = {};
-            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-            if (departmentFilter)
-                params.department_id = parseInt(departmentFilter);
-            if (yearFilter) params.year_id = parseInt(yearFilter);
-
-            if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id ?? undefined;
-                params.department_id = user.department?.id ?? undefined;
-                params.year_id = user.year?.id ?? undefined;
-            }
-
-            if (Object.keys(params).length < 3) {
-                setSubjects([]);
-                return;
-            }
-
-            const result = await searchCourses({ data: params }).unwrap();
+            const data = user.canAccessAll
+                ? {}
+                : {
+                      faculty_id: user.faculty?.id ?? undefined,
+                      department_id: user.department?.id ?? undefined,
+                      year_id: user.year?.id ?? undefined,
+                  };
+            const result = await searchCourses({ data }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+    }, [searchCourses, user]);
 
     const fetchExams = useCallback(async () => {
         try {
@@ -184,25 +167,18 @@ export const ExamsPage = () => {
         authorId,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchSubjects(),
-                fetchExams(),
-            ]),
-        [
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchSubjects,
-            fetchExams,
-        ],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears(), fetchSubjects()]),
+        [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchExamsQuery = useCallback(
+        () => fetchExams(),
+        [fetchExams],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchExamsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -269,14 +245,6 @@ export const ExamsPage = () => {
         }
     };
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
-    useEffect(() => {
-        setSubjectFilter("");
-    }, [departmentFilter, yearFilter]);
-
     const facultyOptions = useMemo(
         () => [
             { value: "", label: "Faculty" },
@@ -291,12 +259,18 @@ export const ExamsPage = () => {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "Department" },
-            ...departments.map((department) => ({
-                value: department.id?.toString() || "",
-                label: department.name || "",
-            })),
+            ...departments
+                .filter(
+                    (department) =>
+                        !facultyFilter ||
+                        department.faculty?.id?.toString() === facultyFilter,
+                )
+                .map((department) => ({
+                    value: department.id?.toString() || "",
+                    label: department.name || "",
+                })),
         ],
-        [departments],
+        [departments, facultyFilter],
     );
 
     const yearOptions = useMemo(
@@ -340,7 +314,7 @@ export const ExamsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search exams..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
 
@@ -349,30 +323,32 @@ export const ExamsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) => setFilters({ faculty_id: value as string, department_id: null, subject_id: null })} value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={(value) => setFilters({ department_id: value as string, subject_id: null })} value={departmentFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={(value) => setFilters({ year_id: value as string, subject_id: null })} value={yearFilter}
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={subjectOptions}
-                            setValue={setSubjectFilter}
+                            setValue={setSubjectFilter} value={subjectFilter}
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>

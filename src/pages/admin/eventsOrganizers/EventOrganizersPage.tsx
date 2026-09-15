@@ -11,6 +11,7 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import {
     useLazyGetEventOrganizersQuery,
     useDeleteEventOrganizerMutation,
@@ -20,7 +21,9 @@ import styles from "./EventOrganizersPage.module.css";
 
 export const EventOrganizersPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [organizers, setOrganizers] = useState<EventOrganizerResponseDto[]>(
@@ -110,7 +113,7 @@ export const EventOrganizersPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search event organizers..."
-                        setValue={setSearchQuery}
+                        setValue={setSearchQuery} value={searchQuery}
                     />
                 </div>
                 <div className={styles.cardsGrid}>

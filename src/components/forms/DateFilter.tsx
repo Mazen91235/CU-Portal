@@ -12,6 +12,7 @@ type DateFilterProps = {
     placeholder?: string;
     startRight?: boolean;
     defaultDate?: string;
+    value?: string;
 };
 
 export const DateFilter = ({
@@ -19,6 +20,7 @@ export const DateFilter = ({
     placeholder = "Select Date",
     startRight = false,
     defaultDate = "",
+    value,
 }: DateFilterProps) => {
     const [selectedDate, setSelectedDate] = useState<string>("");
     const [displayDate, setDisplayDate] = useState<string>("");
@@ -161,19 +163,27 @@ export const DateFilter = ({
     };
 
     useEffect(() => {
-        if (defaultDate) {
+        const nextValue = value ?? defaultDate;
+        if (nextValue) {
             const defaultDateForDisplay = new Date(
-                defaultDate,
+                nextValue,
             ).toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
             }); // Convert to "MMM DD, YYYY" format
-            setSelectedDate(defaultDate);
-            setValue(defaultDate);
+            setSelectedDate(nextValue);
+            setValue(nextValue);
             setDisplayDate(defaultDateForDisplay);
         }
-    }, [defaultDate]);
+    }, [defaultDate, value]);
+
+    useEffect(() => {
+        if (value === "") {
+            setSelectedDate("");
+            setDisplayDate("");
+        }
+    }, [value]);
 
     useEffect(() => {
         const handleViewportChange = () => {

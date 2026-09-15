@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import {
     useLazyGetEventsQuery,
     useDeleteEventMutation,
@@ -11,6 +11,7 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import type { Icon } from "../../../types/Icon";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -35,20 +36,26 @@ import styles from "./EventsPage.module.css";
 
 export const EventsPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const authorId = searchParams.get("author_id");
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [eventTypeFilter, setEventTypeFilter] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    );
-    const [dateToFilter, setDateToFilter] = useState("");
+    const { getFilter, getFilterSetter, searchParams } = useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const eventTypeFilter = getFilter("event_type", "");
+    const setEventTypeFilter = getFilterSetter("event_type");
+    const facultyFilter = getFilter("faculty_id", "");
+    const setFacultyFilter = getFilterSetter("faculty_id");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
+    const eventOrganizerFilter = getFilter("event_organizer_id", "");
+    const setEventOrganizerFilter = getFilterSetter("event_organizer_id");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [events, setEvents] = useState<EventResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -92,24 +99,13 @@ export const EventsPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         if (!user?.canAccessAll) return;
-
-        if (!facultyFilter) {
-            setDepartments([]);
-            return;
-        }
-
         try {
-            const result = await getDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter),
-                    study_type: undefined,
-                },
-            }).unwrap();
+            const result = await getDepartments({ data: {} }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, facultyFilter, user?.canAccessAll]);
+    }, [getDepartments, user?.canAccessAll]);
 
     const fetchYears = useCallback(async () => {
         if (!user?.canAccessAll) return;
@@ -206,25 +202,18 @@ export const EventsPage = () => {
         page,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchEvents(),
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchEventOrganizers(),
-            ]),
-        [
-            fetchEvents,
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchEventOrganizers,
-        ],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears(), fetchEventOrganizers()]),
+        [fetchFaculties, fetchDepartments, fetchYears, fetchEventOrganizers],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchEventsQuery = useCallback(
+        () => fetchEvents(),
+        [fetchEvents],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchEventsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -239,10 +228,6 @@ export const EventsPage = () => {
         dateFromFilter,
         dateToFilter,
     ]);
-
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
 
     const handleViewEvent = (eventId: number) => {
         navigate(`/admin/events/${eventId}`);
@@ -298,12 +283,18 @@ export const EventsPage = () => {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "Department" },
-            ...departments.map((department) => ({
-                value: department.id?.toString() || "",
-                label: department.name || "",
-            })),
+            ...departments
+                .filter(
+                    (department) =>
+                        !facultyFilter ||
+                        department.faculty?.id?.toString() === facultyFilter,
+                )
+                .map((department) => ({
+                    value: department.id?.toString() || "",
+                    label: department.name || "",
+                })),
         ],
-        [departments],
+        [departments, facultyFilter],
     );
 
     const yearOptions = useMemo(
@@ -346,7 +337,7 @@ export const EventsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search events..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
 
@@ -355,34 +346,36 @@ export const EventsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={setFacultyFilter} value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={setDepartmentFilter} value={departmentFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={setYearFilter} value={yearFilter}
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={eventOrganizerOptions}
-                            setValue={setEventOrganizerFilter}
+                            setValue={setEventOrganizerFilter} value={eventOrganizerFilter}
                         />
                         <SelectFilter
                             options={eventTypeOptions}
-                            setValue={setEventTypeFilter}
+                            setValue={setEventTypeFilter} value={eventTypeFilter}
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter}
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>

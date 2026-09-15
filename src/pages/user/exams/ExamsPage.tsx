@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useLazyGetExamsQuery } from "../../../services/apis/user/ExamAPIs";
 import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -23,17 +24,19 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const subjectFilter = getFilter("subject_id", "");
+    const setSubjectFilter = getFilterSetter("subject_id");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [dateFromFilter, setDateFromFilter] = useState<string>(
-        new Date().toLocaleDateString("en-CA"),
-    ); // Set default date to today's date in "YYYY-MM-DD" format
-    const [dateToFilter, setDateToFilter] = useState("");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [searchParams] = useSearchParams();
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getExams, { isFetching }] = useLazyGetExamsQuery();
 
@@ -81,24 +84,23 @@ export const ExamsPage = () => {
         hasNextPage,
     ]);
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchSubjects(), fetchExams()]),
-        [fetchSubjects, fetchExams],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchSubjects()]),
+        [fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchExamsQuery = useCallback(
+        () => fetchExams(),
+        [fetchExams],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchExamsQuery);
 
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
-
-    useEffect(() => {
-        const subject_id = searchParams.get("subject_id") || "";
-        if (subject_id && subjects.length > 0) {
-            setSubjectFilter(subject_id);
-        }
-    }, [searchParams, subjects]);
 
     const handleViewExam = (examId: number) => {
         navigate(`/user/exams/${examId}`);
@@ -148,7 +150,7 @@ export const ExamsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search exams..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
 
@@ -162,10 +164,12 @@ export const ExamsPage = () => {
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
                         />
                     </div>
                 </div>
