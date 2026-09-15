@@ -93,11 +93,11 @@ export function EditWeek() {
         <Layout>
             <PageSeo
                 title="Edit Week - CU Portal"
-                description="Update a weekly guide"
+                description="Update a weeks"
             />
             <SubBanner
                 title="Edit Week"
-                description="Update weekly guide information"
+                description="Update week information"
                 linkText="Back to Week"
                 linkTo={redirectUrl}
             />

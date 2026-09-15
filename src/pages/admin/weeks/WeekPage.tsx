@@ -591,9 +591,13 @@ export function WeekPage() {
             setDeleteOpen(false);
             setWeek(null);
             if (adjacentWeek?.id !== undefined) {
-                navigate(`/admin/weeks/${adjacentWeek.id}`);
+                navigate(`/admin/weeks/${adjacentWeek.id}`, {
+                    state: { success: "Week deleted successfully" },
+                });
             } else {
-                navigate("/admin/weeks");
+                navigate("/admin/weeks", {
+                    state: { success: "Week deleted successfully" },
+                });
             }
             showToast("success", "Deleted", "Week deleted successfully");
         } catch (error) {
@@ -604,22 +608,27 @@ export function WeekPage() {
     return (
         <Layout>
             <PageSeo
-                title="Weekly Guide - Admin - CU Portal"
-                description="Manage weekly course materials"
+                title="Week Management - CU Portal"
+                description="Manage week course materials"
             />
             <SubBanner
                 title={week ? `Week ${week.week_number ?? ""}` : "Week"}
                 description={
                     week
                         ? `${week.faculty?.name || ""} · ${week.department?.name || ""} · ${week.year?.year || ""}`
-                        : "View weekly course materials"
+                        : "View week course materials"
                 }
                 linkText="Back to Weeks"
                 linkTo="/admin/weeks"
                 button={week ? "Edit Week" : undefined}
                 buttonAction={
                     week?.id
-                        ? () => navigate(buildRedirectUrl(`/admin/weeks/edit/${week.id}`))
+                        ? () =>
+                              navigate(
+                                  buildRedirectUrl(
+                                      `/admin/weeks/edit/${week.id}`,
+                                  ),
+                              )
                         : undefined
                 }
                 deleteAction={week ? () => setDeleteOpen(true) : undefined}

@@ -185,11 +185,11 @@ export function CreateWeek() {
         <Layout>
             <PageSeo
                 title="Create Weeks - CU Portal"
-                description="Create weekly guides"
+                description="Create weeks"
             />
             <SubBanner
                 title="Create Weeks"
-                description="Create one or more weekly guides"
+                description="Create one or more weeks"
                 linkText="Back to Weeks"
                 linkTo="/admin/weeks"
             />

@@ -24,6 +24,7 @@ import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { formatDate, formatDateTime } from "../../../utils/Formatter";
+import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./WeeksPage.module.css";
 
@@ -48,7 +49,7 @@ export function WeeksPage() {
     const setDepartmentFilter = getFilterSetter("department_id");
     const yearFilter = getFilter("year_id", "");
     const setYearFilter = getFilterSetter("year_id");
-    const dateFrom = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFrom = getFilter("date_from", "");
     const setDateFrom = getFilterSetter("date_from", true);
     const dateTo = getFilter("date_to", "");
     const setDateTo = getFilterSetter("date_to", true);
@@ -137,16 +138,19 @@ export function WeeksPage() {
             setDepartmentFilter(user?.department?.id?.toString() || "");
             setYearFilter(user?.year?.id?.toString() || "");
         }
-    }, [user]);
+    }, [setFacultyFilter, setDepartmentFilter, setYearFilter, user]);
 
-    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
-    const authWeeksQuery = useCallback(
-        () => fetch(),
-        [fetch],
-    );
+    const authWeeksQuery = useCallback(() => fetch(), [fetch]);
 
     useAuthQuery(authFacultiesQuery);
     useAuthQuery(authDepartmentsQuery);
@@ -157,6 +161,7 @@ export function WeeksPage() {
         if (!weekToDelete?.id) return;
         try {
             await deleteWeek({ week_id: weekToDelete.id }).unwrap();
+            showToast("success", "Success", "Week deleted successfully");
             setWeekToDelete(null);
             await fetch();
         } catch (error) {
@@ -168,11 +173,11 @@ export function WeeksPage() {
         <Layout>
             <PageSeo
                 title="Weeks Management - CU Portal"
-                description="Manage weekly guides"
+                description="Manage weeks"
             />
             <Banner
                 title="Weeks Management"
-                description="Manage weekly guides"
+                description="Manage weeks"
                 button="Create Weeks"
                 buttonAction={() => navigate("/admin/weeks/create")}
             />
@@ -247,14 +252,13 @@ export function WeeksPage() {
                                 {
                                     icon: "calendar",
                                     label: "Start date",
-                                    value: formatDate(week.start_date, false),
+                                    value: formatDate(week.start_date),
                                 },
                                 {
                                     icon: "calendar",
                                     label: "End date",
                                     value: formatDate(
                                         getWeekEndDate(week.start_date),
-                                        false,
                                     ),
                                 },
                                 {
@@ -270,7 +274,11 @@ export function WeeksPage() {
                             hasOptions
                             editable
                             onEdit={() =>
-                                navigate(buildRedirectUrl(`/admin/weeks/edit/${week.id}`))
+                                navigate(
+                                    buildRedirectUrl(
+                                        `/admin/weeks/edit/${week.id}`,
+                                    ),
+                                )
                             }
                             deletable
                             onDelete={() => setWeekToDelete(week)}
