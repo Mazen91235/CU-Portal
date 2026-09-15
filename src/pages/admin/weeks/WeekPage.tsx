@@ -20,10 +20,8 @@ import { Select } from "../../../components/forms/Select";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import {
-    useCreateWeekMutation,
     useDeleteWeekMutation,
     useLazyGetWeeksQuery,
-    useUpdateWeekMutation,
 } from "../../../services/apis/admin/WeekAPIs";
 import { useUpdateMaterialMutation } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
@@ -32,25 +30,6 @@ import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import styles from "./WeekPage.module.css";
-
-const getWeekStartDates = (start: string, end: string) => {
-    if (!start || !end || end < start) return [];
-
-    const startDate = new Date(`${start}T00:00:00Z`);
-    const endDate = new Date(`${end}T00:00:00Z`);
-    const days =
-        Math.floor((endDate.getTime() - startDate.getTime()) / 86400000) + 1;
-    const count = Math.ceil(days / 7);
-
-    return Array.from({ length: count }, (_, index) => {
-        const date = new Date(startDate);
-        date.setUTCDate(startDate.getUTCDate() + index * 7);
-        return date.toISOString().slice(0, 10);
-    });
-};
-
-const countWeeks = (start: string, end: string) =>
-    getWeekStartDates(start, end).length;
 
 const getWeekEndDate = (startDate?: string | null) => {
     if (!startDate) return null;
@@ -369,15 +348,8 @@ export function WeekPage() {
     const [weekMaterials, setWeekMaterials] = useState<MaterialResponseDto[]>(
         [],
     );
-    const [createOpen, setCreateOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [editDate, setEditDate] = useState("");
     const [getWeeks] = useLazyGetWeeksQuery();
-    const [createWeek] = useCreateWeekMutation();
-    const [updateWeek] = useUpdateWeekMutation();
     const [deleteWeek] = useDeleteWeekMutation();
 
     const fetchWeek = useCallback(async () => {
@@ -470,12 +442,6 @@ export function WeekPage() {
 
     useAuthQuery(fetchWeek);
 
-    const weekNumbers = weeks
-        .map((item) => item.week_number)
-        .filter(
-            (value): value is number => value !== null && value !== undefined,
-        )
-        .sort((first, second) => first - second);
     const orderedWeeks = [...weeks].sort((first, second) =>
         (first.start_date || "").localeCompare(second.start_date || ""),
     );
@@ -514,71 +480,6 @@ export function WeekPage() {
                 ] as [string, MaterialResponseDto[]],
         );
     }, [weekMaterials]);
-
-    const createWeeks = async () => {
-        const weekStartDates = getWeekStartDates(startDate, endDate);
-        const totalWeeks = weekStartDates.length;
-        if (
-            !totalWeeks ||
-            !user?.faculty?.id ||
-            !user.department?.id ||
-            !user.year?.id
-        ) {
-            showToast(
-                "error",
-                "Invalid data",
-                "Select a valid date range and ensure your academic profile is complete.",
-            );
-            return;
-        }
-        const facultyId = user.faculty.id;
-        const departmentId = user.department.id;
-        const yearId = user.year.id;
-        try {
-            const firstWeekNumber = Math.max(0, ...weekNumbers) + 1;
-            await Promise.all(
-                weekStartDates.map((startDateValue, index) =>
-                    createWeek({
-                        week_number: firstWeekNumber + index,
-                        start_date: `${startDateValue}T00:00:00.000Z`,
-                        faculty_id: facultyId,
-                        department_id: departmentId,
-                        year_id: yearId,
-                    }).unwrap(),
-                ),
-            );
-            setCreateOpen(false);
-            setStartDate("");
-            setEndDate("");
-            await fetchWeek();
-            showToast(
-                "success",
-                "Created",
-                `${totalWeeks} week${totalWeeks === 1 ? "" : "s"} created successfully`,
-            );
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    };
-
-    const saveWeek = async () => {
-        if (!week?.id || !editDate) return;
-        try {
-            await updateWeek({
-                week_id: week.id,
-                week_number: week.week_number || 1,
-                start_date: `${editDate}T00:00:00.000Z`,
-                faculty_id: week.faculty?.id || user?.faculty?.id || 0,
-                department_id: week.department?.id || user?.department?.id || 0,
-                year_id: week.year?.id || user?.year?.id || 0,
-            }).unwrap();
-            setEditOpen(false);
-            await fetchWeek();
-            showToast("success", "Saved", "Week updated successfully");
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    };
 
     const removeWeek = async () => {
         if (!week?.id) return;
@@ -679,100 +580,6 @@ export function WeekPage() {
                     )}
                 </section>
             </main>
-
-            {createOpen && (
-                <div
-                    className={styles.modalOverlay}
-                    onClick={() => setCreateOpen(false)}
-                >
-                    <form
-                        className={styles.modal}
-                        onClick={(event) => event.stopPropagation()}
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            void createWeeks();
-                        }}
-                    >
-                        <h2>Create Weeks</h2>
-                        <label>
-                            Start date
-                            <input
-                                type="date"
-                                value={startDate}
-                                onChange={(event) =>
-                                    setStartDate(event.target.value)
-                                }
-                                required
-                            />
-                        </label>
-                        <label>
-                            End date
-                            <input
-                                type="date"
-                                value={endDate}
-                                min={startDate}
-                                onChange={(event) =>
-                                    setEndDate(event.target.value)
-                                }
-                                required
-                            />
-                        </label>
-                        <label>
-                            Weeks to create
-                            <input
-                                value={countWeeks(startDate, endDate)}
-                                disabled
-                            />
-                        </label>
-                        <div className={styles.modalActions}>
-                            <button
-                                type="button"
-                                onClick={() => setCreateOpen(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button type="submit">Create</button>
-                        </div>
-                    </form>
-                </div>
-            )}
-            {editOpen && (
-                <div
-                    className={styles.modalOverlay}
-                    onClick={() => setEditOpen(false)}
-                >
-                    <form
-                        className={styles.modal}
-                        onClick={(event) => event.stopPropagation()}
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            void saveWeek();
-                        }}
-                    >
-                        <h2>Edit Week</h2>
-                        <label>
-                            Start date
-                            <input
-                                type="date"
-                                value={editDate}
-                                onChange={(event) =>
-                                    setEditDate(event.target.value)
-                                }
-                                required
-                            />
-                        </label>
-                        <div className={styles.modalActions}>
-                            <button
-                                type="button"
-                                onClick={() => setEditOpen(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button type="submit">Save</button>
-                        </div>
-                    </form>
-                </div>
-            )}
             <ConfirmModal
                 isOpen={deleteOpen}
                 onClose={() => setDeleteOpen(false)}
