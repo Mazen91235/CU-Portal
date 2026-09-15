@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetEventsQuery,
     useDeleteEventMutation,
@@ -241,7 +242,7 @@ export const EventsPage = () => {
     };
 
     const handleEditEvent = (eventId: number) => {
-        navigate(`/admin/events/edit/${eventId}`);
+        navigate(buildRedirectUrl(`/admin/events/edit/${eventId}`));
     };
 
     const handleDeleteClick = (event: EventResponseDto) => {

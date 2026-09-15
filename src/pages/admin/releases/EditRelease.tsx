@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { Button } from "../../../components/forms/Button";
 import { DateInput } from "../../../components/forms/DateInput";
 import { Form } from "../../../components/forms/Form";
@@ -30,6 +31,8 @@ type ReleaseFormData = Record<string, unknown> & {
 
 export const EditRelease = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/releases");
     const { releaseId } = useParams<{ releaseId: string }>();
     const [getRelease] = useLazyGetReleaseQuery();
     const [updateRelease, { isLoading }] = useUpdateReleaseMutation();
@@ -71,7 +74,7 @@ export const EditRelease = () => {
             });
         } catch (error) {
             handlePopupErrors(error);
-            navigate("/admin/releases");
+            navigate(redirectUrl);
         }
     }, [getRelease, navigate, releaseId, reset]);
 
@@ -87,7 +90,7 @@ export const EditRelease = () => {
                 ...data,
             }).unwrap();
             showToast("success", "Success", "Release updated successfully");
-            navigate(`/admin/releases/${releaseId}`);
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -104,7 +107,7 @@ export const EditRelease = () => {
                 description="Update release information and release updates"
                 icon="user"
                 linkText="Back to Releases"
-                linkTo="/admin/releases"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -173,7 +176,7 @@ export const EditRelease = () => {
                             loadingText="Cancelling..."
                             type="button"
                             isSubmitting={false}
-                            onClick={() => navigate("/admin/releases")}
+                            onClick={() => navigate(redirectUrl)}
                             isSecondary
                         />
                         <Button

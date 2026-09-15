@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import { Link } from "react-router";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { usePageLoading } from "../../hooks/usePageLoading";
@@ -218,10 +219,10 @@ export const DashboardProgressView = ({
                             </div>
                             <div className={styles["step-content"]}>
                                 <h4 className={styles["step-title"]}>
-                                    {step.title}
+                                    {formatString(step.title, "CardTitle")}
                                 </h4>
                                 <p className={styles["step-description"]}>
-                                    {step.description}
+                                    {formatString(step.description, "CardDescription")}
                                 </p>
                                 {step.tasks.length > 0 && (
                                     <ul className={styles["task-list"]}>

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useLazyGetCourseQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { UserResponseDto } from "../../../types/dtos/UserDtos";
@@ -63,7 +64,7 @@ export const CoursePage = () => {
                 icon="course"
                 button="Edit Course"
                 buttonAction={() =>
-                    navigate(`/admin/courses/edit/${course.id}`)
+                    navigate(buildRedirectUrl(`/admin/courses/edit/${course.id}`))
                 }
                 linkText="Back to Courses"
                 linkTo="/admin/courses"

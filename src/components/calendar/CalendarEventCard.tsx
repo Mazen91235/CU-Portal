@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import { Link } from "react-router";
 import type { EventResponseDto } from "../../types/dtos/EventDtos";
 import { formatDateTime } from "../../utils/Formatter";
@@ -8,7 +9,7 @@ export const CalendarEventCard = ({ event }: { event: EventResponseDto }) => (
     <div className={styles.card}>
         <div className={styles.content}>
             <div className={styles.titleRow}>
-                <h4 className={styles.title}>{event.title || "Untitled event"}</h4>
+                <h4 className={styles.title}>{formatString(event.title || "Untitled event", "CalendarCardTitle")}</h4>
                 <span className={styles.badge}>Event</span>
             </div>
             <div className={styles.detail}>

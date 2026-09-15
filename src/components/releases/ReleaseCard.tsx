@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import type { ReleaseResponseDto } from "../../types/dtos/ReleaseDtos";
 import type { ReleaseItemType } from "../../types/entities/ReleaseItem";
 import styles from "./ReleaseCard.module.css";
@@ -52,10 +53,10 @@ export const ReleaseCard = ({ release, onViewDetails }: ReleaseCardProps) => {
             </div>
 
             <div className={styles.content}>
-                <h2 className={styles.title}>{release.title ?? "Release"}</h2>
+                <h2 className={styles.title}>{formatString(release.title ?? "Release", "CardTitle")}</h2>
                 {release.details?.description && (
                     <p className={styles.description}>
-                        {release.details.description}
+                        {formatString(release.details.description, "CardDescription")}
                     </p>
                 )}
 

@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetTasksQuery,
     useDeleteTaskMutation,
@@ -242,7 +243,7 @@ export const TasksPage = () => {
     };
 
     const handleEditTask = (taskId: number) => {
-        navigate(`/admin/tasks/edit/${taskId}`);
+        navigate(buildRedirectUrl(`/admin/tasks/edit/${taskId}`));
     };
 
     const handleDeleteClick = (task: TaskResponseDto) => {

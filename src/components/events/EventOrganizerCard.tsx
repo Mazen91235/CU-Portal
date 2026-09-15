@@ -2,6 +2,7 @@ import { Bordered } from "../bordered/Bordered";
 import { Button } from "../forms/Button";
 import type { EventOrganizerResponseDto } from "../../types/dtos/EventOrganizerDtos";
 import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
+import { formatString } from "../../utils/Formatter";
 import styles from "./EventOrganizerCard.module.css";
 
 type EventOrganizerCardProps = {
@@ -42,7 +43,7 @@ export const EventOrganizerCard = ({
                     )}
                 </div>
 
-                <h4 className={styles.name}>{name}</h4>
+                <h4 className={styles.name}>{formatString(name, "CardTitle")}</h4>
 
                 {onView && organizer.id ? (
                     <Button

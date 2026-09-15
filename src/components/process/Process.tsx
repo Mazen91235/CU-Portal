@@ -78,7 +78,7 @@ export function Process() {
                             onClick={() => handleClick(process)}
                         >
                             <span className={styles.processName}>
-                                {formatString(process.name, 30)}
+                                {formatString(process.name, "CardTitle")}
                             </span>
                             <div className={styles.circularProgress}>
                                 <svg

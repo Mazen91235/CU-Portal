@@ -112,14 +112,14 @@ export const Card = ({
                 </div>
             )}
 
-            {img && <h3 className={styles.title}>{formatString(title, 30)}</h3>}
+            {img && <h3 className={styles.title}>{formatString(title, "CardTitle")}</h3>}
 
             <div
                 className={styles.titleRow}
                 style={img ? { position: "absolute", margin: "1rem" } : {}}
             >
                 {!img && (
-                    <h3 className={styles.title}>{formatString(title, 30)}</h3>
+                    <h3 className={styles.title}>{formatString(title, "CardTitle")}</h3>
                 )}
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>

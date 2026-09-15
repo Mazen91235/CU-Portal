@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { Avatar } from "../avatar/Avatar";
-import { captitalize } from "../../utils/Formatter";
+import { captitalize, formatString } from "../../utils/Formatter";
 import emailIcon from "../../assets/icons/email.svg";
 import phoneIcon from "../../assets/icons/phone.svg";
 import styles from "./UserCard.module.css";
@@ -14,14 +14,14 @@ type UserCardProps = {
 export const UserCard = ({ user, button = false }: UserCardProps) => (
     <div className={styles.card}>
         <div className={styles.header}>
-            <span className={styles.role}>{captitalize(user.role?.name || undefined)}</span>
+            <span className={styles.role}>{formatString(captitalize(user.role?.name || undefined), "CardTitle")}</span>
         </div>
         <Avatar user={user} size="large" className={styles.avatar} />
-        <h3 className={styles.name}>{user.name}</h3>
+        <h3 className={styles.name}>{formatString(user.name, "CardTitle")}</h3>
         <div className={styles.academicDetails}>
-            <div><span>Faculty</span><span>{user.faculty?.name || "N/A"}</span></div>
+            <div><span>Faculty</span><span>{formatString(user.faculty?.name || "N/A", "CardDescription")}</span></div>
             <div className={styles.separator}></div>
-            <div><span>Department</span><span>{user.department?.name || "N/A"}</span></div>
+            <div><span>Department</span><span>{formatString(user.department?.name || "N/A", "CardDescription")}</span></div>
             <div className={styles.separator}></div>
             <div><span>Year</span><span>{user.year?.year || "N/A"}</span></div>
         </div>

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
   useLazyGetExamQuery,
   useDeleteExamMutation,
@@ -81,7 +82,7 @@ export const ExamPage = () => {
         title={exam.name || "Exam Details"}
         icon="task"
         button="Edit Exam"
-        buttonAction={() => navigate(`/admin/exams/edit/${exam.id}`)}
+        buttonAction={() => navigate(buildRedirectUrl(`/admin/exams/edit/${exam.id}`))}
         deleteButton="Delete Exam"
         deleteAction={handleDeleteClick}
         linkText="Back to Exams"

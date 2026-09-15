@@ -11,6 +11,7 @@ import { useCallback, useMemo, useState } from "react";
 import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./ReleasesPage.module.css";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import {
     useDeleteReleaseMutation,
@@ -113,7 +114,7 @@ export function ReleasesPage() {
         ).size;
 
     const handleEditRelease = (release: ReleaseResponseDto) => {
-        navigation(`/admin/releases/edit/${release.id}`);
+        navigation(buildRedirectUrl(`/admin/releases/edit/${release.id}`));
     };
 
     const handleDeleteClick = (release: ReleaseResponseDto) => {

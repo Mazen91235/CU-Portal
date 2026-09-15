@@ -1,5 +1,6 @@
 import { Bordered } from "../bordered/Bordered";
 import { Heading } from "../heading/Heading";
+import { formatString } from "../../utils/Formatter";
 
 import styles from "./QuickInfoSection.module.css";
 
@@ -19,7 +20,7 @@ export const QuickInfoSection = ({ items }: { items: QuickInfoItem[] }) => {
                             {item.label}
                         </span>
                         <span className={styles.quickInfoValue}>
-                            {item.value}
+                            {formatString(item.value, "CardDescription")}
                         </span>
                     </div>
                 ))}

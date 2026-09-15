@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import { Link } from "react-router";
 import type { NotificationResponseDto } from "../../types/dtos/NotificationDtos";
 import { formatTimeAgo } from "../../utils/Formatter";
@@ -47,12 +48,12 @@ export const NotificationItem = ({
                         className={styles.notificationLink}
                     >
                         <div className={styles.notificationTitle}>
-                            {notification.content}
+                            {formatString(notification.content, "CardDescription")}
                         </div>
                     </Link>
                 ) : (
                     <div className={styles.notificationTitle}>
-                        {notification.content}
+                        {formatString(notification.content, "CardDescription")}
                     </div>
                 )}
                 <div className={styles.notificationSubtitle}>

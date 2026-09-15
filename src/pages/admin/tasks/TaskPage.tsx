@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 
 import {
     useLazyGetTaskQuery,
@@ -83,7 +84,7 @@ export const TaskPage = () => {
                 title={task.name || "Task Details"}
                 icon="task"
                 button="Edit Task"
-                buttonAction={() => navigate(`/admin/tasks/edit/${task.id}`)}
+                buttonAction={() => navigate(buildRedirectUrl(`/admin/tasks/edit/${task.id}`))}
                 deleteButton="Delete Task"
                 deleteAction={handleDeleteClick}
                 linkText="Back to Tasks"

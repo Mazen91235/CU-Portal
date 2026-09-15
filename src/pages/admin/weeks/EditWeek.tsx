@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,6 +29,8 @@ type WeekFormData = z.infer<typeof weekSchema>;
 export function EditWeek() {
     const { weekId } = useParams<{ weekId: string }>();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/weeks");
     const [getWeek] = useLazyGetWeekQuery();
     const [updateWeek, { isLoading }] = useUpdateWeekMutation();
     const [loadingWeek, setLoadingWeek] = useState(true);
@@ -79,7 +82,7 @@ export function EditWeek() {
                 year_id: week.year.id,
             }).unwrap();
             showToast("success", "Saved", "Week updated successfully");
-            navigate(`/admin/weeks/${weekId}`);
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -96,7 +99,7 @@ export function EditWeek() {
                 title="Edit Week"
                 description="Update weekly guide information"
                 linkText="Back to Week"
-                linkTo={`/admin/weeks/${weekId}`}
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -129,7 +132,7 @@ export function EditWeek() {
                             type="button"
                             isSubmitting={false}
                             isSecondary
-                            onClick={() => navigate(`/admin/weeks/${weekId}`)}
+                            onClick={() => navigate(redirectUrl)}
                         />
                         <Button
                             text="Save Week"

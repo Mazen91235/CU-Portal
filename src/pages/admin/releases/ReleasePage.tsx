@@ -6,6 +6,7 @@ import { StatCard } from "../../../components/card/StatCard";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
 import styles from "./ReleasePage.module.css";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useCallback, useState } from "react";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { useParams } from "react-router";
@@ -101,7 +102,7 @@ export function ReleasePage() {
                 linkTo="/admin/releases"
                 button="Edit Release"
                 buttonAction={() =>
-                    navigate(`/admin/releases/edit/${release.id}`)
+                    navigate(buildRedirectUrl(`/admin/releases/edit/${release.id}`))
                 }
                 deleteButton="Delete Release"
                 deleteAction={handleDeleteClick}

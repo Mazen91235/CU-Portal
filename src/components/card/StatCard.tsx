@@ -1,4 +1,5 @@
 import styles from "./StatCard.module.css";
+import { formatString } from "../../utils/Formatter";
 
 type StatCardProps = {
     type: string;
@@ -78,7 +79,7 @@ export const StatCard = ({ type, value, icon }: StatCardProps) => {
             </div>
             <div className={styles.statTexts}>
                 <div className={styles.statTitle}>{type}</div>
-                <div className={styles.statValue}>{value}</div>
+                <div className={styles.statValue}>{typeof value === "string" ? formatString(value, "StatCardContent") : value}</div>
             </div>
         </div>
     );

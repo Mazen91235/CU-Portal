@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetExamsQuery,
     useDeleteExamMutation,
@@ -238,7 +239,7 @@ export const ExamsPage = () => {
     };
 
     const handleEditExam = (examId: number) => {
-        navigate(`/admin/exams/edit/${examId}`);
+        navigate(buildRedirectUrl(`/admin/exams/edit/${examId}`));
     };
 
     const handleDeleteClick = (exam: ExamResponseDto) => {

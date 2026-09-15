@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
@@ -164,7 +165,7 @@ export const CoursesPage = () => {
     };
 
     const handleEditCourse = (courseId: number) => {
-        navigate(`/admin/courses/edit/${courseId}`);
+        navigate(buildRedirectUrl(`/admin/courses/edit/${courseId}`));
     };
 
     const handleDeleteClick = (course: SubjectResponseDto) => {
@@ -262,7 +263,8 @@ export const CoursesPage = () => {
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter} value={departmentFilter}
+                                    setValue={setDepartmentFilter}
+                                    value={departmentFilter}
                                     disabled={!facultyFilter}
                                 />
                                 <SelectFilter

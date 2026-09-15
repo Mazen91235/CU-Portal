@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -41,6 +42,8 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const EditCourse = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/courses");
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
@@ -122,7 +125,7 @@ export const EditCourse = () => {
             }
         } catch (error) {
             handlePopupErrors(error);
-            navigate("/admin/courses");
+            navigate(redirectUrl);
         }
     }, [courseId, faculties, years, getCourse, setValue, navigate]);
 
@@ -176,14 +179,14 @@ export const EditCourse = () => {
 
             await updateCourse(courseData).unwrap();
             showToast("success", "Success", "Course updated successfully");
-            navigate("/admin/courses");
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/admin/courses");
+        navigate(redirectUrl);
     };
 
     return (
@@ -197,7 +200,7 @@ export const EditCourse = () => {
                 description="Update course information"
                 icon="course"
                 linkText="Back to Courses"
-                linkTo="/admin/courses"
+                linkTo={redirectUrl}
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,4 +1,5 @@
 import { linkify } from "../../utils/Linkify";
+import { formatString } from "../../utils/Formatter";
 import { Bordered } from "../bordered/Bordered";
 import { Heading } from "../heading/Heading";
 
@@ -20,7 +21,9 @@ export const LongSection = ({
         {!children || children.toString().trim() == "" ? (
           <span>No content available</span>
         ) : (
-          linkify(children)
+          typeof children === "string"
+            ? formatString(children, "Content")
+            : linkify(children)
         )}
       </div>
     </Bordered>

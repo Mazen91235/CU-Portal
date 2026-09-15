@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -55,6 +56,8 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 export const EditTask = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/tasks");
     const { taskId } = useParams<{ taskId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
@@ -104,7 +107,7 @@ export const EditTask = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -163,7 +166,7 @@ export const EditTask = () => {
             }
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch task",
                 },
@@ -236,7 +239,7 @@ export const EditTask = () => {
             };
 
             await updateTask(taskData).unwrap();
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { success: "Task updated successfully" },
             });
         } catch (error) {
@@ -248,7 +251,7 @@ export const EditTask = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/tasks");
+        navigate(redirectUrl);
     };
 
     useEffect(() => {
@@ -268,7 +271,7 @@ export const EditTask = () => {
                 description="Update task information"
                 icon="task"
                 linkText="Back to Tasks"
-                linkTo="/admin/tasks"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form

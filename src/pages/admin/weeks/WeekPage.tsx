@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
@@ -618,7 +619,7 @@ export function WeekPage() {
                 button={week ? "Edit Week" : undefined}
                 buttonAction={
                     week?.id
-                        ? () => navigate(`/admin/weeks/edit/${week.id}`)
+                        ? () => navigate(buildRedirectUrl(`/admin/weeks/edit/${week.id}`))
                         : undefined
                 }
                 deleteAction={week ? () => setDeleteOpen(true) : undefined}

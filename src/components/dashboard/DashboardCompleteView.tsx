@@ -351,7 +351,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                                 key={course.id}
                                 className={styles["course-item"]}
                             >
-                                <span>{course.name}</span>
+                                <span>{formatString(course.name, "CardTitle")}</span>
                             </div>
                         ))}
                     </div>
@@ -381,10 +381,10 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                             >
                                 <div>
                                     <h6>
-                                        {formatString(announcement.title, 30)}
+                                        {formatString(announcement.title, "CardTitle")}
                                     </h6>
                                     <p>
-                                        {formatString(announcement.content, 50)}
+                                        {formatString(announcement.content, "CardContent")}
                                     </p>
                                     <div>
                                         <span>

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetEventQuery,
     useDeleteEventMutation,
@@ -81,7 +82,7 @@ export const EventPage = () => {
                 icon="calendar"
                 img={event.logo?.url || undefined}
                 button="Edit Event"
-                buttonAction={() => navigate(`/admin/events/edit/${event.id}`)}
+                buttonAction={() => navigate(buildRedirectUrl(`/admin/events/edit/${event.id}`))}
                 deleteButton="Delete Event"
                 deleteAction={() => setIsDeleteModalOpen(true)}
                 linkText="Back to Events"

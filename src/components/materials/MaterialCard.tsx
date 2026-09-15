@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { formatString } from "../../utils/Formatter";
 import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { getFileIcon } from "../../utils/MaterialHelpers";
 import { formatTimeAgo } from "../../utils/Formatter";
@@ -195,11 +196,6 @@ export const MaterialCard = ({
       onDrop(material.id || null);
     }
   };
-  const truncateName = (name: string, maxLength = 30) => {
-    if (name.length <= maxLength) return name;
-    return `${name.substring(0, 25)}...${name.substring(name.length - 5)}`;
-  };
-
   if (isFolder) {
     return (
       <div
@@ -373,7 +369,7 @@ export const MaterialCard = ({
           </div>
           <div className={styles.folderInfo}>
             <span className={styles.folderName}>
-              {truncateName(material.name || "")}
+              {formatString(material.name || "", "CardTitle")}
             </span>
             <span className={styles.folderTag}>{material.subject?.code}</span>
             <span className={styles.folderDate}>
@@ -483,7 +479,7 @@ export const MaterialCard = ({
         </div>
         <div className={styles.fileInfo}>
           <div className={styles.fileName}>
-            {truncateName(material.name || "")}
+            {formatString(material.name || "", "CardTitle")}
           </div>
           <span className={styles.fileTag}>{material.subject?.code}</span>
           <div className={styles.fileDate}>

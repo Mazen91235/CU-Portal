@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { Banner } from "../../../components/banner/Banner";
 import { Card } from "../../../components/card/Card";
 import { DateFilter } from "../../../components/forms/DateFilter";
@@ -269,7 +270,7 @@ export function WeeksPage() {
                             hasOptions
                             editable
                             onEdit={() =>
-                                navigate(`/admin/weeks/edit/${week.id}`)
+                                navigate(buildRedirectUrl(`/admin/weeks/edit/${week.id}`))
                             }
                             deletable
                             onDelete={() => setWeekToDelete(week)}

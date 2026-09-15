@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -85,6 +86,8 @@ type EventFormData = z.input<typeof eventSchema>;
 
 export const EditEvent = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/events");
     const { eventId } = useParams<{ eventId: string }>();
     const user = useAppSelector((state) => state.user.user);
 
@@ -246,7 +249,7 @@ export const EditEvent = () => {
             const err = error as {
                 data?: { message?: string };
             };
-            navigate("/admin/events", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.data?.message || "Failed to fetch event",
                 },
@@ -438,7 +441,7 @@ export const EditEvent = () => {
 
             await updateEvent(payload).unwrap();
 
-            navigate("/admin/events", {
+            navigate(redirectUrl, {
                 state: { success: "Event updated successfully!" },
             });
         } catch (error) {
@@ -503,7 +506,7 @@ export const EditEvent = () => {
                 icon="calendar"
                 img={existingThumbnailUrl || undefined}
                 linkText="Back to Events"
-                linkTo="/admin/events"
+                linkTo={redirectUrl}
             />
 
             <main className={styles.container}>
@@ -752,7 +755,7 @@ export const EditEvent = () => {
                             loadingText=""
                             type="button"
                             isSubmitting={false}
-                            onClick={() => navigate("/admin/events")}
+                            onClick={() => navigate(redirectUrl)}
                             isSecondary
                         />
                         <Button

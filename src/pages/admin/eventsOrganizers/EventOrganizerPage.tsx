@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -70,7 +71,7 @@ export const EventOrganizerPage = () => {
                 linkTo="/admin/event-organizers"
                 button="Edit Organizer"
                 buttonAction={() =>
-                    navigate(`/admin/event-organizers/edit/${organizer.id}`)
+                    navigate(buildRedirectUrl(`/admin/event-organizers/edit/${organizer.id}`))
                 }
             />
             <main className={styles.container}>

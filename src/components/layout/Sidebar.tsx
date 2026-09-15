@@ -40,13 +40,13 @@ const navSectionsDefault: NavSection[] = [
                 icon: "sidebar-courses",
                 activatesPaths: ["/user/courses/"],
             },
-            {
-                label: "Course Map",
-                // path: "/user/course-map",
-                path: "#!",
-                icon: "sidebar-coursemap",
-                badge: "Soon",
-            },
+            // {
+            //     label: "Course Map",
+            //     // path: "/user/course-map",
+            //     path: "#!",
+            //     icon: "sidebar-coursemap",
+            //     badge: "Soon",
+            // },
             {
                 label: "Calendar",
                 path: "/user/calendar",
@@ -56,11 +56,13 @@ const navSectionsDefault: NavSection[] = [
                 label: "Timeline",
                 path: "/user/timeline",
                 icon: "sidebar-timeline",
+                badge: "New",
             },
             {
                 label: "Weekly Guide",
                 path: "/user/weeks",
                 icon: "sidebar-weekly-guide",
+                badge: "Beta",
                 activatesPaths: ["/user/weeks/"],
             },
             {
@@ -85,7 +87,6 @@ const navSectionsDefault: NavSection[] = [
                 label: "Materials",
                 path: "/user/materials",
                 icon: "sidebar-materials",
-                badge: "Beta",
                 activatesPaths: ["/user/materials/"],
             },
             {
@@ -95,37 +96,23 @@ const navSectionsDefault: NavSection[] = [
                 badge: "Beta",
                 activatesPaths: ["/user/other-materials/"],
             },
-            {
-                label: "Grades",
-                // path: "/user/grades",
-                path: "#!",
-                icon: "sidebar-grades",
-                badge: "Soon",
-                activatesPaths: ["/user/grades/"],
-            },
         ],
     },
     {
         title: "Organization",
         links: [
             {
-                label: "Study Tracker",
-                // path: "/user/study-tracker",
-                path: "#!",
-                icon: "sidebar-study-tracker",
-                badge: "Soon",
-            },
-            {
                 label: "Events",
                 path: "/user/events",
                 icon: "sidebar-events",
-                badge: "New",
+                badge: "Beta",
                 activatesPaths: ["/user/events/"],
             },
             {
                 label: "Events Organizers",
                 path: "/user/event-organizers",
                 icon: "sidebar-event-organizers",
+                badge: "Beta",
                 activatesPaths: ["/user/event-organizers/"],
             },
         ],
@@ -140,10 +127,10 @@ const navSectionsDefault: NavSection[] = [
                 badge: "New",
             },
             {
-                label: "CV Generator",
-                // path: "/user/cv-generator",
+                label: "Study Tracker",
+                // path: "/user/study-tracker",
                 path: "#!",
-                icon: "sidebar-cv-generator",
+                icon: "sidebar-study-tracker",
                 badge: "Soon",
             },
         ],
@@ -216,15 +203,15 @@ const showAdminLinks = (permissions: string[]) => {
 
     if (!permissions.includes("View AdminLinks")) return null;
 
-    if (permissions.includes("View AdminPanel")) {
-        section.links.push({
-            label: "Dashboard",
-            // path: "/admin",
-            path: "#!",
-            icon: "sidebar-admin-dashboard",
-            badge: "Soon",
-        });
-    }
+    // if (permissions.includes("View AdminPanel")) {
+    //     section.links.push({
+    //         label: "Dashboard",
+    //         // path: "/admin",
+    //         path: "#!",
+    //         icon: "sidebar-admin-dashboard",
+    //         badge: "Soon",
+    //     });
+    // }
 
     if (permissions.includes("View Faculties")) {
         section.links.push({
@@ -250,15 +237,15 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
-    if (permissions.includes("View Course Maps")) {
-        section.links.push({
-            label: "Course Maps",
-            // path: "/admin/course-maps",
-            path: "#!",
-            icon: "sidebar-admin-course-maps",
-            badge: "Soon",
-        });
-    }
+    // if (permissions.includes("View Course Maps")) {
+    //     section.links.push({
+    //         label: "Course Maps",
+    //         // path: "/admin/course-maps",
+    //         path: "#!",
+    //         icon: "sidebar-admin-course-maps",
+    //         badge: "Soon",
+    //     });
+    // }
 
     if (permissions.includes("View Users")) {
         section.links.push({
@@ -292,7 +279,6 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Materials",
             path: "/admin/materials",
             icon: "sidebar-admin-materials",
-            badge: "Beta",
             activatesPaths: ["/admin/materials/"],
         });
         section.links.push({
@@ -301,17 +287,6 @@ const showAdminLinks = (permissions: string[]) => {
             icon: "sidebar-admin-other-materials",
             badge: "Beta",
             activatesPaths: ["/admin/other-materials/"],
-        });
-    }
-
-    if (permissions.includes("View Grades")) {
-        section.links.push({
-            label: "Grades",
-            // path: "/admin/grades",
-            path: "#!",
-            icon: "sidebar-admin-grades",
-            badge: "Soon",
-            activatesPaths: ["/admin/grades/"],
         });
     }
 
@@ -347,6 +322,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Events",
             path: "/admin/events",
             icon: "sidebar-admin-events",
+            badge: "Beta",
             activatesPaths: ["/admin/events/"],
         });
     }
@@ -356,6 +332,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Event Organizers",
             path: "/admin/event-organizers",
             icon: "sidebar-admin-event-organizers",
+            badge: "Beta",
             activatesPaths: ["/admin/event-organizers/"],
         });
     }
@@ -365,6 +342,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Logs",
             path: "/admin/logs",
             icon: "sidebar-admin-logs",
+            badge: "New",
             activatesPaths: ["/admin/logs/"],
         });
     }
@@ -374,6 +352,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Weeks",
             path: "/admin/weeks",
             icon: "sidebar-weekly-guide",
+            badge: "Beta",
             activatesPaths: ["/admin/weeks/"],
         });
     }
@@ -387,6 +366,7 @@ const showAdminLinks = (permissions: string[]) => {
             activatesPaths: ["/admin/releases/"],
         });
     }
+    
     section.links.push({
         label: "Roadmaps",
         // path: "/admin/roadmaps",

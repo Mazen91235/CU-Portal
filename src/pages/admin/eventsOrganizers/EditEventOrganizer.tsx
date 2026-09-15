@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -67,6 +68,8 @@ const parseLinks = (value?: string) =>
 export const EditEventOrganizer = () => {
     const { eventOrganizerId } = useParams<{ eventOrganizerId: string }>();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/event-organizers");
     const [getEventOrganizer, { isFetching }] = useLazyGetEventOrganizerQuery();
     const [updateEventOrganizer, { isLoading }] =
         useUpdateEventOrganizerMutation();
@@ -187,7 +190,7 @@ export const EditEventOrganizer = () => {
                     ],
                 },
             }).unwrap();
-            navigate(`/admin/event-organizers/${eventOrganizerId}`, {
+            navigate(redirectUrl, {
                 state: { success: "Event organizer updated successfully!" },
             });
         } catch (error) {
@@ -209,7 +212,7 @@ export const EditEventOrganizer = () => {
                 description="Update the event organizer details"
                 icon="user"
                 linkText="Back to Event Organizer"
-                linkTo={`/admin/event-organizers/${eventOrganizerId}`}
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -282,7 +285,7 @@ export const EditEventOrganizer = () => {
                             isSubmitting={false}
                             onClick={() =>
                                 navigate(
-                                    `/admin/event-organizers/${eventOrganizerId}`,
+                                    redirectUrl,
                                 )
                             }
                             isSecondary

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import styles from "./WeekPage.module.css";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
+import { SubBanner } from "../../../components/banner/SubBanner";
 import { PageSeo } from "../../../components/PageSeo";
 import { Preview } from "../../../components/preview/Preview";
 import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
@@ -13,6 +14,7 @@ import {
     formatDate,
     formatDateTime,
     formatTimeAgo,
+    formatString,
 } from "../../../utils/Formatter";
 import { FaChevronUp } from "react-icons/fa";
 import { MonthPicker } from "../../../components/timeline/MonthPicker";
@@ -78,7 +80,7 @@ function WeeklyMaterialCard({ item }: { item: MaterialResponseDto }) {
                     />
                     <div className={styles.fileText}>
                         <span className={styles.fileName}>
-                            {item.name || "Unnamed material"}
+                            {formatString(item.name || "Unnamed material", "CardTitle")}
                         </span>
                         <span className={styles.fileMeta}>
                             {formatTimeAgo(
@@ -427,10 +429,23 @@ export function WeekPage() {
                 title="Weekly Guide - CU Portal"
                 description="Weekly Guide for students to access their course materials and resources."
             />
-            <Banner
-                title="My Weekly Guide"
-                description="Weekly Guide for students to access their course materials and resources."
-            />
+            {routeWeekId ? (
+                <SubBanner
+                    title={
+                        week?.week_number
+                            ? `Week ${week.week_number}`
+                            : "Weekly Guide"
+                    }
+                    description="Weekly Guide for students to access their course materials and resources."
+                    linkText="Back to Weekly Guide"
+                    linkTo="/user/weeks"
+                />
+            ) : (
+                <Banner
+                    title="My Weekly Guide"
+                    description="Weekly Guide for students to access their course materials and resources."
+                />
+            )}
             <div className={styles.container}>
                 <WeekMaterials
                     materials={weekMaterials}

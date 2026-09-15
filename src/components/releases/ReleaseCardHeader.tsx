@@ -1,7 +1,7 @@
 import styles from "./ReleaseCardHeader.module.css";
 import type { ReleaseResponseDto } from "../../types/dtos/ReleaseDtos";
 import type { ReleaseItemType } from "../../types/entities/ReleaseItem";
-import { formatCalendarDate } from "../../utils/Formatter";
+import { formatCalendarDate, formatString } from "../../utils/Formatter";
 
 export type ReleaseCategory = {
     type: ReleaseItemType;
@@ -69,11 +69,11 @@ export const ReleaseCardHeader = ({
                     <span className={styles.version}>{version}</span>
                 </div>
 
-                <h2 className={styles.title}>{title}</h2>
+                <h2 className={styles.title}>{formatString(title, "PageTitle")}</h2>
 
                 {release.details?.description && (
                     <div className={styles.description}>
-                        {release.details.description}
+                        {formatString(release.details.description, "PageDescription")}
                     </div>
                 )}
 

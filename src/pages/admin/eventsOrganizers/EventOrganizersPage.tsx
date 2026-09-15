@@ -128,7 +128,7 @@ export const EventOrganizersPage = () => {
                             hasOptions
                             onEdit={() =>
                                 navigate(
-                                    `/admin/event-organizers/edit/${organizer.id}`,
+                                    buildRedirectUrl(`/admin/event-organizers/edit/${organizer.id}`),
                                 )
                             }
                             onDelete={() => openDelete(organizer)}

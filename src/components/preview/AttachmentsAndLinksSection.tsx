@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Preview } from "./Preview";
 import type {
@@ -80,7 +81,7 @@ export const AttachmentsAndLinksSection = ({
                                         </div>
                                         <div className={styles.fileDetails}>
                                             <div className={styles.fileName}>
-                                                {file.name}
+                                                {formatString(file.name, "CardTitle")}
                                             </div>
                                             <div className={styles.fileSize}>
                                                 {file.size}
@@ -119,7 +120,7 @@ export const AttachmentsAndLinksSection = ({
                                 <div key={index} className={styles.linkRow}>
                                     <div className={styles.linkInfo}>
                                         <i className="fa fa-arrow-up-right-from-square"></i>
-                                        <span>{link.title}</span>
+                                        <span>{formatString(link.title, "CardTitle")}</span>
                                     </div>
                                     <button
                                         className={styles.openLinkBtn}

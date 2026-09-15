@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { NoteResponseDto } from "../../types/dtos/NoteDtos";
-import { formatDate } from "../../utils/Formatter";
+import { formatDate, formatString } from "../../utils/Formatter";
 import styles from "./CalendarNoteCard.module.css";
 
 const getPreview = (content?: string | null) => {
@@ -88,10 +88,10 @@ export const CalendarNoteCard = ({
 
             <div className={styles.content}>
                 <div className={styles.titleRow}>
-                    <h4 className={styles.title}>{note.title || "Untitled note"}</h4>
+                    <h4 className={styles.title}>{formatString(note.title || "Untitled note", "CalendarCardTitle")}</h4>
                     <span className={styles.badge}>Note</span>
                 </div>
-                <p className={styles.preview}>{getPreview(note.content)}</p>
+                <p className={styles.preview}>{formatString(getPreview(note.content), "CalendarCardContent")}</p>
                 <div className={`${styles.footer} ${viewButtonPlacement === "inline" ? styles.footerInline : styles.footerCenter}`}>
                     {note.date && <div className={styles.date}>{formatDate(note.date)}</div>}
                     {onView && (

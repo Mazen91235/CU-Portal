@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -53,6 +54,8 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 
 export const EditAnnouncement = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/announcements");
     const { announcementId } = useParams<{ announcementId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
@@ -103,7 +106,7 @@ export const EditAnnouncement = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -161,7 +164,7 @@ export const EditAnnouncement = () => {
             }
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch announcement",
                 },
@@ -239,7 +242,7 @@ export const EditAnnouncement = () => {
             };
 
             await updateAnnouncement(announcementData).unwrap();
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: { success: "Announcement updated successfully" },
             });
         } catch (error) {
@@ -251,7 +254,7 @@ export const EditAnnouncement = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/announcements");
+        navigate(redirectUrl);
     };
 
     useEffect(() => {
@@ -271,7 +274,7 @@ export const EditAnnouncement = () => {
                 description="Update announcement information"
                 icon="announcements"
                 linkText="Back to Announcements"
-                linkTo="/admin/announcements"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form

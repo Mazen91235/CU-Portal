@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useNavigate, useParams, Link } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
-import { Banner } from "../../../components/banner/Banner";
+import { SubBanner } from "../../../components/banner/SubBanner";
 import { Button } from "../../../components/forms/Button";
 import {
     useLazyGetUserQuery,
@@ -161,9 +161,12 @@ export const UserPage = () => {
                 description="View and manage user details"
             />
 
-            <Banner
-                title="Users Management"
-                description="Search, Filter, Approve, And Update Users All In One Place"
+            <SubBanner
+                title={user.name || "User Details"}
+                description="View and manage user information"
+                icon="user"
+                linkText="Back to Users"
+                linkTo="/admin/users"
             />
 
             <div className={styles.userDetailsCard}>

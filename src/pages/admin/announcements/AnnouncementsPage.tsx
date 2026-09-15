@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetAnnouncementsQuery,
     useDeleteAnnouncementMutation,
@@ -246,7 +247,7 @@ export const AnnouncementsPage = () => {
     };
 
     const handleEditAnnouncement = (announcementId: number) => {
-        navigate(`/admin/announcements/edit/${announcementId}`);
+        navigate(buildRedirectUrl(`/admin/announcements/edit/${announcementId}`));
     };
 
     const handleDeleteClick = (announcement: AnnouncementResponseDto) => {

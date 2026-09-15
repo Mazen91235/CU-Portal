@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import styles from "./ReleasesBanner.module.css";
 import type { ReleaseResponseDto } from "../../types/dtos/ReleaseDtos";
 import type { ReleaseItemType } from "../../types/entities/ReleaseItem";
@@ -80,7 +81,7 @@ export const ReleasesBanner = ({
                     <span className={styles.version}>{version}</span>
                 </div>
 
-                <h2 className={styles.title}>{title}</h2>
+                <h2 className={styles.title}>{formatString(title, "PageTitle")}</h2>
 
                 <time className={styles.date} dateTime={date}>
                     <i

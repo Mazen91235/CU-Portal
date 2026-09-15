@@ -9,7 +9,7 @@ type BrowseCardProps = {
 export const BrowseCard = ({ title, onClick }: BrowseCardProps) => {
     return (
         <button type="button" className={styles.card} onClick={onClick}>
-            <span className={styles.title}>{formatString(title, 30)}</span>
+            <span className={styles.title}>{formatString(title, "CardTitle")}</span>
         </button>
     );
 };

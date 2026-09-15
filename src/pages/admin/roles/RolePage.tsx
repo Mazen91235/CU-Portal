@@ -14,7 +14,7 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
 import styles from "./RolePage.module.css";
-import { Banner } from "../../../components/banner/Banner";
+import { SubBanner } from "../../../components/banner/SubBanner";
 
 export const RolePage = () => {
     const { roleId } = useParams<{ roleId: string }>();
@@ -107,9 +107,12 @@ export const RolePage = () => {
                 description="Define and manage user roles to ensure secure and organized access across the platform"
             />
 
-            <Banner
+            <SubBanner
                 title={role.name || "Role Details"}
                 description={`Manage permissions and users for the ${role.name} role`}
+                icon="user"
+                linkText="Back to Roles"
+                linkTo="/admin/roles"
             />
 
             {hasNoPermissions ? (

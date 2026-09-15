@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -51,6 +52,8 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 export const EditExam = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/exams");
     const { examId } = useParams<{ examId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [exam, setExam] = useState<ExamResponseDto | null>(null);
@@ -89,7 +92,7 @@ export const EditExam = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -125,7 +128,7 @@ export const EditExam = () => {
             }
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch exam",
                 },
@@ -172,7 +175,7 @@ export const EditExam = () => {
             };
 
             await updateExam(examData).unwrap();
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { success: "Exam updated successfully!" },
             });
         } catch (error) {
@@ -181,7 +184,7 @@ export const EditExam = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/exams");
+        navigate(redirectUrl);
     };
 
     if (!exam) {
@@ -199,7 +202,7 @@ export const EditExam = () => {
                 description="Update exam information"
                 icon="task"
                 linkText="Back to Exams"
-                linkTo="/admin/exams"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form

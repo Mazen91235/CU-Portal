@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 
 import {
     useLazyGetAnnouncementQuery,
@@ -93,7 +94,7 @@ export const AnnouncementPage = () => {
                 icon="announcements"
                 button="Edit Announcement"
                 buttonAction={() =>
-                    navigate(`/admin/announcements/edit/${announcement.id}`)
+                    navigate(buildRedirectUrl(`/admin/announcements/edit/${announcement.id}`))
                 }
                 deleteButton="Delete Announcement"
                 deleteAction={handleDeleteClick}

@@ -1,13 +1,15 @@
 import { Link } from "react-router";
+import type { ReactNode } from "react";
 
 import IconComponent from "../IconComponent";
 import { type Icon } from "../../types/Icon";
 import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
 import styles from "./SubBanner.module.css";
+import { formatString } from "../../utils/Formatter";
 
 type SubBannerProps = {
-    title: string;
-    description?: string;
+    title: string | ReactNode;
+    description?: string | ReactNode;
     button?: string;
     buttonAction?: () => void;
     deleteButton?: string;
@@ -53,10 +55,10 @@ export const SubBanner = ({
                         <IconComponent icon={icon} className={styles["icon"]} />
                     )}
                     <div className={styles["textContent"]}>
-                        <h1 className={styles["title"]}>{title}</h1>
+                        <h1 className={styles["title"]}>{typeof title === "string" ? formatString(title, "PageTitle") : title}</h1>
                         {description && (
                             <p className={styles["description"]}>
-                                {description}
+                                {typeof description === "string" ? formatString(description, "PageDescription") : description}
                             </p>
                         )}
                     </div>
