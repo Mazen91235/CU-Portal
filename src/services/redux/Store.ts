@@ -34,6 +34,8 @@ import { AdminExamAPI } from "../apis/admin/ExamAPIs";
 import { AdminLogAPI } from "../apis/admin/LogAPIs";
 import { AdminMessageAPI } from "../apis/admin/MessageAPIs";
 import { AdminTaskAPI } from "../apis/admin/TaskAPIs";
+import { AdminWeekAPI } from "../apis/admin/WeekAPIs";
+import { WeekAPI } from "../apis/user/WeekAPIs";
 import { AdminReleaseAPI } from "../apis/admin/ReleaseAPIs";
 
 import { MessageAPI } from "../apis/MessageAPIs";
@@ -61,6 +63,7 @@ const store = configureStore({
     [YearAPI.reducerPath]: YearAPI.reducer,
     [EventAPI.reducerPath]: EventAPI.reducer,
     [EventOrganizerAPI.reducerPath]: EventOrganizerAPI.reducer,
+    [WeekAPI.reducerPath]: WeekAPI.reducer,
     [AdminAnnouncementAPI.reducerPath]: AdminAnnouncementAPI.reducer,
     [AdminCourseAPI.reducerPath]: AdminCourseAPI.reducer,
     [AdminDepartmentAPI.reducerPath]: AdminDepartmentAPI.reducer,
@@ -75,6 +78,7 @@ const store = configureStore({
     [AdminTaskAPI.reducerPath]: AdminTaskAPI.reducer,
     [AdminUserAPI.reducerPath]: AdminUserAPI.reducer,
     [AdminYearAPI.reducerPath]: AdminYearAPI.reducer,
+    [AdminWeekAPI.reducerPath]: AdminWeekAPI.reducer,
     [AdminReleaseAPI.reducerPath]: AdminReleaseAPI.reducer,
     [ReleaseAPI.reducerPath]: ReleaseAPI.reducer,
   },
@@ -97,6 +101,7 @@ const store = configureStore({
       YearAPI.middleware,
       EventAPI.middleware,
       EventOrganizerAPI.middleware,
+      WeekAPI.middleware,
       AdminAnnouncementAPI.middleware,
       AdminCourseAPI.middleware,
       AdminDepartmentAPI.middleware,
@@ -111,6 +116,7 @@ const store = configureStore({
       AdminTaskAPI.middleware,
       AdminUserAPI.middleware,
       AdminYearAPI.middleware,
+      AdminWeekAPI.middleware,
       AdminReleaseAPI.middleware,
       ReleaseAPI.middleware,
     ),

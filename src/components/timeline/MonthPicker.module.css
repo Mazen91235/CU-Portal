@@ -1,51 +1,71 @@
 .monthPicker {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px;
 
-    gap: 7px;
+  gap: 7px;
 
-    margin-left: 40px;
+  margin-left: 40px;
+}
+
+.weeklyGuide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 380px;
+
+  gap: 7px;
+
+  margin-left: 40px;
 }
 
 .calendarIcon {
-    color: #6b176f;
+  color: #6b176f;
 }
 
 .monthText {
-    font-size: 25px;
-    font-weight: 600;
-    color: #374151;
+  font-size: 25px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .arrows {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    margin-left: 2px;
-    gap: 10px;
-    height: 28px;
-    justify-content: center;
+  margin-left: 2px;
+  gap: 10px;
+  height: 28px;
+  justify-content: center;
 }
 
 .arrowButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    width: 18px;
-    height: 13px;
+  width: 18px;
+  height: 13px;
 
-    padding: 0;
-    border: none;
+  padding: 0;
+  border: none;
 
-    background: transparent;
-    color: #374151;
+  background: transparent;
+  color: #374151;
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .arrowButton:hover {
-    color: #6b176f;
+  color: #6b176f;
+}
+
+.arrowButton:disabled {
+  color: #c7c9cf;
+  cursor: not-allowed;
+}
+
+.arrowButton:disabled:hover {
+  color: #c7c9cf;
 }
