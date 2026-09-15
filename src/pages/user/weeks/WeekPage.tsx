@@ -272,13 +272,10 @@ export default function WeekMaterials({
                 </div>
             ) : (
                 !isLoading && (
-                    <div>
-                        <EmptySection
-                            icon="calendar"
-                            title="No materials for this week"
-                            description="There are no course materials available for the selected week."
-                        />
-                    </div>
+                    <EmptySection
+                        icon="calendar"
+                        title="No materials or weeks found for this week."
+                    />
                 )
             )}
         </section>
@@ -292,8 +289,10 @@ export function WeekPage() {
     const [weekMaterials, setWeekMaterials] = useState<MaterialResponseDto[]>(
         [],
     );
+    const [loadedRouteKey, setLoadedRouteKey] = useState<string | null>(null);
     const user = useAppSelector((state) => state.user.user);
     const [getWeeks, { isFetching }] = useLazyGetWeeksQuery();
+    const isRouteWeekLoading = loadedRouteKey !== (routeWeekId || "default");
 
     const academicWeekFilter = useMemo(() => {
         return {
@@ -382,6 +381,7 @@ export function WeekPage() {
         }
 
         setWeekMaterials(selectedWeek?.materials || []);
+        setLoadedRouteKey(routeWeekId || "default");
     }, [getWeeks, navigate, routeWeekId, academicWeekFilter]);
 
     useAuthQuery(fetchWeek);
@@ -439,7 +439,7 @@ export function WeekPage() {
                     materials={weekMaterials}
                     weekNumber={week?.week_number || 0}
                     onWeekChange={handleWeekChange}
-                    isLoading={isFetching}
+                    isLoading={isFetching || isRouteWeekLoading}
                     periodLabel={
                         week?.week_number
                             ? `Week ${week.week_number} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})`

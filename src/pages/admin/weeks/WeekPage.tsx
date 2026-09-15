@@ -4,6 +4,7 @@ import { SubBanner } from "../../../components/banner/SubBanner";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import { MonthPicker } from "../../../components/timeline/MonthPicker";
+import { EmptySection } from "../../../components/calendar/EmptySection";
 import { Preview } from "../../../components/preview/Preview";
 import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { downloadFile } from "../../../utils/FileDownloader";
@@ -661,9 +662,10 @@ export function WeekPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className={styles.empty}>
-                            No materials or weeks found for this week.
-                        </p>
+                        <EmptySection
+                            icon="calendar"
+                            title="No materials or weeks found for this week."
+                        />
                     )}
                 </section>
             </main>
