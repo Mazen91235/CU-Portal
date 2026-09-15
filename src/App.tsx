@@ -234,10 +234,6 @@ function App() {
                         <Route path=":weekId" element={<WeekPage />} />
                     </Route>
                 </Route>
-                <Route path="/weeks" element={<ProtectedRoute />}>
-                    <Route index element={<WeekPage />} />
-                    <Route path=":weekId" element={<WeekPage />} />
-                </Route>
                 <Route path="/admin" element={<ProtectedRoute />}>
                     <Route
                         path=""

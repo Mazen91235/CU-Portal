@@ -59,8 +59,9 @@ const navSectionsDefault: NavSection[] = [
             },
             {
                 label: "Weekly Guide",
-                path: "/weeks",
+                path: "/user/weeks",
                 icon: "sidebar-weekly-guide",
+                activatesPaths: ["/user/weeks/"],
             },
             {
                 label: "Tasks",

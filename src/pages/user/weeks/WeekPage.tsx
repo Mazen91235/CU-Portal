@@ -9,7 +9,11 @@ import { MaterialActionsDropdown } from "../../../components/materials/MaterialA
 import { downloadFile } from "../../../utils/FileDownloader";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
-import { formatDate, formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
+import {
+    formatDate,
+    formatDateTime,
+    formatTimeAgo,
+} from "../../../utils/Formatter";
 import { FaChevronUp } from "react-icons/fa";
 import { MonthPicker } from "../../../components/timeline/MonthPicker";
 import { EmptySection } from "../../../components/calendar/EmptySection";
@@ -291,11 +295,13 @@ export function WeekPage() {
     const user = useAppSelector((state) => state.user.user);
     const [getWeeks, { isFetching }] = useLazyGetWeeksQuery();
 
-    const academicWeekFilter = {
-        faculty_id: user?.faculty?.id || undefined,
-        department_id: user?.department?.id || undefined,
-        year_id: user?.year?.id || undefined,
-    };
+    const academicWeekFilter = useMemo(() => {
+        return {
+            faculty_id: user?.faculty?.id || undefined,
+            department_id: user?.department?.id || undefined,
+            year_id: user?.year?.id || undefined,
+        };
+    }, [user]);
 
     const fetchWeek = useCallback(async () => {
         const today = new Date().toLocaleDateString("en-CA");
@@ -372,26 +378,24 @@ export function WeekPage() {
         setWeek(selectedWeek || null);
 
         if (!routeWeekId && selectedWeek?.id) {
-            navigate(`/weeks/${selectedWeek.id}`, { replace: true });
+            navigate(`/user/weeks/${selectedWeek.id}`, { replace: true });
         }
 
         setWeekMaterials(selectedWeek?.materials || []);
-    }, [
-        getWeeks,
-        navigate,
-        routeWeekId,
-        academicWeekFilter.faculty_id,
-        academicWeekFilter.department_id,
-        academicWeekFilter.year_id,
-    ]);
+    }, [getWeeks, navigate, routeWeekId, academicWeekFilter]);
 
     useAuthQuery(fetchWeek);
 
     const handleWeekChange = (amount: number) => {
         if (!week?.start_date) return;
         if (amount < 0) {
+            const targetDate = new Date(formatDateTime(week.start_date, true));
+            targetDate.setUTCDate(targetDate.getUTCDate() - 1);
             void getWeeks({
-                data: { ...academicWeekFilter, start_date_to: week.start_date },
+                data: {
+                    ...academicWeekFilter,
+                    start_date_to: targetDate.toISOString().slice(0, 10),
+                },
                 order_by: ["start_date"],
                 descending: true,
                 limit: 1,
@@ -399,11 +403,11 @@ export function WeekPage() {
                 .unwrap()
                 .then((response) => {
                     if (response.data?.[0]?.id)
-                        navigate(`/weeks/${response.data[0].id}`);
+                        navigate(`/user/weeks/${response.data[0].id}`);
                 });
             return;
         }
-        const targetDate = new Date(`${week.start_date}T00:00:00Z`);
+        const targetDate = new Date(formatDateTime(week.start_date, true));
         targetDate.setUTCDate(targetDate.getUTCDate() + 7);
         void getWeeks({
             data: {
@@ -416,7 +420,7 @@ export function WeekPage() {
             .unwrap()
             .then((response) => {
                 if (response.data?.[0]?.id)
-                    navigate(`/weeks/${response.data[0].id}`);
+                    navigate(`/user/weeks/${response.data[0].id}`);
             });
     };
 

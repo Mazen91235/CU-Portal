@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
+import type React from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -74,87 +75,86 @@ export function CreateWeek() {
             year_id: "",
         },
     });
-    const facultyId = watch("faculty_id");
     const startDate = watch("start_date");
     const endDate = watch("end_date");
     const weeksCount = getWeeksCount(startDate, endDate);
 
-    const loadFilters = useCallback(async () => {
-        if (!user?.canAccessAll) return;
+    const fetchFilters = useCallback(async () => {
+        if (!user?.canAccessAll) {
+            setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            setValue("department_id", user?.department?.id?.toString() || "");
+            setValue("year_id", user?.year?.id?.toString() || "");
+            return;
+        }
+
         try {
             const [facultyResult, yearResult] = await Promise.all([
                 getFaculties({ data: {} }).unwrap(),
                 getYears({ data: {} }).unwrap(),
             ]);
-            setFaculties(facultyResult.data || []);
-            setYears(yearResult.data || []);
-            setValue("faculty_id", String(user.faculty?.id || ""));
-            setValue("year_id", String(user.year?.id || ""));
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getFaculties, getYears, setValue, user]);
 
-    const loadDepartments = useCallback(async () => {
-        if (!user?.canAccessAll || !facultyId) {
-            setDepartments([]);
-            return;
-        }
-        try {
-            const result = await getDepartments({
+            const availableFaculties = facultyResult.data || [];
+            const availableYears = yearResult.data || [];
+
+            setFaculties(availableFaculties);
+            setYears(availableYears);
+
+            const facultyId = user?.faculty?.id?.toString() || "";
+            const departmentId = user?.department?.id?.toString() || "";
+            const yearId = user?.year?.id?.toString() || "";
+            if (faculties.length > 0) setValue("faculty_id", facultyId);
+            if (years.length > 0) setValue("year_id", yearId);
+
+            if (!facultyId) {
+                setDepartments([]);
+                return;
+            }
+
+            const departmentResult = await getDepartments({
                 data: { faculty_id: Number(facultyId) },
             }).unwrap();
-            const availableDepartments = result.data || [];
+
+            const availableDepartments = departmentResult.data || [];
             setDepartments(availableDepartments);
-            const userDepartmentId = user.department?.id;
-            setValue(
-                "department_id",
-                availableDepartments.some(
-                    (department) => department.id === userDepartmentId,
-                )
-                    ? String(userDepartmentId)
-                    : "",
-            );
+
+            if (departments.length > 0) setValue("department_id", departmentId);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [facultyId, getDepartments, setValue, user]);
+    }, [
+        getDepartments,
+        getFaculties,
+        getYears,
+        setValue,
+        user,
+        faculties,
+        years,
+        departments,
+    ]);
 
-    useEffect(() => {
-        if (!user) return;
-        if (!user.canAccessAll) {
-            setValue("faculty_id", String(user.faculty?.id || ""));
-            setValue("department_id", String(user.department?.id || ""));
-            setValue("year_id", String(user.year?.id || ""));
-        }
-    }, [setValue, user]);
+    const handleFacultyChange = useCallback(
+        async (event: React.ChangeEvent<HTMLSelectElement>) => {
+            const facultyId = event.target.value;
 
-    useEffect(() => {
-        if (!user?.canAccessAll) return;
-        setValue("department_id", "");
-        setDepartments([]);
-        void loadDepartments();
-    }, [facultyId, loadDepartments, setValue, user?.canAccessAll]);
+            setValue("faculty_id", facultyId);
+            setValue("department_id", "");
+            setDepartments([]);
 
-    useAuthQuery(useCallback(() => loadFilters(), [loadFilters]));
+            if (!facultyId) return;
 
-    const options = useMemo(
-        () => ({
-            faculty: faculties.map((item) => ({
-                value: String(item.id),
-                label: item.name || "",
-            })),
-            department: departments.map((item) => ({
-                value: String(item.id),
-                label: item.name || "",
-            })),
-            year: years.map((item) => ({
-                value: String(item.id),
-                label: String(item.year || ""),
-            })),
-        }),
-        [departments, faculties, years],
+            try {
+                const result = await getDepartments({
+                    data: { faculty_id: Number(facultyId) },
+                }).unwrap();
+                setDepartments(result.data || []);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        },
+        [getDepartments, setValue],
     );
+
+    useAuthQuery(fetchFilters);
 
     const onSubmit = async (data: WeekFormData) => {
         try {
@@ -241,14 +241,15 @@ export function CreateWeek() {
                                 name="faculty_id"
                                 errors={errors}
                                 disabled={busy}
+                                onChange={handleFacultyChange}
                             >
                                 <option value="">Select Faculty</option>
-                                {options.faculty.map((option) => (
+                                {faculties.map((faculty) => (
                                     <option
-                                        key={option.value}
-                                        value={option.value}
+                                        key={faculty.id}
+                                        value={faculty.id?.toString()}
                                     >
-                                        {option.label}
+                                        {faculty.name}
                                     </option>
                                 ))}
                             </Select>
@@ -260,12 +261,12 @@ export function CreateWeek() {
                                 disabled={busy}
                             >
                                 <option value="">Select Department</option>
-                                {options.department.map((option) => (
+                                {departments.map((department) => (
                                     <option
-                                        key={option.value}
-                                        value={option.value}
+                                        key={department.id}
+                                        value={department.id?.toString()}
                                     >
-                                        {option.label}
+                                        {department.name}
                                     </option>
                                 ))}
                             </Select>
@@ -277,12 +278,12 @@ export function CreateWeek() {
                                 disabled={busy}
                             >
                                 <option value="">Select Academic Year</option>
-                                {options.year.map((option) => (
+                                {years.map((year) => (
                                     <option
-                                        key={option.value}
-                                        value={option.value}
+                                        key={year.id}
+                                        value={year.id?.toString()}
                                     >
-                                        {option.label}
+                                        {year.year}
                                     </option>
                                 ))}
                             </Select>
