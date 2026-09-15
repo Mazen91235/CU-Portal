@@ -45,7 +45,7 @@ export const RolesPage = () => {
         try {
             const result = await getRoles({
                 data: { query: searchQuery },
-                includes: ["role_links.exact_role"],
+                includes: ["role_links.exact_role", "users"],
             }).unwrap();
             setRoles(result.data || []);
             setFilteredRoles(result.data || []);
@@ -158,7 +158,8 @@ export const RolesPage = () => {
             <div className={styles.searchSection}>
                 <Search
                     placeholder="Search roles..."
-                    setValue={setSearchQuery} value={searchQuery}
+                    setValue={setSearchQuery}
+                    value={searchQuery}
                 />
             </div>
 

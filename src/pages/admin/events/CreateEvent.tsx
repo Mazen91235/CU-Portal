@@ -122,12 +122,18 @@ export const CreateEvent = () => {
 
     useEffect(() => {
         if (!user?.canAccessAll && isRestricted) {
-            setValue("faculty_id", user?.faculty?.id?.toString() || "");
-            setValue("department_id", user?.department?.id?.toString() || "");
-            setValue("year_id", user?.year?.id?.toString() || "");
             setFaculties(user?.faculty ? [user.faculty] : []);
             setDepartments(user?.department ? [user.department] : []);
             setYears(user?.year ? [user.year] : []);
+            if (faculties.length > 0)
+                setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            if (departments.length > 0)
+                setValue(
+                    "department_id",
+                    user?.department?.id?.toString() || "",
+                );
+            if (years.length > 0)
+                setValue("year_id", user?.year?.id?.toString() || "");
             return;
         }
 
@@ -141,7 +147,7 @@ export const CreateEvent = () => {
                 setYears([]);
             }
         }
-    }, [isRestricted, user, setValue]);
+    }, [setValue, isRestricted, user, faculties, departments, years]);
 
     const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;

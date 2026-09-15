@@ -245,8 +245,21 @@ export function OtherMaterialsPage() {
 
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
+        if (selectedMaterials.length === 1) {
+            const selectedMaterial = materials.find(
+                (material) => material.id === selectedMaterials[0],
+            );
+            const fileId =
+                selectedMaterial?.material_type === "file"
+                    ? selectedMaterial.attachment?.details?.file_data?.id
+                    : undefined;
+            if (fileId) {
+                downloadFile(fileId);
+                return;
+            }
+        }
         downloadMaterials(selectedMaterials);
-    }, [selectedMaterials]);
+    }, [selectedMaterials, materials]);
 
     const handleSelectAll = useCallback(() => {
         const materialIds = materials

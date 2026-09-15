@@ -172,11 +172,22 @@ export function MaterialsPage() {
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
         if (selectedMaterials.length === 1) {
+            const selectedMaterial = materials.find(
+                (material) => material.id === selectedMaterials[0],
+            );
+            const fileId =
+                selectedMaterial?.material_type === "file"
+                    ? selectedMaterial.attachment?.details?.file_data?.id
+                    : undefined;
+            if (fileId) {
+                handleDownloadFile(fileId);
+                return;
+            }
             handleDownloadMaterial(selectedMaterials[0]);
             return;
         }
         downloadMaterials(selectedMaterials);
-    }, [selectedMaterials, handleDownloadMaterial]);
+    }, [selectedMaterials, materials, handleDownloadFile, handleDownloadMaterial]);
 
     const handleCardClick = useCallback(
         (material: MaterialResponseDto) => {

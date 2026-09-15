@@ -39,7 +39,8 @@ export const EventsPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
 
-    const { getFilter, getFilterSetter, searchParams, setFilters } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams, setFilters } =
+        useFilterSearchParams();
     const authorId = searchParams.get("author_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
@@ -52,7 +53,10 @@ export const EventsPage = () => {
     const setYearFilter = getFilterSetter("year_id");
     const eventOrganizerFilter = getFilter("event_organizer_id", "");
     const setEventOrganizerFilter = getFilterSetter("event_organizer_id");
-    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFromFilter = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
     const setDateToFilter = getFilterSetter("date_to", true);
@@ -142,18 +146,11 @@ export const EventsPage = () => {
                 eventTypeFilter === "Offline"
                     ? eventTypeFilter
                     : undefined) as "Online" | "Offline" | undefined,
-                faculty_id:
-                    user.canAccessAll && facultyFilter
-                        ? parseInt(facultyFilter)
-                        : undefined,
-                department_id:
-                    user.canAccessAll && departmentFilter
-                        ? parseInt(departmentFilter)
-                        : undefined,
-                year_id:
-                    user.canAccessAll && yearFilter
-                        ? parseInt(yearFilter)
-                        : undefined,
+                faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
+                department_id: departmentFilter
+                    ? parseInt(departmentFilter)
+                    : undefined,
+                year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 event_organizer_id: eventOrganizerFilter
                     ? parseInt(eventOrganizerFilter)
                     : undefined,
@@ -161,6 +158,12 @@ export const EventsPage = () => {
                 start_date_from: dateFromFilter || undefined,
                 start_date_to: dateToFilter || undefined,
             };
+
+            if (!user?.canAccessAll) {
+                params.faculty_id = user?.faculty?.id || undefined;
+                params.department_id = user?.department?.id || undefined;
+                params.year_id = user?.year?.id || undefined;
+            }
 
             const result = await getEvents({
                 data: params,
@@ -207,10 +210,19 @@ export const EventsPage = () => {
         page,
     ]);
 
-    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
-    const authEventOrganizersQuery = useCallback(() => fetchEventOrganizers(), [fetchEventOrganizers]);
+    const authEventOrganizersQuery = useCallback(
+        () => fetchEventOrganizers(),
+        [fetchEventOrganizers],
+    );
 
     const authFetchEventsQuery = useCallback(
         () => fetchEvents(),
@@ -339,7 +351,8 @@ export const EventsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search events..."
-                            setValue={setSearchQuery} value={searchQuery}
+                            setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
 
@@ -364,17 +377,20 @@ export const EventsPage = () => {
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter} value={yearFilter}
+                                    setValue={setYearFilter}
+                                    value={yearFilter}
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={eventOrganizerOptions}
-                            setValue={setEventOrganizerFilter} value={eventOrganizerFilter}
+                            setValue={setEventOrganizerFilter}
+                            value={eventOrganizerFilter}
                         />
                         <SelectFilter
                             options={eventTypeOptions}
-                            setValue={setEventTypeFilter} value={eventTypeFilter}
+                            setValue={setEventTypeFilter}
+                            value={eventTypeFilter}
                         />
                         <DateFilter
                             placeholder="Date From"

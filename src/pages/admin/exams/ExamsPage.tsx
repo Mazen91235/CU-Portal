@@ -140,7 +140,7 @@ export const ExamsPage = () => {
     const fetchExams = useCallback(async () => {
         try {
             if (!hasNextPage || !user) return;
-            const params: any = {
+            const params = {
                 query: searchQuery || undefined,
                 faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
                 department_id: departmentFilter
@@ -153,13 +153,17 @@ export const ExamsPage = () => {
                 author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getExams({
                 data: params,
-                includes: ["subject"],
+                includes: [
+                    "subject.faculty",
+                    "subject.department",
+                    "subject.year",
+                ],
                 page,
             }).unwrap();
             setExams((prev) => {

@@ -2,11 +2,12 @@ import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { WeekResponseDto } from "./WeekDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
+import type { MaterialType } from "../entities/Material";
 import type { SearchDto } from "./BaseDtos";
 
 export type MaterialCreateDto = {
     name: string;
-    material_type: string;
+    material_type: MaterialType;
     subject_id: number;
     parent_id?: number | null;
     week_id?: number | null;
@@ -18,7 +19,7 @@ export type MaterialCreateDto = {
 export type MaterialResponseDto = {
     id?: number | null;
     name?: string | null;
-    material_type?: string | null;
+    material_type?: MaterialType | null;
     details?: object | null;
     created_at?: string | null;
     updated_at?: string | null;
@@ -32,7 +33,7 @@ export type MaterialResponseDto = {
 
 export type MaterialUpdateDto = {
     name: string;
-    material_type: string;
+    material_type: MaterialType;
     week_id?: number | null;
     details?: {
         url?: string | null;
@@ -45,7 +46,7 @@ export type MaterialsDeleteDto = {
 
 export type MaterialSearchDto = {
     id?: number | null;
-    material_type?: string | null;
+    material_type?: MaterialType | null;
     subject_id?: number | null;
     parent_id?: number | null;
     week_id?: number | null;

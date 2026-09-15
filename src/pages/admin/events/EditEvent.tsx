@@ -87,7 +87,10 @@ type EventFormData = z.input<typeof eventSchema>;
 export const EditEvent = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/events");
+    const redirectUrl = getRedirectUrl(
+        searchParams.get("redirect_url"),
+        "/admin/events",
+    );
     const { eventId } = useParams<{ eventId: string }>();
     const user = useAppSelector((state) => state.user.user);
 
@@ -255,7 +258,7 @@ export const EditEvent = () => {
                 },
             });
         }
-    }, [eventId, getEvent, navigate, setValue]);
+    }, [getEvent, navigate, setValue, eventId, redirectUrl]);
 
     const authQueryParams = useCallback(
         () =>
@@ -279,12 +282,18 @@ export const EditEvent = () => {
 
     useEffect(() => {
         if (!user?.canAccessAll && isRestricted) {
-            setValue("faculty_id", user?.faculty?.id?.toString() || "");
-            setValue("department_id", user?.department?.id?.toString() || "");
-            setValue("year_id", user?.year?.id?.toString() || "");
             setFaculties(user?.faculty ? [user.faculty] : []);
             setDepartments(user?.department ? [user.department] : []);
             setYears(user?.year ? [user.year] : []);
+            if (faculties.length > 0)
+                setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            if (departments.length > 0)
+                setValue(
+                    "department_id",
+                    user?.department?.id?.toString() || "",
+                );
+            if (years.length > 0)
+                setValue("year_id", user?.year?.id?.toString() || "");
             return;
         }
 
@@ -298,7 +307,7 @@ export const EditEvent = () => {
                 setYears([]);
             }
         }
-    }, [isRestricted, user, setValue]);
+    }, [setValue, isRestricted, user, faculties, departments, years]);
 
     useEffect(() => {
         if (user?.canAccessAll) {
