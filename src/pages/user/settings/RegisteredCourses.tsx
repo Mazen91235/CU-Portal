@@ -120,17 +120,15 @@ export const RegisteredCourses = () => {
         }
     }, [getYears]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchDepartments(), fetchYears()]),
-        [fetchDepartments, fetchYears],
-    );
-
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
     const authCoursesQuery = useCallback(
         () => Promise.all([fetchEnrolledCourses(), fetchAvailableCourses()]),
         [fetchEnrolledCourses, fetchAvailableCourses],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
     useAuthQuery(authCoursesQuery);
 
     const generalDepartment = useMemo(

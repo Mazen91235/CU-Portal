@@ -36,7 +36,6 @@ export const CoursesPage = () => {
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
     const facultyFilter = getFilter("faculty_id", "");
-    const setFacultyFilter = getFilterSetter("faculty_id");
     const departmentFilter = getFilter("department_id", "");
     const setDepartmentFilter = getFilterSetter("department_id");
     const yearFilter = getFilter("year_id", "");
@@ -68,12 +67,18 @@ export const CoursesPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const result = await searchDepartments({ data: {} }).unwrap();
+            if (!user?.canAccessAll || !facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: parseInt(facultyFilter) },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments]);
+    }, [searchDepartments, user?.canAccessAll, facultyFilter]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -135,17 +140,18 @@ export const CoursesPage = () => {
         userId,
     ]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authCoursesQuery = useCallback(
         () => fetchCourses(),
         [fetchCourses],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
     useAuthQuery(authCoursesQuery);
 
     useEffect(() => {

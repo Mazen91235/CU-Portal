@@ -30,11 +30,10 @@ import styles from "./UsersPage.module.css";
 export const UsersPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
-    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, setFilters } = useFilterSearchParams();
     const searchQuery = getFilter("query");
     const setSearchQuery = getFilterSetter("query");
     const selectedFaculty = getFilter("faculty_id");
-    const setSelectedFaculty = getFilterSetter("faculty_id");
     const selectedDepartment = getFilter("department_id");
     const setSelectedDepartment = getFilterSetter("department_id");
     const selectedYear = getFilter("year_id");
@@ -90,12 +89,18 @@ export const UsersPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const result = await searchDepartments({ data: {} }).unwrap();
+            if (!user?.canAccessAll || !selectedFaculty) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: Number(selectedFaculty) },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments]);
+    }, [searchDepartments, user?.canAccessAll, selectedFaculty]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -156,18 +161,18 @@ export const UsersPage = () => {
         user,
     ]);
 
-    const authFilterQuery = useCallback(
-        () =>
-            Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authUsersQuery = useCallback(
         () => Promise.all([fetchUsers(), fetchUsersData()]),
         [fetchUsers, fetchUsersData],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
     useAuthQuery(authUsersQuery);
 
     useEffect(() => {
@@ -346,7 +351,12 @@ export const UsersPage = () => {
                             <div className={styles.filterItem}>
                                 <SelectFilter
                                     value={selectedFaculty}
-                                    setValue={setSelectedFaculty}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                        })
+                                    }
                                     options={facultyOptions}
                                 />
                             </div>
@@ -355,6 +365,7 @@ export const UsersPage = () => {
                                     value={selectedDepartment}
                                     setValue={setSelectedDepartment}
                                     options={departmentOptions}
+                                    disabled={!selectedFaculty}
                                 />
                             </div>
                             <div className={styles.filterItem}>

@@ -28,12 +28,11 @@ import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./PendingUsersPage.module.css";
 
 export const PendingUsersPage = () => {
-    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, setFilters } = useFilterSearchParams();
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
     const user = useAppSelector((state) => state.user.user);
     const selectedFaculty = getFilter("faculty_id", "");
-    const setSelectedFaculty = getFilterSetter("faculty_id");
     const selectedDepartment = getFilter("department_id", "");
     const setSelectedDepartment = getFilterSetter("department_id");
     const selectedYear = getFilter("year_id", "");
@@ -71,12 +70,18 @@ export const PendingUsersPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const result = await searchDepartments({ data: {} }).unwrap();
+            if (!user?.canAccessAll || !selectedFaculty) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: Number(selectedFaculty) },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments]);
+    }, [searchDepartments, user?.canAccessAll, selectedFaculty]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -144,17 +149,18 @@ export const PendingUsersPage = () => {
         user,
     ]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authPendingUsersQuery = useCallback(
         () => fetchPendingUsers(),
         [fetchPendingUsers],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
     useAuthQuery(authPendingUsersQuery);
 
     useEffect(() => {
@@ -335,7 +341,12 @@ export const PendingUsersPage = () => {
                             <div className={styles.filterItem}>
                                 <SelectFilter
                                     value={selectedFaculty}
-                                    setValue={setSelectedFaculty}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                        })
+                                    }
                                     options={facultyOptions}
                                 />
                             </div>
@@ -344,6 +355,7 @@ export const PendingUsersPage = () => {
                                     value={selectedDepartment}
                                     setValue={setSelectedDepartment}
                                     options={departmentOptions}
+                                    disabled={!selectedFaculty}
                                 />
                             </div>
                             <div className={styles.filterItem}>

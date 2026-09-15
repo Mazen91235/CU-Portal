@@ -87,12 +87,22 @@ export const AnnouncementsPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const result = await searchDepartments({ data: {} }).unwrap();
+            if (!user?.canAccessAll) {
+                setDepartments([]);
+                return;
+            }
+            if (!facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: parseInt(facultyFilter) },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments]);
+    }, [searchDepartments, facultyFilter, user?.canAccessAll]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -106,8 +116,18 @@ export const AnnouncementsPage = () => {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
+            if (user.canAccessAll) {
+                if (!facultyFilter || !departmentFilter || !yearFilter) {
+                    setSubjects([]);
+                    return;
+                }
+            }
             const data = user.canAccessAll
-                ? {}
+                ? {
+                      faculty_id: parseInt(facultyFilter),
+                      department_id: parseInt(departmentFilter),
+                      year_id: parseInt(yearFilter),
+                  }
                 : {
                       faculty_id: user.faculty?.id ?? undefined,
                       department_id: user.department?.id ?? undefined,
@@ -118,7 +138,13 @@ export const AnnouncementsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, user]);
+    }, [
+        searchCourses,
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+    ]);
 
     const fetchAnnouncements = useCallback(async () => {
         try {
@@ -175,17 +201,20 @@ export const AnnouncementsPage = () => {
         authorId,
     ]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears(), fetchSubjects()]),
-        [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
 
     const authFetchAnnouncementsQuery = useCallback(
         () => fetchAnnouncements(),
         [fetchAnnouncements],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authSubjectsQuery);
     useAuthQuery(authFetchAnnouncementsQuery);
 
     useEffect(() => {
@@ -347,7 +376,9 @@ export const AnnouncementsPage = () => {
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={(value) => setFilters({ department_id: value as string, subject_id: null })} value={departmentFilter}
+                                    setValue={(value) => setFilters({ department_id: value as string, subject_id: null })}
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
@@ -357,7 +388,9 @@ export const AnnouncementsPage = () => {
                         )}
                         <SelectFilter
                             options={subjectOptions}
-                            setValue={setSubjectFilter} value={subjectFilter}
+                            setValue={setSubjectFilter}
+                            value={subjectFilter}
+                            disabled={user?.canAccessAll ? (!facultyFilter || !departmentFilter || !yearFilter) : false}
                         />
                         <DateFilter
                             placeholder="Start Date"

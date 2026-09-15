@@ -77,7 +77,7 @@ export const YearsPage = () => {
     const filteredYears = useMemo(
         () =>
             years.filter((year) =>
-                !yearFilter ? true : year.year?.toString() === yearFilter,
+                !yearFilter ? true : year.id?.toString() === yearFilter,
             ),
         [years, yearFilter],
     );
@@ -142,13 +142,14 @@ export const YearsPage = () => {
         }
     };
 
-    const uniqueYears = Array.from(
-        new Set(years.map((y) => y.year?.toString() || "")),
-    ).filter(Boolean);
-
     const yearOptions = [
         { value: "", label: "Academic Year" },
-        ...uniqueYears.map((year) => ({ value: String(year), label: String(year) })),
+        ...years
+            .filter((year) => year.id != null)
+            .map((year) => ({
+                value: String(year.id),
+                label: String(year.year ?? ""),
+            })),
     ];
 
     return (

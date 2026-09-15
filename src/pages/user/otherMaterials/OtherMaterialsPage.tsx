@@ -185,17 +185,17 @@ export function OtherMaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchDepartment(), fetchYear(), fetchSubjects()]),
-        [fetchDepartment, fetchYear, fetchSubjects],
-    );
-
+    const authDepartmentQuery = useCallback(() => fetchDepartment(), [fetchDepartment]);
+    const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
+    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
     const authMaterialsQuery = useCallback(
         () => fetchMaterials(currentParentId),
         [fetchMaterials, currentParentId],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authDepartmentQuery);
+    useAuthQuery(authYearQuery);
+    useAuthQuery(authSubjectsQuery);
     useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {

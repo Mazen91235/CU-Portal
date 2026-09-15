@@ -59,16 +59,13 @@ export function MaterialsPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams, setFilters, setSearchParams } = useFilterSearchParams();
     const authorId = searchParams.get("author_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
     const facultyFilter = getFilter("faculty_id", "");
-    const setFacultyFilter = getFilterSetter("faculty_id");
     const departmentFilter = getFilter("department_id", "");
-    const setDepartmentFilter = getFilterSetter("department_id");
     const yearFilter = getFilter("year_id", "");
-    const setYearFilter = getFilterSetter("year_id");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -147,12 +144,18 @@ export function MaterialsPage() {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            const result = await searchDepartments({ data: {} }).unwrap();
+            if (!user?.canAccessAll || !facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: Number(facultyFilter) },
+            }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments]);
+    }, [searchDepartments, user?.canAccessAll, facultyFilter]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -166,8 +169,18 @@ export function MaterialsPage() {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
+            if (user.canAccessAll) {
+                if (!facultyFilter || !departmentFilter || !yearFilter) {
+                    setSubjects([]);
+                    return;
+                }
+            }
             const data = user.canAccessAll
-                ? {}
+                ? {
+                      faculty_id: Number(facultyFilter),
+                      department_id: Number(departmentFilter),
+                      year_id: Number(yearFilter),
+                  }
                 : {
                       faculty_id: user.faculty?.id ?? undefined,
                       department_id: user.department?.id ?? undefined,
@@ -178,7 +191,13 @@ export function MaterialsPage() {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, user]);
+    }, [
+        searchCourses,
+        user,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+    ]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -273,17 +292,20 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears(), fetchSubjects()]),
-        [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
 
     const authMaterialsQuery = useCallback(
         () => Promise.all([fetchMaterials(currentParentId), fetchFolders(currentParentId)]),
         [fetchMaterials, fetchFolders, currentParentId],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authSubjectsQuery);
     useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
@@ -1034,38 +1056,37 @@ export function MaterialsPage() {
                         <>
                             <SelectFilter
                                 options={facultyOptions}
-                                setValue={(value) => {
-                                    if (
-                                        facultyFilter &&
-                                        value != facultyFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setFacultyFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        faculty_id: value as string,
+                                        department_id: null,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={facultyFilter}
                             />
                             <SelectFilter
                                 options={departmentOptions}
-                                setValue={(value) => {
-                                    if (
-                                        departmentFilter &&
-                                        value != departmentFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setDepartmentFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        department_id: value as string,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={departmentFilter}
+                                disabled={!facultyFilter}
                             />
                             <SelectFilter
                                 options={yearOptions}
-                                setValue={(value) => {
-                                    if (yearFilter && value != yearFilter) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setYearFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        year_id: value as string,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={yearFilter}
                             />
                         </>
@@ -1081,6 +1102,7 @@ export function MaterialsPage() {
                             );
                         }}
                         value={subjectFilter}
+                        disabled={user?.canAccessAll ? (!facultyFilter || !departmentFilter || !yearFilter) : false}
                     />
                 </div>
 

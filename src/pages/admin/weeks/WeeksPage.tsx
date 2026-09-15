@@ -40,7 +40,7 @@ export function WeeksPage() {
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
-    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, setFilters } = useFilterSearchParams();
     const facultyFilter = getFilter("faculty_id", "");
     const setFacultyFilter = getFilterSetter("faculty_id");
     const departmentFilter = getFilter("department_id", "");
@@ -95,21 +95,40 @@ export function WeeksPage() {
         dateTo,
     ]);
 
-    const loadFilters = useCallback(async () => {
+    const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;
         try {
-            const [facultyResult, departmentResult, yearResult] = await Promise.all([
-                getFaculties({ data: {} }).unwrap(),
-                getDepartments({ data: {} }).unwrap(),
-                getYears({ data: {} }).unwrap(),
-            ]);
-            setFaculties(facultyResult.data || []);
-            setDepartments(departmentResult.data || []);
-            setYears(yearResult.data || []);
+            const result = await getFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, getFaculties, getYears, user?.canAccessAll]);
+    }, [getFaculties, user?.canAccessAll]);
+
+    const fetchDepartments = useCallback(async () => {
+        if (!user?.canAccessAll || !facultyFilter) {
+            setDepartments([]);
+            return;
+        }
+        try {
+            const result = await getDepartments({
+                data: { faculty_id: Number(facultyFilter) },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getDepartments, user?.canAccessAll, facultyFilter]);
+
+    const fetchYears = useCallback(async () => {
+        if (!user?.canAccessAll) return;
+        try {
+            const result = await getYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getYears, user?.canAccessAll]);
 
     useEffect(() => {
         if (!user?.canAccessAll) {
@@ -119,17 +138,18 @@ export function WeeksPage() {
         }
     }, [user]);
 
-    const authFilterQuery = useCallback(
-        () => loadFilters(),
-        [loadFilters],
-    );
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authWeeksQuery = useCallback(
         () => fetch(),
         [fetch],
     );
 
-    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
     useAuthQuery(authWeeksQuery);
 
     const removeWeek = async () => {
@@ -169,7 +189,12 @@ export function WeeksPage() {
                                         })),
                                     ]}
                                     value={facultyFilter}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                        })
+                                    }
                                 />
                                 <SelectFilter
                                     options={[
@@ -181,6 +206,7 @@ export function WeeksPage() {
                                     ]}
                                     value={departmentFilter}
                                     setValue={setDepartmentFilter}
+                                    disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={[
