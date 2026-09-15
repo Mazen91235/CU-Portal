@@ -816,18 +816,12 @@ export function MaterialsPage() {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "All Departments" },
-            ...departments
-                .filter(
-                    (dept) =>
-                        !facultyFilter ||
-                        dept.faculty?.id?.toString() === facultyFilter,
-                )
-                .map((dept) => ({
-                    value: dept.id?.toString() || "",
-                    label: dept.name || "",
-                })),
+            ...departments.map((dept) => ({
+                value: dept.id?.toString() || "",
+                label: dept.name || "",
+            })),
         ],
-        [departments, facultyFilter],
+        [departments],
     );
 
     const yearOptions = useMemo(
@@ -844,22 +838,12 @@ export function MaterialsPage() {
     const subjectOptions = useMemo(
         () => [
             { value: "", label: "All Courses" },
-            ...subjects
-                .filter(
-                    (subject) =>
-                        (!facultyFilter ||
-                            subject.faculty?.id?.toString() === facultyFilter) &&
-                        (!departmentFilter ||
-                            subject.department?.id?.toString() === departmentFilter) &&
-                        (!yearFilter ||
-                            subject.year?.id?.toString() === yearFilter),
-                )
-                .map((subject) => ({
-                    value: subject.id?.toString() || "",
-                    label: subject.name || "",
-                })),
+            ...subjects.map((subject) => ({
+                value: subject.id?.toString() || "",
+                label: subject.name || "",
+            })),
         ],
-        [subjects, facultyFilter, departmentFilter, yearFilter],
+        [subjects],
     );
 
     // Handle global drag events for file upload

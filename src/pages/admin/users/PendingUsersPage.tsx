@@ -181,18 +181,12 @@ export const PendingUsersPage = () => {
     const departmentOptions = useMemo(() => {
         return [
             { value: "", label: "All Departments" },
-            ...departments
-                .filter(
-                    (department: DepartmentResponseDto) =>
-                        !selectedFaculty ||
-                        department.faculty?.id?.toString() === selectedFaculty,
-                )
-                .map((department: DepartmentResponseDto) => ({
-                    value: String(department.id),
-                    label: department.name || "",
-                })),
+            ...departments.map((department: DepartmentResponseDto) => ({
+                value: String(department.id),
+                label: department.name || "",
+            })),
         ];
-    }, [departments, selectedFaculty]);
+    }, [departments]);
 
     const yearOptions = useMemo(() => {
         return [

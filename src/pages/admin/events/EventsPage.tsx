@@ -290,18 +290,12 @@ export const EventsPage = () => {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "Department" },
-            ...departments
-                .filter(
-                    (department) =>
-                        !facultyFilter ||
-                        department.faculty?.id?.toString() === facultyFilter,
-                )
-                .map((department) => ({
-                    value: department.id?.toString() || "",
-                    label: department.name || "",
-                })),
+            ...departments.map((department) => ({
+                value: department.id?.toString() || "",
+                label: department.name || "",
+            })),
         ],
-        [departments, facultyFilter],
+        [departments],
     );
 
     const yearOptions = useMemo(

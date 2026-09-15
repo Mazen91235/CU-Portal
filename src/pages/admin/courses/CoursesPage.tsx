@@ -214,18 +214,12 @@ export const CoursesPage = () => {
     const departmentOptions = useMemo(
         () => [
             { value: "", label: "Department" },
-            ...departments
-                .filter(
-                    (dept) =>
-                        !facultyFilter ||
-                        dept.faculty?.id?.toString() === facultyFilter,
-                )
-                .map((dept) => ({
+            ...departments.map((dept) => ({
                 value: dept.id?.toString() || "",
                 label: dept.name || "",
-                })),
+            })),
         ],
-        [departments, facultyFilter],
+        [departments],
     );
 
     const yearOptions = useMemo(
@@ -269,6 +263,7 @@ export const CoursesPage = () => {
                                 <SelectFilter
                                     options={departmentOptions}
                                     setValue={setDepartmentFilter} value={departmentFilter}
+                                    disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
