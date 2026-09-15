@@ -10,6 +10,7 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import {
@@ -113,7 +114,8 @@ export const EventOrganizersPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search event organizers..."
-                        setValue={setSearchQuery} value={searchQuery}
+                        setValue={setSearchQuery}
+                        value={searchQuery}
                     />
                 </div>
                 <div className={styles.cardsGrid}>
@@ -128,7 +130,9 @@ export const EventOrganizersPage = () => {
                             hasOptions
                             onEdit={() =>
                                 navigate(
-                                    buildRedirectUrl(`/admin/event-organizers/edit/${organizer.id}`),
+                                    buildRedirectUrl(
+                                        `/admin/event-organizers/edit/${organizer.id}`,
+                                    ),
                                 )
                             }
                             onDelete={() => openDelete(organizer)}

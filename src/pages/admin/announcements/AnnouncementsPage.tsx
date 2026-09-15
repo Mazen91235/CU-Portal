@@ -41,19 +41,20 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
-    const { getFilter, getFilterSetter, searchParams, setFilters } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams, setFilters } =
+        useFilterSearchParams();
     const authorId = searchParams.get("author_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
     const facultyFilter = getFilter("faculty_id", "");
-    const setFacultyFilter = getFilterSetter("faculty_id");
     const departmentFilter = getFilter("department_id", "");
-    const setDepartmentFilter = getFilterSetter("department_id");
     const yearFilter = getFilter("year_id", "");
-    const setYearFilter = getFilterSetter("year_id");
     const subjectFilter = getFilter("subject_id", "");
     const setSubjectFilter = getFilterSetter("subject_id");
-    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFromFilter = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
     const setDateToFilter = getFilterSetter("date_to", true);
@@ -139,13 +140,7 @@ export const AnnouncementsPage = () => {
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [
-        searchCourses,
-        user,
-        facultyFilter,
-        departmentFilter,
-        yearFilter,
-    ]);
+    }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
     const fetchAnnouncements = useCallback(async () => {
         try {
@@ -202,10 +197,19 @@ export const AnnouncementsPage = () => {
         authorId,
     ]);
 
-    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
-    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
+    );
 
     const authFetchAnnouncementsQuery = useCallback(
         () => fetchAnnouncements(),
@@ -247,7 +251,9 @@ export const AnnouncementsPage = () => {
     };
 
     const handleEditAnnouncement = (announcementId: number) => {
-        navigate(buildRedirectUrl(`/admin/announcements/edit/${announcementId}`));
+        navigate(
+            buildRedirectUrl(`/admin/announcements/edit/${announcementId}`),
+        );
     };
 
     const handleDeleteClick = (announcement: AnnouncementResponseDto) => {
@@ -348,7 +354,8 @@ export const AnnouncementsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search announcements..."
-                            setValue={setSearchQuery} value={searchQuery}
+                            setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
 
@@ -357,17 +364,35 @@ export const AnnouncementsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={(value) => setFilters({ faculty_id: value as string, department_id: null, subject_id: null })} value={facultyFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={(value) => setFilters({ department_id: value as string, subject_id: null })}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            department_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
                                     value={departmentFilter}
                                     disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={(value) => setFilters({ year_id: value as string, subject_id: null })} value={yearFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            year_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={yearFilter}
                                 />
                             </>
                         )}
@@ -375,7 +400,13 @@ export const AnnouncementsPage = () => {
                             options={subjectOptions}
                             setValue={setSubjectFilter}
                             value={subjectFilter}
-                            disabled={user?.canAccessAll ? (!facultyFilter || !departmentFilter || !yearFilter) : false}
+                            disabled={
+                                user?.canAccessAll
+                                    ? !facultyFilter ||
+                                      !departmentFilter ||
+                                      !yearFilter
+                                    : false
+                            }
                         />
                         <DateFilter
                             placeholder="Start Date"
