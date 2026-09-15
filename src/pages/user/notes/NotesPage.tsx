@@ -23,13 +23,17 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDate } from "../../../utils/Formatter";
+import { showToast } from "../../../utils/ToastsManager";
 import styles from "./NotesPage.module.css";
 
 export const NotesPage = () => {
     const { getFilter, getFilterSetter } = useFilterSearchParams();
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
-    const dateFrom = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFrom = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
     const setDateFrom = getFilterSetter("date_from", true);
     const dateTo = getFilter("date_to", "");
     const setDateTo = getFilterSetter("date_to", true);
@@ -67,29 +71,35 @@ export const NotesPage = () => {
     const filteredNotes = useMemo(() => notes, [notes]);
 
     const handleSaveNote = async (data: NoteFormData) => {
-        let result: NoteResponseDto | undefined;
-        if (editingNote?.id) {
-            result =
-                (
-                    await updateNote({
-                        note_id: editingNote.id,
-                        ...data,
-                    }).unwrap()
-                ).data ?? undefined;
-        } else {
-            result = (await createNote(data).unwrap()).data ?? undefined;
+        try {
+            let result: NoteResponseDto | undefined;
+            if (editingNote?.id) {
+                result =
+                    (
+                        await updateNote({
+                            note_id: editingNote.id,
+                            ...data,
+                        }).unwrap()
+                    ).data ?? undefined;
+                showToast("success", "Success", "Note updated successfully.");
+            } else {
+                result = (await createNote(data).unwrap()).data ?? undefined;
+                showToast("success", "Success", "Note created successfully.");
+            }
+            if (result) {
+                setNotes((current) => {
+                    if (editingNote?.id)
+                        return current.map((item) =>
+                            item.id === result?.id ? result : item,
+                        );
+                    return [result, ...current];
+                });
+            }
+            setEditingNote(null);
+            setIsNoteFormOpen(false);
+        } catch (error) {
+            handlePopupErrors(error);
         }
-        if (result) {
-            setNotes((current) => {
-                if (editingNote?.id)
-                    return current.map((item) =>
-                        item.id === result?.id ? result : item,
-                    );
-                return [result, ...current];
-            });
-        }
-        setEditingNote(null);
-        setIsNoteFormOpen(false);
     };
 
     const handleDeleteNote = async () => {
@@ -100,6 +110,7 @@ export const NotesPage = () => {
                 current.filter((item) => item.id !== noteToDelete.id),
             );
             setNoteToDelete(null);
+            showToast("success", "Success", "Note deleted successfully.");
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -127,7 +138,8 @@ export const NotesPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search notes..."
-                            setValue={setSearchQuery} value={searchQuery}
+                            setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
                     <div className={styles.filtersRow}>

@@ -33,6 +33,7 @@ import {
 } from "../../services/apis/user/NoteAPIs";
 import type { NoteResponseDto, NoteUpdateDto } from "../../types/dtos/NoteDtos";
 import { normalizeCalendarEvents } from "../../utils/CalendarHandler";
+import { showToast } from "../../utils/ToastsManager";
 
 export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
@@ -166,8 +167,16 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
 
     const handleSaveNote = async (data: NoteFormData) => {
         if (!selectedDate) return;
-        await createNote({ ...data, date: data.date || selectedDate }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await createNote({
+                ...data,
+                date: data.date || selectedDate,
+            }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note created successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
     const handleUpdateNote = async (
@@ -175,14 +184,24 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         data: NoteUpdateDto,
     ) => {
         if (!note.id) return;
-        await updateNote({ note_id: note.id, ...data }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await updateNote({ note_id: note.id, ...data }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note updated successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
     const handleDeleteNote = async (note: NoteResponseDto) => {
         if (!note.id) return;
-        await deleteNote({ note_id: note.id }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await deleteNote({ note_id: note.id }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note deleted successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
     const notesBusy = isCreatingNote || isUpdatingNote || isDeletingNote;
@@ -351,7 +370,9 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                                 key={course.id}
                                 className={styles["course-item"]}
                             >
-                                <span>{formatString(course.name, "CardTitle")}</span>
+                                <span>
+                                    {formatString(course.name, "CardTitle")}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -381,10 +402,16 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                             >
                                 <div>
                                     <h6>
-                                        {formatString(announcement.title, "CardTitle")}
+                                        {formatString(
+                                            announcement.title,
+                                            "CardTitle",
+                                        )}
                                     </h6>
                                     <p>
-                                        {formatString(announcement.content, "CardContent")}
+                                        {formatString(
+                                            announcement.content,
+                                            "CardContent",
+                                        )}
                                     </p>
                                     <div>
                                         <span>
