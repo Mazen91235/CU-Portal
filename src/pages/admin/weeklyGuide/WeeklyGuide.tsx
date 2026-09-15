@@ -7,8 +7,11 @@ import {
   formatWeekLabel,
   MonthPicker,
 } from "../../../components/timeline/MonthPicker";
-import { MaterialCard } from "../../../components/materials/MaterialCard";
 import { Preview } from "../../../components/preview/Preview";
+import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
+import { downloadFile } from "../../../utils/FileDownloader";
+import { getFileIcon } from "../../../utils/MaterialHelpers";
+import { formatTimeAgo } from "../../../utils/Formatter";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import {
@@ -19,6 +22,7 @@ import {
 } from "../../../services/apis/admin/WeekAPIs";
 import {
   useDeleteMaterialsMutation,
+  useLazyGetMaterialsQuery,
   useUpdateMaterialMutation,
 } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
@@ -63,6 +67,35 @@ function MaterialAdminCard({
   const [updateMaterial] = useUpdateMaterialMutation();
   const [deleteMaterials] = useDeleteMaterialsMutation();
 
+  const fileData = material.attachment?.details?.file_data;
+  const fileType =
+    fileData?.file_type || fileData?.type || material.material_type;
+  const isFile = material.material_type === "file";
+  const isLink =
+    material.material_type === "drive" ||
+    material.material_type === "youtube" ||
+    material.material_type === "external";
+
+  const handlePreview = () => {
+    if (fileData?.id) {
+      setPreviewFile({ id: fileData.id, name: material.name || "Preview" });
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!fileData?.id) return;
+    try {
+      await downloadFile(fileData.id);
+    } catch (error) {
+      handlePopupErrors(error);
+    }
+  };
+
+  const handleOpenLink = () => {
+    const url = material.attachment?.url;
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const save = async () => {
     if (!material.id || !name.trim()) return;
     try {
@@ -92,33 +125,100 @@ function MaterialAdminCard({
 
   return (
     <>
-      <MaterialCard
-        material={material}
-        isSelected={false}
-        isSelectionMode={false}
-        showCount={material.material_type === "folder"}
-        showAll={true}
-        onClick={() => {}}
-        onDoubleClick={() => {}}
-        onDragStart={() => {}}
-        onEdit={() => setEditOpen(true)}
-        onDelete={remove}
-        onCopy={() => {}}
-        onMove={() => {}}
-        onShare={() => {}}
-        onPreview={(id, fileName) => setPreviewFile({ id, name: fileName })}
-        onDownload={() => undefined}
-        onOpenLink={(url) => window.open(url, "_blank")}
-        className={styles.materialCard}
-      />
+      <article className={styles.fileCard}>
+        <div className={styles.fileInfo}>
+          <img
+            src={getFileIcon(fileType || undefined)}
+            alt=""
+            className={styles.fileIcon}
+          />
+          <div className={styles.fileText}>
+            <span className={styles.fileName}>
+              {material.name || "Unnamed material"}
+            </span>
+            <span className={styles.fileMeta}>
+              {formatTimeAgo(material.updated_at || material.created_at || "")}
+            </span>
+          </div>
+        </div>
+
+        {(isFile || isLink) && (
+          <>
+            <div className={styles.fileActions}>
+              {isFile && fileData?.id && (
+                <>
+                  <button
+                    type="button"
+                    className={styles.fileActionButton}
+                    onClick={handlePreview}
+                  >
+                    <i className="fas fa-eye" aria-hidden="true" />
+                    View
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.fileActionButton}
+                    onClick={() => void handleDownload()}
+                  >
+                    <i className="fas fa-download" aria-hidden="true" />
+                    Download
+                  </button>
+                </>
+              )}
+              {isLink && material.attachment?.url && (
+                <button
+                  type="button"
+                  className={styles.fileActionButton}
+                  onClick={handleOpenLink}
+                >
+                  <i className="fas fa-external-link" aria-hidden="true" />
+                  Open
+                </button>
+              )}
+              <button
+                type="button"
+                className={`${styles.fileActionButton} ${styles.deleteActionButton}`}
+                onClick={() => void remove()}
+              >
+                <i className="fas fa-trash" aria-hidden="true" />
+                Delete
+              </button>
+            </div>
+
+            <div className={styles.fileActionsMobile}>
+              <MaterialActionsDropdown
+                onShare={() => {}}
+                onMove={() => {}}
+                onCopy={() => {}}
+                onEdit={() => setEditOpen(true)}
+                onDelete={() => void remove()}
+                onView={isFile ? handlePreview : handleOpenLink}
+                onDownload={
+                  isFile && fileData?.id
+                    ? () => void handleDownload()
+                    : undefined
+                }
+                showShare={false}
+                showMove={false}
+                showCopy={false}
+                showEdit={false}
+                showDelete
+                showDownload={isFile && Boolean(fileData?.id)}
+              />
+            </div>
+          </>
+        )}
+      </article>
+
       {previewFile && (
         <Preview
           file_id={previewFile.id}
           fileName={previewFile.name}
           onClose={() => setPreviewFile(null)}
-          onDownload={() => undefined}
+          onDownload={() => void handleDownload()}
         />
       )}
+
       {editOpen && (
         <div className={styles.modalOverlay} onClick={() => setEditOpen(false)}>
           <form
@@ -161,6 +261,7 @@ export function WeeklyGuidePage() {
       : null;
   const [week, setWeek] = useState<WeekResponseDto | null>(null);
   const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
+  const [weekMaterials, setWeekMaterials] = useState<MaterialResponseDto[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -171,6 +272,7 @@ export function WeeklyGuidePage() {
   const [createWeek] = useCreateWeekMutation();
   const [updateWeek] = useUpdateWeekMutation();
   const [deleteWeek] = useDeleteWeekMutation();
+  const [getMaterials] = useLazyGetMaterialsQuery();
 
   const fetchWeek = useCallback(async () => {
     try {
@@ -188,6 +290,7 @@ export function WeeklyGuidePage() {
 
       if (!weekNumber) {
         setWeek(null);
+        setWeekMaterials([]);
         if (weeksResponse.data?.[0]?.week_number) {
           navigate(`/admin/week-guide/${weeksResponse.data[0].week_number}`, {
             replace: true,
@@ -198,15 +301,32 @@ export function WeeklyGuidePage() {
 
       const selectedResponse = await getWeeks({
         data: { ...academicWeekFilter, week_number: weekNumber },
-        includes: ["materials", "subject", "attachment"],
         limit: 1,
       }).unwrap();
-      setWeek(selectedResponse.data?.[0] || null);
-      if (!selectedResponse.data?.[0] && weeksResponse.data?.[0]?.week_number) {
+
+      const selectedWeek = selectedResponse.data?.[0] || null;
+      setWeek(selectedWeek);
+
+      if (!selectedWeek && weeksResponse.data?.[0]?.week_number) {
+        setWeekMaterials([]);
         navigate(`/admin/week-guide/${weeksResponse.data[0].week_number}`, {
           replace: true,
         });
+        return;
       }
+
+      if (!selectedWeek?.id) {
+        setWeekMaterials([]);
+        return;
+      }
+
+      const materialsResponse = await getMaterials({
+        data: { week_id: selectedWeek.id },
+        includes: ["subject", "attachment"],
+        limit: 1000,
+      }).unwrap();
+
+      setWeekMaterials(materialsResponse.data || []);
     } catch (error) {
       handlePopupErrors(error);
     }
@@ -217,6 +337,7 @@ export function WeeklyGuidePage() {
     user?.faculty?.id,
     user?.department?.id,
     user?.year?.id,
+    getMaterials,
   ]);
 
   useAuthQuery(fetchWeek);
@@ -244,12 +365,20 @@ export function WeeklyGuidePage() {
 
   const materialsBySubject = useMemo(() => {
     const grouped = new Map<string, MaterialResponseDto[]>();
-    (week?.materials || []).forEach((material) => {
-      const title = material.subject?.name || "Other Materials";
-      grouped.set(title, [...(grouped.get(title) || []), material]);
+    (weekMaterials || []).forEach((material) => {
+      const subjectId = material.subject?.id ?? "other";
+      const subjectName = material.subject?.name || "Other Materials";
+      const key = `${subjectId}:${subjectName}`;
+      grouped.set(key, [...(grouped.get(key) || []), material]);
     });
-    return Array.from(grouped.entries());
-  }, [week?.materials]);
+    return Array.from(grouped.entries()).map(
+      ([, materials]) =>
+        [materials[0]?.subject?.name || "Other Materials", materials] as [
+          string,
+          MaterialResponseDto[],
+        ],
+    );
+  }, [weekMaterials]);
 
   const createWeeks = async () => {
     const weekStartDates = getWeekStartDates(startDate, endDate);

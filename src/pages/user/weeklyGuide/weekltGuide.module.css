@@ -129,6 +129,8 @@
 
 .fileActionsMobile {
   display: none;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .fileActionButton {

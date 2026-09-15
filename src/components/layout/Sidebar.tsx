@@ -58,6 +58,11 @@ const navSectionsDefault: NavSection[] = [
         icon: "sidebar-timeline",
       },
       {
+        label: "Weekly Guide",
+        path: "/user/week-guide",
+        icon: "sidebar-weekly-guide",
+      },
+      {
         label: "Tasks",
         path: "/user/tasks",
         icon: "sidebar-tasks",
@@ -360,6 +365,15 @@ const showAdminLinks = (permissions: string[]) => {
       path: "/admin/logs",
       icon: "sidebar-admin-logs",
       activatesPaths: ["/admin/logs/"],
+    });
+  }
+
+  if (permissions.includes("View Weeks")) {
+    section.links.push({
+      label: "Weeks",
+      path: "/admin/week-guide",
+      icon: "sidebar-weekly-guide",
+      activatesPaths: ["/admin/week-guide/"],
     });
   }
 

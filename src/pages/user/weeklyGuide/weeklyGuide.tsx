@@ -5,6 +5,7 @@ import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
 import { PageSeo } from "../../../components/PageSeo";
 import { Preview } from "../../../components/preview/Preview";
+import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { downloadFile } from "../../../utils/FileDownloader";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
@@ -14,10 +15,11 @@ import {
   formatWeekLabel,
   MonthPicker,
 } from "../../../components/timeline/MonthPicker";
-import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { EmptySection } from "../../../components/calendar/EmptySection";
 import { useLazyGetWeeksQuery } from "../../../services/apis/user/WeekAPIs";
+import { useLazyGetMaterialsQuery } from "../../../services/apis/user/MaterialAPIs";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import { useAppSelector } from "../../../services/redux/Hooks";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
 
@@ -31,6 +33,11 @@ function WeeklyMaterialCard({ item }: { item: MaterialResponseDto }) {
 
   const fileData = item.attachment?.details?.file_data;
   const fileType = fileData?.file_type || fileData?.type || item.material_type;
+  const isFile = item.material_type === "file";
+  const isLink =
+    item.material_type === "drive" ||
+    item.material_type === "youtube" ||
+    item.material_type === "external";
 
   const handlePreview = () => {
     if (fileData?.id) {
@@ -45,6 +52,11 @@ function WeeklyMaterialCard({ item }: { item: MaterialResponseDto }) {
     } catch (error) {
       handlePopupErrors(error);
     }
+  };
+
+  const handleOpenLink = () => {
+    const url = item.attachment?.url;
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -66,40 +78,63 @@ function WeeklyMaterialCard({ item }: { item: MaterialResponseDto }) {
           </div>
         </div>
 
-        {fileData?.id && (
-          <div className={styles.fileActions}>
-            <button
-              type="button"
-              className={styles.fileActionButton}
-              onClick={handlePreview}
-            >
-              <i className="fas fa-eye" aria-hidden="true" />
-              View
-            </button>
-            <button
-              type="button"
-              className={styles.fileActionButton}
-              onClick={handleDownload}
-            >
-              <i className="fas fa-download" aria-hidden="true" />
-              Download
-            </button>
-          </div>
-        )}
+        {(isFile || isLink) && (
+          <>
+            <div className={styles.fileActions}>
+              {isFile && fileData?.id && (
+                <>
+                  <button
+                    type="button"
+                    className={styles.fileActionButton}
+                    onClick={handlePreview}
+                  >
+                    <i className="fas fa-eye" aria-hidden="true" />
+                    View
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.fileActionButton}
+                    onClick={() => void handleDownload()}
+                  >
+                    <i className="fas fa-download" aria-hidden="true" />
+                    Download
+                  </button>
+                </>
+              )}
+              {isLink && item.attachment?.url && (
+                <button
+                  type="button"
+                  className={styles.fileActionButton}
+                  onClick={handleOpenLink}
+                >
+                  <i className="fas fa-external-link" aria-hidden="true" />
+                  Open
+                </button>
+              )}
+            </div>
 
-        {fileData?.id && (
-          <div className={styles.fileActionsMobile}>
-            <MaterialActionsDropdown
-              onShare={() => {}}
-              onDownload={handleDownload}
-              onMove={() => {}}
-              onCopy={() => {}}
-              onEdit={() => {}}
-              onDelete={() => {}}
-              onView={handlePreview}
-              showAll={false}
-            />
-          </div>
+            <div className={styles.fileActionsMobile}>
+              <MaterialActionsDropdown
+                onShare={() => {}}
+                onMove={() => {}}
+                onCopy={() => {}}
+                onEdit={() => {}}
+                onDelete={() => {}}
+                onView={isFile ? handlePreview : handleOpenLink}
+                onDownload={
+                  isFile && fileData?.id
+                    ? () => void handleDownload()
+                    : undefined
+                }
+                showShare={false}
+                showMove={false}
+                showCopy={false}
+                showEdit={false}
+                showDelete={false}
+                showDownload={isFile && Boolean(fileData?.id)}
+              />
+            </div>
+          </>
         )}
       </article>
       {previewFile && (
@@ -157,15 +192,15 @@ function AccordionSection({
 }
 
 export default function UserWeeklyGuide({
-  week,
   weekNumber,
+  materials,
   onWeekChange,
   isLoading,
   periodLabel,
   previousDisabled,
   nextDisabled,
 }: {
-  week: WeekResponseDto | null;
+  materials: MaterialResponseDto[];
   weekNumber: number;
   onWeekChange: (amount: number) => void;
   isLoading: boolean;
@@ -175,14 +210,22 @@ export default function UserWeeklyGuide({
 }) {
   const sections = useMemo(() => {
     const grouped = new Map<string, MaterialResponseDto[]>();
-    (week?.materials || []).forEach((material) => {
+    (materials || []).forEach((material) => {
+      const subjectId = material.subject?.id ?? "other";
       const title = material.subject?.name || "Other Materials";
-      const items = grouped.get(title) || [];
+      const key = `${subjectId}:${title}`;
+      const items = grouped.get(key) || [];
       items.push(material);
-      grouped.set(title, items);
+      grouped.set(key, items);
     });
-    return Array.from(grouped.entries());
-  }, [week?.materials]);
+    return Array.from(grouped.values()).map(
+      (materials) =>
+        [materials[0]?.subject?.name || "Other Materials", materials] as [
+          string,
+          MaterialResponseDto[],
+        ],
+    );
+  }, [materials]);
 
   return (
     <section className={styles.panel}>
@@ -224,23 +267,54 @@ export function WeeklyGuidePage() {
   );
   const [week, setWeek] = useState<WeekResponseDto | null>(null);
   const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
+  const [weekMaterials, setWeekMaterials] = useState<MaterialResponseDto[]>([]);
+  const user = useAppSelector((state) => state.user.user);
   const [getWeeks, { isFetching }] = useLazyGetWeeksQuery();
+  const [getMaterials] = useLazyGetMaterialsQuery();
 
   const fetchWeek = useCallback(async () => {
+    const academicWeekFilter = {
+      faculty_id: user?.faculty?.id || undefined,
+      department_id: user?.department?.id || undefined,
+      year_id: user?.year?.id || undefined,
+    };
+
     const [selectedResponse, weeksResponse] = await Promise.all([
       getWeeks({
-        data: { week_number: weekNumber },
-        includes: ["materials", "subject", "attachment"],
+        data: { ...academicWeekFilter, week_number: weekNumber },
+        limit: 1,
       }).unwrap(),
       getWeeks({
-        data: {},
+        data: academicWeekFilter,
         order_by: ["week_number"],
         limit: 1000,
       }).unwrap(),
     ]);
-    setWeek(selectedResponse.data?.[0] || null);
+
+    const selectedWeek = selectedResponse.data?.[0] || null;
+    setWeek(selectedWeek);
     setWeeks(weeksResponse.data || []);
-  }, [getWeeks, weekNumber]);
+
+    if (!selectedWeek?.id) {
+      setWeekMaterials([]);
+      return;
+    }
+
+    const materialsResponse = await getMaterials({
+      data: { week_id: selectedWeek.id },
+      includes: ["subject", "attachment"],
+      limit: 1000,
+    }).unwrap();
+
+    setWeekMaterials(materialsResponse.data || []);
+  }, [
+    getMaterials,
+    getWeeks,
+    weekNumber,
+    user?.faculty?.id,
+    user?.department?.id,
+    user?.year?.id,
+  ]);
 
   useAuthQuery(fetchWeek);
 
@@ -274,7 +348,7 @@ export function WeeklyGuidePage() {
       />
       <div className={styles.container}>
         <UserWeeklyGuide
-          week={week}
+          materials={weekMaterials}
           weekNumber={weekNumber}
           onWeekChange={handleWeekChange}
           isLoading={isFetching}
