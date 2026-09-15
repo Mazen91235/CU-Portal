@@ -10,25 +10,27 @@ export const Select = <T extends Record<string, unknown>>({
     errors,
     label,
     disabled,
+    value,
     hasNoMarginOrBorder,
     onChange,
     children,
     className,
 }: {
-    register: UseFormRegister<T>;
-    name: Path<T>;
-    errors: FieldErrors<T>;
+    register?: UseFormRegister<T>;
+    name?: Path<T>;
+    errors?: FieldErrors<T>;
     label?: string;
     disabled?: boolean;
+    value?: string | number;
     hasNoMarginOrBorder?: boolean;
     onChange?: ChangeEventHandler<HTMLSelectElement>;
     children: React.ReactNode;
     className?: string;
 }) => {
-    const registration = register(name);
+    const registration = register && name ? register(name) : undefined;
 
     const handleChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-        void registration.onChange(e);
+        void registration?.onChange(e);
         onChange?.(e);
     };
 
@@ -42,17 +44,20 @@ export const Select = <T extends Record<string, unknown>>({
             )}
             <select
                 id={`form-${String(name)}-field`}
-                name={registration.name}
-                onBlur={registration.onBlur}
-                ref={registration.ref}
+                name={registration?.name}
+                onBlur={registration?.onBlur}
+                ref={registration?.ref}
                 onChange={handleChange}
-                className={errors[name] ? styles["error"] : undefined}
+                className={
+                    errors && name && errors[name] ? styles["error"] : undefined
+                }
                 disabled={disabled}
                 style={hasNoMarginOrBorder ? { border: "none" } : undefined}
+                value={value}
             >
                 {children}
             </select>
-            {errors[name] && (
+            {errors && name && errors[name] && (
                 <InputError>{errors[name]?.message as string}</InputError>
             )}
         </div>

@@ -41,6 +41,7 @@ import styles from "./OtherMaterialsPage.module.css";
 import { showToast } from "../../../utils/ToastsManager";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
+import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
@@ -277,6 +278,32 @@ export function OtherMaterialsPage() {
         window.open(url, "_blank");
     };
 
+    const handleShareMaterials = (
+        materialId?: number,
+        type?: string | null,
+    ) => {
+        const parentId =
+            currentPath.length > 0
+                ? currentPath[currentPath.length - 1].id
+                : null;
+        let url = `${window.location.origin}${buildMaterialsPath(subjectFilter, parentId)}`;
+        if (type === "folder") {
+            url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
+        } else if (type === "file") {
+            url += `?material_id=${materialId}`;
+        } else {
+            url =
+                materials.find((material) => material.id === materialId)
+                    ?.attachment?.url || "";
+        }
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Material link copied to clipboard successfully",
+        );
+    };
+
     const handleCopyMaterials = (materialId?: number) => {
         if (materialId && !selectedMaterials.includes(materialId)) {
             setSelectedMaterials((prev) => [...prev, materialId]);
@@ -505,12 +532,17 @@ export function OtherMaterialsPage() {
                                             onCopy={() =>
                                                 handleCopyMaterials(folderId)
                                             }
+                                            onShare={() =>
+                                                handleShareMaterials(
+                                                    folderId,
+                                                    folder.material_type,
+                                                )
+                                            }
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
-                                            showShare={false}
                                             showCopy
                                         />
                                     );
@@ -535,12 +567,17 @@ export function OtherMaterialsPage() {
                                             onCopy={() =>
                                                 handleCopyMaterials(fileId)
                                             }
+                                            onShare={() =>
+                                                handleShareMaterials(
+                                                    fileId,
+                                                    file.material_type,
+                                                )
+                                            }
                                             onPreview={handlePreview}
                                             onDownload={handleDownload}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
-                                            showShare={false}
                                             showCopy
                                         />
                                     );

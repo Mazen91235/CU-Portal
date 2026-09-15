@@ -10,7 +10,9 @@ export type MaterialCreateDto = {
     subject_id: number;
     parent_id?: number | null;
     week_id?: number | null;
-    details?: object | null;
+    details?: {
+        url?: string | null;
+    } | null;
 };
 
 export type MaterialResponseDto = {
@@ -32,7 +34,9 @@ export type MaterialUpdateDto = {
     name: string;
     material_type: string;
     week_id?: number | null;
-    details?: object | null;
+    details?: {
+        url?: string | null;
+    } | null;
 };
 
 export type MaterialsDeleteDto = {

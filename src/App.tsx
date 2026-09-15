@@ -87,338 +87,413 @@ import { TermsOfServicePage } from "./pages/landing/terms/TermsOfServicePage";
 import { TeamPage } from "./pages/landing/TeamPage";
 
 import "./App.css";
-import { WeeklyGuidePage as AdminWeeklyGuide } from "./pages/admin/weeklyGuide/WeeklyGuide";
-import { WeeklyGuidePage } from "./pages/user/weeklyGuide/weeklyGuide";
+import { WeekPage as AdminWeekPage } from "./pages/admin/weeks/WeekPage";
+import { WeeksPage } from "./pages/admin/weeks/WeeksPage";
+import { CreateWeek } from "./pages/admin/weeks/CreateWeek";
+import { EditWeek } from "./pages/admin/weeks/EditWeek";
+import { WeekPage } from "./pages/user/weeks/WeekPage";
 function App() {
-  useAuth({ shouldNavigate: false });
-  useGetUser();
-  useGetNotifications();
-  useRouteMessages();
-  useValidateUserLevel();
-  usePageLoading();
-  const pushNotifications = usePushNotifications();
-  return (
-    <>
-      <NotificationPermissionRequest
-        permission={pushNotifications.permission}
-        isRequesting={pushNotifications.isRequestingPermission}
-        onEnable={pushNotifications.requestNotificationPermission}
-      />
-      <ForegroundNotification
-        notification={pushNotifications.foregroundNotification}
-        onView={pushNotifications.viewForegroundNotification}
-        onDismiss={pushNotifications.dismissForegroundNotification}
-      />
-      <Routes>
-        <Route index element={<LandingPage />} />
-        <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-        <Route path="terms-of-service" element={<TermsOfServicePage />} />
-        <Route path="our-team" element={<TeamPage />} />
-        <Route path="" element={<ProtectedRoute reverse={true} />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login-success" element={<LoginSuccessPage />} />
-          <Route path="/create-profile" element={<CreateProfilePage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-        </Route>
-        <Route path="/user" element={<ProtectedRoute />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="notifications" element={<UserNotificationsPage />} />
-          <Route path="settings">
-            <Route path="profile" element={<ProfileSettings />} />
-            <Route path="academic" element={<AcademicSettings />} />
-            <Route path="courses" element={<RegisteredCourses />} />
-          </Route>
-          <Route path="system">
-            <Route path="releases" index element={<UserReleasesPage />} />
-            <Route path="releases/:releaseId" element={<UserReleasePage />} />
-          </Route>
-          <Route path="notes" element={<UserNotesPage />} />
-          <Route path="tasks">
-            <Route index element={<UserTasksPage />} />
-            <Route path=":taskId" element={<UserTaskPage />} />
-          </Route>
-          <Route path="exams">
-            <Route index element={<UserExamsPage />} />
-            <Route path=":examId" element={<UserExamPage />} />
-          </Route>
-          <Route path="announcements">
-            <Route index element={<UserAnnouncementsPage />} />
-            <Route path=":announcementId" element={<UserAnnouncementPage />} />
-          </Route>
-          <Route path="courses">
-            <Route index element={<UserCoursesPage />} />
-            <Route path=":courseId" element={<UserCoursePage />} />
-          </Route>
-          <Route path="events">
-            <Route index element={<UserEventsPage />} />
-            <Route path=":eventId" element={<UserEventPage />} />
-          </Route>
-          <Route path="event-organizers">
-            <Route index element={<UserEventsOrganizersPage />} />
-            <Route
-              path=":eventOrganizerId"
-              element={<UserEventOrganizerPage />}
+    useAuth({ shouldNavigate: false });
+    useGetUser();
+    useGetNotifications();
+    useRouteMessages();
+    useValidateUserLevel();
+    usePageLoading();
+    const pushNotifications = usePushNotifications();
+    return (
+        <>
+            <NotificationPermissionRequest
+                permission={pushNotifications.permission}
+                isRequesting={pushNotifications.isRequestingPermission}
+                onEnable={pushNotifications.requestNotificationPermission}
             />
-          </Route>
+            <ForegroundNotification
+                notification={pushNotifications.foregroundNotification}
+                onView={pushNotifications.viewForegroundNotification}
+                onDismiss={pushNotifications.dismissForegroundNotification}
+            />
+            <Routes>
+                <Route index element={<LandingPage />} />
+                <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route
+                    path="terms-of-service"
+                    element={<TermsOfServicePage />}
+                />
+                <Route path="our-team" element={<TeamPage />} />
+                <Route path="" element={<ProtectedRoute reverse={true} />}>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route
+                        path="/login-success"
+                        element={<LoginSuccessPage />}
+                    />
+                    <Route
+                        path="/create-profile"
+                        element={<CreateProfilePage />}
+                    />
+                    <Route path="/verify-email" element={<VerifyEmailPage />} />
+                </Route>
+                <Route path="/user" element={<ProtectedRoute />}>
+                    <Route index element={<DashboardPage />} />
+                    <Route
+                        path="notifications"
+                        element={<UserNotificationsPage />}
+                    />
+                    <Route path="settings">
+                        <Route path="profile" element={<ProfileSettings />} />
+                        <Route path="academic" element={<AcademicSettings />} />
+                        <Route path="courses" element={<RegisteredCourses />} />
+                    </Route>
+                    <Route path="system">
+                        <Route
+                            path="releases"
+                            index
+                            element={<UserReleasesPage />}
+                        />
+                        <Route
+                            path="releases/:releaseId"
+                            element={<UserReleasePage />}
+                        />
+                    </Route>
+                    <Route path="notes" element={<UserNotesPage />} />
+                    <Route path="tasks">
+                        <Route index element={<UserTasksPage />} />
+                        <Route path=":taskId" element={<UserTaskPage />} />
+                    </Route>
+                    <Route path="exams">
+                        <Route index element={<UserExamsPage />} />
+                        <Route path=":examId" element={<UserExamPage />} />
+                    </Route>
+                    <Route path="announcements">
+                        <Route index element={<UserAnnouncementsPage />} />
+                        <Route
+                            path=":announcementId"
+                            element={<UserAnnouncementPage />}
+                        />
+                    </Route>
+                    <Route path="courses">
+                        <Route index element={<UserCoursesPage />} />
+                        <Route path=":courseId" element={<UserCoursePage />} />
+                    </Route>
+                    <Route path="events">
+                        <Route index element={<UserEventsPage />} />
+                        <Route path=":eventId" element={<UserEventPage />} />
+                    </Route>
+                    <Route path="event-organizers">
+                        <Route index element={<UserEventsOrganizersPage />} />
+                        <Route
+                            path=":eventOrganizerId"
+                            element={<UserEventOrganizerPage />}
+                        />
+                    </Route>
 
-          <Route path="materials">
-            <Route index element={<UserMaterialsPage />} />
-            <Route path=":subjectId" element={<UserMaterialsPage />} />
-            <Route
-              path=":subjectId/:parentId"
-              element={<UserMaterialsPage />}
-            />
-          </Route>
-          <Route path="other-materials">
-            <Route index element={<UserOtherMaterialsDepartmentsPage />} />
-            <Route
-              path=":studyType"
-              element={<UserOtherMaterialsDepartmentsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId"
-              element={<UserOtherMaterialsYearsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId"
-              element={<UserOtherMaterialsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId/:subjectId"
-              element={<UserOtherMaterialsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
-              element={<UserOtherMaterialsPage />}
-            />
-          </Route>
-          <Route path="calendar">
-            <Route index element={<UserCalendarPage />} />
-          </Route>
-          <Route path="timeline">
-            <Route index element={<UserTimelinePage />} />
-          </Route>
-          <Route path="week-guide">
-            <Route index element={<WeeklyGuidePage />} />
-            <Route path=":weekNumber" element={<WeeklyGuidePage />} />
-          </Route>
-        </Route>
-        <Route path="/admin" element={<ProtectedRoute />}>
-          <Route
-            path=""
-            element={<ProtectedRoute permission="View AdminPanel" />}
-          >
-            <Route index element={<div>Admin Dashboard</div>} />
-          </Route>
-          <Route
-            path="faculties"
-            element={<ProtectedRoute permission="View Faculties" />}
-          >
-            <Route index element={<FacultiesPage />} />
-          </Route>
-          <Route
-            path="departments"
-            element={<ProtectedRoute permission="View Departments" />}
-          >
-            <Route index element={<DepartmentsPage />} />
-          </Route>
-          <Route
-            path="users"
-            element={<ProtectedRoute permission="View Users" />}
-          >
-            <Route index element={<UsersPage />} />
-            <Route path="pending" element={<PendingUsersPage />} />
-            <Route path=":userId" element={<UserPage />} />
-          </Route>
-          <Route
-            path="years"
-            element={<ProtectedRoute permission="View Years" />}
-          >
-            <Route index element={<YearsPage />} />
-          </Route>
+                    <Route path="materials">
+                        <Route index element={<UserMaterialsPage />} />
+                        <Route
+                            path=":subjectId"
+                            element={<UserMaterialsPage />}
+                        />
+                        <Route
+                            path=":subjectId/:parentId"
+                            element={<UserMaterialsPage />}
+                        />
+                    </Route>
+                    <Route path="other-materials">
+                        <Route
+                            index
+                            element={<UserOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType"
+                            element={<UserOtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId"
+                            element={<UserOtherMaterialsYearsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId"
+                            element={<UserOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId/:subjectId"
+                            element={<UserOtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+                            element={<UserOtherMaterialsPage />}
+                        />
+                    </Route>
+                    <Route path="calendar">
+                        <Route index element={<UserCalendarPage />} />
+                    </Route>
+                    <Route path="timeline">
+                        <Route index element={<UserTimelinePage />} />
+                    </Route>
+                    <Route path="weeks">
+                        <Route index element={<WeekPage />} />
+                        <Route path=":weekId" element={<WeekPage />} />
+                    </Route>
+                </Route>
+                <Route path="/weeks" element={<ProtectedRoute />}>
+                    <Route index element={<WeekPage />} />
+                    <Route path=":weekId" element={<WeekPage />} />
+                </Route>
+                <Route path="/admin" element={<ProtectedRoute />}>
+                    <Route
+                        path=""
+                        element={
+                            <ProtectedRoute permission="View AdminPanel" />
+                        }
+                    >
+                        <Route index element={<div>Admin Dashboard</div>} />
+                    </Route>
+                    <Route
+                        path="faculties"
+                        element={<ProtectedRoute permission="View Faculties" />}
+                    >
+                        <Route index element={<FacultiesPage />} />
+                    </Route>
+                    <Route
+                        path="departments"
+                        element={
+                            <ProtectedRoute permission="View Departments" />
+                        }
+                    >
+                        <Route index element={<DepartmentsPage />} />
+                    </Route>
+                    <Route
+                        path="users"
+                        element={<ProtectedRoute permission="View Users" />}
+                    >
+                        <Route index element={<UsersPage />} />
+                        <Route path="pending" element={<PendingUsersPage />} />
+                        <Route path=":userId" element={<UserPage />} />
+                    </Route>
+                    <Route
+                        path="years"
+                        element={<ProtectedRoute permission="View Years" />}
+                    >
+                        <Route index element={<YearsPage />} />
+                    </Route>
 
-          <Route
-            path="roles"
-            element={<ProtectedRoute permission="View Roles" />}
-          >
-            <Route index element={<RolesPage />} />
-            <Route path=":roleId" element={<RolePage />} />
-          </Route>
+                    <Route
+                        path="roles"
+                        element={<ProtectedRoute permission="View Roles" />}
+                    >
+                        <Route index element={<RolesPage />} />
+                        <Route path=":roleId" element={<RolePage />} />
+                    </Route>
 
-          <Route
-            path="courses"
-            element={<ProtectedRoute permission="View Courses" />}
-          >
-            <Route index element={<CoursesPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Courses" />}
-            >
-              <Route index element={<CreateCourse />} />
-            </Route>
-            <Route
-              path="edit/:courseId"
-              element={<ProtectedRoute permission="Edit Courses" />}
-            >
-              <Route index element={<EditCourse />} />
-            </Route>
-            <Route path=":courseId" element={<CoursePage />} />
-          </Route>
+                    <Route
+                        path="courses"
+                        element={<ProtectedRoute permission="View Courses" />}
+                    >
+                        <Route index element={<CoursesPage />} />
+                        <Route
+                            path="create"
+                            element={
+                                <ProtectedRoute permission="Add Courses" />
+                            }
+                        >
+                            <Route index element={<CreateCourse />} />
+                        </Route>
+                        <Route
+                            path="edit/:courseId"
+                            element={
+                                <ProtectedRoute permission="Edit Courses" />
+                            }
+                        >
+                            <Route index element={<EditCourse />} />
+                        </Route>
+                        <Route path=":courseId" element={<CoursePage />} />
+                    </Route>
 
-          <Route
-            path="tasks"
-            element={<ProtectedRoute permission="View Tasks" />}
-          >
-            <Route index element={<TasksPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Tasks" />}
-            >
-              <Route index element={<CreateTask />} />
-            </Route>
-            <Route
-              path="edit/:taskId"
-              element={<ProtectedRoute permission="Edit Tasks" />}
-            >
-              <Route index element={<EditTask />} />
-            </Route>
-            <Route path=":taskId" element={<TaskPage />} />
-          </Route>
+                    <Route
+                        path="tasks"
+                        element={<ProtectedRoute permission="View Tasks" />}
+                    >
+                        <Route index element={<TasksPage />} />
+                        <Route
+                            path="create"
+                            element={<ProtectedRoute permission="Add Tasks" />}
+                        >
+                            <Route index element={<CreateTask />} />
+                        </Route>
+                        <Route
+                            path="edit/:taskId"
+                            element={<ProtectedRoute permission="Edit Tasks" />}
+                        >
+                            <Route index element={<EditTask />} />
+                        </Route>
+                        <Route path=":taskId" element={<TaskPage />} />
+                    </Route>
 
-          <Route
-            path="exams"
-            element={<ProtectedRoute permission="View Exams" />}
-          >
-            <Route index element={<ExamsPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Exams" />}
-            >
-              <Route index element={<CreateExam />} />
-            </Route>
-            <Route
-              path="edit/:examId"
-              element={<ProtectedRoute permission="Edit Exams" />}
-            >
-              <Route index element={<EditExam />} />
-            </Route>
-            <Route path=":examId" element={<ExamPage />} />
-          </Route>
+                    <Route
+                        path="exams"
+                        element={<ProtectedRoute permission="View Exams" />}
+                    >
+                        <Route index element={<ExamsPage />} />
+                        <Route
+                            path="create"
+                            element={<ProtectedRoute permission="Add Exams" />}
+                        >
+                            <Route index element={<CreateExam />} />
+                        </Route>
+                        <Route
+                            path="edit/:examId"
+                            element={<ProtectedRoute permission="Edit Exams" />}
+                        >
+                            <Route index element={<EditExam />} />
+                        </Route>
+                        <Route path=":examId" element={<ExamPage />} />
+                    </Route>
 
-          <Route
-            path="announcements"
-            element={<ProtectedRoute permission="View Announcements" />}
-          >
-            <Route index element={<AnnouncementsPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Announcements" />}
-            >
-              <Route index element={<CreateAnnouncement />} />
-            </Route>
-            <Route
-              path="edit/:announcementId"
-              element={<ProtectedRoute permission="Edit Announcements" />}
-            >
-              <Route index element={<EditAnnouncement />} />
-            </Route>
-            <Route path=":announcementId" element={<AnnouncementPage />} />
-          </Route>
+                    <Route
+                        path="announcements"
+                        element={
+                            <ProtectedRoute permission="View Announcements" />
+                        }
+                    >
+                        <Route index element={<AnnouncementsPage />} />
+                        <Route
+                            path="create"
+                            element={
+                                <ProtectedRoute permission="Add Announcements" />
+                            }
+                        >
+                            <Route index element={<CreateAnnouncement />} />
+                        </Route>
+                        <Route
+                            path="edit/:announcementId"
+                            element={
+                                <ProtectedRoute permission="Edit Announcements" />
+                            }
+                        >
+                            <Route index element={<EditAnnouncement />} />
+                        </Route>
+                        <Route
+                            path=":announcementId"
+                            element={<AnnouncementPage />}
+                        />
+                    </Route>
 
-          <Route
-            path="events"
-            element={<ProtectedRoute permission="View Events" />}
-          >
-            <Route index element={<EventsPage />} />
-            <Route
-              path="create"
-              element={<ProtectedRoute permission="Add Events" />}
-            >
-              <Route index element={<CreateEvent />} />
-            </Route>
-            <Route
-              path="edit/:eventId"
-              element={<ProtectedRoute permission="Edit Events" />}
-            >
-              <Route index element={<EditEvent />} />
-            </Route>
-            <Route path=":eventId" element={<EventPage />} />
-          </Route>
+                    <Route
+                        path="events"
+                        element={<ProtectedRoute permission="View Events" />}
+                    >
+                        <Route index element={<EventsPage />} />
+                        <Route
+                            path="create"
+                            element={<ProtectedRoute permission="Add Events" />}
+                        >
+                            <Route index element={<CreateEvent />} />
+                        </Route>
+                        <Route
+                            path="edit/:eventId"
+                            element={
+                                <ProtectedRoute permission="Edit Events" />
+                            }
+                        >
+                            <Route index element={<EditEvent />} />
+                        </Route>
+                        <Route path=":eventId" element={<EventPage />} />
+                    </Route>
 
-          <Route path="event-organizers">
-            <Route index element={<EventOrganizersPage />} />
-            <Route path="create">
-              <Route index element={<CreateEventOrganizer />} />
-            </Route>
-            <Route path=":eventOrganizerId" element={<EventOrganizerPage />} />
-            <Route
-              path="edit/:eventOrganizerId"
-              element={<EditEventOrganizer />}
-            />
-          </Route>
-          <Route
-            path="week-guide"
-            element={<ProtectedRoute permission="View Weeks" />}
-          >
-            <Route index element={<AdminWeeklyGuide />} />
-            <Route path=":weekNumber" element={<AdminWeeklyGuide />} />
-          </Route>
-          <Route path="releases">
-            <Route index element={<ReleasesPage />} />
-            <Route path=":releaseId" element={<ReleasePage />} />
-            <Route path="create">
-              <Route index element={<CreateRelease />} />
-            </Route>
-            <Route path="edit/:releaseId">
-              <Route index element={<EditRelease />} />
-            </Route>
-          </Route>
-          <Route
-            path="materials"
-            element={<ProtectedRoute permission="View Materials" />}
-          >
-            <Route index element={<MaterialsPage />} />
-            <Route path=":subjectId" element={<MaterialsPage />} />
-            <Route path=":subjectId/:parentId" element={<MaterialsPage />} />
-          </Route>
+                    <Route path="event-organizers">
+                        <Route index element={<EventOrganizersPage />} />
+                        <Route path="create">
+                            <Route index element={<CreateEventOrganizer />} />
+                        </Route>
+                        <Route
+                            path=":eventOrganizerId"
+                            element={<EventOrganizerPage />}
+                        />
+                        <Route
+                            path="edit/:eventOrganizerId"
+                            element={<EditEventOrganizer />}
+                        />
+                    </Route>
+                    <Route
+                        path="weeks"
+                        element={<ProtectedRoute permission="View Weeks" />}
+                    >
+                        <Route index element={<WeeksPage />} />
+                        <Route
+                            path="create"
+                            element={<ProtectedRoute permission="Add Weeks" />}
+                        >
+                            <Route index element={<CreateWeek />} />
+                        </Route>
+                        <Route
+                            path="edit/:weekId"
+                            element={<ProtectedRoute permission="Edit Weeks" />}
+                        >
+                            <Route index element={<EditWeek />} />
+                        </Route>
+                        <Route path=":weekId" element={<AdminWeekPage />} />
+                    </Route>
+                    <Route path="releases">
+                        <Route index element={<ReleasesPage />} />
+                        <Route path=":releaseId" element={<ReleasePage />} />
+                        <Route path="create">
+                            <Route index element={<CreateRelease />} />
+                        </Route>
+                        <Route path="edit/:releaseId">
+                            <Route index element={<EditRelease />} />
+                        </Route>
+                    </Route>
+                    <Route
+                        path="materials"
+                        element={<ProtectedRoute permission="View Materials" />}
+                    >
+                        <Route index element={<MaterialsPage />} />
+                        <Route path=":subjectId" element={<MaterialsPage />} />
+                        <Route
+                            path=":subjectId/:parentId"
+                            element={<MaterialsPage />}
+                        />
+                    </Route>
 
-          <Route
-            path="logs"
-            element={<ProtectedRoute permission="View Logs" />}
-          >
-            <Route index element={<LogsPage />} />
-            <Route path=":logId" element={<LogPage />} />
-          </Route>
-          <Route
-            path="other-materials"
-            element={<ProtectedRoute permission="View Materials" />}
-          >
-            <Route index element={<OtherMaterialsDepartmentsPage />} />
-            <Route
-              path=":studyType"
-              element={<OtherMaterialsDepartmentsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId"
-              element={<OtherMaterialsYearsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId"
-              element={<OtherMaterialsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId/:subjectId"
-              element={<OtherMaterialsPage />}
-            />
-            <Route
-              path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
-              element={<OtherMaterialsPage />}
-            />
-          </Route>
-        </Route>
-      </Routes>
-    </>
-  );
+                    <Route
+                        path="logs"
+                        element={<ProtectedRoute permission="View Logs" />}
+                    >
+                        <Route index element={<LogsPage />} />
+                        <Route path=":logId" element={<LogPage />} />
+                    </Route>
+                    <Route
+                        path="other-materials"
+                        element={<ProtectedRoute permission="View Materials" />}
+                    >
+                        <Route
+                            index
+                            element={<OtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType"
+                            element={<OtherMaterialsDepartmentsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId"
+                            element={<OtherMaterialsYearsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId"
+                            element={<OtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId/:subjectId"
+                            element={<OtherMaterialsPage />}
+                        />
+                        <Route
+                            path=":studyType/:departmentId/:yearId/:subjectId/:parentId"
+                            element={<OtherMaterialsPage />}
+                        />
+                    </Route>
+                </Route>
+            </Routes>
+        </>
+    );
 }
 
 export default App;
