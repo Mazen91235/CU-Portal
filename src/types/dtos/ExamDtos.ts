@@ -37,6 +37,9 @@ export type ExamDeleteDto = {
 export type ExamSearchDto = {
     id?: number | null;
     subject_id?: number | null;
+    faculty_id?: number | null;
+    department_id?: number | null;
+    year_id?: number | null;
     author_id?: number | null;
     deadline_from?: string | null;
     deadline_to?: string | null;

@@ -158,9 +158,9 @@ export const AnnouncementsPage = () => {
                 author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getAnnouncements({
                 data: params,
