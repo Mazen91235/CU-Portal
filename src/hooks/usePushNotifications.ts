@@ -60,6 +60,15 @@ export function usePushNotifications() {
         );
     };
 
+    const getDeviceId = (createIfMissing: boolean) => {
+        const savedDeviceId = localStorage.getItem("device_id");
+        if (savedDeviceId || !createIfMissing) return savedDeviceId;
+
+        const deviceId = crypto.randomUUID();
+        localStorage.setItem("device_id", deviceId);
+        return deviceId;
+    };
+
     const syncToken = useCallback(
         async (currentPermission = permission) => {
             if (!("Notification" in window) || isSyncingToken) return;
@@ -68,6 +77,8 @@ export function usePushNotifications() {
             try {
                 if (currentPermission === "granted") {
                     const savedTokenDetails = getSavedTokenDetails();
+                    const deviceId = getDeviceId(true);
+                    if (!deviceId) return;
                     if (
                         savedTokenDetails.token &&
                         savedTokenDetails.timestamp &&
@@ -77,13 +88,18 @@ export function usePushNotifications() {
                         return; // 1 hour valid
                     const token = await requestFcmToken();
                     if (token) {
-                        await registerDevice({ device_token: token }).unwrap();
+                        await registerDevice({
+                            device_id: deviceId,
+                            device_token: token,
+                        }).unwrap();
                         setSavedTokenDetails(token);
                     }
                 } else {
                     const savedTokenDetails = getSavedTokenDetails();
-                    if (savedTokenDetails.token) {
+                    const deviceId = getDeviceId(false);
+                    if (savedTokenDetails.token && deviceId) {
                         await unregisterDevice({
+                            device_id: deviceId,
                             device_token: savedTokenDetails.token,
                         }).unwrap();
                         setSavedTokenDetails("");

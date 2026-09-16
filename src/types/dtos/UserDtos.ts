@@ -187,5 +187,6 @@ export type UserStatisticsResponseDto = {
 };
 
 export type UserDeviceActionDto = {
+    device_id: string;
     device_token: string;
 };
