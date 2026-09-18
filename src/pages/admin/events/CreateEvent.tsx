@@ -37,16 +37,7 @@ import styles from "./CreateEvent.module.css";
 const eventSchema = z
     .object({
         title: z.string().min(1, "Event title is required"),
-        thumbnail: z
-            .any()
-            .refine(
-                (value) =>
-                    value instanceof File ||
-                    (typeof FileList !== "undefined" &&
-                        value instanceof FileList &&
-                        value.length > 0),
-                "Thumbnail is required",
-            ),
+        thumbnail: z.any().optional(),
         description: z.string().min(1, "Description is required"),
         start_date: z.string().min(1, "Start date is required"),
         start_time: z.string().min(1, "Start time is required"),
@@ -252,13 +243,6 @@ export const CreateEvent = () => {
     const onSubmit = async (data: EventFormData) => {
         const uploadedUrls: string[] = [];
         const thumbnailFile = getThumbnailFile(data.thumbnail);
-        if (!thumbnailFile) {
-            setError("thumbnail", {
-                type: "required",
-                message: "Thumbnail is required",
-            });
-            return;
-        }
 
         try {
             setIsUploading(true);
@@ -269,7 +253,17 @@ export const CreateEvent = () => {
                     : [];
             uploadedFiles.forEach((url) => uploadedUrls.push(url));
 
-            const thumbnailUrl = await uploadFile(thumbnailFile);
+            const thumbnailUrl = thumbnailFile
+                ? await uploadFile(thumbnailFile)
+                : undefined;
+            if (thumbnailFile && !thumbnailUrl) {
+                await removeUploadedFiles(uploadedUrls);
+                setError("thumbnail", {
+                    type: "upload",
+                    message: "Failed to upload thumbnail",
+                });
+                return;
+            }
             if (thumbnailUrl) uploadedUrls.push(thumbnailUrl);
 
             const scopedIds = user?.canAccessAll
@@ -429,7 +423,6 @@ export const CreateEvent = () => {
                         <Thumbnail
                             register={register}
                             name="thumbnail"
-                            required
                             errors={errors}
                             setValue={setValue}
                             disabled={busy}

@@ -12,6 +12,8 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 // import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { formatDateTime } from "../../../utils/Formatter";
 
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventPage.module.css";
 import { AttachmentsAndLinksSection } from "../../../components/preview/AttachmentsAndLinksSection";
 import { Button } from "../../../components/forms/Button";
@@ -124,7 +126,7 @@ export const EventPage = () => {
 
             <SubBanner
                 title={event.title || "Event Details"}
-                img={event.logo?.url || undefined}
+                img={event.logo?.url || defaultEventThumbnail}
                 icon="calendar"
                 linkText="Back to Events"
                 linkTo="/user/events"

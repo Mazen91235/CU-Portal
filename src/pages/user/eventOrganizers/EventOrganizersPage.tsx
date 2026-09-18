@@ -12,6 +12,8 @@ import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganiz
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import defaultEventOrganizerLogo from "../../../assets/default event organizer logo.jpg";
+
 import styles from "./EventOrganizersPage.module.css";
 
 export const EventsOrganizersPage = () => {
@@ -78,7 +80,7 @@ export const EventsOrganizersPage = () => {
                             key={organizer.id}
                             title="Event Organizer"
                             profile={organizer.name || "Unnamed organizer"}
-                            profileLogo={organizer.logo?.url || undefined}
+                            profileLogo={organizer.logo?.url || defaultEventOrganizerLogo}
                             button="View Details"
                             buttonAction={() =>
                                 navigate(

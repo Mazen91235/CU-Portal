@@ -23,10 +23,7 @@ import styles from "./CreateEventOrganizer.module.css";
 
 const schema = z.object({
     name: z.string().trim().min(1, "Organizer name is required"),
-    logo: z.any().refine(
-        (value) => value instanceof File || Boolean(value && typeof value === "object" && "length" in value && Number(value.length) > 0),
-        "Logo is required",
-    ),
+    logo: z.any().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -69,16 +66,12 @@ export const CreateEventOrganizer = () => {
             const logoFile = data.logo instanceof File
                 ? data.logo
                 : (data.logo as FileList)?.[0];
-            if (!logoFile) {
-                setError("logo", { type: "required", message: "Logo is required" });
-                return;
-            }
-            const logoUrl = await uploadFile(logoFile);
-            if (logoUrl) uploadedUrls.push(logoUrl);
-            if (!logoUrl) {
+            const logoUrl = logoFile ? await uploadFile(logoFile) : undefined;
+            if (logoFile && !logoUrl) {
                 setError("logo", { type: "upload", message: "Failed to upload logo" });
                 return;
             }
+            if (logoUrl) uploadedUrls.push(logoUrl);
 
             const urls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
@@ -92,7 +85,7 @@ export const CreateEventOrganizer = () => {
             await createEventOrganizer({
                 name: data.name,
                 details: {
-                    url: logoUrl,
+                    url: logoUrl || undefined,
                     urls,
                     links: parseLinks(data.links),
                 },
@@ -121,7 +114,7 @@ export const CreateEventOrganizer = () => {
 
                     <div className={styles.attachmentsSection}>
                         <Heading icon="image" content="Logo" size="medium" />
-                        <Thumbnail register={register} name="logo" errors={errors} setValue={setValue} label="Logo" required logo disabled={busy} />
+                        <Thumbnail register={register} name="logo" errors={errors} setValue={setValue} label="Logo" logo disabled={busy} />
                     </div>
 
                     <div className={styles.attachmentsSection}>

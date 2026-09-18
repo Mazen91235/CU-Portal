@@ -16,6 +16,8 @@ import { formatDateTime } from "../../../utils/Formatter";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventOrganizerPage.module.css";
 
 export const EventOrganizerPage = () => {
@@ -108,7 +110,7 @@ export const EventOrganizerPage = () => {
                             <Card
                                 key={event.id}
                                 title={event.title || ""}
-                                img={event.logo?.url || ""}
+                                img={event.logo?.url || defaultEventThumbnail}
                                 badge={
                                     event.price === 0
                                         ? "Free"

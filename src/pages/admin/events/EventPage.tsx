@@ -19,6 +19,8 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
 
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventPage.module.css";
 
 export const EventPage = () => {
@@ -80,7 +82,7 @@ export const EventPage = () => {
             <SubBanner
                 title={event.title || "Event Details"}
                 icon="calendar"
-                img={event.logo?.url || undefined}
+                img={event.logo?.url || defaultEventThumbnail}
                 button="Edit Event"
                 buttonAction={() => navigate(buildRedirectUrl(`/admin/events/edit/${event.id}`))}
                 deleteButton="Delete Event"

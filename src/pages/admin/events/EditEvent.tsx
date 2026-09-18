@@ -359,13 +359,6 @@ export const EditEvent = () => {
         const uploadedUrls: string[] = [];
 
         const thumbnailFile = getThumbnailFile(data.thumbnail);
-        if (!thumbnailFile && !existingThumbnailUrl) {
-            setError("thumbnail", {
-                type: "required",
-                message: "Thumbnail is required",
-            });
-            return;
-        }
 
         try {
             setIsUploading(true);
@@ -379,6 +372,14 @@ export const EditEvent = () => {
             const newThumbnailUrl = thumbnailFile
                 ? await uploadFile(thumbnailFile)
                 : undefined;
+            if (thumbnailFile && !newThumbnailUrl) {
+                await removeUploadedFiles(uploadedUrls);
+                setError("thumbnail", {
+                    type: "upload",
+                    message: "Failed to upload thumbnail",
+                });
+                return;
+            }
             if (newThumbnailUrl) uploadedUrls.push(newThumbnailUrl);
 
             const fileUrls = [
@@ -544,7 +545,6 @@ export const EditEvent = () => {
                         <Thumbnail
                             register={register}
                             name="thumbnail"
-                            required
                             errors={errors}
                             setValue={setValue}
                             existingUrl={existingThumbnailUrl}

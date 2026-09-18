@@ -45,8 +45,7 @@ const getLevelClass = (level?: string | null) => {
 
 export const LogsPage = () => {
     const navigate = useNavigate();
-    const { getFilter, getFilterSetter, searchParams } =
-        useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams } = useFilterSearchParams();
     const userId = searchParams.get("user_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
@@ -56,10 +55,7 @@ export const LogsPage = () => {
     const setEntityFilter = getFilterSetter("entity");
     const levelFilter = getFilter("level", "");
     const setLevelFilter = getFilterSetter("level");
-    const dateFromFilter = getFilter(
-        "date_from",
-        new Date().toLocaleDateString("en-CA"),
-    );
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
     const setDateToFilter = getFilterSetter("date_to", true);
@@ -109,9 +105,7 @@ export const LogsPage = () => {
             setLogs((prev) => {
                 const filteredPrev = prev.filter(
                     (log) =>
-                        !logsResult.data?.some(
-                            (newLog) => newLog.id === log.id,
-                        ),
+                        !logsResult.data?.some((newLog) => newLog.id === log.id),
                 );
                 if (page === 1) return logsResult.data || [];
                 return [...filteredPrev, ...(logsResult.data || [])];
@@ -223,8 +217,7 @@ export const LogsPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search logs by action, entity, user or code..."
-                        setValue={setSearchQuery}
-                        value={searchQuery}
+                        setValue={setSearchQuery} value={searchQuery}
                     />
                 </div>
                 <div className={styles.filtersRow}>
@@ -247,13 +240,13 @@ export const LogsPage = () => {
                         placeholder="Date From"
                         setValue={setDateFromFilter}
                         defaultDate={dateFromFilter}
-                        value={dateFromFilter}
-                    />
+                            value={dateFromFilter}
+                        />
                     <DateFilter
                         placeholder="Date To"
                         setValue={setDateToFilter}
-                        value={dateToFilter}
-                    />
+                            value={dateToFilter}
+                        />
                 </div>
             </section>
             <section className={styles.tableSection}>

@@ -33,6 +33,8 @@ import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
 
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventsPage.module.css";
 
 export const EventsPage = () => {
@@ -411,7 +413,7 @@ export const EventsPage = () => {
                         <Card
                             key={event.id}
                             title={event.title || ""}
-                            img={event.logo?.url || ""}
+                            img={event.logo?.url || defaultEventThumbnail}
                             badge={
                                 event.department && event.year
                                     ? `${event.department?.code || ""} ${event.year?.year || ""}`.trim()

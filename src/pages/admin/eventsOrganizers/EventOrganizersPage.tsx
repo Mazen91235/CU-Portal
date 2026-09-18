@@ -18,6 +18,8 @@ import {
     useDeleteEventOrganizerMutation,
 } from "../../../services/apis/admin/EventOrganizerAPIs";
 import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import defaultEventOrganizerLogo from "../../../assets/default event organizer logo.jpg";
+
 import styles from "./EventOrganizersPage.module.css";
 
 export const EventOrganizersPage = () => {
@@ -124,7 +126,7 @@ export const EventOrganizersPage = () => {
                             key={organizer.id}
                             title="Event Organizer"
                             profile={organizer.name || "Unnamed organizer"}
-                            profileLogo={organizer.logo?.url || undefined}
+                            profileLogo={organizer.logo?.url || defaultEventOrganizerLogo}
                             editable
                             deletable
                             hasOptions

@@ -32,20 +32,7 @@ import styles from "./EditEventOrganizer.module.css";
 
 const schema = z.object({
     name: z.string().trim().min(1, "Organizer name is required"),
-    logo: z
-        .any()
-        .refine(
-            (value) =>
-                (typeof value === "string" && value.length > 0) ||
-                value instanceof File ||
-                Boolean(
-                    value &&
-                    typeof value === "object" &&
-                    "length" in value &&
-                    Number(value.length) > 0,
-                ),
-            "Logo is required",
-        ),
+    logo: z.any().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -155,14 +142,6 @@ export const EditEventOrganizer = () => {
                 logoUrl = (await uploadFile(logoValue[0])) || "";
                 if (logoUrl) uploadedUrls.push(logoUrl);
             }
-            if (!logoUrl) {
-                setError("logo", {
-                    type: "required",
-                    message: "Logo is required",
-                });
-                return;
-            }
-
             const newUrls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
                 const url = await uploadFile(file);
@@ -179,7 +158,7 @@ export const EditEventOrganizer = () => {
                 event_organizer_id: Number(eventOrganizerId),
                 name: data.name,
                 details: {
-                    url: logoUrl,
+                    url: logoUrl || undefined,
                     urls: [...retainedUrls, ...newUrls],
                     links: [
                         ...existingLinks.map(({ title, url }) => ({
@@ -247,7 +226,6 @@ export const EditEventOrganizer = () => {
                             existingUrl={existingLogoUrl}
                             onRemoveExisting={() => setExistingLogoUrl(null)}
                             label="Logo"
-                            required
                             logo
                             disabled={busy}
                         />

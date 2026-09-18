@@ -14,6 +14,8 @@ import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 import { formatDateTime } from "../../../utils/Formatter";
 
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
@@ -210,7 +212,7 @@ export const EventsPage = () => {
                         <Card
                             key={event.id}
                             title={event.title || ""}
-                            img={event.logo?.url || ""}
+                            img={event.logo?.url || defaultEventThumbnail}
                             badge={
                                 event.price !== undefined &&
                                 event.price !== null
