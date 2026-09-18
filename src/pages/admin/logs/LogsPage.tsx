@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -7,6 +7,7 @@ import { Search } from "../../../components/forms/Search";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { DateFilter } from "../../../components/forms/DateFilter";
 import { Table } from "../../../components/table/Table";
+import { Pagination } from "../../../components/pagination/Pagination";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import {
@@ -44,7 +45,8 @@ const getLevelClass = (level?: string | null) => {
 
 export const LogsPage = () => {
     const navigate = useNavigate();
-    const { getFilter, getFilterSetter, searchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams } =
+        useFilterSearchParams();
     const userId = searchParams.get("user_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
@@ -54,12 +56,17 @@ export const LogsPage = () => {
     const setEntityFilter = getFilterSetter("entity");
     const levelFilter = getFilter("level", "");
     const setLevelFilter = getFilterSetter("level");
-    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFromFilter = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
     const setDateToFilter = getFilterSetter("date_to", true);
     const [logs, setLogs] = useState<LogResponseDto[]>([]);
-    const [getLogs] = useLazyGetLogsQuery();
+    const [page, setPage] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const [getLogs, { isFetching }] = useLazyGetLogsQuery();
     const [getLogActions] = useLazyGetLogActionsQuery();
     const [getLogEntities] = useLazyGetLogEntitiesQuery();
     const [actions, setActions] = useState<string[]>([]);
@@ -82,8 +89,9 @@ export const LogsPage = () => {
 
     const fetchLogsData = useCallback(async () => {
         try {
+            if (!hasNextPage) return;
+
             const logsResult = await getLogs({
-                limit: 100,
                 includes: ["user"],
                 data: {
                     query: searchQuery.trim() || undefined,
@@ -96,8 +104,19 @@ export const LogsPage = () => {
                 },
                 order_by: ["id"],
                 descending: true,
+                page,
             }).unwrap();
-            setLogs(logsResult.data || []);
+            setLogs((prev) => {
+                const filteredPrev = prev.filter(
+                    (log) =>
+                        !logsResult.data?.some(
+                            (newLog) => newLog.id === log.id,
+                        ),
+                );
+                if (page === 1) return logsResult.data || [];
+                return [...filteredPrev, ...(logsResult.data || [])];
+            });
+            setHasNextPage(logsResult.next_page || false);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -110,7 +129,28 @@ export const LogsPage = () => {
         levelFilter,
         searchQuery,
         userId,
+        page,
+        hasNextPage,
     ]);
+
+    useEffect(() => {
+        setPage(1);
+        setHasNextPage(true);
+    }, [
+        searchQuery,
+        actionFilter,
+        entityFilter,
+        levelFilter,
+        dateFromFilter,
+        dateToFilter,
+        userId,
+    ]);
+
+    const handlePagination = () => {
+        if (hasNextPage && !isFetching && logs.length > 0) {
+            setPage(page + 1);
+        }
+    };
 
     const authQueryParams = useCallback(() => fetchLogsData(), [fetchLogsData]);
 
@@ -183,7 +223,8 @@ export const LogsPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search logs by action, entity, user or code..."
-                        setValue={setSearchQuery} value={searchQuery}
+                        setValue={setSearchQuery}
+                        value={searchQuery}
                     />
                 </div>
                 <div className={styles.filtersRow}>
@@ -206,13 +247,13 @@ export const LogsPage = () => {
                         placeholder="Date From"
                         setValue={setDateFromFilter}
                         defaultDate={dateFromFilter}
-                            value={dateFromFilter}
-                        />
+                        value={dateFromFilter}
+                    />
                     <DateFilter
                         placeholder="Date To"
                         setValue={setDateToFilter}
-                            value={dateToFilter}
-                        />
+                        value={dateToFilter}
+                    />
                 </div>
             </section>
             <section className={styles.tableSection}>
@@ -230,6 +271,7 @@ export const LogsPage = () => {
                     action
                 />
             </section>
+            <Pagination onReached={handlePagination} />
         </Layout>
     );
 };
