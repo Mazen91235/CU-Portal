@@ -5,7 +5,7 @@ import {
     useRegisterDeviceMutation,
     useUnregisterDeviceMutation,
 } from "../services/apis/user/UserAPIs";
-import { useMarkNotificationAsSeenMutation } from "../services/apis/user/NotificationAPIs";
+import { useMarkNotificationsAsSeenMutation } from "../services/apis/user/NotificationAPIs";
 import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
 
@@ -19,7 +19,7 @@ type ForegroundNotification = {
 export function usePushNotifications() {
     const [registerDevice] = useRegisterDeviceMutation();
     const [unregisterDevice] = useUnregisterDeviceMutation();
-    const [markNotificationAsSeen] = useMarkNotificationAsSeenMutation();
+    const [markNotificationsAsSeen] = useMarkNotificationsAsSeenMutation();
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
     const [permission, setPermission] = useState<NotificationPermission>(() =>
@@ -190,7 +190,7 @@ export function usePushNotifications() {
             unsubscribeOnMessage();
             if (permissionStatus) permissionStatus.onchange = null;
         };
-    }, [user, isLoggedIn, syncToken, markNotificationAsSeen]);
+    }, [user, isLoggedIn, syncToken, markNotificationsAsSeen]);
 
     const dismissForegroundNotification = useCallback(() => {
         setForegroundNotification(null);
@@ -205,8 +205,8 @@ export function usePushNotifications() {
         if (notificationId) {
             queueMicrotask(async () => {
                 try {
-                    await markNotificationAsSeen({
-                        notification_id: notificationId,
+                    await markNotificationsAsSeen({
+                        notification_ids: [notificationId],
                     }).unwrap();
                 } catch {
                     //
@@ -216,7 +216,7 @@ export function usePushNotifications() {
 
         window.focus();
         window.location.href = url;
-    }, [foregroundNotification, markNotificationAsSeen]);
+    }, [foregroundNotification, markNotificationsAsSeen]);
 
     return {
         permission,
