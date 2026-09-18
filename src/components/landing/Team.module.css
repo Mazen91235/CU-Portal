@@ -1,6 +1,6 @@
 .teamSection {
     width: 100%;
-    padding: 4rem 0 3rem 0;
+    padding: 4rem 0 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,102 +19,214 @@
 }
 
 .teamMembers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.5rem;
-    justify-content: center;
-    align-items: stretch;
-    width: 100%;
-    max-width: 1400px;
+    width: min(1240px, calc(100% - 32px));
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    justify-content: center;
+    gap: 24px;
+    align-items: stretch;
     position: relative;
     z-index: 1;
 }
 
 .teamCard {
-    background: var(--white);
-    border-radius: var(--primary-border-radius);
+    min-width: 0;
+    width: 100%;
+    max-width: 300px;
     height: auto;
-    width: 300px;
+    background: var(--white);
+    border: 1px solid rgba(123, 22, 132, 0.08);
+    border-radius: 20px;
     box-shadow: var(--dark-box-shadow);
-    padding: 3rem 1.5rem 1.5rem;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 0;
-    margin-bottom: 2rem;
-    transition: box-shadow var(--transition-duration);
-    position: relative;
-    overflow: hidden;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
-.teamCardSemicircle {
-    width: 100%;
-    padding-top: 100%;
+.teamCard:hover {
+    transform: translateY(-5px);
+    border-color: rgba(123, 22, 132, 0.18);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.11);
+}
+
+.teamImageFrame {
     position: relative;
+    width: 100%;
+    height: 220px;
     overflow: hidden;
-    border-radius: 50%;
-    margin-bottom: 15px;
+    background: var(--grey-background, #f3f3f5);
+    flex-shrink: 0;
 }
 
 .teamIcon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.teamCard:hover .teamIcon {
+    transform: scale(1.025);
+}
+
+.teamImageOverlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60%;
-    height: auto;
-}
-
-.teamName {
-    font-family: var(--primary-font-family);
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--primary-purple);
-    text-align: center;
-    margin-top: 32px;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
-}
-
-.teamRole {
-    font-family: var(--primary-font-family);
-    font-size: var(--primary-font-size);
-    font-weight: var(--secondary-font-weight);
-    color: var(--primary-purple);
-    text-align: center;
-    margin-bottom: 1.2rem;
-    letter-spacing: 0.8px;
-}
-
-.role {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #9d25a8;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgba(18, 10, 21, 0.05) 45%,
+        rgba(18, 10, 21, 0.5) 100%
+    );
 }
 
 .teamBadge {
-    font-size: 0.8rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--primary-purple);
-    border-color: var(--primary-purple);
-    border: solid 1px;
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--primary-border-radius);
-    font-weight: var(--primary-font-weight);
-    display: inline-block;
     position: absolute;
-    top: 18px;
-    left: 18px;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 32px);
+    min-height: 30px;
+    padding: 6px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--primary-purple, #7b1684);
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 700;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(7px);
+}
+
+.teamCardContent {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.teamName {
     margin: 0;
+    font-family: var(--primary-font-family);
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--primary-purple);
+    letter-spacing: 0.2px;
+}
+
+.role {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: 27px;
+    margin-top: 7px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: rgba(157, 37, 168, 0.1);
+    color: #9d25a8;
+    font-family: var(--primary-font-family);
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.teamMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    color: var(--medium-grey, #7f838b);
+    font-family: var(--primary-font-family);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.metaSeparator {
+    color: rgba(127, 131, 139, 0.65);
+}
+
+.additionalRoles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.additionalRolesLabel {
+    color: var(--medium-grey, #7f838b);
+    font-family: var(--primary-font-family);
+    font-size: 9px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.roleChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.secondaryRole,
+.sprintRole,
+.moreRoles {
+    display: inline-flex;
+    align-items: center;
+    min-height: 25px;
+    padding: 5px 8px;
+    border-radius: 7px;
+    font-family: var(--primary-font-family);
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.secondaryRole {
+    background: var(--grey-background, #f3f3f5);
+    color: var(--text-color, #555b63);
+}
+
+.sprintRole {
+    background: rgba(123, 22, 132, 0.08);
+    color: var(--primary-purple, #7b1684);
+    border: 1px solid rgba(123, 22, 132, 0.12);
+}
+
+.moreRoles {
+    color: var(--medium-grey, #7f838b);
+    background: transparent;
+    border: 1px dashed rgba(127, 131, 139, 0.4);
 }
 
 .teamSocials {
     display: flex;
-    gap: 1.2rem;
-    justify-content: center;
+    gap: 10px;
+    justify-content: flex-start;
     align-items: center;
-    margin-top: 0.5rem;
+    margin-top: 14px;
+    padding-top: 13px;
+}
+
+.teamSocials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
 }
 
 .teamSocials a img {
@@ -123,67 +235,45 @@
     border-radius: var(--primary-border-radius);
     background: var(--white);
     box-shadow: var(--light-box-shadow);
-    transition: transform var(--transition-duration);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.teamSocials a img:hover {
-    transform: scale(1.15);
+.teamSocials a:hover img {
+    transform: translateY(-2px) scale(1.06);
     box-shadow: var(--dark-box-shadow);
 }
 
 @media (max-width: 1280px) {
     .teamSection {
-        padding: 2.5rem 0 2rem 0;
+        padding: 2.5rem 0 2rem;
     }
 
     .teamMembers {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        justify-items: center;
-        justify-content: center;
-    }
-
-    .teamCard {
-        width: 220px;
-        min-width: 0;
-        padding: 2rem 0.8rem 1rem;
-        margin: 0;
+        gap: 20px;
     }
 }
 
 @media (max-width: 1024px) {
     .teamMembers {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        width: 100%;
-        margin: 0 auto;
-        max-width: 100vw;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .teamCard {
-        width: 90vw;
-        max-width: 350px;
-        padding: 1.5rem 0.5rem;
+        grid-template-columns: repeat(2, minmax(250px, 300px));
+        justify-content: center;
     }
 }
 
-@media (max-width: 600px) {
-    .teamMembers {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        width: 100%;
-        margin: 0 auto;
-        max-width: 100vw;
-        padding-left: 0;
-        padding-right: 0;
+@media (max-width: 700px) {
+    .teamTitle {
+        font-size: 34px;
     }
 
-    .teamCard {
-        width: 90vw;
+    .teamMembers {
+        grid-template-columns: minmax(0, 300px);
         max-width: 300px;
-        padding: 1.5rem 0.5rem;
+    }
+
+    .teamCardContent {
+        padding: 16px;
     }
 }
 

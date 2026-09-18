@@ -5,18 +5,25 @@ export type SocialLink = {
 
 export const memberRoles = [
     "Full Stack Developer",
-    "Frontend Developer",
     "Backend Developer",
+    "Frontend Developer",
     "UI/UX Designer",
     "Software Tester",
 ] as const;
 
+export type AdditionalRole = {
+    name: string;
+    type?: "secondary" | "sprint";
+};
+
 export type MemberProps = {
     name: string;
     title: string;
-    role: typeof memberRoles[number];
+    role: (typeof memberRoles)[number];
+    additionalRoles?: AdditionalRole[];
     university: string;
     badge?: string;
     image: string;
+    imagePosition?: "top" | "center" | "bottom";
     socials: SocialLink[];
 };

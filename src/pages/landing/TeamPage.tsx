@@ -14,12 +14,12 @@ import styles from "./TeamPage.module.css";
 
 export const TeamPage = () => {
     const [, setActiveSection] = useState("team");
-    const founders = teamMembers.filter(
-        (m) => m.badge === "Founder & Team Lead" || m.badge === "Founder",
+    const founders = teamMembers.filter((m) =>
+        m.badge?.toLocaleLowerCase().includes("founder"),
     );
 
-    const partners = teamMembers.filter(
-        (m) => m.badge === "Partner" || m.badge === "Contributor",
+    const partners = teamMembers.filter((m) =>
+        m.badge?.toLocaleLowerCase().includes("partner"),
     );
 
     const groupedMembers = useMemo(() => {
@@ -36,47 +36,97 @@ export const TeamPage = () => {
         );
     }, []);
 
-    const renderTeamCard = (member: MemberProps, index: number) => (
-        <div key={index} className={styles.teamCard}>
-            {member.badge && (
-                <div>
-                    <span className={styles.teamBadge}>{member.badge}</span>
-                </div>
-            )}
-            <div className={styles.teamCardSemicircle}>
-                <img
-                    src={member.image}
-                    alt={member.name}
-                    className={styles.teamIcon}
-                />
-            </div>
-            <div className={styles.teamName}>{member.name}</div>
+    const renderTeamCard = (member: MemberProps, index: number) => {
+        const additionalRoles = member.additionalRoles ?? [];
+        const visibleRoles = additionalRoles.slice(0, 3);
+        const remainingRoles = Math.max(
+            additionalRoles.length - visibleRoles.length,
+            0,
+        );
 
-            {(founders.includes(member) || partners.includes(member)) && (
-                <span className={styles.role}>{member.role}</span>
-            )}
-            <div className={styles.teamRole}>
-                {member.title}
-                <br />
-                {member.university}
-            </div>
+        return (
+            <article
+                key={`${member.name}-${index}`}
+                className={styles.teamCard}
+            >
+                <div className={styles.teamImageFrame}>
+                    <img
+                        src={member.image}
+                        alt={member.name}
+                        className={styles.teamIcon}
+                        style={{
+                            objectPosition: `${member.imagePosition ?? "center"} top`,
+                        }}
+                        loading="lazy"
+                    />
 
-            {member.socials && member.socials.length > 0 && (
-                <div className={styles.teamSocials}>
-                    {member.socials.map((social: SocialLink, idx: number) => (
-                        <a
-                            key={idx}
-                            href={social.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img src={social.icon} alt="Social" />
-                        </a>
-                    ))}
+                    <div className={styles.teamImageOverlay} />
+
+                    {member.badge && (
+                        <span className={styles.teamBadge}>{member.badge}</span>
+                    )}
                 </div>
-            )}
-        </div>
-    );
+
+                <div className={styles.teamCardContent}>
+                    <div className={styles.teamNameBlock}>
+                        <h3 className={styles.teamName}>{member.name}</h3>
+                        <span className={styles.role}>{member.role}</span>
+                    </div>
+
+                    <div className={styles.teamMeta}>
+                        <span>{member.title}</span>
+                        <span className={styles.metaSeparator}>•</span>
+                        <span>{member.university}</span>
+                    </div>
+
+                    {additionalRoles.length > 0 && (
+                        <div className={styles.additionalRoles}>
+                            <span className={styles.additionalRolesLabel}>
+                                Also contributed as
+                            </span>
+                            <div className={styles.roleChips}>
+                                {visibleRoles.map((additionalRole) => (
+                                    <span
+                                        key={`${member.name}-${additionalRole.name}`}
+                                        className={
+                                            additionalRole.type === "sprint"
+                                                ? styles.sprintRole
+                                                : styles.secondaryRole
+                                        }
+                                    >
+                                        {additionalRole.name}
+                                    </span>
+                                ))}
+                                {remainingRoles > 0 && (
+                                    <span className={styles.moreRoles}>
+                                        +{remainingRoles}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {member.socials && member.socials.length > 0 && (
+                        <div className={styles.teamSocials}>
+                            {member.socials.map(
+                                (social: SocialLink, idx: number) => (
+                                    <a
+                                        key={idx}
+                                        href={social.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`${member.name} social link`}
+                                    >
+                                        <img src={social.icon} alt="" />
+                                    </a>
+                                ),
+                            )}
+                        </div>
+                    )}
+                </div>
+            </article>
+        );
+    };
 
     return (
         <>
