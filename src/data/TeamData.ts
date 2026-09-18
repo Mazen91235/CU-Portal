@@ -7,6 +7,7 @@ import janaNourImg from "../assets/team/jana-nour.jpg";
 import hadeerKhalilImg from "../assets/team/hadeer-khalil.jpg";
 import somiaAliImg from "../assets/team/somia-ali.jpg";
 import marwaMohamedImg from "../assets/team/marwa-mohamed.jpg";
+import jasmineIsmailImg from "../assets/team/jasmine-ismail.jpeg";
 import websiteIcon from "../assets/icons/social-website.png";
 // import facebookIcon from "../assets/icons/social-facebook.png";
 import linkedinIcon from "../assets/icons/social-linkedin.png";
@@ -140,6 +141,23 @@ export const teamMembers: MemberProps[] = [
             {
                 icon: linkedinIcon,
                 url: "https://www.linkedin.com/in/marwa-mohamed-8565b5222",
+            },
+        ],
+    },
+    {
+        name: "Jasmine Ismail",
+        title: "Computer Engineer",
+        role: "Software Tester",
+        university: "Cairo University",
+        image: jasmineIsmailImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/jasmine-ismailx6",
+            },
+            {
+                icon: githubIcon,
+                url: "https://github.com/jasminex6",
             },
         ],
     },
