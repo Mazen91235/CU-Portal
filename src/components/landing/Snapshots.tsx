@@ -23,12 +23,12 @@ export const Snapshots = ({
             <div className={styles.screenshotsGalleryOverlap}>
                 <img
                     src={snapshot1}
-                    alt="Student Portal Dashboard 1"
+                    alt="CU-Portal Dashboard 1"
                     className={styles.screenshotImgBack}
                 />
                 <img
                     src={snapshot2}
-                    alt="Student Portal Dashboard 2"
+                    alt="CU-Portal Dashboard 2"
                     className={styles.screenshotImgFront}
                 />
             </div>

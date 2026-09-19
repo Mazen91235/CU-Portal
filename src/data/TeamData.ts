@@ -2,6 +2,7 @@ import mazenMohsenImg from "../assets/team/mazen-mohsen.jpg";
 import mohamedAhmedImg from "../assets/team/mohamed-ahmed.jpg";
 import omarMagdyImg from "../assets/team/omar-magdy.jpg";
 import omarNagyImg from "../assets/team/omar-nagy.jpeg";
+import mariamSamehImg from "../assets/team/mariam-sameh.jpg";
 import rojanHamdyImg from "../assets/team/rojan-hamdy.jpg";
 import anneOmerImg from "../assets/team/anne-omer.jpg";
 import mariamMohamedImg from "../assets/team/mariam-mohamed.png";
@@ -77,6 +78,26 @@ export const teamMembers: MemberProps[] = [
                 url: "https://www.linkedin.com/in/omar-nagy-work",
             },
             { icon: githubIcon, url: "https://github.com/bradocola" },
+        ],
+    },
+    {
+        name: "Mariam Sameh",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        additionalRoles: [
+            {
+                name: "Software Tester",
+                type: "secondary",
+            },
+        ],
+        university: "Cairo University",
+        image: mariamSamehImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/mariam-sameh-1b726a335",
+            },
+            { icon: githubIcon, url: "https://github.com/Mariam-Sameh17" },
         ],
     },
     {

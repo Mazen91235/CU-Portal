@@ -13,10 +13,6 @@ export const Footer = ({ compact = false }: { compact?: boolean }) => {
         <footer className={styles.footer}>
             {!compact && (
                 <>
-                    <div className={styles.footerBranding}>
-                        St<span className={styles.footerHighlight}>u</span>dent
-                        P<span className={styles.footerHighlight}>o</span>rtal
-                    </div>
                     <div className={styles.footerLinks}>
                         <button
                             className={styles.footerLink}
