@@ -1,14 +1,18 @@
 .layoutContainer {
     width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    max-width: 100%;
     overflow: hidden;
+    min-height: 100vh;
 }
 
 .mainContent {
     margin-top: 60px;
     transition: margin-left var(--transition-duration) ease;
     min-height: calc(100vh - 60px);
+    min-width: 0;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .mainContent.sidebarOpen {

@@ -157,9 +157,9 @@ export const CalendarPage = () => {
 
         const dateObj = parseDateString(selectedDate) || new Date(selectedDate);
         const options: Intl.DateTimeFormatOptions = {
-            weekday: "long",
+            weekday: "short",
             year: "numeric",
-            month: "long",
+            month: "short",
             day: "numeric",
         };
         const dateStr = dateObj.toLocaleDateString(undefined, options);

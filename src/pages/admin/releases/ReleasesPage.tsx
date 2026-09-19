@@ -7,7 +7,7 @@ import { PageSeo } from "../../../components/PageSeo";
 import type { ReleaseResponseDto } from "../../../types/dtos/ReleaseDtos";
 import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./ReleasesPage.module.css";
 import { useNavigate } from "react-router";
@@ -26,6 +26,9 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 
 export function ReleasesPage() {
     const [releases, setReleases] = useState<ReleaseResponseDto[]>([]);
+    const [latestRelease, setLatestRelease] =
+        useState<ReleaseResponseDto | null>(null);
+    const latestReleaseFetched = useRef(false);
     const [versions, setVersions] = useState<VersionResponseDto[]>([]);
     const { getFilter, getFilterSetter } = useFilterSearchParams();
     const queryFilter = getFilter("query", "");
@@ -72,20 +75,27 @@ export function ReleasesPage() {
         }
     }, [getReleases, queryFilter, versionsFilter]);
 
+    const fetchLatestRelease = useCallback(async () => {
+        if (latestReleaseFetched.current) return;
+
+        try {
+            const result = await getReleases({
+                data: {},
+                includes: ["release_version", "release_items"],
+                order_by: ["date"],
+                descending: true,
+                limit: 1,
+            }).unwrap();
+            setLatestRelease(result.data?.[0] ?? null);
+            latestReleaseFetched.current = true;
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [getReleases]);
+
     useAuthQuery(fetchVersions);
     useAuthQuery(fetchReleases);
-
-    const latestRelease = useMemo(
-        () =>
-            releases.reduce<ReleaseResponseDto | null>(
-                (latest, release) =>
-                    !latest || (release.date ?? "") > (latest.date ?? "")
-                        ? release
-                        : latest,
-                null,
-            ),
-        [releases],
-    );
+    useAuthQuery(fetchLatestRelease);
 
     const filteredReleases = useMemo(
         () =>

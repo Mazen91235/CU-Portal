@@ -155,3 +155,21 @@
 }
 
 .dot-event { background: #3b82f6; }
+
+.mobile-note-dot {
+  display: none;
+}
+
+.dot-note {
+  background: grey;
+}
+
+@media (max-width: 768px) {
+  .note-icon {
+    display: none;
+  }
+
+  .mobile-note-dot {
+    display: inline-block;
+  }
+}

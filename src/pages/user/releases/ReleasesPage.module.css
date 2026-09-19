@@ -147,3 +147,35 @@
     padding-right: 0;
   }
 }
+
+.timelineReleaseItem {
+  position: relative;
+  min-width: 0;
+}
+
+.timelineReleaseItem::before {
+  content: "";
+  position: absolute;
+  top: 1.2rem;
+  left: -20px;
+  z-index: 3;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--medium-grey);
+  box-shadow: 0 0 0 4px var(--white);
+}
+
+.timelineReleaseItem > :global(.card) {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .timelineDate {
+    padding-left: 12px;
+  }
+
+  .timelineReleaseItem::before {
+    left: -14px;
+  }
+}

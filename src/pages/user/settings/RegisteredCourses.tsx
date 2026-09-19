@@ -189,30 +189,28 @@ export const RegisteredCourses = () => {
     }, [user?.year?.year, years]);
 
     useEffect(() => {
-        if (!user?.department?.id) {
-            setDepartmentFilter((current) => current || "");
+        const userDepartmentId = user?.department?.id;
+
+        if (!userDepartmentId || departments.length === 0) {
+            setDepartmentFilter("");
             return;
         }
 
         setDepartmentFilter(
-            (current) => current || user.department?.id?.toString() || "",
+            (current) => current || userDepartmentId.toString() || "",
         );
-    }, [user?.department?.id]);
+    }, [setDepartmentFilter, user, departments]);
 
     useEffect(() => {
-        const userYear = user?.year?.year;
+        const userYearId = user?.year?.id;
 
-        if (userYear == null) {
-            setYearFilter((current) => current || "");
+        if (!userYearId || years.length === 0) {
+            setYearFilter("");
             return;
         }
 
-        const currentYear = years.find((year) => year.year === userYear);
-
-        setYearFilter(
-            (current) => current || currentYear?.id?.toString() || "",
-        );
-    }, [user?.year?.year, years]);
+        setYearFilter((current) => current || userYearId.toString() || "");
+    }, [setYearFilter, user, years]);
 
     const handleConfirm = useCallback(async () => {
         if (!selectedCourse?.id) return;

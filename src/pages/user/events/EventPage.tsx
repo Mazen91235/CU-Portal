@@ -133,44 +133,38 @@ export const EventPage = () => {
             />
 
             <div className={styles.container}>
-                <div className={styles.content}>
-                    <div className={styles.statsRow}>
-                        <StatCard
-                            type="Start Date"
-                            value={formatDateTime(event.start_date) || "N/A"}
-                            icon="calendar"
-                        />
-                        <StatCard
-                            type="End Date"
-                            value={formatDateTime(event.end_date) || "N/A"}
-                            icon="calendar"
-                        />
-                        <StatCard
-                            type="Price"
-                            value={price}
-                            icon="dollar-sign"
-                        />
-                        <StatCard
-                            type="Attendees"
-                            value={event.attendees?.length ?? 0}
-                            icon="people"
-                        />
-                    </div>
+                <div className={styles.statsRow}>
+                    <StatCard
+                        type="Start Date"
+                        value={formatDateTime(event.start_date) || "N/A"}
+                        icon="calendar"
+                    />
+                    <StatCard
+                        type="End Date"
+                        value={formatDateTime(event.end_date) || "N/A"}
+                        icon="calendar"
+                    />
+                    <StatCard
+                        type="Price"
+                        value={price}
+                        icon="dollar-sign"
+                    />
+                    <StatCard
+                        type="Attendees"
+                        value={event.attendees?.length ?? 0}
+                        icon="people"
+                    />
+                </div>
 
+                <div className={styles.descriptionSection}>
                     <LongSection title="Description" icon="align-left">
                         {event.details?.description || (
                             <span>No description available</span>
                         )}
                     </LongSection>
-
-                    {event.attachments && event.attachments.length > 0 && (
-                        <AttachmentsAndLinksSection
-                            attachments={event.attachments}
-                        />
-                    )}
                 </div>
 
-                <div className={styles.sideInfo}>
+                <div className={styles.quickActionsSection}>
                     <Bordered>
                         <div className={styles.quickActions}>
                             <h4>Quick Actions</h4>
@@ -199,8 +193,10 @@ export const EventPage = () => {
                             />
                         </div>
                     </Bordered>
+                </div>
 
-                    {event.event_organizer && (
+                {event.event_organizer && (
+                    <div className={styles.organizerSection}>
                         <EventOrganizerCard
                             organizer={event.event_organizer}
                             onView={() =>
@@ -209,8 +205,10 @@ export const EventPage = () => {
                                 )
                             }
                         />
-                    )}
+                    </div>
+                )}
 
+                <div className={styles.quickInfoSection}>
                     <QuickInfoSection
                         items={[
                             {
@@ -224,6 +222,14 @@ export const EventPage = () => {
                         ]}
                     />
                 </div>
+
+                {event.attachments && event.attachments.length > 0 && (
+                    <div className={styles.attachmentsSection}>
+                        <AttachmentsAndLinksSection
+                            attachments={event.attachments}
+                        />
+                    </div>
+                )}
             </div>
 
             <ConfirmModal

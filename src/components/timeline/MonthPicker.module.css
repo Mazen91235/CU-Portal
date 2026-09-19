@@ -3,9 +3,7 @@
     align-items: center;
     justify-content: space-between;
     width: 200px;
-
     gap: 7px;
-
     margin-left: 40px;
 }
 
@@ -14,44 +12,44 @@
     align-items: center;
     justify-content: space-between;
     width: 500px;
+    max-width: 100%;
+    min-width: 0;
     gap: 7px;
     margin-left: 40px;
 }
 
 .calendarIcon {
     color: #6b176f;
+    flex: 0 0 auto;
 }
 
 .monthText {
     font-size: 25px;
     font-weight: 600;
     color: #374151;
+    min-width: 0;
 }
 
 .arrows {
     display: flex;
     flex-direction: column;
-
     margin-left: 2px;
     gap: 10px;
     height: 28px;
     justify-content: center;
+    flex: 0 0 auto;
 }
 
 .arrowButton {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 18px;
     height: 13px;
-
     padding: 0;
     border: none;
-
     background: transparent;
     color: #374151;
-
     cursor: pointer;
 }
 
@@ -66,4 +64,29 @@
 
 .arrowButton:disabled:hover {
     color: #c7c9cf;
+}
+
+@media (max-width: 768px) {
+    .weeklyGuide {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        gap: 4px;
+        padding: 0 0.25rem;
+    }
+
+    .weeklyGuide .monthText {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: center;
+        font-size: 16px;
+        line-height: 1.25;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .weeklyGuide .calendarIcon,
+    .weeklyGuide .arrows {
+        flex: 0 0 auto;
+    }
 }

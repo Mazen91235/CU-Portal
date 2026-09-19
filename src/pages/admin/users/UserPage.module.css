@@ -1255,3 +1255,60 @@
         padding-left: 16px;
     }
 }
+
+@media (max-width: 600px) {
+    .examCard,
+    .taskCard,
+    .eventCard,
+    .materialsCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    .examCardIcon,
+    .taskCardIcon,
+    .eventCardIcon,
+    .materialsCardIcon {
+        margin-right: 10px;
+    }
+
+    .examCardInfo,
+    .taskCardInfo,
+    .eventCardInfo,
+    .materialsCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
+
+    .examCardBadges,
+    .taskCardBadges,
+    .eventCardBadges,
+    .materialsCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .announcementCardTitleRow {
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .announcementCardTitle {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .announcementBadge {
+        margin-left: auto;
+    }
+}

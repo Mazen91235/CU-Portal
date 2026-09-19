@@ -219,15 +219,19 @@ export function ReleasesPage() {
                                         </div>
                                         <div className={styles.timelineCard}>
                                             {releases.map((release) => (
-                                                <ReleaseCard
+                                                <div
+                                                    className={styles.timelineReleaseItem}
                                                     key={release.id}
-                                                    release={release}
-                                                    onViewDetails={() =>
-                                                        navigate(
-                                                            `/user/system/releases/${release.id}`,
-                                                        )
-                                                    }
-                                                />
+                                                >
+                                                    <ReleaseCard
+                                                        release={release}
+                                                        onViewDetails={() =>
+                                                            navigate(
+                                                                `/user/system/releases/${release.id}`,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                     </article>

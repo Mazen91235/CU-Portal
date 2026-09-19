@@ -185,6 +185,12 @@ export const Calendar = ({
                     ></span>{" "}
                     Events
                 </span>
+                <span className={styles["legend-note"]}>
+                    <span
+                        className={`${styles["legend-dot"]} ${styles["dot-note"]}`}
+                    ></span>{" "}
+                    Notes
+                </span>
             </div>
         </div>
     );

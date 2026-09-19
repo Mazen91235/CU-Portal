@@ -167,3 +167,13 @@
         padding-right: 0;
     }
 }
+
+@media (max-width: 768px) {
+    .footer {
+        flex-wrap: wrap;
+    }
+
+    .viewButton {
+        width: 100%;
+    }
+}

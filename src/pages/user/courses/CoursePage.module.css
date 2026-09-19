@@ -100,6 +100,15 @@
     }
 
     .quickLinksGrid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        min-width: 0;
+    }
+
+    .quickCard {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
     }
 }

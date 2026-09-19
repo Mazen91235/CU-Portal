@@ -1,18 +1,22 @@
 .dashboard-container {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
     gap: 24px;
     padding: var(--primary-padding);
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .main-column {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
 .sidebar-column {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -327,6 +331,23 @@
 }
 
 @media (max-width: 768px) {
+    .dashboard-container {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendar-section,
+    .exams-overview,
+    .tasks-overview,
+    .my-courses,
+    .user-announcements,
+    .motivation-card {
+        width: 100%;
+        min-width: 0;
+    }
+
     .cards-container {
         grid-template-columns: 1fr;
     }

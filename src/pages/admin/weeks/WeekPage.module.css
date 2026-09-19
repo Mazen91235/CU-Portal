@@ -303,10 +303,10 @@
     }
 
     .weekPicker {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 0.75rem;
-        padding: 1rem;
+        width: 100%;
+        min-width: 0;
+        gap: 0.5rem;
+        padding: 0.75rem 0.5rem;
     }
 
     .sectionTitle {

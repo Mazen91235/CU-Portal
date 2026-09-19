@@ -174,7 +174,7 @@
 
 @media (max-width: 768px) {
     .container {
-        padding: 1.5rem 1rem;
+        padding: 1.5rem 0;
     }
 
     .sectionsList {
@@ -199,5 +199,12 @@
     }
     .fileActionsMobile {
         display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    .weekPicker {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 }

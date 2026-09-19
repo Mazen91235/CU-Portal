@@ -25,10 +25,18 @@ export const FloatingForm = <T extends Record<string, unknown>>({
     if (!isOpen) return null;
 
     return (
-        <div className={styles["overlay"]} onClick={disabled ? undefined : onClose}>
+        <div
+            className={styles["overlay"]}
+            onClick={(event) => {
+                event.stopPropagation();
+                if (!disabled && event.target === event.currentTarget) {
+                    onClose?.();
+                }
+            }}
+        >
             <div
                 className={`${styles["modal"]} ${className || ""}`}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
             >
                 {title && <h2 className={styles["title"]}>{title}</h2>}
                 <form className={styles["form"]} onSubmit={onSubmit}>
