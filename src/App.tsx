@@ -98,7 +98,7 @@ function App() {
     useGetNotifications();
     useRouteMessages();
     useValidateUserLevel();
-    usePageLoading();
+    usePageLoading(true);
     const pushNotifications = usePushNotifications();
     return (
         <>
