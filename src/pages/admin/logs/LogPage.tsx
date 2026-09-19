@@ -10,7 +10,7 @@ import { LongSection } from "../../../components/section/LongSection";
 import { UserCard } from "../../../components/user/UserCard";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useLazyGetLogQuery } from "../../../services/apis/admin/LogAPIs";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import type { LogResponseDto } from "../../../types/dtos/LogDtos";
 import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./LogPage.module.css";
@@ -37,10 +37,15 @@ export const LogPage = () => {
         try {
             const result = await getLog({ log_id: Number(logId) }).unwrap();
             if (result.data) setLog(result.data);
-            else navigate("/admin/logs");
+            else {
+                navigate("/admin/logs", {
+                    state: { error: "Failed to fetch log" },
+                });
+            }
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/admin/logs");
+            navigate("/admin/logs", {
+                state: { error: getErrorMessage(error) || "Failed to fetch log" },
+            });
         }
     }, [getLog, logId, navigate]);
 

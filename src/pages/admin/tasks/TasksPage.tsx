@@ -405,6 +405,7 @@ export const TasksPage = () => {
                             placeholder="Date To"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

@@ -17,6 +17,7 @@ import {
 } from "../../../services/apis/admin/LogAPIs";
 import type { LogResponseDto } from "../../../types/dtos/LogDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { toIsoFormat } from "../../../utils/Formatter";
 import styles from "./LogsPage.module.css";
 
 const formatDate = (value?: string | null) => {
@@ -95,8 +96,8 @@ export const LogsPage = () => {
                     entity: entityFilter || undefined,
                     user_id: userId ? Number(userId) : undefined,
                     level: levelFilter || undefined,
-                    created_at_from: dateFromFilter || undefined,
-                    created_at_to: dateToFilter || undefined,
+                    created_at_from: toIsoFormat(dateFromFilter),
+                    created_at_to: toIsoFormat(dateToFilter),
                 },
                 order_by: ["id"],
                 descending: true,
@@ -240,12 +241,13 @@ export const LogsPage = () => {
                         placeholder="Date From"
                         setValue={setDateFromFilter}
                         defaultDate={dateFromFilter}
-                            value={dateFromFilter}
+                        value={dateFromFilter}
                         />
                     <DateFilter
                         placeholder="Date To"
                         setValue={setDateToFilter}
-                            value={dateToFilter}
+                        value={dateToFilter}
+                        startDay={false}
                         />
                 </div>
             </section>

@@ -3,6 +3,11 @@
     width: 100%;
 }
 
+.container label {
+    width: 100%;
+    text-align: left;
+}
+
 .dateFilter {
     position: relative;
     width: 100%;

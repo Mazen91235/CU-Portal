@@ -8,7 +8,7 @@ import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { formatCalendarDate } from "../../../utils/Formatter";
 import styles from "./ReleasePage.module.css";
 
@@ -54,10 +54,18 @@ export function ReleasePage() {
             const result = await getRelease({
                 release_id: Number(releaseId),
             }).unwrap();
-            setRelease(result.data ?? null);
+            const release = result.data;
+            if (!release) {
+                navigate("/user/system/releases", {
+                    state: { error: "Failed to fetch release" },
+                });
+                return;
+            }
+            setRelease(release);
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/user/system/releases");
+            navigate("/user/system/releases", {
+                state: { error: getErrorMessage(error) || "Failed to fetch release" },
+            });
         }
     }, [getRelease, navigate, releaseId]);
 

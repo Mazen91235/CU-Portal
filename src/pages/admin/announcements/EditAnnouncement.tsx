@@ -10,7 +10,7 @@ import {
 } from "../../../services/apis/admin/AnnouncementAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
@@ -122,7 +122,13 @@ export const EditAnnouncement = () => {
                 announcement_id: parseInt(announcementId),
             }).unwrap();
             const announcement = result.data;
-            setAnnouncement(announcement || null);
+            if (!announcement) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch announcement" },
+                });
+                return;
+            }
+            setAnnouncement(announcement);
             if (announcement) {
                 setValue("title", announcement.title || "");
                 setValue("content", announcement.content || "");
@@ -163,14 +169,11 @@ export const EditAnnouncement = () => {
                 );
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
             navigate(redirectUrl, {
-                state: {
-                    error: err.message || "Failed to fetch announcement",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch announcement" },
             });
         }
-    }, [announcementId, getAnnouncement, setValue, navigate]);
+    }, [announcementId, getAnnouncement, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchAnnouncement()]),

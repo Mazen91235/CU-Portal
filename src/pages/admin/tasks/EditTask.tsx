@@ -10,7 +10,7 @@ import {
 } from "../../../services/apis/admin/TaskAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
@@ -123,7 +123,13 @@ export const EditTask = () => {
                 task_id: parseInt(taskId),
             }).unwrap();
             const task = result.data;
-            setTask(task || null);
+            if (!task) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch task" },
+                });
+                return;
+            }
+            setTask(task);
             if (task) {
                 setValue("title", task.name || "");
                 setValue("description", task.details?.description || "");
@@ -165,14 +171,11 @@ export const EditTask = () => {
                 );
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
             navigate(redirectUrl, {
-                state: {
-                    error: err.message || "Failed to fetch task",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch task" },
             });
         }
-    }, [taskId, getTask, setValue, navigate]);
+    }, [taskId, getTask, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchTask()]),

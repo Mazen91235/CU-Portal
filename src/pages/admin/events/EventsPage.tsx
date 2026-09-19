@@ -28,7 +28,7 @@ import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
@@ -157,8 +157,8 @@ export const EventsPage = () => {
                     ? parseInt(eventOrganizerFilter)
                     : undefined,
                 author_id: authorId ? parseInt(authorId) : undefined,
-                start_date_from: dateFromFilter || undefined,
-                start_date_to: dateToFilter || undefined,
+                start_date_from: toIsoFormat(dateFromFilter),
+                start_date_to: toIsoFormat(dateToFilter),
             };
 
             if (!user?.canAccessAll) {
@@ -404,6 +404,7 @@ export const EventsPage = () => {
                             placeholder="Date To"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

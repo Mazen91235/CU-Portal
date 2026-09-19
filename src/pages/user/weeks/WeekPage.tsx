@@ -8,7 +8,7 @@ import { PageSeo } from "../../../components/PageSeo";
 import { Preview } from "../../../components/preview/Preview";
 import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { downloadFile } from "../../../utils/FileDownloader";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
 import {
     formatDate,
@@ -303,84 +303,102 @@ export function WeekPage() {
     }, [user]);
 
     const fetchWeek = useCallback(async () => {
-        const today = new Date().toLocaleDateString("en-CA");
-        let selectedWeek = routeWeekId
-            ? (
-                  await getWeeks({
-                      data: { ...academicWeekFilter, id: Number(routeWeekId) },
-                      includes: [
-                          "faculty",
-                          "department",
-                          "year",
-                          "materials",
-                          "materials.subject",
-                          "materials.attachment",
-                      ],
-                      limit: 1,
-                  }).unwrap()
-              ).data?.[0]
-            : (
-                  await getWeeks({
-                      data: {
-                          ...academicWeekFilter,
-                          start_date_includes: today,
-                      },
-                      includes: [
-                          "faculty",
-                          "department",
-                          "year",
-                          "materials",
-                          "materials.subject",
-                          "materials.attachment",
-                      ],
-                      order_by: ["start_date"],
-                      limit: 1,
-                  }).unwrap()
-              ).data?.[0];
+        try {
+            const today = new Date().toLocaleDateString("en-CA");
+            let selectedWeek: WeekResponseDto | undefined;
 
-        if (!selectedWeek) {
-            selectedWeek = (
-                await getWeeks({
-                    data: { ...academicWeekFilter, start_date_to: today },
-                    includes: [
-                        "faculty",
-                        "department",
-                        "year",
-                        "materials",
-                        "materials.subject",
-                        "materials.attachment",
-                    ],
-                    order_by: ["start_date"],
-                    descending: true,
-                    limit: 1,
-                }).unwrap()
-            ).data?.[0];
+            if (routeWeekId) {
+                selectedWeek = (
+                    await getWeeks({
+                        data: { ...academicWeekFilter, id: Number(routeWeekId) },
+                        includes: [
+                            "faculty",
+                            "department",
+                            "year",
+                            "materials",
+                            "materials.subject",
+                            "materials.attachment",
+                        ],
+                        limit: 1,
+                    }).unwrap()
+                ).data?.[0];
+
+                if (!selectedWeek) {
+                    navigate("/user/weeks", {
+                        state: { error: "Failed to fetch week" },
+                    });
+                    return;
+                }
+            } else {
+                selectedWeek = (
+                    await getWeeks({
+                        data: {
+                            ...academicWeekFilter,
+                            start_date_includes: today,
+                        },
+                        includes: [
+                            "faculty",
+                            "department",
+                            "year",
+                            "materials",
+                            "materials.subject",
+                            "materials.attachment",
+                        ],
+                        order_by: ["start_date"],
+                        limit: 1,
+                    }).unwrap()
+                ).data?.[0];
+
+                if (!selectedWeek) {
+                    selectedWeek = (
+                        await getWeeks({
+                            data: { ...academicWeekFilter, start_date_to: today },
+                            includes: [
+                                "faculty",
+                                "department",
+                                "year",
+                                "materials",
+                                "materials.subject",
+                                "materials.attachment",
+                            ],
+                            order_by: ["start_date"],
+                            descending: true,
+                            limit: 1,
+                        }).unwrap()
+                    ).data?.[0];
+                }
+
+                if (!selectedWeek) {
+                    selectedWeek = (
+                        await getWeeks({
+                            data: { ...academicWeekFilter, start_date_from: today },
+                            includes: [
+                                "faculty",
+                                "department",
+                                "year",
+                                "materials",
+                                "materials.subject",
+                                "materials.attachment",
+                            ],
+                            order_by: ["start_date"],
+                            limit: 1,
+                        }).unwrap()
+                    ).data?.[0];
+                }
+            }
+
+            setWeek(selectedWeek || null);
+
+            if (!routeWeekId && selectedWeek?.id) {
+                navigate(`/user/weeks/${selectedWeek.id}`, { replace: true });
+            }
+
+            setWeekMaterials(selectedWeek?.materials || []);
+        } catch (error) {
+            navigate("/user/weeks", {
+                state: { error: getErrorMessage(error) || "Failed to fetch week" },
+            });
         }
-        if (!selectedWeek) {
-            selectedWeek = (
-                await getWeeks({
-                    data: { ...academicWeekFilter, start_date_from: today },
-                    includes: [
-                        "faculty",
-                        "department",
-                        "year",
-                        "materials",
-                        "materials.subject",
-                        "materials.attachment",
-                    ],
-                    order_by: ["start_date"],
-                    limit: 1,
-                }).unwrap()
-            ).data?.[0];
-        }
-
-        setWeek(selectedWeek || null);
-
-        if (!routeWeekId && selectedWeek?.id) {
-            navigate(`/user/weeks/${selectedWeek.id}`, { replace: true });
-        }
-
-        setWeekMaterials(selectedWeek?.materials || []);
     }, [getWeeks, navigate, routeWeekId, academicWeekFilter]);
 
     useAuthQuery(fetchWeek);

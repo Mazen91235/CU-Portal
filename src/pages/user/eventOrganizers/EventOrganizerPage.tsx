@@ -16,7 +16,7 @@ import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganiz
 import { formatDateTime } from "../../../utils/Formatter";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
 
 import styles from "./EventOrganizerPage.module.css";
@@ -34,11 +34,20 @@ export const EventOrganizerPage = () => {
             const result = await getEventOrganizer({
                 event_organizer_id: Number(eventOrganizerId),
             }).unwrap();
-            setOrganizer(result.data || null);
+            const organizer = result.data;
+            if (!organizer) {
+                navigate("/user/event-organizers", {
+                    state: { error: "Failed to fetch event organizer" },
+                });
+                return;
+            }
+            setOrganizer(organizer);
         } catch (error) {
-            handlePopupErrors(error);
+            navigate("/user/event-organizers", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event organizer" },
+            });
         }
-    }, [getEventOrganizer, eventOrganizerId]);
+    }, [getEventOrganizer, eventOrganizerId, navigate]);
 
     useAuthQuery(fetchOrganizer);
 

@@ -10,7 +10,7 @@ import {
 } from "../../../services/apis/admin/ExamAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
@@ -21,8 +21,8 @@ import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
-import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
 
 import styles from "./EditExam.module.css";
@@ -39,7 +39,7 @@ const examSchema = z.object({
     exam_type: z.string().optional(),
     due_date: z.string().optional(),
     start_time: z.string().optional(),
-    duration: z.string().optional(),
+    duration: z.number().nonnegative("Duration cannot be negative").optional(),
     location: z.string().optional(),
     exam_format: z.string().optional(),
     exam_weight: z.string().optional(),
@@ -107,7 +107,13 @@ export const EditExam = () => {
                 exam_id: parseInt(examId),
             }).unwrap();
             const examData = result.data;
-            setExam(examData || null);
+            if (!examData) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch exam" },
+                });
+                return;
+            }
+            setExam(examData);
 
             if (examData) {
                 setValue("title", examData.name || "");
@@ -117,7 +123,7 @@ export const EditExam = () => {
                 setValue("start_time", formatTimeInputValue(examData.deadline));
                 setValue(
                     "duration",
-                    examData.details?.duration?.toString() || "",
+                    examData.details?.duration ?? undefined,
                 );
                 setValue("location", examData.details?.location || "");
                 setValue("exam_format", examData.details?.exam_format || "");
@@ -126,14 +132,11 @@ export const EditExam = () => {
                 setValue("instructions", examData.details?.instructions || "");
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
             navigate(redirectUrl, {
-                state: {
-                    error: err.message || "Failed to fetch exam",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch exam" },
             });
         }
-    }, [getExam, setValue, navigate, examId]);
+    }, [getExam, setValue, navigate, examId, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchExam()]),
@@ -291,6 +294,9 @@ export const EditExam = () => {
                             register={register}
                             name="duration"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={isLoading}
                         />
                         <Input

@@ -17,7 +17,7 @@ import {
     useUpdateReleaseMutation,
 } from "../../../services/apis/admin/ReleaseAPIs";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import styles from "./EditRelease.module.css";
 
@@ -59,7 +59,12 @@ export const EditRelease = () => {
                 release_id: Number(releaseId),
             }).unwrap();
             const release = result.data;
-            if (!release) return;
+            if (!release) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch release" },
+                });
+                return;
+            }
             const items = (release.release_items ?? []).map((item) => ({
                 item_type: item.item_type ?? "Feature",
                 content: item.content ?? "",
@@ -73,10 +78,11 @@ export const EditRelease = () => {
                 release_items: items,
             });
         } catch (error) {
-            handlePopupErrors(error);
-            navigate(redirectUrl);
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch release" },
+            });
         }
-    }, [getRelease, navigate, releaseId, reset]);
+    }, [getRelease, navigate, releaseId, reset, redirectUrl]);
 
     useAuthQuery(fetchRelease);
 

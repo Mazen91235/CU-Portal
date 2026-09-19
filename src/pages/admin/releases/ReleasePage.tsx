@@ -15,7 +15,7 @@ import {
     useDeleteReleaseMutation,
 } from "../../../services/apis/admin/ReleaseAPIs";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDate } from "../../../utils/Formatter";
 
 const getReleaseCategories = (release: ReleaseResponseDto) => {
@@ -62,10 +62,18 @@ export function ReleasePage() {
             const result = await getRelease({
                 release_id: Number(releaseId),
             }).unwrap();
-            setRelease(result.data ?? null);
+            const release = result.data;
+            if (!release) {
+                navigate("/admin/releases", {
+                    state: { error: "Failed to fetch release" },
+                });
+                return;
+            }
+            setRelease(release);
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/admin/releases");
+            navigate("/admin/releases", {
+                state: { error: getErrorMessage(error) || "Failed to fetch release" },
+            });
         }
     }, [getRelease, navigate, releaseId]);
 

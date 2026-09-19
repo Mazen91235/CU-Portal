@@ -9,7 +9,7 @@ import {
 } from "../../../services/apis/admin/RoleAPIs";
 import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
@@ -36,7 +36,13 @@ export const RolePage = () => {
         try {
             const result = await getRole({ role_id: Number(roleId) }).unwrap();
             const roleResponse = result.data;
-            setRole(roleResponse ?? null);
+            if (!roleResponse) {
+                navigate("/admin/roles", {
+                    state: { error: "Failed to fetch role" },
+                });
+                return;
+            }
+            setRole(roleResponse);
             setSelectedPermissions(
                 roleResponse?.exact_roles?.map((r) => r.name ?? "") || [],
             );
@@ -45,9 +51,11 @@ export const RolePage = () => {
                 setIsEditing(true);
             }
         } catch (error) {
-            handlePopupErrors(error);
+            navigate("/admin/roles", {
+                state: { error: getErrorMessage(error) || "Failed to fetch role" },
+            });
         }
-    }, [roleId, getRole]);
+    }, [roleId, getRole, navigate]);
 
     const fetchAllPermissions = useCallback(async () => {
         try {

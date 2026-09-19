@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { FloatingForm } from "../forms/FloatingForm";
 import { Input } from "../forms/Input";
+import { DateInput } from "../forms/DateInput";
 import { Button } from "../forms/Button";
 import type { NoteResponseDto, NoteCreateDto } from "../../types/dtos/NoteDtos";
 import styles from "./NoteForm.module.css";
@@ -30,9 +31,12 @@ export const NoteForm = ({
         reset,
         formState: { errors },
         setError,
+        setValue,
+        control,
     } = useForm<NoteFormData>({
         defaultValues: { title: "", content: "", date: "" },
     });
+    const selectedDate = useWatch({ control, name: "date" });
 
     useEffect(() => {
         reset({
@@ -40,9 +44,11 @@ export const NoteForm = ({
             content: note?.content || "",
             date: note?.date
                 ? formatDateInputValue(note.date)
-                : /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
-                  ? dateStr
-                  : "",
+                : formatDateInputValue(dateStr)
+                  ? formatDateInputValue(dateStr)
+                  : /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+                    ? dateStr
+                    : "",
         });
     }, [note, reset, isOpen, dateStr]);
 
@@ -60,12 +66,14 @@ export const NoteForm = ({
         }
     };
 
+    const title = `${note ? "Edit Note" : "Add Note"}${selectedDate ? ` for ${selectedDate.split("T")[0]}` : dateStr ? ` for ${dateStr.split("T")[0]}` : ""}`;
+
     return (
         <FloatingForm
             isOpen={isOpen}
             onSubmit={handleSubmit(submit)}
             errors={errors}
-            title={note ? "Edit Note" : `Add Note ${dateStr ? `for ${dateStr}` : ""}`}
+            title={title}
             onClose={isSubmitting ? undefined : onClose}
             className={styles["note-modal"]}
             disabled={isSubmitting}
@@ -81,7 +89,10 @@ export const NoteForm = ({
                 disabled={isSubmitting}
                 registerOptions={{
                     required: "A title is required",
-                    maxLength: { value: 100, message: "Title must be 100 characters or less" },
+                    maxLength: {
+                        value: 100,
+                        message: "Title must be 100 characters or less",
+                    },
                 }}
             />
             <Input
@@ -96,18 +107,21 @@ export const NoteForm = ({
                 disabled={isSubmitting}
                 registerOptions={{
                     required: "Note content is required",
-                    maxLength: { value: 2000, message: "Note must be 2000 characters or less" },
+                    maxLength: {
+                        value: 2000,
+                        message: "Note must be 2000 characters or less",
+                    },
                 }}
             />
-            <Input
+            <DateInput
                 register={register}
                 name="date"
-                type="date"
-                placeholder="Date"
                 errors={errors}
+                setValue={setValue}
+                control={control}
+                placeholder="Date"
                 label="Date"
                 disabled={isSubmitting}
-                registerOptions={{ required: false }}
             />
             <Button
                 text={note ? "Update Note" : "Save Note"}

@@ -24,7 +24,7 @@ import { showToast } from "../../../utils/ToastsManager";
 import styles from "./WeekForm.module.css";
 
 const weekSchema = z.object({
-    week_number: z.string().min(1, "Starting week number is required"),
+    week_number: z.number({ message: "Starting week number is required" }).int("Starting week number must be a whole number").positive("Starting week number must be positive"),
     start_date: z.string().min(1, "Start date is required"),
     end_date: z.string().min(1, "End date is required"),
     faculty_id: z.string().min(1, "Faculty is required"),
@@ -72,7 +72,7 @@ export function CreateWeek() {
     } = useForm<WeekFormData>({
         resolver: zodResolver(weekSchema),
         defaultValues: {
-            week_number: "1",
+            week_number: 1,
             faculty_id: "",
             department_id: "",
             year_id: "",
@@ -165,7 +165,7 @@ export function CreateWeek() {
                 const date = new Date(`${data.start_date}T00:00:00Z`);
                 date.setUTCDate(date.getUTCDate() + index * 7);
                 await createWeek({
-                    week_number: Number(data.week_number) + index,
+                    week_number: data.week_number + index,
                     start_date: date.toISOString(),
                     faculty_id: Number(data.faculty_id),
                     department_id: Number(data.department_id),
@@ -209,6 +209,9 @@ export function CreateWeek() {
                         name="week_number"
                         type="number"
                         errors={errors}
+                        registerOptions={{
+                            setValueAs: (value) => value === "" ? undefined : Number(value),
+                        }}
                         disabled={busy}
                     />
                     <DateInput

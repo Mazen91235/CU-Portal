@@ -12,7 +12,7 @@ import {
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type {
     UserResponseDto,
@@ -75,13 +75,17 @@ export const UserPage = () => {
         if (!userId) return;
         try {
             const result = await getUser({ user_id: Number(userId) }).unwrap();
-            setUser(result.data || {});
+            const user = result.data;
+            if (!user) {
+                navigate("/admin/users", {
+                    state: { error: "Failed to fetch user data" },
+                });
+                return;
+            }
+            setUser(user);
         } catch (error) {
-            const res = error as DefaultAPIResponse;
             navigate("/admin/users", {
-                state: {
-                    error: res.data?.message || "Failed to fetch user data",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch user data" },
             });
         }
     }, [userId, getUser, navigate]);

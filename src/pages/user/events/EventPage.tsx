@@ -26,7 +26,7 @@ import {
     useRegisterEventMutation,
     useUnregisterEventMutation,
 } from "../../../services/apis/user/EventAPIs";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 export const EventPage = () => {
@@ -50,6 +50,12 @@ export const EventPage = () => {
                 event_id: parseInt(eventId),
             }).unwrap();
             const eventData = result.data || null;
+            if (!eventData) {
+                navigate("/user/events", {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
             setEvent(eventData);
             const userId = user?.id;
             setIsRegistered(
@@ -61,17 +67,25 @@ export const EventPage = () => {
                 ),
             );
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/user/events");
+            navigate("/user/events", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
+            });
         }
     }, [eventId, getEvent, navigate, user?.id]);
 
     useAuthQuery(fetchEvent);
 
-    const handleRegisterClick = () => setIsRegisterModalOpen(true);
+    const eventHasStarted = Boolean(
+        event?.start_date && new Date(event.start_date).getTime() <= Date.now(),
+    );
+
+    const handleRegisterClick = () => {
+        if (eventHasStarted) return;
+        setIsRegisterModalOpen(true);
+    };
 
     const handleRegisterEvent = async () => {
-        if (!event?.id) return;
+        if (!event?.id || eventHasStarted) return;
         try {
             setIsProcessing(true);
             if (isRegistered) {
@@ -183,6 +197,7 @@ export const EventPage = () => {
                                 isOrange={false}
                                 isSecondary={isRegistered}
                                 onClick={handleRegisterClick}
+                                disabled={eventHasStarted}
                             />
                             <Button
                                 text="Share Event"

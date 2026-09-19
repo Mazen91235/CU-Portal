@@ -22,7 +22,7 @@ import type { NoteResponseDto } from "../../../types/dtos/NoteDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
-import { formatDate } from "../../../utils/Formatter";
+import { formatDate, toIsoFormat } from "../../../utils/Formatter";
 import { showToast } from "../../../utils/ToastsManager";
 import styles from "./NotesPage.module.css";
 
@@ -56,8 +56,8 @@ export const NotesPage = () => {
             const result = await getNotes({
                 data: {
                     query: searchQuery || undefined,
-                    date_from: dateFrom || undefined,
-                    date_to: dateTo || undefined,
+                    date_from: toIsoFormat(dateFrom),
+                    date_to: toIsoFormat(dateTo),
                 },
             }).unwrap();
             setNotes(result.data || []);
@@ -72,29 +72,17 @@ export const NotesPage = () => {
 
     const handleSaveNote = async (data: NoteFormData) => {
         try {
-            let result: NoteResponseDto | undefined;
             if (editingNote?.id) {
-                result =
-                    (
-                        await updateNote({
-                            note_id: editingNote.id,
-                            ...data,
-                        }).unwrap()
-                    ).data ?? undefined;
+                await updateNote({
+                    note_id: editingNote.id,
+                    ...data,
+                }).unwrap();
                 showToast("success", "Success", "Note updated successfully.");
             } else {
-                result = (await createNote(data).unwrap()).data ?? undefined;
+                await createNote(data).unwrap();
                 showToast("success", "Success", "Note created successfully.");
             }
-            if (result) {
-                setNotes((current) => {
-                    if (editingNote?.id)
-                        return current.map((item) =>
-                            item.id === result?.id ? result : item,
-                        );
-                    return [result, ...current];
-                });
-            }
+            await fetchNotes();
             setEditingNote(null);
             setIsNoteFormOpen(false);
         } catch (error) {
@@ -106,9 +94,7 @@ export const NotesPage = () => {
         if (!noteToDelete?.id) return;
         try {
             await deleteNote({ note_id: noteToDelete.id }).unwrap();
-            setNotes((current) =>
-                current.filter((item) => item.id !== noteToDelete.id),
-            );
+            await fetchNotes();
             setNoteToDelete(null);
             showToast("success", "Success", "Note deleted successfully.");
         } catch (error) {
@@ -153,6 +139,7 @@ export const NotesPage = () => {
                             placeholder="Date To"
                             setValue={setDateTo}
                             value={dateTo}
+                            startDay={false}
                         />
                     </div>
                 </div>

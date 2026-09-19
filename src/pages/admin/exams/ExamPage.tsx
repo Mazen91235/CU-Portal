@@ -14,8 +14,7 @@ import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 
@@ -37,11 +36,17 @@ export const ExamPage = () => {
       const result = await getExam({
         exam_id: parseInt(examId),
       }).unwrap();
-      setExam(result.data || null);
+      const exam = result.data;
+      if (!exam) {
+        navigate("/admin/exams", {
+          state: { error: "Failed to fetch exam" },
+        });
+        return;
+      }
+      setExam(exam);
     } catch (error) {
-      const err = error as DefaultAPIResponse;
       navigate("/admin/exams", {
-        state: { error: err.data.message || "Failed to fetch exam" },
+        state: { error: getErrorMessage(error) || "Failed to fetch exam" },
       });
     }
   }, [getExam, navigate, examId]);

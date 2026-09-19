@@ -11,7 +11,7 @@ import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import { SubmissionSection } from "../../../components/section/SubmissionSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
 
 import styles from "./TaskPage.module.css";
@@ -30,11 +30,17 @@ export const TaskPage = () => {
             const result = await getTask({
                 task_id: parseInt(taskId),
             }).unwrap();
-            setTask(result.data || null);
+            const task = result.data;
+            if (!task) {
+                navigate("/user/tasks", {
+                    state: { error: "Failed to fetch task" },
+                });
+                return;
+            }
+            setTask(task);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/user/tasks", {
-                state: { error: err.data.message || "Failed to fetch task" },
+                state: { error: getErrorMessage(error) || "Failed to fetch task" },
             });
         }
     }, [getTask, navigate, taskId]);

@@ -46,7 +46,7 @@ const eventSchema = z
         end_time: z.string().optional(),
         location_type: z.enum(["Online", "Offline"]),
         location: z.string().min(1, "Location is required"),
-        price: z.string().min(1, "Price is required"),
+        price: z.number({ message: "Price is required" }).nonnegative("Price cannot be negative"),
         event_organizer_id: z.string().min(1, "Event organizer is required"),
         files: z.any().optional(),
         links: z.string().optional(),
@@ -105,7 +105,7 @@ export const CreateEvent = () => {
     } = useForm<EventFormData>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
-            price: "0",
+            price: 0,
             location_type: "Offline",
             is_restricted: false,
         },
@@ -313,7 +313,7 @@ export const CreateEvent = () => {
                           ),
                       ) || null
                     : null,
-                price: parseFloat(data.price),
+                price: data.price,
                 location_type: data.location_type,
                 location: data.location,
                 event_organizer_id: parseInt(data.event_organizer_id),
@@ -538,6 +538,9 @@ export const CreateEvent = () => {
                             name="price"
                             type="number"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={busy}
                         />
                     </div>

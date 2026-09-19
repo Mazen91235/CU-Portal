@@ -23,7 +23,7 @@ import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
-import { formatDate, formatDateTime } from "../../../utils/Formatter";
+import { formatDate, formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./WeeksPage.module.css";
@@ -75,8 +75,8 @@ export function WeeksPage() {
                     year_id: user?.canAccessAll
                         ? Number(yearFilter) || undefined
                         : user?.year?.id,
-                    start_date_from: dateFrom || undefined,
-                    start_date_to: dateTo || undefined,
+                    start_date_from: toIsoFormat(dateFrom),
+                    start_date_to: toIsoFormat(dateTo),
                 },
                 order_by: ["start_date"],
                 descending: true,
@@ -236,6 +236,7 @@ export function WeeksPage() {
                             placeholder="Date To"
                             setValue={setDateTo}
                             value={dateTo}
+                            startDay={false}
                         />
                     </div>
                 </div>

@@ -242,7 +242,12 @@ export const DateInput = <T extends Record<string, unknown>>({
                     {displayDate || placeholder}
                 </div>
             </button>
-            <input type="hidden" {...register(name)} value={selectedDate} />
+            <input
+                id={`form-${String(name)}-field`}
+                type="hidden"
+                {...register(name)}
+                value={selectedDate}
+            />
 
             {isOpen && (
                 <div

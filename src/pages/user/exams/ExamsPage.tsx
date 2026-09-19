@@ -14,7 +14,7 @@ import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
@@ -56,8 +56,8 @@ export const ExamsPage = () => {
             const result = await getExams({
                 data: {
                     query: searchQuery || undefined,
-                    deadline_from: dateFromFilter || undefined,
-                    deadline_to: dateToFilter || undefined,
+                    deadline_from: toIsoFormat(dateFromFilter),
+                    deadline_to: toIsoFormat(dateToFilter),
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
@@ -171,6 +171,7 @@ export const ExamsPage = () => {
                             placeholder="Date To"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

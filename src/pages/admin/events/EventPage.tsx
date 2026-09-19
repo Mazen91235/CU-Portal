@@ -16,7 +16,7 @@ import { LongSection } from "../../../components/section/LongSection";
 import { AttachmentsAndLinksSection } from "../../../components/preview/AttachmentsAndLinksSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
 
 import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
@@ -39,10 +39,18 @@ export const EventPage = () => {
             const result = await getEvent({
                 event_id: parseInt(eventId),
             }).unwrap();
-            setEvent(result.data || null);
+            const event = result.data;
+            if (!event) {
+                navigate("/admin/events", {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
+            setEvent(event);
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/admin/events");
+            navigate("/admin/events", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
+            });
         }
     }, [eventId, getEvent, navigate]);
 

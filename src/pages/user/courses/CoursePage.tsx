@@ -7,7 +7,7 @@ import { Layout } from "../../../components/layout/Layout";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import IconComponent from "../../../components/IconComponent";
 import styles from "./CoursePage.module.css";
 import { Button } from "../../../components/forms/Button";
@@ -26,11 +26,17 @@ export const CoursePage = () => {
             const result = await getEnrolledCourse({
                 subject_id: parseInt(courseId),
             }).unwrap();
-            setCourse(result.data || null);
+            const course = result.data;
+            if (!course) {
+                navigate("/user/courses", {
+                    state: { error: "Failed to fetch course" },
+                });
+                return;
+            }
+            setCourse(course);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/user/courses", {
-                state: { error: err.data.message || "Failed to fetch course" },
+                state: { error: getErrorMessage(error) || "Failed to fetch course" },
             });
         }
     }, [getEnrolledCourse, navigate, courseId]);

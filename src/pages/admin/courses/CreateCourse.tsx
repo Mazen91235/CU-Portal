@@ -29,7 +29,7 @@ import { useCallback, useState } from "react";
 const courseSchema = z.object({
     name: z.string().min(1, "Course name is required"),
     code: z.string().min(1, "Course code is required"),
-    credits: z.string().min(1, "Credits are required"),
+    credits: z.number({ message: "Credits are required" }).nonnegative("Credits cannot be negative"),
     faculty_id: z.string().optional(),
     department_id: z.string().optional(),
     year_id: z.string().optional(),
@@ -158,7 +158,7 @@ export const CreateCourse = () => {
             const courseData = {
                 name: data.name,
                 code: data.code,
-                credits: parseInt(data.credits),
+                credits: data.credits,
                 faculty_id: params.faculty_id!,
                 department_id: params.department_id!,
                 year_id: params.year_id!,
@@ -295,6 +295,9 @@ export const CreateCourse = () => {
                                     type="number"
                                     placeholder="3"
                                     errors={errors}
+                                    registerOptions={{
+                                        setValueAs: (value) => value === "" ? undefined : Number(value),
+                                    }}
                                 />
                             </div>
                         </section>

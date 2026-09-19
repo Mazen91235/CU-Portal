@@ -177,6 +177,7 @@ export const AnnouncementsPage = () => {
                             placeholder="End Date"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

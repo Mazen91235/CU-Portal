@@ -15,13 +15,13 @@ import {
     useLazyGetWeekQuery,
     useUpdateWeekMutation,
 } from "../../../services/apis/admin/WeekAPIs";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import { formatDateInputValue } from "../../../utils/Formatter";
 import styles from "./WeekForm.module.css";
 
 const weekSchema = z.object({
-    week_number: z.string().min(1, "Week number is required"),
+    week_number: z.number({ message: "Week number is required" }).int("Week number must be a whole number").positive("Week number must be positive"),
     start_date: z.string().min(1, "Start date is required"),
 });
 type WeekFormData = z.infer<typeof weekSchema>;
@@ -50,15 +50,22 @@ export function EditWeek() {
                 week_id: Number(weekId),
             }).unwrap();
             const week = response.data;
-            if (!week) return;
-            setValue("week_number", String(week.week_number ?? ""));
+            if (!week) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch week" },
+                });
+                return;
+            }
+            setValue("week_number", week.week_number ?? 1);
             setValue("start_date", formatDateInputValue(week.start_date || ""));
         } catch (error) {
-            handlePopupErrors(error);
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch week" },
+            });
         } finally {
             setLoadingWeek(false);
         }
-    }, [getWeek, setValue, weekId]);
+    }, [getWeek, navigate, redirectUrl, setValue, weekId]);
 
     useEffect(() => {
         void fetchWeek();
@@ -75,7 +82,7 @@ export function EditWeek() {
                 return;
             await updateWeek({
                 week_id: Number(weekId),
-                week_number: Number(data.week_number),
+                week_number: data.week_number,
                 start_date: `${data.start_date}T00:00:00.000Z`,
                 faculty_id: week.faculty.id,
                 department_id: week.department.id,
@@ -114,6 +121,9 @@ export function EditWeek() {
                         name="week_number"
                         type="number"
                         errors={errors}
+                        registerOptions={{
+                            setValueAs: (value) => value === "" ? undefined : Number(value),
+                        }}
                         disabled={busy}
                     />
                     <DateInput

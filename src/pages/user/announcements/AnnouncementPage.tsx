@@ -10,7 +10,7 @@ import { AttachmentsAndLinksSection } from "../../../components/preview/Attachme
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
 
 import styles from "./AnnouncementPage.module.css";
@@ -30,13 +30,17 @@ export const AnnouncementPage = () => {
             const result = await getAnnouncement({
                 announcement_id: parseInt(announcementId),
             }).unwrap();
-            setAnnouncement(result.data || null);
+            const announcement = result.data;
+            if (!announcement) {
+                navigate("/user/announcements", {
+                    state: { error: "Failed to fetch announcement" },
+                });
+                return;
+            }
+            setAnnouncement(announcement);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/user/announcements", {
-                state: {
-                    error: err.data.message || "Failed to fetch announcement",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch announcement" },
             });
         }
     }, [getAnnouncement, navigate, announcementId]);

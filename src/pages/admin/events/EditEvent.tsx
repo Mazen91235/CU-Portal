@@ -25,7 +25,7 @@ import {
     useUploadFileToDrive,
     useRemoveUploadedFiles,
 } from "../../../hooks/useHandleProcesses";
-import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import {
     formatDateInputValue,
     formatTimeInputValue,
@@ -57,7 +57,7 @@ const eventSchema = z
         end_time: z.string().optional(),
         location_type: z.enum(["Online", "Offline"]),
         location: z.string().min(1, "Location is required"),
-        price: z.string().min(1, "Price is required"),
+        price: z.number({ message: "Price is required" }).nonnegative("Price cannot be negative"),
         event_organizer_id: z.string().min(1, "Event organizer is required"),
         files: z.any().optional(),
         links: z.string().optional(),
@@ -198,7 +198,12 @@ export const EditEvent = () => {
             const eventData = result.data || null;
             setEvent(eventData);
 
-            if (!eventData) return;
+            if (!eventData) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
 
             setValue("title", eventData.title || "");
             setValue("description", eventData.details?.description || "");
@@ -208,7 +213,7 @@ export const EditEvent = () => {
             setValue("end_time", formatTimeInputValue(eventData.end_date));
             setValue("location_type", eventData.location_type || "Offline");
             setValue("location", eventData.location || "");
-            setValue("price", eventData.price?.toString() || "0");
+            setValue("price", eventData.price ?? 0);
             setValue(
                 "event_organizer_id",
                 eventData.event_organizer?.id?.toString() || "",
@@ -249,13 +254,8 @@ export const EditEvent = () => {
                     .filter((link) => !!link.url) || [],
             );
         } catch (error) {
-            const err = error as {
-                data?: { message?: string };
-            };
             navigate(redirectUrl, {
-                state: {
-                    error: err.data?.message || "Failed to fetch event",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
             });
         }
     }, [getEvent, navigate, setValue, eventId, redirectUrl]);
@@ -436,7 +436,7 @@ export const EditEvent = () => {
                           ),
                       ) || null
                     : null,
-                price: parseFloat(data.price),
+                price: data.price,
                 location_type: data.location_type,
                 location: data.location,
                 event_organizer_id: parseInt(data.event_organizer_id),
@@ -661,6 +661,9 @@ export const EditEvent = () => {
                             name="price"
                             type="number"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={busy}
                         />
                     </div>

@@ -95,6 +95,7 @@ export const ProfileSettings = () => {
     const changeGoogleAccount = () => {
         const path = "/user/change-google-account";
         localStorage.removeItem("user");
+        localStorage.removeItem("permissions");
         window.location.href = GetWebLink(path);
     };
 

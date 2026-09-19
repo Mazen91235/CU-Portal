@@ -28,7 +28,7 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./ExamsPage.module.css";
@@ -148,8 +148,8 @@ export const ExamsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                deadline_from: dateFromFilter || undefined,
-                deadline_to: dateToFilter || undefined,
+                deadline_from: toIsoFormat(dateFromFilter),
+                deadline_to: toIsoFormat(dateToFilter),
                 author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
@@ -407,6 +407,7 @@ export const ExamsPage = () => {
                             placeholder="Date To"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

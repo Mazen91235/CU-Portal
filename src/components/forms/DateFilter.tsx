@@ -6,11 +6,13 @@ import {
     type SetStateAction,
 } from "react";
 import styles from "./DateFilter.module.css";
+import { formatCalendarDay, toIsoFormat } from "../../utils/Formatter";
 
 type DateFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     placeholder?: string;
     startRight?: boolean;
+    startDay?: boolean;
     defaultDate?: string;
     value?: string;
 };
@@ -19,6 +21,7 @@ export const DateFilter = ({
     setValue,
     placeholder = "Select Date",
     startRight = false,
+    startDay = true,
     defaultDate = "",
     value,
 }: DateFilterProps) => {
@@ -73,12 +76,12 @@ export const DateFilter = ({
     };
 
     const handleDateSelect = (date: Date) => {
-        const nextDay = new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate() + 1,
-        );
-        const dateString = nextDay.toISOString().split("T")[0];
+        const dateString = formatCalendarDay(date);
+        const normalizedDate = new Date(date.getTime());
+        if (!startDay) {
+            normalizedDate.setHours(23, 59, 59, 999);
+        }
+        const normalizedValue = toIsoFormat(normalizedDate) || "";
         setSelectedDate(dateString);
         setDisplayDate(
             date.toLocaleDateString("en-CA", {
@@ -87,7 +90,7 @@ export const DateFilter = ({
                 day: "numeric",
             }),
         );
-        setValue(dateString);
+        setValue(normalizedValue);
         setIsOpen(false);
     };
 
@@ -164,19 +167,28 @@ export const DateFilter = ({
 
     useEffect(() => {
         const nextValue = value ?? defaultDate;
-        if (nextValue) {
-            const defaultDateForDisplay = new Date(
-                nextValue,
-            ).toLocaleDateString("en-CA", {
+        if (!nextValue) return;
+
+        const parsedDate = new Date(nextValue);
+        if (Number.isNaN(parsedDate.getTime())) return;
+
+        const normalizedValue = toIsoFormat(nextValue) || "";
+        setSelectedDate(formatCalendarDay(parsedDate));
+        setDisplayDate(
+            parsedDate.toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
-            }); // Convert to "MMM DD, YYYY" format
-            setSelectedDate(nextValue);
-            setValue(nextValue);
-            setDisplayDate(defaultDateForDisplay);
+            }),
+        );
+        setCurrentMonth(
+            new Date(parsedDate.getFullYear(), parsedDate.getMonth(), 1),
+        );
+
+        if (nextValue !== normalizedValue) {
+            setValue(normalizedValue);
         }
-    }, [defaultDate, value]);
+    }, [defaultDate, value, setValue]);
 
     useEffect(() => {
         if (value === "") {

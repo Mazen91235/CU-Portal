@@ -27,7 +27,7 @@ import {
     useRemoveUploadedFiles,
 } from "../../../hooks/useHandleProcesses";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
-import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./EditEventOrganizer.module.css";
 
 const schema = z.object({
@@ -87,7 +87,12 @@ export const EditEventOrganizer = () => {
                 event_organizer_id: Number(eventOrganizerId),
             }).unwrap();
             const data = result.data;
-            if (!data) return;
+            if (!data) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch event organizer" },
+                });
+                return;
+            }
             setValue("name", data.name || "");
             const logoUrl = data.logo?.url || null;
             setExistingLogoUrl(logoUrl);
@@ -110,15 +115,19 @@ export const EditEventOrganizer = () => {
                         (attachment) => !attachment.is_file && attachment.url,
                     )
                     .map((attachment) => ({
-                        title: attachment.details?.link_title || "Link",
+                        title: attachment.details?.link_title || "Untitled Link",
                         url: attachment.url || "",
                         isExisting: true,
                     })),
             );
         } catch (error) {
-            handlePopupErrors(error);
+            navigate(redirectUrl, {
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch event organizer",
+                },
+            });
         }
-    }, [getEventOrganizer, eventOrganizerId, setValue]);
+    }, [getEventOrganizer, eventOrganizerId, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => fetchOrganizer(),

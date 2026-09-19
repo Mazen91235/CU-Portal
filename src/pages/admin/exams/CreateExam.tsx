@@ -30,7 +30,7 @@ const examSchema = z.object({
     exam_type: z.string().optional(),
     due_date: z.string().min(1, "Exam date is required"),
     start_time: z.string().optional(),
-    duration: z.string().optional(),
+    duration: z.number().nonnegative("Duration cannot be negative").optional(),
     location: z.string().optional(),
     exam_format: z.string().optional(),
     exam_weight: z.string().optional(),
@@ -98,9 +98,7 @@ export const CreateExam = () => {
                 )!,
                 details: {
                     exam_type: data.exam_type || undefined,
-                    duration: data.duration
-                        ? parseFloat(data.duration)
-                        : undefined,
+                    duration: data.duration,
                     location: data.location || undefined,
                     exam_format: data.exam_format as
                         | "MCQ"
@@ -230,6 +228,9 @@ export const CreateExam = () => {
                             register={register}
                             name="duration"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={isLoading}
                         />
                         <Input

@@ -13,7 +13,7 @@ import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 
 import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
 
@@ -78,8 +78,8 @@ export const EventsPage = () => {
                     event_organizer_id: eventOrganizerFilter
                         ? parseInt(eventOrganizerFilter)
                         : undefined,
-                    start_date_from: dateFromFilter || undefined,
-                    start_date_to: dateToFilter || undefined,
+                    start_date_from: toIsoFormat(dateFromFilter),
+                    start_date_to: toIsoFormat(dateToFilter),
                 },
                 includes: [
                     "faculty",
@@ -204,6 +204,7 @@ export const EventsPage = () => {
                             placeholder="Date To"
                             setValue={setDateToFilter}
                             value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>

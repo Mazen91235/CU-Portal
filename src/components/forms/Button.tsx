@@ -10,6 +10,7 @@ export const Button = ({
     isSecondary = false,
     isDefault = false,
     className = "",
+    disabled = false,
 }: {
     text: string;
     loadingText: string;
@@ -20,6 +21,7 @@ export const Button = ({
     isSecondary?: boolean;
     isDefault?: boolean;
     className?: string;
+    disabled?: boolean;
 }) => {
     const buttonType = type === "default" ? "button" : type;
     const getButtonClass = () => {
@@ -32,7 +34,7 @@ export const Button = ({
     return (
         <button
             type={buttonType}
-            disabled={isSubmitting}
+            disabled={disabled || isSubmitting}
             className={`${styles["button"]} ${getButtonClass()} ${className}`}
             onClick={onClick}
         >

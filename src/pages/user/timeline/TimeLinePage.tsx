@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { useLazyGetCalendarTasksQuery } from "../../../services/apis/user/CalendarAPIs";
+import { useLazyGetWeeksQuery } from "../../../services/apis/user/WeekAPIs";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { CalendarDayEventsDto } from "../../../types/dtos/CalendarDtos";
@@ -13,6 +14,8 @@ import { CalendarEventCard } from "../../../components/calendar/CalendarEventCar
 import { DayEvent } from "../../../components/calendar/DayEvent";
 import { NotePopup } from "../../../components/notes/NotePopup";
 import IconComponent from "../../../components/IconComponent";
+import { useAppSelector } from "../../../services/redux/Hooks";
+import { formatDateTime } from "../../../utils/Formatter";
 import styles from "./TimeLinePage.module.css";
 import {
   getCalendarDateKey,
@@ -34,6 +37,9 @@ export const TimeLinePage = () => {
   );
   const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
   const [getCalendar] = useLazyGetCalendarTasksQuery();
+  const [getWeeks] = useLazyGetWeeksQuery();
+  const [currentWeekStartDate, setCurrentWeekStartDate] = useState<string | null>(null);
+  const user = useAppSelector((state) => state.user.user);
   const [viewedNote, setViewedNote] = useState<NoteResponseDto | null>(null);
 
   const selectedMonthDate = new Date(`${selectedMonth}-01T00:00:00`);
@@ -60,6 +66,74 @@ export const TimeLinePage = () => {
       () => fetchCalendar(selectedYear, selectedMonthIndex),
       [fetchCalendar, selectedYear, selectedMonthIndex],
     ),
+  );
+
+  const academicWeekFilter = useMemo(
+    () => ({
+      faculty_id: user?.faculty?.id || undefined,
+      department_id: user?.department?.id || undefined,
+      year_id: user?.year?.id || undefined,
+    }),
+    [user],
+  );
+
+  const fetchCurrentWeek = useCallback(async () => {
+    const today = new Date().toLocaleDateString("en-CA");
+    let selectedWeek = (
+      await getWeeks({
+        data: { ...academicWeekFilter, start_date_includes: today },
+        order_by: ["start_date"],
+        limit: 1,
+      }).unwrap()
+    ).data?.[0];
+
+    if (!selectedWeek) {
+      selectedWeek = (
+        await getWeeks({
+          data: { ...academicWeekFilter, start_date_to: today },
+          order_by: ["start_date"],
+          descending: true,
+          limit: 1,
+        }).unwrap()
+      ).data?.[0];
+    }
+
+    if (!selectedWeek) {
+      selectedWeek = (
+        await getWeeks({
+          data: { ...academicWeekFilter, start_date_from: today },
+          order_by: ["start_date"],
+          limit: 1,
+        }).unwrap()
+      ).data?.[0];
+    }
+
+    setCurrentWeekStartDate(selectedWeek?.start_date || null);
+  }, [academicWeekFilter, getWeeks]);
+
+  useAuthQuery(fetchCurrentWeek);
+
+  const currentWeekRange = useMemo(() => {
+    if (!currentWeekStartDate) return null;
+
+    const start = new Date(formatDateTime(currentWeekStartDate, true));
+    if (Number.isNaN(start.getTime())) return null;
+
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 6);
+
+    return {
+      start: start.toISOString().slice(0, 10),
+      end: end.toISOString().slice(0, 10),
+    };
+  }, [currentWeekStartDate]);
+
+  const isCurrentWeekDate = useCallback(
+    (date: string) =>
+      !!currentWeekRange &&
+      date >= currentWeekRange.start &&
+      date <= currentWeekRange.end,
+    [currentWeekRange],
   );
 
   const days = useMemo(
@@ -127,7 +201,7 @@ export const TimeLinePage = () => {
                     {getTimelineDateLabel(firstDateSource)}
                   </div>
                   <div className={styles.timelineMarker}>
-                    <span className={styles.timelineDot} />
+                    <span className={`${styles.timelineDot} ${isCurrentWeekDate(date) ? styles.timelineDotCurrent : ""}`} />
                   </div>
                   <div className={styles.timelineDayContent}>
                     {!!events.notes?.length && (
@@ -135,7 +209,7 @@ export const TimeLinePage = () => {
                         <h3 className={styles.sectionTitle}>Notes</h3>
                         {events.notes.map((note) => (
                           <div className={styles.timelineItem} key={note.id}>
-                            <span className={styles.timelineItemDot} />
+                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
                             <CalendarNoteCard
                               note={note}
                               onView={() => setViewedNote(note)}
@@ -151,7 +225,7 @@ export const TimeLinePage = () => {
                         <h3 className={styles.sectionTitle}>Events</h3>
                         {events.events.map((event) => (
                           <div className={styles.timelineItem} key={event.id}>
-                            <span className={styles.timelineItemDot} />
+                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
                             <CalendarEventCard event={event} />
                           </div>
                         ))}
@@ -166,7 +240,7 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={styles.timelineItemDot} />
+                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
                             <DayEvent {...event} />
                           </div>
                         ))}
@@ -181,7 +255,7 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={styles.timelineItemDot} />
+                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
                             <DayEvent {...event} />
                           </div>
                         ))}
@@ -196,7 +270,7 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={styles.timelineItemDot} />
+                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
                             <DayEvent {...event} />
                           </div>
                         ))}

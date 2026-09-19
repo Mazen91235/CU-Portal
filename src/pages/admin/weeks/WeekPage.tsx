@@ -26,7 +26,7 @@ import {
 import { useUpdateMaterialMutation } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import styles from "./WeekPage.module.css";
@@ -394,7 +394,10 @@ export function WeekPage() {
 
             if (!selectedWeek) {
                 setWeekMaterials([]);
-                navigate("/admin/weeks", { replace: true });
+                navigate("/admin/weeks", {
+                    replace: true,
+                    state: { error: "Failed to fetch week" },
+                });
                 return;
             }
 
@@ -429,7 +432,14 @@ export function WeekPage() {
 
             setWeekMaterials(selectedWeek.materials || []);
         } catch (error) {
-            handlePopupErrors(error);
+            if (weekId) {
+                navigate("/admin/weeks", {
+                    replace: true,
+                    state: { error: getErrorMessage(error) || "Failed to fetch week" },
+                });
+            } else {
+                handlePopupErrors(error);
+            }
         }
     }, [
         getWeeks,
