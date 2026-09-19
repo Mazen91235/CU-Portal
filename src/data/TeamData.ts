@@ -3,6 +3,7 @@ import mohamedAhmedImg from "../assets/team/mohamed-ahmed.jpg";
 import omarMagdyImg from "../assets/team/omar-magdy.jpg";
 import omarNagyImg from "../assets/team/omar-nagy.jpeg";
 import mariamSamehImg from "../assets/team/mariam-sameh.jpg";
+import habibaMahmoudImg from "../assets/team/habiba-mahmoud.png";
 import rojanHamdyImg from "../assets/team/rojan-hamdy.jpg";
 import anneOmerImg from "../assets/team/anne-omer.jpg";
 import mariamMohamedImg from "../assets/team/mariam-mohamed.png";
@@ -98,6 +99,21 @@ export const teamMembers: MemberProps[] = [
                 url: "https://www.linkedin.com/in/mariam-sameh-1b726a335",
             },
             { icon: githubIcon, url: "https://github.com/Mariam-Sameh17" },
+        ],
+    },
+    {
+        name: "Habiba Mahmoud",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        university: "Cairo University",
+        image: habibaMahmoudImg,
+        imagePosition: "top",
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/habiba-mahmoud-10aa2a2a2",
+            },
+            { icon: githubIcon, url: "https://github.com/HabibaMahmoud2005" },
         ],
     },
     {
