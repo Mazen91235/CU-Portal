@@ -271,7 +271,7 @@ export const TasksPage = () => {
     };
 
     const handleViewTask = (taskId: number) => {
-        navigate(`/admin/tasks/${taskId}`);
+        navigate(buildRedirectUrl(`/admin/tasks/${taskId}`));
     };
 
     const handlePagination = () => {

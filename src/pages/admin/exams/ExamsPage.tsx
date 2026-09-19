@@ -271,7 +271,7 @@ export const ExamsPage = () => {
     };
 
     const handleViewExam = (examId: number) => {
-        navigate(`/admin/exams/${examId}`);
+        navigate(buildRedirectUrl(`/admin/exams/${examId}`));
     };
 
     const handlePagination = () => {

@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import type { ReactNode } from "react";
 
 import IconComponent from "../IconComponent";
@@ -32,6 +32,9 @@ export const SubBanner = ({
     linkTo,
     img,
 }: SubBannerProps) => {
+    const [searchParams] = useSearchParams();
+    const redirectUrl = searchParams.get("redirect_url");
+
     return (
         <header
             className={`${styles["subBanner"]} ${img ? styles["subBannerWithImage"] : ""}`}
@@ -45,7 +48,7 @@ export const SubBanner = ({
         >
             <div className={styles["leftSection"]}>
                 {linkTo && linkText && (
-                    <Link to={linkTo} className={styles["backLink"]}>
+                    <Link to={redirectUrl || linkTo} className={styles["backLink"]}>
                         <i className="fas fa-arrow-left"></i>
                         {linkText}
                     </Link>

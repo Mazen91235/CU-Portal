@@ -12,6 +12,7 @@ import type { ReleaseResponseDto } from "../../../types/dtos/ReleaseDtos";
 import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
@@ -227,7 +228,7 @@ export function ReleasesPage() {
                                                         release={release}
                                                         onViewDetails={() =>
                                                             navigate(
-                                                                `/user/system/releases/${release.id}`,
+                                                                buildRedirectUrl(`/user/system/releases/${release.id}`),
                                                             )
                                                         }
                                                     />

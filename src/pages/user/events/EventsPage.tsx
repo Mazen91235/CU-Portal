@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -243,7 +244,7 @@ export const EventsPage = () => {
                             ]}
                             button="View Details"
                             buttonAction={() =>
-                                navigate(`/user/events/${event.id}`)
+                                navigate(buildRedirectUrl(`/user/events/${event.id}`))
                             }
                             hasOptions
                             sharable

@@ -284,7 +284,7 @@ export const AnnouncementsPage = () => {
     };
 
     const handleViewAnnouncement = (announcementId: number) => {
-        navigate(`/admin/announcements/${announcementId}`);
+        navigate(buildRedirectUrl(`/admin/announcements/${announcementId}`));
     };
 
     const handlePagination = () => {

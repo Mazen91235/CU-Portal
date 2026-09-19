@@ -148,7 +148,7 @@ export const EventOrganizerPage = () => {
                                 ]}
                                 button="View Event"
                                 buttonAction={() =>
-                                    navigate(`/admin/events/${event.id}`)
+                                    navigate(buildRedirectUrl(`/admin/events/${event.id}`))
                                 }
                                 hasOptions
                                 sharable

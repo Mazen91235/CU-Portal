@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
@@ -84,7 +85,7 @@ export const EventsOrganizersPage = () => {
                             button="View Details"
                             buttonAction={() =>
                                 navigate(
-                                    `/user/event-organizers/${organizer.id}`,
+                                    buildRedirectUrl(`/user/event-organizers/${organizer.id}`),
                                 )
                             }
                         />

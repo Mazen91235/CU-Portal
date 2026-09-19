@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
+import { useNavigate, useSearchParams } from "react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,6 +47,8 @@ const parseLinks = (value?: string) =>
 
 export const CreateEventOrganizer = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/event-organizers");
     const [createEventOrganizer, { isLoading }] = useCreateEventOrganizerMutation();
     const uploadFile = useUploadFileToDrive({});
     const removeUploadedFiles = useRemoveUploadedFiles();
@@ -90,7 +93,7 @@ export const CreateEventOrganizer = () => {
                     links: parseLinks(data.links),
                 },
             }).unwrap();
-            navigate("/admin/event-organizers", {
+            navigate(redirectUrl, {
                 state: { success: "Event organizer created successfully!" },
             });
         } catch (error) {
@@ -104,7 +107,7 @@ export const CreateEventOrganizer = () => {
     return (
         <Layout>
             <PageSeo title="Create Event Organizer - CU Portal" description="Create a new event organizer" />
-            <SubBanner title="Create New Event Organizer" description="Add an event organizer and its resources" icon="user" linkText="Back to Event Organizers" linkTo="/admin/event-organizers" />
+            <SubBanner title="Create New Event Organizer" description="Add an event organizer and its resources" icon="user" linkText="Back to Event Organizers" linkTo={redirectUrl} />
             <main className={styles.container}>
                 <Form onSubmit={handleSubmit(onSubmit)} errors={errors} className={styles.formCard} disabled={busy}>
                     <div className={styles.formGroup}>
@@ -124,7 +127,7 @@ export const CreateEventOrganizer = () => {
                     </div>
 
                     <div className={styles.formActions}>
-                        <Button text="Cancel" loadingText="Cancelling..." type="button" isSubmitting={false} onClick={() => navigate("/admin/event-organizers")} isSecondary />
+                        <Button text="Cancel" loadingText="Cancelling..." type="button" isSubmitting={false} onClick={() => navigate(redirectUrl)} isSecondary />
                         <Button text="Create Event Organizer" loadingText="Creating..." isSubmitting={busy} type="submit" isOrange={false} />
                     </div>
                 </Form>

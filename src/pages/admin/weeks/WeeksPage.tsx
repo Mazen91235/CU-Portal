@@ -269,7 +269,7 @@ export function WeeksPage() {
                             ]}
                             button="View Week"
                             buttonAction={() =>
-                                navigate(`/admin/weeks/${week.id}`)
+                                navigate(buildRedirectUrl(`/admin/weeks/${week.id}`))
                             }
                             hasOptions
                             editable

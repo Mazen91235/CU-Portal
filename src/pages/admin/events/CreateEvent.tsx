@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -74,6 +75,8 @@ type EventFormData = z.input<typeof eventSchema>;
 
 export const CreateEvent = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/events");
     const user = useAppSelector((state) => state.user.user);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -325,7 +328,7 @@ export const CreateEvent = () => {
 
             await createEvent(payload).unwrap();
 
-            navigate("/admin/events", {
+            navigate(redirectUrl, {
                 state: { success: "Event created successfully!" },
             });
         } catch (error) {
@@ -394,7 +397,7 @@ export const CreateEvent = () => {
                 description="Fill in the details to create your event"
                 icon="calendar"
                 linkText="Back to Events"
-                linkTo="/admin/events"
+                linkTo={redirectUrl}
             />
 
             <main className={styles.container}>
@@ -634,7 +637,7 @@ export const CreateEvent = () => {
                             loadingText=""
                             type="button"
                             isSubmitting={false}
-                            onClick={() => navigate("/admin/events")}
+                            onClick={() => navigate(redirectUrl)}
                             isSecondary
                         />
                         <Button

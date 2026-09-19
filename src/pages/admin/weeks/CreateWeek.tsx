@@ -1,6 +1,7 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useCallback, useState } from "react";
 import type React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -45,6 +46,8 @@ const getWeeksCount = (start: string, end: string) => {
 
 export function CreateWeek() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/weeks");
     const user = useAppSelector((state) => state.user.user);
     const [faculties, setFaculties] = useState<
         { id?: number | null; name?: string | null }[]
@@ -174,7 +177,7 @@ export function CreateWeek() {
                 "Created",
                 `${weeksCount} week${weeksCount === 1 ? "" : "s"} created successfully`,
             );
-            navigate("/admin/weeks");
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -191,7 +194,7 @@ export function CreateWeek() {
                 title="Create Weeks"
                 description="Create one or more weeks"
                 linkText="Back to Weeks"
-                linkTo="/admin/weeks"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -296,7 +299,7 @@ export function CreateWeek() {
                             type="button"
                             isSubmitting={false}
                             isSecondary
-                            onClick={() => navigate("/admin/weeks")}
+                            onClick={() => navigate(redirectUrl)}
                         />
                         <Button
                             text="Create Weeks"

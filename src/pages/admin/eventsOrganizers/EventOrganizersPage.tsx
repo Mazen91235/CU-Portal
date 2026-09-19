@@ -141,7 +141,7 @@ export const EventOrganizersPage = () => {
                             button="View Details"
                             buttonAction={() =>
                                 navigate(
-                                    `/admin/event-organizers/${organizer.id}`,
+                                    buildRedirectUrl(`/admin/event-organizers/${organizer.id}`),
                                 )
                             }
                         />

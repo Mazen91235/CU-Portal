@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -44,6 +45,8 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 export const CreateTask = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/tasks");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -84,7 +87,7 @@ export const CreateTask = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { error: err.message || "Failed to fetch subjects." },
             });
         }
@@ -144,7 +147,7 @@ export const CreateTask = () => {
             };
 
             await createTask(taskData).unwrap();
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { success: "Task created successfully!" },
             });
         } catch (error) {
@@ -156,7 +159,7 @@ export const CreateTask = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/tasks");
+        navigate(redirectUrl);
     };
 
     return (
@@ -170,7 +173,7 @@ export const CreateTask = () => {
                 description="Add a new assignment for your students"
                 icon="task"
                 linkText="Back to Tasks"
-                linkTo="/admin/tasks"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form

@@ -1,7 +1,8 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/forms/Button";
 import { DateInput } from "../../../components/forms/DateInput";
@@ -25,6 +26,8 @@ type ReleaseFormData = Record<string, unknown> & {
 
 export const CreateRelease = () => {
   const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/releases");
   const [createRelease, { isLoading }] = useCreateReleaseMutation();
   const {
     register,
@@ -47,7 +50,7 @@ export const CreateRelease = () => {
     try {
       await createRelease(data).unwrap();
       showToast("success", "Success", "Release created successfully");
-      navigate("/admin/releases");
+      navigate(redirectUrl);
     } catch (error) {
       handlePopupErrors(error);
     }
@@ -64,7 +67,7 @@ export const CreateRelease = () => {
         description="Add a new release to the system"
         icon="user"
         linkText="Back to Releases"
-        linkTo="/admin/releases"
+        linkTo={redirectUrl}
       />
       <main className={styles.container}>
         <Form
@@ -128,7 +131,7 @@ export const CreateRelease = () => {
               loadingText="Cancelling..."
               type="button"
               isSubmitting={false}
-              onClick={() => navigate("/admin/releases")}
+              onClick={() => navigate(redirectUrl)}
               isSecondary
             />
             <Button

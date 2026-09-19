@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -181,7 +182,7 @@ export const RolesPage = () => {
                             },
                         ]}
                         button="View Role"
-                        buttonAction={() => navigate(`/admin/roles/${role.id}`)}
+                        buttonAction={() => navigate(buildRedirectUrl(`/admin/roles/${role.id}`))}
                         hasOptions={true}
                         editable={true}
                         deletable={true}

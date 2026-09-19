@@ -192,7 +192,7 @@ export const CoursesPage = () => {
     };
 
     const handleViewCourse = (courseId: number) => {
-        navigate(`/admin/courses/${courseId}`);
+        navigate(buildRedirectUrl(`/admin/courses/${courseId}`));
     };
 
     const handlePagination = () => {

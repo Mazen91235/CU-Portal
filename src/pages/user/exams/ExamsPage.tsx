@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { useLazyGetExamsQuery } from "../../../services/apis/user/ExamAPIs";
 import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
@@ -103,7 +104,7 @@ export const ExamsPage = () => {
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
     const handleViewExam = (examId: number) => {
-        navigate(`/user/exams/${examId}`);
+        navigate(buildRedirectUrl(`/user/exams/${examId}`));
     };
 
     const handlePagination = () => {

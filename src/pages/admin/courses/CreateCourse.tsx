@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import type React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -38,6 +39,8 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const CreateCourse = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/courses");
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
@@ -163,14 +166,14 @@ export const CreateCourse = () => {
 
             await createCourse(courseData).unwrap();
             showToast("success", "Success", "Course created successfully");
-            navigate("/admin/courses");
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/admin/courses");
+        navigate(redirectUrl);
     };
 
     return (
@@ -184,7 +187,7 @@ export const CreateCourse = () => {
                 description="Add a new course to the university catalog"
                 icon="course"
                 linkText="Back to Courses"
-                linkTo="/admin/courses"
+                linkTo={redirectUrl}
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>

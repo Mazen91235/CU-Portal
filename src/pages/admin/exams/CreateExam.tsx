@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -42,6 +43,8 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 export const CreateExam = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/exams");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -76,7 +79,7 @@ export const CreateExam = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { error: err.message || "Failed to fetch subjects." },
             });
         }
@@ -115,7 +118,7 @@ export const CreateExam = () => {
             };
 
             await createExam(examData).unwrap();
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { success: "Exam created successfully!" },
             });
         } catch (error) {
@@ -124,7 +127,7 @@ export const CreateExam = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/exams");
+        navigate(redirectUrl);
     };
 
     return (
@@ -138,7 +141,7 @@ export const CreateExam = () => {
                 description="Add a new exam for your students"
                 icon="task"
                 linkText="Back to Exams"
-                linkTo="/admin/exams"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form

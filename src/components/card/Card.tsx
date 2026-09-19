@@ -233,7 +233,7 @@ export const Card = ({
                             {profile.slice(0, 1).toUpperCase()}
                         </div>
                     )}
-                    <span className={styles.profileText}>{profile}</span>
+                    <span className={styles.profileText}>{formatString(profile, "CardDescription")}</span>
                 </div>
             )}
 
@@ -249,10 +249,10 @@ export const Card = ({
                                     icon={item.icon}
                                     className={styles.itemIcon}
                                 />
-                                {item.label}
+                                {formatString(item.label, "CardDescription")}
                             </span>
                             <span className={styles.itemValue}>
-                                {item.value}
+                                {formatString(item.value, "CardDescription")}
                             </span>
                         </div>
                     ))}

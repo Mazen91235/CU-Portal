@@ -252,7 +252,7 @@ export const EventsPage = () => {
     ]);
 
     const handleViewEvent = (eventId: number) => {
-        navigate(`/admin/events/${eventId}`);
+        navigate(buildRedirectUrl(`/admin/events/${eventId}`));
     };
 
     const handleEditEvent = (eventId: number) => {

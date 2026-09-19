@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { useLazyGetTasksQuery } from "../../../services/apis/user/TaskAPIs";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
@@ -103,7 +104,7 @@ export const TasksPage = () => {
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
     const handleViewTask = (taskId: number) => {
-        navigate(`/user/tasks/${taskId}`);
+        navigate(buildRedirectUrl(`/user/tasks/${taskId}`));
     };
 
     const handlePagination = () => {

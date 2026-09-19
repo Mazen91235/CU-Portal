@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Card } from "../../../components/card/Card";
@@ -210,7 +211,7 @@ export const CoursesPage = () => {
     }, [fetchAvailableCourses]);
 
     const handleViewCourse = (courseId: number) => {
-        navigate(`/user/courses/${courseId}`);
+        navigate(buildRedirectUrl(`/user/courses/${courseId}`));
     };
 
     const showCourseFilterPrompt = !departmentFilter || !yearFilter;

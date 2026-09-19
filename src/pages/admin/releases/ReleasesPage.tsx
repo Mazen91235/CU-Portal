@@ -127,6 +127,10 @@ export function ReleasesPage() {
         navigation(buildRedirectUrl(`/admin/releases/edit/${release.id}`));
     };
 
+    const handleViewRelease = (releaseId: number) => {
+        navigation(buildRedirectUrl(`/admin/releases/${releaseId}`));
+    };
+
     const handleDeleteClick = (release: ReleaseResponseDto) => {
         setReleaseToDelete(release);
     };
@@ -242,7 +246,7 @@ export function ReleasesPage() {
                                 ]}
                                 button="View Release"
                                 buttonAction={() =>
-                                    navigation(`/admin/releases/${release.id}`)
+                                    handleViewRelease(release.id!)
                                 }
                                 editable
                                 deletable

@@ -1,9 +1,33 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useSearchParams } from "react-router";
 import type { SetStateAction } from "react";
 
+const areSearchParamsEqual = (left: URLSearchParams, right: URLSearchParams) =>
+    left.toString() === right.toString();
+
 export const useFilterSearchParams = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const searchParamsRef = useRef(searchParams);
+    const setterCache = useRef(
+        new Map<string, (value: SetStateAction<string>) => void>(),
+    );
+
+    searchParamsRef.current = searchParams;
+
+    const updateSearchParams = useCallback(
+        (
+            buildNext: (current: URLSearchParams) => URLSearchParams,
+            replace = false,
+        ) => {
+            const current = searchParamsRef.current;
+            const next = buildNext(new URLSearchParams(current));
+            if (areSearchParamsEqual(current, next)) return;
+
+            searchParamsRef.current = next;
+            setSearchParams(next, { replace });
+        },
+        [setSearchParams],
+    );
 
     const getFilter = useCallback(
         (key: string, fallback = "") =>
@@ -13,35 +37,54 @@ export const useFilterSearchParams = () => {
 
     const setFilter = useCallback(
         (key: string, value: string, keepEmpty = false) => {
-            const next = new URLSearchParams(searchParams);
-            if (value || keepEmpty) next.set(key, value);
-            else next.delete(key);
-            setSearchParams(next);
+            updateSearchParams((current) => {
+                if (value || keepEmpty) current.set(key, value);
+                else current.delete(key);
+                return current;
+            });
         },
-        [searchParams, setSearchParams],
+        [updateSearchParams],
     );
 
     const getFilterSetter = useCallback(
-        (key: string, keepEmpty = false) =>
-            (value: SetStateAction<string>) => {
-                const current = searchParams.get(key) ?? "";
-                const nextValue =
-                    typeof value === "function" ? value(current) : value;
-                setFilter(key, nextValue, keepEmpty);
-            },
-        [searchParams, setFilter],
+        (key: string, keepEmpty = false) => {
+            const cacheKey = `${key}:${keepEmpty ? "keep" : "drop"}`;
+            const cached = setterCache.current.get(cacheKey);
+            if (cached) return cached;
+
+            const setter = (value: SetStateAction<string>) => {
+                updateSearchParams((current) => {
+                    const currentValue = current.get(key) ?? "";
+                    const nextValue =
+                        typeof value === "function"
+                            ? value(currentValue)
+                            : value;
+                    if (nextValue || keepEmpty) current.set(key, nextValue);
+                    else current.delete(key);
+                    return current;
+                });
+            };
+
+            setterCache.current.set(cacheKey, setter);
+            return setter;
+        },
+        [updateSearchParams],
     );
 
     const setFilters = useCallback(
-        (updates: Record<string, string | null | undefined>, replace = false) => {
-            const next = new URLSearchParams(searchParams);
-            Object.entries(updates).forEach(([key, value]) => {
-                if (value) next.set(key, value);
-                else next.delete(key);
-            });
-            setSearchParams(next, { replace });
+        (
+            updates: Record<string, string | null | undefined>,
+            replace = false,
+        ) => {
+            updateSearchParams((current) => {
+                Object.entries(updates).forEach(([key, value]) => {
+                    if (value) current.set(key, value);
+                    else current.delete(key);
+                });
+                return current;
+            }, replace);
         },
-        [searchParams, setSearchParams],
+        [updateSearchParams],
     );
 
     return {

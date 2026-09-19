@@ -92,7 +92,7 @@
 .day-section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
     min-width: 0;
 }
 .day-section-title { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--dark-text); }

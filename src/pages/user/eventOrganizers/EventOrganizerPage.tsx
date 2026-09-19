@@ -1,3 +1,4 @@
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Layout } from "../../../components/layout/Layout";
@@ -143,7 +144,7 @@ export const EventOrganizerPage = () => {
                                 ]}
                                 button="View Event"
                                 buttonAction={() =>
-                                    navigate(`/user/events/${event.id}`)
+                                    navigate(buildRedirectUrl(`/user/events/${event.id}`))
                                 }
                                 hasOptions
                                 sharable

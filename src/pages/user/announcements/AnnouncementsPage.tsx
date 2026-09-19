@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { useLazyGetAnnouncementsQuery } from "../../../services/apis/user/AnnouncementAPIs";
 import type { AnnouncementResponseDto } from "../../../types/dtos/AnnouncementDtos";
@@ -112,7 +113,7 @@ export const AnnouncementsPage = () => {
     }, [searchQuery, subjectFilter, dateFromFilter, dateToFilter]);
 
     const handleViewAnnouncement = (announcementId: number) => {
-        navigate(`/user/announcements/${announcementId}`);
+        navigate(buildRedirectUrl(`/user/announcements/${announcementId}`));
     };
 
     const handlePagination = () => {
