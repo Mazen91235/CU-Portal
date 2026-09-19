@@ -15,6 +15,7 @@ import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAP
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { showToast } from "../../../utils/ToastsManager";
+import { Avatar } from "../../../components/avatar/Avatar";
 import type { UserResponseDto } from "../../../types/dtos/UserDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
@@ -411,14 +412,10 @@ export const PendingUsersPage = () => {
                                     key={user.id}
                                     className={styles.pendingMiniCard}
                                 >
-                                    <img
+                                    <Avatar
+                                        user={user}
+                                        size="medium"
                                         className={styles.pendingMiniAvatar}
-                                        src={
-                                            user.avatar?.url ||
-                                            user.google_avatar ||
-                                            "https://via.placeholder.com/72"
-                                        }
-                                        alt="Avatar"
                                     />
                                     <div className={styles.pendingMiniContent}>
                                         <div className={styles.pendingMiniName}>

@@ -71,7 +71,6 @@ export const UsersPage = () => {
             }
             await getUsersData({
                 data: params,
-                includes: ["avatar"],
             }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
@@ -161,8 +160,14 @@ export const UsersPage = () => {
         user,
     ]);
 
-    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authUsersQuery = useCallback(
@@ -343,7 +348,8 @@ export const UsersPage = () => {
                     <div className={styles.filterSearch}>
                         <Search
                             placeholder="Search by name, email or phone number..."
-                            setValue={setSearchQuery} value={searchQuery}
+                            setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
                     {user?.canAccessAll && (

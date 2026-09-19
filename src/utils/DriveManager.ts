@@ -11,6 +11,7 @@ export function GetDrivePreviewUrlFromId(fileId: string) {
 }
 
 export function GetDrivePreviewUrlFromUrl(url: string) {
+    if (!url) return null;
     const fileId = GetDriveIdFromUrl(url);
     return fileId ? GetDrivePreviewUrlFromId(fileId) : null;
 }
