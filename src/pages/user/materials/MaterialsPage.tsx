@@ -31,7 +31,8 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter, searchParams, setSearchParams } =
+        useFilterSearchParams();
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
@@ -127,10 +128,7 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authFilterQuery = useCallback(
-        () => fetchSubjects(),
-        [fetchSubjects],
-    );
+    const authFilterQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
 
     const authMaterialsQuery = useCallback(
         () => fetchMaterials(currentParentId),
@@ -187,7 +185,12 @@ export function MaterialsPage() {
             return;
         }
         downloadMaterials(selectedMaterials);
-    }, [selectedMaterials, materials, handleDownloadFile, handleDownloadMaterial]);
+    }, [
+        selectedMaterials,
+        materials,
+        handleDownloadFile,
+        handleDownloadMaterial,
+    ]);
 
     const handleCardClick = useCallback(
         (material: MaterialResponseDto) => {
@@ -242,7 +245,10 @@ export function MaterialsPage() {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
             const previewUrl = new URL(url, window.location.origin);
-            previewUrl.searchParams.set("material_id", String(materialId ?? ""));
+            previewUrl.searchParams.set(
+                "material_id",
+                String(materialId ?? ""),
+            );
             url = previewUrl.toString();
         } else {
             url =
@@ -325,7 +331,8 @@ export function MaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery} value={searchQuery}
+                                setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
                     </div>
@@ -366,7 +373,9 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadFile}
+                                            onDownload={() =>
+                                                handleDownloadMaterial(folderId)
+                                            }
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
@@ -399,7 +408,14 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadFile}
+                                            onDownload={(fileId) => {
+                                                if (fileId)
+                                                    handleDownloadFile(fileId);
+                                                else
+                                                    handleDownloadMaterial(
+                                                        file.id ?? 0,
+                                                    );
+                                            }}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}

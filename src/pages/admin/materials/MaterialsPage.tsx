@@ -1219,7 +1219,9 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadFile}
+                                            onDownload={() =>
+                                                handleDownloadMaterial(folderId)
+                                            }
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1268,7 +1270,14 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadFile}
+                                            onDownload={(fileId) => {
+                                                if (fileId)
+                                                    handleDownloadFile(fileId);
+                                                else
+                                                    handleDownloadMaterial(
+                                                        file.id ?? 0,
+                                                    );
+                                            }}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
