@@ -1,9 +1,14 @@
 import mazenMohsenImg from "../assets/team/mazen-mohsen.jpg";
 import mohamedAhmedImg from "../assets/team/mohamed-ahmed.jpg";
 import omarMagdyImg from "../assets/team/omar-magdy.jpg";
+import omarNagyImg from "../assets/team/omar-nagy.jpeg";
+import rojanHamdyImg from "../assets/team/rojan-hamdy.jpg";
 import anneOmerImg from "../assets/team/anne-omer.jpg";
+import mariamMohamedImg from "../assets/team/mariam-mohamed.png";
+import abdelrhmanMohamedImg from "../assets/team/abdelrhman-mohamed.jpg";
 import yasmineTharwatImg from "../assets/team/yasmine-tharwat.jpg";
 import janaNourImg from "../assets/team/jana-nour.jpg";
+import nayraSamyImg from "../assets/team/nayra-samy.jpeg";
 import hadeerKhalilImg from "../assets/team/hadeer-khalil.jpg";
 import somiaAliImg from "../assets/team/somia-ali.jpg";
 import marwaMohamedImg from "../assets/team/marwa-mohamed.jpg";
@@ -51,6 +56,44 @@ export const teamMembers: MemberProps[] = [
         ],
     },
     {
+        name: "Omar Nagy",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        additionalRoles: [
+            { name: "Frontend Developer", type: "sprint" },
+            { name: "Software Tester", type: "secondary" },
+        ],
+        university: "Cairo University",
+        image: omarNagyImg,
+        imagePosition: "top",
+        socials: [
+            {
+                icon: websiteIcon,
+                url: " https://omar-nagy-portfolio.vercel.app",
+            },
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/omar-nagy-work",
+            },
+            { icon: githubIcon, url: "https://github.com/bradocola" },
+        ],
+    },
+    {
+        name: "Rojan Hamdy",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        university: "Cairo University",
+        image: rojanHamdyImg,
+        imagePosition: "bottom",
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/rojan-hamdy-8a4683397",
+            },
+            { icon: githubIcon, url: "https://github.com/rojan-hamdy" },
+        ],
+    },
+    {
         name: "Mohamed Ahmed",
         title: "Computer Engineer",
         role: "Frontend Developer",
@@ -80,6 +123,35 @@ export const teamMembers: MemberProps[] = [
         ],
     },
     {
+        name: "Mariam Mohamed",
+        title: "Computer Engineer",
+        role: "Frontend Developer",
+        university: "Cairo University",
+        image: mariamMohamedImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/mariam-mohamed-923025335",
+            },
+            { icon: githubIcon, url: "https://github.com/mariamramadan0306" },
+        ],
+    },
+    {
+        name: "Abdelrhman Mohamed",
+        title: "Communication Engineer",
+        role: "Frontend Developer",
+        university: "Cairo University",
+        image: abdelrhmanMohamedImg,
+        imagePosition: "bottom",
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/abdelrhman-mohamed-93099931b",
+            },
+            { icon: githubIcon, url: "https://github.com/abdelrhman-sys" },
+        ],
+    },
+    {
         name: "Yasmin Tharwat",
         title: "Software Engineer",
         role: "Frontend Developer",
@@ -102,6 +174,24 @@ export const teamMembers: MemberProps[] = [
                 url: "https://www.linkedin.com/in/jana-nour-1510bb324",
             },
             { icon: githubIcon, url: "https://github.com/jananour00" },
+        ],
+    },
+    {
+        name: "Nayra Samy",
+        title: "Faculty of Arts",
+        role: "UI/UX Designer",
+        university: "Ain Shams University",
+        image: nayraSamyImg,
+        imagePosition: "top",
+        socials: [
+            {
+                icon: websiteIcon,
+                url: " https://www.behance.net/nayrasamy2",
+            },
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/nayra-samy-b323641b3",
+            },
         ],
     },
     {
