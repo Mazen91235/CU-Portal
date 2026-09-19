@@ -112,12 +112,19 @@ export const AcademicSettings = () => {
         }
     }, [searchYears]);
 
-    const authQueryParam = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
+    const authFacultiesAndYearsQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchYears()]),
+        [fetchFaculties, fetchYears],
     );
 
-    useAuthQuery(authQueryParam);
+    useAuthQuery(authFacultiesAndYearsQuery);
+
+    const authDepartmentsQuery = useCallback(
+        () => Promise.all([fetchDepartments()]),
+        [fetchDepartments],
+    );
+
+    useAuthQuery(authDepartmentsQuery);
 
     useEffect(() => {
         if (valuesSet) return;
@@ -182,7 +189,10 @@ export const AcademicSettings = () => {
                         </div>
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <fieldset disabled={isSubmitting} className={styles.form}>
+                            <fieldset
+                                disabled={isSubmitting}
+                                className={styles.form}
+                            >
                                 <div className={styles.selectGroup}>
                                     <Select
                                         register={register}
