@@ -50,17 +50,21 @@ export const DashboardPage = () => {
     return (
         <Layout>
             <PageSeo title="Dashboard - CU Portal" description="..." />
-            {showLatestRelease && latestRelease && (
-                <ReleasesBanner
-                    release={latestRelease}
-                    onClose={handleReleaseClose}
-                    onViewAllReleases={() => navigate("/user/system/releases")}
-                />
-            )}
             {user && userLevel < 4 ? (
                 <DashboardProgressView userLevel={userLevel} user={user} />
             ) : user ? (
-                <DashboardCompleteView user={user} />
+                <>
+                    {showLatestRelease && latestRelease && (
+                        <ReleasesBanner
+                            release={latestRelease}
+                            onClose={handleReleaseClose}
+                            onViewAllReleases={() =>
+                                navigate("/user/system/releases")
+                            }
+                        />
+                    )}
+                    <DashboardCompleteView user={user} />
+                </>
             ) : null}
         </Layout>
     );
