@@ -417,7 +417,7 @@ export const Sidebar = ({
     isOpen: boolean;
     onClose?: () => void;
 }) => {
-    const location = useLocation();
+    const {pathname} = useLocation();
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
@@ -456,10 +456,10 @@ export const Sidebar = ({
     }, [permissions]);
 
     const isLinkActive = (link: NavLink) => {
-        if (location.pathname === link.path) return true;
+        if (pathname === link.path) return true;
         if (
             link.activatesPaths &&
-            link.activatesPaths.some((path) => location.pathname.includes(path))
+            link.activatesPaths.some((path) => pathname.includes(path))
         )
             return true;
         return false;
@@ -468,9 +468,8 @@ export const Sidebar = ({
     const isSectionActive = (section: NavSection) => {
         return section.links.some(
             (link) =>
-                (location.pathname.includes(link.path) &&
-                    link.path !== "/user") ||
-                (location.pathname === "/user" && link.path === "/user"),
+                (pathname.includes(link.path) && link.path !== "/user") ||
+                (pathname === "/user" && link.path === "/user"),
         );
     };
 
@@ -480,9 +479,9 @@ export const Sidebar = ({
             navSections.forEach((section) => {
                 const isActive = section.links.some(
                     (link) =>
-                        (location.pathname.includes(link.path) &&
+                        (pathname.includes(link.path) &&
                             link.path !== "/user") ||
-                        (location.pathname === "/user" &&
+                        (pathname === "/user" &&
                             link.path === "/user"),
                 );
                 if (isActive && !newExpanded.includes(section.title)) {
@@ -491,7 +490,7 @@ export const Sidebar = ({
             });
             return newExpanded;
         });
-    }, [location.pathname, navSections]);
+    }, [pathname, navSections]);
 
     const toggleSection = (title: string) => {
         setExpandedSections((previous) =>

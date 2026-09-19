@@ -10,17 +10,16 @@ export function useAuthQuery<TTriggerArg, TReturn>(
 ) {
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
-    const location = useLocation();
+    const {pathname} = useLocation();
     const startPageLoading = usePageLoading();
 
     useEffect(() => {
         (async () => {
             const loggedIn = await isLoggedIn();
-            const path = location.pathname;
             if (
                 !loggedIn ||
                 !user ||
-                !validateUserAccess(user.level, path, user.role?.level)
+                !validateUserAccess(user.level, pathname, user.role?.level)
             )
                 return;
             try {
@@ -29,7 +28,7 @@ export function useAuthQuery<TTriggerArg, TReturn>(
                 handlePopupErrors(error);
             }
         })();
-    }, [user, isLoggedIn, trigger, startPageLoading, location.pathname]);
+    }, [user, isLoggedIn, trigger, startPageLoading, pathname]);
 }
 
 export default useAuthQuery;

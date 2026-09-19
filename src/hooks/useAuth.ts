@@ -28,15 +28,15 @@ export default function useAuth({
     const user = useAppSelector((state) => state.user.user);
     const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
-    const location = useLocation();
+    const { pathname, state } = useLocation();
     useEffect(() => {
         (async () => {
             if (checkCrawler()) return;
-            if (location.state?.isProcessing) {
+            if (state?.isProcessing) {
                 dispatch(setIsProcessing(false));
-                navigate(location.pathname, {
+                navigate(pathname, {
                     state: {
-                        ...location.state,
+                        ...state,
                         isProcessing: undefined,
                     },
                     replace: true,
@@ -86,7 +86,8 @@ export default function useAuth({
     }, [
         user,
         permissions,
-        location,
+        pathname,
+        state,
         isProcessing,
         navigate,
         dispatch,
