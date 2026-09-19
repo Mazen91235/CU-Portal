@@ -119,7 +119,7 @@ export const PendingUsersPage = () => {
                 data: params,
                 includes: [
                     "pending_user.attachment",
-                    "attachment",
+                    "avatar",
                     "faculty",
                     "department",
                     "year",
@@ -149,8 +149,14 @@ export const PendingUsersPage = () => {
         user,
     ]);
 
-    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
 
     const authPendingUsersQuery = useCallback(
@@ -327,7 +333,8 @@ export const PendingUsersPage = () => {
                     <div className={styles.filterSearch}>
                         <Search
                             placeholder="Search by name, email or phone number..."
-                            setValue={setSearchQuery} value={searchQuery}
+                            setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
                     {user?.canAccessAll && (
