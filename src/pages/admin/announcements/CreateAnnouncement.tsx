@@ -11,7 +11,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
@@ -193,20 +193,23 @@ export const CreateAnnouncement = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <SearchableInput
+                        <Select
                             label="Subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading || isUploading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                            placeholder="Select a subject"
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div className={styles.formGroup}>

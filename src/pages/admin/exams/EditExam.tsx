@@ -15,7 +15,6 @@ import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
 import { DateInput } from "../../../components/forms/DateInput";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
@@ -226,20 +225,23 @@ export const EditExam = () => {
                             errors={errors}
                             disabled={isLoading}
                         />
-                        <SearchableInput
+                        <Select
                             label="Subject"
-                            placeholder="Select a subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                         <Select
                             label="Exam Type"
                             register={register}
