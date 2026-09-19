@@ -81,7 +81,7 @@ export const ExamPage = () => {
                         type="Duration"
                         value={
                             exam.details?.duration
-                                ? `${exam.details.duration} hours`
+                                ? `${exam.details.duration} minutes`
                                 : "N/A"
                         }
                         icon="clock"

@@ -51,6 +51,7 @@ export const Thumbnail = <T extends FieldValues>({
 
     useEffect(() => {
         const nextUrl = existingUrl || null;
+        if (objectUrlRef.current) return;
         setPreviewUrl(nextUrl);
         hasPreviewRef.current = Boolean(nextUrl);
         setFileError(null);

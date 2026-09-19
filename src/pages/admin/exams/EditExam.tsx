@@ -158,9 +158,7 @@ export const EditExam = () => {
                 )!,
                 details: {
                     exam_type: data.exam_type || undefined,
-                    duration: data.duration
-                        ? parseFloat(data.duration)
-                        : undefined,
+                    duration: data.duration ?? undefined,
                     location: data.location || undefined,
                     exam_format: data.exam_format as
                         | "MCQ"
@@ -288,7 +286,7 @@ export const EditExam = () => {
                             />
                         </div>
                         <Input
-                            label="Duration (hours)"
+                            label="Duration (minutes)"
                             type="number"
                             placeholder="Enter exam duration"
                             register={register}

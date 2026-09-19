@@ -27,7 +27,7 @@ import {
     useRemoveUploadedFiles,
 } from "../../../hooks/useHandleProcesses";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
-import { handleErrors, getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, getErrorMessage } from "../../../utils/ErrorHandling";
 import styles from "./EditEventOrganizer.module.css";
 
 const schema = z.object({

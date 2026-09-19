@@ -222,7 +222,7 @@ export const CreateExam = () => {
                             />
                         </div>
                         <Input
-                            label="Duration (hours)"
+                            label="Duration (minutes)"
                             type="number"
                             placeholder="Enter exam duration"
                             register={register}

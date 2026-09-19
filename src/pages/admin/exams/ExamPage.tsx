@@ -109,7 +109,7 @@ export const ExamPage = () => {
           <StatCard
             type="Duration"
             value={
-              exam.details?.duration ? `${exam.details.duration} hours` : "N/A"
+              exam.details?.duration ? `${exam.details.duration} minutes` : "N/A"
             }
             icon="clock"
           />
