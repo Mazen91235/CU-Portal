@@ -28,7 +28,11 @@ import { Select } from "../../../components/forms/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Avatar } from "../../../components/avatar/Avatar";
-import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
+import {
+    formatDateTime,
+    formatString,
+    formatTimeAgo,
+} from "../../../utils/Formatter";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
@@ -176,7 +180,10 @@ export const UserPage = () => {
                             <>
                                 <div className={styles.userRoleLeft}>
                                     <span className={styles.userBadge}>
-                                        {user.role?.name || "User"}
+                                        {formatString(
+                                            user.role?.name || "User",
+                                            "CardTitle",
+                                        )}
                                     </span>
                                     {user.is_early_access && (
                                         <span
@@ -291,14 +298,17 @@ export const UserPage = () => {
                                         <IconComponent icon="user" /> Name:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.name || "N/A"}
+                                        {formatString(user.name, "CardContent")}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="mail-details" />{" "}
                                         E-Mail:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.email || "N/A"}
+                                        {formatString(
+                                            user.email,
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -307,14 +317,20 @@ export const UserPage = () => {
                                         Phone:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.phone || "N/A"}
+                                        {formatString(
+                                            user.phone,
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="building" />{" "}
                                         Faculty:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.faculty?.name || "N/A"}
+                                        {formatString(
+                                            user.faculty?.name,
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -323,14 +339,20 @@ export const UserPage = () => {
                                         Department:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.department?.name || "N/A"}
+                                        {formatString(
+                                            user.department?.name,
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="certificate-year" />{" "}
                                         Academic Year:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.year?.year || "N/A"}
+                                        {formatString(
+                                            user.year?.year?.toString(),
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -339,7 +361,10 @@ export const UserPage = () => {
                                         Is Active:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.status ? "Yes" : "No"}
+                                        {formatString(
+                                            user.status ? "Yes" : "No",
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="iconsax-calendar" />{" "}
@@ -408,15 +433,20 @@ export const UserPage = () => {
                                                         styles.examCardTitle
                                                     }
                                                 >
-                                                    {exam.name}
+                                                    {formatString(
+                                                        exam.name,
+                                                        "CardTitle",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
                                                         styles.examCardSubject
                                                     }
                                                 >
-                                                    {exam.subject?.name ||
-                                                        "N/A"}
+                                                    {formatString(
+                                                        exam.subject?.name,
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
@@ -511,15 +541,20 @@ export const UserPage = () => {
                                                         styles.taskCardTitle
                                                     }
                                                 >
-                                                    {task.name}
+                                                    {formatString(
+                                                        task.name,
+                                                        "CardTitle",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
                                                         styles.taskCardSubject
                                                     }
                                                 >
-                                                    {task.subject?.name ||
-                                                        "N/A"}
+                                                    {formatString(
+                                                        task.subject?.name,
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
@@ -608,7 +643,10 @@ export const UserPage = () => {
                                                             styles.announcementCardTitle
                                                         }
                                                     >
-                                                        {announcement.title}
+                                                        {formatString(
+                                                            announcement.title,
+                                                            "CardTitle",
+                                                        )}
                                                     </span>
                                                     <span
                                                         className={
@@ -623,8 +661,11 @@ export const UserPage = () => {
                                                         styles.announcementCardDesc
                                                     }
                                                 >
-                                                    {announcement.content ||
-                                                        "No content"}
+                                                    {formatString(
+                                                        announcement.content ||
+                                                            "No content",
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
@@ -707,7 +748,10 @@ export const UserPage = () => {
                                                         styles.eventCardTitle
                                                     }
                                                 >
-                                                    {event.title || "N/A"}
+                                                    {formatString(
+                                                        event.title,
+                                                        "CardTitle",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
@@ -739,8 +783,11 @@ export const UserPage = () => {
                                                     }
                                                 >
                                                     Organizer:{" "}
-                                                    {event.event_organizer
-                                                        ?.name ?? "N/A"}
+                                                    {formatString(
+                                                        event.event_organizer
+                                                            ?.name,
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                             </div>
                                             <div
@@ -812,15 +859,20 @@ export const UserPage = () => {
                                                     styles.materialsCardTitle
                                                 }
                                             >
-                                                {material.name}
+                                                {formatString(
+                                                    material.name,
+                                                    "CardTitle",
+                                                )}
                                             </div>
                                             <div
                                                 className={
                                                     styles.materialsCardSubject
                                                 }
                                             >
-                                                {material.subject?.name ||
-                                                    "N/A"}
+                                                {formatString(
+                                                    material.subject?.name,
+                                                    "CardDescription",
+                                                )}
                                             </div>
                                             <div
                                                 className={
@@ -904,14 +956,20 @@ export const UserPage = () => {
                                                     styles.subjectsCardTitle
                                                 }
                                             >
-                                                {subject.name}
+                                                {formatString(
+                                                    subject.name,
+                                                    "CardTitle",
+                                                )}
                                             </div>
                                             <div
                                                 className={
                                                     styles.subjectsCardCode
                                                 }
                                             >
-                                                {subject.code || "N/A"}
+                                                {formatString(
+                                                    subject.code,
+                                                    "CardContent",
+                                                )}
                                             </div>
                                             {subject.credits && (
                                                 <div
@@ -919,7 +977,10 @@ export const UserPage = () => {
                                                         styles.subjectsCardCredit
                                                     }
                                                 >
-                                                    {`${subject.credits} Credit Hours`}
+                                                    {formatString(
+                                                        `${subject.credits} Credit Hours`,
+                                                        "CardContent",
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -970,7 +1031,10 @@ export const UserPage = () => {
                                                     styles.activityLogCardTitle
                                                 }
                                             >
-                                                {`${log.action} ${log.entity}`}
+                                                {formatString(
+                                                    `${log.action} ${log.entity}`,
+                                                    "CardContent",
+                                                )}
                                             </div>
                                             <div
                                                 className={
@@ -992,7 +1056,10 @@ export const UserPage = () => {
                                             <span
                                                 className={`${styles.activityLogBadge} ${log.level === "error" ? styles.activityLogBadgeError : log.level === "warning" ? styles.activityLogBadgeWarning : styles.activityLogBadgeInfo}`}
                                             >
-                                                {log.level || "info"}
+                                                {formatString(
+                                                    log.level || "info",
+                                                    "CardContent",
+                                                )}
                                             </span>
                                         </div>
                                     </div>
