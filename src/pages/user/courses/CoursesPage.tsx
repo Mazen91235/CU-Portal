@@ -88,7 +88,10 @@ export const CoursesPage = () => {
         }
     }, [getYears]);
 
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
     const authCoursesQuery = useCallback(
         () => fetchEnrolledCourses(),
@@ -157,30 +160,28 @@ export const CoursesPage = () => {
     }, [user?.year?.year, years]);
 
     useEffect(() => {
-        if (!user?.department?.id) {
+        const userDepartmentId = user?.department?.id;
+
+        if (!userDepartmentId || departments.length === 0) {
             setDepartmentFilter("");
             return;
         }
 
         setDepartmentFilter(
-            (current) => current || user.department?.id?.toString() || "",
+            (current) => current || userDepartmentId.toString() || "",
         );
-    }, [user?.department?.id]);
+    }, [setDepartmentFilter, user, departments]);
 
     useEffect(() => {
-        const userYear = user?.year?.year;
+        const userYearId = user?.year?.id;
 
-        if (userYear == null) {
+        if (!userYearId || years.length === 0) {
             setYearFilter("");
             return;
         }
 
-        const currentYear = years.find((year) => year.year === userYear);
-
-        setYearFilter(
-            (current) => current || currentYear?.id?.toString() || "",
-        );
-    }, [user?.year?.year, years]);
+        setYearFilter((current) => current || userYearId.toString() || "");
+    }, [setYearFilter, user, years]);
 
     const fetchAvailableCourses = useCallback(async () => {
         if (!departmentFilter || !yearFilter) {
@@ -294,7 +295,8 @@ export const CoursesPage = () => {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search by course name or code"
-                                setValue={setSearchQuery} value={searchQuery}
+                                setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
 

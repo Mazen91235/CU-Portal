@@ -162,7 +162,7 @@ export const FORMAT_STRING_LIMITS = {
     ListContent: 100,
     PageTitle: 100,
     PageDescription: 180,
-    Content: 300,
+    Content: Infinity,
 } as const;
 
 export type FormatStringType = keyof typeof FORMAT_STRING_LIMITS;
@@ -173,15 +173,15 @@ export const formatString = (
 ): ReactNode => {
     if (!str) return "N/A";
 
-    const maxLength = typeof viewer === "number"
-        ? viewer
-        : FORMAT_STRING_LIMITS[viewer];
+    const maxLength =
+        typeof viewer === "number" ? viewer : FORMAT_STRING_LIMITS[viewer];
 
-    const formatted = maxLength && str.length > maxLength
-        ? str.substring(0, Math.max(0, maxLength - 5)) +
-          "..." +
-          str.substring(str.length - 5)
-        : str;
+    const formatted =
+        maxLength && str.length > maxLength
+            ? str.substring(0, Math.max(0, maxLength - 5)) +
+              "..." +
+              str.substring(str.length - 5)
+            : str;
 
     return linkify(formatted);
 };

@@ -75,7 +75,7 @@ export const CourseAPI = createApi({
             QueryModel<SubjectSearchAvailableDto>
         >({
             query: (query) => ({
-                url: "/",
+                url: "/available",
                 method: "GET",
                 credentials: "include",
                 params: {
