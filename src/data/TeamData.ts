@@ -17,6 +17,7 @@ import websiteIcon from "../assets/icons/social-website.png";
 // import facebookIcon from "../assets/icons/social-facebook.png";
 import linkedinIcon from "../assets/icons/social-linkedin.png";
 import githubIcon from "../assets/icons/social-github.png";
+import behanceIcon from "../assets/icons/social-behance.png";
 import linktreeIcon from "../assets/icons/social-linktree.png";
 import type { MemberProps } from "../types/props/MemberProps";
 
@@ -185,7 +186,7 @@ export const teamMembers: MemberProps[] = [
         imagePosition: "top",
         socials: [
             {
-                icon: websiteIcon,
+                icon: behanceIcon,
                 url: " https://www.behance.net/nayrasamy2",
             },
             {
