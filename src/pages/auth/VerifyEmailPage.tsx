@@ -157,7 +157,10 @@ export const VerifyEmailPage = () => {
                         </div>
                         <div className={styles.emailContainer}>{userEmail}</div>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <fieldset disabled={isSubmitting} className={styles.inputGroup}>
+                            <fieldset
+                                disabled={isSubmitting}
+                                className={styles.inputGroup}
+                            >
                                 <Input
                                     register={register}
                                     name="code"
@@ -166,12 +169,12 @@ export const VerifyEmailPage = () => {
                                     errors={errors}
                                     disabled={isSubmitting}
                                 />
-                            <Button
-                                text="Verify Email"
-                                loadingText="Verifying..."
-                                isSubmitting={isSubmitting}
-                                isOrange={false}
-                            />
+                                <Button
+                                    text="Verify Email"
+                                    loadingText="Verifying..."
+                                    isSubmitting={isSubmitting}
+                                    isOrange={false}
+                                />
                             </fieldset>
                         </form>
                         <div className={styles.resendContainer}>
@@ -183,7 +186,7 @@ export const VerifyEmailPage = () => {
                                 type="button"
                             >
                                 {canResendAfter > 0
-                                    ? `Resend Code (${canResendAfter}s)`
+                                    ? `Resend Code (${Math.ceil(canResendAfter)}s)`
                                     : "Resend code"}
                             </button>
                         </div>

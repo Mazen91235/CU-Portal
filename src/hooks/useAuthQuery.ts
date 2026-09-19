@@ -10,7 +10,7 @@ export function useAuthQuery<TTriggerArg, TReturn>(
 ) {
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
-    const {pathname} = useLocation();
+    const { pathname } = useLocation();
     const startPageLoading = usePageLoading();
 
     useEffect(() => {

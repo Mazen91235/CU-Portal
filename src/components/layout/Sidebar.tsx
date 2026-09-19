@@ -366,7 +366,7 @@ const showAdminLinks = (permissions: string[]) => {
             activatesPaths: ["/admin/releases/"],
         });
     }
-    
+
     section.links.push({
         label: "Roadmaps",
         // path: "/admin/roadmaps",
@@ -417,7 +417,7 @@ export const Sidebar = ({
     isOpen: boolean;
     onClose?: () => void;
 }) => {
-    const {pathname} = useLocation();
+    const { pathname } = useLocation();
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
@@ -481,8 +481,7 @@ export const Sidebar = ({
                     (link) =>
                         (pathname.includes(link.path) &&
                             link.path !== "/user") ||
-                        (pathname === "/user" &&
-                            link.path === "/user"),
+                        (pathname === "/user" && link.path === "/user"),
                 );
                 if (isActive && !newExpanded.includes(section.title)) {
                     newExpanded.push(section.title);
