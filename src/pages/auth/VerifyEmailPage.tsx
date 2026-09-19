@@ -88,8 +88,10 @@ export const VerifyEmailPage = () => {
     const onSubmit = async (data: VerifyEmailFormData) => {
         try {
             await verifyEmail({ token: data.code }).unwrap();
-            navigate("/user", {
-                state: { success: "Email verified successfully!" },
+            navigate("/login", {
+                state: {
+                    success: "Email verified successfully, You can now login.",
+                },
             });
         } catch (error) {
             handlePopupErrors(error);
