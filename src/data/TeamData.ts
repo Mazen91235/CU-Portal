@@ -5,6 +5,9 @@ import omarNagyImg from "../assets/team/omar-nagy.jpeg";
 import mariamSamehImg from "../assets/team/mariam-sameh.jpg";
 import habibaMahmoudImg from "../assets/team/habiba-mahmoud.png";
 import rojanHamdyImg from "../assets/team/rojan-hamdy.jpg";
+import alaaTarekImg from "../assets/team/alaa-tarek.jpg";
+import ahmedAbozeidImg from "../assets/team/ahmed-abozeid.jpg";
+import ibrahimSherifImg from "../assets/team/ibrahim-sherif.jpeg";
 import anneOmerImg from "../assets/team/anne-omer.jpg";
 import mariamMohamedImg from "../assets/team/mariam-mohamed.png";
 import abdelrhmanMohamedImg from "../assets/team/abdelrhman-mohamed.jpg";
@@ -15,8 +18,9 @@ import hadeerKhalilImg from "../assets/team/hadeer-khalil.jpg";
 import somiaAliImg from "../assets/team/somia-ali.jpg";
 import marwaMohamedImg from "../assets/team/marwa-mohamed.jpg";
 import jasmineIsmailImg from "../assets/team/jasmine-ismail.jpeg";
-import websiteIcon from "../assets/icons/social-website.png";
+import mohammedAshrafImg from "../assets/team/mohammed-ashraf.jpg";
 // import facebookIcon from "../assets/icons/social-facebook.png";
+import websiteIcon from "../assets/icons/social-website.png";
 import linkedinIcon from "../assets/icons/social-linkedin.png";
 import githubIcon from "../assets/icons/social-github.png";
 import behanceIcon from "../assets/icons/social-behance.png";
@@ -132,9 +136,70 @@ export const teamMembers: MemberProps[] = [
         ],
     },
     {
+        name: "Alaa Tarek",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        additionalRoles: [
+            {
+                name: "Software Tester",
+                type: "secondary",
+            },
+        ],
+        university: "Cairo University",
+        image: alaaTarekImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/alaa-tarek-24114b362",
+            },
+            { icon: githubIcon, url: "https://github.com/alaatarek319" },
+        ],
+    },
+    {
+        name: "Ahmed Abozeid",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        additionalRoles: [
+            {
+                name: "Software Tester",
+                type: "secondary",
+            },
+        ],
+        university: "Cairo University",
+        image: ahmedAbozeidImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/ahmedabozeid1",
+            },
+            { icon: githubIcon, url: "https://github.com/Abozeidd12" },
+        ],
+    },
+    {
+        name: "Ibrahim Sherif",
+        title: "Computer Engineer",
+        role: "Backend Developer",
+        university: "Cairo University",
+        image: ibrahimSherifImg,
+        imagePosition: "top",
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/ibrahim-sherif-cmpe",
+            },
+            { icon: githubIcon, url: "https://github.com/Ibrahim-357" },
+        ],
+    },
+    {
         name: "Mohamed Ahmed",
         title: "Computer Engineer",
         role: "Frontend Developer",
+        additionalRoles: [
+            {
+                name: "Software Tester",
+                type: "secondary",
+            },
+        ],
         university: "Cairo University",
         badge: "Former Partner",
         image: mohamedAhmedImg,
@@ -176,7 +241,7 @@ export const teamMembers: MemberProps[] = [
     },
     {
         name: "Abdelrhman Mohamed",
-        title: "Communication Engineer",
+        title: "Network Engineer",
         role: "Frontend Developer",
         university: "Cairo University",
         image: abdelrhmanMohamedImg,
@@ -286,6 +351,24 @@ export const teamMembers: MemberProps[] = [
             {
                 icon: githubIcon,
                 url: "https://github.com/jasminex6",
+            },
+        ],
+    },
+    {
+        name: "Mohammed Ashraf",
+        title: "Computer Engineer",
+        role: "Software Tester",
+        university: "Cairo University",
+        image: mohammedAshrafImg,
+        imagePosition: "top",
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/mohamad-ashraf-5b8a6731a",
+            },
+            {
+                icon: githubIcon,
+                url: ":https://github.com/mahamad-elgohary",
             },
         ],
     },
