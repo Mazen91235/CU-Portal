@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../forms/Button";
+import { Input } from "../forms/Input";
 import styles from "./MaterialForm.module.css";
 import { showToast } from "../../utils/ToastsManager";
 
@@ -39,7 +40,10 @@ export function FetchFromDriveForm({
     };
 
     return (
-        <div className={styles.modalOverlay} onClick={formDisabled ? undefined : onClose}>
+        <div
+            className={styles.modalOverlay}
+            onClick={formDisabled ? undefined : onClose}
+        >
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
                     <h2>Fetch From Drive</h2>
@@ -54,42 +58,44 @@ export function FetchFromDriveForm({
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    <fieldset disabled={formDisabled} className={styles.fieldset}>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="driveUrl" className={styles.label}>
-                            Google Drive URL
-                        </label>
-                        <input
-                            type="url"
-                            id="driveUrl"
-                            className={styles.input}
-                            value={driveUrl}
-                            onChange={(e) => setDriveUrl(e.target.value)}
-                            placeholder="https://drive.google.com/..."
-                            required
-                            autoFocus
-                        />
-                    </div>
+                    <fieldset
+                        disabled={formDisabled}
+                        className={styles.fieldset}
+                    >
+                        <div className={styles.formGroup}>
+                            <Input<Record<string, unknown>>
+                                name="driveUrl"
+                                type="url"
+                                errors={{}}
+                                value={driveUrl}
+                                onChange={(e) => setDriveUrl(e.target.value)}
+                                placeholder="https://drive.google.com/..."
+                                required
+                                label="Google Drive URL"
+                                id="driveUrl"
+                                className={styles.input}
+                            />
+                        </div>
 
-                    <div className={styles.formActions}>
-                        <Button
-                            type="button"
-                            isSubmitting={formDisabled}
-                            text="Cancel"
-                            loadingText="Canceling..."
-                            className={styles.cancelButton}
-                            isDefault={true}
-                            onClick={onClose}
-                        />
-                        <Button
-                            type="submit"
-                            isSubmitting={formDisabled}
-                            text="Fetch Files"
-                            loadingText="Fetching..."
-                            className={styles.submitButton}
-                            isOrange={false}
-                        />
-                    </div>
+                        <div className={styles.formActions}>
+                            <Button
+                                type="button"
+                                isSubmitting={formDisabled}
+                                text="Cancel"
+                                loadingText="Canceling..."
+                                className={styles.cancelButton}
+                                isDefault={true}
+                                onClick={onClose}
+                            />
+                            <Button
+                                type="submit"
+                                isSubmitting={formDisabled}
+                                text="Fetch Files"
+                                loadingText="Fetching..."
+                                className={styles.submitButton}
+                                isOrange={false}
+                            />
+                        </div>
                     </fieldset>
                 </form>
             </div>

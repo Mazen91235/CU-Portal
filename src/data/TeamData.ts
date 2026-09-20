@@ -247,6 +247,19 @@ export const teamMembers: MemberProps[] = [
         ],
     },
     {
+        name: "Marwa Mohamed",
+        title: "Commerce English Sector",
+        role: "UI/UX Designer",
+        university: "Cairo University",
+        image: marwaMohamedImg,
+        socials: [
+            {
+                icon: linkedinIcon,
+                url: "https://www.linkedin.com/in/marwa-mohamed-8565b5222",
+            },
+        ],
+    },
+    {
         name: "Somia Ali",
         title: "Kindergarten",
         role: "UI/UX Designer",
@@ -256,19 +269,6 @@ export const teamMembers: MemberProps[] = [
             {
                 icon: linkedinIcon,
                 url: "https://www.linkedin.com/in/somialiui",
-            },
-        ],
-    },
-    {
-        name: "Marwa Mohamed",
-        title: "Commerce English Sector",
-        role: "UI/UX Designer",
-        university: "cairo university",
-        image: marwaMohamedImg,
-        socials: [
-            {
-                icon: linkedinIcon,
-                url: "https://www.linkedin.com/in/marwa-mohamed-8565b5222",
             },
         ],
     },
