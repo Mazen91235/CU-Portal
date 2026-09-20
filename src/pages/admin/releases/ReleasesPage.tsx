@@ -8,7 +8,7 @@ import type { ReleaseResponseDto } from "../../../types/dtos/ReleaseDtos";
 import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDate } from "../../../utils/Formatter";
 import styles from "./ReleasesPage.module.css";
 import { useNavigate } from "react-router";
 import { buildRedirectUrl } from "../../../utils/Navigation";
@@ -35,7 +35,10 @@ export function ReleasesPage() {
     const setQueryFilter = getFilterSetter("query");
     const versionsFilter = getFilter("release_version_id", "");
     const setVersionsFilter = getFilterSetter("release_version_id");
-    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const dateFromFilter = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
     const setDateToFilter = getFilterSetter("date_to", true);
@@ -227,7 +230,7 @@ export function ReleasesPage() {
                                     {
                                         icon: "calendar",
                                         label: "Release Date",
-                                        value: formatDateTime(release.date),
+                                        value: formatDate(release.date),
                                     },
                                     {
                                         icon: "checkmark-done",
