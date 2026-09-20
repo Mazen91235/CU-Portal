@@ -286,6 +286,12 @@ export const teamMembers: MemberProps[] = [
         name: "Nayra Samy",
         title: "Faculty of Arts",
         role: "UI/UX Designer",
+        additionalRoles: [
+            {
+                name: "Software Tester",
+                type: "secondary",
+            },
+        ],
         university: "Ain Shams University",
         image: nayraSamyImg,
         imagePosition: "-30px",
