@@ -8,8 +8,8 @@ export type Material = {
     name?: string | null;
     material_type?: MaterialType;
     details?: object;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     subject_id?: number | null;
     subject?: Subject | null;
     author_id?: number | null;

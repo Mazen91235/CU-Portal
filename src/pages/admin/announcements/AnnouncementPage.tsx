@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 
 import {
     useLazyGetAnnouncementQuery,
@@ -15,8 +16,7 @@ import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 
@@ -39,13 +39,17 @@ export const AnnouncementPage = () => {
             const result = await getAnnouncement({
                 announcement_id: parseInt(announcementId),
             }).unwrap();
-            setAnnouncement(result.data || null);
+            const announcement = result.data;
+            if (!announcement) {
+                navigate("/admin/announcements", {
+                    state: { error: "Failed to fetch announcement" },
+                });
+                return;
+            }
+            setAnnouncement(announcement);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/admin/announcements", {
-                state: {
-                    error: err.data.message || "Failed to fetch announcement",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch announcement" },
             });
         }
     }, [getAnnouncement, navigate, announcementId]);
@@ -93,7 +97,7 @@ export const AnnouncementPage = () => {
                 icon="announcements"
                 button="Edit Announcement"
                 buttonAction={() =>
-                    navigate(`/admin/announcements/edit/${announcement.id}`)
+                    navigate(buildRedirectUrl(`/admin/announcements/edit/${announcement.id}`))
                 }
                 deleteButton="Delete Announcement"
                 deleteAction={handleDeleteClick}

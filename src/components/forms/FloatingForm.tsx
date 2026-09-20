@@ -9,6 +9,7 @@ type FloatingFormProps<T extends Record<string, unknown>> = {
     onClose?: () => void;
     isOpen: boolean;
     className?: string;
+    disabled?: boolean;
 };
 
 export const FloatingForm = <T extends Record<string, unknown>>({
@@ -19,14 +20,23 @@ export const FloatingForm = <T extends Record<string, unknown>>({
     onClose,
     isOpen,
     className,
+    disabled = false,
 }: FloatingFormProps<T>) => {
     if (!isOpen) return null;
 
     return (
-        <div className={styles["overlay"]} onClick={onClose}>
+        <div
+            className={styles["overlay"]}
+            onClick={(event) => {
+                event.stopPropagation();
+                if (!disabled && event.target === event.currentTarget) {
+                    onClose?.();
+                }
+            }}
+        >
             <div
                 className={`${styles["modal"]} ${className || ""}`}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
             >
                 {title && <h2 className={styles["title"]}>{title}</h2>}
                 <form className={styles["form"]} onSubmit={onSubmit}>
@@ -35,7 +45,9 @@ export const FloatingForm = <T extends Record<string, unknown>>({
                             {errors.root?.message}
                         </span>
                     )}
-                    {children}
+                    <fieldset disabled={disabled} className={styles["fieldset"]}>
+                        {children}
+                    </fieldset>
                 </form>
             </div>
         </div>

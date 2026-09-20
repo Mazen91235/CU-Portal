@@ -24,11 +24,11 @@ export type Task = {
     name?: string | null;
     task_type?: string | null;
     url?: string | null;
-    details?: Omit<TaskDetails, 'urls' | 'links'> | null;
-    deadline?: Date;
-    due_date?: Date | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    details?: Omit<TaskDetails, "urls" | "links"> | null;
+    deadline?: string;
+    due_date?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     subject_id?: number | null;
     subject?: Subject | null;
     author_id?: number;

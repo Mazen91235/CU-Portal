@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetEventQuery,
     useDeleteEventMutation,
@@ -15,8 +16,10 @@ import { LongSection } from "../../../components/section/LongSection";
 import { AttachmentsAndLinksSection } from "../../../components/preview/AttachmentsAndLinksSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
+
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
 
 import styles from "./EventPage.module.css";
 
@@ -36,10 +39,18 @@ export const EventPage = () => {
             const result = await getEvent({
                 event_id: parseInt(eventId),
             }).unwrap();
-            setEvent(result.data || null);
+            const event = result.data;
+            if (!event) {
+                navigate("/admin/events", {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
+            setEvent(event);
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/admin/events");
+            navigate("/admin/events", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
+            });
         }
     }, [eventId, getEvent, navigate]);
 
@@ -79,9 +90,9 @@ export const EventPage = () => {
             <SubBanner
                 title={event.title || "Event Details"}
                 icon="calendar"
-                img={event.logo?.url || undefined}
+                img={event.logo?.url || defaultEventThumbnail}
                 button="Edit Event"
-                buttonAction={() => navigate(`/admin/events/edit/${event.id}`)}
+                buttonAction={() => navigate(buildRedirectUrl(`/admin/events/edit/${event.id}`))}
                 deleteButton="Delete Event"
                 deleteAction={() => setIsDeleteModalOpen(true)}
                 linkText="Back to Events"

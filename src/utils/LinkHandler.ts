@@ -9,7 +9,6 @@ import {
     FaGithub,
     FaLinkedin,
     FaLink,
-    FaSpinner,
     FaUserCircle,
     FaIdCard,
     FaScroll,
@@ -65,9 +64,17 @@ import {
     LuSquarePen,
     LuTrash,
     LuX,
+    LuCircleAlert,
 } from "react-icons/lu";
 import { FiBookOpen, FiHome } from "react-icons/fi";
 import { FaRegNoteSticky } from "react-icons/fa6";
+import { RiGuideLine } from "react-icons/ri";
+import spinnerEllipse11Icon from "../assets/icons/spinner-ellipse-11.svg";
+import spinnerEllipse12Icon from "../assets/icons/spinner-ellipse-12.svg";
+import spinnerEllipse13Icon from "../assets/icons/spinner-ellipse-13.svg";
+import spinnerEllipse14Icon from "../assets/icons/spinner-ellipse-14.svg";
+import spinnerEllipse15Icon from "../assets/icons/spinner-ellipse-15.svg";
+import spinnerEllipse16Icon from "../assets/icons/spinner-ellipse-16.svg";
 
 const apiDomain = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -122,8 +129,8 @@ export const GetImgFromLink = async (path: string): Promise<File> => {
     return new File([blob], "avatar.png", { type: blob.type });
 };
 
-export const GetIcon = (icon: Icon | string): IconType => {
-    const iconMap: Record<string, IconType> = {
+export const GetIcon = (icon: Icon | string): IconType | string => {
+    const iconMap: Record<string, IconType | string> = {
         announcements: LuMegaphone,
         building: LuBuilding,
         calendar: LuCalendar,
@@ -159,14 +166,15 @@ export const GetIcon = (icon: Icon | string): IconType => {
 
         time: LuClock,
         tracker: FaGraduationCap,
+        "warning-circle": LuCircleAlert,
         "view-icon": LuEye,
 
-        "spinner-ellipse-11": FaSpinner,
-        "spinner-ellipse-12": FaSpinner,
-        "spinner-ellipse-13": FaSpinner,
-        "spinner-ellipse-14": FaSpinner,
-        "spinner-ellipse-15": FaSpinner,
-        "spinner-ellipse-16": FaSpinner,
+        "spinner-ellipse-11": spinnerEllipse11Icon,
+        "spinner-ellipse-12": spinnerEllipse12Icon,
+        "spinner-ellipse-13": spinnerEllipse13Icon,
+        "spinner-ellipse-14": spinnerEllipse14Icon,
+        "spinner-ellipse-15": spinnerEllipse15Icon,
+        "spinner-ellipse-16": spinnerEllipse16Icon,
 
         "sidebar-dropdown": LuChevronDown,
         "sidebar-dropup": LuChevronUp,
@@ -185,13 +193,14 @@ export const GetIcon = (icon: Icon | string): IconType => {
         "sidebar-grades": LuBadge,
         "sidebar-study-tracker": LuRadar,
         "sidebar-cv-generator": LuFileText,
-
+        "sidebar-weekly-guide": RiGuideLine,
         "sidebar-roadmaps": LuMapPin,
         "sidebar-discussion": LuMessagesSquare,
         "sidebar-profile-settings": LuUserCog,
         "sidebar-academic-settings": LuSettings,
         "sidebar-registered-courses": FiBookOpen,
         "sidebar-logout": LuLogOut,
+        "sidebar-releases": LuFileText,
 
         "sidebar-admin-faculties": LuLandmark,
         "sidebar-admin-departments": LuBuilding,

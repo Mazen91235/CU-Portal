@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,7 +12,6 @@ import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
 import { DateInput } from "../../../components/forms/DateInput";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
@@ -20,7 +20,7 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateExam.module.css";
 
@@ -30,7 +30,7 @@ const examSchema = z.object({
     exam_type: z.string().optional(),
     due_date: z.string().min(1, "Exam date is required"),
     start_time: z.string().optional(),
-    duration: z.string().optional(),
+    duration: z.number().nonnegative("Duration cannot be negative").optional(),
     location: z.string().optional(),
     exam_format: z.string().optional(),
     exam_weight: z.string().optional(),
@@ -42,6 +42,8 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 export const CreateExam = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/exams");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -76,7 +78,7 @@ export const CreateExam = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { error: err.message || "Failed to fetch subjects." },
             });
         }
@@ -91,15 +93,12 @@ export const CreateExam = () => {
             const examData = {
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.due_date,
-                    data.start_time || "00:00",
-                )!.toISOString(),
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.due_date, data.start_time || "00:00"),
+                )!,
                 details: {
                     exam_type: data.exam_type || undefined,
-                    duration: data.duration
-                        ? parseFloat(data.duration)
-                        : undefined,
+                    duration: data.duration,
                     location: data.location || undefined,
                     exam_format: data.exam_format as
                         | "MCQ"
@@ -116,7 +115,7 @@ export const CreateExam = () => {
             };
 
             await createExam(examData).unwrap();
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { success: "Exam created successfully!" },
             });
         } catch (error) {
@@ -125,7 +124,7 @@ export const CreateExam = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/exams");
+        navigate(redirectUrl);
     };
 
     return (
@@ -139,7 +138,7 @@ export const CreateExam = () => {
                 description="Add a new exam for your students"
                 icon="task"
                 linkText="Back to Exams"
-                linkTo="/admin/exams"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -163,20 +162,23 @@ export const CreateExam = () => {
                             errors={errors}
                             disabled={isLoading}
                         />
-                        <SearchableInput
+                        <Select
                             label="Subject"
-                            placeholder="Select a subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                         <Select
                             label="Exam Type"
                             register={register}
@@ -220,12 +222,15 @@ export const CreateExam = () => {
                             />
                         </div>
                         <Input
-                            label="Duration (hours)"
+                            label="Duration (minutes)"
                             type="number"
                             placeholder="Enter exam duration"
                             register={register}
                             name="duration"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={isLoading}
                         />
                         <Input

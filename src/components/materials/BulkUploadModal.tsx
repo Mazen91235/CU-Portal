@@ -24,8 +24,10 @@ export function BulkUploadModal({
     const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
+    const formDisabled = isUploading || uploadFileToDrive.isGoogleAccessTokenLoading;
 
     const handleRemoveFile = (index: number) => {
+        if (formDisabled) return;
         setFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
@@ -68,7 +70,7 @@ export function BulkUploadModal({
     };
 
     const handleSubmit = async () => {
-        if (files.length === 0 || isUploading) return;
+        if (files.length === 0 || formDisabled) return;
 
         setIsUploading(true);
         onClose();
@@ -91,11 +93,11 @@ export function BulkUploadModal({
     }
 
     return (
-        <div className={styles.overlay} onClick={onClose}>
+        <div className={styles.overlay} onClick={formDisabled ? undefined : onClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
                     <h2>Upload Files</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>
+                    <button className={styles.closeBtn} onClick={onClose} disabled={formDisabled}>
                         <i className="fa-solid fa-times"></i>
                     </button>
                 </div>
@@ -103,9 +105,9 @@ export function BulkUploadModal({
                 <div className={styles.content}>
                     <div
                         className={`${styles.dropArea} ${isDragOver ? styles.dragover : ""}`}
-                        onDragOver={handleDragOver}
-                        onMouseLeave={handleDragLeave}
-                        onDrop={handleDrop}
+                        onDragOver={(e) => { if (formDisabled) return; handleDragOver(e); }}
+                        onMouseLeave={(e) => { if (formDisabled) return; handleDragLeave(e); }}
+                        onDrop={(e) => { if (formDisabled) return; handleDrop(e); }}
                     >
                         <i className="fa-solid fa-cloud-arrow-up"></i>
                         <p>Drag more files here or click to browse</p>
@@ -114,6 +116,7 @@ export function BulkUploadModal({
                             multiple
                             onChange={handleFileInput}
                             className={styles.fileInput}
+                            disabled={formDisabled}
                         />
                     </div>
 
@@ -141,6 +144,7 @@ export function BulkUploadModal({
                                     <button
                                         className={styles.removeBtn}
                                         onClick={() => handleRemoveFile(index)}
+                                        disabled={formDisabled}
                                         title="Remove file"
                                     >
                                         <i className="fa-solid fa-times"></i>
@@ -155,14 +159,14 @@ export function BulkUploadModal({
                     <button
                         className={styles.cancelBtn}
                         onClick={onClose}
-                        disabled={isUploading}
+                        disabled={formDisabled}
                     >
                         Cancel
                     </button>
                     <button
                         className={styles.submitBtn}
                         onClick={handleSubmit}
-                        disabled={files.length === 0 || isUploading}
+                        disabled={files.length === 0 || formDisabled}
                     >
                         <i className="fa-solid fa-upload me-2"></i>
                         Upload {files.length} file

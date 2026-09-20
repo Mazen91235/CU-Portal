@@ -51,6 +51,7 @@ export default function useGetUser() {
                             "department",
                             "year",
                             "role",
+                            "pending_user",
                             "user_subject_links.subject",
                             "avatar",
                             "notes",

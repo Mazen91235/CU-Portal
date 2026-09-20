@@ -65,7 +65,7 @@ export const AdminLogAPI = createApi({
 
 export const {
     useLazyGetLogsQuery,
-    useGetLogActionsQuery,
-    useGetLogEntitiesQuery,
+    useLazyGetLogActionsQuery,
+    useLazyGetLogEntitiesQuery,
     useLazyGetLogQuery,
 } = AdminLogAPI;

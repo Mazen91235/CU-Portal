@@ -9,3 +9,7 @@ export type NotificationResponseDto = {
     url?: string | null;
     created_at?: string | null;
 };
+
+export type NotificationMarkManyAsSeenDto = {
+    notification_ids: number[];
+};

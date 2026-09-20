@@ -88,8 +88,10 @@ export const VerifyEmailPage = () => {
     const onSubmit = async (data: VerifyEmailFormData) => {
         try {
             await verifyEmail({ token: data.code }).unwrap();
-            navigate("/user", {
-                state: { success: "Email verified successfully!" },
+            navigate("/login", {
+                state: {
+                    success: "Email verified successfully, You can now login.",
+                },
             });
         } catch (error) {
             handlePopupErrors(error);
@@ -157,7 +159,10 @@ export const VerifyEmailPage = () => {
                         </div>
                         <div className={styles.emailContainer}>{userEmail}</div>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={styles.inputGroup}>
+                            <fieldset
+                                disabled={isSubmitting}
+                                className={styles.inputGroup}
+                            >
                                 <Input
                                     register={register}
                                     name="code"
@@ -166,13 +171,13 @@ export const VerifyEmailPage = () => {
                                     errors={errors}
                                     disabled={isSubmitting}
                                 />
-                            </div>
-                            <Button
-                                text="Verify Email"
-                                loadingText="Verifying..."
-                                isSubmitting={isSubmitting}
-                                isOrange={false}
-                            />
+                                <Button
+                                    text="Verify Email"
+                                    loadingText="Verifying..."
+                                    isSubmitting={isSubmitting}
+                                    isOrange={false}
+                                />
+                            </fieldset>
                         </form>
                         <div className={styles.resendContainer}>
                             <span>Didn't receive the code?</span>
@@ -183,7 +188,7 @@ export const VerifyEmailPage = () => {
                                 type="button"
                             >
                                 {canResendAfter > 0
-                                    ? `Resend Code (${canResendAfter}s)`
+                                    ? `Resend Code (${Math.ceil(canResendAfter)}s)`
                                     : "Resend code"}
                             </button>
                         </div>

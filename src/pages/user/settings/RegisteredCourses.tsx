@@ -13,6 +13,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { Layout } from "../../../components/layout/Layout";
 import IconComponent from "../../../components/IconComponent";
 import { Search } from "../../../components/forms/Search";
@@ -43,9 +44,13 @@ export const RegisteredCourses = () => {
     >([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [selectedCourse, setSelectedCourse] =
         useState<SubjectResponseDto | null>(null);
     const [action, setAction] = useState<"register" | "unregister" | null>(
@@ -115,23 +120,16 @@ export const RegisteredCourses = () => {
         }
     }, [getYears]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchEnrolledCourses(),
-                fetchAvailableCourses(),
-                fetchDepartments(),
-                fetchYears(),
-            ]),
-        [
-            fetchEnrolledCourses,
-            fetchAvailableCourses,
-            fetchDepartments,
-            fetchYears,
-        ],
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authCoursesQuery = useCallback(
+        () => Promise.all([fetchEnrolledCourses(), fetchAvailableCourses()]),
+        [fetchEnrolledCourses, fetchAvailableCourses],
     );
 
-    useAuthQuery(authQueryParams);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authCoursesQuery);
 
     const generalDepartment = useMemo(
         () =>
@@ -191,30 +189,28 @@ export const RegisteredCourses = () => {
     }, [user?.year?.year, years]);
 
     useEffect(() => {
-        if (!user?.department?.id) {
-            setDepartmentFilter((current) => current || "");
+        const userDepartmentId = user?.department?.id;
+
+        if (!userDepartmentId || departments.length === 0) {
+            setDepartmentFilter("");
             return;
         }
 
         setDepartmentFilter(
-            (current) => current || user.department?.id?.toString() || "",
+            (current) => current || userDepartmentId.toString() || "",
         );
-    }, [user?.department?.id]);
+    }, [setDepartmentFilter, user, departments]);
 
     useEffect(() => {
-        const userYear = user?.year?.year;
+        const userYearId = user?.year?.id;
 
-        if (userYear == null) {
-            setYearFilter((current) => current || "");
+        if (!userYearId || years.length === 0) {
+            setYearFilter("");
             return;
         }
 
-        const currentYear = years.find((year) => year.year === userYear);
-
-        setYearFilter(
-            (current) => current || currentYear?.id?.toString() || "",
-        );
-    }, [user?.year?.year, years]);
+        setYearFilter((current) => current || userYearId.toString() || "");
+    }, [setYearFilter, user, years]);
 
     const handleConfirm = useCallback(async () => {
         if (!selectedCourse?.id) return;
@@ -350,7 +346,7 @@ export const RegisteredCourses = () => {
                                 <div className={styles.searchContainer}>
                                     <Search
                                         placeholder="Search by course name or code"
-                                        setValue={setSearchQuery}
+                                        setValue={setSearchQuery} value={searchQuery}
                                     />
                                 </div>
 

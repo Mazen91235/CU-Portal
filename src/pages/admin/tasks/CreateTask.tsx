@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,7 +12,7 @@ import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
 import { DateInput } from "../../../components/forms/DateInput";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
@@ -24,7 +25,7 @@ import {
 } from "../../../hooks/useHandleProcesses";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateTask.module.css";
 import { Heading } from "../../../components/heading/Heading";
@@ -44,6 +45,8 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 export const CreateTask = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/tasks");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -63,7 +66,11 @@ export const CreateTask = () => {
         resolver: zodResolver(taskSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -80,7 +87,7 @@ export const CreateTask = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { error: err.message || "Failed to fetch subjects." },
             });
         }
@@ -109,7 +116,10 @@ export const CreateTask = () => {
                 setIsUploading(true);
                 const uploaded = await uploadFiles(data.files as FileList);
                 urls = uploaded;
-                uploaded.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                uploaded
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -117,9 +127,8 @@ export const CreateTask = () => {
                 name: data.title,
                 url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.deadline_date,
-                    data.deadline_time,
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.deadline_date, data.deadline_time),
                 )!,
                 details: {
                     urls: urls ? urls.split(", ") : [],
@@ -138,7 +147,7 @@ export const CreateTask = () => {
             };
 
             await createTask(taskData).unwrap();
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { success: "Task created successfully!" },
             });
         } catch (error) {
@@ -150,7 +159,7 @@ export const CreateTask = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/tasks");
+        navigate(redirectUrl);
     };
 
     return (
@@ -164,7 +173,7 @@ export const CreateTask = () => {
                 description="Add a new assignment for your students"
                 icon="task"
                 linkText="Back to Tasks"
-                linkTo="/admin/tasks"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -186,20 +195,23 @@ export const CreateTask = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <SearchableInput
+                        <Select
                             label="Subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading || isUploading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                            placeholder="Select a subject"
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div className={styles.formGroup}>

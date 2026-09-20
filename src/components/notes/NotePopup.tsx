@@ -1,5 +1,5 @@
 import type { NoteResponseDto } from "../../types/dtos/NoteDtos";
-import { formatDate } from "../../utils/Formatter";
+import { formatDate, formatString } from "../../utils/Formatter";
 import styles from "./NotePopup.module.css";
 
 export const NotePopup = ({
@@ -25,14 +25,14 @@ export const NotePopup = ({
                 <div className={styles.header}>
                     <div>
                         <span className={styles.badge}>Note</span>
-                        <h2>{note.title || "Untitled note"}</h2>
+                        <h2>{formatString(note.title || "Untitled note", "PageTitle")}</h2>
                     </div>
                     <button type="button" className={styles.close} onClick={onClose}>
                         ×
                     </button>
                 </div>
                 {note.date && <div className={styles.date}>{formatDate(note.date)}</div>}
-                <div className={styles.content}>{note.content || ""}</div>
+                <div className={styles.content}>{formatString(note.content || "", "Content")}</div>
             </div>
         </div>
     );

@@ -1,7 +1,10 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
-import type { NotificationResponseDto } from "../../../types/dtos/NotificationDtos";
+import type {
+    NotificationResponseDto,
+    NotificationMarkManyAsSeenDto,
+} from "../../../types/dtos/NotificationDtos";
 import type { UserNotificationSearchDto } from "../../../types/dtos/UserNotificationDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
 import {
@@ -38,14 +41,15 @@ export const NotificationAPI = createApi({
                 },
             }),
         }),
-        markNotificationAsSeen: builder.mutation<
-            GenericAPIResponse<boolean>,
-            { notification_id: number }
+        markNotificationsAsSeen: builder.mutation<
+            GenericAPIResponse,
+            NotificationMarkManyAsSeenDto
         >({
-            query: ({ notification_id }) => ({
-                url: `/${notification_id}`,
+            query: (data) => ({
+                url: `/seen`,
                 method: "PATCH",
                 credentials: "include",
+                body: data,
             }),
         }),
     }),
@@ -53,5 +57,5 @@ export const NotificationAPI = createApi({
 
 export const {
     useLazyGetNotificationsQuery,
-    useMarkNotificationAsSeenMutation,
+    useMarkNotificationsAsSeenMutation,
 } = NotificationAPI;

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
   useLazyGetExamQuery,
   useDeleteExamMutation,
@@ -13,8 +14,7 @@ import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 
@@ -36,11 +36,17 @@ export const ExamPage = () => {
       const result = await getExam({
         exam_id: parseInt(examId),
       }).unwrap();
-      setExam(result.data || null);
+      const exam = result.data;
+      if (!exam) {
+        navigate("/admin/exams", {
+          state: { error: "Failed to fetch exam" },
+        });
+        return;
+      }
+      setExam(exam);
     } catch (error) {
-      const err = error as DefaultAPIResponse;
       navigate("/admin/exams", {
-        state: { error: err.data.message || "Failed to fetch exam" },
+        state: { error: getErrorMessage(error) || "Failed to fetch exam" },
       });
     }
   }, [getExam, navigate, examId]);
@@ -81,7 +87,7 @@ export const ExamPage = () => {
         title={exam.name || "Exam Details"}
         icon="task"
         button="Edit Exam"
-        buttonAction={() => navigate(`/admin/exams/edit/${exam.id}`)}
+        buttonAction={() => navigate(buildRedirectUrl(`/admin/exams/edit/${exam.id}`))}
         deleteButton="Delete Exam"
         deleteAction={handleDeleteClick}
         linkText="Back to Exams"
@@ -103,7 +109,7 @@ export const ExamPage = () => {
           <StatCard
             type="Duration"
             value={
-              exam.details?.duration ? `${exam.details.duration} hours` : "N/A"
+              exam.details?.duration ? `${exam.details.duration} minutes` : "N/A"
             }
             icon="clock"
           />
@@ -146,15 +152,15 @@ export const ExamPage = () => {
                 },
                 {
                   label: "Faculty:",
-                  value: exam.faculty?.name || "N/A",
+                  value: exam.subject?.faculty?.name || "N/A",
                 },
                 {
                   label: "Department:",
-                  value: exam.department?.name || "N/A",
+                  value: exam.subject?.department?.name || "N/A",
                 },
                 {
                   label: "Year:",
-                  value: exam.year?.year?.toString() || "N/A",
+                  value: exam.subject?.year?.year?.toString() || "N/A",
                 },
                 {
                   label: "Exam Type:",

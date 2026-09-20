@@ -54,6 +54,12 @@ export const Day = ({
             }
             <span className={styles["day-number"]}>{day}</span>
             <div className={styles["day-dots"]}>
+                {eventTypes.note && (
+                    <span
+                        className={`${styles["event-dot"]} ${styles["dot-note"]} ${styles["mobile-note-dot"]}`}
+                        aria-label="Notes"
+                    />
+                )}
                 {eventTypes.assignment && (
                     <span
                         className={`${styles["event-dot"]} ${styles["dot-assignment"]}`}

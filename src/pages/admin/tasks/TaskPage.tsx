@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 
 import {
     useLazyGetTaskQuery,
@@ -16,8 +17,7 @@ import { LongSection } from "../../../components/section/LongSection";
 import { SubmissionSection } from "../../../components/section/SubmissionSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 
 import { formatDateTime } from "../../../utils/Formatter";
 
@@ -38,11 +38,17 @@ export const TaskPage = () => {
             const result = await getTask({
                 task_id: parseInt(taskId),
             }).unwrap();
-            setTask(result.data || null);
+            const task = result.data;
+            if (!task) {
+                navigate("/admin/tasks", {
+                    state: { error: "Failed to fetch task" },
+                });
+                return;
+            }
+            setTask(task);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/admin/tasks", {
-                state: { error: err.data.message || "Failed to fetch task" },
+                state: { error: getErrorMessage(error) || "Failed to fetch task" },
             });
         }
     }, [getTask, navigate, taskId]);
@@ -83,7 +89,7 @@ export const TaskPage = () => {
                 title={task.name || "Task Details"}
                 icon="task"
                 button="Edit Task"
-                buttonAction={() => navigate(`/admin/tasks/edit/${task.id}`)}
+                buttonAction={() => navigate(buildRedirectUrl(`/admin/tasks/edit/${task.id}`))}
                 deleteButton="Delete Task"
                 deleteAction={handleDeleteClick}
                 linkText="Back to Tasks"
@@ -143,7 +149,8 @@ export const TaskPage = () => {
                                 {
                                     label: "Year:",
                                     value:
-                                        task.subject?.year?.toString() || "N/A",
+                                        task.subject?.year?.year?.toString() ||
+                                        "N/A",
                                 },
                             ]}
                         />

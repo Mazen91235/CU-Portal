@@ -4,32 +4,51 @@ import { handlePopupErrors } from "../utils/ErrorHandling";
 import { validateUserAccess } from "../utils/Validators";
 import { useLocation } from "react-router";
 import { useLogin } from "./useLogin";
-import { usePageLoading } from "./usePageLoading";
+import { useLoading } from "../contexts/hooks/useLoading";
+
 export function useAuthQuery<TTriggerArg, TReturn>(
     trigger: (arg?: TTriggerArg) => Promise<TReturn>,
 ) {
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
-    const location = useLocation();
-    const startPageLoading = usePageLoading();
+    const { pathname } = useLocation();
+    const { startLoading, stopLoading } = useLoading();
 
     useEffect(() => {
-        (async () => {
-            const loggedIn = await isLoggedIn();
-            const path = location.pathname;
-            if (
-                !loggedIn ||
-                !user ||
-                !validateUserAccess(user.level, path, user.role?.level)
-            )
-                return;
+        startLoading();
+
+        const runQuery = async () => {
             try {
-                await trigger().finally(() => startPageLoading());
+                const loggedIn = await isLoggedIn();
+
+                if (
+                    !loggedIn ||
+                    !user ||
+                    !validateUserAccess(
+                        user.level,
+                        pathname,
+                        user.role?.level,
+                    )
+                )
+                    return;
+
+                await trigger();
             } catch (error) {
                 handlePopupErrors(error);
+            } finally {
+                stopLoading();
             }
-        })();
-    }, [user, isLoggedIn, trigger, startPageLoading, location.pathname]);
+        };
+
+        void runQuery();
+    }, [
+        user,
+        isLoggedIn,
+        trigger,
+        startLoading,
+        stopLoading,
+        pathname,
+    ]);
 }
 
 export default useAuthQuery;

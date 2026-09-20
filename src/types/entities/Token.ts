@@ -1,8 +1,8 @@
 export type Token = {
     id?: number;
-    token?: Date;
+    token?: string;
     is_valid?: boolean;
-    expire_at?: Date | null;
+    expire_at?: string | null;
     type?: number;
     details?: object;
-}
+};

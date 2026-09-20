@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -15,13 +16,16 @@ import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import styles from "./RolesPage.module.css";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
 
 export const RolesPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [roles, setRoles] = useState<RoleResponseDto[]>([]);
     const [permissionsCount, setPermissionsCount] = useState<number>(0);
     const [filteredRoles, setFilteredRoles] = useState<RoleResponseDto[]>([]);
@@ -42,7 +46,7 @@ export const RolesPage = () => {
         try {
             const result = await getRoles({
                 data: { query: searchQuery },
-                includes: ["role_links.exact_role"],
+                includes: ["role_links.exact_role", "users"],
             }).unwrap();
             setRoles(result.data || []);
             setFilteredRoles(result.data || []);
@@ -156,6 +160,7 @@ export const RolesPage = () => {
                 <Search
                     placeholder="Search roles..."
                     setValue={setSearchQuery}
+                    value={searchQuery}
                 />
             </div>
 
@@ -177,7 +182,7 @@ export const RolesPage = () => {
                             },
                         ]}
                         button="View Role"
-                        buttonAction={() => navigate(`/admin/roles/${role.id}`)}
+                        buttonAction={() => navigate(buildRedirectUrl(`/admin/roles/${role.id}`))}
                         hasOptions={true}
                         editable={true}
                         deletable={true}

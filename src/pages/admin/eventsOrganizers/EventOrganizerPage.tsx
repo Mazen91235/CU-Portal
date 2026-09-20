@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -15,7 +16,9 @@ import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganiz
 import { formatDateTime } from "../../../utils/Formatter";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventOrganizerPage.module.css";
 
 export const EventOrganizerPage = () => {
@@ -31,11 +34,20 @@ export const EventOrganizerPage = () => {
             const result = await getEventOrganizer({
                 event_organizer_id: Number(eventOrganizerId),
             }).unwrap();
-            setOrganizer(result.data || null);
+            const organizer = result.data;
+            if (!organizer) {
+                navigate("/admin/event-organizers", {
+                    state: { error: "Failed to fetch event organizer" },
+                });
+                return;
+            }
+            setOrganizer(organizer);
         } catch (error) {
-            handlePopupErrors(error);
+            navigate("/admin/event-organizers", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event organizer" },
+            });
         }
-    }, [getEventOrganizer, eventOrganizerId]);
+    }, [getEventOrganizer, eventOrganizerId, navigate]);
 
     useAuthQuery(fetchOrganizer);
 
@@ -70,7 +82,7 @@ export const EventOrganizerPage = () => {
                 linkTo="/admin/event-organizers"
                 button="Edit Organizer"
                 buttonAction={() =>
-                    navigate(`/admin/event-organizers/edit/${organizer.id}`)
+                    navigate(buildRedirectUrl(`/admin/event-organizers/edit/${organizer.id}`))
                 }
             />
             <main className={styles.container}>
@@ -112,7 +124,7 @@ export const EventOrganizerPage = () => {
                             <Card
                                 key={event.id}
                                 title={event.title || ""}
-                                img={event.logo?.url || ""}
+                                img={event.logo?.url || defaultEventThumbnail}
                                 badge={
                                     event.price === 0
                                         ? "Free"
@@ -145,7 +157,7 @@ export const EventOrganizerPage = () => {
                                 ]}
                                 button="View Event"
                                 buttonAction={() =>
-                                    navigate(`/admin/events/${event.id}`)
+                                    navigate(buildRedirectUrl(`/admin/events/${event.id}`))
                                 }
                                 hasOptions
                                 sharable

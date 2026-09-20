@@ -4,7 +4,7 @@ import { PageSeo } from "../../../components/PageSeo";
 import { NotificationItem } from "../../../components/notifications/NotificationItem";
 import {
     useLazyGetNotificationsQuery,
-    useMarkNotificationAsSeenMutation,
+    useMarkNotificationsAsSeenMutation,
 } from "../../../services/apis/user/NotificationAPIs";
 import type { NotificationResponseDto } from "../../../types/dtos/NotificationDtos";
 import { showToast } from "../../../utils/ToastsManager";
@@ -15,7 +15,7 @@ import styles from "./NotificationsPage.module.css";
 
 export const NotificationsPage = () => {
     const [getNotifications, { isFetching }] = useLazyGetNotificationsQuery();
-    const [markNotificationAsSeen] = useMarkNotificationAsSeenMutation();
+    const [markNotificationsAsSeen] = useMarkNotificationsAsSeenMutation();
     const [readPage, setReadPage] = useState(1);
     const [hasReadNextPage, setHasReadNextPage] = useState(true);
     const [unreadNotifications, setUnreadNotifications] = useState<
@@ -24,6 +24,7 @@ export const NotificationsPage = () => {
     const [readNotifications, setReadNotifications] = useState<
         NotificationResponseDto[]
     >([]);
+    const [isMarkingAsSeen, setIsMarkingAsSeen] = useState(false);
 
     const fetchNotifications = useCallback(async () => {
         try {
@@ -68,8 +69,9 @@ export const NotificationsPage = () => {
     const handleMarkAsRead = async (notificationId?: number) => {
         if (!notificationId) return;
         try {
-            await markNotificationAsSeen({
-                notification_id: notificationId,
+            setIsMarkingAsSeen(true);
+            await markNotificationsAsSeen({
+                notification_ids: [notificationId],
             }).unwrap();
             const notification = unreadNotifications.find(
                 (n) => n.id === notificationId,
@@ -83,6 +85,8 @@ export const NotificationsPage = () => {
             showToast("success", "Success", "Notification marked as read");
         } catch (error) {
             handlePopupErrors(error);
+        } finally {
+            setIsMarkingAsSeen(false);
         }
     };
 
@@ -92,17 +96,18 @@ export const NotificationsPage = () => {
             return;
         }
         try {
+            setIsMarkingAsSeen(true);
             const unreadIds = unreadNotifications.map((n) => n.id || 0) || [];
-            await Promise.all(
-                unreadIds.map((id) =>
-                    markNotificationAsSeen({ notification_id: id }).unwrap(),
-                ),
-            );
+            await markNotificationsAsSeen({
+                notification_ids: unreadIds,
+            }).unwrap();
             setReadNotifications(unreadNotifications.concat(readNotifications));
             setUnreadNotifications([]);
             showToast("success", "Success", "All notifications marked as read");
         } catch (error) {
             handlePopupErrors(error);
+        } finally {
+            setIsMarkingAsSeen(false);
         }
     };
 
@@ -132,7 +137,10 @@ export const NotificationsPage = () => {
                         <button
                             className={styles.markAllReadBtn}
                             onClick={handleMarkAllAsRead}
-                            disabled={unreadNotifications.length === 0}
+                            disabled={
+                                unreadNotifications.length === 0 ||
+                                isMarkingAsSeen
+                            }
                         >
                             Mark All As Read
                         </button>

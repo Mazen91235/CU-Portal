@@ -42,6 +42,14 @@ export const DateInput = <T extends Record<string, unknown>>({
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const containerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{
+        left: number;
+        top: number;
+        placement: "above" | "below";
+    } | null>(null);
+    const VIEWPORT_MARGIN = 16;
+    const DROPDOWN_WIDTH = 280;
     const formValue = useWatch({ control, name });
 
     useEffect(() => {
@@ -58,6 +66,43 @@ export const DateInput = <T extends Record<string, unknown>>({
         setDisplayDate(formatDateWithWeekday(value));
         setCurrentMonth(selected);
     }, [formValue]);
+
+    const updateDropdownPosition = () => {
+        const trigger = containerRef.current;
+        if (!trigger) return;
+        const rect = trigger.getBoundingClientRect();
+        const maxLeft = Math.max(
+            VIEWPORT_MARGIN,
+            window.innerWidth - DROPDOWN_WIDTH - VIEWPORT_MARGIN,
+        );
+        const dropdownHeight = dropdownRef.current?.offsetHeight || 360;
+        const spaceBelow = window.innerHeight - rect.bottom - VIEWPORT_MARGIN;
+        const spaceAbove = rect.top - VIEWPORT_MARGIN;
+        const placement =
+            spaceBelow < dropdownHeight + 8 && spaceAbove > spaceBelow
+                ? "above"
+                : "below";
+
+        setDropdownPosition({
+            left: Math.min(Math.max(rect.left, VIEWPORT_MARGIN), maxLeft),
+            top:
+                placement === "above"
+                    ? Math.max(VIEWPORT_MARGIN, rect.top - dropdownHeight - 8)
+                    : rect.bottom + 8,
+            placement,
+        });
+    };
+
+    const toggleDropdown = () => {
+        if (disabled) return;
+        setIsOpen((open) => {
+            const next = !open;
+            if (next) {
+                requestAnimationFrame(updateDropdownPosition);
+            }
+            return next;
+        });
+    };
 
     const handleDateSelect = (date: Date) => {
         const dateString = formatCalendarDay(date);
@@ -139,6 +184,10 @@ export const DateInput = <T extends Record<string, unknown>>({
     };
 
     useEffect(() => {
+        const handleViewportChange = () => {
+            if (isOpen) updateDropdownPosition();
+        };
+
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 containerRef.current &&
@@ -149,10 +198,18 @@ export const DateInput = <T extends Record<string, unknown>>({
         };
 
         document.addEventListener("mousedown", handleClickOutside);
+        window.addEventListener("resize", handleViewportChange);
+        window.addEventListener("scroll", handleViewportChange, true);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            window.removeEventListener("resize", handleViewportChange);
+            window.removeEventListener("scroll", handleViewportChange, true);
         };
-    }, []);
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) updateDropdownPosition();
+    }, [isOpen]);
 
     return (
         <div className={styles.container} ref={containerRef}>
@@ -162,7 +219,7 @@ export const DateInput = <T extends Record<string, unknown>>({
             <button
                 type="button"
                 className={`${styles.dateFilter} ${isOpen ? styles.active : ""}`}
-                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onClick={toggleDropdown}
                 disabled={disabled}
             >
                 <svg
@@ -185,11 +242,25 @@ export const DateInput = <T extends Record<string, unknown>>({
                     {displayDate || placeholder}
                 </div>
             </button>
-            <input type="hidden" {...register(name)} value={selectedDate} />
+            <input
+                id={`form-${String(name)}-field`}
+                type="hidden"
+                {...register(name)}
+                value={selectedDate}
+            />
 
             {isOpen && (
                 <div
-                    className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""}`}
+                    ref={dropdownRef}
+                    className={`${styles.calendarDropdown} ${startRight ? styles.startRight : ""} ${dropdownPosition?.placement === "above" ? styles.openAbove : ""}`}
+                    style={
+                        dropdownPosition
+                            ? {
+                                  left: dropdownPosition.left,
+                                  top: dropdownPosition.top,
+                              }
+                            : undefined
+                    }
                 >
                     <div className={styles.calendarHeader}>
                         <button

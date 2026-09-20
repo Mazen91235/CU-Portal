@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,25 +27,12 @@ import {
     useRemoveUploadedFiles,
 } from "../../../hooks/useHandleProcesses";
 import type { FileDataWithExisting } from "../../../types/entities/Attachment";
-import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, getErrorMessage } from "../../../utils/ErrorHandling";
 import styles from "./EditEventOrganizer.module.css";
 
 const schema = z.object({
     name: z.string().trim().min(1, "Organizer name is required"),
-    logo: z
-        .any()
-        .refine(
-            (value) =>
-                (typeof value === "string" && value.length > 0) ||
-                value instanceof File ||
-                Boolean(
-                    value &&
-                    typeof value === "object" &&
-                    "length" in value &&
-                    Number(value.length) > 0,
-                ),
-            "Logo is required",
-        ),
+    logo: z.any().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -67,6 +55,8 @@ const parseLinks = (value?: string) =>
 export const EditEventOrganizer = () => {
     const { eventOrganizerId } = useParams<{ eventOrganizerId: string }>();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/event-organizers");
     const [getEventOrganizer, { isFetching }] = useLazyGetEventOrganizerQuery();
     const [updateEventOrganizer, { isLoading }] =
         useUpdateEventOrganizerMutation();
@@ -88,7 +78,7 @@ export const EditEventOrganizer = () => {
         setError,
         setValue,
     } = useForm<FormData>({ resolver: zodResolver(schema) });
-    const busy = isSubmitting || isLoading || isUploading || isFetching;
+    const busy = isSubmitting || isLoading || isUploading || isFetching || uploadFile.isGoogleAccessTokenLoading;
 
     const fetchOrganizer = useCallback(async () => {
         if (!eventOrganizerId) return;
@@ -97,7 +87,12 @@ export const EditEventOrganizer = () => {
                 event_organizer_id: Number(eventOrganizerId),
             }).unwrap();
             const data = result.data;
-            if (!data) return;
+            if (!data) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch event organizer" },
+                });
+                return;
+            }
             setValue("name", data.name || "");
             const logoUrl = data.logo?.url || null;
             setExistingLogoUrl(logoUrl);
@@ -120,15 +115,19 @@ export const EditEventOrganizer = () => {
                         (attachment) => !attachment.is_file && attachment.url,
                     )
                     .map((attachment) => ({
-                        title: attachment.details?.link_title || "Link",
+                        title: attachment.details?.link_title || "Untitled Link",
                         url: attachment.url || "",
                         isExisting: true,
                     })),
             );
         } catch (error) {
-            handlePopupErrors(error);
+            navigate(redirectUrl, {
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch event organizer",
+                },
+            });
         }
-    }, [getEventOrganizer, eventOrganizerId, setValue]);
+    }, [getEventOrganizer, eventOrganizerId, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => fetchOrganizer(),
@@ -152,14 +151,6 @@ export const EditEventOrganizer = () => {
                 logoUrl = (await uploadFile(logoValue[0])) || "";
                 if (logoUrl) uploadedUrls.push(logoUrl);
             }
-            if (!logoUrl) {
-                setError("logo", {
-                    type: "required",
-                    message: "Logo is required",
-                });
-                return;
-            }
-
             const newUrls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
                 const url = await uploadFile(file);
@@ -176,7 +167,7 @@ export const EditEventOrganizer = () => {
                 event_organizer_id: Number(eventOrganizerId),
                 name: data.name,
                 details: {
-                    url: logoUrl,
+                    url: logoUrl || undefined,
                     urls: [...retainedUrls, ...newUrls],
                     links: [
                         ...existingLinks.map(({ title, url }) => ({
@@ -187,7 +178,7 @@ export const EditEventOrganizer = () => {
                     ],
                 },
             }).unwrap();
-            navigate(`/admin/event-organizers/${eventOrganizerId}`, {
+            navigate(redirectUrl, {
                 state: { success: "Event organizer updated successfully!" },
             });
         } catch (error) {
@@ -209,7 +200,7 @@ export const EditEventOrganizer = () => {
                 description="Update the event organizer details"
                 icon="user"
                 linkText="Back to Event Organizer"
-                linkTo={`/admin/event-organizers/${eventOrganizerId}`}
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -244,7 +235,6 @@ export const EditEventOrganizer = () => {
                             existingUrl={existingLogoUrl}
                             onRemoveExisting={() => setExistingLogoUrl(null)}
                             label="Logo"
-                            required
                             logo
                             disabled={busy}
                         />
@@ -282,7 +272,7 @@ export const EditEventOrganizer = () => {
                             isSubmitting={false}
                             onClick={() =>
                                 navigate(
-                                    `/admin/event-organizers/${eventOrganizerId}`,
+                                    redirectUrl,
                                 )
                             }
                             isSecondary

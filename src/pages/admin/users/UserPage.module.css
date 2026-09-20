@@ -102,6 +102,22 @@
     opacity: 0.9;
 }
 
+.unsuspendUserBtn {
+    background: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.unsuspendUserBtn:hover {
+    opacity: 0.9;
+}
+
 .roleFormContainer {
     width: 100%;
     padding: 0;
@@ -212,21 +228,33 @@
 
 /* Sections Row Container */
 .sectionsRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    justify-content: center;
-    align-items: flex-start;
-    margin-bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    width: 100%;
+    align-items: start;
 }
 
 .sectionsRow > .section {
-    flex: 1 1 45%;
-    min-width: 340px;
-    max-width: 600px;
-    margin-bottom: 24px;
-    display: flex;
-    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin-bottom: 0;
+}
+
+/* View All Link */
+.viewAllLink {
+    margin-left: auto;
+    color: var(--slate-500, #64748b);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.viewAllLink:hover {
+    color: #7b1684;
 }
 
 /* Exams Section */
@@ -537,6 +565,127 @@
     color: #64748b;
 }
 
+/* Events Section */
+.eventsSection {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+    padding: 24px 18px 18px 18px;
+    width: 90%;
+    margin: 32px auto 0 auto;
+}
+
+.eventsHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.eventsHeaderIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fef6ee;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eventsHeaderTitle {
+    color: var(--slate-700, #334155);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.eventsListPublished {
+    background: #fef6ee;
+    border-radius: 12px;
+    padding: 14px 8px 8px 8px;
+}
+
+.eventCard {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
+}
+
+.eventCardIcon {
+    margin-right: 12px;
+}
+
+.eventCircleIcon {
+    width: 38px;
+    height: 38px;
+    background: #fff7ed;
+    border-radius: 50%;
+    padding: 7px;
+}
+
+.eventCardInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.eventCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.eventCardDate {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.eventCardBadges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.eventBadge {
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 14px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.eventBadgePublished {
+    background: #e6d6f3;
+    color: #7b1684;
+}
+
+.eventBadgePending {
+    background: #fef9e6;
+    color: #b9910c;
+}
+
+.eventBadgeComplete {
+    background: #e6fee6;
+    color: #22c55e;
+}
+
+.eventBadgeUpcoming,
+.eventBadgeOngoing {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
 /* Announcement Section */
 .announcementSection {
     background: #fff;
@@ -773,132 +922,6 @@
     color: #7b1684;
 }
 
-/* Grades Section */
-.gradesSection {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
-    padding: 24px 18px 18px 18px;
-    width: 90%;
-    margin: 32px auto 0 auto;
-}
-
-.gradesHeader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.gradesHeaderIcon {
-    width: 57px;
-    height: 57px;
-    border-radius: 50%;
-    background: #fef6ee;
-    padding: 8px;
-    object-fit: contain;
-}
-
-.gradesHeaderTitle {
-    color: var(--slate-700, #334155);
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: capitalize;
-}
-
-.gradesList {
-    background: #fef6ee;
-    border-radius: 16px;
-    padding: 18px 12px 12px 12px;
-}
-
-.gradesCard {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(123, 22, 132, 0.04);
-    position: relative;
-    min-height: 90px;
-    padding: 10px 12px;
-}
-
-.gradesCardIcon {
-    margin-right: 12px;
-}
-
-.gradesCircleIcon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #fef6ee;
-    padding: 8px;
-    object-fit: contain;
-    display: block;
-    overflow: visible;
-}
-
-.gradesCardInfo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.gradesCardTitle {
-    font-size: 15px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 2px;
-}
-
-.gradesCardSubject {
-    font-size: 14px;
-    font-weight: 500;
-    color: #f97316;
-    margin-bottom: 2px;
-}
-
-.gradesCardDateRow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 2px;
-}
-
-.gradesCardDate {
-    font-size: 13px;
-    color: #64748b;
-}
-
-.gradesCardBadges {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-end;
-    margin-left: 12px;
-}
-
-.gradesBadge {
-    display: inline-block;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 4px 14px;
-    margin-bottom: 2px;
-    text-align: center;
-    min-width: 70px;
-}
-
-.gradesBadgePublisher {
-    background: #e6d6f3;
-    color: #7b1684;
-}
-
 /* Subjects Section */
 .subjectsSection {
     background: #fff;
@@ -1002,9 +1025,10 @@
 
 /* Activity Logs Section */
 .activityLogsFullWidth {
-    width: 92%;
-    max-width: 1165px;
-    margin: 32px auto 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0px auto 18px auto;
+    padding: 0px 18px;
 }
 
 .activityLogsSection {
@@ -1012,8 +1036,9 @@
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
     padding: 24px 18px 18px 18px;
-    width: 90%;
+    width: 100%;
     margin: 32px auto 0 auto;
+    box-sizing: border-box;
 }
 
 .activityLogsHeader {
@@ -1140,28 +1165,20 @@
 }
 
 @media (max-width: 1100px) {
-    .sectionsRow > .section {
-        min-width: 280px;
-        max-width: 100vw;
-    }
     .sectionsRow {
-        gap: 12px;
+        gap: 0 12px;
     }
 }
 
 @media (max-width: 900px) {
     .sectionsRow {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 0;
-        align-items: center;
     }
     .sectionsRow > .section {
-        min-width: 0;
-        max-width: 100vw;
-        margin-bottom: 24px;
         width: 95vw;
-        display: flex;
-        justify-content: center;
+        max-width: 95vw;
+        margin: 0 auto;
     }
     .examsSection,
     .tasksSection,
@@ -1236,5 +1253,62 @@
     }
     .userDetailsInfoTableWrapper {
         padding-left: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .examCard,
+    .taskCard,
+    .eventCard,
+    .materialsCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    .examCardIcon,
+    .taskCardIcon,
+    .eventCardIcon,
+    .materialsCardIcon {
+        margin-right: 10px;
+    }
+
+    .examCardInfo,
+    .taskCardInfo,
+    .eventCardInfo,
+    .materialsCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
+
+    .examCardBadges,
+    .taskCardBadges,
+    .eventCardBadges,
+    .materialsCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .announcementCardTitleRow {
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .announcementCardTitle {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .announcementBadge {
+        margin-left: auto;
     }
 }

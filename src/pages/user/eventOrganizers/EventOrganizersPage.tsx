@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import { Layout } from "../../../components/layout/Layout";
 import { PageSeo } from "../../../components/PageSeo";
@@ -10,12 +11,17 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import { useLazyGetEventOrganizersQuery } from "../../../services/apis/user/EventOrganizerAPIs";
 import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import defaultEventOrganizerLogo from "../../../assets/default event organizer logo.jpg";
+
 import styles from "./EventOrganizersPage.module.css";
 
 export const EventsOrganizersPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [organizers, setOrganizers] = useState<EventOrganizerResponseDto[]>(
@@ -66,7 +72,7 @@ export const EventsOrganizersPage = () => {
                 <div className={styles.searchRow}>
                     <Search
                         placeholder="Search event organizers..."
-                        setValue={setSearchQuery}
+                        setValue={setSearchQuery} value={searchQuery}
                     />
                 </div>
                 <div className={styles.cardsGrid}>
@@ -75,11 +81,11 @@ export const EventsOrganizersPage = () => {
                             key={organizer.id}
                             title="Event Organizer"
                             profile={organizer.name || "Unnamed organizer"}
-                            profileLogo={organizer.logo?.url || undefined}
+                            profileLogo={organizer.logo?.url || defaultEventOrganizerLogo}
                             button="View Details"
                             buttonAction={() =>
                                 navigate(
-                                    `/user/event-organizers/${organizer.id}`,
+                                    buildRedirectUrl(`/user/event-organizers/${organizer.id}`),
                                 )
                             }
                         />

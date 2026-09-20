@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import {
     useLazyGetMaterialsQuery,
@@ -10,6 +10,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
@@ -30,9 +31,10 @@ import { showToast } from "../../../utils/ToastsManager";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setSearchParams } =
+        useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
 
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
@@ -43,8 +45,9 @@ export function MaterialsPage() {
     } | null>(null);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
-    const subjectFilter = routeSubjectId ?? "";
-    const currentParentId = routeParentId ? Number(routeParentId) : null;
+    const subjectFilter = getFilter("subject_id");
+    const parentFilter = getFilter("parent_id");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
 
     const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
@@ -85,14 +88,16 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!subjectValue) return "/user/materials";
-            const subjectSegment = String(subjectValue);
-            if (!parentValue) {
-                return `/user/materials/${subjectSegment}`;
-            }
-            return `/user/materials/${subjectSegment}/${parentValue}`;
+            const params = new URLSearchParams(searchParams);
+            if (subjectValue) params.set("subject_id", String(subjectValue));
+            else params.delete("subject_id");
+            if (parentValue) params.set("parent_id", String(parentValue));
+            else params.delete("parent_id");
+            params.delete("material_id");
+            const query = params.toString();
+            return `/user/materials${query ? `?${query}` : ""}`;
         },
-        [],
+        [searchParams],
     );
 
     const loadCurrentPath = useCallback(
@@ -123,13 +128,15 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authQueryParams = useCallback(
-        async () =>
-            Promise.all([fetchSubjects(), fetchMaterials(currentParentId)]),
-        [fetchSubjects, fetchMaterials, currentParentId],
+    const authFilterQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
+
+    const authMaterialsQuery = useCallback(
+        () => fetchMaterials(currentParentId),
+        [fetchMaterials, currentParentId],
     );
 
-    useAuthQuery(authQueryParams);
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
         setSelectedMaterials([]);
@@ -152,45 +159,68 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
+    const handleDownloadFile = useCallback((fileId: string) => {
+        if (fileId) downloadFile(fileId);
+    }, []);
+
     const handleDownloadMaterial = useCallback((materialId: number) => {
-        const material = materials.find((item) => item.id === materialId);
-        if (!material) return;
-        if (material.material_type?.toLowerCase() === "file") {
-            const fileId = material.attachment?.details?.file_data?.id;
-            if (fileId) {
-                downloadFile(fileId);
-                return;
-            }
-        }
         downloadMaterials([materialId]);
-    }, [materials]);
+    }, []);
 
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
         if (selectedMaterials.length === 1) {
+            const selectedMaterial = materials.find(
+                (material) => material.id === selectedMaterials[0],
+            );
+            const fileId =
+                selectedMaterial?.material_type === "file"
+                    ? selectedMaterial.attachment?.details?.file_data?.id
+                    : undefined;
+            if (fileId) {
+                handleDownloadFile(fileId);
+                return;
+            }
             handleDownloadMaterial(selectedMaterials[0]);
             return;
         }
         downloadMaterials(selectedMaterials);
-    }, [selectedMaterials, handleDownloadMaterial]);
+    }, [
+        selectedMaterials,
+        materials,
+        handleDownloadFile,
+        handleDownloadMaterial,
+    ]);
 
-    const handleCardClick = useCallback((material: MaterialResponseDto) => {
-        if (!material.id) return;
-        if (isSelectionMode) {
-            setSelectedMaterials((prev) => prev.includes(material.id!) ? prev.filter((id) => id !== material.id) : [...prev, material.id!]);
-        } else {
-            setIsSelectionMode(true);
-            setSelectedMaterials([material.id]);
-        }
-    }, [isSelectionMode]);
+    const handleCardClick = useCallback(
+        (material: MaterialResponseDto) => {
+            if (!material.id) return;
+            if (isSelectionMode) {
+                setSelectedMaterials((prev) =>
+                    prev.includes(material.id!)
+                        ? prev.filter((id) => id !== material.id)
+                        : [...prev, material.id!],
+                );
+            } else {
+                setIsSelectionMode(true);
+                setSelectedMaterials([material.id]);
+            }
+        },
+        [isSelectionMode],
+    );
 
-    const handleCardDoubleClick = useCallback((material: MaterialResponseDto) => {
-        if (material.material_type === "folder") handleNavigate(material);
-    }, [handleNavigate]);
+    const handleCardDoubleClick = useCallback(
+        (material: MaterialResponseDto) => {
+            if (material.material_type === "folder") handleNavigate(material);
+        },
+        [handleNavigate],
+    );
 
     const handleSelectAll = useCallback(() => {
-        const ids = materials.map((item) => item.id).filter((id): id is number => id !== undefined);
-        setSelectedMaterials((prev) => prev.length === ids.length ? [] : ids);
+        const ids = materials
+            .map((item) => item.id)
+            .filter((id): id is number => id !== undefined);
+        setSelectedMaterials((prev) => (prev.length === ids.length ? [] : ids));
     }, [materials]);
 
     const handleCancelSelection = useCallback(() => {
@@ -214,7 +244,12 @@ export function MaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `?material_id=${materialId}`;
+            const previewUrl = new URL(url, window.location.origin);
+            previewUrl.searchParams.set(
+                "material_id",
+                String(materialId ?? ""),
+            );
+            url = previewUrl.toString();
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -239,7 +274,9 @@ export function MaterialsPage() {
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setSearchParams({}, { replace: true });
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.delete("material_id");
+                setSearchParams(nextParams, { replace: true });
             }
         }
     }, [searchParams, materials, handlePreview, setSearchParams]);
@@ -263,7 +300,6 @@ export function MaterialsPage() {
         ],
         [subjects],
     );
-
 
     const showFilterPage = !subjectFilter;
     const showEmptyPage = subjectFilter && materials.length === 0;
@@ -296,6 +332,7 @@ export function MaterialsPage() {
                             <Search
                                 placeholder="Search Materials..."
                                 setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
                     </div>
@@ -318,15 +355,17 @@ export function MaterialsPage() {
                                             key={folderId}
                                             material={folder}
                                             showCount={true}
-                                            isSelected={selectedMaterials.includes(folderId)}
+                                            isSelected={selectedMaterials.includes(
+                                                folderId,
+                                            )}
                                             isSelectionMode={isSelectionMode}
-                                            onClick={() => handleCardClick(folder)}
-                                            onDoubleClick={() => handleCardDoubleClick(folder)}
+                                            onClick={() =>
+                                                handleCardClick(folder)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(folder)
+                                            }
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     folderId,
@@ -334,7 +373,9 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={() =>
+                                                handleDownloadMaterial(folderId)
+                                            }
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}
@@ -349,15 +390,17 @@ export function MaterialsPage() {
                                             key={fileId}
                                             material={file}
                                             showCount={false}
-                                            isSelected={selectedMaterials.includes(fileId)}
+                                            isSelected={selectedMaterials.includes(
+                                                fileId,
+                                            )}
                                             isSelectionMode={isSelectionMode}
-                                            onClick={() => handleCardClick(file)}
-                                            onDoubleClick={() => handleCardDoubleClick(file)}
+                                            onClick={() =>
+                                                handleCardClick(file)
+                                            }
+                                            onDoubleClick={() =>
+                                                handleCardDoubleClick(file)
+                                            }
                                             onDragStart={() => {}}
-                                            onEdit={() => {}}
-                                            onDelete={() => {}}
-                                            onCopy={() => {}}
-                                            onMove={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
                                                     fileId,
@@ -365,7 +408,14 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={(fileId) => {
+                                                if (fileId)
+                                                    handleDownloadFile(fileId);
+                                                else
+                                                    handleDownloadMaterial(
+                                                        file.id ?? 0,
+                                                    );
+                                            }}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={false}
                                             className={styles.materialCard}

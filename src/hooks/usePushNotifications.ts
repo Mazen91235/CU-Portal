@@ -5,7 +5,7 @@ import {
     useRegisterDeviceMutation,
     useUnregisterDeviceMutation,
 } from "../services/apis/user/UserAPIs";
-import { useMarkNotificationAsSeenMutation } from "../services/apis/user/NotificationAPIs";
+import { useMarkNotificationsAsSeenMutation } from "../services/apis/user/NotificationAPIs";
 import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
 
@@ -19,7 +19,7 @@ type ForegroundNotification = {
 export function usePushNotifications() {
     const [registerDevice] = useRegisterDeviceMutation();
     const [unregisterDevice] = useUnregisterDeviceMutation();
-    const [markNotificationAsSeen] = useMarkNotificationAsSeenMutation();
+    const [markNotificationsAsSeen] = useMarkNotificationsAsSeenMutation();
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
     const [permission, setPermission] = useState<NotificationPermission>(() =>
@@ -60,6 +60,15 @@ export function usePushNotifications() {
         );
     };
 
+    const getDeviceId = (createIfMissing: boolean) => {
+        const savedDeviceId = localStorage.getItem("device_id");
+        if (savedDeviceId || !createIfMissing) return savedDeviceId;
+
+        const deviceId = crypto.randomUUID();
+        localStorage.setItem("device_id", deviceId);
+        return deviceId;
+    };
+
     const syncToken = useCallback(
         async (currentPermission = permission) => {
             if (!("Notification" in window) || isSyncingToken) return;
@@ -68,6 +77,8 @@ export function usePushNotifications() {
             try {
                 if (currentPermission === "granted") {
                     const savedTokenDetails = getSavedTokenDetails();
+                    const deviceId = getDeviceId(true);
+                    if (!deviceId) return;
                     if (
                         savedTokenDetails.token &&
                         savedTokenDetails.timestamp &&
@@ -77,13 +88,18 @@ export function usePushNotifications() {
                         return; // 1 hour valid
                     const token = await requestFcmToken();
                     if (token) {
-                        await registerDevice({ device_token: token }).unwrap();
+                        await registerDevice({
+                            device_id: deviceId,
+                            device_token: token,
+                        }).unwrap();
                         setSavedTokenDetails(token);
                     }
                 } else {
                     const savedTokenDetails = getSavedTokenDetails();
-                    if (savedTokenDetails.token) {
+                    const deviceId = getDeviceId(false);
+                    if (savedTokenDetails.token && deviceId) {
                         await unregisterDevice({
+                            device_id: deviceId,
                             device_token: savedTokenDetails.token,
                         }).unwrap();
                         setSavedTokenDetails("");
@@ -174,7 +190,7 @@ export function usePushNotifications() {
             unsubscribeOnMessage();
             if (permissionStatus) permissionStatus.onchange = null;
         };
-    }, [user, isLoggedIn, syncToken, markNotificationAsSeen]);
+    }, [user, isLoggedIn, syncToken, markNotificationsAsSeen]);
 
     const dismissForegroundNotification = useCallback(() => {
         setForegroundNotification(null);
@@ -189,8 +205,8 @@ export function usePushNotifications() {
         if (notificationId) {
             queueMicrotask(async () => {
                 try {
-                    await markNotificationAsSeen({
-                        notification_id: notificationId,
+                    await markNotificationsAsSeen({
+                        notification_ids: [notificationId],
                     }).unwrap();
                 } catch {
                     //
@@ -200,7 +216,7 @@ export function usePushNotifications() {
 
         window.focus();
         window.location.href = url;
-    }, [foregroundNotification, markNotificationAsSeen]);
+    }, [foregroundNotification, markNotificationsAsSeen]);
 
     return {
         permission,

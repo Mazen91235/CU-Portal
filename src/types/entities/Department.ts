@@ -12,8 +12,8 @@ export type Department = {
     code?: string | null;
     details?: object;
     study_type?: DepartmentStudyType;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     faculty_id?: number | null;
     faculty?: Faculty | null;
     users?: User[] | null;

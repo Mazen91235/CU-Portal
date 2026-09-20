@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,7 +15,7 @@ import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
@@ -31,7 +32,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 const courseSchema = z.object({
     name: z.string().min(1, "Course name is required"),
     code: z.string().min(1, "Course code is required"),
-    credits: z.string().min(1, "Credits are required"),
+    credits: z.number({ message: "Credits are required" }).nonnegative("Credits cannot be negative"),
     faculty_id: z.string().optional(),
     department_id: z.string().optional(),
     year_id: z.string().optional(),
@@ -41,6 +42,8 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const EditCourse = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/courses");
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
@@ -107,11 +110,17 @@ export const EditCourse = () => {
                 course_id: parseInt(courseId),
             }).unwrap();
             const course = result.data;
-            setCourse(course || null);
+            if (!course) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch course" },
+                });
+                return;
+            }
+            setCourse(course);
             if (course) {
                 setValue("name", course.name || "");
                 setValue("code", course.code || "");
-                setValue("credits", course.credits?.toString() || "");
+                setValue("credits", course.credits ?? 0);
                 if (faculties.length > 0)
                     setValue(
                         "faculty_id",
@@ -121,10 +130,11 @@ export const EditCourse = () => {
                     setValue("year_id", course.year?.id?.toString() || "");
             }
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/admin/courses");
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch course" },
+            });
         }
-    }, [courseId, faculties, years, getCourse, setValue, navigate]);
+    }, [courseId, faculties, years, getCourse, setValue, navigate, redirectUrl]);
 
     useEffect(() => {
         if (course && selectedFacultyId && departments.length > 0)
@@ -168,7 +178,7 @@ export const EditCourse = () => {
                 course_id: parseInt(courseId),
                 name: data.name,
                 code: data.code,
-                credits: parseInt(data.credits),
+                credits: data.credits,
                 faculty_id: params.faculty_id!,
                 department_id: params.department_id!,
                 year_id: params.year_id!,
@@ -176,14 +186,14 @@ export const EditCourse = () => {
 
             await updateCourse(courseData).unwrap();
             showToast("success", "Success", "Course updated successfully");
-            navigate("/admin/courses");
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/admin/courses");
+        navigate(redirectUrl);
     };
 
     return (
@@ -197,10 +207,11 @@ export const EditCourse = () => {
                 description="Update course information"
                 icon="course"
                 linkText="Back to Courses"
-                linkTo="/admin/courses"
+                linkTo={redirectUrl}
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                    <fieldset disabled={isLoading} className={styles.formFieldset}>
                     <section className={styles["formSection"]}>
                         <Heading
                             icon="info-circle"
@@ -297,6 +308,9 @@ export const EditCourse = () => {
                                 type="number"
                                 placeholder="3"
                                 errors={errors}
+                                registerOptions={{
+                                    setValueAs: (value) => value === "" ? undefined : Number(value),
+                                }}
                             />
                         </div>
                     </section>
@@ -318,6 +332,7 @@ export const EditCourse = () => {
                             isOrange={false}
                         />
                     </div>
+                    </fieldset>
                 </form>
             </main>
         </Layout>

@@ -4,9 +4,9 @@ export type Note = {
     id?: number;
     title?: string;
     content?: string;
-    date?: Date | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    date?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     author_id?: number | null;
     author?: User | null;
 };

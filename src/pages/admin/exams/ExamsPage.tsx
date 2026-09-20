@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetExamsQuery,
     useDeleteExamMutation,
@@ -16,6 +17,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -26,7 +28,7 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./ExamsPage.module.css";
@@ -35,15 +37,23 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 export const ExamsPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [subjectFilter, setSubjectFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
+    const { getFilter, getFilterSetter, searchParams, setFilters } =
+        useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const departmentFilter = getFilter("department_id", "");
+    const yearFilter = getFilter("year_id", "");
+    const subjectFilter = getFilter("subject_id", "");
+    const setSubjectFilter = getFilterSetter("subject_id");
+    const dateFromFilter = getFilter(
+        "date_from",
         new Date().toLocaleDateString("en-CA"),
-    ); // Set default date to today's date in "YYYY-MM-DD" format
-    const [dateToFilter, setDateToFilter] = useState("");
+    );
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -74,21 +84,22 @@ export const ExamsPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
+            if (!user?.canAccessAll) {
+                setDepartments([]);
+                return;
+            }
             if (!facultyFilter) {
                 setDepartments([]);
                 return;
             }
             const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type: undefined,
-                },
+                data: { faculty_id: parseInt(facultyFilter) },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments, facultyFilter, user?.canAccessAll]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -102,33 +113,29 @@ export const ExamsPage = () => {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            const params: {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-            } = {};
-            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-            if (departmentFilter)
-                params.department_id = parseInt(departmentFilter);
-            if (yearFilter) params.year_id = parseInt(yearFilter);
-
-            if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id ?? undefined;
-                params.department_id = user.department?.id ?? undefined;
-                params.year_id = user.year?.id ?? undefined;
+            if (user.canAccessAll) {
+                if (!facultyFilter || !departmentFilter || !yearFilter) {
+                    setSubjects([]);
+                    return;
+                }
             }
-
-            if (Object.keys(params).length < 3) {
-                setSubjects([]);
-                return;
-            }
-
-            const result = await searchCourses({ data: params }).unwrap();
+            const data = user.canAccessAll
+                ? {
+                      faculty_id: parseInt(facultyFilter),
+                      department_id: parseInt(departmentFilter),
+                      year_id: parseInt(yearFilter),
+                  }
+                : {
+                      faculty_id: user.faculty?.id ?? undefined,
+                      department_id: user.department?.id ?? undefined,
+                      year_id: user.year?.id ?? undefined,
+                  };
+            const result = await searchCourses({ data }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+    }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
     const fetchExams = useCallback(async () => {
         try {
@@ -141,17 +148,23 @@ export const ExamsPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                deadline_from: dateFromFilter || undefined,
-                deadline_to: dateToFilter || undefined,
+                deadline_from: toIsoFormat(dateFromFilter),
+                deadline_to: toIsoFormat(dateToFilter),
+                author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getExams({
                 data: params,
-                includes: ["faculty", "department", "year", "subject"],
+                includes: [
+                    "subject.faculty",
+                    "subject.department",
+                    "subject.year",
+                ],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setExams((prev) => {
@@ -178,27 +191,30 @@ export const ExamsPage = () => {
         page,
         hasNextPage,
         user,
+        authorId,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchSubjects(),
-                fetchExams(),
-            ]),
-        [
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchSubjects,
-            fetchExams,
-        ],
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchExamsQuery = useCallback(() => fetchExams(), [fetchExams]);
+
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authSubjectsQuery);
+    useAuthQuery(authFetchExamsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -211,6 +227,7 @@ export const ExamsPage = () => {
         searchQuery,
         dateFromFilter,
         dateToFilter,
+        authorId,
     ]);
 
     const handleAddExam = () => {
@@ -228,7 +245,7 @@ export const ExamsPage = () => {
     };
 
     const handleEditExam = (examId: number) => {
-        navigate(`/admin/exams/edit/${examId}`);
+        navigate(buildRedirectUrl(`/admin/exams/edit/${examId}`));
     };
 
     const handleDeleteClick = (exam: ExamResponseDto) => {
@@ -255,7 +272,7 @@ export const ExamsPage = () => {
     };
 
     const handleViewExam = (examId: number) => {
-        navigate(`/admin/exams/${examId}`);
+        navigate(buildRedirectUrl(`/admin/exams/${examId}`));
     };
 
     const handlePagination = () => {
@@ -263,14 +280,6 @@ export const ExamsPage = () => {
             setPage(page + 1);
         }
     };
-
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
-    useEffect(() => {
-        setSubjectFilter("");
-    }, [departmentFilter, yearFilter]);
 
     const facultyOptions = useMemo(
         () => [
@@ -336,6 +345,7 @@ export const ExamsPage = () => {
                         <Search
                             placeholder="Search exams..."
                             setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
 
@@ -344,30 +354,61 @@ export const ExamsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
-                                    setValue={setDepartmentFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            department_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
-                                    setValue={setYearFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            year_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={yearFilter}
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={subjectOptions}
                             setValue={setSubjectFilter}
+                            value={subjectFilter}
+                            disabled={
+                                user?.canAccessAll
+                                    ? !facultyFilter ||
+                                      !departmentFilter ||
+                                      !yearFilter
+                                    : false
+                            }
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>
@@ -377,12 +418,12 @@ export const ExamsPage = () => {
                         <Card
                             key={exam.id}
                             title={exam.name || "Untitled Exam"}
-                            badge={`${exam.department?.code} ${exam.year?.year}`}
+                            badge={`${exam.subject?.department?.code} ${exam.subject?.year?.year}`}
                             items={[
                                 {
                                     icon: "building",
                                     label: "Faculty",
-                                    value: exam.faculty?.name || "N/A",
+                                    value: exam.subject?.faculty?.name || "N/A",
                                 },
                                 {
                                     icon: "subject",

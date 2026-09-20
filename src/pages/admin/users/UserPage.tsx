@@ -1,16 +1,18 @@
 import { useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, Link } from "react-router";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
-import { Banner } from "../../../components/banner/Banner";
+import { SubBanner } from "../../../components/banner/SubBanner";
 import { Button } from "../../../components/forms/Button";
 import {
     useLazyGetUserQuery,
     useUpdateUsersMutation,
+    useSuspendUserMutation,
+    useUnsuspendUserMutation,
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type {
     UserResponseDto,
@@ -21,11 +23,16 @@ import IconComponent from "../../../components/IconComponent";
 import styles from "./UserPage.module.css";
 import z from "zod";
 import { Form } from "../../../components/forms/Form";
+import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Select } from "../../../components/forms/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Avatar } from "../../../components/avatar/Avatar";
-import { formatDateTime, formatTimeAgo } from "../../../utils/Formatter";
+import {
+    formatDateTime,
+    formatString,
+    formatTimeAgo,
+} from "../../../utils/Formatter";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
@@ -41,6 +48,13 @@ export const UserPage = () => {
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
     const [updateUser] = useUpdateUsersMutation();
+    const [suspendUser, { isLoading: isSuspendingUser }] =
+        useSuspendUserMutation();
+    const [unsuspendUser, { isLoading: isUnsuspendingUser }] =
+        useUnsuspendUserMutation();
+    const [userStatusAction, setUserStatusAction] = useState<
+        "suspend" | "unsuspend" | null
+    >(null);
 
     const schema = z.object({
         roleId: z.string().min(1, "Role is required"),
@@ -61,13 +75,17 @@ export const UserPage = () => {
         if (!userId) return;
         try {
             const result = await getUser({ user_id: Number(userId) }).unwrap();
-            setUser(result.data || {});
+            const user = result.data;
+            if (!user) {
+                navigate("/admin/users", {
+                    state: { error: "Failed to fetch user data" },
+                });
+                return;
+            }
+            setUser(user);
         } catch (error) {
-            const res = error as DefaultAPIResponse;
             navigate("/admin/users", {
-                state: {
-                    error: res.data?.message || "Failed to fetch user data",
-                },
+                state: { error: getErrorMessage(error) || "Failed to fetch user data" },
             });
         }
     }, [userId, getUser, navigate]);
@@ -122,6 +140,28 @@ export const UserPage = () => {
         }
     };
 
+    const handleUserStatusConfirm = async () => {
+        if (!userId || !userStatusAction) return;
+
+        try {
+            if (userStatusAction === "suspend") {
+                await suspendUser({ user_id: Number(userId) }).unwrap();
+                showToast("success", "Success", "User suspended successfully");
+            } else {
+                await unsuspendUser({ user_id: Number(userId) }).unwrap();
+                showToast(
+                    "success",
+                    "Success",
+                    "User unsuspended successfully",
+                );
+            }
+            setUserStatusAction(null);
+            await fetchUserData();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
+
     return (
         <Layout>
             <PageSeo
@@ -129,9 +169,12 @@ export const UserPage = () => {
                 description="View and manage user details"
             />
 
-            <Banner
-                title="Users Management"
-                description="Search, Filter, Approve, And Update Users All In One Place"
+            <SubBanner
+                title={user.name || "User Details"}
+                description="View and manage user information"
+                icon="user"
+                linkText="Back to Users"
+                linkTo="/admin/users"
             />
 
             <div className={styles.userDetailsCard}>
@@ -141,7 +184,10 @@ export const UserPage = () => {
                             <>
                                 <div className={styles.userRoleLeft}>
                                     <span className={styles.userBadge}>
-                                        {user.role?.name || "User"}
+                                        {formatString(
+                                            user.role?.name || "User",
+                                            "CardTitle",
+                                        )}
                                     </span>
                                     {user.is_early_access && (
                                         <span
@@ -153,24 +199,49 @@ export const UserPage = () => {
                                         </span>
                                     )}
                                 </div>
-                                {canManageUsers && (
-                                    <div className={styles.userRoleActions}>
-                                        <button
-                                            type="button"
-                                            className={styles.suspendUserBtn}
-                                            onClick={() => null}
-                                        >
-                                            Suspend User
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={styles.editRoleBtn}
-                                            onClick={handleEditRole}
-                                        >
-                                            Edit Role
-                                        </button>
-                                    </div>
-                                )}
+                                {canManageUsers &&
+                                    (user.status ? (
+                                        <div className={styles.userRoleActions}>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    styles.suspendUserBtn
+                                                }
+                                                onClick={() =>
+                                                    setUserStatusAction(
+                                                        "suspend",
+                                                    )
+                                                }
+                                                disabled={isSuspendingUser}
+                                            >
+                                                Suspend User
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={styles.editRoleBtn}
+                                                onClick={handleEditRole}
+                                            >
+                                                Edit Role
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className={styles.userRoleActions}>
+                                            <button
+                                                type="button"
+                                                className={
+                                                    styles.unsuspendUserBtn
+                                                }
+                                                onClick={() =>
+                                                    setUserStatusAction(
+                                                        "unsuspend",
+                                                    )
+                                                }
+                                                disabled={isUnsuspendingUser}
+                                            >
+                                                Unsuspend User
+                                            </button>
+                                        </div>
+                                    ))}
                             </>
                         ) : (
                             <Form
@@ -231,14 +302,17 @@ export const UserPage = () => {
                                         <IconComponent icon="user" /> Name:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.name || "N/A"}
+                                        {formatString(user.name, "CardContent")}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="mail-details" />{" "}
                                         E-Mail:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.email || "N/A"}
+                                        {formatString(
+                                            user.email,
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -247,14 +321,20 @@ export const UserPage = () => {
                                         Phone:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.phone || "N/A"}
+                                        {formatString(
+                                            user.phone,
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="building" />{" "}
                                         Faculty:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.faculty?.name || "N/A"}
+                                        {formatString(
+                                            user.faculty?.name,
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -263,14 +343,20 @@ export const UserPage = () => {
                                         Department:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.department?.name || "N/A"}
+                                        {formatString(
+                                            user.department?.name,
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="certificate-year" />{" "}
                                         Academic Year:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.year?.year || "N/A"}
+                                        {formatString(
+                                            user.year?.year?.toString(),
+                                            "CardContent",
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>
@@ -279,7 +365,10 @@ export const UserPage = () => {
                                         Is Active:
                                     </td>
                                     <td className={styles.userDetailsValue}>
-                                        {user.status ? "Yes" : "No"}
+                                        {formatString(
+                                            user.status ? "Yes" : "No",
+                                            "CardContent",
+                                        )}
                                     </td>
                                     <td className={styles.userDetailsLabel}>
                                         <IconComponent icon="iconsax-calendar" />{" "}
@@ -306,90 +395,101 @@ export const UserPage = () => {
                             <span className={styles.examsHeaderTitle}>
                                 Exams
                             </span>
+                            <Link
+                                to={`/admin/exams?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
-                        {user.exams_published &&
-                            user.exams_published.length > 0 && (
-                                <div className={styles.examsListPublished}>
-                                    {user.exams_published.map((exam) => {
-                                        const deadline = new Date(
-                                            formatDateTime(exam.deadline, true),
-                                        );
-                                        const today = new Date();
-                                        const type =
-                                            deadline < today
-                                                ? "Complete"
-                                                : "Upcoming";
-                                        return (
+                        <div className={styles.examsListPublished}>
+                            {user.exams_published &&
+                            user.exams_published.length > 0 ? (
+                                user.exams_published.map((exam) => {
+                                    const deadline = new Date(
+                                        formatDateTime(exam.deadline, true),
+                                    );
+                                    const today = new Date();
+                                    const type =
+                                        deadline < today
+                                            ? "Complete"
+                                            : "Upcoming";
+                                    return (
+                                        <div
+                                            key={exam.id}
+                                            className={`${styles.examCard} ${styles.examCardWhiteBg}`}
+                                        >
                                             <div
-                                                key={exam.id}
-                                                className={`${styles.examCard} ${styles.examCardWhiteBg}`}
+                                                className={styles.examCardIcon}
+                                            >
+                                                <IconComponent
+                                                    icon="exam-icon"
+                                                    className={
+                                                        styles.examCircleIcon
+                                                    }
+                                                />
+                                            </div>
+                                            <div
+                                                className={styles.examCardInfo}
                                             >
                                                 <div
                                                     className={
-                                                        styles.examCardIcon
+                                                        styles.examCardTitle
                                                     }
                                                 >
-                                                    <IconComponent
-                                                        icon="exam-icon"
-                                                        className={
-                                                            styles.examCircleIcon
-                                                        }
-                                                    />
+                                                    {formatString(
+                                                        exam.name,
+                                                        "CardTitle",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.examCardInfo
+                                                        styles.examCardSubject
                                                     }
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.examCardTitle
-                                                        }
-                                                    >
-                                                        {exam.name}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.examCardSubject
-                                                        }
-                                                    >
-                                                        {exam.subject?.name ||
-                                                            "N/A"}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.examCardDate
-                                                        }
-                                                    >
-                                                        Due:{" "}
-                                                        {exam.deadline
-                                                            ? formatDateTime(
-                                                                  exam.deadline,
-                                                              )
-                                                            : "N/A"}
-                                                    </div>
+                                                    {formatString(
+                                                        exam.subject?.name,
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.examCardBadges
+                                                        styles.examCardDate
                                                     }
                                                 >
-                                                    <span
-                                                        className={`${styles.examBadge} ${styles.examBadgePublisher}`}
-                                                    >
-                                                        Publisher
-                                                    </span>
-                                                    <span
-                                                        className={`${styles.examBadge} ${type === "Complete" ? styles.examBadgeComplete : styles.examBadgeUpcoming}`}
-                                                    >
-                                                        {type || "Pending"}
-                                                    </span>
+                                                    Due:{" "}
+                                                    {exam.deadline
+                                                        ? formatDateTime(
+                                                              exam.deadline,
+                                                          )
+                                                        : "N/A"}
                                                 </div>
                                             </div>
-                                        );
-                                    })}
+                                            <div
+                                                className={
+                                                    styles.examCardBadges
+                                                }
+                                            >
+                                                <span
+                                                    className={`${styles.examBadge} ${styles.examBadgePublisher}`}
+                                                >
+                                                    Publisher
+                                                </span>
+                                                <span
+                                                    className={`${styles.examBadge} ${type === "Complete" ? styles.examBadgeComplete : styles.examBadgeUpcoming}`}
+                                                >
+                                                    {type || "Pending"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className={styles.emptySection}>
+                                    No exams published
                                 </div>
                             )}
+                        </div>
                     </div>
                 </section>
 
@@ -403,90 +503,101 @@ export const UserPage = () => {
                             <span className={styles.tasksHeaderTitle}>
                                 Tasks
                             </span>
+                            <Link
+                                to={`/admin/tasks?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
-                        {user.tasks_published &&
-                            user.tasks_published.length > 0 && (
-                                <div className={styles.tasksListPublished}>
-                                    {user.tasks_published.map((task) => {
-                                        const deadline = new Date(
-                                            formatDateTime(task.deadline, true),
-                                        );
-                                        const today = new Date();
-                                        const type =
-                                            deadline < today
-                                                ? "Complete"
-                                                : "Upcoming";
-                                        return (
+                        <div className={styles.tasksListPublished}>
+                            {user.tasks_published &&
+                            user.tasks_published.length > 0 ? (
+                                user.tasks_published.map((task) => {
+                                    const deadline = new Date(
+                                        formatDateTime(task.deadline, true),
+                                    );
+                                    const today = new Date();
+                                    const type =
+                                        deadline < today
+                                            ? "Complete"
+                                            : "Upcoming";
+                                    return (
+                                        <div
+                                            key={task.id}
+                                            className={`${styles.taskCard} ${styles.taskCardWhiteBg}`}
+                                        >
                                             <div
-                                                key={task.id}
-                                                className={`${styles.taskCard} ${styles.taskCardWhiteBg}`}
+                                                className={styles.taskCardIcon}
+                                            >
+                                                <IconComponent
+                                                    icon="task-details-icon"
+                                                    className={
+                                                        styles.taskCircleIcon
+                                                    }
+                                                />
+                                            </div>
+                                            <div
+                                                className={styles.taskCardInfo}
                                             >
                                                 <div
                                                     className={
-                                                        styles.taskCardIcon
+                                                        styles.taskCardTitle
                                                     }
                                                 >
-                                                    <IconComponent
-                                                        icon="task-details-icon"
-                                                        className={
-                                                            styles.taskCircleIcon
-                                                        }
-                                                    />
+                                                    {formatString(
+                                                        task.name,
+                                                        "CardTitle",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.taskCardInfo
+                                                        styles.taskCardSubject
                                                     }
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.taskCardTitle
-                                                        }
-                                                    >
-                                                        {task.name}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.taskCardSubject
-                                                        }
-                                                    >
-                                                        {task.subject?.name ||
-                                                            "N/A"}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.taskCardDate
-                                                        }
-                                                    >
-                                                        Due:{" "}
-                                                        {task.deadline
-                                                            ? formatDateTime(
-                                                                  task.deadline,
-                                                              )
-                                                            : "N/A"}
-                                                    </div>
+                                                    {formatString(
+                                                        task.subject?.name,
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
-                                                        styles.taskCardBadges
+                                                        styles.taskCardDate
                                                     }
                                                 >
-                                                    <span
-                                                        className={`${styles.taskBadge} ${styles.taskBadgePublisher}`}
-                                                    >
-                                                        Publisher
-                                                    </span>
-                                                    <span
-                                                        className={`${styles.taskBadge} ${type === "Complete" ? styles.taskBadgeComplete : type === "Upcoming" ? styles.taskBadgeUpcoming : styles.taskBadgePending}`}
-                                                    >
-                                                        {type || "Pending"}
-                                                    </span>
+                                                    Due:{" "}
+                                                    {task.deadline
+                                                        ? formatDateTime(
+                                                              task.deadline,
+                                                          )
+                                                        : "N/A"}
                                                 </div>
                                             </div>
-                                        );
-                                    })}
+                                            <div
+                                                className={
+                                                    styles.taskCardBadges
+                                                }
+                                            >
+                                                <span
+                                                    className={`${styles.taskBadge} ${styles.taskBadgePublisher}`}
+                                                >
+                                                    Publisher
+                                                </span>
+                                                <span
+                                                    className={`${styles.taskBadge} ${type === "Complete" ? styles.taskBadgeComplete : type === "Upcoming" ? styles.taskBadgeUpcoming : styles.taskBadgePending}`}
+                                                >
+                                                    {type || "Pending"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className={styles.emptySection}>
+                                    No tasks published
                                 </div>
                             )}
+                        </div>
                     </div>
                 </section>
             </div>
@@ -500,8 +611,14 @@ export const UserPage = () => {
                                 className={styles.announcementHeaderIcon}
                             />
                             <span className={styles.announcementHeaderTitle}>
-                                Announcement
+                                Announcements
                             </span>
+                            <Link
+                                to={`/admin/announcements?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.announcementList}>
                             {user.announcements_published &&
@@ -530,7 +647,10 @@ export const UserPage = () => {
                                                             styles.announcementCardTitle
                                                         }
                                                     >
-                                                        {announcement.title}
+                                                        {formatString(
+                                                            announcement.title,
+                                                            "CardTitle",
+                                                        )}
                                                     </span>
                                                     <span
                                                         className={
@@ -545,8 +665,11 @@ export const UserPage = () => {
                                                         styles.announcementCardDesc
                                                     }
                                                 >
-                                                    {announcement.content ||
-                                                        "No content"}
+                                                    {formatString(
+                                                        announcement.content ||
+                                                            "No content",
+                                                        "CardDescription",
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
@@ -566,13 +689,138 @@ export const UserPage = () => {
                                 )
                             ) : (
                                 <div className={styles.emptySection}>
-                                    No announcements
+                                    No announcements published
                                 </div>
                             )}
                         </div>
                     </div>
                 </section>
-
+                <section className={styles.section}>
+                    <div className={styles.eventsSection}>
+                        <div className={styles.eventsHeader}>
+                            <span className={styles.eventsHeaderIcon}>
+                                <IconComponent icon="calendar" />
+                            </span>
+                            <span className={styles.eventsHeaderTitle}>
+                                Events
+                            </span>
+                            <Link
+                                to={`/admin/events?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
+                        </div>
+                        <div className={styles.eventsListPublished}>
+                            {user.events && user.events.length > 0 ? (
+                                user.events.map((event) => {
+                                    const now = new Date();
+                                    const startDate = event.start_date
+                                        ? new Date(event.start_date)
+                                        : null;
+                                    const endDate = event.end_date
+                                        ? new Date(event.end_date)
+                                        : null;
+                                    const state =
+                                        !startDate || !endDate
+                                            ? "Pending"
+                                            : now < startDate
+                                              ? "Upcoming"
+                                              : now <= endDate
+                                                ? "Ongoing"
+                                                : "Complete";
+                                    return (
+                                        <div
+                                            key={event.id}
+                                            className={`${styles.eventCard} ${styles.eventCardWhiteBg}`}
+                                        >
+                                            <div
+                                                className={styles.eventCardIcon}
+                                            >
+                                                <IconComponent
+                                                    icon="calendar"
+                                                    className={
+                                                        styles.eventCircleIcon
+                                                    }
+                                                />
+                                            </div>
+                                            <div
+                                                className={styles.eventCardInfo}
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.eventCardTitle
+                                                    }
+                                                >
+                                                    {formatString(
+                                                        event.title,
+                                                        "CardTitle",
+                                                    )}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    Start:{" "}
+                                                    {event.start_date
+                                                        ? formatDateTime(
+                                                              event.start_date,
+                                                          )
+                                                        : "N/A"}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    End:{" "}
+                                                    {event.end_date
+                                                        ? formatDateTime(
+                                                              event.end_date,
+                                                          )
+                                                        : "N/A"}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.eventCardDate
+                                                    }
+                                                >
+                                                    Organizer:{" "}
+                                                    {formatString(
+                                                        event.event_organizer
+                                                            ?.name,
+                                                        "CardDescription",
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.eventCardBadges
+                                                }
+                                            >
+                                                <span
+                                                    className={`${styles.eventBadge} ${styles.eventBadgePublished}`}
+                                                >
+                                                    Published
+                                                </span>
+                                                <span
+                                                    className={`${styles.eventBadge} ${state === "Complete" ? styles.eventBadgeComplete : state === "Ongoing" ? styles.eventBadgeOngoing : state === "Upcoming" ? styles.eventBadgeUpcoming : styles.eventBadgePending}`}
+                                                >
+                                                    {state}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className={styles.emptySection}>
+                                    No events published
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
                 <section className={styles.section}>
                     <div className={styles.materialsSection}>
                         <div className={styles.materialsHeader}>
@@ -583,6 +831,12 @@ export const UserPage = () => {
                             <span className={styles.materialsHeaderTitle}>
                                 Materials
                             </span>
+                            <Link
+                                to={`/admin/materials?author_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.materialsList}>
                             {user.materials && user.materials.length > 0 ? (
@@ -609,15 +863,20 @@ export const UserPage = () => {
                                                     styles.materialsCardTitle
                                                 }
                                             >
-                                                {material.name}
+                                                {formatString(
+                                                    material.name,
+                                                    "CardTitle",
+                                                )}
                                             </div>
                                             <div
                                                 className={
                                                     styles.materialsCardSubject
                                                 }
                                             >
-                                                {material.subject?.name ||
-                                                    "N/A"}
+                                                {formatString(
+                                                    material.subject?.name,
+                                                    "CardDescription",
+                                                )}
                                             </div>
                                             <div
                                                 className={
@@ -659,9 +918,6 @@ export const UserPage = () => {
                         </div>
                     </div>
                 </section>
-            </div>
-
-            <div className={styles.sectionsRow}>
                 <section className={styles.section}>
                     <div className={styles.subjectsSection}>
                         <div className={styles.subjectsHeader}>
@@ -672,6 +928,12 @@ export const UserPage = () => {
                             <span className={styles.subjectsHeaderTitle}>
                                 Subjects
                             </span>
+                            <Link
+                                to={`/admin/courses?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.subjectsList}>
                             {user.subjects && user.subjects.length > 0 ? (
@@ -698,33 +960,47 @@ export const UserPage = () => {
                                                     styles.subjectsCardTitle
                                                 }
                                             >
-                                                {subject.name}
+                                                {formatString(
+                                                    subject.name,
+                                                    "CardTitle",
+                                                )}
                                             </div>
                                             <div
                                                 className={
                                                     styles.subjectsCardCode
                                                 }
                                             >
-                                                {subject.code || "N/A"}
+                                                {formatString(
+                                                    subject.code,
+                                                    "CardContent",
+                                                )}
                                             </div>
-                                            <div
-                                                className={
-                                                    styles.subjectsCardCredit
-                                                }
-                                            >
-                                                {`${subject.credits} Credit Hours`}
-                                            </div>
+                                            {subject.credits && (
+                                                <div
+                                                    className={
+                                                        styles.subjectsCardCredit
+                                                    }
+                                                >
+                                                    {formatString(
+                                                        `${subject.credits} Credit Hours`,
+                                                        "CardContent",
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))
                             ) : (
                                 <div className={styles.emptySection}>
-                                    No subjects
+                                    No subjects registered
                                 </div>
                             )}
                         </div>
                     </div>
                 </section>
+            </div>
+
+            <div className={styles.activityLogsFullWidth}>
                 <section className={styles.section}>
                     <div className={styles.activityLogsSection}>
                         <div className={styles.activityLogsHeader}>
@@ -735,6 +1011,12 @@ export const UserPage = () => {
                             <span className={styles.activityLogsHeaderTitle}>
                                 Activity Logs
                             </span>
+                            <Link
+                                to={`/admin/logs?user_id=${userId}`}
+                                className={styles.viewAllLink}
+                            >
+                                View All
+                            </Link>
                         </div>
                         <div className={styles.activityLogsList}>
                             {user.logs && user.logs.length > 0 ? (
@@ -753,7 +1035,10 @@ export const UserPage = () => {
                                                     styles.activityLogCardTitle
                                                 }
                                             >
-                                                {`${log.action} ${log.entity}`}
+                                                {formatString(
+                                                    `${log.action} ${log.entity}`,
+                                                    "CardContent",
+                                                )}
                                             </div>
                                             <div
                                                 className={
@@ -775,7 +1060,10 @@ export const UserPage = () => {
                                             <span
                                                 className={`${styles.activityLogBadge} ${log.level === "error" ? styles.activityLogBadgeError : log.level === "warning" ? styles.activityLogBadgeWarning : styles.activityLogBadgeInfo}`}
                                             >
-                                                {log.level || "info"}
+                                                {formatString(
+                                                    log.level || "info",
+                                                    "CardContent",
+                                                )}
                                             </span>
                                         </div>
                                     </div>
@@ -789,6 +1077,29 @@ export const UserPage = () => {
                     </div>
                 </section>
             </div>
+
+            <ConfirmModal
+                isOpen={userStatusAction !== null}
+                onClose={() => setUserStatusAction(null)}
+                onConfirm={handleUserStatusConfirm}
+                confirmText={
+                    userStatusAction === "suspend"
+                        ? "Suspend User"
+                        : "Unsuspend User"
+                }
+                title={
+                    userStatusAction === "suspend"
+                        ? "Suspend User?"
+                        : "Unsuspend User?"
+                }
+                message={
+                    userStatusAction === "suspend"
+                        ? "This will prevent the user from accessing their account until they are unsuspended."
+                        : "This will restore the user's account access."
+                }
+                colorType={userStatusAction === "suspend" ? "red" : "green"}
+                disabled={isSuspendingUser || isUnsuspendingUser}
+            />
         </Layout>
     );
 };

@@ -36,6 +36,7 @@ export const Thumbnail = <T extends FieldValues>({
     logo = false,
 }: ThumbnailProps<T>) => {
     const [previewUrl, setPreviewUrl] = useState<string | null>(existingUrl || null);
+    const [fileError, setFileError] = useState<string | null>(null);
     const hasPreviewRef = useRef(Boolean(existingUrl));
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
@@ -50,8 +51,10 @@ export const Thumbnail = <T extends FieldValues>({
 
     useEffect(() => {
         const nextUrl = existingUrl || null;
+        if (objectUrlRef.current) return;
         setPreviewUrl(nextUrl);
         hasPreviewRef.current = Boolean(nextUrl);
+        setFileError(null);
     }, [existingUrl]);
 
     useEffect(() => {
@@ -65,6 +68,13 @@ export const Thumbnail = <T extends FieldValues>({
         const file = e.target.files?.[0];
         if (!file) return;
 
+        if (!file.type.startsWith("image/")) {
+            setFileError("Please select a valid image file.");
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            return;
+        }
+
+        setFileError(null);
         if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
         objectUrlRef.current = URL.createObjectURL(file);
         setPreviewUrl(objectUrlRef.current);
@@ -85,6 +95,7 @@ export const Thumbnail = <T extends FieldValues>({
         }
         setPreviewUrl(null);
         hasPreviewRef.current = false;
+        setFileError(null);
         setValue(name, undefined as PathValue<T, Path<T>>, {
             shouldValidate: true,
             shouldDirty: true,
@@ -93,7 +104,8 @@ export const Thumbnail = <T extends FieldValues>({
         onRemoveExisting?.();
     };
 
-    const errorMessage = (errors as Record<string, any>)[name]?.message as string | undefined;
+    const errorMessage =
+        fileError || ((errors as Record<string, any>)[name]?.message as string | undefined);
 
     return (
         <div className={styles.thumbnailContainer}>

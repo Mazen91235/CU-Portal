@@ -9,7 +9,7 @@ import { StatCard } from "../../../components/card/StatCard";
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
 
 import styles from "./ExamPage.module.css";
@@ -28,11 +28,17 @@ export const ExamPage = () => {
             const result = await getExam({
                 exam_id: parseInt(examId),
             }).unwrap();
-            setExam(result.data || null);
+            const exam = result.data;
+            if (!exam) {
+                navigate("/user/exams", {
+                    state: { error: "Failed to fetch exam" },
+                });
+                return;
+            }
+            setExam(exam);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/user/exams", {
-                state: { error: err.data.message || "Failed to fetch exam" },
+                state: { error: getErrorMessage(error) || "Failed to fetch exam" },
             });
         }
     }, [getExam, navigate, examId]);
@@ -75,7 +81,7 @@ export const ExamPage = () => {
                         type="Duration"
                         value={
                             exam.details?.duration
-                                ? `${exam.details.duration} hours`
+                                ? `${exam.details.duration} minutes`
                                 : "N/A"
                         }
                         icon="clock"

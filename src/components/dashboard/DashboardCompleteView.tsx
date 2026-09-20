@@ -5,15 +5,11 @@ import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
 import type { AnnouncementResponseDto } from "../../types/dtos/AnnouncementDtos";
 import type { TaskResponseDto } from "../../types/dtos/TaskDtos";
 import type { ExamResponseDto } from "../../types/dtos/ExamDtos";
-import type {
-    CalendarDayEventsDto,
-} from "../../types/dtos/CalendarDtos";
+import type { CalendarDayEventsDto } from "../../types/dtos/CalendarDtos";
 import { Calendar } from "../../components/calendar/Calendar";
 import { FloatingDay } from "../../components/calendar/FloatingDay";
 import { Card } from "../../components/card/Card";
 
-import emailIcon from "../../assets/icons/email.svg";
-import phoneIcon from "../../assets/icons/phone.svg";
 import coursesWhiteIcon from "../../assets/icons/courses-white.svg";
 import announcementsWhiteIcon from "../../assets/icons/announcements-white.svg";
 import dashboardExamsIcon from "../../assets/icons/dashboard-exams-icon.svg";
@@ -23,20 +19,21 @@ import styles from "./DashboardCompleteView.module.css";
 import { useLazyGetCalendarTasksQuery } from "../../services/apis/user/CalendarAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import useAuthQuery from "../../hooks/useAuthQuery";
-import {
-    captitalize,
-    formatDateTime,
-    formatString,
-} from "../../utils/Formatter";
-import { Avatar } from "../avatar/Avatar";
+import { formatDateTime, formatString } from "../../utils/Formatter";
+import { UserCard } from "../user/UserCard";
 import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
 import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
 import type { NoteFormData } from "../notes/NoteForm";
-import { useCreateNoteMutation, useUpdateNoteMutation, useDeleteNoteMutation } from "../../services/apis/user/NoteAPIs";
+import {
+    useCreateNoteMutation,
+    useUpdateNoteMutation,
+    useDeleteNoteMutation,
+} from "../../services/apis/user/NoteAPIs";
 import type { NoteResponseDto, NoteUpdateDto } from "../../types/dtos/NoteDtos";
 import { normalizeCalendarEvents } from "../../utils/CalendarHandler";
+import { showToast } from "../../utils/ToastsManager";
 
 export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
@@ -64,6 +61,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getExams({
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 limit: 3,
             }).unwrap();
             setExams(result.data || []);
@@ -76,6 +74,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getTasks({
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 limit: 3,
             }).unwrap();
             setTasks(result.data || []);
@@ -88,6 +87,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getAnnouncements({
                 includes: ["subject"],
+                order_by: ["date_nearest"],
                 limit: 3,
             }).unwrap();
             setAnnouncements(result.data || []);
@@ -113,7 +113,9 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                     date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
                 }).unwrap();
 
-                setEventsData(normalizeCalendarEvents(result.data?.events || {}));
+                setEventsData(
+                    normalizeCalendarEvents(result.data?.events || {}),
+                );
             } catch (error) {
                 handlePopupErrors(error);
             }
@@ -168,27 +170,55 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
 
     const handleSaveNote = async (data: NoteFormData) => {
         if (!selectedDate) return;
-        await createNote({ ...data, date: data.date || selectedDate }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await createNote({
+                ...data,
+                date: data.date || selectedDate,
+            }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note created successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
-    const handleUpdateNote = async (note: NoteResponseDto, data: NoteUpdateDto) => {
+    const handleUpdateNote = async (
+        note: NoteResponseDto,
+        data: NoteUpdateDto,
+    ) => {
         if (!note.id) return;
-        await updateNote({ note_id: note.id, ...data }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await updateNote({ note_id: note.id, ...data }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note updated successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
     const handleDeleteNote = async (note: NoteResponseDto) => {
         if (!note.id) return;
-        await deleteNote({ note_id: note.id }).unwrap();
-        await fetchCalendar(currentYear, currentMonth);
+        try {
+            await deleteNote({ note_id: note.id }).unwrap();
+            await fetchCalendar(currentYear, currentMonth);
+            showToast("success", "Success", "Note deleted successfully.");
+        } catch (error) {
+            handlePopupErrors(error);
+        }
     };
 
     const notesBusy = isCreatingNote || isUpdatingNote || isDeletingNote;
 
-    const selectedEvents = selectedDate && eventsData[selectedDate]
-        ? eventsData[selectedDate]
-        : { tasks: [], exams: [], announcements: [], events: [], notes: [] };
+    const selectedEvents =
+        selectedDate && eventsData[selectedDate]
+            ? eventsData[selectedDate]
+            : {
+                  tasks: [],
+                  exams: [],
+                  announcements: [],
+                  events: [],
+                  notes: [],
+              };
 
     return (
         <div className={styles["dashboard-container"]}>
@@ -322,45 +352,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
             </div>
 
             <div className={styles["sidebar-column"]}>
-                <div className={styles["user-card"]}>
-                    <div className={styles["user-card-header"]}>
-                        <span className={styles["user-role"]}>
-                            {captitalize(user.role?.name || undefined)}
-                        </span>
-                    </div>
-                    <Avatar
-                        user={user}
-                        size="large"
-                        className={styles["user-avatar"]}
-                    />
-                    <h3 className={styles["user-name"]}>{user.name}</h3>
-                    <div className={styles["user-academic-details"]}>
-                        <div>
-                            <span>Faculty</span>
-                            <span>{user.faculty?.name || "N/A"}</span>
-                        </div>
-                        <div className={styles["separator"]}></div>
-                        <div>
-                            <span>Department</span>
-                            <span>{user.department?.name || "N/A"}</span>
-                        </div>
-                        <div className={styles["separator"]}></div>
-                        <div>
-                            <span>Year</span>
-                            <span>{user.year?.year || "N/A"}</span>
-                        </div>
-                    </div>
-                    <div className={styles["user-details"]}>
-                        <h5>
-                            <img src={emailIcon} alt="Email" />
-                            <span>{user.email}</span>
-                        </h5>
-                        <h5>
-                            <img src={phoneIcon} alt="Phone" />
-                            <span>{user.phone || "N/A"}</span>
-                        </h5>
-                    </div>
-                </div>
+                <UserCard user={user} />
 
                 <div className={styles["my-courses"]}>
                     <div className={styles["courses-header"]}>
@@ -381,7 +373,9 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                                 key={course.id}
                                 className={styles["course-item"]}
                             >
-                                <span>{course.name}</span>
+                                <span>
+                                    {formatString(course.name, "CardTitle")}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -411,10 +405,16 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                             >
                                 <div>
                                     <h6>
-                                        {formatString(announcement.title, 30)}
+                                        {formatString(
+                                            announcement.title,
+                                            "CardTitle",
+                                        )}
                                     </h6>
                                     <p>
-                                        {formatString(announcement.content, 50)}
+                                        {formatString(
+                                            announcement.content,
+                                            "CardContent",
+                                        )}
                                     </p>
                                     <div>
                                         <span>

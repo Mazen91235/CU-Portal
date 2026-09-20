@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
 import {
@@ -28,15 +28,15 @@ export default function useAuth({
     const user = useAppSelector((state) => state.user.user);
     const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
-    const location = useLocation();
+    const { pathname, state } = useLocation();
     useEffect(() => {
         (async () => {
             if (checkCrawler()) return;
-            if (location.state?.isProcessing) {
+            if (state?.isProcessing) {
                 dispatch(setIsProcessing(false));
-                navigate(location.pathname, {
+                navigate(pathname, {
                     state: {
-                        ...location.state,
+                        ...state,
                         isProcessing: undefined,
                     },
                     replace: true,
@@ -86,7 +86,8 @@ export default function useAuth({
     }, [
         user,
         permissions,
-        location,
+        pathname,
+        state,
         isProcessing,
         navigate,
         dispatch,
@@ -102,14 +103,17 @@ export default function useAuth({
 
 export function useGetGoogleAccessToken() {
     useAuth({ shouldNavigate: false });
+    const [isLoading, setIsLoading] = useState(true);
     const [getGoogleStoredTokenMutation] = useGetGoogleStoredTokenMutation();
     const [getGoogleAccessTokenMutation] = useLazyGetGoogleAccessTokenQuery();
     const isLoggedIn = useLogin();
 
     useEffect(() => {
         (async () => {
-            const loggedIn = await isLoggedIn();
+            setIsLoading(true);
+            let loggedIn = false;
             try {
+                loggedIn = await isLoggedIn();
                 if (
                     GetCookie("oauth_state") &&
                     GetCookie("google_details_token") &&
@@ -124,6 +128,8 @@ export function useGetGoogleAccessToken() {
                 if (loggedIn) await getGoogleAccessTokenMutation().unwrap();
             } catch {
                 return;
+            } finally {
+                setIsLoading(false);
             }
         })();
     }, [
@@ -131,4 +137,6 @@ export function useGetGoogleAccessToken() {
         getGoogleAccessTokenMutation,
         isLoggedIn,
     ]);
+
+    return isLoading;
 }

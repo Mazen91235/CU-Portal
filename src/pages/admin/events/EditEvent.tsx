@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,11 +25,12 @@ import {
     useUploadFileToDrive,
     useRemoveUploadedFiles,
 } from "../../../hooks/useHandleProcesses";
-import { handleErrors, handlePopupErrors } from "../../../utils/ErrorHandling";
+import { handleErrors, getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -55,7 +57,7 @@ const eventSchema = z
         end_time: z.string().optional(),
         location_type: z.enum(["Online", "Offline"]),
         location: z.string().min(1, "Location is required"),
-        price: z.string().min(1, "Price is required"),
+        price: z.number({ message: "Price is required" }).nonnegative("Price cannot be negative"),
         event_organizer_id: z.string().min(1, "Event organizer is required"),
         files: z.any().optional(),
         links: z.string().optional(),
@@ -84,6 +86,11 @@ type EventFormData = z.input<typeof eventSchema>;
 
 export const EditEvent = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(
+        searchParams.get("redirect_url"),
+        "/admin/events",
+    );
     const { eventId } = useParams<{ eventId: string }>();
     const user = useAppSelector((state) => state.user.user);
 
@@ -126,7 +133,11 @@ export const EditEvent = () => {
 
     const isRestricted = watch("is_restricted");
     const selectedFaculty = watch("faculty_id");
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchFaculties = useCallback(async () => {
         if (!user?.canAccessAll) return;
@@ -187,7 +198,12 @@ export const EditEvent = () => {
             const eventData = result.data || null;
             setEvent(eventData);
 
-            if (!eventData) return;
+            if (!eventData) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
 
             setValue("title", eventData.title || "");
             setValue("description", eventData.details?.description || "");
@@ -197,7 +213,7 @@ export const EditEvent = () => {
             setValue("end_time", formatTimeInputValue(eventData.end_date));
             setValue("location_type", eventData.location_type || "Offline");
             setValue("location", eventData.location || "");
-            setValue("price", eventData.price?.toString() || "0");
+            setValue("price", eventData.price ?? 0);
             setValue(
                 "event_organizer_id",
                 eventData.event_organizer?.id?.toString() || "",
@@ -238,16 +254,11 @@ export const EditEvent = () => {
                     .filter((link) => !!link.url) || [],
             );
         } catch (error) {
-            const err = error as {
-                data?: { message?: string };
-            };
-            navigate("/admin/events", {
-                state: {
-                    error: err.data?.message || "Failed to fetch event",
-                },
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
             });
         }
-    }, [eventId, getEvent, navigate, setValue]);
+    }, [getEvent, navigate, setValue, eventId, redirectUrl]);
 
     const authQueryParams = useCallback(
         () =>
@@ -271,12 +282,18 @@ export const EditEvent = () => {
 
     useEffect(() => {
         if (!user?.canAccessAll && isRestricted) {
-            setValue("faculty_id", user?.faculty?.id?.toString() || "");
-            setValue("department_id", user?.department?.id?.toString() || "");
-            setValue("year_id", user?.year?.id?.toString() || "");
             setFaculties(user?.faculty ? [user.faculty] : []);
             setDepartments(user?.department ? [user.department] : []);
             setYears(user?.year ? [user.year] : []);
+            if (faculties.length > 0)
+                setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            if (departments.length > 0)
+                setValue(
+                    "department_id",
+                    user?.department?.id?.toString() || "",
+                );
+            if (years.length > 0)
+                setValue("year_id", user?.year?.id?.toString() || "");
             return;
         }
 
@@ -290,7 +307,7 @@ export const EditEvent = () => {
                 setYears([]);
             }
         }
-    }, [isRestricted, user, setValue]);
+    }, [setValue, isRestricted, user, faculties, departments, years]);
 
     useEffect(() => {
         if (user?.canAccessAll) {
@@ -342,13 +359,6 @@ export const EditEvent = () => {
         const uploadedUrls: string[] = [];
 
         const thumbnailFile = getThumbnailFile(data.thumbnail);
-        if (!thumbnailFile && !existingThumbnailUrl) {
-            setError("thumbnail", {
-                type: "required",
-                message: "Thumbnail is required",
-            });
-            return;
-        }
 
         try {
             setIsUploading(true);
@@ -362,6 +372,14 @@ export const EditEvent = () => {
             const newThumbnailUrl = thumbnailFile
                 ? await uploadFile(thumbnailFile)
                 : undefined;
+            if (thumbnailFile && !newThumbnailUrl) {
+                await removeUploadedFiles(uploadedUrls);
+                setError("thumbnail", {
+                    type: "upload",
+                    message: "Failed to upload thumbnail",
+                });
+                return;
+            }
             if (newThumbnailUrl) uploadedUrls.push(newThumbnailUrl);
 
             const fileUrls = [
@@ -407,17 +425,18 @@ export const EditEvent = () => {
                 event_id: parseInt(eventId),
                 title: data.title,
                 start_date:
-                    mergeDateAndTime(
-                        data.start_date,
-                        data.start_time,
-                    )?.toISOString() || "",
+                    toIsoFormat(
+                        mergeDateAndTime(data.start_date, data.start_time),
+                    ) || "",
                 end_date: data.end_date
-                    ? mergeDateAndTime(
-                          data.end_date,
-                          data.end_time || "00:00",
-                      )?.toISOString() || null
+                    ? toIsoFormat(
+                          mergeDateAndTime(
+                              data.end_date,
+                              data.end_time || "00:00",
+                          ),
+                      ) || null
                     : null,
-                price: parseFloat(data.price),
+                price: data.price,
                 location_type: data.location_type,
                 location: data.location,
                 event_organizer_id: parseInt(data.event_organizer_id),
@@ -432,7 +451,7 @@ export const EditEvent = () => {
 
             await updateEvent(payload).unwrap();
 
-            navigate("/admin/events", {
+            navigate(redirectUrl, {
                 state: { success: "Event updated successfully!" },
             });
         } catch (error) {
@@ -497,7 +516,7 @@ export const EditEvent = () => {
                 icon="calendar"
                 img={existingThumbnailUrl || undefined}
                 linkText="Back to Events"
-                linkTo="/admin/events"
+                linkTo={redirectUrl}
             />
 
             <main className={styles.container}>
@@ -526,7 +545,6 @@ export const EditEvent = () => {
                         <Thumbnail
                             register={register}
                             name="thumbnail"
-                            required
                             errors={errors}
                             setValue={setValue}
                             existingUrl={existingThumbnailUrl}
@@ -643,6 +661,9 @@ export const EditEvent = () => {
                             name="price"
                             type="number"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={busy}
                         />
                     </div>
@@ -746,7 +767,7 @@ export const EditEvent = () => {
                             loadingText=""
                             type="button"
                             isSubmitting={false}
-                            onClick={() => navigate("/admin/events")}
+                            onClick={() => navigate(redirectUrl)}
                             isSecondary
                         />
                         <Button

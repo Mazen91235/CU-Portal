@@ -20,7 +20,7 @@ export const Preview = ({
                         <i className="fas fa-times"></i>
                     </button>
                     <h2 className={styles.previewerTitle}>
-                        {formatString(fileName, 25)}
+                        {formatString(fileName, "CardTitle")}
                     </h2>
                 </div>
                 <button className={styles.fileActionBtn} onClick={onDownload}>

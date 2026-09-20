@@ -7,7 +7,7 @@ import type { TaskDetails } from "../entities/Task";
 export type TaskCreateDto = {
     name: string;
     url?: string | null;
-    deadline: Date;
+    deadline: string;
     subject_id: number;
     details?: TaskDetails;
 };
@@ -18,10 +18,10 @@ export type TaskResponseDto = {
     task_type?: string | null;
     url?: string | null;
     details?: TaskDetails | null;
-    deadline?: Date | null;
-    due_date?: Date | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    deadline?: string | null;
+    due_date?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     attachments?: AttachmentResponseDto[] | null;
@@ -30,7 +30,7 @@ export type TaskResponseDto = {
 export type TaskUpdateDto = {
     name: string;
     url?: string | null;
-    deadline: Date;
+    deadline: string;
     subject_id: number;
     details?: TaskDetails;
 };
@@ -42,11 +42,14 @@ export type TaskDeleteDto = {
 export type TaskSearchDto = {
     id?: number | null;
     subject_id?: number | null;
+    faculty_id?: number | null;
+    department_id?: number | null;
+    year_id?: number | null;
     author_id?: number | null;
-    deadline_from?: Date | null;
-    deadline_to?: Date | null;
-    created_at_from?: Date | null;
-    created_at_to?: Date | null;
-    updated_at_from?: Date | null;
-    updated_at_to?: Date | null;
+    deadline_from?: string | null;
+    deadline_to?: string | null;
+    created_at_from?: string | null;
+    created_at_to?: string | null;
+    updated_at_from?: string | null;
+    updated_at_to?: string | null;
 } & SearchDto;

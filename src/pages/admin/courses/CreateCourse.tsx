@@ -1,4 +1,6 @@
-import { useNavigate } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
+import type React from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,7 +29,7 @@ import { useCallback, useState } from "react";
 const courseSchema = z.object({
     name: z.string().min(1, "Course name is required"),
     code: z.string().min(1, "Course code is required"),
-    credits: z.string().min(1, "Credits are required"),
+    credits: z.number({ message: "Credits are required" }).nonnegative("Credits cannot be negative"),
     faculty_id: z.string().optional(),
     department_id: z.string().optional(),
     year_id: z.string().optional(),
@@ -37,6 +39,8 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const CreateCourse = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/courses");
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
     const [years, setYears] = useState<YearResponseDto[]>([]);
@@ -51,51 +55,86 @@ export const CreateCourse = () => {
         register,
         handleSubmit,
         formState: { errors },
-        watch,
+        setValue,
     } = useForm<CourseFormData>({
         resolver: zodResolver(courseSchema),
     });
 
-    const selectedFacultyId = watch("faculty_id");
-
-    const fetchFaculties = useCallback(async () => {
-        try {
-            const result = await searchFaculties({ data: {} }).unwrap();
-            setFaculties(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
+    const fetchFilters = useCallback(async () => {
+        if (!user?.canAccessAll) {
+            setValue("faculty_id", user?.faculty?.id?.toString() || "");
+            setValue("department_id", user?.department?.id?.toString() || "");
+            setValue("year_id", user?.year?.id?.toString() || "");
+            return;
         }
-    }, [searchFaculties]);
 
-    const fetchDepartments = useCallback(async () => {
         try {
-            if (!selectedFacultyId) return;
-            const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(selectedFacultyId),
-                },
+            const [facultyResult, yearResult] = await Promise.all([
+                searchFaculties({ data: {} }).unwrap(),
+                searchYears({ data: {} }).unwrap(),
+            ]);
+
+            const availableFaculties = facultyResult.data || [];
+            const availableYears = yearResult.data || [];
+
+            setFaculties(availableFaculties);
+            setYears(availableYears);
+            const facultyId = user?.faculty?.id?.toString() || "";
+            const departmentId = user?.department?.id?.toString() || "";
+            const yearId = user?.year?.id?.toString() || "";
+
+            if (faculties.length > 0) setValue("faculty_id", facultyId);
+            if (years.length > 0) setValue("year_id", yearId);
+
+            if (!facultyId) {
+                setDepartments([]);
+                return;
+            }
+
+            const departmentResult = await searchDepartments({
+                data: { faculty_id: Number(facultyId) },
             }).unwrap();
-            setDepartments(result.data || []);
+
+            const availableDepartments = departmentResult.data || [];
+            setDepartments(availableDepartments);
+            if (departments.length > 0) setValue("department_id", departmentId);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, selectedFacultyId]);
+    }, [
+        searchDepartments,
+        searchFaculties,
+        searchYears,
+        setValue,
+        user,
+        faculties,
+        years,
+        departments,
+    ]);
 
-    const fetchYears = useCallback(async () => {
-        try {
-            const result = await searchYears({ data: {} }).unwrap();
-            setYears(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [searchYears]);
+    const handleFacultyChange = useCallback(
+        async (event: React.ChangeEvent<HTMLSelectElement>) => {
+            const facultyId = event.target.value;
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
+            setValue("faculty_id", facultyId);
+            setValue("department_id", "");
+            setDepartments([]);
+
+            if (!facultyId) return;
+
+            try {
+                const result = await searchDepartments({
+                    data: { faculty_id: Number(facultyId) },
+                }).unwrap();
+                setDepartments(result.data || []);
+            } catch (error) {
+                handlePopupErrors(error);
+            }
+        },
+        [searchDepartments, setValue],
     );
 
-    useAuthQuery(authQueryParams);
+    useAuthQuery(fetchFilters);
 
     const onSubmit = async (data: CourseFormData) => {
         try {
@@ -119,7 +158,7 @@ export const CreateCourse = () => {
             const courseData = {
                 name: data.name,
                 code: data.code,
-                credits: parseInt(data.credits),
+                credits: data.credits,
                 faculty_id: params.faculty_id!,
                 department_id: params.department_id!,
                 year_id: params.year_id!,
@@ -127,14 +166,14 @@ export const CreateCourse = () => {
 
             await createCourse(courseData).unwrap();
             showToast("success", "Success", "Course created successfully");
-            navigate("/admin/courses");
+            navigate(redirectUrl);
         } catch (error) {
             handlePopupErrors(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/admin/courses");
+        navigate(redirectUrl);
     };
 
     return (
@@ -148,126 +187,139 @@ export const CreateCourse = () => {
                 description="Add a new course to the university catalog"
                 icon="course"
                 linkText="Back to Courses"
-                linkTo="/admin/courses"
+                linkTo={redirectUrl}
             />
             <main className={styles["container"]}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <section className={styles["formSection"]}>
-                        <Heading
-                            icon="info-circle"
-                            content="Basic Information"
-                            size="medium"
-                        />
+                    <fieldset
+                        disabled={isLoading}
+                        className={styles.formFieldset}
+                    >
+                        <section className={styles["formSection"]}>
+                            <Heading
+                                icon="info-circle"
+                                content="Basic Information"
+                                size="medium"
+                            />
 
-                        <div className={styles["formRow"]}>
-                            <Input
-                                label="Course Title"
-                                register={register}
-                                name="name"
-                                type="text"
-                                placeholder="e.g., Operating Systems"
-                                errors={errors}
-                            />
-                        </div>
-                        <div className={styles["formRow"]}>
-                            <Input
-                                label="Course Code"
-                                register={register}
-                                name="code"
-                                type="text"
-                                placeholder="e.g., CS301"
-                                errors={errors}
-                            />
-                        </div>
-                        {user?.canAccessAll && (
-                            <>
-                                <div className={styles["formRow"]}>
-                                    <Select
-                                        label="Faculty"
-                                        register={register}
-                                        name="faculty_id"
-                                        errors={errors}
-                                    >
-                                        <option value="">Select Faculty</option>
-                                        {faculties.map((faculty) => (
-                                            <option
-                                                key={faculty.id}
-                                                value={faculty.id?.toString()}
-                                            >
-                                                {faculty.name}
+                            <div className={styles["formRow"]}>
+                                <Input
+                                    label="Course Title"
+                                    register={register}
+                                    name="name"
+                                    type="text"
+                                    placeholder="e.g., Operating Systems"
+                                    errors={errors}
+                                />
+                            </div>
+                            <div className={styles["formRow"]}>
+                                <Input
+                                    label="Course Code"
+                                    register={register}
+                                    name="code"
+                                    type="text"
+                                    placeholder="e.g., CS301"
+                                    errors={errors}
+                                />
+                            </div>
+                            {user?.canAccessAll && (
+                                <>
+                                    <div className={styles["formRow"]}>
+                                        <Select
+                                            label="Faculty"
+                                            register={register}
+                                            name="faculty_id"
+                                            errors={errors}
+                                            onChange={handleFacultyChange}
+                                        >
+                                            <option value="">
+                                                Select Faculty
                                             </option>
-                                        ))}
-                                    </Select>
-                                </div>
-                                <div className={styles["formRow"]}>
-                                    <Select
-                                        label="Department"
-                                        register={register}
-                                        name="department_id"
-                                        errors={errors}
-                                    >
-                                        <option value="">
-                                            Select Department
-                                        </option>
-                                        {departments.map((department) => (
-                                            <option
-                                                key={department.id}
-                                                value={department.id?.toString()}
-                                            >
-                                                {department.name}
+                                            {faculties.map((faculty) => (
+                                                <option
+                                                    key={faculty.id}
+                                                    value={faculty.id?.toString()}
+                                                >
+                                                    {faculty.name}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </div>
+                                    <div className={styles["formRow"]}>
+                                        <Select
+                                            label="Department"
+                                            register={register}
+                                            name="department_id"
+                                            errors={errors}
+                                        >
+                                            <option value="">
+                                                Select Department
                                             </option>
-                                        ))}
-                                    </Select>
-                                </div>
-                                <div className={styles["formRow"]}>
-                                    <Select
-                                        label="Academic Year"
-                                        register={register}
-                                        name="year_id"
-                                        errors={errors}
-                                    >
-                                        <option value="">Select Year</option>
-                                        {years.map((year) => (
-                                            <option
-                                                key={year.id}
-                                                value={year.id?.toString()}
-                                            >
-                                                {year.year}
+                                            {departments.map((department) => (
+                                                <option
+                                                    key={department.id}
+                                                    value={department.id?.toString()}
+                                                >
+                                                    {department.name}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </div>
+                                    <div className={styles["formRow"]}>
+                                        <Select
+                                            label="Academic Year"
+                                            register={register}
+                                            name="year_id"
+                                            errors={errors}
+                                        >
+                                            <option value="">
+                                                Select Year
                                             </option>
-                                        ))}
-                                    </Select>
-                                </div>
-                            </>
-                        )}
-                        <div className={styles["formRow"]}>
-                            <Input
-                                label="Credits"
-                                register={register}
-                                name="credits"
-                                type="number"
-                                placeholder="3"
-                                errors={errors}
-                            />
-                        </div>
-                    </section>
+                                            {years.map((year) => (
+                                                <option
+                                                    key={year.id}
+                                                    value={year.id?.toString()}
+                                                >
+                                                    {year.year}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </div>
+                                </>
+                            )}
+                            <div className={styles["formRow"]}>
+                                <Input
+                                    label="Credits"
+                                    register={register}
+                                    name="credits"
+                                    type="number"
+                                    placeholder="3"
+                                    errors={errors}
+                                    registerOptions={{
+                                        setValueAs: (value) => value === "" ? undefined : Number(value),
+                                    }}
+                                />
+                            </div>
+                        </section>
 
-                    <div className={styles["formActions"]}>
-                        <Button
-                            text="Cancel"
-                            loadingText="Cancelling..."
-                            type="button"
-                            isSubmitting={false}
-                            onClick={handleCancel}
-                            isSecondary={true}
-                        />
-                        <Button
-                            text="Create Course"
-                            loadingText="Creating..."
-                            isSubmitting={isLoading}
-                            type="submit"
-                            isOrange={false}
-                        />
-                    </div>
+                        <div className={styles["formActions"]}>
+                            <Button
+                                text="Cancel"
+                                loadingText="Cancelling..."
+                                type="button"
+                                isSubmitting={false}
+                                onClick={handleCancel}
+                                isSecondary={true}
+                            />
+                            <Button
+                                text="Create Course"
+                                loadingText="Creating..."
+                                isSubmitting={isLoading}
+                                type="submit"
+                                isOrange={false}
+                            />
+                        </div>
+                    </fieldset>
                 </form>
             </main>
         </Layout>

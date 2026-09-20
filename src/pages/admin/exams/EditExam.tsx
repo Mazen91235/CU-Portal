@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,20 +10,19 @@ import {
 } from "../../../services/apis/admin/ExamAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
 import { DateInput } from "../../../components/forms/DateInput";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
 import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { Layout } from "../../../components/layout/Layout";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
-import { Form } from "../../../components/forms/Form";
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
 
 import styles from "./EditExam.module.css";
@@ -30,6 +30,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 
 const examSchema = z.object({
@@ -38,7 +39,7 @@ const examSchema = z.object({
     exam_type: z.string().optional(),
     due_date: z.string().optional(),
     start_time: z.string().optional(),
-    duration: z.string().optional(),
+    duration: z.number().nonnegative("Duration cannot be negative").optional(),
     location: z.string().optional(),
     exam_format: z.string().optional(),
     exam_weight: z.string().optional(),
@@ -50,6 +51,8 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 export const EditExam = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/exams");
     const { examId } = useParams<{ examId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [exam, setExam] = useState<ExamResponseDto | null>(null);
@@ -88,7 +91,7 @@ export const EditExam = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -104,7 +107,13 @@ export const EditExam = () => {
                 exam_id: parseInt(examId),
             }).unwrap();
             const examData = result.data;
-            setExam(examData || null);
+            if (!examData) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch exam" },
+                });
+                return;
+            }
+            setExam(examData);
 
             if (examData) {
                 setValue("title", examData.name || "");
@@ -114,7 +123,7 @@ export const EditExam = () => {
                 setValue("start_time", formatTimeInputValue(examData.deadline));
                 setValue(
                     "duration",
-                    examData.details?.duration?.toString() || "",
+                    examData.details?.duration ?? undefined,
                 );
                 setValue("location", examData.details?.location || "");
                 setValue("exam_format", examData.details?.exam_format || "");
@@ -123,14 +132,11 @@ export const EditExam = () => {
                 setValue("instructions", examData.details?.instructions || "");
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/exams", {
-                state: {
-                    error: err.message || "Failed to fetch exam",
-                },
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch exam" },
             });
         }
-    }, [getExam, setValue, navigate, examId]);
+    }, [getExam, setValue, navigate, examId, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchExam()]),
@@ -147,15 +153,12 @@ export const EditExam = () => {
                 exam_id: parseInt(examId),
                 name: data.title,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.due_date,
-                    data.start_time || "00:00",
-                )!.toISOString(),
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.due_date, data.start_time || "00:00"),
+                )!,
                 details: {
                     exam_type: data.exam_type || undefined,
-                    duration: data.duration
-                        ? parseFloat(data.duration)
-                        : undefined,
+                    duration: data.duration ?? undefined,
                     location: data.location || undefined,
                     exam_format: data.exam_format as
                         | "MCQ"
@@ -172,7 +175,7 @@ export const EditExam = () => {
             };
 
             await updateExam(examData).unwrap();
-            navigate("/admin/exams", {
+            navigate(redirectUrl, {
                 state: { success: "Exam updated successfully!" },
             });
         } catch (error) {
@@ -181,7 +184,7 @@ export const EditExam = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/exams");
+        navigate(redirectUrl);
     };
 
     if (!exam) {
@@ -199,7 +202,7 @@ export const EditExam = () => {
                 description="Update exam information"
                 icon="task"
                 linkText="Back to Exams"
-                linkTo="/admin/exams"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -223,20 +226,23 @@ export const EditExam = () => {
                             errors={errors}
                             disabled={isLoading}
                         />
-                        <SearchableInput
+                        <Select
                             label="Subject"
-                            placeholder="Select a subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                         <Select
                             label="Exam Type"
                             register={register}
@@ -280,12 +286,15 @@ export const EditExam = () => {
                             />
                         </div>
                         <Input
-                            label="Duration (hours)"
+                            label="Duration (minutes)"
                             type="number"
                             placeholder="Enter exam duration"
                             register={register}
                             name="duration"
                             errors={errors}
+                            registerOptions={{
+                                setValueAs: (value) => value === "" ? undefined : Number(value),
+                            }}
                             disabled={isLoading}
                         />
                         <Input

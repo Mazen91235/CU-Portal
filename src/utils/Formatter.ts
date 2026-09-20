@@ -1,3 +1,6 @@
+import { linkify } from "./Linkify";
+import { type ReactNode } from "react";
+
 const getDiffHours = (date: Date): number => {
     const dateLocal = date.toLocaleString("en-US", {
         timeZone: "Africa/Cairo",
@@ -69,15 +72,45 @@ export const formatDateTime = (
     });
 };
 
-export const formatDate = (dateString?: string | Date | null): string => {
+export const formatDate = (
+    dateString?: string | Date | null,
+    weekDay = true,
+): string => {
     const date = parseDateValue(dateString);
     return date
         ? date.toLocaleDateString([], {
+              weekday: weekDay ? "short" : undefined,
               month: "short",
               day: "numeric",
               year: "numeric",
           })
         : "N/A";
+};
+
+export const formatCalendarDate = (
+    dateString?: string | Date | null,
+    weekDay = true,
+): string => {
+    if (!dateString) return "N/A";
+
+    if (typeof dateString === "string") {
+        const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            const date = new Date(
+                Number(match[1]),
+                Number(match[2]) - 1,
+                Number(match[3]),
+            );
+            return date.toLocaleDateString([], {
+                weekday: weekDay ? "short" : undefined,
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+            });
+        }
+    }
+
+    return formatDate(dateString, weekDay);
 };
 
 export const formatTime = (dateTimeString?: string | Date | null): string => {
@@ -118,19 +151,39 @@ export const formatTimeAgo = (
     return "Just now";
 };
 
+export const FORMAT_STRING_LIMITS = {
+    CardTitle: 30,
+    CardDescription: 60,
+    CardContent: 80,
+    StatCardContent: 30,
+    CalendarCardTitle: 40,
+    CalendarCardContent: 80,
+    ListTitle: 50,
+    ListContent: 100,
+    PageTitle: 100,
+    PageDescription: 180,
+    Content: Infinity,
+} as const;
+
+export type FormatStringType = keyof typeof FORMAT_STRING_LIMITS;
+
 export const formatString = (
     str?: string | null,
-    maxLength?: number,
-): string => {
+    viewer: number | FormatStringType = FORMAT_STRING_LIMITS.Content,
+): ReactNode => {
     if (!str) return "N/A";
-    if (maxLength && str.length > maxLength) {
-        return (
-            str.substring(0, maxLength - 5) +
-            "..." +
-            str.substring(str.length - 5)
-        );
-    }
-    return str;
+
+    const maxLength =
+        typeof viewer === "number" ? viewer : FORMAT_STRING_LIMITS[viewer];
+
+    const formatted =
+        maxLength && str.length > maxLength
+            ? str.substring(0, Math.max(0, maxLength - 5)) +
+              "..." +
+              str.substring(str.length - 5)
+            : str;
+
+    return linkify(formatted);
 };
 
 export const formatCalendarDay = (date: Date): string => {
@@ -191,7 +244,6 @@ export const mergeDateAndTime = (
     const date = new Date(timeValue ? `${dateValue}T${timeValue}` : dateValue);
     return Number.isNaN(date.getTime()) ? undefined : date;
 };
-
 
 export const toIsoFormat = (
     dateValue?: string | Date | null,

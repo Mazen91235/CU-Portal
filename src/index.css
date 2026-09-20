@@ -45,6 +45,21 @@
     --card-pink: rgba(239, 68, 68, 0.05);
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 a {
     text-decoration: none;
     color: inherit;

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,11 +10,11 @@ import {
 } from "../../../services/apis/admin/AnnouncementAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
@@ -35,6 +36,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import styles from "./EditAnnouncement.module.css";
 
@@ -52,6 +54,8 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 
 export const EditAnnouncement = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/announcements");
     const { announcementId } = useParams<{ announcementId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
@@ -80,7 +84,11 @@ export const EditAnnouncement = () => {
         resolver: zodResolver(announcementSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -98,7 +106,7 @@ export const EditAnnouncement = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -114,7 +122,13 @@ export const EditAnnouncement = () => {
                 announcement_id: parseInt(announcementId),
             }).unwrap();
             const announcement = result.data;
-            setAnnouncement(announcement || null);
+            if (!announcement) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch announcement" },
+                });
+                return;
+            }
+            setAnnouncement(announcement);
             if (announcement) {
                 setValue("title", announcement.title || "");
                 setValue("content", announcement.content || "");
@@ -155,14 +169,11 @@ export const EditAnnouncement = () => {
                 );
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/announcements", {
-                state: {
-                    error: err.message || "Failed to fetch announcement",
-                },
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch announcement" },
             });
         }
-    }, [announcementId, getAnnouncement, setValue, navigate]);
+    }, [announcementId, getAnnouncement, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchAnnouncement()]),
@@ -192,7 +203,10 @@ export const EditAnnouncement = () => {
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
-                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                newUrls
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -202,12 +216,14 @@ export const EditAnnouncement = () => {
                 title: data.title,
                 content: data.content || "",
                 subject_id: parseInt(data.subject_id),
-                date: data.date_date
-                    ? mergeDateAndTime(
-                          data.date_date,
-                          data.date_time || "00:00",
-                      )
-                    : undefined,
+                date: toIsoFormat(
+                    data.date_date
+                        ? mergeDateAndTime(
+                              data.date_date,
+                              data.date_time || "00:00",
+                          )
+                        : undefined,
+                ),
                 details: {
                     urls: urls != "" ? urls.split(", ") : [],
                     links: (() => {
@@ -229,7 +245,7 @@ export const EditAnnouncement = () => {
             };
 
             await updateAnnouncement(announcementData).unwrap();
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: { success: "Announcement updated successfully" },
             });
         } catch (error) {
@@ -241,7 +257,7 @@ export const EditAnnouncement = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/announcements");
+        navigate(redirectUrl);
     };
 
     useEffect(() => {
@@ -261,7 +277,7 @@ export const EditAnnouncement = () => {
                 description="Update announcement information"
                 icon="announcements"
                 linkText="Back to Announcements"
-                linkTo="/admin/announcements"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -283,20 +299,23 @@ export const EditAnnouncement = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <SearchableInput
+                        <Select
                             label="Subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading || isUploading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                            placeholder="Select a subject"
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div className={styles.formGroup}>

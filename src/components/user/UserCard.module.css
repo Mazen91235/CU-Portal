@@ -1,0 +1,107 @@
+.card {
+    background: var(--white);
+    border-radius: var(--primary-border-radius);
+    padding: 24px;
+    box-shadow: var(--dark-box-shadow);
+    width: 100%;
+}
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.role {
+    font-size: 12px;
+    color: var(--primary-purple);
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 4px 12px;
+    border: 1px solid #8c0dab33;
+    text-transform: capitalize;
+}
+.avatar {
+    width: 100px;
+    height: 100px;
+    margin: 16px auto;
+    display: block;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.name {
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    margin: 12px auto;
+    display: block;
+    color: var(--dark-text);
+}
+.academicDetails {
+    width: 100%;
+    margin: 16px 0;
+    border: 1px solid #8c0dab33;
+    border-radius: var(--primary-border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+}
+.academicDetails div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.academicDetails .separator {
+    min-height: 30px;
+    width: 1px;
+    background: #8c0dab33;
+}
+.academicDetails div span:first-child {
+    font-size: var(--secondary-font-size);
+    color: var(--medium-grey);
+}
+.academicDetails div span:last-child {
+    font-size: var(--secondary-font-size);
+    background: linear-gradient(0deg, #520e58, #7b1684);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+}
+.details {
+    width: 100%;
+    margin: 16px 0 0;
+}
+.details h5 {
+    width: 100%;
+    border: 1px solid #8c0dab33;
+    border-radius: var(--primary-border-radius);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 12px;
+    font-size: var(--secondary-font-size);
+    margin: 8px 0;
+}
+.details h5 img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+.details h5 span {
+    color: var(--medium-grey);
+}
+.viewButton {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--primary-border-radius);
+    background: var(--primary-purple);
+    color: var(--white);
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}

@@ -23,7 +23,7 @@ const Logo = ({
     return (
         <img
             src={logoImage}
-            alt="CU Portal Logo"
+            alt="CU-Portal Logo"
             width={width}
             height={height}
             className={styles.logoImage}

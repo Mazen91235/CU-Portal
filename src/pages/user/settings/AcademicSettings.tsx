@@ -35,10 +35,10 @@ export const AcademicSettings = () => {
         formState: { errors, isSubmitting },
         setError,
         setValue,
+        getValues,
     } = useForm<AcademicFormData>({
         resolver: zodResolver(academicSchema),
     });
-
     const user = useAppSelector((state) => state.user.user);
 
     const [searchFaculties] = useLazyGetFacultiesQuery();
@@ -112,31 +112,48 @@ export const AcademicSettings = () => {
         }
     }, [searchYears]);
 
-    const authQueryParam = useCallback(
-        () => Promise.all([fetchFaculties(), fetchDepartments(), fetchYears()]),
-        [fetchFaculties, fetchDepartments, fetchYears],
+    const authFacultiesAndYearsQuery = useCallback(
+        () => Promise.all([fetchFaculties(), fetchYears()]),
+        [fetchFaculties, fetchYears],
     );
 
-    useAuthQuery(authQueryParam);
+    useAuthQuery(authFacultiesAndYearsQuery);
+
+    const authDepartmentsQuery = useCallback(
+        () => Promise.all([fetchDepartments()]),
+        [fetchDepartments],
+    );
+
+    useAuthQuery(authDepartmentsQuery);
 
     useEffect(() => {
         if (valuesSet) return;
         if (faculties.length && years.length && user) {
-            setValue("faculty", user.faculty?.id?.toString() || "");
-            setValue(
-                "studyType",
-                (user.study_type as "Mainstream" | "Credit") || "",
-            );
-            setValue("year", user.year?.id?.toString() || "");
-            setFaculty(user.faculty || null);
-            setStudyType(user.study_type || "");
-            if (departments.length) {
+            if (user.faculty) {
+                setValue("faculty", user.faculty?.id?.toString() || "");
+                setFaculty(user.faculty || null);
+            }
+            if (user.study_type) {
+                setValue(
+                    "studyType",
+                    (user.study_type as "Mainstream" | "Credit") || "",
+                );
+                setStudyType(user.study_type || "");
+            }
+            if (user.year) setValue("year", user.year?.id?.toString() || "");
+            if (departments.length && user.department) {
                 setValue("department", user.department?.id?.toString() || "");
-                setValuesSet(true);
+                setValuesSet(
+                    getValues("faculty") !== "" &&
+                        getValues("studyType") !== "" &&
+                        getValues("year") !== "" &&
+                        getValues("department") !== "",
+                );
             }
         }
     }, [
         setValue,
+        getValues,
         setValuesSet,
         user,
         faculties,
@@ -182,7 +199,10 @@ export const AcademicSettings = () => {
                         </div>
 
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={styles.form}>
+                            <fieldset
+                                disabled={isSubmitting}
+                                className={styles.form}
+                            >
                                 <div className={styles.selectGroup}>
                                     <Select
                                         register={register}
@@ -263,7 +283,7 @@ export const AcademicSettings = () => {
                                         ))}
                                     </Select>
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <div className={styles.buttonContainer}>
                                 <Button

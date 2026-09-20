@@ -22,7 +22,7 @@ export function useUploadFileToDriveChunked({
     resolve?: (process: Process) => void;
     reject?: (process: Process) => void;
 }) {
-    useGetGoogleAccessToken();
+    const isGoogleAccessTokenLoading = useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
         (state) => state.user.google_access_token,
     );
@@ -131,7 +131,9 @@ export function useUploadFileToDriveChunked({
             dispatch,
         ],
     );
-    return uploadFileToDriveChunked;
+    return Object.assign(uploadFileToDriveChunked, {
+        isGoogleAccessTokenLoading,
+    });
 }
 
 export const useCreateProcess = ({
@@ -176,7 +178,7 @@ export function useUploadFileToDrive({
     resolve?: (url: string) => void;
     reject?: (error: string) => void;
 }) {
-    useGetGoogleAccessToken();
+    const isGoogleAccessTokenLoading = useGetGoogleAccessToken();
     const google_access_token = useAppSelector(
         (state) => state.user.google_access_token,
     );
@@ -224,7 +226,9 @@ export function useUploadFileToDrive({
             makeFilePublic,
         ],
     );
-    return uploadFileToDrive;
+    return Object.assign(uploadFileToDrive, {
+        isGoogleAccessTokenLoading,
+    });
 }
 
 export function useRemoveUploadedFiles() {

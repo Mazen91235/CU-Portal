@@ -1,3 +1,4 @@
+import { useState } from "react";
 import IconComponent from "../IconComponent";
 
 import styles from "./ConfirmModal.module.css";
@@ -5,7 +6,7 @@ import styles from "./ConfirmModal.module.css";
 type ConfirmModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    onConfirm: () => void;
+    onConfirm: () => void | Promise<void>;
     confirmText: string;
     title?: string;
     message?: string;
@@ -23,11 +24,18 @@ const ConfirmModal = ({
     colorType = "orange",
     disabled = false,
 }: ConfirmModalProps) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const isDisabled = disabled || isSubmitting;
     if (!isOpen) return null;
 
-    const handleConfirm = () => {
-        if (disabled) return;
-        onConfirm();
+    const handleConfirm = async () => {
+        if (isDisabled) return;
+        setIsSubmitting(true);
+        try {
+            await onConfirm();
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const colorClass =
@@ -38,7 +46,7 @@ const ConfirmModal = ({
               : styles.orange;
 
     return (
-        <div className={styles.overlay} onClick={onClose}>
+        <div className={styles.overlay} onClick={isDisabled ? undefined : onClose}>
             <div className={styles.box} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.content}>
                     <span className={styles.iconWrapper}>
@@ -55,16 +63,16 @@ const ConfirmModal = ({
                         <button
                             className={styles.cancelBtn}
                             onClick={onClose}
-                            disabled={disabled}
+                            disabled={isDisabled}
                         >
                             Cancel
                         </button>
                         <button
                             className={`${styles.confirmBtn} ${colorClass}`}
                             onClick={handleConfirm}
-                            disabled={disabled}
+                            disabled={isDisabled}
                         >
-                            {confirmText}
+                            {isSubmitting ? "Processing..." : confirmText}
                         </button>
                     </div>
                 </div>

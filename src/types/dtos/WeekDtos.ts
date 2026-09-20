@@ -1,4 +1,3 @@
-// weekDtos.ts
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
@@ -39,6 +38,9 @@ export type WeekSearchDto = {
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
+    start_date_from?: string | null;
+    start_date_to?: string | null;
+    start_date_includes?: string | null;
     created_at_from?: string | null;
     created_at_to?: string | null;
     updated_at_from?: string | null;

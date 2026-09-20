@@ -9,7 +9,7 @@ import styles from "./Card.module.css";
 type CardItemColor = "green" | "yellow" | "orange" | "pink";
 
 type CardItem = {
-    icon: Icon | string;
+    icon: Icon;
     label?: string;
     value?: string;
     color?: CardItemColor;
@@ -112,14 +112,14 @@ export const Card = ({
                 </div>
             )}
 
-            {img && <h3 className={styles.title}>{formatString(title, 30)}</h3>}
+            {img && <h3 className={styles.title}>{formatString(title, "CardTitle")}</h3>}
 
             <div
                 className={styles.titleRow}
                 style={img ? { position: "absolute", margin: "1rem" } : {}}
             >
                 {!img && (
-                    <h3 className={styles.title}>{formatString(title, 30)}</h3>
+                    <h3 className={styles.title}>{formatString(title, "CardTitle")}</h3>
                 )}
                 {hasOptions && (
                     <div ref={optionsRef} className={styles.optionsContainer}>
@@ -233,7 +233,7 @@ export const Card = ({
                             {profile.slice(0, 1).toUpperCase()}
                         </div>
                     )}
-                    <span className={styles.profileText}>{profile}</span>
+                    <span className={styles.profileText}>{formatString(profile, "CardDescription")}</span>
                 </div>
             )}
 
@@ -246,17 +246,13 @@ export const Card = ({
                         >
                             <span className={styles.itemLabel}>
                                 <IconComponent
-                                    icon={
-                                        typeof item.icon === "string"
-                                            ? "time"
-                                            : item.icon
-                                    }
+                                    icon={item.icon}
                                     className={styles.itemIcon}
                                 />
-                                {item.label}
+                                {formatString(item.label, "CardDescription")}
                             </span>
                             <span className={styles.itemValue}>
-                                {item.value}
+                                {formatString(item.value, "CardDescription")}
                             </span>
                         </div>
                     ))}

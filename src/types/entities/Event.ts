@@ -9,16 +9,16 @@ import type { Attachment } from "./Attachment";
 export type Event = {
     id?: number;
     title?: string;
-    start_date?: Date;
-    end_date?: Date | null;
+    start_date?: string;
+    end_date?: string | null;
     price?: number;
     location_type?: EventLocationType;
     location?: string;
     details?: {
         description?: string;
     };
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     author_id?: number | null;
     author?: User | null;
     faculty_id?: number | null;

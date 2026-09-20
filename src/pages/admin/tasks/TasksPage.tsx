@@ -1,8 +1,9 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
-  useLazyGetTasksQuery,
-  useDeleteTaskMutation,
+    useLazyGetTasksQuery,
+    useDeleteTaskMutation,
 } from "../../../services/apis/admin/TaskAPIs";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -16,6 +17,7 @@ import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -26,107 +28,114 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 import styles from "./TasksPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export const TasksPage = () => {
-  const navigate = useNavigate();
-  const user = useAppSelector((state) => state.user.user);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [facultyFilter, setFacultyFilter] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState("");
-  const [yearFilter, setYearFilter] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
-  const [dateFromFilter, setDateFromFilter] = useState(
-    new Date().toLocaleDateString("en-CA"),
-  ); // Set default date to today's date in "YYYY-MM-DD" format
-  const [dateToFilter, setDateToFilter] = useState("");
-  const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
-  const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
-  const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
-  const [years, setYears] = useState<YearResponseDto[]>([]);
-  const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(
-    null,
-  );
-  const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(true);
+    const navigate = useNavigate();
+    const user = useAppSelector((state) => state.user.user);
+    const { getFilter, getFilterSetter, searchParams, setFilters } =
+        useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const departmentFilter = getFilter("department_id", "");
+    const yearFilter = getFilter("year_id", "");
+    const subjectFilter = getFilter("subject_id", "");
+    const setSubjectFilter = getFilterSetter("subject_id");
+    const dateFromFilter = getFilter(
+        "date_from",
+        new Date().toLocaleDateString("en-CA"),
+    );
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
+    const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
+    const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
+    const [years, setYears] = useState<YearResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<TaskResponseDto | null>(
+        null,
+    );
+    const [page, setPage] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(true);
 
-  const [searchFaculties] = useLazyGetFacultiesQuery();
-  const [searchDepartments] = useLazyGetDepartmentsQuery();
-  const [searchYears] = useLazyGetYearsQuery();
-  const [searchCourses] = useLazyGetCoursesQuery();
-  const [getTasks, { isFetching }] = useLazyGetTasksQuery();
-  const [deleteTask] = useDeleteTaskMutation();
+    const [searchFaculties] = useLazyGetFacultiesQuery();
+    const [searchDepartments] = useLazyGetDepartmentsQuery();
+    const [searchYears] = useLazyGetYearsQuery();
+    const [searchCourses] = useLazyGetCoursesQuery();
+    const [getTasks, { isFetching }] = useLazyGetTasksQuery();
+    const [deleteTask] = useDeleteTaskMutation();
 
-  const fetchFaculties = useCallback(async () => {
-    try {
-      const result = await searchFaculties({ data: {} }).unwrap();
-      setFaculties(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchFaculties]);
+    const fetchFaculties = useCallback(async () => {
+        try {
+            const result = await searchFaculties({ data: {} }).unwrap();
+            setFaculties(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchFaculties]);
 
-  const fetchDepartments = useCallback(async () => {
-    try {
-      if (!facultyFilter) {
-        setDepartments([]);
-        return;
-      }
-      const result = await searchDepartments({
-        data: {
-          faculty_id: parseInt(facultyFilter) || undefined,
-          study_type: undefined,
-        },
-      }).unwrap();
-      setDepartments(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchDepartments, facultyFilter]);
+    const fetchDepartments = useCallback(async () => {
+        try {
+            if (!user?.canAccessAll) {
+                setDepartments([]);
+                return;
+            }
+            if (!facultyFilter) {
+                setDepartments([]);
+                return;
+            }
+            const result = await searchDepartments({
+                data: { faculty_id: parseInt(facultyFilter) },
+            }).unwrap();
+            setDepartments(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchDepartments, facultyFilter, user?.canAccessAll]);
 
-  const fetchYears = useCallback(async () => {
-    try {
-      const result = await searchYears({ data: {} }).unwrap();
-      setYears(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchYears]);
+    const fetchYears = useCallback(async () => {
+        try {
+            const result = await searchYears({ data: {} }).unwrap();
+            setYears(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchYears]);
 
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            const params: {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-            } = {};
-            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-            if (departmentFilter)
-                params.department_id = parseInt(departmentFilter);
-            if (yearFilter) params.year_id = parseInt(yearFilter);
-            if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id ?? undefined;
-                params.department_id = user.department?.id ?? undefined;
-                params.year_id = user.year?.id ?? undefined;
+            if (user.canAccessAll) {
+                if (!facultyFilter || !departmentFilter || !yearFilter) {
+                    setSubjects([]);
+                    return;
+                }
             }
-            if (Object.keys(params).length < 3) {
-                setSubjects([]);
-                return;
-            }
-
-      const result = await searchCourses({ data: params }).unwrap();
-      setSubjects(result.data || []);
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+            const data = user.canAccessAll
+                ? {
+                      faculty_id: parseInt(facultyFilter),
+                      department_id: parseInt(departmentFilter),
+                      year_id: parseInt(yearFilter),
+                  }
+                : {
+                      faculty_id: user.faculty?.id ?? undefined,
+                      department_id: user.department?.id ?? undefined,
+                      year_id: user.year?.id ?? undefined,
+                  };
+            const result = await searchCourses({ data }).unwrap();
+            setSubjects(result.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
     const fetchTasks = useCallback(async () => {
         try {
@@ -139,15 +148,14 @@ export const TasksPage = () => {
                     : undefined,
                 year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 subject_id: subjectFilter ? parseInt(subjectFilter) : undefined,
-                deadline_from: dateFromFilter
-                    ? new Date(dateFromFilter)
-                    : undefined,
-                deadline_to: dateToFilter ? new Date(dateToFilter) : undefined,
+                deadline_from: toIsoFormat(dateFromFilter),
+                deadline_to: toIsoFormat(dateToFilter),
+                author_id: authorId ? parseInt(authorId) : undefined,
             };
             if (!user.canAccessAll) {
-                params.faculty_id = undefined;
-                params.department_id = undefined;
-                params.year_id = undefined;
+                params.faculty_id = user.faculty?.id ?? undefined;
+                params.department_id = user.department?.id ?? undefined;
+                params.year_id = user.year?.id ?? undefined;
             }
             const result = await getTasks({
                 data: params,
@@ -156,6 +164,7 @@ export const TasksPage = () => {
                     "subject.department",
                     "subject.year",
                 ],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setTasks((prev) => {
@@ -182,182 +191,225 @@ export const TasksPage = () => {
         page,
         hasNextPage,
         user,
+        authorId,
     ]);
 
-  const authQueryParams = useCallback(
-    () =>
-      Promise.all([
-        fetchFaculties(),
-        fetchDepartments(),
-        fetchYears(),
-        fetchSubjects(),
-        fetchTasks(),
-      ]),
-    [fetchFaculties, fetchDepartments, fetchYears, fetchSubjects, fetchTasks],
-  );
-
-  useAuthQuery(authQueryParams);
-
-  useEffect(() => {
-    setPage(1);
-    setHasNextPage(true);
-  }, [
-    facultyFilter,
-    departmentFilter,
-    yearFilter,
-    subjectFilter,
-    searchQuery,
-    dateFromFilter,
-    dateToFilter,
-  ]);
-
-  const handleAddTask = () => {
-    navigate("/admin/tasks/create");
-  };
-
-  const handleShareTask = (taskId: number) => {
-    const url = `${window.location.origin}/admin/tasks/${taskId}`;
-    copyToClipboard(url);
-    showToast(
-      "success",
-      "Success",
-      "Task link copied to clipboard successfully",
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
     );
-  };
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
+    );
 
-  const handleEditTask = (taskId: number) => {
-    navigate(`/admin/tasks/edit/${taskId}`);
-  };
+    const authFetchTasksQuery = useCallback(() => fetchTasks(), [fetchTasks]);
 
-  const handleDeleteClick = (task: TaskResponseDto) => {
-    setSelectedTask(task);
-    setIsDeleteModalOpen(true);
-  };
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authSubjectsQuery);
+    useAuthQuery(authFetchTasksQuery);
 
-  const handleDelete = async () => {
-    if (!selectedTask?.id) return;
+    useEffect(() => {
+        setPage(1);
+        setHasNextPage(true);
+    }, [
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        searchQuery,
+        dateFromFilter,
+        dateToFilter,
+        authorId,
+    ]);
 
-    try {
-      await deleteTask({
-        task_id: selectedTask.id,
-      }).unwrap();
-      showToast("success", "Success", "Task deleted successfully");
-      setIsDeleteModalOpen(false);
-      setSelectedTask(null);
-      setPage(1);
-      setHasNextPage(true);
-      await fetchTasks();
-    } catch (error) {
-      handlePopupErrors(error);
-    }
-  };
+    const handleAddTask = () => {
+        navigate("/admin/tasks/create");
+    };
 
-  const handleViewTask = (taskId: number) => {
-    navigate(`/admin/tasks/${taskId}`);
-  };
+    const handleShareTask = (taskId: number) => {
+        const url = `${window.location.origin}/admin/tasks/${taskId}`;
+        copyToClipboard(url);
+        showToast(
+            "success",
+            "Success",
+            "Task link copied to clipboard successfully",
+        );
+    };
 
-  const handlePagination = () => {
-    if (hasNextPage && !isFetching && tasks.length > 0) {
-      setPage(page + 1);
-    }
-  };
+    const handleEditTask = (taskId: number) => {
+        navigate(buildRedirectUrl(`/admin/tasks/edit/${taskId}`));
+    };
 
-  useEffect(() => {
-    setDepartmentFilter("");
-  }, [facultyFilter]);
+    const handleDeleteClick = (task: TaskResponseDto) => {
+        setSelectedTask(task);
+        setIsDeleteModalOpen(true);
+    };
 
-  useEffect(() => {
-    setSubjectFilter("");
-  }, [departmentFilter, yearFilter]);
+    const handleDelete = async () => {
+        if (!selectedTask?.id) return;
 
-  const facultyOptions = useMemo(
-    () => [
-      { value: "", label: "Faculty" },
-      ...faculties.map((faculty) => ({
-        value: faculty.id?.toString() || "",
-        label: faculty.name || "",
-      })),
-    ],
-    [faculties],
-  );
+        try {
+            await deleteTask({
+                task_id: selectedTask.id,
+            }).unwrap();
+            showToast("success", "Success", "Task deleted successfully");
+            setIsDeleteModalOpen(false);
+            setSelectedTask(null);
+            setPage(1);
+            setHasNextPage(true);
+            await fetchTasks();
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    };
 
-  const departmentOptions = useMemo(
-    () => [
-      { value: "", label: "Department" },
-      ...departments.map((dept) => ({
-        value: dept.id?.toString() || "",
-        label: dept.name || "",
-      })),
-    ],
-    [departments],
-  );
+    const handleViewTask = (taskId: number) => {
+        navigate(buildRedirectUrl(`/admin/tasks/${taskId}`));
+    };
 
-  const yearOptions = useMemo(
-    () => [
-      { value: "", label: "Academic Year" },
-      ...years.map((year) => ({
-        value: year.id?.toString() || "",
-        label: year.year?.toString() || "",
-      })),
-    ],
-    [years],
-  );
+    const handlePagination = () => {
+        if (hasNextPage && !isFetching && tasks.length > 0) {
+            setPage(page + 1);
+        }
+    };
 
-  const subjectOptions = useMemo(
-    () => [
-      { value: "", label: "Subject" },
-      ...subjects.map((subject) => ({
-        value: subject.id?.toString() || "",
-        label: subject.name || "",
-      })),
-    ],
-    [subjects],
-  );
+    const facultyOptions = useMemo(
+        () => [
+            { value: "", label: "Faculty" },
+            ...faculties.map((faculty) => ({
+                value: faculty.id?.toString() || "",
+                label: faculty.name || "",
+            })),
+        ],
+        [faculties],
+    );
 
-  return (
-    <Layout>
-      <PageSeo
-        title="Tasks Management - CU Portal"
-        description="Manage all university tasks and assignments"
-      />
-      <Banner
-        title="Tasks Management"
-        description="Manage all university tasks and assignments"
-        button="Add New Task"
-        buttonAction={handleAddTask}
-      />
-      <div className={styles.container}>
-        <div className={styles.filtersContainer}>
-          <div className={styles.searchRow}>
-            <Search placeholder="Search tasks..." setValue={setSearchQuery} />
-          </div>
+    const departmentOptions = useMemo(
+        () => [
+            { value: "", label: "Department" },
+            ...departments.map((dept) => ({
+                value: dept.id?.toString() || "",
+                label: dept.name || "",
+            })),
+        ],
+        [departments],
+    );
 
-          <div className={styles.filtersRow}>
-            {user?.canAccessAll && (
-              <>
-                <SelectFilter
-                  options={facultyOptions}
-                  setValue={setFacultyFilter}
-                />
-                <SelectFilter
-                  options={departmentOptions}
-                  setValue={setDepartmentFilter}
-                />
-                <SelectFilter options={yearOptions} setValue={setYearFilter} />
-              </>
-            )}
-            <SelectFilter
-              options={subjectOptions}
-              setValue={setSubjectFilter}
+    const yearOptions = useMemo(
+        () => [
+            { value: "", label: "Academic Year" },
+            ...years.map((year) => ({
+                value: year.id?.toString() || "",
+                label: year.year?.toString() || "",
+            })),
+        ],
+        [years],
+    );
+
+    const subjectOptions = useMemo(
+        () => [
+            { value: "", label: "Subject" },
+            ...subjects.map((subject) => ({
+                value: subject.id?.toString() || "",
+                label: subject.name || "",
+            })),
+        ],
+        [subjects],
+    );
+
+    return (
+        <Layout>
+            <PageSeo
+                title="Tasks Management - CU Portal"
+                description="Manage all university tasks and assignments"
             />
-            <DateFilter
-              placeholder="Date From"
-              setValue={setDateFromFilter}
-              defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+            <Banner
+                title="Tasks Management"
+                description="Manage all university tasks and assignments"
+                button="Add New Task"
+                buttonAction={handleAddTask}
             />
-            <DateFilter placeholder="Date To" setValue={setDateToFilter} />
-          </div>
-        </div>
+            <div className={styles.container}>
+                <div className={styles.filtersContainer}>
+                    <div className={styles.searchRow}>
+                        <Search
+                            placeholder="Search tasks..."
+                            setValue={setSearchQuery}
+                            value={searchQuery}
+                        />
+                    </div>
+
+                    <div className={styles.filtersRow}>
+                        {user?.canAccessAll && (
+                            <>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={facultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            department_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            year_id: value as string,
+                                            subject_id: null,
+                                        })
+                                    }
+                                    value={yearFilter}
+                                />
+                            </>
+                        )}
+                        <SelectFilter
+                            options={subjectOptions}
+                            setValue={setSubjectFilter}
+                            value={subjectFilter}
+                            disabled={
+                                user?.canAccessAll
+                                    ? !facultyFilter ||
+                                      !departmentFilter ||
+                                      !yearFilter
+                                    : false
+                            }
+                        />
+                        <DateFilter
+                            placeholder="Date From"
+                            setValue={setDateFromFilter}
+                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            value={dateFromFilter}
+                        />
+                        <DateFilter
+                            placeholder="Date To"
+                            setValue={setDateToFilter}
+                            value={dateToFilter}
+                            startDay={false}
+                        />
+                    </div>
+                </div>
 
                 <div className={styles.tasksGrid}>
                     {tasks.map((task) => (
@@ -395,22 +447,22 @@ export const TasksPage = () => {
                     ))}
                 </div>
 
-        {tasks.length === 0 && !isFetching && (
-          <NoContentSection icon="tasks" label="No tasks found" />
-        )}
+                {tasks.length === 0 && !isFetching && (
+                    <NoContentSection icon="tasks" label="No tasks found" />
+                )}
 
-        <Pagination onReached={handlePagination} />
-      </div>
+                <Pagination onReached={handlePagination} />
+            </div>
 
-      <ConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        title="Delete Task"
-        message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        colorType="red"
-      />
-    </Layout>
-  );
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                title="Delete Task"
+                message={`Are you sure you want to delete "${selectedTask?.name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                colorType="red"
+            />
+        </Layout>
+    );
 };

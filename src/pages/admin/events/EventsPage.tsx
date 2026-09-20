@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetEventsQuery,
     useDeleteEventMutation,
@@ -8,13 +9,15 @@ import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
+import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import type { Icon } from "../../../types/Icon";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
 import { useLazyGetYearsQuery } from "../../../services/apis/admin/YearAPIs";
 import { useLazyGetEventOrganizersQuery } from "../../../services/apis/admin/EventOrganizerAPIs";
-import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -25,10 +28,12 @@ import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
+
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
 
 import styles from "./EventsPage.module.css";
 
@@ -36,16 +41,27 @@ export const EventsPage = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [eventTypeFilter, setEventTypeFilter] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
-    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
+    const { getFilter, getFilterSetter, searchParams, setFilters } =
+        useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const eventTypeFilter = getFilter("event_type", "");
+    const setEventTypeFilter = getFilterSetter("event_type");
+    const facultyFilter = getFilter("faculty_id", "");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
+    const eventOrganizerFilter = getFilter("event_organizer_id", "");
+    const setEventOrganizerFilter = getFilterSetter("event_organizer_id");
+    const dateFromFilter = getFilter(
+        "date_from",
         new Date().toLocaleDateString("en-CA"),
     );
-    const [dateToFilter, setDateToFilter] = useState("");
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [events, setEvents] = useState<EventResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -88,25 +104,19 @@ export const EventsPage = () => {
     }, [getFaculties, user?.canAccessAll]);
 
     const fetchDepartments = useCallback(async () => {
-        if (!user?.canAccessAll) return;
-
-        if (!facultyFilter) {
+        if (!user?.canAccessAll || !facultyFilter) {
             setDepartments([]);
             return;
         }
-
         try {
             const result = await getDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter),
-                    study_type: undefined,
-                },
+                data: { faculty_id: Number(facultyFilter) },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [getDepartments, facultyFilter, user?.canAccessAll]);
+    }, [getDepartments, user?.canAccessAll, facultyFilter]);
 
     const fetchYears = useCallback(async () => {
         if (!user?.canAccessAll) return;
@@ -138,24 +148,24 @@ export const EventsPage = () => {
                 eventTypeFilter === "Offline"
                     ? eventTypeFilter
                     : undefined) as "Online" | "Offline" | undefined,
-                faculty_id:
-                    user.canAccessAll && facultyFilter
-                        ? parseInt(facultyFilter)
-                        : undefined,
-                department_id:
-                    user.canAccessAll && departmentFilter
-                        ? parseInt(departmentFilter)
-                        : undefined,
-                year_id:
-                    user.canAccessAll && yearFilter
-                        ? parseInt(yearFilter)
-                        : undefined,
+                faculty_id: facultyFilter ? parseInt(facultyFilter) : undefined,
+                department_id: departmentFilter
+                    ? parseInt(departmentFilter)
+                    : undefined,
+                year_id: yearFilter ? parseInt(yearFilter) : undefined,
                 event_organizer_id: eventOrganizerFilter
                     ? parseInt(eventOrganizerFilter)
                     : undefined,
-                start_date_from: dateFromFilter || undefined,
-                start_date_to: dateToFilter || undefined,
+                author_id: authorId ? parseInt(authorId) : undefined,
+                start_date_from: toIsoFormat(dateFromFilter),
+                start_date_to: toIsoFormat(dateToFilter),
             };
+
+            if (!user?.canAccessAll) {
+                params.faculty_id = user?.faculty?.id || undefined;
+                params.department_id = user?.department?.id || undefined;
+                params.year_id = user?.year?.id || undefined;
+            }
 
             const result = await getEvents({
                 data: params,
@@ -167,6 +177,7 @@ export const EventsPage = () => {
                     "logo",
                     "attachments",
                 ],
+                order_by: ["start_date_nearest"],
                 page,
             }).unwrap();
 
@@ -196,30 +207,36 @@ export const EventsPage = () => {
         departmentFilter,
         yearFilter,
         eventOrganizerFilter,
+        authorId,
         dateFromFilter,
         dateToFilter,
         page,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchEvents(),
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchEventOrganizers(),
-            ]),
-        [
-            fetchEvents,
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchEventOrganizers,
-        ],
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authEventOrganizersQuery = useCallback(
+        () => fetchEventOrganizers(),
+        [fetchEventOrganizers],
     );
 
-    useAuthQuery(authQueryParams);
+    const authFetchEventsQuery = useCallback(
+        () => fetchEvents(),
+        [fetchEvents],
+    );
+
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authEventOrganizersQuery);
+    useAuthQuery(authFetchEventsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -235,16 +252,12 @@ export const EventsPage = () => {
         dateToFilter,
     ]);
 
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
-
     const handleViewEvent = (eventId: number) => {
-        navigate(`/admin/events/${eventId}`);
+        navigate(buildRedirectUrl(`/admin/events/${eventId}`));
     };
 
     const handleEditEvent = (eventId: number) => {
-        navigate(`/admin/events/edit/${eventId}`);
+        navigate(buildRedirectUrl(`/admin/events/edit/${eventId}`));
     };
 
     const handleDeleteClick = (event: EventResponseDto) => {
@@ -342,6 +355,7 @@ export const EventsPage = () => {
                         <Search
                             placeholder="Search events..."
                             setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
 
@@ -350,34 +364,48 @@ export const EventsPage = () => {
                             <>
                                 <SelectFilter
                                     options={facultyOptions}
-                                    setValue={setFacultyFilter}
+                                    setValue={(value) =>
+                                        setFilters({
+                                            faculty_id: value as string,
+                                            department_id: null,
+                                        })
+                                    }
+                                    value={facultyFilter}
                                 />
                                 <SelectFilter
                                     options={departmentOptions}
                                     setValue={setDepartmentFilter}
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
                                 />
                                 <SelectFilter
                                     options={yearOptions}
                                     setValue={setYearFilter}
+                                    value={yearFilter}
                                 />
                             </>
                         )}
                         <SelectFilter
                             options={eventOrganizerOptions}
                             setValue={setEventOrganizerFilter}
+                            value={eventOrganizerFilter}
                         />
                         <SelectFilter
                             options={eventTypeOptions}
                             setValue={setEventTypeFilter}
+                            value={eventTypeFilter}
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter}
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>
@@ -387,7 +415,7 @@ export const EventsPage = () => {
                         <Card
                             key={event.id}
                             title={event.title || ""}
-                            img={event.logo?.url || ""}
+                            img={event.logo?.url || defaultEventThumbnail}
                             badge={
                                 event.department && event.year
                                     ? `${event.department?.code || ""} ${event.year?.year || ""}`.trim()
@@ -397,7 +425,7 @@ export const EventsPage = () => {
                                 ...(event.faculty
                                     ? [
                                           {
-                                              icon: "building",
+                                              icon: "building" as Icon,
                                               label: "Faculty",
                                               value:
                                                   event.faculty.name || "N/A",

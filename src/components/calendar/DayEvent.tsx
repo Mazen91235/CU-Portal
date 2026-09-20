@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import type { CalendarDayEventDto } from "../../types/dtos/CalendarDtos";
 import styles from "./DayEvent.module.css";
 import IconComponent from "../IconComponent";
-import { formatDate, formatDateTime } from "../../utils/Formatter";
+import { formatDate, formatDateTime, formatString } from "../../utils/Formatter";
 
 export const DayEvent = ({
     event_type,
@@ -70,7 +70,7 @@ export const DayEvent = ({
         <div className={styles["event-card"]}>
             <div className={styles["event-content"]}>
                 <div className={styles["event-title"]}>
-                    {title}{" "}
+                    {formatString(title, "CalendarCardTitle")} {" "}
                     <span className={`${styles["badge"]} ${getBadgeClass()}`}>
                         {getBadgeText()}
                     </span>
@@ -81,7 +81,7 @@ export const DayEvent = ({
                             icon="subject"
                             className={styles["detail-icon"]}
                         />
-                        {subject ? `Subject: ${subject}` : ""}
+                        {subject ? <>Subject: {formatString(subject, "CalendarCardContent")}</> : ""}
                     </div>
                 )}
                 {due && (
@@ -101,7 +101,7 @@ export const DayEvent = ({
                             icon="location"
                             className={styles["detail-icon"]}
                         />
-                        {location}
+                        {formatString(location, "CalendarCardContent")}
                     </div>
                 )}
                 {created_at && (

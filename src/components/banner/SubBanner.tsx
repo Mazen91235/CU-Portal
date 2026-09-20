@@ -1,13 +1,15 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
+import type { ReactNode } from "react";
 
 import IconComponent from "../IconComponent";
 import { type Icon } from "../../types/Icon";
 import { GetDrivePreviewUrlFromUrl } from "../../utils/DriveManager";
 import styles from "./SubBanner.module.css";
+import { formatString } from "../../utils/Formatter";
 
 type SubBannerProps = {
-    title: string;
-    description?: string;
+    title: string | ReactNode;
+    description?: string | ReactNode;
     button?: string;
     buttonAction?: () => void;
     deleteButton?: string;
@@ -30,6 +32,9 @@ export const SubBanner = ({
     linkTo,
     img,
 }: SubBannerProps) => {
+    const [searchParams] = useSearchParams();
+    const redirectUrl = searchParams.get("redirect_url");
+
     return (
         <header
             className={`${styles["subBanner"]} ${img ? styles["subBannerWithImage"] : ""}`}
@@ -43,7 +48,7 @@ export const SubBanner = ({
         >
             <div className={styles["leftSection"]}>
                 {linkTo && linkText && (
-                    <Link to={linkTo} className={styles["backLink"]}>
+                    <Link to={redirectUrl || linkTo} className={styles["backLink"]}>
                         <i className="fas fa-arrow-left"></i>
                         {linkText}
                     </Link>
@@ -53,10 +58,10 @@ export const SubBanner = ({
                         <IconComponent icon={icon} className={styles["icon"]} />
                     )}
                     <div className={styles["textContent"]}>
-                        <h1 className={styles["title"]}>{title}</h1>
+                        <h1 className={styles["title"]}>{typeof title === "string" ? formatString(title, "PageTitle") : title}</h1>
                         {description && (
                             <p className={styles["description"]}>
-                                {description}
+                                {typeof description === "string" ? formatString(description, "PageDescription") : description}
                             </p>
                         )}
                     </div>

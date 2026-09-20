@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import type { MaterialType } from "../../../types/entities/Material";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
 import { useLazyGetDepartmentsQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -21,9 +21,13 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    handlePopupErrors,
+    getErrorMessage,
+} from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
@@ -45,25 +49,29 @@ import emptySectionIcon from "../../../assets/icons/materials-welcome.svg";
 import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import { Banner } from "../../../components/banner/Banner";
 import type { Process } from "../../../types/Process";
+import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
-import type {
-    DefaultAPIResponse,
-    GenericAPIResponse,
-} from "../../../types/responses/GenericAPIResponse";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
 import styles from "./MaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { subjectId: routeSubjectId, parentId: routeParentId } = useParams();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const {
+        getFilter,
+        getFilterSetter,
+        searchParams,
+        setFilters,
+        setSearchParams,
+    } = useFilterSearchParams();
+    const authorId = searchParams.get("author_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const departmentFilter = getFilter("department_id", "");
+    const yearFilter = getFilter("year_id", "");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -106,8 +114,15 @@ export function MaterialsPage() {
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
-    const subjectFilter = routeSubjectId ?? "";
-    const currentParentId = routeParentId ? Number(routeParentId) : null;
+    const subjectFilter = getFilter("subject_id");
+    const parentFilter = getFilter("parent_id");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
+    const selectedSubject = useMemo(
+        () =>
+            subjects.find((subject) => String(subject.id) === subjectFilter) ??
+            null,
+        [subjectFilter, subjects],
+    );
 
     const [searchFaculties] = useLazyGetFacultiesQuery();
     const [searchDepartments] = useLazyGetDepartmentsQuery();
@@ -135,20 +150,18 @@ export function MaterialsPage() {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!facultyFilter) {
+            if (!user?.canAccessAll || !facultyFilter) {
                 setDepartments([]);
                 return;
             }
             const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                },
+                data: { faculty_id: Number(facultyFilter) },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments, user?.canAccessAll, facultyFilter]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -162,36 +175,29 @@ export function MaterialsPage() {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            const params: {
-                faculty_id?: number;
-                department_id?: number;
-                year_id?: number;
-            } = {};
-            if (facultyFilter) params.faculty_id = parseInt(facultyFilter);
-            if (departmentFilter)
-                params.department_id = parseInt(departmentFilter);
-            if (yearFilter) params.year_id = parseInt(yearFilter);
-
-            if (!user.canAccessAll) {
-                params.faculty_id = user.faculty?.id ?? undefined;
-                setFacultyFilter(user.faculty?.id?.toString() || "");
-                params.department_id = user.department?.id ?? undefined;
-                setDepartmentFilter(user.department?.id?.toString() || "");
-                params.year_id = user.year?.id ?? undefined;
-                setYearFilter(user.year?.id?.toString() || "");
+            if (user.canAccessAll) {
+                if (!facultyFilter || !departmentFilter || !yearFilter) {
+                    setSubjects([]);
+                    return;
+                }
             }
-
-            if (Object.keys(params).length < 3) {
-                setSubjects([]);
-                return;
-            }
-
-            const result = await searchCourses({ data: params }).unwrap();
+            const data = user.canAccessAll
+                ? {
+                      faculty_id: Number(facultyFilter),
+                      department_id: Number(departmentFilter),
+                      year_id: Number(yearFilter),
+                  }
+                : {
+                      faculty_id: user.faculty?.id ?? undefined,
+                      department_id: user.department?.id ?? undefined,
+                      year_id: user.year?.id ?? undefined,
+                  };
+            const result = await searchCourses({ data }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchCourses, facultyFilter, departmentFilter, yearFilter, user]);
+    }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -203,6 +209,7 @@ export function MaterialsPage() {
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? null,
                         query: searchQuery || undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                     includes: ["subject", "children", "attachment"],
                 }).unwrap();
@@ -211,7 +218,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, searchQuery, getMaterials, authorId],
     );
 
     const fetchFolders = useCallback(
@@ -224,6 +231,7 @@ export function MaterialsPage() {
                         material_type: "folder",
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? undefined,
+                        author_id: authorId ? parseInt(authorId) : undefined,
                     },
                 }).unwrap();
                 setFloatingFolders(response.data || []);
@@ -231,7 +239,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, getMaterials],
+        [subjectFilter, getMaterials, authorId],
     );
 
     const buildMaterialsPath = useCallback(
@@ -239,14 +247,16 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            if (!subjectValue) return "/admin/materials";
-            const subjectSegment = String(subjectValue);
-            if (!parentValue) {
-                return `/admin/materials/${subjectSegment}`;
-            }
-            return `/admin/materials/${subjectSegment}/${parentValue}`;
+            const params = new URLSearchParams(searchParams);
+            if (subjectValue) params.set("subject_id", String(subjectValue));
+            else params.delete("subject_id");
+            if (parentValue) params.set("parent_id", String(parentValue));
+            else params.delete("parent_id");
+            params.delete("material_id");
+            const query = params.toString();
+            return `/admin/materials${query ? `?${query}` : ""}`;
         },
-        [],
+        [searchParams],
     );
 
     const loadCurrentPath = useCallback(
@@ -282,28 +292,34 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authQueryParams = useCallback(
-        async () =>
+    const authFacultiesQuery = useCallback(
+        () => fetchFaculties(),
+        [fetchFaculties],
+    );
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
+    );
+
+    const authMaterialsQuery = useCallback(
+        () =>
             Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchSubjects(),
                 fetchMaterials(currentParentId),
                 fetchFolders(currentParentId),
             ]),
-        [
-            fetchFaculties,
-            fetchDepartments,
-            fetchYears,
-            fetchSubjects,
-            fetchMaterials,
-            fetchFolders,
-            currentParentId,
-        ],
+        [fetchMaterials, fetchFolders, currentParentId],
     );
 
-    useAuthQuery(authQueryParams);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authSubjectsQuery);
+    useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
         if (!subjectFilter) {
@@ -378,7 +394,8 @@ export function MaterialsPage() {
                 try {
                     await moveMaterials({
                         material_ids: selectedMaterials,
-                        destination_id: targetId ?? undefined,
+                        destination_id: targetId,
+                        subject_id: parseInt(subjectFilter),
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
                     setCurrentPath((prev) => {
@@ -388,15 +405,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Move failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Move failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -486,29 +501,55 @@ export function MaterialsPage() {
             try {
                 const material = formData.material;
                 const name = data.get("name") as string;
+                const weekId = data.get("week_id") as string | null;
                 const material_type = data.get("material_type") as MaterialType;
                 const url = data.get("url") as string | null;
                 const parent_id = data.get("parent_id") as string | null;
                 let result: GenericAPIResponse<MaterialResponseDto>;
+                // The API rejects week_id for folder materials.
+                // Only real course materials (files/links) can be attached to a week.
+                const parsedWeekId =
+                    material_type !== "folder" && weekId
+                        ? parseInt(weekId, 10)
+                        : undefined;
+
                 if (material && material.id) {
-                    result = await updateMaterial({
-                        material_id: material.id,
-                        name,
-                        material_type,
-                        details: {
-                            url: url,
-                        },
-                    }).unwrap();
+                    const updatePayload: Parameters<typeof updateMaterial>[0] =
+                        {
+                            material_id: material.id,
+                            name,
+                            material_type,
+                            details: {
+                                url: url,
+                            },
+                        };
+
+                    if (parsedWeekId !== undefined) {
+                        updatePayload.week_id = parsedWeekId;
+                    } else {
+                        updatePayload.week_id = null;
+                    }
+
+                    result = await updateMaterial(updatePayload).unwrap();
                 } else {
-                    result = await createMaterial({
-                        subject_id: parseInt(subjectFilter),
-                        name,
-                        material_type,
-                        details: {
-                            url: url,
-                        },
-                        parent_id: parent_id ? parseInt(parent_id) : null,
-                    }).unwrap();
+                    const createPayload: Parameters<typeof createMaterial>[0] =
+                        {
+                            subject_id: parseInt(subjectFilter, 10),
+                            name,
+                            material_type,
+                            details: {
+                                url: url,
+                            },
+                            parent_id: parent_id
+                                ? parseInt(parent_id, 10)
+                                : null,
+                        };
+
+                    if (parsedWeekId !== undefined) {
+                        createPayload.week_id = parsedWeekId;
+                    }
+
+                    result = await createMaterial(createPayload).unwrap();
                 }
                 if (!uploadResult) {
                     showToast(
@@ -519,12 +560,22 @@ export function MaterialsPage() {
                             : "Material created successfully",
                     );
                 } else {
-                    const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+                    const url = new URL(
+                        buildMaterialsPath(
+                            subjectFilter,
+                            currentPath[currentPath.length - 1]?.id ?? null,
+                        ),
+                        window.location.origin,
+                    );
+                    url.searchParams.set(
+                        "material_id",
+                        String(result.data?.id ?? ""),
+                    );
                     dispatch(
                         setProcess({
                             ...uploadResult,
                             status: "completed",
-                            url,
+                            url: `${url.pathname}${url.search}`,
                         }),
                     );
                 }
@@ -597,7 +648,12 @@ export function MaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            url += `?material_id=${materialId}`;
+            const previewUrl = new URL(url, window.location.origin);
+            previewUrl.searchParams.set(
+                "material_id",
+                String(materialId ?? ""),
+            );
+            url = previewUrl.toString();
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -619,27 +675,38 @@ export function MaterialsPage() {
         setPreviewFile(null);
     };
 
+    const handleDownloadFile = useCallback((fileId: string) => {
+        if (fileId) downloadFile(fileId);
+    }, []);
+
     const handleDownloadMaterial = useCallback((materialId: number) => {
-        const material = materials.find((item) => item.id === materialId);
-        if (!material) return;
-        if (material.material_type?.toLowerCase() === "file") {
-            const fileId = material.attachment?.details?.file_data?.id;
-            if (fileId) {
-                downloadFile(fileId);
-                return;
-            }
-        }
         downloadMaterials([materialId]);
-    }, [materials]);
+    }, []);
 
     const handleDownloadSelected = useCallback(() => {
         if (selectedMaterials.length === 0) return;
         if (selectedMaterials.length === 1) {
+            const selectedMaterial = materials.find(
+                (material) => material.id === selectedMaterials[0],
+            );
+            const fileId =
+                selectedMaterial?.material_type === "file"
+                    ? selectedMaterial.attachment?.details?.file_data?.id
+                    : undefined;
+            if (fileId) {
+                handleDownloadFile(fileId);
+                return;
+            }
             handleDownloadMaterial(selectedMaterials[0]);
             return;
         }
         downloadMaterials(selectedMaterials);
-    }, [selectedMaterials, handleDownloadMaterial]);
+    }, [
+        selectedMaterials,
+        materials,
+        handleDownloadFile,
+        handleDownloadMaterial,
+    ]);
 
     const handleOpenLink = (url: string) => {
         window.open(url, "_blank");
@@ -684,12 +751,14 @@ export function MaterialsPage() {
                     if (floatingContainer.operation === "copy") {
                         await copyMaterials({
                             material_ids: selectedMaterials,
-                            destination_id: targetId ?? undefined,
+                            destination_id: targetId,
+                            subject_id: parseInt(subjectFilter),
                         }).unwrap();
                     } else {
                         await moveMaterials({
                             material_ids: selectedMaterials,
-                            destination_id: targetId ?? undefined,
+                            destination_id: targetId,
+                            subject_id: parseInt(subjectFilter),
                         }).unwrap();
                     }
                     dispatch(setProcess({ ...process, status: "completed" }));
@@ -700,15 +769,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Operation failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Operation failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -731,7 +798,6 @@ export function MaterialsPage() {
             }).unwrap();
 
             showToast("success", "Success", "Folder created successfully");
-
             // Refresh the materials list in the floating container
             if (parentId === null) {
                 setFloatingContainer((prev) => ({ ...prev, targetPath: [] }));
@@ -755,7 +821,9 @@ export function MaterialsPage() {
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                setSearchParams({}, { replace: true });
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.delete("material_id");
+                setSearchParams(nextParams, { replace: true });
             }
         }
     }, [searchParams, materials, handlePreview, setSearchParams]);
@@ -813,7 +881,6 @@ export function MaterialsPage() {
         [subjects],
     );
 
-
     // Handle global drag events for file upload
     useEffect(() => {
         const handleDocumentDragOver = (e: DragEvent) => {
@@ -828,7 +895,6 @@ export function MaterialsPage() {
                 formData.show
             )
                 return;
-
             // Check if dragging files
             if (
                 e.dataTransfer?.items &&
@@ -840,7 +906,6 @@ export function MaterialsPage() {
                 setIsDraggingExternal(true);
             }
         };
-
         const handleDocumentMouseLeave = (e: MouseEvent) => {
             e.preventDefault();
             // Check if actually leaving the document
@@ -913,9 +978,22 @@ export function MaterialsPage() {
                 },
             }).unwrap();
 
-            const url = `${buildMaterialsPath(subjectFilter, currentPath[currentPath.length - 1]?.id ?? null)}?material_id=${result.data?.id}`;
+            const url = new URL(
+                buildMaterialsPath(
+                    subjectFilter,
+                    currentPath[currentPath.length - 1]?.id ?? null,
+                ),
+                window.location.origin,
+            );
+            url.searchParams.set("material_id", String(result.data?.id ?? ""));
 
-            dispatch(setProcess({ ...uploadResult, status: "completed", url }));
+            dispatch(
+                setProcess({
+                    ...uploadResult,
+                    status: "completed",
+                    url: `${url.pathname}${url.search}`,
+                }),
+            );
             setCurrentPath((prev) => {
                 const latestParentId =
                     (prev.length > 0 ? prev[prev.length - 1] : null)?.id ??
@@ -955,15 +1033,13 @@ export function MaterialsPage() {
                         return prev;
                     });
                 } catch (error) {
-                    const res =
-                        (error as Error).message ||
-                        (error as DefaultAPIResponse)?.data?.message ||
-                        "Fetch failed";
+                    const errorMessage =
+                        getErrorMessage(error) || "Fetch failed";
                     dispatch(
                         setProcess({
                             ...process,
                             status: "failed",
-                            reason: res,
+                            reason: errorMessage,
                         }),
                     );
                 }
@@ -999,38 +1075,37 @@ export function MaterialsPage() {
                         <>
                             <SelectFilter
                                 options={facultyOptions}
-                                setValue={(value) => {
-                                    if (
-                                        facultyFilter &&
-                                        value != facultyFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setFacultyFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        faculty_id: value as string,
+                                        department_id: null,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={facultyFilter}
                             />
                             <SelectFilter
                                 options={departmentOptions}
-                                setValue={(value) => {
-                                    if (
-                                        departmentFilter &&
-                                        value != departmentFilter
-                                    ) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setDepartmentFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        department_id: value as string,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={departmentFilter}
+                                disabled={!facultyFilter}
                             />
                             <SelectFilter
                                 options={yearOptions}
-                                setValue={(value) => {
-                                    if (yearFilter && value != yearFilter) {
-                                        navigate(buildMaterialsPath("", ""));
-                                    }
-                                    setYearFilter(value);
-                                }}
+                                setValue={(value) =>
+                                    setFilters({
+                                        year_id: value as string,
+                                        subject_id: null,
+                                        parent_id: null,
+                                    })
+                                }
                                 value={yearFilter}
                             />
                         </>
@@ -1046,6 +1121,13 @@ export function MaterialsPage() {
                             );
                         }}
                         value={subjectFilter}
+                        disabled={
+                            user?.canAccessAll
+                                ? !facultyFilter ||
+                                  !departmentFilter ||
+                                  !yearFilter
+                                : false
+                        }
                     />
                 </div>
 
@@ -1055,6 +1137,7 @@ export function MaterialsPage() {
                             <Search
                                 placeholder="Search Materials..."
                                 setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
                         <div className={styles.actionsContainer}>
@@ -1085,7 +1168,6 @@ export function MaterialsPage() {
 
                 {showContentPage && (
                     <>
-
                         <Navigator
                             path={currentPath}
                             onNavigate={handleNavigate}
@@ -1137,7 +1219,9 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={() =>
+                                                handleDownloadMaterial(folderId)
+                                            }
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
@@ -1186,11 +1270,19 @@ export function MaterialsPage() {
                                                 );
                                             }}
                                             onPreview={handlePreview}
-                                            onDownload={handleDownloadMaterial}
+                                            onDownload={(fileId) => {
+                                                if (fileId)
+                                                    handleDownloadFile(fileId);
+                                                else
+                                                    handleDownloadMaterial(
+                                                        file.id ?? 0,
+                                                    );
+                                            }}
                                             onOpenLink={handleOpenLink}
                                             isDraggingGlobal={
                                                 draggedFilesState.active
                                             }
+                                            showAll={true}
                                         />
                                     );
                                 })}
@@ -1238,7 +1330,9 @@ export function MaterialsPage() {
                         isSelectionMode={isSelectionMode}
                         selectedCount={selectedMaterials.length}
                         totalCount={materials.length}
-                        isAdmin
+                        showCopy
+                        showMove
+                        showDelete
                         onEnter={() => setIsSelectionMode(true)}
                         onCancel={handleCancelSelection}
                         onSelectAll={handleSelectAll}
@@ -1260,6 +1354,19 @@ export function MaterialsPage() {
                     <MaterialForm
                         materialType={formData.type}
                         material={formData.material}
+                        facultyId={
+                            selectedSubject?.faculty?.id ??
+                            user?.faculty?.id ??
+                            null
+                        }
+                        departmentId={
+                            selectedSubject?.department?.id ??
+                            user?.department?.id ??
+                            null
+                        }
+                        yearId={
+                            selectedSubject?.year?.id ?? user?.year?.id ?? null
+                        }
                         parentId={
                             currentPath.length > 0
                                 ? (currentPath[currentPath.length - 1].id ??

@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import { Link } from "react-router";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
 import { usePageLoading } from "../../hooks/usePageLoading";
@@ -19,11 +20,85 @@ type ProgressStep = {
 
 export const DashboardProgressView = ({
     userLevel,
+    user,
 }: {
     userLevel: number;
     user: UserResponseDto;
 }) => {
     usePageLoading(true);
+
+    const isSuspended = user.status === false && !user.pending_user;
+
+    if (isSuspended) {
+        return (
+            <div className={styles["progress-container"]}>
+                <div className={styles["welcome-section"]}>
+                    <div className={styles["progress-card"]}>
+                        <div className={styles["progress-header"]}>
+                            <div>
+                                <h3 className={styles["progress-title"]}>
+                                    Your Account Is Suspended
+                                </h3>
+                                <p className={styles["progress-subtitle"]}>
+                                    Access to your CU-Portal account is currently suspended.
+                                </p>
+                            </div>
+                            <div className={styles["progress-stats"]}>
+                                <span className={styles["progress-percentage"]}>
+                                    <i className="fas fa-lock"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <p className={styles["progress-encouragement"]}>
+                            Please contact our support team to request that your account be reviewed and unsuspended.
+                        </p>
+                    </div>
+                </div>
+
+                <div className={styles["steps-grid"]}>
+                    <div className={styles["steps-column"]}>
+                        <div className={`${styles["step-card"]} ${styles["current"]}`}>
+                            <div className={styles["step-icon"]}>
+                                <i className="fas fa-user-lock"></i>
+                            </div>
+                            <div className={styles["step-content"]}>
+                                <h4 className={styles["step-title"]}>
+                                    Account Suspended
+                                </h4>
+                                <p className={styles["step-description"]}>
+                                    Your profile is saved, but your account cannot currently access the portal. Our support team can help you resolve the suspension.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles["steps-column"]}>
+                        <div className={styles["help-card"]}>
+                            <div className={styles["help-icon"]}>
+                                <i className="fas fa-headset"></i>
+                            </div>
+                            <div className={styles["help-content"]}>
+                                <h4 className={styles["help-title"]}>
+                                    Need your account restored?
+                                </h4>
+                                <p className={styles["help-description"]}>
+                                    Contact support and ask us to review your account suspension.
+                                </p>
+                                <a
+                                    href="https://wa.me/+201281518436"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={styles["contact-button"]}
+                                >
+                                    Contact support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     const steps: ProgressStep[] = [
         {
             id: 1,
@@ -95,7 +170,7 @@ export const DashboardProgressView = ({
                         </div>
                         <p className={styles["welcome-description"]}>
                             Complete these smart steps to unlock the full
-                            potential of your CU Portal experience.
+                            potential of your CU-Portal experience.
                         </p>
                     </div>
                 </div>
@@ -144,10 +219,10 @@ export const DashboardProgressView = ({
                             </div>
                             <div className={styles["step-content"]}>
                                 <h4 className={styles["step-title"]}>
-                                    {step.title}
+                                    {formatString(step.title, "CardTitle")}
                                 </h4>
                                 <p className={styles["step-description"]}>
-                                    {step.description}
+                                    {formatString(step.description, "CardDescription")}
                                 </p>
                                 {step.tasks.length > 0 && (
                                     <ul className={styles["task-list"]}>

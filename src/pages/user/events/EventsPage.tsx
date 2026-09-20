@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useNavigate } from "react-router";
 import type { EventResponseDto } from "../../../types/dtos/EventDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { useLazyGetEventsQuery } from "../../../services/apis/user/EventAPIs";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
@@ -11,7 +13,9 @@ import { Card } from "../../../components/card/Card";
 import { Layout } from "../../../components/layout/Layout";
 import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
-import { formatDateTime } from "../../../utils/Formatter";
+import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
+
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
 
 import styles from "./EventsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -23,13 +27,17 @@ import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganiz
 
 export const EventsPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [eventTypeFilter, setEventTypeFilter] = useState("");
-    const [eventOrganizerFilter, setEventOrganizerFilter] = useState("");
-    const [dateFromFilter, setDateFromFilter] = useState(
-        new Date().toLocaleDateString("en-CA"),
-    );
-    const [dateToFilter, setDateToFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const eventTypeFilter = getFilter("event_type", "");
+    const setEventTypeFilter = getFilterSetter("event_type");
+    const eventOrganizerFilter = getFilter("event_organizer_id", "");
+    const setEventOrganizerFilter = getFilterSetter("event_organizer_id");
+    const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
+    const setDateFromFilter = getFilterSetter("date_from", true);
+    const dateToFilter = getFilter("date_to", "");
+    const setDateToFilter = getFilterSetter("date_to", true);
     const [eventOrganizers, setEventOrganizers] = useState<
         EventOrganizerResponseDto[]
     >([]);
@@ -70,8 +78,8 @@ export const EventsPage = () => {
                     event_organizer_id: eventOrganizerFilter
                         ? parseInt(eventOrganizerFilter)
                         : undefined,
-                    start_date_from: dateFromFilter || undefined,
-                    start_date_to: dateToFilter || undefined,
+                    start_date_from: toIsoFormat(dateFromFilter),
+                    start_date_to: toIsoFormat(dateToFilter),
                 },
                 includes: [
                     "faculty",
@@ -81,6 +89,7 @@ export const EventsPage = () => {
                     "logo",
                     "attachments",
                 ],
+                order_by: ["start_date_nearest"],
                 page,
             }).unwrap();
 
@@ -109,11 +118,18 @@ export const EventsPage = () => {
         searchQuery,
     ]);
 
-    const authQueryParams = useCallback(
-        () => Promise.all([fetchEvents(), fetchEventOrganizers()]),
-        [fetchEvents, fetchEventOrganizers],
+    const authFilterQuery = useCallback(
+        () => Promise.all([fetchEventOrganizers()]),
+        [fetchEventOrganizers],
     );
-    useAuthQuery(authQueryParams);
+
+    const authFetchEventsQuery = useCallback(
+        () => fetchEvents(),
+        [fetchEvents],
+    );
+
+    useAuthQuery(authFilterQuery);
+    useAuthQuery(authFetchEventsQuery);
 
     useEffect(() => {
         setPage(1);
@@ -167,26 +183,29 @@ export const EventsPage = () => {
                     <div className={styles.searchRow}>
                         <Search
                             placeholder="Search events..."
-                            setValue={setSearchQuery}
+                            setValue={setSearchQuery} value={searchQuery}
                         />
                     </div>
                     <div className={styles.filtersRow}>
                         <SelectFilter
                             options={eventOrganizerOptions}
-                            setValue={setEventOrganizerFilter}
+                            setValue={setEventOrganizerFilter} value={eventOrganizerFilter}
                         />
                         <SelectFilter
                             options={eventTypeOptions}
-                            setValue={setEventTypeFilter}
+                            setValue={setEventTypeFilter} value={eventTypeFilter}
                         />
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
                             defaultDate={dateFromFilter}
+                            value={dateFromFilter}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateToFilter}
+                            value={dateToFilter}
+                            startDay={false}
                         />
                     </div>
                 </div>
@@ -196,7 +215,7 @@ export const EventsPage = () => {
                         <Card
                             key={event.id}
                             title={event.title || ""}
-                            img={event.logo?.url || ""}
+                            img={event.logo?.url || defaultEventThumbnail}
                             badge={
                                 event.price !== undefined &&
                                 event.price !== null
@@ -227,7 +246,7 @@ export const EventsPage = () => {
                             ]}
                             button="View Details"
                             buttonAction={() =>
-                                navigate(`/user/events/${event.id}`)
+                                navigate(buildRedirectUrl(`/user/events/${event.id}`))
                             }
                             hasOptions
                             sharable

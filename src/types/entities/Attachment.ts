@@ -31,9 +31,9 @@ export type Attachment = {
         fetched?: boolean;
         link_title?: string;
     };
-    author_google_refresh_token?: Date | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    author_google_refresh_token?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     author_id?: number;
     author?: User | null;
     pending_user_id?: number | null;

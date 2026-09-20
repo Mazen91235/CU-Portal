@@ -1,0 +1,320 @@
+.teamPage {
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-top: 88px;
+    background: var(--grey-background);
+}
+
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
+}
+
+.roleSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.roleCategoryTitle {
+    font-family: var(--primary-font-family);
+    font-size: 32px;
+    font-weight: var(--primary-font-weight-heavy, 800);
+    color: var(--primary-purple, #7b1684);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    width: 100%;
+}
+
+.roleCategoryTitle::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background-color: var(--primary-purple, #7b1684);
+    border-radius: 2px;
+}
+
+.teamMembers {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    justify-content: center;
+    gap: 24px;
+    align-items: stretch;
+}
+
+.teamCard {
+    min-width: 0;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    background: var(--white, #ffffff);
+    border: 1px solid rgba(123, 22, 132, 0.08);
+    border-radius: 20px;
+    box-shadow: var(--dark-box-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.teamCard:hover {
+    transform: translateY(-5px);
+    border-color: rgba(123, 22, 132, 0.18);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.11);
+}
+
+.teamImageFrame {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: var(--grey-background, #f3f3f5);
+    flex-shrink: 0;
+}
+
+.teamIcon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.teamCard:hover .teamIcon {
+    transform: scale(1.025);
+}
+
+.teamImageOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgba(18, 10, 21, 0.05) 45%,
+        rgba(18, 10, 21, 0.5) 100%
+    );
+}
+
+.teamBadge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 32px);
+    min-height: 30px;
+    padding: 6px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--primary-purple, #7b1684);
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 700;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(7px);
+}
+
+.teamCardContent {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.teamNameBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+}
+
+.teamName {
+    margin: 0;
+    font-family: var(--primary-font-family);
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--primary-purple, #7b1684);
+    letter-spacing: 0.2px;
+}
+
+.role {
+    display: inline-flex;
+    align-items: center;
+    min-height: 27px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: rgba(157, 37, 168, 0.1);
+    color: #9d25a8;
+    font-family: var(--primary-font-family);
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.teamMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin-top: 13px;
+    color: var(--medium-grey, #7f838b);
+    font-family: var(--primary-font-family);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.metaSeparator {
+    color: rgba(127, 131, 139, 0.65);
+}
+
+.additionalRoles {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 17px;
+}
+
+.additionalRolesLabel {
+    color: var(--medium-grey, #7f838b);
+    font-family: var(--primary-font-family);
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.roleChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.secondaryRole,
+.sprintRole,
+.moreRoles {
+    display: inline-flex;
+    align-items: center;
+    min-height: 27px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    font-family: var(--primary-font-family);
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.secondaryRole {
+    background: var(--grey-background, #f3f3f5);
+    color: var(--text-color, #555b63);
+}
+
+.sprintRole {
+    background: rgba(123, 22, 132, 0.08);
+    color: var(--primary-purple, #7b1684);
+    border: 1px solid rgba(123, 22, 132, 0.12);
+}
+
+.moreRoles {
+    color: var(--medium-grey, #7f838b);
+    background: transparent;
+    border: 1px dashed rgba(127, 131, 139, 0.4);
+}
+
+.teamSocials {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 18px;
+}
+
+.teamSocials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--white, #ffffff);
+}
+
+.teamSocials a img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    box-shadow: var(--light-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.05));
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.teamSocials a:hover img {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: var(--dark-box-shadow, 0 4px 8px rgba(0, 0, 0, 0.08));
+}
+
+@media (max-width: 1280px) {
+    .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .teamMembers {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 2.5rem 1.25rem;
+    }
+
+    .teamMembers {
+        grid-template-columns: repeat(2, minmax(250px, 300px));
+        justify-content: center;
+    }
+}
+
+@media (max-width: 700px) {
+    .container {
+        padding: 2rem 1rem;
+        gap: 3.5rem;
+    }
+
+    .teamMembers {
+        grid-template-columns: minmax(0, 300px);
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .roleCategoryTitle {
+        font-size: 28px;
+        margin-bottom: 2.25rem;
+    }
+
+    .teamCardContent {
+        padding: 16px;
+    }
+}

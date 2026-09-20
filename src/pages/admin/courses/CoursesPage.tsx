@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import {
     useLazyGetCoursesQuery,
     useDeleteCourseMutation,
@@ -14,6 +15,7 @@ import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { PageSeo } from "../../../components/PageSeo";
 import { Banner } from "../../../components/banner/Banner";
 import { Search } from "../../../components/forms/Search";
@@ -28,11 +30,17 @@ import styles from "./CoursesPage.module.css";
 
 export const CoursesPage = () => {
     const navigate = useNavigate();
+
     const user = useAppSelector((state) => state.user.user);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [facultyFilter, setFacultyFilter] = useState("");
-    const [departmentFilter, setDepartmentFilter] = useState("");
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter, searchParams, setFilters } = useFilterSearchParams();
+    const userId = searchParams.get("user_id");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const facultyFilter = getFilter("faculty_id", "");
+    const departmentFilter = getFilter("department_id", "");
+    const setDepartmentFilter = getFilterSetter("department_id");
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
     const [faculties, setFaculties] = useState<FacultyResponseDto[]>([]);
     const [departments, setDepartments] = useState<DepartmentResponseDto[]>([]);
@@ -60,21 +68,18 @@ export const CoursesPage = () => {
 
     const fetchDepartments = useCallback(async () => {
         try {
-            if (!facultyFilter) {
+            if (!user?.canAccessAll || !facultyFilter) {
                 setDepartments([]);
                 return;
             }
             const result = await searchDepartments({
-                data: {
-                    faculty_id: parseInt(facultyFilter) || undefined,
-                    study_type: undefined,
-                },
+                data: { faculty_id: parseInt(facultyFilter) },
             }).unwrap();
             setDepartments(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [searchDepartments, facultyFilter]);
+    }, [searchDepartments, user?.canAccessAll, facultyFilter]);
 
     const fetchYears = useCallback(async () => {
         try {
@@ -93,6 +98,7 @@ export const CoursesPage = () => {
                 department_id: parseInt(departmentFilter) || undefined,
                 year_id: parseInt(yearFilter) || undefined,
                 query: searchQuery || "",
+                user_id: userId ? parseInt(userId) : undefined,
             };
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
@@ -132,32 +138,34 @@ export const CoursesPage = () => {
         page,
         hasNextPage,
         user,
+        userId,
     ]);
 
-    const authQueryParams = useCallback(
-        () =>
-            Promise.all([
-                fetchFaculties(),
-                fetchDepartments(),
-                fetchYears(),
-                fetchCourses(),
-            ]),
-        [fetchFaculties, fetchDepartments, fetchYears, fetchCourses],
+    const authFacultiesQuery = useCallback(() => fetchFaculties(), [fetchFaculties]);
+    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
+
+    const authCoursesQuery = useCallback(
+        () => fetchCourses(),
+        [fetchCourses],
     );
 
-    useAuthQuery(authQueryParams);
+    useAuthQuery(authFacultiesQuery);
+    useAuthQuery(authDepartmentsQuery);
+    useAuthQuery(authYearsQuery);
+    useAuthQuery(authCoursesQuery);
 
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
-    }, [facultyFilter, departmentFilter, yearFilter, searchQuery]);
+    }, [facultyFilter, departmentFilter, yearFilter, searchQuery, userId]);
 
     const handleAddCourse = () => {
         navigate("/admin/courses/create");
     };
 
     const handleEditCourse = (courseId: number) => {
-        navigate(`/admin/courses/edit/${courseId}`);
+        navigate(buildRedirectUrl(`/admin/courses/edit/${courseId}`));
     };
 
     const handleDeleteClick = (course: SubjectResponseDto) => {
@@ -184,7 +192,7 @@ export const CoursesPage = () => {
     };
 
     const handleViewCourse = (courseId: number) => {
-        navigate(`/admin/courses/${courseId}`);
+        navigate(buildRedirectUrl(`/admin/courses/${courseId}`));
     };
 
     const handlePagination = () => {
@@ -192,10 +200,6 @@ export const CoursesPage = () => {
             setPage(page + 1);
         }
     };
-
-    useEffect(() => {
-        setDepartmentFilter("");
-    }, [facultyFilter]);
 
     const facultyOptions = useMemo(
         () => [
@@ -243,30 +247,34 @@ export const CoursesPage = () => {
                 buttonAction={handleAddCourse}
             />
             <div className={styles.container}>
-                <div className={styles.filtersContainer}>
-                    <div className={styles.searchRow}>
-                        <Search
-                            placeholder="Search by course name or code"
-                            setValue={setSearchQuery}
-                        />
-                    </div>
-                    {user?.canAccessAll && (
-                        <div className={styles.filtersRow}>
-                            <SelectFilter
-                                options={facultyOptions}
-                                setValue={setFacultyFilter}
-                            />
-                            <SelectFilter
-                                options={departmentOptions}
-                                setValue={setDepartmentFilter}
-                            />
-                            <SelectFilter
-                                options={yearOptions}
-                                setValue={setYearFilter}
+                {!userId && (
+                    <div className={styles.filtersContainer}>
+                        <div className={styles.searchRow}>
+                            <Search
+                                placeholder="Search by course name or code"
+                                setValue={setSearchQuery} value={searchQuery}
                             />
                         </div>
-                    )}
-                </div>
+                        {user?.canAccessAll && (
+                            <div className={styles.filtersRow}>
+                                <SelectFilter
+                                    options={facultyOptions}
+                                    setValue={(value) => setFilters({ faculty_id: value as string, department_id: null })} value={facultyFilter}
+                                />
+                                <SelectFilter
+                                    options={departmentOptions}
+                                    setValue={setDepartmentFilter}
+                                    value={departmentFilter}
+                                    disabled={!facultyFilter}
+                                />
+                                <SelectFilter
+                                    options={yearOptions}
+                                    setValue={setYearFilter} value={yearFilter}
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div className={styles.courseGrid}>
                     {courses.map((course) => (

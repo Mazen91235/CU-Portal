@@ -12,6 +12,7 @@ type SelectFilterProps = {
     setValue: Dispatch<SetStateAction<string>>;
     options: { value: string; label: string }[];
     placeholder?: string;
+    disabled?: boolean;
 };
 
 export const SelectFilter = ({
@@ -19,6 +20,7 @@ export const SelectFilter = ({
     setValue,
     options,
     placeholder,
+    disabled = false,
 }: SelectFilterProps) => {
     const [selectValue, setSelectValue] = useState("");
 
@@ -38,6 +40,7 @@ export const SelectFilter = ({
             value={selectValue}
             onChange={onChange}
             className={styles["select"]}
+            disabled={disabled}
         >
             {placeholder && <option value="">{placeholder}</option>}
             {options.map((option) => (

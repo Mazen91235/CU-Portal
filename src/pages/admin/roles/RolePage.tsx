@@ -9,12 +9,12 @@ import {
 } from "../../../services/apis/admin/RoleAPIs";
 import type { RoleResponseDto } from "../../../types/dtos/RoleDtos";
 import { showToast } from "../../../utils/ToastsManager";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
 import styles from "./RolePage.module.css";
-import { Banner } from "../../../components/banner/Banner";
+import { SubBanner } from "../../../components/banner/SubBanner";
 
 export const RolePage = () => {
     const { roleId } = useParams<{ roleId: string }>();
@@ -28,7 +28,7 @@ export const RolePage = () => {
 
     const [getRole] = useLazyGetRoleQuery();
     const [getPermissions] = useLazyGetPermissionsQuery();
-    const [updateRole] = useUpdateRoleMutation();
+    const [updateRole, { isLoading: isUpdatingRole }] = useUpdateRoleMutation();
     const navigate = useNavigate();
 
     const fetchRole = useCallback(async () => {
@@ -36,7 +36,13 @@ export const RolePage = () => {
         try {
             const result = await getRole({ role_id: Number(roleId) }).unwrap();
             const roleResponse = result.data;
-            setRole(roleResponse ?? null);
+            if (!roleResponse) {
+                navigate("/admin/roles", {
+                    state: { error: "Failed to fetch role" },
+                });
+                return;
+            }
+            setRole(roleResponse);
             setSelectedPermissions(
                 roleResponse?.exact_roles?.map((r) => r.name ?? "") || [],
             );
@@ -45,9 +51,11 @@ export const RolePage = () => {
                 setIsEditing(true);
             }
         } catch (error) {
-            handlePopupErrors(error);
+            navigate("/admin/roles", {
+                state: { error: getErrorMessage(error) || "Failed to fetch role" },
+            });
         }
-    }, [roleId, getRole]);
+    }, [roleId, getRole, navigate]);
 
     const fetchAllPermissions = useCallback(async () => {
         try {
@@ -107,9 +115,12 @@ export const RolePage = () => {
                 description="Define and manage user roles to ensure secure and organized access across the platform"
             />
 
-            <Banner
+            <SubBanner
                 title={role.name || "Role Details"}
                 description={`Manage permissions and users for the ${role.name} role`}
+                icon="user"
+                linkText="Back to Roles"
+                linkTo="/admin/roles"
             />
 
             {hasNoPermissions ? (
@@ -136,15 +147,20 @@ export const RolePage = () => {
                             <button
                                 className={styles.saveButton}
                                 onClick={handleSave}
+                                disabled={isUpdatingRole}
                             >
-                                Save Changes
+                                {isUpdatingRole ? "Saving..." : "Save Changes"}
                             </button>
                         </div>
                     </div>
 
-                    <div className={styles.permissionsList}>
-                        {allPermissions.map((permission) => (
-                            <div
+                    <fieldset
+                        className={styles.permissionsFieldset}
+                        disabled={isUpdatingRole}
+                    >
+                        <div className={styles.permissionsList}>
+                            {allPermissions.map((permission) => (
+                                <div
                                 key={permission}
                                 className={styles.permissionRow}
                             >
@@ -163,9 +179,10 @@ export const RolePage = () => {
                                     />
                                     <span className={styles.slider}></span>
                                 </label>
-                            </div>
-                        ))}
-                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </fieldset>
                 </>
             ) : (
                 <>
@@ -181,8 +198,9 @@ export const RolePage = () => {
                                 <button
                                     className={styles.saveButton}
                                     onClick={handleSave}
+                                    disabled={isUpdatingRole}
                                 >
-                                    Save Changes
+                                    {isUpdatingRole ? "Saving..." : "Save Changes"}
                                 </button>
                             ) : (
                                 <button
@@ -196,32 +214,37 @@ export const RolePage = () => {
                     </div>
 
                     {isEditing ? (
-                        <div className={styles.permissionsList}>
-                            {allPermissions.map((permission) => (
-                                <div
-                                    key={permission}
-                                    className={styles.permissionRow}
-                                >
-                                    <span className={styles.permissionLabel}>
-                                        {permission}
-                                    </span>
-                                    <label className={styles.switch}>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPermissions.includes(
-                                                permission,
-                                            )}
-                                            onChange={() =>
-                                                handleTogglePermission(
+                        <fieldset
+                            className={styles.permissionsFieldset}
+                            disabled={isUpdatingRole}
+                        >
+                            <div className={styles.permissionsList}>
+                                {allPermissions.map((permission) => (
+                                    <div
+                                        key={permission}
+                                        className={styles.permissionRow}
+                                    >
+                                        <span className={styles.permissionLabel}>
+                                            {permission}
+                                        </span>
+                                        <label className={styles.switch}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPermissions.includes(
                                                     permission,
-                                                )
-                                            }
-                                        />
-                                        <span className={styles.slider}></span>
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
+                                                )}
+                                                onChange={() =>
+                                                    handleTogglePermission(
+                                                        permission,
+                                                    )
+                                                }
+                                            />
+                                            <span className={styles.slider}></span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </fieldset>
                     ) : (
                         <div className={styles.permissionsGrid}>
                             {selectedPermissions.map((permission) => (

@@ -1,0 +1,42 @@
+.card {
+    background: var(--white);
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--dark-box-shadow);
+    padding: 0.9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    cursor: pointer;
+    font-family: var(--primary-font-family);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(60, 60, 60, 0.12);
+}
+
+.card:focus-visible {
+    outline: 2px solid var(--primary-purple);
+    outline-offset: 2px;
+}
+
+.title {
+    font-weight: var(--primary-font-weight);
+    font-size: 0.95rem;
+    color: #232323;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 0.85rem;
+    }
+}

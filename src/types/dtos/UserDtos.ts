@@ -12,6 +12,7 @@ import type { NotificationResponseDto } from "./NotificationDtos";
 import type { NoteResponseDto } from "./NoteDtos";
 import type { LogResponseDto } from "./LogDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
+import type { EventResponseDto } from "./EventDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { SearchDto } from "./BaseDtos";
 
@@ -57,6 +58,7 @@ export type UserResponseDto = {
     announcements?: AnnouncementResponseDto[] | null;
     notifications?: NotificationResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    events?: EventResponseDto[] | null;
     notes?: NoteResponseDto[] | null;
     logs?: LogResponseDto[] | null;
     attachments?: AttachmentResponseDto[] | null;
@@ -112,8 +114,8 @@ export type UserGetUserWithDetailsDto = {
     announcements?: AnnouncementResponseDto[] | null;
     materials?: MaterialResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
+    events?: EventResponseDto[] | null;
     logs?: LogResponseDto[] | null;
-    attachments?: AttachmentResponseDto[] | null;
 };
 
 export type UserSignUpResponseDto = {
@@ -185,5 +187,6 @@ export type UserStatisticsResponseDto = {
 };
 
 export type UserDeviceActionDto = {
+    device_id: string;
     device_token: string;
 };

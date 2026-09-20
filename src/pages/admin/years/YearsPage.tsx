@@ -22,6 +22,7 @@ import styles from "./YearsPage.module.css";
 import { Layout } from "../../../components/layout/Layout";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 
 const yearSchema = z.object({
     year: z
@@ -37,7 +38,9 @@ const yearSchema = z.object({
 type YearFormData = z.infer<typeof yearSchema>;
 
 export const YearsPage = () => {
-    const [yearFilter, setYearFilter] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const yearFilter = getFilter("year_id", "");
+    const setYearFilter = getFilterSetter("year_id");
     const [years, setYears] = useState<YearResponseDto[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,7 +77,7 @@ export const YearsPage = () => {
     const filteredYears = useMemo(
         () =>
             years.filter((year) =>
-                !yearFilter ? true : year.year?.toString() === yearFilter,
+                !yearFilter ? true : year.id?.toString() === yearFilter,
             ),
         [years, yearFilter],
     );
@@ -139,13 +142,14 @@ export const YearsPage = () => {
         }
     };
 
-    const uniqueYears = Array.from(
-        new Set(years.map((y) => y.year?.toString() || "")),
-    ).filter(Boolean);
-
     const yearOptions = [
         { value: "", label: "Academic Year" },
-        ...uniqueYears.map((year) => ({ value: year, label: year })),
+        ...years
+            .filter((year) => year.id != null)
+            .map((year) => ({
+                value: String(year.id),
+                label: String(year.year ?? ""),
+            })),
     ];
 
     return (
@@ -167,6 +171,7 @@ export const YearsPage = () => {
                         <div className={styles["filter-section"]}>
                             <SelectFilter
                                 setValue={setYearFilter}
+                                value={yearFilter}
                                 options={yearOptions}
                             />
                         </div>
@@ -198,7 +203,8 @@ export const YearsPage = () => {
                     onSubmit={handleSubmit(onSubmit)}
                     errors={errors}
                     title={editMode ? "Edit Year" : "Add A New Year"}
-                    onClose={handleCloseForm}
+                    onClose={isCreating || isUpdating ? undefined : handleCloseForm}
+                    disabled={isCreating || isUpdating}
                 >
                     <Input
                         register={register}

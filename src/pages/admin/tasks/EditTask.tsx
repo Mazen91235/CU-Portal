@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,12 +10,12 @@ import {
 } from "../../../services/apis/admin/TaskAPIs";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
-import { handleErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
 import { DateInput } from "../../../components/forms/DateInput";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
@@ -34,6 +35,7 @@ import {
     formatDateInputValue,
     formatTimeInputValue,
     mergeDateAndTime,
+    toIsoFormat,
 } from "../../../utils/Formatter";
 import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
 import styles from "./EditTask.module.css";
@@ -54,6 +56,8 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 export const EditTask = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/tasks");
     const { taskId } = useParams<{ taskId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
@@ -81,7 +85,11 @@ export const EditTask = () => {
         resolver: zodResolver(taskSchema),
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -99,7 +107,7 @@ export const EditTask = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: {
                     error: err.message || "Failed to fetch subjects",
                 },
@@ -115,7 +123,13 @@ export const EditTask = () => {
                 task_id: parseInt(taskId),
             }).unwrap();
             const task = result.data;
-            setTask(task || null);
+            if (!task) {
+                navigate(redirectUrl, {
+                    state: { error: "Failed to fetch task" },
+                });
+                return;
+            }
+            setTask(task);
             if (task) {
                 setValue("title", task.name || "");
                 setValue("description", task.details?.description || "");
@@ -157,14 +171,11 @@ export const EditTask = () => {
                 );
             }
         } catch (error) {
-            const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/tasks", {
-                state: {
-                    error: err.message || "Failed to fetch task",
-                },
+            navigate(redirectUrl, {
+                state: { error: getErrorMessage(error) || "Failed to fetch task" },
             });
         }
-    }, [taskId, getTask, setValue, navigate]);
+    }, [taskId, getTask, setValue, navigate, redirectUrl]);
 
     const authQueryParams = useCallback(
         () => Promise.all([fetchSubjects(), fetchTask()]),
@@ -189,13 +200,14 @@ export const EditTask = () => {
         const uploadedUrls: string[] = [];
 
         try {
-            let urls = existingFiles
-                .map((file) => file.url)
-                .join(", ");
+            let urls = existingFiles.map((file) => file.url).join(", ");
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 const newUrls = await uploadFiles(data.files as FileList);
-                newUrls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                newUrls
+                    .split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 urls = urls ? `${urls}, ${newUrls}` : newUrls;
                 setIsUploading(false);
             }
@@ -205,9 +217,8 @@ export const EditTask = () => {
                 name: data.title,
                 url: data.submission_url || undefined,
                 subject_id: parseInt(data.subject_id),
-                deadline: mergeDateAndTime(
-                    data.deadline_date,
-                    data.deadline_time,
+                deadline: toIsoFormat(
+                    mergeDateAndTime(data.deadline_date, data.deadline_time),
                 )!,
                 details: {
                     urls: urls ? urls.split(", ") : [],
@@ -231,7 +242,7 @@ export const EditTask = () => {
             };
 
             await updateTask(taskData).unwrap();
-            navigate("/admin/tasks", {
+            navigate(redirectUrl, {
                 state: { success: "Task updated successfully" },
             });
         } catch (error) {
@@ -243,7 +254,7 @@ export const EditTask = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/tasks");
+        navigate(redirectUrl);
     };
 
     useEffect(() => {
@@ -263,7 +274,7 @@ export const EditTask = () => {
                 description="Update task information"
                 icon="task"
                 linkText="Back to Tasks"
-                linkTo="/admin/tasks"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -285,20 +296,23 @@ export const EditTask = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <SearchableInput
+                        <Select
                             label="Subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading || isUploading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                            placeholder="Select a subject"
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div className={styles.formGroup}>

@@ -75,6 +75,10 @@
     transform: translateX(-50%);
 }
 
+.timelineDotCurrent {
+    background: var(--primary-purple);
+}
+
 .timelineDayContent {
     min-width: 0;
     display: flex;
@@ -105,6 +109,9 @@
     box-shadow: 0 0 0 4px var(--white);
 }
 
+.timelineItemDotCurrent {
+    background: var(--primary-purple);
+}
 
 .sectionTitle {
     margin: 0;
@@ -171,7 +178,7 @@
     }
 
     .timelineDate {
-        padding-left: 4px;
+        padding-left: 16px;
         padding-top: 0.65rem;
         font-size: 0.85rem;
     }
@@ -184,5 +191,12 @@
 
     .timelineDayContent {
         padding-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .timelineItemDot {
+        left: 50%;
+        transform: translateX(-50%);
     }
 }

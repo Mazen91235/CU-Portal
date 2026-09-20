@@ -20,16 +20,23 @@ import {
 } from "../../../services/apis/user/NoteAPIs";
 import type { NoteResponseDto } from "../../../types/dtos/NoteDtos";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
-import { formatDate } from "../../../utils/Formatter";
+import { formatDate, toIsoFormat } from "../../../utils/Formatter";
+import { showToast } from "../../../utils/ToastsManager";
 import styles from "./NotesPage.module.css";
 
 export const NotesPage = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [dateFrom, setDateFrom] = useState(
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
+    const dateFrom = getFilter(
+        "date_from",
         new Date().toLocaleDateString("en-CA"),
     );
-    const [dateTo, setDateTo] = useState("");
+    const setDateFrom = getFilterSetter("date_from", true);
+    const dateTo = getFilter("date_to", "");
+    const setDateTo = getFilterSetter("date_to", true);
     const [notes, setNotes] = useState<NoteResponseDto[]>([]);
     const [editingNote, setEditingNote] = useState<NoteResponseDto | null>(
         null,
@@ -49,9 +56,10 @@ export const NotesPage = () => {
             const result = await getNotes({
                 data: {
                     query: searchQuery || undefined,
-                    date_from: dateFrom || undefined,
-                    date_to: dateTo || undefined,
+                    date_from: toIsoFormat(dateFrom),
+                    date_to: toIsoFormat(dateTo),
                 },
+                order_by: ["date_nearest"],
             }).unwrap();
             setNotes(result.data || []);
         } catch (error) {
@@ -64,39 +72,32 @@ export const NotesPage = () => {
     const filteredNotes = useMemo(() => notes, [notes]);
 
     const handleSaveNote = async (data: NoteFormData) => {
-        let result: NoteResponseDto | undefined;
-        if (editingNote?.id) {
-            result =
-                (
-                    await updateNote({
-                        note_id: editingNote.id,
-                        ...data,
-                    }).unwrap()
-                ).data ?? undefined;
-        } else {
-            result = (await createNote(data).unwrap()).data ?? undefined;
+        try {
+            if (editingNote?.id) {
+                await updateNote({
+                    note_id: editingNote.id,
+                    ...data,
+                }).unwrap();
+                showToast("success", "Success", "Note updated successfully.");
+            } else {
+                await createNote(data).unwrap();
+                showToast("success", "Success", "Note created successfully.");
+            }
+            await fetchNotes();
+            setEditingNote(null);
+            setIsNoteFormOpen(false);
+        } catch (error) {
+            handlePopupErrors(error);
         }
-        if (result) {
-            setNotes((current) => {
-                if (editingNote?.id)
-                    return current.map((item) =>
-                        item.id === result?.id ? result : item,
-                    );
-                return [result, ...current];
-            });
-        }
-        setEditingNote(null);
-        setIsNoteFormOpen(false);
     };
 
     const handleDeleteNote = async () => {
         if (!noteToDelete?.id) return;
         try {
             await deleteNote({ note_id: noteToDelete.id }).unwrap();
-            setNotes((current) =>
-                current.filter((item) => item.id !== noteToDelete.id),
-            );
+            await fetchNotes();
             setNoteToDelete(null);
+            showToast("success", "Success", "Note deleted successfully.");
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -125,6 +126,7 @@ export const NotesPage = () => {
                         <Search
                             placeholder="Search notes..."
                             setValue={setSearchQuery}
+                            value={searchQuery}
                         />
                     </div>
                     <div className={styles.filtersRow}>
@@ -132,10 +134,13 @@ export const NotesPage = () => {
                             placeholder="Date From"
                             setValue={setDateFrom}
                             defaultDate={dateFrom}
+                            value={dateFrom}
                         />
                         <DateFilter
                             placeholder="Date To"
                             setValue={setDateTo}
+                            value={dateTo}
+                            startDay={false}
                         />
                     </div>
                 </div>

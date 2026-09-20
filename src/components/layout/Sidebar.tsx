@@ -12,6 +12,7 @@ import IconComponent from "../IconComponent";
 
 import styles from "./Sidebar.module.css";
 import { captitalize } from "../../utils/Formatter";
+import { useLazyGetReleasesQuery } from "../../services/apis/user/ReleaseAPIs";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
@@ -39,13 +40,13 @@ const navSectionsDefault: NavSection[] = [
                 icon: "sidebar-courses",
                 activatesPaths: ["/user/courses/"],
             },
-            {
-                label: "Course Map",
-                // path: "/user/course-map",
-                path: "#!",
-                icon: "sidebar-coursemap",
-                badge: "Soon",
-            },
+            // {
+            //     label: "Course Map",
+            //     // path: "/user/course-map",
+            //     path: "#!",
+            //     icon: "sidebar-coursemap",
+            //     badge: "Soon",
+            // },
             {
                 label: "Calendar",
                 path: "/user/calendar",
@@ -55,6 +56,14 @@ const navSectionsDefault: NavSection[] = [
                 label: "Timeline",
                 path: "/user/timeline",
                 icon: "sidebar-timeline",
+                badge: "New",
+            },
+            {
+                label: "Weekly Guide",
+                path: "/user/weeks",
+                icon: "sidebar-weekly-guide",
+                badge: "Beta",
+                activatesPaths: ["/user/weeks/"],
             },
             {
                 label: "Tasks",
@@ -78,24 +87,14 @@ const navSectionsDefault: NavSection[] = [
                 label: "Materials",
                 path: "/user/materials",
                 icon: "sidebar-materials",
-                badge: "Beta",
                 activatesPaths: ["/user/materials/"],
             },
             {
                 label: "Other Materials",
-                // path: "/user/other-materials",
-                path: "#!",
+                path: "/user/other-materials",
                 icon: "sidebar-other-materials",
-                badge: "Soon",
+                badge: "Beta",
                 activatesPaths: ["/user/other-materials/"],
-            },
-            {
-                label: "Grades",
-                // path: "/user/grades",
-                path: "#!",
-                icon: "sidebar-grades",
-                badge: "Soon",
-                activatesPaths: ["/user/grades/"],
             },
         ],
     },
@@ -103,23 +102,17 @@ const navSectionsDefault: NavSection[] = [
         title: "Organization",
         links: [
             {
-                label: "Study Tracker",
-                // path: "/user/study-tracker",
-                path: "#!",
-                icon: "sidebar-study-tracker",
-                badge: "Soon",
-            },
-            {
                 label: "Events",
                 path: "/user/events",
                 icon: "sidebar-events",
-                badge: "New",
+                badge: "Beta",
                 activatesPaths: ["/user/events/"],
             },
             {
                 label: "Events Organizers",
                 path: "/user/event-organizers",
                 icon: "sidebar-event-organizers",
+                badge: "Beta",
                 activatesPaths: ["/user/event-organizers/"],
             },
         ],
@@ -134,10 +127,10 @@ const navSectionsDefault: NavSection[] = [
                 badge: "New",
             },
             {
-                label: "CV Generator",
-                // path: "/user/cv-generator",
+                label: "Study Tracker",
+                // path: "/user/study-tracker",
                 path: "#!",
-                icon: "sidebar-cv-generator",
+                icon: "sidebar-study-tracker",
                 badge: "Soon",
             },
         ],
@@ -188,6 +181,18 @@ const navSectionsDefault: NavSection[] = [
             },
         ],
     },
+    {
+        title: "System",
+        links: [
+            {
+                label: "Releases",
+                path: "/user/system/releases",
+                icon: "sidebar-releases",
+                badge: "New",
+                activatesPaths: ["/user/system/releases/"],
+            },
+        ],
+    },
 ];
 
 const showAdminLinks = (permissions: string[]) => {
@@ -196,17 +201,17 @@ const showAdminLinks = (permissions: string[]) => {
         links: [],
     };
 
-    if (!permissions.includes("View Admin Links")) return null;
+    if (!permissions.includes("View AdminLinks")) return null;
 
-    if (permissions.includes("View Admin Panel")) {
-        section.links.push({
-            label: "Dashboard",
-            // path: "/admin",
-            path: "#!",
-            icon: "sidebar-admin-dashboard",
-            badge: "Soon",
-        });
-    }
+    // if (permissions.includes("View AdminPanel")) {
+    //     section.links.push({
+    //         label: "Dashboard",
+    //         // path: "/admin",
+    //         path: "#!",
+    //         icon: "sidebar-admin-dashboard",
+    //         badge: "Soon",
+    //     });
+    // }
 
     if (permissions.includes("View Faculties")) {
         section.links.push({
@@ -232,15 +237,15 @@ const showAdminLinks = (permissions: string[]) => {
         });
     }
 
-    if (permissions.includes("View Course Maps")) {
-        section.links.push({
-            label: "Course Maps",
-            // path: "/admin/course-maps",
-            path: "#!",
-            icon: "sidebar-admin-course-maps",
-            badge: "Soon",
-        });
-    }
+    // if (permissions.includes("View Course Maps")) {
+    //     section.links.push({
+    //         label: "Course Maps",
+    //         // path: "/admin/course-maps",
+    //         path: "#!",
+    //         icon: "sidebar-admin-course-maps",
+    //         badge: "Soon",
+    //     });
+    // }
 
     if (permissions.includes("View Users")) {
         section.links.push({
@@ -274,19 +279,14 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Materials",
             path: "/admin/materials",
             icon: "sidebar-admin-materials",
-            badge: "Beta",
             activatesPaths: ["/admin/materials/"],
         });
-    }
-
-    if (permissions.includes("View Grades")) {
         section.links.push({
-            label: "Grades",
-            // path: "/admin/grades",
-            path: "#!",
-            icon: "sidebar-admin-grades",
-            badge: "Soon",
-            activatesPaths: ["/admin/grades/"],
+            label: "Other Materials",
+            path: "/admin/other-materials",
+            icon: "sidebar-admin-other-materials",
+            badge: "Beta",
+            activatesPaths: ["/admin/other-materials/"],
         });
     }
 
@@ -322,6 +322,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Events",
             path: "/admin/events",
             icon: "sidebar-admin-events",
+            badge: "Beta",
             activatesPaths: ["/admin/events/"],
         });
     }
@@ -331,6 +332,7 @@ const showAdminLinks = (permissions: string[]) => {
             label: "Event Organizers",
             path: "/admin/event-organizers",
             icon: "sidebar-admin-event-organizers",
+            badge: "Beta",
             activatesPaths: ["/admin/event-organizers/"],
         });
     }
@@ -338,11 +340,30 @@ const showAdminLinks = (permissions: string[]) => {
     if (permissions.includes("View Logs")) {
         section.links.push({
             label: "Logs",
-            // path: "/admin/logs",
-            path: "#!",
+            path: "/admin/logs",
             icon: "sidebar-admin-logs",
-            badge: "Soon",
+            badge: "New",
             activatesPaths: ["/admin/logs/"],
+        });
+    }
+
+    if (permissions.includes("View Weeks")) {
+        section.links.push({
+            label: "Weeks",
+            path: "/admin/weeks",
+            icon: "sidebar-weekly-guide",
+            badge: "Beta",
+            activatesPaths: ["/admin/weeks/"],
+        });
+    }
+
+    if (permissions.includes("View Releases")) {
+        section.links.push({
+            label: "Releases",
+            path: "/admin/releases",
+            icon: "sidebar-admin-releases",
+            badge: "New",
+            activatesPaths: ["/admin/releases/"],
         });
     }
 
@@ -381,7 +402,13 @@ const showAdminLinks = (permissions: string[]) => {
         activatesPaths: ["/admin/discussions/"],
     });
 
-    return section.links.length > 0 ? section : null;
+    const uniqueLinks = section.links.filter(
+        (link, index, links) =>
+            links.findIndex((candidate) => candidate.label === link.label) ===
+            index,
+    );
+
+    return uniqueLinks.length > 0 ? { ...section, links: uniqueLinks } : null;
 };
 export const Sidebar = ({
     isOpen,
@@ -390,15 +417,31 @@ export const Sidebar = ({
     isOpen: boolean;
     onClose?: () => void;
 }) => {
-    const location = useLocation();
+    const { pathname } = useLocation();
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
     const [logout] = useLazyLogoutQuery();
     const [expandedSections, setExpandedSections] = useState<string[]>([]);
+    const [latestVersion, setLatestVersion] = useState<null | string>(null);
+    const [getReleases] = useLazyGetReleasesQuery();
     const [navSections, setNavSections] = useState<NavSection[]>([
         ...navSectionsDefault,
     ]);
+
+    useEffect(() => {
+        getReleases({
+            data: {},
+            order_by: ["date"],
+            descending: true,
+            limit: 1,
+        })
+            .unwrap()
+            .then((result) => {
+                setLatestVersion(result.data?.[0]?.release_number ?? null);
+            })
+            .catch(() => undefined);
+    }, [getReleases]);
 
     useEffect(() => {
         if (permissions) {
@@ -412,19 +455,11 @@ export const Sidebar = ({
         }
     }, [permissions]);
 
-    const toggleSection = (title: string) => {
-        setExpandedSections((prev) =>
-            prev.includes(title)
-                ? prev.filter((t) => t !== title)
-                : [...prev, title],
-        );
-    };
-
     const isLinkActive = (link: NavLink) => {
-        if (location.pathname === link.path) return true;
+        if (pathname === link.path) return true;
         if (
             link.activatesPaths &&
-            link.activatesPaths.some((path) => location.pathname.includes(path))
+            link.activatesPaths.some((path) => pathname.includes(path))
         )
             return true;
         return false;
@@ -433,9 +468,8 @@ export const Sidebar = ({
     const isSectionActive = (section: NavSection) => {
         return section.links.some(
             (link) =>
-                (location.pathname.includes(link.path) &&
-                    link.path !== "/user") ||
-                (location.pathname === "/user" && link.path === "/user"),
+                (pathname.includes(link.path) && link.path !== "/user") ||
+                (pathname === "/user" && link.path === "/user"),
         );
     };
 
@@ -445,10 +479,9 @@ export const Sidebar = ({
             navSections.forEach((section) => {
                 const isActive = section.links.some(
                     (link) =>
-                        (location.pathname.includes(link.path) &&
+                        (pathname.includes(link.path) &&
                             link.path !== "/user") ||
-                        (location.pathname === "/user" &&
-                            link.path === "/user"),
+                        (pathname === "/user" && link.path === "/user"),
                 );
                 if (isActive && !newExpanded.includes(section.title)) {
                     newExpanded.push(section.title);
@@ -456,7 +489,15 @@ export const Sidebar = ({
             });
             return newExpanded;
         });
-    }, [location.pathname, navSections]);
+    }, [pathname, navSections]);
+
+    const toggleSection = (title: string) => {
+        setExpandedSections((previous) =>
+            previous.includes(title)
+                ? previous.filter((sectionTitle) => sectionTitle !== title)
+                : [...previous, title],
+        );
+    };
 
     const handleLogout = async () => {
         try {
@@ -554,8 +595,10 @@ export const Sidebar = ({
             </ul>
 
             <div className={styles.endingSidebar}>
-                <span>CU Portal</span>
+                <span>CU-Portal</span>
                 <span>© 2026 All Rights Reserved</span>
+                <hr />
+                <span>{`V${latestVersion ?? "N/A"}`}</span>
             </div>
         </div>
     );

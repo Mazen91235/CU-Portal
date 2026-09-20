@@ -9,6 +9,7 @@
     align-items: center;
     padding: 12px 0;
     border-bottom: 1px solid #f1f5f9;
+    min-width: 0;
 }
 
 .quickInfoRow:last-child {
@@ -19,6 +20,7 @@
     font-size: 14px;
     color: var(--medium-grey);
     font-weight: var(--primary-font-weight);
+    min-width: 0;
 }
 
 .quickInfoValue {
@@ -27,4 +29,18 @@
     font-weight: 600;
     text-align: right;
     text-transform: capitalize;
+    min-width: 0;
+    max-width: 65%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+@media (max-width: 768px) {
+    .quickInfoRow {
+        gap: 1rem;
+    }
+
+    .quickInfoValue {
+        flex: 1;
+    }
 }

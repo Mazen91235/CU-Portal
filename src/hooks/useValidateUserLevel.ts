@@ -6,23 +6,20 @@ import { validateUserAccess } from "../utils/Validators";
 export const useValidateUserLevel = () => {
     const user = useAppSelector((state) => state.user.user);
     const navigate = useNavigate();
-    const location = useLocation();
+    const { pathname } = useLocation();
     useEffect(() => {
         if (
             !user ||
             (user.level || 4) > 3 ||
-            (!location.pathname.includes("/user") &&
-                !location.pathname.includes("/admin"))
+            (!pathname.includes("/user") && !pathname.includes("/admin"))
         )
             return;
-        if (
-            !validateUserAccess(user.level, location.pathname, user.role?.level)
-        ) {
+        if (!validateUserAccess(user.level, pathname, user.role?.level)) {
             navigate("/user", {
                 state: {
                     error: "Please complete the required steps to proceed.",
                 },
             });
         }
-    }, [user, location, navigate]);
+    }, [user, pathname, navigate]);
 };

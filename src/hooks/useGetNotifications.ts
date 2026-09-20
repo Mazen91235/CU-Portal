@@ -8,7 +8,7 @@ export default function useGetNotifications({
     page = 1,
     limit = 1e6,
 }: { seen?: boolean; page?: number; limit?: number } = {}) {
-    const location = useLocation();
+    const { pathname } = useLocation();
     const isLoggedIn = useLogin();
     const [getNotifications, { data }] = useLazyGetNotificationsQuery();
     useEffect(() => {
@@ -27,6 +27,6 @@ export default function useGetNotifications({
                 return;
             }
         })();
-    }, [location, seen, page, limit, isLoggedIn, getNotifications]);
+    }, [pathname, seen, page, limit, isLoggedIn, getNotifications]);
     return data;
 }

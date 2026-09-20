@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import { useLazyGetCourseQuery } from "../../../services/apis/admin/CourseAPIs";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { UserResponseDto } from "../../../types/dtos/UserDtos";
@@ -9,7 +10,7 @@ import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import { Bordered } from "../../../components/bordered/Bordered";
 import useAuthQuery from "../../../hooks/useAuthQuery";
-import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
+import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { Heading } from "../../../components/heading/Heading";
 import { Avatar } from "../../../components/avatar/Avatar";
 import styles from "./CoursePage.module.css";
@@ -31,11 +32,17 @@ export const CoursePage = () => {
             const result = await getCourse({
                 course_id: parseInt(courseId),
             }).unwrap();
-            setCourse(result.data || null);
+            const course = result.data;
+            if (!course) {
+                navigate("/admin/courses", {
+                    state: { error: "Failed to fetch course" },
+                });
+                return;
+            }
+            setCourse(course);
         } catch (error) {
-            const err = error as DefaultAPIResponse;
             navigate("/admin/courses", {
-                state: { error: err.data.message || "Failed to fetch course" },
+                state: { error: getErrorMessage(error) || "Failed to fetch course" },
             });
         }
     }, [getCourse, navigate, courseId]);
@@ -63,7 +70,7 @@ export const CoursePage = () => {
                 icon="course"
                 button="Edit Course"
                 buttonAction={() =>
-                    navigate(`/admin/courses/edit/${course.id}`)
+                    navigate(buildRedirectUrl(`/admin/courses/edit/${course.id}`))
                 }
                 linkText="Back to Courses"
                 linkTo="/admin/courses"

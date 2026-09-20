@@ -1,81 +1,92 @@
 .banner {
-    background: linear-gradient(90deg, #520e58 0%, #7b1684 100%);
-    padding: 32px;
-    border-radius: var(--primary-border-radius);
-    margin: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--primary-margin);
-    min-height: 110px;
+  background: linear-gradient(90deg, #520e58 0%, #7b1684 100%);
+  padding: 32px;
+  border-radius: var(--primary-border-radius);
+  margin: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--primary-margin);
+  min-height: 110px;
 }
 
 .content {
-    text-align: left;
-    flex: 1;
+  text-align: left;
+  flex: 1;
 }
 
 .title {
-    color: var(--light-text);
-    font-family: "Poppins", var(--primary-font-family);
-    font-size: 32px;
-    font-weight: var(--primary-font-weight-heavy);
-    letter-spacing: 0.96px;
-    margin-bottom: 8px;
+  color: var(--light-text);
+  font-family: "Poppins", var(--primary-font-family);
+  font-size: 32px;
+  font-weight: var(--primary-font-weight-heavy);
+  letter-spacing: 0.96px;
+  margin-bottom: 8px;
 }
 
 .description {
-    color: var(--light-text);
-    font-family: "Poppins", var(--primary-font-family);
-    font-size: 20px;
-    font-weight: var(--secondary-font-weight);
-    margin-bottom: 0;
-    opacity: 0.8;
+  color: var(--light-text);
+  font-family: "Poppins", var(--primary-font-family);
+  font-size: 20px;
+  font-weight: var(--secondary-font-weight);
+  margin-bottom: 0;
+  opacity: 0.8;
 }
 
 .button {
-    background: var(--white);
-    color: var(--primary-purple);
-    font-weight: 600;
-    border-radius: var(--primary-border-radius);
-    font-size: 18px;
-    border: none;
-    box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
-    transition:
-        background var(--transition-duration),
-        color var(--transition-duration);
-    min-width: 132px;
-    min-height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0px 10px;
-    cursor: pointer;
+  background: var(--white);
+  color: var(--primary-purple);
+  font-weight: 600;
+  border-radius: var(--primary-border-radius);
+  font-size: 18px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(80, 14, 88, 0.08);
+  transition:
+    background var(--transition-duration),
+    color var(--transition-duration);
+  min-width: 132px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .button:hover {
-    background: var(--light-grey);
+  background: var(--light-grey);
 }
 
 @media (max-width: 768px) {
-    .banner {
-        margin: 56px 16px 16px 16px;
-        padding: 24px 20px;
-        min-height: auto;
-    }
+  .banner {
+    margin: 56px 16px 16px 16px;
+    padding: 24px 20px;
+    min-height: auto;
+  }
 
-    .title {
-        font-size: 24px;
-        letter-spacing: 0.72px;
-    }
+  .title {
+    font-size: 24px;
+    letter-spacing: 0.72px;
+  }
 
-    .description {
-        font-size: 16px;
-    }
+  .description {
+    font-size: 16px;
+  }
 
-    .button {
-        width: 100%;
-        min-width: 100%;
-    }
+  .button {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column;
+  }
 }

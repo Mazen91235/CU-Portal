@@ -9,7 +9,7 @@ import { handlePopupErrors } from "../../utils/ErrorHandling";
 import { showToast } from "../../utils/ToastsManager";
 import {
     useLazyGetNotificationsQuery,
-    useMarkNotificationAsSeenMutation,
+    useMarkNotificationsAsSeenMutation,
 } from "../../services/apis/user/NotificationAPIs";
 
 export const Navbar = ({
@@ -21,8 +21,9 @@ export const Navbar = ({
 }) => {
     const [getNotifications] = useLazyGetNotificationsQuery();
     const navigate = useNavigate();
-    const [markNotificationsAsSeen] = useMarkNotificationAsSeenMutation();
+    const [markNotificationsAsSeen] = useMarkNotificationsAsSeenMutation();
     const [showNotifications, setShowNotifications] = useState(false);
+    const [isMarkingAsSeen, setIsMarkingAsSeen] = useState(false);
 
     const notifications = useAppSelector(
         (state) => state.notification.notifications,
@@ -48,9 +49,21 @@ export const Navbar = ({
 
     const handleNotificationClick = async (notification_id: number) => {
         try {
-            await markNotificationsAsSeen({ notification_id }).unwrap();
+            setIsMarkingAsSeen(true);
+            await markNotificationsAsSeen({
+                notification_ids: [notification_id],
+            }).unwrap();
+            await getNotifications({
+                data: { seen: false },
+                order_by: ["id"],
+                descending: true,
+                page: 1,
+                limit: 1e6,
+            }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
+        } finally {
+            setIsMarkingAsSeen(false);
         }
     };
 
@@ -60,12 +73,11 @@ export const Navbar = ({
             return;
         }
         try {
+            setIsMarkingAsSeen(true);
             const unreadIds = notifications.map((n) => n.id || 0) || [];
-            await Promise.all(
-                unreadIds.map((id) =>
-                    markNotificationsAsSeen({ notification_id: id }).unwrap(),
-                ),
-            );
+            await markNotificationsAsSeen({
+                notification_ids: unreadIds,
+            }).unwrap();
             await getNotifications({
                 data: { seen: false },
                 order_by: ["id"],
@@ -76,6 +88,8 @@ export const Navbar = ({
             showToast("success", "Success", "All notifications marked as read");
         } catch (error) {
             handlePopupErrors(error);
+        } finally {
+            setIsMarkingAsSeen(false);
         }
     };
 
@@ -140,7 +154,8 @@ export const Navbar = ({
                                             className={styles.markAllReadBtn}
                                             onClick={handleMarkAllAsRead}
                                             disabled={
-                                                notifications.length === 0
+                                                notifications.length === 0 ||
+                                                isMarkingAsSeen
                                             }
                                             title="Mark All As Read"
                                         >

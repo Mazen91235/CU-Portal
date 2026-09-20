@@ -1,0 +1,106 @@
+.container {
+    width: min(100% - 32px, 1180px);
+    margin: 28px auto 48px;
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.descriptionSection,
+.categorySection {
+    margin-top: 22px;
+    padding: 22px 24px;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    background: var(--white);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.sectionTitle {
+    display: inline-block;
+    margin: 0;
+    padding-bottom: 5px;
+    color: var(--dark-text);
+    font-family: var(--primary-font-family);
+    font-size: 22px;
+    font-weight: var(--primary-font-weight-heavy);
+    line-height: 1.25;
+    text-decoration: underline;
+    text-decoration-color: var(--primary-purple);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+}
+
+.description {
+    margin: 12px 0 0;
+    color: var(--dark-grey);
+    font-family: var(--primary-font-family);
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.categorySections {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+}
+
+.categorySection {
+    margin-top: 16px;
+}
+
+.itemsList {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+}
+
+.itemMarker {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    margin-top: 7px;
+    border-radius: 50%;
+    background: var(--primary-purple);
+}
+
+.itemContent {
+    margin: 0;
+    color: var(--dark-grey);
+    font-family: var(--primary-font-family);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .statsRow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .container {
+        width: min(100% - 24px, 1200px);
+        margin-top: 16px;
+    }
+
+    .statsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .descriptionSection,
+    .categorySection {
+        padding: 18px;
+    }
+}

@@ -16,8 +16,8 @@ export type Subject = {
     year_rank?: number | null;
     term?: number | null;
     credits?: number | null;
-    created_at?: Date | null;
-    updated_at?: Date | null;
+    created_at?: string | null;
+    updated_at?: string | null;
     year_id?: number | null;
     year?: Year | null;
     department_id?: number | null;

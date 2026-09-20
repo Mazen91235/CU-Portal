@@ -16,11 +16,22 @@ export default function IconComponent({
 }) {
     const IconComponent = GetIcon(icon);
     return IconComponent ? (
-        <IconComponent
-            size={size}
-            className={className}
-            color={color}
-            style={style}
-        />
+        typeof IconComponent === "string" ? (
+            <img
+                src={IconComponent}
+                alt={icon}
+                width={size}
+                height={size}
+                className={className}
+                style={{ ...style, color }}
+            />
+        ) : (
+            <IconComponent
+                size={size}
+                className={className}
+                color={color}
+                style={style}
+            />
+        )
     ) : null;
 }

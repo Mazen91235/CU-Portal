@@ -128,7 +128,7 @@ the main css shared over the project is found in the `index.css` file in the roo
   -> Assets (Like Images or Any Assets)
   -> Styles (Like importing from css module)
 - For Forms use the Zod and ReactForms approach like the one in Contact Form page of landing page
-- For Page Seo don't use plain `Helmet` component in any page instead use the `PageSeo` component and fill the title, description props properly (include `CU Portal` in the title to make sure every page is under the `CU Portal` website for better SEO) and note that the title of the website is no longer `Student Portal` instead it's `CU Portal` to change it whenever encountering it
+- For Page Seo don't use plain `Helmet` component in any page instead use the `PageSeo` component and fill the title, description props properly (include `CU Portal` in the title to make sure every page is under the `CU Portal` website for better SEO) and note that the title of the website is no longer `CU-Portal` instead it's `CU Portal` to change it whenever encountering it
 - Any Custom Select box use a component from `Select` or `SearchableInput` in case that this custom select box was searchable and that's rare to encounter
 - Any Card Encountered like in pages courses or tasks or exams or announcements or etc.. use the Card component as it should be generic and cover all these cards
 - When Converting and encountering any needed assets .. copy them with meaningful name to the `src/assets` proper folder whether `icons` or whatever but don't import anything from old_project directly

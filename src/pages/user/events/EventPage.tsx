@@ -12,6 +12,8 @@ import useAuthQuery from "../../../hooks/useAuthQuery";
 // import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { formatDateTime } from "../../../utils/Formatter";
 
+import defaultEventThumbnail from "../../../assets/default event thumbnail.jpg";
+
 import styles from "./EventPage.module.css";
 import { AttachmentsAndLinksSection } from "../../../components/preview/AttachmentsAndLinksSection";
 import { Button } from "../../../components/forms/Button";
@@ -24,7 +26,7 @@ import {
     useRegisterEventMutation,
     useUnregisterEventMutation,
 } from "../../../services/apis/user/EventAPIs";
-import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { useAppSelector } from "../../../services/redux/Hooks";
 
 export const EventPage = () => {
@@ -48,6 +50,12 @@ export const EventPage = () => {
                 event_id: parseInt(eventId),
             }).unwrap();
             const eventData = result.data || null;
+            if (!eventData) {
+                navigate("/user/events", {
+                    state: { error: "Failed to fetch event" },
+                });
+                return;
+            }
             setEvent(eventData);
             const userId = user?.id;
             setIsRegistered(
@@ -59,17 +67,25 @@ export const EventPage = () => {
                 ),
             );
         } catch (error) {
-            handlePopupErrors(error);
-            navigate("/user/events");
+            navigate("/user/events", {
+                state: { error: getErrorMessage(error) || "Failed to fetch event" },
+            });
         }
     }, [eventId, getEvent, navigate, user?.id]);
 
     useAuthQuery(fetchEvent);
 
-    const handleRegisterClick = () => setIsRegisterModalOpen(true);
+    const eventHasStarted = Boolean(
+        event?.start_date && new Date(event.start_date).getTime() <= Date.now(),
+    );
+
+    const handleRegisterClick = () => {
+        if (eventHasStarted) return;
+        setIsRegisterModalOpen(true);
+    };
 
     const handleRegisterEvent = async () => {
-        if (!event?.id) return;
+        if (!event?.id || eventHasStarted) return;
         try {
             setIsProcessing(true);
             if (isRegistered) {
@@ -124,51 +140,45 @@ export const EventPage = () => {
 
             <SubBanner
                 title={event.title || "Event Details"}
-                img={event.logo?.url || undefined}
+                img={event.logo?.url || defaultEventThumbnail}
                 icon="calendar"
                 linkText="Back to Events"
                 linkTo="/user/events"
             />
 
             <div className={styles.container}>
-                <div className={styles.content}>
-                    <div className={styles.statsRow}>
-                        <StatCard
-                            type="Start Date"
-                            value={formatDateTime(event.start_date) || "N/A"}
-                            icon="calendar"
-                        />
-                        <StatCard
-                            type="End Date"
-                            value={formatDateTime(event.end_date) || "N/A"}
-                            icon="calendar"
-                        />
-                        <StatCard
-                            type="Price"
-                            value={price}
-                            icon="dollar-sign"
-                        />
-                        <StatCard
-                            type="Attendees"
-                            value={event.attendees?.length ?? 0}
-                            icon="people"
-                        />
-                    </div>
+                <div className={styles.statsRow}>
+                    <StatCard
+                        type="Start Date"
+                        value={formatDateTime(event.start_date) || "N/A"}
+                        icon="calendar"
+                    />
+                    <StatCard
+                        type="End Date"
+                        value={formatDateTime(event.end_date) || "N/A"}
+                        icon="calendar"
+                    />
+                    <StatCard
+                        type="Price"
+                        value={price}
+                        icon="dollar-sign"
+                    />
+                    <StatCard
+                        type="Attendees"
+                        value={event.attendees?.length ?? 0}
+                        icon="people"
+                    />
+                </div>
 
+                <div className={styles.descriptionSection}>
                     <LongSection title="Description" icon="align-left">
                         {event.details?.description || (
                             <span>No description available</span>
                         )}
                     </LongSection>
-
-                    {event.attachments && event.attachments.length > 0 && (
-                        <AttachmentsAndLinksSection
-                            attachments={event.attachments}
-                        />
-                    )}
                 </div>
 
-                <div className={styles.sideInfo}>
+                <div className={styles.quickActionsSection}>
                     <Bordered>
                         <div className={styles.quickActions}>
                             <h4>Quick Actions</h4>
@@ -187,6 +197,7 @@ export const EventPage = () => {
                                 isOrange={false}
                                 isSecondary={isRegistered}
                                 onClick={handleRegisterClick}
+                                disabled={eventHasStarted}
                             />
                             <Button
                                 text="Share Event"
@@ -197,8 +208,10 @@ export const EventPage = () => {
                             />
                         </div>
                     </Bordered>
+                </div>
 
-                    {event.event_organizer && (
+                {event.event_organizer && (
+                    <div className={styles.organizerSection}>
                         <EventOrganizerCard
                             organizer={event.event_organizer}
                             onView={() =>
@@ -207,8 +220,10 @@ export const EventPage = () => {
                                 )
                             }
                         />
-                    )}
+                    </div>
+                )}
 
+                <div className={styles.quickInfoSection}>
                     <QuickInfoSection
                         items={[
                             {
@@ -222,6 +237,14 @@ export const EventPage = () => {
                         ]}
                     />
                 </div>
+
+                {event.attachments && event.attachments.length > 0 && (
+                    <div className={styles.attachmentsSection}>
+                        <AttachmentsAndLinksSection
+                            attachments={event.attachments}
+                        />
+                    </div>
+                )}
             </div>
 
             <ConfirmModal

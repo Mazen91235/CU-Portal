@@ -1,18 +1,22 @@
 .dashboard-container {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
     gap: 24px;
     padding: var(--primary-padding);
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .main-column {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
 .sidebar-column {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -128,116 +132,6 @@
 
 .tasks-cards {
     max-height: 320px;
-}
-
-.user-card {
-    background: var(--white);
-    border-radius: var(--primary-border-radius);
-    padding: 24px;
-    box-shadow: var(--dark-box-shadow);
-    width: 100%;
-}
-
-.user-card-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.user-role {
-    font-size: 12px;
-    color: var(--primary-purple);
-    font-weight: 600;
-    border-radius: 4px;
-    padding: 4px 12px;
-    border: 1px solid #8c0dab33;
-    text-transform: capitalize;
-}
-
-.user-avatar {
-    width: 100px;
-    height: 100px;
-    margin: 16px auto;
-    display: block;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.user-name {
-    font-weight: 600;
-    font-size: 18px;
-    text-align: center;
-    width: 100%;
-    margin: 12px auto;
-    display: block;
-    color: var(--dark-text);
-}
-
-.user-academic-details {
-    width: 100%;
-    margin: 16px 0;
-    border: 1px solid #8c0dab33;
-    border-radius: var(--primary-border-radius);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-}
-
-.user-academic-details div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.user-academic-details .separator {
-    min-height: 30px;
-    width: 1px;
-    background: #8c0dab33;
-}
-
-.user-academic-details div span:nth-child(1) {
-    font-size: var(--secondary-font-size);
-    color: var(--medium-grey);
-}
-
-.user-academic-details div span:nth-child(2) {
-    font-size: var(--secondary-font-size);
-    background: linear-gradient(0deg, #520e58, #7b1684);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 600;
-}
-
-.user-details {
-    width: 100%;
-    margin: 16px 0 0 0;
-}
-
-.user-details h5 {
-    width: 100%;
-    border: 1px solid #8c0dab33;
-    border-radius: var(--primary-border-radius);
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 12px;
-    font-size: var(--secondary-font-size);
-    margin: 8px 0;
-}
-
-.user-details h5 img {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-}
-
-.user-details h5 span {
-    color: var(--medium-grey);
 }
 
 .my-courses {
@@ -437,6 +331,23 @@
 }
 
 @media (max-width: 768px) {
+    .dashboard-container {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendar-section,
+    .exams-overview,
+    .tasks-overview,
+    .my-courses,
+    .user-announcements,
+    .motivation-card {
+        width: 100%;
+        min-width: 0;
+    }
+
     .cards-container {
         grid-template-columns: 1fr;
     }

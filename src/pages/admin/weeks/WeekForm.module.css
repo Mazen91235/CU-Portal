@@ -1,0 +1,35 @@
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.formCard {
+    display: grid;
+    gap: 1.25rem;
+    padding: 2.5rem;
+    background: var(--white);
+    border-radius: var(--primary-border-radius);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-grey);
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+    }
+    .formCard {
+        padding: 1.5rem;
+    }
+    .formActions {
+        flex-direction: column-reverse;
+    }
+}

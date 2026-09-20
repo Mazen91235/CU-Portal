@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router";
+import { getRedirectUrl } from "../../../utils/Navigation";
+import { useNavigate, useSearchParams } from "react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,10 +24,7 @@ import styles from "./CreateEventOrganizer.module.css";
 
 const schema = z.object({
     name: z.string().trim().min(1, "Organizer name is required"),
-    logo: z.any().refine(
-        (value) => value instanceof File || Boolean(value && typeof value === "object" && "length" in value && Number(value.length) > 0),
-        "Logo is required",
-    ),
+    logo: z.any().optional(),
     files: z.any().optional(),
     links: z.string().optional(),
 });
@@ -49,6 +47,8 @@ const parseLinks = (value?: string) =>
 
 export const CreateEventOrganizer = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/event-organizers");
     const [createEventOrganizer, { isLoading }] = useCreateEventOrganizerMutation();
     const uploadFile = useUploadFileToDrive({});
     const removeUploadedFiles = useRemoveUploadedFiles();
@@ -60,7 +60,7 @@ export const CreateEventOrganizer = () => {
         setValue,
     } = useForm<FormData>({ resolver: zodResolver(schema) });
     const [isUploading, setIsUploading] = useState(false);
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy = isSubmitting || isLoading || isUploading || uploadFile.isGoogleAccessTokenLoading;
 
     const onSubmit = async (data: FormData) => {
         const uploadedUrls: string[] = [];
@@ -69,16 +69,12 @@ export const CreateEventOrganizer = () => {
             const logoFile = data.logo instanceof File
                 ? data.logo
                 : (data.logo as FileList)?.[0];
-            if (!logoFile) {
-                setError("logo", { type: "required", message: "Logo is required" });
-                return;
-            }
-            const logoUrl = await uploadFile(logoFile);
-            if (logoUrl) uploadedUrls.push(logoUrl);
-            if (!logoUrl) {
+            const logoUrl = logoFile ? await uploadFile(logoFile) : undefined;
+            if (logoFile && !logoUrl) {
                 setError("logo", { type: "upload", message: "Failed to upload logo" });
                 return;
             }
+            if (logoUrl) uploadedUrls.push(logoUrl);
 
             const urls: string[] = [];
             for (const file of Array.from((data.files as FileList) || [])) {
@@ -92,12 +88,12 @@ export const CreateEventOrganizer = () => {
             await createEventOrganizer({
                 name: data.name,
                 details: {
-                    url: logoUrl,
+                    url: logoUrl || undefined,
                     urls,
                     links: parseLinks(data.links),
                 },
             }).unwrap();
-            navigate("/admin/event-organizers", {
+            navigate(redirectUrl, {
                 state: { success: "Event organizer created successfully!" },
             });
         } catch (error) {
@@ -111,7 +107,7 @@ export const CreateEventOrganizer = () => {
     return (
         <Layout>
             <PageSeo title="Create Event Organizer - CU Portal" description="Create a new event organizer" />
-            <SubBanner title="Create New Event Organizer" description="Add an event organizer and its resources" icon="user" linkText="Back to Event Organizers" linkTo="/admin/event-organizers" />
+            <SubBanner title="Create New Event Organizer" description="Add an event organizer and its resources" icon="user" linkText="Back to Event Organizers" linkTo={redirectUrl} />
             <main className={styles.container}>
                 <Form onSubmit={handleSubmit(onSubmit)} errors={errors} className={styles.formCard} disabled={busy}>
                     <div className={styles.formGroup}>
@@ -121,7 +117,7 @@ export const CreateEventOrganizer = () => {
 
                     <div className={styles.attachmentsSection}>
                         <Heading icon="image" content="Logo" size="medium" />
-                        <Thumbnail register={register} name="logo" errors={errors} setValue={setValue} label="Logo" required logo disabled={busy} />
+                        <Thumbnail register={register} name="logo" errors={errors} setValue={setValue} label="Logo" logo disabled={busy} />
                     </div>
 
                     <div className={styles.attachmentsSection}>
@@ -131,7 +127,7 @@ export const CreateEventOrganizer = () => {
                     </div>
 
                     <div className={styles.formActions}>
-                        <Button text="Cancel" loadingText="Cancelling..." type="button" isSubmitting={false} onClick={() => navigate("/admin/event-organizers")} isSecondary />
+                        <Button text="Cancel" loadingText="Cancelling..." type="button" isSubmitting={false} onClick={() => navigate(redirectUrl)} isSecondary />
                         <Button text="Create Event Organizer" loadingText="Creating..." isSubmitting={busy} type="submit" isOrange={false} />
                     </div>
                 </Form>

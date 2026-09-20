@@ -1,5 +1,6 @@
+import { getRedirectUrl } from "../../../utils/Navigation";
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +11,7 @@ import { handleErrors } from "../../../utils/ErrorHandling";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
 import { Input } from "../../../components/forms/Input";
-import { SearchableInput } from "../../../components/forms/SearchableInput";
+import { Select } from "../../../components/forms/Select";
 import { Button } from "../../../components/forms/Button";
 import { FilesInputContainer } from "../../../components/forms/FilesInputContainer";
 import { LinksInputContainer } from "../../../components/forms/LinksInputContainer";
@@ -25,7 +26,7 @@ import {
 import type { DefaultAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { Form } from "../../../components/forms/Form";
 import { Heading } from "../../../components/heading/Heading";
-import { mergeDateAndTime } from "../../../utils/Formatter";
+import { mergeDateAndTime, toIsoFormat } from "../../../utils/Formatter";
 
 import styles from "./CreateAnnouncement.module.css";
 
@@ -43,6 +44,8 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 
 export const CreateAnnouncement = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/announcements");
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -51,6 +54,13 @@ export const CreateAnnouncement = () => {
     const uploadFile = useUploadFileToDrive({});
     const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
+    const [defaultDateTime] = useState(() => {
+        const now = new Date();
+        return {
+            date_date: now.toLocaleDateString("en-CA"),
+            date_time: now.toTimeString().slice(0, 5),
+        };
+    });
     const {
         register,
         handleSubmit,
@@ -60,9 +70,14 @@ export const CreateAnnouncement = () => {
         control,
     } = useForm<AnnouncementFormData>({
         resolver: zodResolver(announcementSchema),
+        defaultValues: defaultDateTime,
     });
 
-    const busy = isSubmitting || isLoading || isUploading;
+    const busy =
+        isSubmitting ||
+        isLoading ||
+        isUploading ||
+        uploadFile.isGoogleAccessTokenLoading;
 
     const fetchSubjects = useCallback(async () => {
         try {
@@ -79,7 +94,7 @@ export const CreateAnnouncement = () => {
             setSubjects(result.data || []);
         } catch (error) {
             const err = (error as DefaultAPIResponse).data;
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: { error: err.message || "Failed to fetch subjects." },
             });
         }
@@ -107,7 +122,9 @@ export const CreateAnnouncement = () => {
             if (data.files && (data.files as FileList).length > 0) {
                 setIsUploading(true);
                 urls = await uploadFiles(data.files as FileList);
-                urls.split(", ").filter(Boolean).forEach((url) => uploadedUrls.push(url));
+                urls.split(", ")
+                    .filter(Boolean)
+                    .forEach((url) => uploadedUrls.push(url));
                 setIsUploading(false);
             }
 
@@ -115,12 +132,14 @@ export const CreateAnnouncement = () => {
                 title: data.title,
                 content: data.content ?? "",
                 subject_id: parseInt(data.subject_id),
-                date: data.date_date
-                    ? mergeDateAndTime(
-                          data.date_date,
-                          data.date_time || "00:00",
-                      )
-                    : undefined,
+                date: toIsoFormat(
+                    data.date_date
+                        ? mergeDateAndTime(
+                              data.date_date,
+                              data.date_time || "00:00",
+                          )
+                        : undefined,
+                ),
                 details: {
                     urls: urls != "" ? urls.split(", ") : [],
                     links: data.links
@@ -134,7 +153,7 @@ export const CreateAnnouncement = () => {
             };
 
             await createAnnouncement(announcementData).unwrap();
-            navigate("/admin/announcements", {
+            navigate(redirectUrl, {
                 state: { success: "Announcement created successfully!" },
             });
         } catch (error) {
@@ -146,7 +165,7 @@ export const CreateAnnouncement = () => {
     };
 
     const handleCancel = () => {
-        navigate("/admin/announcements");
+        navigate(redirectUrl);
     };
 
     return (
@@ -160,7 +179,7 @@ export const CreateAnnouncement = () => {
                 description="Add a new announcement for students"
                 icon="announcements"
                 linkText="Back to Announcements"
-                linkTo="/admin/announcements"
+                linkTo={redirectUrl}
             />
             <main className={styles.container}>
                 <Form
@@ -182,20 +201,23 @@ export const CreateAnnouncement = () => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <SearchableInput
+                        <Select
                             label="Subject"
                             register={register}
                             name="subject_id"
                             errors={errors}
                             disabled={isLoading || isUploading}
-                            setValue={setValue}
-                            control={control}
-                            options={subjects.map((subject) => ({
-                                value: subject.id?.toString() || "",
-                                label: subject.name || "",
-                            }))}
-                            placeholder="Select a subject"
-                        />
+                        >
+                            <option value="">Select a subject</option>
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject.id}
+                                    value={subject.id?.toString() || ""}
+                                >
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </Select>
                     </div>
 
                     <div className={styles.formGroup}>

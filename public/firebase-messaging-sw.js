@@ -58,14 +58,19 @@ self.addEventListener("notificationclick", (event) => {
     if (notificationId) {
         (async () => {
             let backendUrl = "https://api-cu-portal-dev.vercel.app";
-            if (!window.location.origin.includes("dev"))
+            if (
+                !window.location.origin.includes("dev") &&
+                !window.location.origin.includes("localhost")
+            )
                 backendUrl = "https://api.cu-portal.com";
-            await fetch(`${backendUrl}/user/notifications/${notificationId}`, {
+            await fetch(`${backendUrl}/user/notifications/seen`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({}),
+                body: JSON.stringify({
+                    notification_ids: [notificationId],
+                }),
                 credentials: "include",
             });
         })();

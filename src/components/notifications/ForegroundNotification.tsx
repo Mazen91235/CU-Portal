@@ -1,3 +1,4 @@
+import { formatString } from "../../utils/Formatter";
 import styles from "./ForegroundNotification.module.css";
 
 type ForegroundNotificationData = {
@@ -27,9 +28,13 @@ export const ForegroundNotification = ({
 
             <div className={styles.content}>
                 <div className={styles.label}>New Notification</div>
-                <div className={styles.title}>{notification.title}</div>
+                <div className={styles.title}>
+                    {formatString(notification.title, "CardTitle")}
+                </div>
                 {notification.content && (
-                    <div className={styles.message}>{notification.content}</div>
+                    <div className={styles.message}>
+                        {formatString(notification.content, "Content")}
+                    </div>
                 )}
 
                 <div className={styles.actions}>
@@ -39,7 +44,9 @@ export const ForegroundNotification = ({
                         onClick={onView}
                     >
                         View
-                        <i className={`fa-solid fa-arrow-right ${styles.viewIcon}`}></i>
+                        <i
+                            className={`fa-solid fa-arrow-right ${styles.viewIcon}`}
+                        ></i>
                     </button>
                 </div>
             </div>

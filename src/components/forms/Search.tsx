@@ -2,6 +2,7 @@ import {
     useCallback,
     useRef,
     useState,
+    useEffect,
     type ChangeEvent,
     type Dispatch,
     type SetStateAction,
@@ -11,12 +12,18 @@ import styles from "./Search.module.css";
 export const Search = ({
     placeholder,
     setValue,
+    value,
 }: {
     placeholder?: string;
     setValue?: Dispatch<SetStateAction<string>>;
+    value?: string;
 }) => {
     const timeout = useRef<number | null>(null);
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState(value ?? "");
+
+    useEffect(() => {
+        setInputValue(value ?? "");
+    }, [value]);
     const handleChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value;

@@ -10,17 +10,23 @@ import { NoContentSection } from "../../../components/section/NoContentSection";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
+import { buildRedirectUrl } from "../../../utils/Navigation";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import {
     useLazyGetEventOrganizersQuery,
     useDeleteEventOrganizerMutation,
 } from "../../../services/apis/admin/EventOrganizerAPIs";
 import type { EventOrganizerResponseDto } from "../../../types/dtos/EventOrganizerDtos";
+import defaultEventOrganizerLogo from "../../../assets/default event organizer logo.jpg";
+
 import styles from "./EventOrganizersPage.module.css";
 
 export const EventOrganizersPage = () => {
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [organizers, setOrganizers] = useState<EventOrganizerResponseDto[]>(
@@ -111,6 +117,7 @@ export const EventOrganizersPage = () => {
                     <Search
                         placeholder="Search event organizers..."
                         setValue={setSearchQuery}
+                        value={searchQuery}
                     />
                 </div>
                 <div className={styles.cardsGrid}>
@@ -119,20 +126,22 @@ export const EventOrganizersPage = () => {
                             key={organizer.id}
                             title="Event Organizer"
                             profile={organizer.name || "Unnamed organizer"}
-                            profileLogo={organizer.logo?.url || undefined}
+                            profileLogo={organizer.logo?.url || defaultEventOrganizerLogo}
                             editable
                             deletable
                             hasOptions
                             onEdit={() =>
                                 navigate(
-                                    `/admin/event-organizers/edit/${organizer.id}`,
+                                    buildRedirectUrl(
+                                        `/admin/event-organizers/edit/${organizer.id}`,
+                                    ),
                                 )
                             }
                             onDelete={() => openDelete(organizer)}
                             button="View Details"
                             buttonAction={() =>
                                 navigate(
-                                    `/admin/event-organizers/${organizer.id}`,
+                                    buildRedirectUrl(`/admin/event-organizers/${organizer.id}`),
                                 )
                             }
                         />

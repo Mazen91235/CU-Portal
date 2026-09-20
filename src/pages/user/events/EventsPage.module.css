@@ -63,4 +63,10 @@
     .filtersRow {
         grid-template-columns: 1fr;
     }
+
+    .eventsGrid {
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        min-width: 0;
+    }
 }

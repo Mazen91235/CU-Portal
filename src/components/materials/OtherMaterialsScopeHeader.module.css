@@ -1,0 +1,44 @@
+.scopeHeader {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: var(--light-box-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.scopeItem {
+    background: none;
+    border: none;
+    color: var(--primary-purple);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: var(--primary-font-weight-heavy);
+    padding: 0.375rem 0.625rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.scopeItem:hover {
+    background: var(--grey-background);
+}
+
+.scopeItemStatic {
+    color: var(--dark-text);
+    font-size: 0.875rem;
+    font-weight: var(--primary-font-weight-heavy);
+    padding: 0.375rem 0.625rem;
+}
+
+.separator {
+    color: #d1d5db;
+}
