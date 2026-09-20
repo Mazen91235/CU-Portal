@@ -15,6 +15,7 @@ import type { ReleaseItemMutationDto } from "../../../types/dtos/ReleaseItemDtos
 import { useCreateReleaseMutation } from "../../../services/apis/admin/ReleaseAPIs";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
+import { toIsoFormat } from "../../../utils/Formatter";
 import styles from "./CreateRelease.module.css";
 
 type ReleaseFormData = Record<string, unknown> & {
@@ -60,6 +61,7 @@ export const CreateRelease = () => {
                     description: data.description,
                 },
                 ...data,
+                date: toIsoFormat(data.date) || "",
             }).unwrap();
             showToast("success", "Success", "Release created successfully");
             navigate(redirectUrl);
