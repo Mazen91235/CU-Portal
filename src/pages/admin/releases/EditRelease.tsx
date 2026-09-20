@@ -19,6 +19,7 @@ import {
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
+import { toIsoFormat } from "../../../utils/Formatter";
 import styles from "./EditRelease.module.css";
 
 type ReleaseFormData = Record<string, unknown> & {
@@ -94,6 +95,7 @@ export const EditRelease = () => {
                 id: Number(releaseId),
                 details: { description: data.description },
                 ...data,
+                date: toIsoFormat(data.date) || "",
             }).unwrap();
             showToast("success", "Success", "Release updated successfully");
             navigate(redirectUrl);
