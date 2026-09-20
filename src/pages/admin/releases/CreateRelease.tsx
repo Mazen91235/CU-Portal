@@ -55,7 +55,12 @@ export const CreateRelease = () => {
 
     const onSubmit = async (data: ReleaseFormData) => {
         try {
-            await createRelease(data).unwrap();
+            await createRelease({
+                details: {
+                    description: data.description,
+                },
+                ...data,
+            }).unwrap();
             showToast("success", "Success", "Release created successfully");
             navigate(redirectUrl);
         } catch (error) {
