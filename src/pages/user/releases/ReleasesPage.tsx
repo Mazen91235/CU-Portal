@@ -223,6 +223,12 @@ export function ReleasesPage() {
                                                     className={styles.timelineReleaseItem}
                                                     key={release.id}
                                                 >
+                                                    <div
+                                                        className={styles.timelineReleaseItemMarker}
+                                                        aria-hidden="true"
+                                                    >
+                                                        <span className={styles.timelineReleaseItemDot} />
+                                                    </div>
                                                     <ReleaseCard
                                                         release={release}
                                                         onViewDetails={() =>

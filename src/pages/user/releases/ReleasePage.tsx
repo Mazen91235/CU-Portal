@@ -64,7 +64,9 @@ export function ReleasePage() {
             setRelease(release);
         } catch (error) {
             navigate("/user/system/releases", {
-                state: { error: getErrorMessage(error) || "Failed to fetch release" },
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch release",
+                },
             });
         }
     }, [getRelease, navigate, releaseId]);
@@ -81,7 +83,6 @@ export function ReleasePage() {
             />
             <SubBanner
                 title={release.title ?? "Release"}
-                description={release.details?.description ?? undefined}
                 icon="user"
                 linkText="Back to all releases"
                 linkTo="/user/system/releases"
