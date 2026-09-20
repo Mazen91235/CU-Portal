@@ -209,7 +209,11 @@ export const TimeLinePage = () => {
                         <h3 className={styles.sectionTitle}>Notes</h3>
                         {events.notes.map((note) => (
                           <div className={styles.timelineItem} key={note.id}>
-                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
+                            <div className={styles.timelineItemMarker} aria-hidden="true">
+                              <span
+                                className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`}
+                              />
+                            </div>
                             <CalendarNoteCard
                               note={note}
                               onView={() => setViewedNote(note)}
@@ -225,7 +229,11 @@ export const TimeLinePage = () => {
                         <h3 className={styles.sectionTitle}>Events</h3>
                         {events.events.map((event) => (
                           <div className={styles.timelineItem} key={event.id}>
-                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
+                            <div className={styles.timelineItemMarker} aria-hidden="true">
+                              <span
+                                className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`}
+                              />
+                            </div>
                             <CalendarEventCard event={event} />
                           </div>
                         ))}
@@ -240,7 +248,11 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
+                            <div className={styles.timelineItemMarker} aria-hidden="true">
+                              <span
+                                className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`}
+                              />
+                            </div>
                             <DayEvent {...event} />
                           </div>
                         ))}
@@ -255,7 +267,11 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
+                            <div className={styles.timelineItemMarker} aria-hidden="true">
+                              <span
+                                className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`}
+                              />
+                            </div>
                             <DayEvent {...event} />
                           </div>
                         ))}
@@ -270,7 +286,11 @@ export const TimeLinePage = () => {
                             className={styles.timelineItem}
                             key={`${event.id}-${event.due}`}
                           >
-                            <span className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`} />
+                            <div className={styles.timelineItemMarker} aria-hidden="true">
+                              <span
+                                className={`${styles.timelineItemDot} ${isCurrentWeekDate(date) ? styles.timelineItemDotCurrent : ""}`}
+                              />
+                            </div>
                             <DayEvent {...event} />
                           </div>
                         ))}

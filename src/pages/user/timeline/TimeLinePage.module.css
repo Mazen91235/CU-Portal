@@ -1,4 +1,8 @@
 .timelineWrapper {
+    --timeline-date-column: 76px;
+    --timeline-marker-column: 32px;
+    --timeline-line-left: calc(var(--timeline-date-column) + (var(--timeline-marker-column) / 2));
+
     width: 100%;
     max-width: 1400px;
     margin: 40px auto;
@@ -28,7 +32,7 @@
 .timeline::before {
     content: "";
     position: absolute;
-    left: 92px;
+    left: var(--timeline-line-left);
     top: 0;
     bottom: 0;
     width: 1px;
@@ -42,7 +46,7 @@
 .timelineDay {
     position: relative;
     display: grid;
-    grid-template-columns: 76px 32px minmax(0, 1fr);
+    grid-template-columns: var(--timeline-date-column) var(--timeline-marker-column) minmax(0, 1fr);
     gap: 0;
     min-height: 120px;
     padding-bottom: 1.25rem;
@@ -58,21 +62,29 @@
     line-height: 1.5;
 }
 
-.timelineMarker {
+.timelineMarker,
+.timelineItemMarker {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
-.timelineDot {
-    position: absolute;
-    top: 0.95rem;
-    left: 50%;
-    z-index: 2;
-    width: 9px;
-    height: 9px;
+.timelineMarker {
+    padding-top: 0.95rem;
+}
+
+.timelineDot,
+.timelineItemDot {
+    flex: 0 0 auto;
     border-radius: 50%;
     background: var(--medium-grey);
     box-shadow: 0 0 0 4px var(--white);
-    transform: translateX(-50%);
+}
+
+.timelineDot {
+    width: 9px;
+    height: 9px;
 }
 
 .timelineDotCurrent {
@@ -95,18 +107,20 @@
 
 .timelineItem {
     position: relative;
+    display: grid;
+    grid-template-columns: var(--timeline-marker-column) minmax(0, 1fr);
+    gap: 0;
+    margin-left: calc(-1 * var(--timeline-marker-column));
+    min-width: 0;
+}
+
+.timelineItemMarker {
+    padding-top: 1.2rem;
 }
 
 .timelineItemDot {
-    position: absolute;
-    top: 1.2rem;
-    left: -20px;
-    z-index: 3;
     width: 8px;
     height: 8px;
-    border-radius: 50%;
-    background: var(--medium-grey);
-    box-shadow: 0 0 0 4px var(--white);
 }
 
 .timelineItemDotCurrent {
@@ -161,6 +175,9 @@
 
 @media (max-width: 768px) {
     .timelineWrapper {
+        --timeline-date-column: 42px;
+        --timeline-marker-column: 18px;
+
         margin: 24px auto;
     }
 
@@ -168,12 +185,7 @@
         margin-left: 0;
     }
 
-    .timeline::before {
-        left: 50px;
-    }
-
     .timelineDay {
-        grid-template-columns: 42px 18px minmax(0, 1fr);
         min-height: auto;
     }
 
@@ -183,20 +195,16 @@
         font-size: 0.85rem;
     }
 
+    .timelineMarker {
+        padding-top: 0.9rem;
+    }
+
     .timelineDot {
-        top: 0.9rem;
         width: 8px;
         height: 8px;
     }
 
     .timelineDayContent {
         padding-right: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .timelineItemDot {
-        left: 50%;
-        transform: translateX(-50%);
     }
 }
