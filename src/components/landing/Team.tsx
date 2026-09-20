@@ -34,7 +34,7 @@ export const Team = () => {
                                     alt={member.name}
                                     className={styles.teamIcon}
                                     style={{
-                                        objectPosition: `${member.imagePosition ?? "center"} top`,
+                                        objectPosition: `center ${member.imagePosition ?? "top"}`,
                                     }}
                                     loading="lazy"
                                 />

@@ -72,7 +72,7 @@ export const teamMembers: MemberProps[] = [
         ],
         university: "Cairo University",
         image: omarNagyImg,
-        imagePosition: "top",
+        imagePosition: "-50px",
         socials: [
             {
                 icon: websiteIcon,
@@ -111,7 +111,7 @@ export const teamMembers: MemberProps[] = [
         role: "Backend Developer",
         university: "Cairo University",
         image: habibaMahmoudImg,
-        imagePosition: "top",
+        imagePosition: "-60px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -126,7 +126,7 @@ export const teamMembers: MemberProps[] = [
         role: "Backend Developer",
         university: "Cairo University",
         image: rojanHamdyImg,
-        imagePosition: "bottom",
+        imagePosition: "-175px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -167,6 +167,7 @@ export const teamMembers: MemberProps[] = [
         ],
         university: "Cairo University",
         image: ahmedAbozeidImg,
+        imagePosition: "-20px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -181,7 +182,7 @@ export const teamMembers: MemberProps[] = [
         role: "Backend Developer",
         university: "Cairo University",
         image: ibrahimSherifImg,
-        imagePosition: "top",
+        imagePosition: "-50px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -217,6 +218,7 @@ export const teamMembers: MemberProps[] = [
         role: "Frontend Developer",
         university: "Cairo University",
         image: anneOmerImg,
+        imagePosition: "-30px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -231,6 +233,7 @@ export const teamMembers: MemberProps[] = [
         role: "Frontend Developer",
         university: "Cairo University",
         image: mariamMohamedImg,
+        imagePosition: "-30px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -270,7 +273,7 @@ export const teamMembers: MemberProps[] = [
         role: "Frontend Developer",
         university: "Cairo University",
         image: janaNourImg,
-        imagePosition: "top",
+        imagePosition: "center",
         socials: [
             {
                 icon: linkedinIcon,
@@ -285,7 +288,7 @@ export const teamMembers: MemberProps[] = [
         role: "UI/UX Designer",
         university: "Ain Shams University",
         image: nayraSamyImg,
-        imagePosition: "top",
+        imagePosition: "-30px",
         socials: [
             {
                 icon: behanceIcon,
@@ -303,7 +306,7 @@ export const teamMembers: MemberProps[] = [
         role: "UI/UX Designer",
         university: "MIS department",
         image: hadeerKhalilImg,
-        imagePosition: "top",
+        imagePosition: "-40px",
         socials: [
             {
                 icon: linkedinIcon,
@@ -360,7 +363,7 @@ export const teamMembers: MemberProps[] = [
         role: "Software Tester",
         university: "Cairo University",
         image: mohammedAshrafImg,
-        imagePosition: "top",
+        imagePosition: "-50px",
         socials: [
             {
                 icon: linkedinIcon,

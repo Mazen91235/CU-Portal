@@ -24,6 +24,6 @@ export type MemberProps = {
     university: string;
     badge?: string;
     image: string;
-    imagePosition?: "top" | "center" | "bottom";
+    imagePosition?: string;
     socials: SocialLink[];
 };
