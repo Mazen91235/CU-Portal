@@ -61,6 +61,7 @@ export const TasksPage = () => {
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setTasks((prev) => {

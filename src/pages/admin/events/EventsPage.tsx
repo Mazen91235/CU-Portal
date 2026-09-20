@@ -177,6 +177,7 @@ export const EventsPage = () => {
                     "logo",
                     "attachments",
                 ],
+                order_by: ["start_date_nearest"],
                 page,
             }).unwrap();
 

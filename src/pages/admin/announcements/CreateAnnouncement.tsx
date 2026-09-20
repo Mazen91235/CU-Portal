@@ -54,6 +54,13 @@ export const CreateAnnouncement = () => {
     const uploadFile = useUploadFileToDrive({});
     const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
+    const [defaultDateTime] = useState(() => {
+        const now = new Date();
+        return {
+            date_date: now.toLocaleDateString("en-CA"),
+            date_time: now.toTimeString().slice(0, 5),
+        };
+    });
     const {
         register,
         handleSubmit,
@@ -63,6 +70,7 @@ export const CreateAnnouncement = () => {
         control,
     } = useForm<AnnouncementFormData>({
         resolver: zodResolver(announcementSchema),
+        defaultValues: defaultDateTime,
     });
 
     const busy =

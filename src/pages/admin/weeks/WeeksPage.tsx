@@ -78,8 +78,7 @@ export function WeeksPage() {
                     start_date_from: toIsoFormat(dateFrom),
                     start_date_to: toIsoFormat(dateTo),
                 },
-                order_by: ["start_date"],
-                descending: true,
+                order_by: ["start_date_nearest"],
                 includes: ["faculty", "department", "year"],
                 limit: 1e6,
             }).unwrap();

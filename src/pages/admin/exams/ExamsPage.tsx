@@ -164,6 +164,7 @@ export const ExamsPage = () => {
                     "subject.department",
                     "subject.year",
                 ],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setExams((prev) => {

@@ -164,6 +164,7 @@ export const TasksPage = () => {
                     "subject.department",
                     "subject.year",
                 ],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setTasks((prev) => {

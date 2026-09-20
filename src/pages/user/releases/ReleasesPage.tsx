@@ -91,8 +91,7 @@ export function ReleasesPage() {
                             : undefined,
                     },
                     includes: ["release_version", "release_items"],
-                    order_by: ["date"],
-                    descending: true,
+                    order_by: ["date_nearest"],
                     limit: 1000,
                 }).unwrap(),
                 getReleases({

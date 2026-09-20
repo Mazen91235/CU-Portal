@@ -61,6 +61,7 @@ export const ExamsPage = () => {
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 page,
             }).unwrap();
             setExams((prev) => {

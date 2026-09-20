@@ -165,6 +165,7 @@ export const AnnouncementsPage = () => {
             const result = await getAnnouncements({
                 data: params,
                 includes: ["faculty", "department", "year", "subject"],
+                order_by: ["date_nearest"],
                 page,
             }).unwrap();
             setAnnouncements((prev) => {

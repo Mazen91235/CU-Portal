@@ -67,6 +67,7 @@ export const AnnouncementsPage = () => {
                     subject_id: parseInt(subjectFilter) || undefined,
                 },
                 includes: ["subject"],
+                order_by: ["date_nearest"],
                 page,
             }).unwrap();
             setAnnouncements((prev) => {

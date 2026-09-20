@@ -61,6 +61,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getExams({
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 limit: 3,
             }).unwrap();
             setExams(result.data || []);
@@ -73,6 +74,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getTasks({
                 includes: ["subject"],
+                order_by: ["deadline_nearest"],
                 limit: 3,
             }).unwrap();
             setTasks(result.data || []);
@@ -85,6 +87,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         try {
             const result = await getAnnouncements({
                 includes: ["subject"],
+                order_by: ["date_nearest"],
                 limit: 3,
             }).unwrap();
             setAnnouncements(result.data || []);

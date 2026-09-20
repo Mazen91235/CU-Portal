@@ -59,6 +59,7 @@ export const NotesPage = () => {
                     date_from: toIsoFormat(dateFrom),
                     date_to: toIsoFormat(dateTo),
                 },
+                order_by: ["date_nearest"],
             }).unwrap();
             setNotes(result.data || []);
         } catch (error) {
