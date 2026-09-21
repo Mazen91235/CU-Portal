@@ -193,26 +193,15 @@ export const RegisteredCourses = () => {
 
     useEffect(() => {
         const userDepartmentId = user?.department?.id;
-
-        if (!userDepartmentId || departments.length === 0) {
-            setDepartmentFilter("");
-            return;
-        }
-
         setDepartmentFilter(
-            (current) => current || userDepartmentId.toString() || "",
+            (current) => current || userDepartmentId?.toString() || "",
+            true,
         );
     }, [setDepartmentFilter, user, departments]);
 
     useEffect(() => {
         const userYearId = user?.year?.id;
-
-        if (!userYearId || years.length === 0) {
-            setYearFilter("");
-            return;
-        }
-
-        setYearFilter((current) => current || userYearId.toString() || "");
+        setYearFilter((current) => current || userYearId?.toString() || "", true);
     }, [setYearFilter, user, years]);
 
     const handleConfirm = useCallback(async () => {

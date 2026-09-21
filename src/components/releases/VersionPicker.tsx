@@ -5,7 +5,7 @@ import styles from "./VersionPicker.module.css";
 type VersionPickerProps = {
   versions: { value: string; label: string }[];
   value?: string;
-  onVersionChange: (version: string) => void;
+  onVersionChange: (version: string, replace?: boolean) => void;
 };
 
 export const VersionPicker = ({
@@ -27,7 +27,7 @@ export const VersionPicker = ({
 
   useEffect(() => {
     if (versions[0] && !value) {
-      onVersionChange(versions[0].value);
+      onVersionChange(versions[0].value, true);
     }
   }, [onVersionChange, value, versions]);
 
