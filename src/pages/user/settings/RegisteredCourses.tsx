@@ -120,7 +120,10 @@ export const RegisteredCourses = () => {
         }
     }, [getYears]);
 
-    const authDepartmentsQuery = useCallback(() => fetchDepartments(), [fetchDepartments]);
+    const authDepartmentsQuery = useCallback(
+        () => fetchDepartments(),
+        [fetchDepartments],
+    );
     const authYearsQuery = useCallback(() => fetchYears(), [fetchYears]);
     const authCoursesQuery = useCallback(
         () => Promise.all([fetchEnrolledCourses(), fetchAvailableCourses()]),
@@ -190,26 +193,15 @@ export const RegisteredCourses = () => {
 
     useEffect(() => {
         const userDepartmentId = user?.department?.id;
-
-        if (!userDepartmentId || departments.length === 0) {
-            setDepartmentFilter("");
-            return;
-        }
-
         setDepartmentFilter(
-            (current) => current || userDepartmentId.toString() || "",
+            (current) => current || userDepartmentId?.toString() || "",
+            true,
         );
     }, [setDepartmentFilter, user, departments]);
 
     useEffect(() => {
         const userYearId = user?.year?.id;
-
-        if (!userYearId || years.length === 0) {
-            setYearFilter("");
-            return;
-        }
-
-        setYearFilter((current) => current || userYearId.toString() || "");
+        setYearFilter((current) => current || userYearId?.toString() || "", true);
     }, [setYearFilter, user, years]);
 
     const handleConfirm = useCallback(async () => {
@@ -237,9 +229,6 @@ export const RegisteredCourses = () => {
                     "Course unregistered successfully.",
                 );
             }
-
-            await fetchEnrolledCourses();
-            await fetchAvailableCourses();
         } catch (error) {
             handlePopupErrors(error);
         } finally {
@@ -247,14 +236,7 @@ export const RegisteredCourses = () => {
             setSelectedCourse(null);
             setAction(null);
         }
-    }, [
-        selectedCourse,
-        action,
-        fetchEnrolledCourses,
-        fetchAvailableCourses,
-        registerCourse,
-        unRegisterCourse,
-    ]);
+    }, [selectedCourse, action, registerCourse, unRegisterCourse]);
 
     return (
         <>
@@ -346,7 +328,8 @@ export const RegisteredCourses = () => {
                                 <div className={styles.searchContainer}>
                                     <Search
                                         placeholder="Search by course name or code"
-                                        setValue={setSearchQuery} value={searchQuery}
+                                        setValue={setSearchQuery}
+                                        value={searchQuery}
                                     />
                                 </div>
 

@@ -2,14 +2,13 @@ import {
     useState,
     useRef,
     useEffect,
-    type Dispatch,
     type SetStateAction,
 } from "react";
 import styles from "./DateFilter.module.css";
 import { formatCalendarDay, toIsoFormat } from "../../utils/Formatter";
 
 type DateFilterProps = {
-    setValue: Dispatch<SetStateAction<string>>;
+    setValue: (value: SetStateAction<string>, replace?: boolean) => void;
     placeholder?: string;
     startRight?: boolean;
     startDay?: boolean;
@@ -186,7 +185,7 @@ export const DateFilter = ({
         );
 
         if (nextValue !== normalizedValue) {
-            setValue(normalizedValue);
+            setValue(normalizedValue, true);
         }
     }, [defaultDate, value, setValue]);
 

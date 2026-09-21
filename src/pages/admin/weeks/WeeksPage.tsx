@@ -133,9 +133,9 @@ export function WeeksPage() {
 
     useEffect(() => {
         if (!user?.canAccessAll) {
-            setFacultyFilter(user?.faculty?.id?.toString() || "");
-            setDepartmentFilter(user?.department?.id?.toString() || "");
-            setYearFilter(user?.year?.id?.toString() || "");
+            setFacultyFilter(user?.faculty?.id?.toString() || "", true);
+            setDepartmentFilter(user?.department?.id?.toString() || "", true);
+            setYearFilter(user?.year?.id?.toString() || "", true);
         }
     }, [setFacultyFilter, setDepartmentFilter, setYearFilter, user]);
 
