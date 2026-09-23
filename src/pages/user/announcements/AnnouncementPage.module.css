@@ -34,21 +34,20 @@
 }
 
 @media (max-width: 1024px) {
-    .contentGrid {
-        grid-template-columns: 1fr;
-    }
 
-    .sidebar {
-        order: -1;
-    }
+.contentGrid {
+    grid-template-columns: 1fr;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+.sidebar {
+    order: -1;
+}
 
-    .statsRow {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
+
+.statsRow {
+    grid-template-columns: 1fr;
+}
 }

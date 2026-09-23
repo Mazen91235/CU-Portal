@@ -161,76 +161,64 @@
 }
 
 @media (max-width: 1024px) {
-    .contentWrapper {
-        flex-direction: column;
-        gap: 40px;
-        padding: 10px;
-    }
 
-    .illustration img {
-        position: static;
-        width: calc(547px * 0.5);
-        height: calc(820px * 0.5);
-        margin-left: 0;
-    }
-
-    .welcomeCard {
-        margin-top: 0;
-        margin-right: 0;
-        width: 90%;
-        max-width: 450px;
-        height: auto;
-        padding: 30px;
-    }
-
-    .welcomeCard h2 {
-        font-size: 28px;
-    }
-
-    .cornerImageTopRight,
-    .cornerImageBottomLeft {
-        display: none;
-    }
+.contentWrapper {
+    flex-direction: column;
+    gap: 40px;
+    padding: 10px;
 }
 
-@media (max-width: 480px) {
-    .header {
-        padding: 15px 20px;
-    }
+.illustration img {
+    position: static;
+    margin-left: 0;
+    width: calc(547px * 0.4);
+    height: calc(820px * 0.4);
+}
 
-    .logo {
-        font-size: 20px;
-    }
+.welcomeCard {
+    margin-top: 0;
+    margin-right: 0;
+    max-width: 450px;
+    height: auto;
+    width: 95%;
+    padding: 25px;
+}
 
-    .welcomeCard {
-        width: 95%;
-        padding: 25px;
-    }
+.welcomeCard h2 {
+    font-size: 24px;
+}
 
-    .welcomeCard h2 {
-        font-size: 24px;
-    }
+.cornerImageTopRight {
+    display: none;
+}
 
-    .welcomeCard p {
-        font-size: 14px;
-    }
+.cornerImageBottomLeft {
+    display: none;
+}
 
-    .continueBtn {
-        font-size: 16px;
-        padding: 12px 20px;
-    }
+.header {
+    padding: 15px 20px;
+}
 
-    .illustration img {
-        width: calc(547px * 0.4);
-        height: calc(820px * 0.4);
-    }
+.logo {
+    font-size: 20px;
+}
 
-    .iconCircle {
-        width: 50px;
-        height: 50px;
-    }
+.welcomeCard p {
+    font-size: 14px;
+}
 
-    .iconCircle .material-icons i {
-        font-size: 1em;
-    }
+.continueBtn {
+    font-size: 16px;
+    padding: 12px 20px;
+}
+
+.iconCircle {
+    width: 50px;
+    height: 50px;
+}
+
+.iconCircle .material-icons i {
+    font-size: 1em;
+}
 }

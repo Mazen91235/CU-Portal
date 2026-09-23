@@ -268,37 +268,38 @@
     cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
-    .modal {
-        width: 95%;
-        max-height: 90vh;
-    }
+@media (max-width: 1024px) {
 
-    .header {
-        padding: 16px 20px;
-    }
+.modal {
+    width: 95%;
+    max-height: 90vh;
+}
 
-    .header h2 {
-        font-size: 18px;
-    }
+.header {
+    padding: 16px 20px;
+}
 
-    .content {
-        padding: 20px;
-    }
+.header h2 {
+    font-size: 18px;
+}
 
-    .dropArea {
-        padding: 24px 16px;
-    }
+.content {
+    padding: 20px;
+}
 
-    .dropArea i {
-        font-size: 36px;
-    }
+.dropArea {
+    padding: 24px 16px;
+}
 
-    .filesScroll {
-        max-height: 220px;
-    }
+.dropArea i {
+    font-size: 36px;
+}
 
-    .footer {
-        padding: 12px 20px;
-    }
+.filesScroll {
+    max-height: 220px;
+}
+
+.footer {
+    padding: 12px 20px;
+}
 }

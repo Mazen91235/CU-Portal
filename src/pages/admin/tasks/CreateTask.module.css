@@ -68,20 +68,21 @@
     width: 30%;
 }
 
-@media (max-width: 768px) {
-    .formCard {
-        padding: 1.5rem;
-    }
+@media (max-width: 1024px) {
 
-    .formActions {
-        flex-direction: column-reverse;
-    }
+.formCard {
+    padding: 1.5rem;
+}
 
-    .formActions > button:nth-child(1) {
-        width: 100%;
-    }
+.formActions {
+    flex-direction: column-reverse;
+}
 
-    .formActions button {
-        width: 100%;
-    }
+.formActions > button:nth-child(1) {
+    width: 100%;
+}
+
+.formActions button {
+    width: 100%;
+}
 }

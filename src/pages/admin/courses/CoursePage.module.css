@@ -159,23 +159,24 @@
     font-size: 1rem;
 }
 
-@media (max-width: 768px) {
-    .statsRow {
-        grid-template-columns: minmax(0, 1fr);
-    }
+@media (max-width: 1024px) {
 
-    .studentsCardHeader {
-        flex-wrap: wrap;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
+.statsRow {
+    grid-template-columns: minmax(0, 1fr);
+}
 
-    .studentsCardHeader .sectionTitle {
-        flex: 1 1 100%;
-    }
+.studentsCardHeader {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
 
-    .studentsCardCount {
-        width: 100%;
-        text-align: right;
-    }
+.studentsCardHeader .sectionTitle {
+    flex: 1 1 100%;
+}
+
+.studentsCardCount {
+    width: 100%;
+    text-align: right;
+}
 }

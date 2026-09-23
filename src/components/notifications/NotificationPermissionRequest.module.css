@@ -111,11 +111,12 @@
     }
 }
 
-@media (max-width: 600px) {
-    .container {
-        right: 12px;
-        bottom: 12px;
-        width: calc(100vw - 24px);
-        padding: 16px;
-    }
+@media (max-width: 1024px) {
+
+.container {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    padding: 16px;
+}
 }

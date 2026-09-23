@@ -35,12 +35,13 @@
     word-break: break-word;
 }
 
-@media (max-width: 768px) {
-    .quickInfoRow {
-        gap: 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .quickInfoValue {
-        flex: 1;
-    }
+.quickInfoRow {
+    gap: 1rem;
+}
+
+.quickInfoValue {
+    flex: 1;
+}
 }

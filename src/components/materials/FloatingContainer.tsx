@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { isMobile } from "../../utils/DeviceHandler";
 import styles from "./FloatingContainer.module.css";
 
 interface FloatingContainerProps {
@@ -38,6 +39,11 @@ export function FloatingContainer({
     const [isCreatingFolder, setIsCreatingFolder] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [newFolderName, setNewFolderName] = useState("");
+    const holdTimeoutRef = React.useRef<number | null>(null);
+    const touchStartPositionRef = React.useRef({ x: 0, y: 0 });
+    const didHoldRef = React.useRef(false);
+    const touchMovedRef = React.useRef(false);
+    const suppressNextClickRef = React.useRef(false);
 
     const selectedMaterialsData = materials.filter(
         (m) => m.id && selectedMaterials.includes(m.id),
@@ -53,7 +59,30 @@ export function FloatingContainer({
         onConfirm(selectedTarget);
     };
 
+    const clearHoldTimeout = () => {
+        if (holdTimeoutRef.current !== null) {
+            window.clearTimeout(holdTimeoutRef.current);
+            holdTimeoutRef.current = null;
+        }
+    };
+
+    useEffect(() => () => {
+        if (holdTimeoutRef.current !== null) {
+            window.clearTimeout(holdTimeoutRef.current);
+        }
+    }, []);
+
     const handleFolderClick = (folderId: number) => {
+        if (isMobile()) {
+            if (suppressNextClickRef.current) {
+                suppressNextClickRef.current = false;
+                return;
+            }
+            onNavigate(folderId);
+            setSelectedTarget(folderId);
+            return;
+        }
+
         if (selectedTarget === folderId) {
             setSelectedTarget(null);
         } else {
@@ -61,9 +90,59 @@ export function FloatingContainer({
         }
     };
 
+    const handleFolderHold = (folderId: number) => {
+        if (isMobile()) {
+            setSelectedTarget(folderId);
+        }
+    };
+
     const handleFolderDoubleClick = (folderId: number) => {
-        onNavigate(folderId);
-        setSelectedTarget(folderId);
+        if (!isMobile()) {
+            onNavigate(folderId);
+            setSelectedTarget(folderId);
+        }
+    };
+
+    const handleFolderTouchStart = (
+        e: React.TouchEvent<HTMLDivElement>,
+        folderId: number,
+    ) => {
+        if (!isMobile() || e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        touchStartPositionRef.current = { x: touch.clientX, y: touch.clientY };
+        didHoldRef.current = false;
+        touchMovedRef.current = false;
+        suppressNextClickRef.current = false;
+        clearHoldTimeout();
+        holdTimeoutRef.current = window.setTimeout(() => {
+            didHoldRef.current = true;
+            suppressNextClickRef.current = true;
+            handleFolderHold(folderId);
+        }, 400);
+    };
+
+    const handleFolderTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (!isMobile() || e.touches.length !== 1 || didHoldRef.current) return;
+
+        const touch = e.touches[0];
+        const moveX = Math.abs(touch.clientX - touchStartPositionRef.current.x);
+        const moveY = Math.abs(touch.clientY - touchStartPositionRef.current.y);
+        if (moveX > 10 || moveY > 10) {
+            touchMovedRef.current = true;
+            suppressNextClickRef.current = true;
+            clearHoldTimeout();
+        }
+    };
+
+    const handleFolderTouchEnd = () => {
+        if (!isMobile()) return;
+        clearHoldTimeout();
+        if (!didHoldRef.current && !touchMovedRef.current) {
+            suppressNextClickRef.current = false;
+        }
+        didHoldRef.current = false;
+        touchMovedRef.current = false;
     };
 
     const handleRootClick = () => {
@@ -255,6 +334,15 @@ export function FloatingContainer({
                                     folder.id &&
                                     handleFolderDoubleClick(folder.id)
                                 }
+                                onTouchStart={(e) =>
+                                    folder.id &&
+                                    handleFolderTouchStart(e, folder.id)
+                                }
+                                onTouchMove={handleFolderTouchMove}
+                                onTouchEnd={handleFolderTouchEnd}
+                                onContextMenu={(e) => {
+                                    if (isMobile()) e.preventDefault();
+                                }}
                             >
                                 <div className={styles.folderIcon}>
                                     <svg

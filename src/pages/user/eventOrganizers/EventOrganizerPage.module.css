@@ -40,22 +40,21 @@
     margin-top: 1.25rem;
 }
 
-@media (max-width: 900px) {
-    .infoGrid {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 1024px) {
+
+.infoGrid {
+    grid-template-columns: 1fr;
 }
 
-@media (max-width: 650px) {
-    .container {
-        padding: 1.25rem 1rem;
-    }
+.container {
+    padding: 1.25rem 1rem;
+}
 
-    .statsRow {
-        grid-template-columns: 1fr;
-    }
+.statsRow {
+    grid-template-columns: 1fr;
+}
 
-    .eventsGrid {
-        grid-template-columns: 1fr;
-    }
+.eventsGrid {
+    grid-template-columns: 1fr;
+}
 }

@@ -21,6 +21,7 @@ import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { showToast } from "../../../utils/ToastsManager";
+import { isMobile } from "../../../utils/DeviceHandler";
 import {
     handlePopupErrors,
     getErrorMessage,
@@ -332,20 +333,37 @@ export function MaterialsPage() {
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
     const handleCardClick = (materialId: number) => {
+        const material = materials.find((item) => item.id === materialId);
+        if (!material) return;
+
         if (isSelectionMode) {
             setSelectedMaterials((prev) =>
                 prev.includes(materialId)
                     ? prev.filter((id) => id !== materialId)
                     : [...prev, materialId],
             );
-        } else {
+            return;
+        }
+        if (isMobile()) {
+            if (material.material_type === "folder") {
+                handleNavigate(material);
+            }
+            return;
+        }
+
+        setIsSelectionMode(true);
+        setSelectedMaterials([materialId]);
+    };
+
+    const handleCardHold = (materialId: number) => {
+        if (isMobile() && !isSelectionMode) {
             setIsSelectionMode(true);
             setSelectedMaterials([materialId]);
         }
     };
 
     const handleCardDoubleClick = (material: MaterialResponseDto) => {
-        if (material.material_type === "folder") {
+        if (!isMobile() && material.material_type === "folder") {
             handleNavigate(material);
         }
     };
@@ -1194,6 +1212,9 @@ export function MaterialsPage() {
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(folder)
                                             }
+                                            onHold={() =>
+                                                handleCardHold(folderId)
+                                            }
                                             onDragStart={() =>
                                                 handleDragStart(folderId)
                                             }
@@ -1247,6 +1268,9 @@ export function MaterialsPage() {
                                             }
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(file)
+                                            }
+                                            onHold={() =>
+                                                handleCardHold(fileId)
                                             }
                                             onDragStart={() =>
                                                 handleDragStart(fileId)

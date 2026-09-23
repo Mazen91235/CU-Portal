@@ -34,6 +34,7 @@ import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 import styles from "./OtherMaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
+import { isMobile } from "../../../utils/DeviceHandler";
 
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
@@ -217,6 +218,18 @@ export function OtherMaterialsPage() {
         void loadCurrentPath(currentParentId);
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
+    const handlePreview = useCallback((fileId: string, fileName: string) => {
+        setPreviewFile({ id: fileId, name: fileName });
+    }, []);
+
+    const handleOpenLink = useCallback((url: string) => {
+        window.open(url, "_blank");
+    }, []);
+
+    const handleClosePreview = () => {
+        setPreviewFile(null);
+    };
+
     const handleCardClick = useCallback(
         (material: MaterialResponseDto) => {
             if (!material.id) return;
@@ -226,9 +239,26 @@ export function OtherMaterialsPage() {
                         ? prev.filter((id) => id !== material.id)
                         : [...prev, material.id!],
                 );
-            } else {
+                return;
+            }
+            if (isMobile()) {
+                if (material.material_type === "folder") {
+                    handleNavigate(material);
+                }
+                return;
+            }
+
+            setIsSelectionMode(true);
+            setSelectedMaterials([material.id]);
+        },
+        [isSelectionMode, handleNavigate],
+    );
+
+    const handleCardHold = useCallback(
+        (materialId: number) => {
+            if (isMobile() && !isSelectionMode) {
                 setIsSelectionMode(true);
-                setSelectedMaterials([material.id]);
+                setSelectedMaterials([materialId]);
             }
         },
         [isSelectionMode],
@@ -236,7 +266,7 @@ export function OtherMaterialsPage() {
 
     const handleCardDoubleClick = useCallback(
         (material: MaterialResponseDto) => {
-            if (material.material_type === "folder") {
+            if (!isMobile() && material.material_type === "folder") {
                 handleNavigate(material);
             }
         },
@@ -275,24 +305,12 @@ export function OtherMaterialsPage() {
         setIsSelectionMode(false);
     }, []);
 
-    const handlePreview = useCallback((fileId: string, fileName: string) => {
-        setPreviewFile({ id: fileId, name: fileName });
-    }, []);
-
-    const handleClosePreview = () => {
-        setPreviewFile(null);
-    };
-
     const handleDownload = async (fileId: string) => {
         try {
             downloadFile(fileId);
         } catch (error) {
             handlePopupErrors(error);
         }
-    };
-
-    const handleOpenLink = (url: string) => {
-        window.open(url, "_blank");
     };
 
     const handleShareMaterials = (
@@ -455,6 +473,9 @@ export function OtherMaterialsPage() {
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(folder)
                                             }
+                                            onHold={() =>
+                                                handleCardHold(folderId)
+                                            }
                                             onDragStart={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
@@ -487,6 +508,9 @@ export function OtherMaterialsPage() {
                                             }
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(file)
+                                            }
+                                            onHold={() =>
+                                                handleCardHold(fileId)
                                             }
                                             onDragStart={() => {}}
                                             onShare={() => {

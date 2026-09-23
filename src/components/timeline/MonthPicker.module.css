@@ -66,27 +66,31 @@
     color: #c7c9cf;
 }
 
-@media (max-width: 768px) {
-    .weeklyGuide {
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
-        gap: 4px;
-        padding: 0 0.25rem;
-    }
+@media (max-width: 1024px) {
 
-    .weeklyGuide .monthText {
-        flex: 1 1 auto;
-        min-width: 0;
-        text-align: center;
-        font-size: 16px;
-        line-height: 1.25;
-        white-space: normal;
-        overflow-wrap: anywhere;
-    }
+.weeklyGuide {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    gap: 4px;
+    padding: 0 0.25rem;
+}
 
-    .weeklyGuide .calendarIcon,
-    .weeklyGuide .arrows {
-        flex: 0 0 auto;
-    }
+.weeklyGuide .monthText {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.weeklyGuide .calendarIcon {
+    flex: 0 0 auto;
+}
+
+.weeklyGuide .arrows {
+    flex: 0 0 auto;
+}
 }

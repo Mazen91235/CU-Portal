@@ -143,48 +143,47 @@
   min-width: 0;
 }
 
-@media (max-width: 768px) {
-  .container {
+@media (max-width: 1024px) {
+
+.container {
     --timeline-date-column: 42px;
     --timeline-marker-column: 18px;
-
     padding: 1rem 0 2rem;
-  }
+}
 
-  .filtersContainer {
+.filtersContainer {
     justify-content: stretch;
     margin-left: 0;
     padding: 0 1rem;
-  }
+}
 
-  .versionTitle {
+.versionTitle {
     padding-top: 0.25rem;
-  }
+}
 
-  .timelineRelease,
-  .versionHeading {
+.timelineRelease {
     min-height: auto;
-  }
+}
 
-  .versionHeading {
+.versionHeading {
     min-height: 48px;
-  }
+}
 
-  .timelineDate {
+.timelineDate {
     padding-left: 12px;
     font-size: 0.85rem;
-  }
+}
 
-  .timelineMarker {
+.timelineMarker {
     padding-top: 0.9rem;
-  }
+}
 
-  .timelineDot {
+.timelineDot {
     width: 8px;
     height: 8px;
-  }
+}
 
-  .timelineCard {
+.timelineCard {
     padding-right: 0;
-  }
+}
 }

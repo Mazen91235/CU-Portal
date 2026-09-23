@@ -105,27 +105,30 @@
     background-color: var(--hover-background);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 16px;
-    }
 
-    .formRow {
-        grid-template-columns: 1fr;
-    }
-
-    .formActions {
-        flex-direction: column;
-    }
-
-    .formActions button {
-        width: 100%;
-    }
-}
 
 .formFieldset {
     border: 0;
     padding: 0;
     margin: 0;
     min-width: 0;
+}
+
+@media (max-width: 1024px) {
+
+.container {
+    padding: 16px;
+}
+
+.formRow {
+    grid-template-columns: 1fr;
+}
+
+.formActions {
+    flex-direction: column;
+}
+
+.formActions button {
+    width: 100%;
+}
 }

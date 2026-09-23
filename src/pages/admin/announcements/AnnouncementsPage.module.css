@@ -25,16 +25,17 @@
     margin-bottom: 2rem;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .filtersRow {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
 
-    .announcementsGrid {
-        grid-template-columns: 1fr;
-    }
+.filtersRow {
+    grid-template-columns: 1fr;
+}
+
+.announcementsGrid {
+    grid-template-columns: 1fr;
+}
 }

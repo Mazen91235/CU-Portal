@@ -70,39 +70,40 @@
     font-size: 20px;
 }
 
-@media (max-width: 600px) {
-    .notificationCard {
-        flex-direction: column;
-        align-items: stretch;
-        min-height: unset;
-        padding: 16px 10px;
-        gap: 8px;
-    }
+@media (max-width: 1024px) {
 
-    .notificationIcon {
-        margin: 0 auto 8px auto;
-        display: block;
-    }
+.notificationCard {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: unset;
+    padding: 16px 10px;
+    gap: 8px;
+}
 
-    .notificationContent {
-        margin-bottom: 8px;
-        text-align: center;
-    }
+.notificationIcon {
+    margin: 0 auto 8px auto;
+    display: block;
+}
 
-    .notificationTitle {
-        font-size: 16px;
-        margin-bottom: 4px;
-        text-align: center;
-    }
+.notificationContent {
+    margin-bottom: 8px;
+    text-align: center;
+}
 
-    .notificationSubtitle {
-        font-size: 13px;
-        margin-bottom: 4px;
-        text-align: center;
-    }
+.notificationTitle {
+    font-size: 16px;
+    margin-bottom: 4px;
+    text-align: center;
+}
 
-    .notificationBtnRow {
-        margin-top: 8px;
-        justify-content: center;
-    }
+.notificationSubtitle {
+    font-size: 13px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.notificationBtnRow {
+    margin-top: 8px;
+    justify-content: center;
+}
 }

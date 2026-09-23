@@ -241,64 +241,38 @@
     opacity: 0.9;
 }
 
-@media (max-width: 500px) {
-    .headerTitle {
-        font-size: 20px;
-    }
+@media (max-width: 1024px) {
 
-    .headerSubtitle {
-        font-size: 10px;
-        font-weight: 100;
-    }
-
-    .addButton {
-        font-size: 10px;
-        border-radius: 3px;
-        white-space: nowrap;
-        padding: 3px 6px;
-    }
-
-    .addButtonIcon {
-        width: 10px;
-        height: 10px;
-    }
-
-    .searchInputWrapper {
-        width: 315px;
-    }
-
-    .rolesContainer {
-        padding: 20px;
-    }
+.headerTitle {
+    font-size: 20px;
 }
 
-@media (max-width: 1025px) {
-    .rolesContainer {
-        padding: 10px;
-    }
+.headerSubtitle {
+    font-size: var(--primary-font-size);
+    font-weight: 100;
+}
 
-    .addRoleCard {
-        width: 320px;
-    }
+.addButton {
+    font-size: var(--primary-font-size);
+    border-radius: 3px;
+    white-space: nowrap;
+    padding: 4px 8px;
+}
 
-    .addButton {
-        font-size: var(--primary-font-size);
-        border-radius: 3px;
-        white-space: nowrap;
-        padding: 4px 8px;
-    }
+.addButtonIcon {
+    width: 20px;
+    height: 20px;
+}
 
-    .addButtonIcon {
-        width: 20px;
-        height: 20px;
-    }
+.searchInputWrapper {
+    width: 350px;
+}
 
-    .headerSubtitle {
-        font-size: var(--primary-font-size);
-        font-weight: 100;
-    }
+.rolesContainer {
+    padding: 10px;
+}
 
-    .searchInputWrapper {
-        width: 350px;
-    }
+.addRoleCard {
+    width: 320px;
+}
 }

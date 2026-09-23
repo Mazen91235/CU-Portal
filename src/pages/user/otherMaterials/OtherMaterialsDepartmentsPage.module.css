@@ -10,12 +10,13 @@
     gap: 1rem;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .cardsGrid {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
+
+.cardsGrid {
+    grid-template-columns: 1fr;
+}
 }

@@ -329,151 +329,116 @@
 }
 
 @media (max-width: 1024px) {
-    .contentWrapper {
-        flex-direction: column;
-        gap: 20px;
-        padding: 40px 20px;
-        box-sizing: border-box;
-        overflow: hidden;
-    }
 
-    .container {
-        overflow: visible;
-        height: auto;
-        padding-bottom: 0;
-        position: relative;
-    }
-
-    .header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .logo {
-        z-index: 20;
-        display: block;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .illustration {
-        display: none;
-    }
-
-    .illustrationImgMobile {
-        display: block;
-        width: calc(445px * 0.25);
-        height: calc(667px * 0.25);
-        margin-left: 0;
-        transform: rotateY(180deg);
-        position: absolute;
-        top: -50px;
-        right: 0;
-    }
-
-    .profileFormCard {
-        padding: 40px 20px;
-        max-width: calc(100% - 80px);
-        margin: 0;
-        box-sizing: border-box;
-        position: relative;
-    }
-
-    .profileFormCard h2 {
-        font-size: 32px;
-        margin-bottom: 5px;
-    }
-
-    .subtitle {
-        font-size: 14px;
-        margin-bottom: 30px;
-    }
-
-    .inputRow {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .inputRow > div {
-        width: 100%;
-        margin: 5px 0 0 0;
-    }
-
-    .selectGroup,
-    .fileInputGroup {
-        height: 45px;
-    }
-
-    .checkboxGroup {
-        margin-top: 15px;
-        margin-bottom: 25px;
-        font-size: 13px;
-        padding-left: 5px;
-    }
-
-    .checkboxGroup input[type="checkbox"] {
-        margin-right: 8px;
-        width: 16px;
-        height: 16px;
-    }
-
-    .checkboxGroup input[type="checkbox"]:checked::after {
-        font-size: 12px;
-    }
-
-    .cornerImageTopRight {
-        top: -150px;
-    }
-
-    .cornerImageBottomLeft {
-        bottom: -200px;
-        left: -400px;
-    }
+.contentWrapper {
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-@media (max-width: 768px) {
-    .header {
-        margin-top: 10px;
-    }
-
-    .logo {
-        display: block;
-        margin: 0 auto;
-        text-align: center;
-        z-index: 30;
-        position: relative;
-        font-size: 30px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .profileFormCard {
-        max-width: 100%;
-    }
-
-    .illustrationImgMobile {
-        display: block;
-        width: calc(445px * 0.25);
-        height: calc(667px * 0.25);
-        margin-left: 0;
-        transform: rotateY(180deg);
-        position: absolute;
-        top: -55px;
-        right: -35px;
-    }
+.container {
+    overflow: visible;
+    height: auto;
+    padding-bottom: 0;
+    position: relative;
 }
 
-@media (max-width: 440px) and (min-width: 370px) {
-    .illustrationImgMobile {
-        top: -120px;
-        right: -30px;
-    }
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }
 
-@media (max-width: 480px) {
-    .cornerImageTopRight,
-    .cornerImageBottomLeft {
-        display: none;
-    }
+.logo {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 30;
+    position: relative;
+    font-size: 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.illustration {
+    display: none;
+}
+
+.illustrationImgMobile {
+    display: block;
+    width: calc(445px * 0.25);
+    height: calc(667px * 0.25);
+    margin-left: 0;
+    transform: rotateY(180deg);
+    position: absolute;
+    top: -120px;
+    right: -30px;
+}
+
+.profileFormCard {
+    padding: 40px 20px;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+    max-width: 100%;
+}
+
+.profileFormCard h2 {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.inputRow {
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inputRow > div {
+    width: 100%;
+    margin: 5px 0 0 0;
+}
+
+.selectGroup {
+    height: 45px;
+}
+
+.fileInputGroup {
+    height: 45px;
+}
+
+.checkboxGroup {
+    margin-top: 15px;
+    margin-bottom: 25px;
+    font-size: 13px;
+    padding-left: 5px;
+}
+
+.checkboxGroup input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.checkboxGroup input[type="checkbox"]:checked::after {
+    font-size: 12px;
+}
+
+.cornerImageTopRight {
+    top: -150px;
+    display: none;
+}
+
+.cornerImageBottomLeft {
+    bottom: -200px;
+    left: -400px;
+    display: none;
+}
 }

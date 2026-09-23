@@ -112,31 +112,7 @@
     background: var(--success-green);
 }
 
-@media (max-width: 1000px) {
-    .calendar-wrapper {
-        min-height: 280px;
-    }
 
-    .calendar-nav {
-        justify-content: space-around;
-    }
-
-    .calendar-table th,
-    .calendar-table td {
-        font-size: 0.85rem;
-        padding: 0.1rem;
-    }
-
-    .legend {
-        gap: 10px;
-        font-size: 0.85rem;
-    }
-
-    .legend-dot {
-        width: 8px;
-        height: 8px;
-    }
-}
 
 .dot-event { background: #3b82f6; }
 
@@ -148,14 +124,39 @@
     background: grey;
 }
 
-@media (max-width: 768px) {
-    .legend {
-        width: 100%;
-        min-width: 0;
-        gap: 0.55rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .legend-note {
-        display: flex !important;
-    }
+.calendar-wrapper {
+    min-height: 280px;
+}
+
+.calendar-nav {
+    justify-content: space-around;
+}
+
+.calendar-table th {
+    font-size: 0.85rem;
+    padding: 0.1rem;
+}
+
+.calendar-table td {
+    font-size: 0.85rem;
+    padding: 0.1rem;
+}
+
+.legend {
+    font-size: 0.85rem;
+    width: 100%;
+    min-width: 0;
+    gap: 0.55rem 1rem;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.legend-note {
+    display: flex !important;
+}
 }

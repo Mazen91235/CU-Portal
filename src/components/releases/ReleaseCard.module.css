@@ -145,72 +145,41 @@
   font-size: 13px;
 }
 
-@media (max-width: 1050px) {
-  .card {
-    grid-template-columns: 170px minmax(0, 1fr) auto;
-    gap: 22px;
-    padding: 22px;
-  }
+@media (max-width: 1024px) {
 
-  .title {
-    font-size: 22px;
-  }
-
-  .description {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 760px) {
-  .card {
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-  }
-
-  .versionColumn {
-    gap: 8px;
-  }
-
-  .content {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-
-  .viewDetailsButton {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .card {
+.card {
     display: flex;
     flex-direction: column;
     gap: 14px;
     padding: 18px;
-  }
+}
 
-  .viewDetailsButton {
-    width: 100%;
-  }
-
-  .version {
-    font-size: 23px;
-  }
-
-  .title {
+.title {
     font-size: 20px;
-  }
+}
 
-  .description {
+.description {
     margin-top: 10px;
     font-size: 15px;
-  }
+}
 
-  .category {
+.versionColumn {
+    gap: 8px;
+}
+
+
+.viewDetailsButton {
+    min-width: 0;
+    width: 100%;
+}
+
+.version {
+    font-size: 23px;
+}
+
+.category {
     width: 100%;
     justify-content: center;
     font-size: 14px;
-  }
+}
 }

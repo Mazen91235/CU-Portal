@@ -73,34 +73,35 @@
 }
 
 @media (max-width: 1024px) {
-    .beginningCard {
-        width: 90%;
-    }
 
-    .beginningTitle {
-        font-size: 28px;
-    }
+.beginningCard {
+    width: 90%;
+}
 
-    .beginningContent {
-        font-size: 18px;
-    }
+.beginningTitle {
+    font-size: 28px;
+}
 
-    .beginningRow {
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-    }
+.beginningContent {
+    font-size: 18px;
+}
 
-    .beginningImageContainer {
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        margin-top: -50px;
-    }
+.beginningRow {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
 
-    .beginningSideImage {
-        max-width: 75vw;
-        margin: 0 auto;
-    }
+.beginningImageContainer {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    margin-top: -50px;
+}
+
+.beginningSideImage {
+    max-width: 75vw;
+    margin: 0 auto;
+}
 }

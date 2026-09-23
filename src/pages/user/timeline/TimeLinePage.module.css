@@ -173,38 +173,38 @@
     line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-    .timelineWrapper {
-        --timeline-date-column: 42px;
-        --timeline-marker-column: 18px;
+@media (max-width: 1024px) {
 
-        margin: 24px auto;
-    }
+.timelineWrapper {
+    --timeline-date-column: 42px;
+    --timeline-marker-column: 18px;
+    margin: 24px auto;
+}
 
-    .timelineControls {
-        margin-left: 0;
-    }
+.timelineControls {
+    margin-left: 0;
+}
 
-    .timelineDay {
-        min-height: auto;
-    }
+.timelineDay {
+    min-height: auto;
+}
 
-    .timelineDate {
-        padding-left: 16px;
-        padding-top: 0.65rem;
-        font-size: 0.85rem;
-    }
+.timelineDate {
+    padding-left: 16px;
+    padding-top: 0.65rem;
+    font-size: 0.85rem;
+}
 
-    .timelineMarker {
-        padding-top: 0.9rem;
-    }
+.timelineMarker {
+    padding-top: 0.9rem;
+}
 
-    .timelineDot {
-        width: 8px;
-        height: 8px;
-    }
+.timelineDot {
+    width: 8px;
+    height: 8px;
+}
 
-    .timelineDayContent {
-        padding-right: 0;
-    }
+.timelineDayContent {
+    padding-right: 0;
+}
 }

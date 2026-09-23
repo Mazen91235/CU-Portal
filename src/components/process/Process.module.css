@@ -209,9 +209,10 @@
     opacity: 1;
 }
 
-@media (max-width: 768px) {
-    .processContainer {
-        width: 300px;
-        max-width: 90%;
-    }
+@media (max-width: 1024px) {
+
+.processContainer {
+    width: 300px;
+    max-width: 90%;
+}
 }

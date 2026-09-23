@@ -53,27 +53,31 @@
     font-family: var(--primary-font-family);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 0 16px;
-    }
+@media (max-width: 1024px) {
 
-    .filters-section {
-        flex-direction: column;
-        align-items: stretch;
-    }
+.container {
+    padding: 0 16px;
+}
 
-    .filters-wrapper {
-        flex-wrap: wrap;
-    }
+.filters-section {
+    flex-direction: column;
+    align-items: stretch;
+}
 
-    .search-wrapper,
-    .filters-wrapper > * {
-        min-width: 100%;
-    }
+.filters-wrapper {
+    flex-wrap: wrap;
+}
 
-    .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
+.search-wrapper {
+    min-width: 100%;
+}
+
+.filters-wrapper > * {
+    min-width: 100%;
+}
+
+.cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
 }

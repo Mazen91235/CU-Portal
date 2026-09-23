@@ -1146,169 +1146,269 @@
 }
 
 /* Responsive */
-@media (max-width: 600px) {
-    .userDetailsCard {
-        max-width: 98vw;
-        padding: 18px 8px 18px 8px;
-    }
-    .userDetailsAvatar {
-        width: 72px;
-        height: 72px;
-    }
-    .userDetailsInfoTable {
-        border-spacing: 0 2px;
-        margin-left: 10px;
-    }
-    .userDetailsInfoTable td {
-        padding: 6px 8px 6px 0;
-    }
+
+@media (max-width: 1024px) {
+
+.userDetailsCard {
+    max-width: 98vw;
+    padding: 18px 8px 18px 8px;
 }
 
-@media (max-width: 1100px) {
-    .sectionsRow {
-        gap: 0 12px;
-    }
+.userDetailsAvatar {
+    width: 72px;
+    height: 72px;
 }
 
-@media (max-width: 900px) {
-    .sectionsRow {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-    .sectionsRow > .section {
-        width: 95vw;
-        max-width: 95vw;
-        margin: 0 auto;
-    }
-    .examsSection,
-    .tasksSection,
-    .announcementSection,
-    .materialsSection,
-    .gradesSection,
-    .subjectsSection,
-    .activityLogsSection {
-        width: 95vw;
-        max-width: 95vw;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.userDetailsInfoTable {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+    float: none;
+    border-spacing: 0 2px;
 }
 
-@media (max-width: 1200px) {
-    .userDetailsMainRow {
-        flex-direction: column;
-        gap: 5px;
-        align-items: center;
-        justify-content: center;
-    }
-    .userDetailsAvatarWrapper {
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-    .userDetailsInfoTableWrapper {
-        width: 100%;
-        max-width: 98vw;
-        justify-content: center;
-        align-items: center;
-        padding-left: 32px;
-    }
-    .userDetailsInfoTable {
-        margin: 0 auto;
-        width: 100%;
-        max-width: 350px;
-        margin-left: auto;
-        margin-right: auto;
-        display: table;
-        float: none;
-        border-spacing: 0 4px;
-    }
-    .userRoleContainer {
-        flex-direction: column;
-        gap: 12px;
-        align-items: center;
-    }
-    .userRoleContainer .userRoleLeft {
-        width: 100%;
-    }
-    .userRoleActions {
-        width: 100%;
-        flex-direction: column;
-    }
-    .userRoleActions .editRoleBtn,
-    .userRoleActions .suspendUserBtn {
-        width: 100%;
-    }
-    .userDetailsInfoTable tr {
-        display: flex;
-        flex-wrap: wrap;
-    }
+.userDetailsInfoTable td {
+    padding: 6px 8px 6px 0;
 }
 
-@media (max-width: 600px) {
-    .userDetailsInfoTable {
-        border-spacing: 0 2px;
-    }
-    .userDetailsInfoTableWrapper {
-        padding-left: 16px;
-    }
+.sectionsRow {
+    grid-template-columns: 1fr;
+    gap: 0;
 }
 
-@media (max-width: 600px) {
-    .examCard,
-    .taskCard,
-    .eventCard,
-    .materialsCard {
-        flex-wrap: wrap;
-        align-items: flex-start;
-        min-width: 0;
-    }
+.sectionsRow > .section {
+    width: 95vw;
+    max-width: 95vw;
+    margin: 0 auto;
+}
 
-    .examCardIcon,
-    .taskCardIcon,
-    .eventCardIcon,
-    .materialsCardIcon {
-        margin-right: 10px;
-    }
+.examsSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .examCardInfo,
-    .taskCardInfo,
-    .eventCardInfo,
-    .materialsCardInfo {
-        min-width: 0;
-        flex: 1 1 auto;
-        width: auto;
-    }
+.tasksSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .examCardBadges,
-    .taskCardBadges,
-    .eventCardBadges,
-    .materialsCardBadges {
-        order: -1;
-        width: 100%;
-        margin-left: 0;
-        margin-bottom: 8px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 6px;
-    }
+.announcementSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .announcementCardTitleRow {
-        flex-direction: column-reverse;
-        justify-content: flex-start;
-        align-items: flex-start;
-    }
+.materialsSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .announcementCardTitle {
-        flex: 1 1 100%;
-        min-width: 0;
-    }
+.gradesSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .announcementBadge {
-        margin-left: auto;
-    }
+.subjectsSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.activityLogsSection {
+    width: 95vw;
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.userDetailsMainRow {
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.userDetailsAvatarWrapper {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.userDetailsInfoTableWrapper {
+    width: 100%;
+    max-width: 98vw;
+    justify-content: center;
+    align-items: center;
+    padding-left: 16px;
+}
+
+.userRoleContainer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.userRoleContainer .userRoleLeft {
+    width: 100%;
+}
+
+.userRoleActions {
+    width: 100%;
+    flex-direction: column;
+}
+
+.userRoleActions .editRoleBtn {
+    width: 100%;
+}
+
+.userRoleActions .suspendUserBtn {
+    width: 100%;
+}
+
+.userDetailsInfoTable tr {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.examCard {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.taskCard {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.eventCard {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.materialsCard {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.examCardIcon {
+    margin-right: 10px;
+}
+
+.taskCardIcon {
+    margin-right: 10px;
+}
+
+.eventCardIcon {
+    margin-right: 10px;
+}
+
+.materialsCardIcon {
+    margin-right: 10px;
+}
+
+.examCardInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.taskCardInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.eventCardInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.materialsCardInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.examCardBadges {
+    order: -1;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.taskCardBadges {
+    order: -1;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.eventCardBadges {
+    order: -1;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.materialsCardBadges {
+    order: -1;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.announcementCardTitleRow {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.announcementCardTitle {
+    flex: 1 1 100%;
+    min-width: 0;
+}
+
+.announcementBadge {
+    margin-left: auto;
+}
 }

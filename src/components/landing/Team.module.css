@@ -245,37 +245,11 @@
     box-shadow: var(--dark-box-shadow);
 }
 
-@media (max-width: 1280px) {
-    .teamSection {
-        padding: 2.5rem 0 2rem;
-    }
 
-    .teamMembers {
-        gap: 20px;
-    }
-}
 
-@media (max-width: 1024px) {
-    .teamMembers {
-        grid-template-columns: repeat(2, minmax(250px, 300px));
-        justify-content: center;
-    }
-}
 
-@media (max-width: 700px) {
-    .teamTitle {
-        font-size: 34px;
-    }
 
-    .teamMembers {
-        grid-template-columns: minmax(0, 300px);
-        max-width: 300px;
-    }
 
-    .teamCardContent {
-        padding: 16px;
-    }
-}
 
 .viewAllContainer {
     margin-top: 3.5rem;
@@ -303,4 +277,26 @@
 .viewAllBtn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+
+.teamSection {
+    padding: 2.5rem 0 2rem;
+}
+
+.teamMembers {
+    gap: 20px;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    max-width: 100%;
+}
+
+.teamTitle {
+    font-size: 34px;
+}
+
+.teamCardContent {
+    padding: 16px;
+}
 }
