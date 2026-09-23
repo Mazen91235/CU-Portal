@@ -145,31 +145,36 @@
     }
 }
 
-@media (max-width: 768px) {
-    .box {
-        height: 250px;
-        width: 450px;
-        padding: 15px;
-    }
+@media (max-width: 1024px) {
 
-    .iconWrapper {
-        width: 40px;
-        height: 40px;
-    }
+.box {
+    height: 250px;
+    width: 450px;
+    padding: 15px;
+}
 
-    .icon {
-        width: 18px;
-        height: 18px;
-    }
+.iconWrapper {
+    width: 40px;
+    height: 40px;
+}
 
-    .heading {
-        margin-top: 18px;
-        font-size: 20px;
-    }
+.icon {
+    width: 18px;
+    height: 18px;
+}
 
-    .cancelBtn,
-    .confirmBtn {
-        font-size: 16px;
-        padding: 8px 16px;
-    }
+.heading {
+    margin-top: 18px;
+    font-size: 20px;
+}
+
+.cancelBtn {
+    font-size: 16px;
+    padding: 8px 16px;
+}
+
+.confirmBtn {
+    font-size: 16px;
+    padding: 8px 16px;
+}
 }

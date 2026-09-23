@@ -64,30 +64,30 @@
     gap: 0.5rem;
 }
 
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        min-width: 0;
-        padding: 1rem;
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-areas:
-            "stats"
+@media (max-width: 1024px) {
+
+.container {
+    width: 100%;
+    min-width: 0;
+    padding: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "stats"
             "description"
             "quick-actions"
             "organizer"
             "quick-info"
             "attachments";
-        gap: 1rem;
-    }
+    gap: 1rem;
+}
 
-    .statsRow {
-        flex-direction: column;
-        gap: 1rem;
-    }
+.statsRow {
+    flex-direction: column;
+    gap: 1rem;
+}
 
-    .statsRow > * {
-        flex: none;
-        width: 100%;
-        min-width: 0;
-    }
+.statsRow > * {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+}
 }

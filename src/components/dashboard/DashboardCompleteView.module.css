@@ -304,55 +304,68 @@
     font-weight: 600;
 }
 
-@media (max-width: 1200px) {
-    .dashboard-container {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 1024px) {
 
-    .sidebar-column {
-        order: 1;
-    }
-
-    .cards-container {
-        max-height: 1500px;
-    }
-
-    .tasks-cards {
-        max-height: 1500px;
-    }
-
-    .main-column {
-        order: 2;
-    }
-    .view-all-btn {
-        font-size: 14px;
-        padding: 6px 12px;
-    }
+.dashboard-container {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    grid-template-columns: minmax(0, 1fr);
 }
 
-@media (max-width: 768px) {
-    .dashboard-container {
-        width: 100%;
-        min-width: 0;
-        padding: 12px;
-        grid-template-columns: minmax(0, 1fr);
-    }
+.sidebar-column {
+    order: 1;
+}
 
-    .calendar-section,
-    .exams-overview,
-    .tasks-overview,
-    .my-courses,
-    .user-announcements,
-    .motivation-card {
-        width: 100%;
-        min-width: 0;
-    }
+.cards-container {
+    max-height: 1500px;
+    grid-template-columns: 1fr;
+}
 
-    .cards-container {
-        grid-template-columns: 1fr;
-    }
+.tasks-cards {
+    max-height: 1500px;
+}
 
-    .section-heading {
-        font-size: 18px;
-    }
+.main-column {
+    order: 2;
+}
+
+.view-all-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+.calendar-section {
+    width: 100%;
+    min-width: 0;
+}
+
+.exams-overview {
+    width: 100%;
+    min-width: 0;
+}
+
+.tasks-overview {
+    width: 100%;
+    min-width: 0;
+}
+
+.my-courses {
+    width: 100%;
+    min-width: 0;
+}
+
+.user-announcements {
+    width: 100%;
+    min-width: 0;
+}
+
+.motivation-card {
+    width: 100%;
+    min-width: 0;
+}
+
+.section-heading {
+    font-size: 18px;
+}
 }

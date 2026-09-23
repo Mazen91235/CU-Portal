@@ -196,81 +196,65 @@
     font-size: 12px;
 }
 
-@media (max-width: 800px) {
-    .banner {
-        min-height: 0;
-        padding: 24px;
-    }
+@media (max-width: 1024px) {
 
-    .content {
-        width: 100%;
-        max-width: none;
-    }
-
-    .headingRow {
-        flex-wrap: wrap;
-        padding-right: 30px;
-    }
-
-    .title,
-    .date,
-    .categories {
-        width: 100%;
-    }
-
-    .date {
-        display: flex;
-    }
-
-    .categories {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-    }
-
-    .category {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .viewAllButton {
-        position: static;
-        width: 100%;
-        margin-top: 14px;
-    }
+.banner {
+    min-height: 0;
+    padding: 24px;
 }
 
-@media (max-width: 480px) {
-    .headingRow {
-        gap: 10px;
-    }
+.content {
+    width: 100%;
+    max-width: none;
+}
 
-    .releaseLabel,
-    .version {
-        min-height: 29px;
-        font-size: 12px;
-        white-space: nowrap;
-    }
+.headingRow {
+    flex-wrap: wrap;
+    padding-right: 30px;
+    gap: 10px;
+}
 
-    .releaseLabel {
-        padding: 0 9px;
-    }
+.title {
+    width: 100%;
+    font-size: 24px;
+}
 
-    .version {
-        padding: 0 11px;
-    }
+.date {
+    width: 100%;
+    display: flex;
+    font-size: 15px;
+}
 
-    .title {
-        font-size: 24px;
-    }
+.categories {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
 
-    .date,
-    .viewAllButton {
-        font-size: 15px;
-    }
+.category {
+    width: 100%;
+    min-width: 0;
+    font-size: 14px;
+}
 
-    .category {
-        width: 100%;
-        min-width: 0;
-        font-size: 14px;
-    }
+.viewAllButton {
+    position: static;
+    width: 100%;
+    margin-top: 14px;
+    font-size: 15px;
+}
+
+.releaseLabel {
+    min-height: 29px;
+    font-size: 12px;
+    white-space: nowrap;
+    padding: 0 9px;
+}
+
+.version {
+    min-height: 29px;
+    font-size: 12px;
+    white-space: nowrap;
+    padding: 0 11px;
+}
 }

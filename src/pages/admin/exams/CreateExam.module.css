@@ -58,28 +58,29 @@
     width: 30%;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .formCard {
-        padding: 1.5rem;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
 
-    .dateTimeGroup {
-        grid-template-columns: 1fr;
-    }
+.formCard {
+    padding: 1.5rem;
+}
 
-    .formActions {
-        flex-direction: column-reverse;
-    }
+.dateTimeGroup {
+    grid-template-columns: 1fr;
+}
 
-    .formActions > button:nth-child(1) {
-        width: 100%;
-    }
+.formActions {
+    flex-direction: column-reverse;
+}
 
-    .formActions button {
-        width: 100%;
-    }
+.formActions > button:nth-child(1) {
+    width: 100%;
+}
+
+.formActions button {
+    width: 100%;
+}
 }

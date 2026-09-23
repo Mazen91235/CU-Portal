@@ -151,24 +151,29 @@
     font-family: var(--primary-font-family);
 }
 
-@media (max-width: 455px) {
-    .linksRow {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
+@media (max-width: 1024px) {
 
-    .linkTitle,
-    .linkUrl {
-        width: 100% !important;
-        min-width: 0;
-    }
+.linksRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
 
-    .removeLinkBtn {
-        align-self: center;
-        margin-left: 0;
-        margin-top: 2px;
-        width: 42px;
-        height: 42px;
-    }
+.linkTitle {
+    width: 100% !important;
+    min-width: 0;
+}
+
+.linkUrl {
+    width: 100% !important;
+    min-width: 0;
+}
+
+.removeLinkBtn {
+    align-self: center;
+    margin-left: 0;
+    margin-top: 2px;
+    width: 42px;
+    height: 42px;
+}
 }

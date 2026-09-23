@@ -35,6 +35,19 @@ const getWeekEndDate = (startDate?: string | null) => {
     return date.toISOString().slice(0, 10);
 };
 
+const getTodayKey = () =>
+    new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+
+const isCurrentWeek = (week: WeekResponseDto) => {
+    if (!week.start_date) return false;
+    const startKey = formatDateTime(week.start_date, true).slice(0, 10);
+    const endKey = getWeekEndDate(week.start_date);
+    const todayKey = getTodayKey();
+    return Boolean(
+        endKey && todayKey >= startKey && todayKey <= endKey,
+    );
+};
+
 export function WeeksPage() {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user.user);
@@ -82,7 +95,16 @@ export function WeeksPage() {
                 includes: ["faculty", "department", "year"],
                 limit: 1e6,
             }).unwrap();
-            setWeeks(result.data || []);
+
+            const fetchedWeeks = result.data || [];
+            const currentWeekIndex = fetchedWeeks.findIndex(isCurrentWeek);
+
+            if (currentWeekIndex > 0) {
+                const [currentWeek] = fetchedWeeks.splice(currentWeekIndex, 1);
+                fetchedWeeks.unshift(currentWeek);
+            }
+
+            setWeeks(fetchedWeeks);
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -247,6 +269,9 @@ export function WeeksPage() {
                             badge={
                                 `${week.department?.code || week.department?.name || ""} ${week.year?.year || ""}`.trim() ||
                                 "Week"
+                            }
+                            secondaryBadge={
+                                isCurrentWeek(week) ? "Current" : undefined
                             }
                             items={[
                                 {

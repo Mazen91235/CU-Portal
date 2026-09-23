@@ -94,22 +94,23 @@
     height: 30px;
 }
 
-@media (max-width: 768px) {
-    .card {
-        width: 95%;
-        padding: 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .inputGroup {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.card {
+    width: 95%;
+    padding: 1rem;
+}
 
-    .buttonGroup {
-        width: 100%;
-    }
+.inputGroup {
+    flex-direction: column;
+    align-items: flex-start;
+}
 
-    .googleButton {
-        width: 100%;
-    }
+.buttonGroup {
+    width: 100%;
+}
+
+.googleButton {
+    width: 100%;
+}
 }

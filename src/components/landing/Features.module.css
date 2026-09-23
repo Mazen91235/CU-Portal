@@ -112,48 +112,49 @@
 }
 
 @media (max-width: 1024px) {
-    .features {
-        padding: 1.2rem 0;
-    }
 
-    .toolkitCard {
-        width: 90vw;
-        max-width: 98vw;
-        padding: 1rem 0.5rem;
-        box-sizing: border-box;
-    }
+.features {
+    padding: 1.2rem 0;
+}
 
-    .toolkitTitle {
-        font-size: 42px;
-        margin-bottom: 1.2rem;
-    }
+.toolkitCard {
+    width: 90vw;
+    max-width: 98vw;
+    padding: 1rem 0.5rem;
+    box-sizing: border-box;
+}
 
-    .miniFeaturesGrid {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-right: 20px;
-        width: 100%;
-    }
+.toolkitTitle {
+    font-size: 42px;
+    margin-bottom: 1.2rem;
+}
 
-    .miniFeaturePair {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
+.miniFeaturesGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 20px;
+    width: 100%;
+}
 
-    .featureIconCircle {
-        margin-left: 10px;
-        margin-right: 5px;
-    }
+.miniFeaturePair {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
 
-    .miniFeatureCard {
-        width: 100%;
-        max-width: calc(100vw - 70px);
-        min-width: 0;
-        box-sizing: border-box;
-        font-size: 15px;
-    }
+.featureIconCircle {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.miniFeatureCard {
+    width: 100%;
+    max-width: calc(100vw - 70px);
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 15px;
+}
 }

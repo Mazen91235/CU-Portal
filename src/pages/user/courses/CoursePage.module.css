@@ -90,25 +90,26 @@
     background-color: var(--primary-purple-hover);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .statsRow {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
 
-    .quickLinksGrid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-        min-width: 0;
-    }
+.statsRow {
+    grid-template-columns: 1fr;
+}
 
-    .quickCard {
-        width: 100%;
-        max-width: none;
-        min-width: 0;
-    }
+.quickLinksGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-width: 0;
+}
+
+.quickCard {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
 }

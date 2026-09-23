@@ -78,15 +78,18 @@
     background: #4b0f51;
 }
 
-@media (max-width: 768px) {
-    .card {
-        align-items: flex-start;
-        padding: 0.9rem;
-    }
-    .titleRow {
-        flex-wrap: wrap;
-    }
-    .viewButton {
-        margin-top: 0.2rem;
-    }
+@media (max-width: 1024px) {
+
+.card {
+    align-items: flex-start;
+    padding: 0.9rem;
+}
+
+.titleRow {
+    flex-wrap: wrap;
+}
+
+.viewButton {
+    margin-top: 0.2rem;
+}
 }

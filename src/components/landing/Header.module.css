@@ -230,23 +230,30 @@
 }
 
 @media (max-width: 1024px) {
-    .mainHeader {
-        padding: 0.7rem 1rem;
-    }
 
-    .headerCenter {
-        display: none;
-    }
+.mainHeader {
+    padding: 0.7rem 1rem;
+}
 
-    .headerRight .loginBtn,
-    .headerRight .signupBtn,
-    .headerRight .dashboardBtn {
-        display: none;
-    }
+.headerCenter {
+    display: none;
+}
 
-    .mobileMenuToggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+.headerRight .loginBtn {
+    display: none;
+}
+
+.headerRight .signupBtn {
+    display: none;
+}
+
+.headerRight .dashboardBtn {
+    display: none;
+}
+
+.mobileMenuToggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 }

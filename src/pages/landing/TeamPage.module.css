@@ -275,46 +275,29 @@
     box-shadow: var(--dark-box-shadow, 0 4px 8px rgba(0, 0, 0, 0.08));
 }
 
-@media (max-width: 1280px) {
-    .container {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-    .teamMembers {
-        gap: 20px;
-    }
-}
-
 @media (max-width: 1024px) {
-    .container {
-        padding: 2.5rem 1.25rem;
-    }
 
-    .teamMembers {
-        grid-template-columns: repeat(2, minmax(250px, 300px));
-        justify-content: center;
-    }
+.container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding: 2rem 1rem;
+    gap: 3.5rem;
 }
 
-@media (max-width: 700px) {
-    .container {
-        padding: 2rem 1rem;
-        gap: 3.5rem;
-    }
+.teamMembers {
+    gap: 20px;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    max-width: 100%;
+    margin: 0 auto;
+}
 
-    .teamMembers {
-        grid-template-columns: minmax(0, 300px);
-        max-width: 300px;
-        margin: 0 auto;
-    }
+.roleCategoryTitle {
+    font-size: 28px;
+    margin-bottom: 2.25rem;
+}
 
-    .roleCategoryTitle {
-        font-size: 28px;
-        margin-bottom: 2.25rem;
-    }
-
-    .teamCardContent {
-        padding: 16px;
-    }
+.teamCardContent {
+    padding: 16px;
+}
 }

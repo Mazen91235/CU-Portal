@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { messaging, requestFcmToken } from "../utils/firebaseManager";
+import { messaging, requestFcmToken } from "../utils/FirebaseManager";
 import { onMessage } from "firebase/messaging";
 import {
     useRegisterDeviceMutation,

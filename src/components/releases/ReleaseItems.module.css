@@ -126,23 +126,31 @@
   font-size: 12px;
 }
 
-@media (max-width: 600px) {
-  .header,
-  .itemRow {
+@media (max-width: 1024px) {
+
+.header {
     align-items: stretch;
     flex-direction: column;
-  }
+}
 
-  .addItemButton {
+.itemRow {
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.addItemButton {
     align-self: flex-start;
-  }
+}
 
-  .contentInput,
-  .typeSelect {
+.contentInput {
     width: 100%;
-  }
+}
 
-  .removeItemButton {
+.typeSelect {
+    width: 100%;
+}
+
+.removeItemButton {
     align-self: center;
-  }
+}
 }

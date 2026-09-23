@@ -158,22 +158,21 @@
     background: #f4f4f6;
 }
 
-@media (max-width: 600px) {
-    .card {
-        padding: 0.9rem;
-    }
+@media (max-width: 1024px) {
 
-    .content {
-        padding-right: 0;
-    }
+.card {
+    padding: 0.9rem;
 }
 
-@media (max-width: 768px) {
-    .footer {
-        flex-wrap: wrap;
-    }
+.content {
+    padding-right: 0;
+}
 
-    .viewButton {
-        width: 100%;
-    }
+.footer {
+    flex-wrap: wrap;
+}
+
+.viewButton {
+    width: 100%;
+}
 }

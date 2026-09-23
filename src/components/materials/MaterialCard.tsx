@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatString } from "../../utils/Formatter";
 import type { MaterialResponseDto } from "../../types/dtos/MaterialDtos";
 import { getFileIcon } from "../../utils/MaterialHelpers";
 import { formatTimeAgo } from "../../utils/Formatter";
 import { MaterialActionsDropdown } from "./MaterialActionsDropdown";
 import styles from "./MaterialCard.module.css";
+import { isMobile } from "../../utils/DeviceHandler";
 
 type MaterialCardProps = {
   material: MaterialResponseDto;
@@ -12,6 +13,7 @@ type MaterialCardProps = {
   isSelectionMode?: boolean;
   onClick: (materialId: number) => void;
   onDoubleClick: (materialId: number) => void;
+  onHold?: (materialId: number) => void;
   onDragStart: (materialId: number) => void;
   onDrop?: (targetId: number | null) => void;
   onEdit?: (materialId: number) => void;
@@ -44,6 +46,7 @@ export const MaterialCard = ({
   isSelectionMode = false,
   onClick,
   onDoubleClick,
+  onHold,
   onDragStart,
   onEdit,
   onDelete,
@@ -66,6 +69,10 @@ export const MaterialCard = ({
 }: MaterialCardProps) => {
   const [clickCount, setClickCount] = useState(0);
   const clickTimeoutRef = useRef<number | null>(null);
+  const holdTimeoutRef = useRef<number | null>(null);
+  const touchStartPositionRef = useRef({ x: 0, y: 0 });
+  const didHoldRef = useRef(false);
+  const touchMovedRef = useRef(false);
   const initialPositionRef = useRef({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -73,10 +80,79 @@ export const MaterialCard = ({
   const isFolder = material.material_type?.toLowerCase() === "folder";
   const isFile = material.material_type?.toLowerCase() === "file";
 
+  const isInteractiveTarget = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return Boolean(
+      target.closest(".dropdown") ||
+          target.closest(`.${styles.fileActionBtn}`),
+    );
+  };
+
+  const clearHoldTimeout = () => {
+    if (holdTimeoutRef.current !== null) {
+      window.clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile() || e.touches.length !== 1 || isInteractiveTarget(e.target)) {
+      return;
+    }
+
+    const touch = e.touches[0];
+    touchStartPositionRef.current = { x: touch.clientX, y: touch.clientY };
+    didHoldRef.current = false;
+    touchMovedRef.current = false;
+    clearHoldTimeout();
+
+    holdTimeoutRef.current = window.setTimeout(() => {
+      if (material.id) {
+        didHoldRef.current = true;
+        onHold?.(material.id);
+      }
+    }, 400);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isMobile() || e.touches.length !== 1 || didHoldRef.current) return;
+
+    const touch = e.touches[0];
+    const moveX = Math.abs(touch.clientX - touchStartPositionRef.current.x);
+    const moveY = Math.abs(touch.clientY - touchStartPositionRef.current.y);
+
+    if (moveX > 10 || moveY > 10) {
+      touchMovedRef.current = true;
+      clearHoldTimeout();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile()) return;
+
+    const wasHeld = didHoldRef.current;
+    const wasMoved = touchMovedRef.current;
+    clearHoldTimeout();
+    didHoldRef.current = false;
+    touchMovedRef.current = false;
+
+    if (wasHeld || wasMoved) return;
+    if (material.id) onClick(material.id);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (isMobile()) e.preventDefault();
+  };
+
+  useEffect(() => () => {
+    if (holdTimeoutRef.current !== null) {
+      window.clearTimeout(holdTimeoutRef.current);
+    }
+  }, []);
+
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest(".dropdown")) return;
-    if ((e.target as HTMLElement).closest(`.${styles.fileActionBtn}`)) return;
+    if (isMobile() || e.button !== 0) return;
+    if (isInteractiveTarget(e.target)) return;
 
     initialPositionRef.current = { x: e.clientX, y: e.clientY };
     setIsDragging(false);
@@ -202,6 +278,10 @@ export const MaterialCard = ({
         className={`${styles.folderCard} ${isSelectionMode ? styles.selectionMode : ""} ${isSelected ? styles.selected : ""} ${isDragOver ? styles.dragOver : ""} ${className}`}
         data-id={material.id}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onContextMenu={handleContextMenu}
         onMouseEnter={() => {
           if (isDraggingGlobal) {
             setIsDragOver(true);
@@ -416,6 +496,10 @@ export const MaterialCard = ({
       className={`${styles.fileCard} ${isSelectionMode ? styles.selectionMode : ""} ${isSelected ? styles.selected : ""} ${className}`}
       data-id={material.id}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onContextMenu={handleContextMenu}
     >
       {isSelected && (
         <span className={styles.materialSelectedIcon}>

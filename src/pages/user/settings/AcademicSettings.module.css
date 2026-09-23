@@ -66,22 +66,23 @@
     height: 44px;
 }
 
-@media (max-width: 768px) {
-    .card {
-        width: 95%;
-        padding: 1.5rem;
-    }
+@media (max-width: 1024px) {
 
-    .formGrid {
-        grid-template-columns: 1fr;
-    }
+.card {
+    width: 95%;
+    padding: 1.5rem;
+}
 
-    .buttonContainer button {
-        width: 100%;
-    }
+.formGrid {
+    grid-template-columns: 1fr;
+}
 
-    .selectGroup {
-        flex-direction: column;
-        gap: 20px;
-    }
+.buttonContainer button {
+    width: 100%;
+}
+
+.selectGroup {
+    flex-direction: column;
+    gap: 20px;
+}
 }

@@ -24,17 +24,12 @@
     -moz-appearance: none;
 }
 
-@supports (appearance: base-select) {
-    @media (hover: hover) {
+@media (hover: hover) {
+    @supports (appearance: base-select) {
         .input-group select,
         .input-group select::picker(select) {
             appearance: base-select;
         }
-    }
-}
-
-@media (hover: hover) {
-    @supports (appearance: base-select) {
         .input-group select {
             padding: 10px 20px 10px 10px;
             background-image: none;

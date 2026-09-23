@@ -128,55 +128,53 @@
     background: #d97706;
 }
 
-@media (max-width: 1280px) {
-    .contactFormSection {
-        margin-top: 2rem;
-        min-height: 400px;
-        margin-bottom: 2rem;
-    }
+@media (max-width: 1024px) {
 
-    .contactFormCard {
-        width: 98vw;
-        max-width: 600px;
-        padding: 24px 8px;
-        gap: 20px;
-    }
-
-    .formLabel,
-    .formInput,
-    .formTextarea {
-        width: 90%;
-        max-width: 400px;
-        font-size: 20px;
-    }
-
-    .formSubmitBtn {
-        width: 100%;
-        height: 44px;
-        font-size: 18px;
-        padding: 0 16px;
-    }
+.contactFormSection {
+    margin-top: 2rem;
+    min-height: 400px;
+    margin-bottom: 2rem;
 }
 
-@media (max-width: 1024px) {
-    .formDecorTop {
-        display: none;
-    }
+.contactFormCard {
+    width: 98vw;
+    max-width: 600px;
+    padding: 24px 8px;
+    gap: 20px;
+}
 
-    .formLabel {
-        width: 100%;
-        text-align: left;
-        font-size: 24px;
-        margin-left: 0;
-        margin-bottom: 0.2rem;
-        padding-left: 10px;
-    }
+.formLabel {
+    max-width: 400px;
+    width: 100%;
+    text-align: left;
+    font-size: 24px;
+    margin-left: 0;
+    margin-bottom: 0.2rem;
+    padding-left: 10px;
+}
 
-    .formInput,
-    .formTextarea {
-        width: 100%;
-        max-width: 100%;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
+.formInput {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.formTextarea {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.formSubmitBtn {
+    width: 100%;
+    height: 44px;
+    font-size: 18px;
+    padding: 0 16px;
+}
+
+.formDecorTop {
+    display: none;
+}
 }

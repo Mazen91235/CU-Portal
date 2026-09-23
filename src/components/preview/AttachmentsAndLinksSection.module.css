@@ -177,34 +177,47 @@
     opacity: 0.9;
 }
 
-@media (max-width: 768px) {
-    .fileRow,
-    .linkRow {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
+@media (max-width: 1024px) {
 
-    .fileInfo,
-    .linkInfo {
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-    }
+.fileRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
 
-    .fileActions {
-        width: 100%;
-        justify-content: center;
-        /* flex-wrap: wrap; */
-    }
+.linkRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
 
-    .previewButton,
-    .downloadButton,
-    .openLinkBtn {
-        max-width: 100%;
-    }
+.fileInfo {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
 
-    .openLinkBtn {
-        align-self: center;
-    }
+.linkInfo {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.fileActions {
+    width: 100%;
+    justify-content: center;
+}
+
+.previewButton {
+    max-width: 100%;
+}
+
+.downloadButton {
+    max-width: 100%;
+}
+
+.openLinkBtn {
+    max-width: 100%;
+    align-self: center;
+}
 }

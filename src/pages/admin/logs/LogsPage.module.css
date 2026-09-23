@@ -66,22 +66,17 @@
     font-weight: 500;
 }
 
-@media (max-width: 900px) {
-    .filtersRow {
-        grid-template-columns: repeat(2, minmax(160px, 1fr));
-    }
+@media (max-width: 1024px) {
+
+.filtersRow {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-@media (max-width: 600px) {
-    .filtersSection {
-        margin: 1rem;
-    }
+.filtersSection {
+    margin: 1rem;
+}
 
-    .tableSection {
-        padding: 1rem;
-    }
-
-    .filtersRow {
-        grid-template-columns: 1fr;
-    }
+.tableSection {
+    padding: 1rem;
+}
 }

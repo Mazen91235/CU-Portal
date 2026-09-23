@@ -28,6 +28,7 @@ import { Banner } from "../../../components/banner/Banner";
 import styles from "./MaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
+import { isMobile } from "../../../utils/DeviceHandler";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
@@ -192,6 +193,10 @@ export function MaterialsPage() {
         handleDownloadMaterial,
     ]);
 
+    const handleOpenLink = useCallback((url: string) => {
+        window.open(url, "_blank");
+    }, []);
+
     const handleCardClick = useCallback(
         (material: MaterialResponseDto) => {
             if (!material.id) return;
@@ -201,9 +206,26 @@ export function MaterialsPage() {
                         ? prev.filter((id) => id !== material.id)
                         : [...prev, material.id!],
                 );
-            } else {
+                return;
+            }
+            if (isMobile()) {
+                if (material.material_type === "folder") {
+                    handleNavigate(material);
+                }
+                return;
+            }
+
+            setIsSelectionMode(true);
+            setSelectedMaterials([material.id]);
+        },
+        [isSelectionMode, handleNavigate],
+    );
+
+    const handleCardHold = useCallback(
+        (materialId: number) => {
+            if (isMobile() && !isSelectionMode) {
                 setIsSelectionMode(true);
-                setSelectedMaterials([material.id]);
+                setSelectedMaterials([materialId]);
             }
         },
         [isSelectionMode],
@@ -211,7 +233,9 @@ export function MaterialsPage() {
 
     const handleCardDoubleClick = useCallback(
         (material: MaterialResponseDto) => {
-            if (material.material_type === "folder") handleNavigate(material);
+            if (!isMobile() && material.material_type === "folder") {
+                handleNavigate(material);
+            }
         },
         [handleNavigate],
     );
@@ -227,10 +251,6 @@ export function MaterialsPage() {
         setSelectedMaterials([]);
         setIsSelectionMode(false);
     }, []);
-
-    const handleOpenLink = (url: string) => {
-        window.open(url, "_blank");
-    };
 
     const handleShareMaterials = (
         materialId?: number,
@@ -365,6 +385,9 @@ export function MaterialsPage() {
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(folder)
                                             }
+                                            onHold={() =>
+                                                handleCardHold(folderId)
+                                            }
                                             onDragStart={() => {}}
                                             onShare={() => {
                                                 handleShareMaterials(
@@ -399,6 +422,9 @@ export function MaterialsPage() {
                                             }
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(file)
+                                            }
+                                            onHold={() =>
+                                                handleCardHold(fileId)
                                             }
                                             onDragStart={() => {}}
                                             onShare={() => {

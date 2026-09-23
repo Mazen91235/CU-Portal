@@ -240,17 +240,18 @@
     font-size: 1.5rem;
 }
 
-@media (max-width: 768px) {
-    .card {
-        padding: 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .title {
-        font-size: 1.1rem;
-    }
+.card {
+    padding: 1rem;
+}
 
-    .item {
-        font-size: 0.9rem;
-        padding: 0.5rem 0.6rem;
-    }
+.title {
+    font-size: 1.1rem;
+}
+
+.item {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.6rem;
+}
 }

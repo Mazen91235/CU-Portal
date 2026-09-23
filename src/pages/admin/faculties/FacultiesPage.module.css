@@ -34,13 +34,14 @@
     font-family: var(--primary-font-family);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 0 16px;
-    }
+@media (max-width: 1024px) {
 
-    .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
+.container {
+    padding: 0 16px;
+}
+
+.cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
 }

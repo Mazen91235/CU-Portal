@@ -23,8 +23,9 @@
     margin-left: 0;
 }
 
-@media (max-width: 768px) {
-    .mainContent {
-        margin-left: 0 !important;
-    }
+@media (max-width: 1024px) {
+
+.mainContent {
+    margin-left: 0 !important;
+}
 }

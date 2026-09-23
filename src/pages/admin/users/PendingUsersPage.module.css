@@ -278,80 +278,84 @@
 }
 
 /* Responsive Styles */
-@media (max-width: 1340px) {
-    .filtersRow {
-        flex-direction: column;
-        align-items: stretch;
-    }
 
-    .filterSearch {
-        width: 100%;
-    }
+@media (max-width: 1024px) {
 
-    .filtersGroup {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .filterItem {
-        width: 100%;
-        min-width: 0;
-    }
+.filtersRow {
+    flex-direction: column;
+    align-items: stretch;
 }
 
-@media (max-width: 760px) {
-    .pendingMiniCard {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 1rem;
-    }
+.filterSearch {
+    width: 100%;
+}
 
-    .pendingMiniAvatar {
-        margin-right: 0;
-        margin-bottom: 1rem;
-        align-self: center;
-    }
+.filtersGroup {
+    flex-direction: column;
+    width: 100%;
+}
 
-    .pendingMiniEmailPhone {
-        gap: 0.5rem;
-        flex-direction: column;
-    }
+.filterItem {
+    width: 100%;
+    min-width: 0;
+}
 
-    .pendingMiniBadges {
-        flex-direction: column;
-    }
+.pendingMiniCard {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+}
 
-    .pendingMiniIdRow {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-    }
+.pendingMiniAvatar {
+    margin-right: 0;
+    margin-bottom: 1rem;
+    align-self: center;
+}
 
-    .pendingMiniIdBtn {
-        width: 100%;
-        max-width: none;
-        min-width: 0;
-    }
+.pendingMiniEmailPhone {
+    gap: 0.5rem;
+    flex-direction: column;
+}
 
-    .pendingMiniActionsRow {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-    }
+.pendingMiniBadges {
+    flex-direction: column;
+}
 
-    .approveBtn,
-    .rejectBtn {
-        width: 100%;
-        font-size: 1rem;
-    }
+.pendingMiniIdRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+}
 
-    .pendingHeader {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-    }
+.pendingMiniIdBtn {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
 
-    .pendingHeaderActions {
-        flex-direction: column;
-    }
+.pendingMiniActionsRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+.approveBtn {
+    width: 100%;
+    font-size: 1rem;
+}
+
+.rejectBtn {
+    width: 100%;
+    font-size: 1rem;
+}
+
+.pendingHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+.pendingHeaderActions {
+    flex-direction: column;
+}
 }

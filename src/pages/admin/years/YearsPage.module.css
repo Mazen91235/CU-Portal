@@ -37,22 +37,23 @@
     font-family: var(--primary-font-family);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 0 16px;
-    }
+@media (max-width: 1024px) {
 
-    .filter-section {
-        justify-content: stretch;
-        padding: 0;
-    }
+.container {
+    padding: 0 16px;
+}
 
-    .filter-section > * {
-        min-width: 100%;
-    }
+.filter-section {
+    justify-content: stretch;
+    padding: 0;
+}
 
-    .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
+.filter-section > * {
+    min-width: 100%;
+}
+
+.cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
 }

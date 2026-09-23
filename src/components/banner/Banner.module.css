@@ -64,29 +64,30 @@
   background: var(--light-grey);
 }
 
-@media (max-width: 768px) {
-  .banner {
+@media (max-width: 1024px) {
+
+.banner {
     margin: 56px 16px 16px 16px;
     padding: 24px 20px;
     min-height: auto;
-  }
+}
 
-  .title {
+.title {
     font-size: 24px;
     letter-spacing: 0.72px;
-  }
+}
 
-  .description {
+.description {
     font-size: 16px;
-  }
+}
 
-  .button {
+.button {
     width: 100%;
     min-width: 100%;
-  }
+}
 
-  .actions {
+.actions {
     width: 100%;
     flex-direction: column;
-  }
+}
 }

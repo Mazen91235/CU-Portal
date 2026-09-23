@@ -259,67 +259,9 @@
     display: none;
 }
 
-@media (max-width: 500px) {
-    .roleNameWarning {
-        font-size: 13px;
-    }
 
-    .roleDescription {
-        font-size: 13px;
-    }
 
-    .roleName {
-        font-size: 18px;
-    }
 
-    .permissionsTitle {
-        font-size: 20px;
-    }
-
-    .initPermTitle {
-        font-size: 18px;
-    }
-
-    .saveButton,
-    .editButton {
-        padding: 8px;
-        font-size: 14px;
-    }
-
-    .headerTitle {
-        font-size: 20px;
-    }
-
-    .headerSubtitle {
-        font-size: 10px;
-        font-weight: 100;
-    }
-
-    .permissionCard {
-        width: 150px;
-        height: 60px;
-        font-size: 10px;
-    }
-
-    .permissionsGrid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-
-    .roleUsersTitle {
-        font-size: 20px;
-    }
-
-    .roleUsersSubtitle {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 1025px) {
-    .headerSubtitle {
-        font-size: var(--primary-font-size);
-        font-weight: 100;
-    }
-}
 
 
 .permissionsFieldset {
@@ -332,4 +274,64 @@
 .saveButton:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+
+.roleNameWarning {
+    font-size: 13px;
+}
+
+.roleDescription {
+    font-size: 13px;
+}
+
+.roleName {
+    font-size: 18px;
+}
+
+.permissionsTitle {
+    font-size: 20px;
+}
+
+.initPermTitle {
+    font-size: 18px;
+}
+
+.saveButton {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.editButton {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.headerTitle {
+    font-size: 20px;
+}
+
+.headerSubtitle {
+    font-size: var(--primary-font-size);
+    font-weight: 100;
+}
+
+.permissionCard {
+    width: 150px;
+    height: 60px;
+    font-size: 10px;
+}
+
+.permissionsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.roleUsersTitle {
+    font-size: 20px;
+}
+
+.roleUsersSubtitle {
+    font-size: 14px;
+}
 }

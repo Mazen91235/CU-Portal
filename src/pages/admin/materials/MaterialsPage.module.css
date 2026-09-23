@@ -141,57 +141,9 @@
     text-align: center;
 }
 
-@media (max-width: 992px) {
-    .explorerTitle {
-        font-size: 28px;
-    }
 
-    .explorerSubtitle {
-        font-size: 14px;
-    }
 
-    .searchActionsSection {
-        flex-direction: column;
-        align-items: stretch;
-    }
 
-    .searchContainer {
-        width: 100%;
-    }
-
-    .actionsContainer {
-        width: 100%;
-        justify-content: stretch;
-        flex-direction: column;
-    }
-
-    .actionButton {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .contentGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .filtersSection {
-        flex-direction: column;
-    }
-
-    .filterDropdown {
-        width: 100%;
-    }
-}
-
-@media (max-width: 600px) {
-    .filterPageTitle {
-        font-size: 1.5rem;
-    }
-
-    .filterPageSubtitle {
-        font-size: 1rem;
-    }
-}
 
 .draggedFilesIcon {
     position: fixed;
@@ -222,4 +174,55 @@
     align-items: center;
     font-size: 10px;
     font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+
+.explorerTitle {
+    font-size: 28px;
+}
+
+.explorerSubtitle {
+    font-size: 14px;
+}
+
+.searchActionsSection {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.searchContainer {
+    width: 100%;
+}
+
+.actionsContainer {
+    width: 100%;
+    justify-content: stretch;
+    flex-direction: column;
+}
+
+.actionButton {
+    flex: 1;
+    min-width: 0;
+}
+
+.contentGrid {
+    grid-template-columns: 1fr;
+}
+
+.filtersSection {
+    flex-direction: column;
+}
+
+.filterDropdown {
+    width: 100%;
+}
+
+.filterPageTitle {
+    font-size: 1.5rem;
+}
+
+.filterPageSubtitle {
+    font-size: 1rem;
+}
 }

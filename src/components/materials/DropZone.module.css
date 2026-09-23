@@ -76,24 +76,25 @@
     user-select: none;
 }
 
-@media (max-width: 768px) {
-    .dropBox {
-        width: 90%;
-        max-width: 400px;
-        height: 300px;
-    }
+@media (max-width: 1024px) {
 
-    .plusButton {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
-    }
+.dropBox {
+    width: 90%;
+    max-width: 400px;
+    height: 300px;
+}
 
-    .mainText {
-        font-size: 18px;
-    }
+.plusButton {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+}
 
-    .subText {
-        font-size: 12px;
-    }
+.mainText {
+    font-size: 18px;
+}
+
+.subText {
+    font-size: 12px;
+}
 }

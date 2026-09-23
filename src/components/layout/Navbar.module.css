@@ -203,22 +203,23 @@
   object-fit: cover;
 }
 
-@media (max-width: 1000px) {
-  .searchContainer {
+@media (max-width: 1024px) {
+
+.searchContainer {
     display: none;
-  }
+}
 
-    .iconButton svg {
-        width: 20px;
-        height: 20px;
-    }
+.iconButton svg {
+    width: 20px;
+    height: 20px;
+}
 
-  .profileImg {
+.profileImg {
     width: 35px;
     height: 35px;
-  }
+}
 
-  .notificationsDropdown {
+.notificationsDropdown {
     right: -60px;
-  }
+}
 }

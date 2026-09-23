@@ -62,21 +62,16 @@
 }
 
 @media (max-width: 1024px) {
-    .statsRow {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
-    .contentGrid {
-        grid-template-columns: 1fr;
-    }
+.statsRow {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
+.contentGrid {
+    grid-template-columns: 1fr;
+}
 
-    .statsRow {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1rem;
+}
 }

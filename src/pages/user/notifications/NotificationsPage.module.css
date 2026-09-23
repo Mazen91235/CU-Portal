@@ -91,41 +91,42 @@
     font-size: 16px;
 }
 
-@media (max-width: 768px) {
-    .notificationsContainer {
-        margin: 72px 12px 24px 12px;
-        padding: 24px 16px 12px 16px;
-    }
+@media (max-width: 1024px) {
 
-    .headerSection {
-        flex-direction: column;
-        align-items: stretch;
-    }
+.notificationsContainer {
+    margin: 72px 12px 24px 12px;
+    padding: 24px 16px 12px 16px;
+}
 
-    .pageTitle {
-        font-size: 24px;
-        letter-spacing: 1.2px;
-    }
+.headerSection {
+    flex-direction: column;
+    align-items: stretch;
+}
 
-    .unreadCount {
-        font-size: 18px;
-    }
+.pageTitle {
+    font-size: 24px;
+    letter-spacing: 1.2px;
+}
 
-    .headerActions {
-        justify-content: flex-end;
-    }
+.unreadCount {
+    font-size: 18px;
+}
 
-    .markAllReadBtn {
-        width: auto;
-        padding: 10px 16px;
-    }
+.headerActions {
+    justify-content: flex-end;
+}
 
-    .notificationsSection {
-        margin: 24px 0 0 0;
-    }
+.markAllReadBtn {
+    width: auto;
+    padding: 10px 16px;
+}
 
-    .sectionTitle {
-        font-size: 18px;
-        padding-left: 10px;
-    }
+.notificationsSection {
+    margin: 24px 0 0 0;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    padding-left: 10px;
+}
 }

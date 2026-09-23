@@ -40,6 +40,7 @@ import folderEmptyIcon from "../../../assets/icons/folder-empty.jpg";
 
 import styles from "./OtherMaterialsPage.module.css";
 import { showToast } from "../../../utils/ToastsManager";
+import { isMobile } from "../../../utils/DeviceHandler";
 import { setProcess } from "../../../services/redux/reducers/ProcessReducer";
 import { useCreateProcess } from "../../../hooks/useHandleProcesses";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
@@ -203,6 +204,8 @@ export function OtherMaterialsPage() {
     const handleNavigate = useCallback(
         (material: MaterialResponseDto | null) => {
             navigate(buildMaterialsPath(subjectFilter, material?.id ?? null));
+            setSelectedMaterials([]);
+            setIsSelectionMode(false);
         },
         [buildMaterialsPath, navigate, subjectFilter],
     );
@@ -242,20 +245,37 @@ export function OtherMaterialsPage() {
     }, [loadCurrentPath, currentParentId, subjectFilter]);
 
     const handleCardClick = (materialId: number) => {
+        const material = materials.find((item) => item.id === materialId);
+        if (!material) return;
+
         if (isSelectionMode) {
             setSelectedMaterials((prev) =>
                 prev.includes(materialId)
                     ? prev.filter((id) => id !== materialId)
                     : [...prev, materialId],
             );
-        } else {
+            return;
+        }
+        if (isMobile()) {
+            if (material.material_type === "folder") {
+                handleNavigate(material);
+            }
+            return;
+        }
+
+        setIsSelectionMode(true);
+        setSelectedMaterials([materialId]);
+    };
+
+    const handleCardHold = (materialId: number) => {
+        if (isMobile() && !isSelectionMode) {
             setIsSelectionMode(true);
             setSelectedMaterials([materialId]);
         }
     };
 
     const handleCardDoubleClick = (material: MaterialResponseDto) => {
-        if (material.material_type === "folder") {
+        if (!isMobile() && material.material_type === "folder") {
             handleNavigate(material);
         }
     };
@@ -272,9 +292,9 @@ export function OtherMaterialsPage() {
         downloadFile(fileId);
     };
 
-    const handleOpenLink = (url: string) => {
+    const handleOpenLink = useCallback((url: string) => {
         window.open(url, "_blank");
-    };
+    }, []);
 
     const handleShareMaterials = (
         materialId?: number,
@@ -543,6 +563,9 @@ export function OtherMaterialsPage() {
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(folder)
                                             }
+                                            onHold={() =>
+                                                handleCardHold(folderId)
+                                            }
                                             onDragStart={() => {}}
                                             onCopy={() =>
                                                 handleCopyMaterials(folderId)
@@ -577,6 +600,9 @@ export function OtherMaterialsPage() {
                                             onClick={handleCardClick}
                                             onDoubleClick={() =>
                                                 handleCardDoubleClick(file)
+                                            }
+                                            onHold={() =>
+                                                handleCardHold(fileId)
                                             }
                                             onDragStart={() => {}}
                                             onCopy={() =>

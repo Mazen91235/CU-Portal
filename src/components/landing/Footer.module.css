@@ -64,26 +64,27 @@
     opacity: 0.8;
 }
 
-@media (max-width: 768px) {
-    .footerBranding {
-        font-size: 24px;
-    }
+@media (max-width: 1024px) {
 
-    .footerLinks {
-        gap: 1rem;
-        padding: 0 1rem 20px 1rem;
-    }
+.footerBranding {
+    font-size: 24px;
+}
 
-    .footerLink {
-        font-size: 16px;
-    }
+.footerLinks {
+    gap: 1rem;
+    padding: 0 1rem 20px 1rem;
+}
 
-    .footerSecondaryLinks {
-        gap: 1rem;
-        padding: 0 1rem 20px 1rem;
-    }
+.footerLink {
+    font-size: 16px;
+}
 
-    .footerSecondaryLink {
-        font-size: 14px;
-    }
+.footerSecondaryLinks {
+    gap: 1rem;
+    padding: 0 1rem 20px 1rem;
+}
+
+.footerSecondaryLink {
+    font-size: 14px;
+}
 }

@@ -37,21 +37,22 @@
     margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
-    .empty-section {
-        padding: 1.5rem;
-    }
+@media (max-width: 1024px) {
 
-    .icon {
-        width: 120px;
-        height: 120px;
-    }
+.empty-section {
+    padding: 1.5rem;
+}
 
-    .title {
-        font-size: 1.1rem;
-    }
+.icon {
+    width: 120px;
+    height: 120px;
+}
 
-    .description {
-        font-size: 0.9rem;
-    }
+.title {
+    font-size: 1.1rem;
+}
+
+.description {
+    font-size: 0.9rem;
+}
 }

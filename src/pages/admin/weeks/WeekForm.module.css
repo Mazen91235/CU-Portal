@@ -22,14 +22,17 @@
     border-top: 1px solid var(--light-grey);
 }
 
-@media (max-width: 768px) {
-    .container {
-        margin: 1rem auto;
-    }
-    .formCard {
-        padding: 1.5rem;
-    }
-    .formActions {
-        flex-direction: column-reverse;
-    }
+@media (max-width: 1024px) {
+
+.container {
+    margin: 1rem auto;
+}
+
+.formCard {
+    padding: 1.5rem;
+}
+
+.formActions {
+    flex-direction: column-reverse;
+}
 }

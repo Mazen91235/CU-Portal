@@ -119,13 +119,14 @@
     box-shadow: var(--light-box-shadow);
 }
 
-@media (max-width: 768px) {
-    .wrapper {
-        right: 1rem;
-        bottom: 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .menu {
-        padding: 0.55rem;
-    }
+.wrapper {
+    right: 1rem;
+    bottom: 1rem;
+}
+
+.menu {
+    padding: 0.55rem;
+}
 }

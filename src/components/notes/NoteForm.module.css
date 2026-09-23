@@ -3,8 +3,9 @@
     min-width: 0;
 }
 
-@media (max-width: 768px) {
-    .note-modal {
-        width: calc(100vw - 2rem);
-    }
+@media (max-width: 1024px) {
+
+.note-modal {
+    width: calc(100vw - 2rem);
+}
 }

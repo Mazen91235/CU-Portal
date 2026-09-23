@@ -21,13 +21,17 @@
     margin-bottom: 2rem;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
+@media (max-width: 1024px) {
 
-    .filtersRow,
-    .weeksGrid {
-        grid-template-columns: 1fr;
-    }
+.container {
+    padding: 1.5rem 1rem;
+}
+
+.filtersRow {
+    grid-template-columns: 1fr;
+}
+
+.weeksGrid {
+    grid-template-columns: 1fr;
+}
 }
