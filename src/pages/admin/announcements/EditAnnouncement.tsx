@@ -43,7 +43,7 @@ import styles from "./EditAnnouncement.module.css";
 const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
-    subject_id: z.string().min(1, "Subject is required"),
+    subject_id: z.string().optional(),
     date_date: z.string().optional(),
     date_time: z.string().optional(),
     files: z.any().optional(),
@@ -55,7 +55,10 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 export const EditAnnouncement = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/announcements");
+    const redirectUrl = getRedirectUrl(
+        searchParams.get("redirect_url"),
+        "/admin/announcements",
+    );
     const { announcementId } = useParams<{ announcementId: string }>();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [existingFiles, setExistingFiles] = useState<FileDataWithExisting[]>(
@@ -170,7 +173,11 @@ export const EditAnnouncement = () => {
             }
         } catch (error) {
             navigate(redirectUrl, {
-                state: { error: getErrorMessage(error) || "Failed to fetch announcement" },
+                state: {
+                    error:
+                        getErrorMessage(error) ||
+                        "Failed to fetch announcement",
+                },
             });
         }
     }, [announcementId, getAnnouncement, setValue, navigate, redirectUrl]);
@@ -215,7 +222,9 @@ export const EditAnnouncement = () => {
                 announcement_id: parseInt(announcementId),
                 title: data.title,
                 content: data.content || "",
-                subject_id: parseInt(data.subject_id),
+                subject_id: data.subject_id
+                    ? parseInt(data.subject_id)
+                    : undefined,
                 date: toIsoFormat(
                     data.date_date
                         ? mergeDateAndTime(

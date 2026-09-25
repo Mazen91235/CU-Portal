@@ -15,9 +15,7 @@ export type LatestReleaseCache = {
 const isReleaseResponse = (value: unknown): value is ReleaseResponseDto =>
     !!value && typeof value === "object";
 
-const isLatestReleaseCache = (
-    value: unknown,
-): value is LatestReleaseCache => {
+const isLatestReleaseCache = (value: unknown): value is LatestReleaseCache => {
     if (!value || typeof value !== "object") return false;
 
     const cache = value as Partial<LatestReleaseCache>;
@@ -90,9 +88,7 @@ export const isReleaseAtLeastAsRecent = (
 const hasEmptyReleaseSearchData = (query?: ReleaseSearchDto | null) => {
     if (!query) return true;
 
-    return Object.values(query).every(
-        (value) => value == null || value === "",
-    );
+    return Object.values(query).every((value) => value == null || value === "");
 };
 
 export const isLatestReleaseQuery = (
@@ -104,7 +100,7 @@ export const isLatestReleaseQuery = (
         hasEmptyReleaseSearchData(query?.data) &&
         query?.descending === true &&
         orderBy?.length === 1 &&
-        orderBy[0] === "date"
+        orderBy[0].includes("date")
     );
 };
 

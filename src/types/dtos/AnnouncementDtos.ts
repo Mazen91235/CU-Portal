@@ -11,7 +11,7 @@ export type AnnouncementCreateDto = {
     title: string;
     content: string;
     date?: string | null;
-    subject_id: number;
+    subject_id?: number | null;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
@@ -38,7 +38,7 @@ export type AnnouncementUpdateDto = {
     title: string;
     content: string;
     date?: string | null;
-    subject_id: number;
+    subject_id?: number | null;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
