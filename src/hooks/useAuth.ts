@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../services/redux/Hooks";
+import { useAppSelector } from "../services/redux/Hooks";
 import {
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
@@ -8,7 +8,6 @@ import {
 } from "../services/apis/AuthenticateAPIs";
 import { GetCookie } from "../utils/CookiesManager";
 import { useLogin } from "./useLogin";
-import { setIsProcessing } from "../services/redux/reducers/UserReducer";
 import { useCheckCrawler } from "./useCheckCrawler";
 
 export default function useAuth({
@@ -21,7 +20,6 @@ export default function useAuth({
     shouldNavigate?: boolean;
 } = {}) {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [logout] = useLazyLogoutQuery();
     const isLoggedIn = useLogin();
     const checkCrawler = useCheckCrawler();
@@ -33,7 +31,6 @@ export default function useAuth({
         (async () => {
             if (checkCrawler()) return;
             if (state?.isProcessing) {
-                dispatch(setIsProcessing(false));
                 navigate(pathname, {
                     state: {
                         ...state,
@@ -90,7 +87,6 @@ export default function useAuth({
         state,
         isProcessing,
         navigate,
-        dispatch,
         logout,
         isLoggedIn,
         checkCrawler,

@@ -1,12 +1,10 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import {
     useLazyGetMaterialsQuery,
     useLazyGetMaterialParentsQuery,
 } from "../../../services/apis/user/MaterialAPIs";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
-import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
@@ -27,6 +25,7 @@ import { Banner } from "../../../components/banner/Banner";
 
 import styles from "./MaterialsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
+import { useAppSelector } from "../../../services/redux/Hooks";
 import { showToast } from "../../../utils/ToastsManager";
 import { isMobile } from "../../../utils/DeviceHandler";
 
@@ -37,7 +36,7 @@ export function MaterialsPage() {
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
-    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const subjects = useAppSelector((state) => state.user.user?.subjects ?? []);
     const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
     const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [previewFile, setPreviewFile] = useState<{
@@ -50,18 +49,9 @@ export function MaterialsPage() {
     const parentFilter = getFilter("parent_id");
     const currentParentId = parentFilter ? Number(parentFilter) : null;
 
-    const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
 
-    const fetchSubjects = useCallback(async () => {
-        try {
-            const result = await getSubjects().unwrap();
-            setSubjects(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getSubjects]);
 
     const fetchMaterials = useCallback(
         async (parentId?: number | null) => {
@@ -129,14 +119,11 @@ export function MaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authFilterQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
-
     const authMaterialsQuery = useCallback(
         () => fetchMaterials(currentParentId),
         [fetchMaterials, currentParentId],
     );
 
-    useAuthQuery(authFilterQuery);
     useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {

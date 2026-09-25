@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../utils/CustomBaseQuery";
+import { timeout } from "../../utils/APIHandling";
 import { SetCookie } from "../../utils/CookiesManager";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
@@ -8,21 +10,13 @@ import type {
     UserTokenDetailsResponseDto,
 } from "../../types/dtos/UserDtos";
 import { GetApiLink } from "../../utils/LinkHandler";
-import { timeout, maxRetries, retryCondition } from "../../utils/APIHandling";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetApiLink("/auth"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetApiLink("/auth"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         logout: builder.query<GenericAPIResponse, void>({
             query: () => ({
@@ -38,6 +32,7 @@ export const AuthenticateAPI = createApi({
                         SetCookie("oauth_state", "", -1);
                         localStorage.removeItem("user");
                         localStorage.removeItem("permissions");
+                        localStorage.removeItem("is-logged-in");
                     }
                 } catch {
                     return;
@@ -50,6 +45,21 @@ export const AuthenticateAPI = createApi({
                 method: "GET",
                 credentials: "include",
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.success) {
+                        localStorage.setItem(
+                            "is-logged-in",
+                            JSON.stringify({
+                                last_fetched: Date.now(),
+                            }),
+                        );
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         getGoogleStoredToken: builder.mutation<
             GenericAPIResponse<string>,

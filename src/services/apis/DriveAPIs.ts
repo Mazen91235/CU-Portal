@@ -1,8 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../utils/CustomBaseQuery";
 import type { RootState } from "../redux/Store";
 export const DriveAPI = createApi({
     reducerPath: "driveAPI",
-    baseQuery: fetchBaseQuery({
+    baseQuery: customBaseQuery({
         baseUrl: "https://www.googleapis.com/upload/drive/v3",
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).user.google_access_token;

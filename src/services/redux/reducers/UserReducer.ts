@@ -12,6 +12,7 @@ import { CourseAPI } from "../../apis/user/CourseAPIs";
 const initialState = {
     user: null as UserResponseDto | null,
     isProcessing: false,
+    pendingRequests: 0,
     google_access_token: null as string | null,
     permissions: null as string[] | null,
 };
@@ -26,9 +27,6 @@ const UserSlice = createSlice({
             validateUserEarlyAccess(state.user, state.permissions);
             validateUserCanAccessAll(state.user, state.permissions);
         },
-        setIsProcessing: (state, { payload }: { payload: boolean }) => {
-            state.isProcessing = payload;
-        },
         setPermissions: (state, { payload }: { payload: string[] }) => {
             state.permissions = payload;
             validateUserEarlyAccess(state.user, state.permissions);
@@ -37,8 +35,36 @@ const UserSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchPending,
+            (state) => {
+                state.pendingRequests += 1;
+                state.isProcessing = true;
+            },
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchFulfilled,
+            (state) => {
+                state.pendingRequests = Math.max(
+                    0,
+                    state.pendingRequests - 1,
+                );
+                state.isProcessing = state.pendingRequests > 0;
+            },
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchRejected,
+            (state) => {
+                state.pendingRequests = Math.max(
+                    0,
+                    state.pendingRequests - 1,
+                );
+                state.isProcessing = state.pendingRequests > 0;
+            },
+        );
+        builder.addMatcher(
             AuthenticateAPI.endpoints.logout.matchPending,
             (state) => {
+                state.pendingRequests += 1;
                 state.isProcessing = true;
             },
         );
@@ -50,20 +76,28 @@ const UserSlice = createSlice({
                     state.permissions = null;
                     state.google_access_token = null;
                 }
+                state.pendingRequests = Math.max(
+                    0,
+                    state.pendingRequests - 1,
+                );
+                state.isProcessing = state.pendingRequests > 0;
             },
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.logout.matchRejected,
             (state) => {
-                state.isProcessing = false;
+                state.pendingRequests = Math.max(
+                    0,
+                    state.pendingRequests - 1,
+                );
+                state.isProcessing = state.pendingRequests > 0;
             },
         );
         builder.addMatcher(
             AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
             (state, { payload }) => {
                 if (payload.success === true) {
-                    state.google_access_token =
-                        payload.data || null;
+                    state.google_access_token = payload.data || null;
                 }
             },
         );
@@ -71,8 +105,7 @@ const UserSlice = createSlice({
             AuthenticateAPI.endpoints.getGoogleAccessToken.matchFulfilled,
             (state, { payload }) => {
                 if (payload.success === true) {
-                    state.google_access_token =
-                        payload.data || null;
+                    state.google_access_token = payload.data || null;
                 }
             },
         );
@@ -123,6 +156,6 @@ const UserSlice = createSlice({
     },
 });
 
-export const { setUser, setIsProcessing, setPermissions } = UserSlice.actions;
+export const { setUser, setPermissions } = UserSlice.actions;
 
 export default UserSlice.reducer;

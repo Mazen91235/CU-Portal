@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../../utils/CustomBaseQuery";
+import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -7,26 +9,14 @@ import type {
 } from "../../../types/dtos/NotificationDtos";
 import type { UserNotificationSearchDto } from "../../../types/dtos/UserNotificationDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
-import {
-    timeout,
-    maxRetries,
-    retryCondition,
-} from "../../../utils/APIHandling";
 
 export const NotificationAPI = createApi({
     reducerPath: "notificationAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetUserApiLink("/notifications"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetUserApiLink("/notifications"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         getNotifications: builder.query<
             GenericAPIResponse<NotificationResponseDto[]>,

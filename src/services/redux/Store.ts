@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./reducers/UserReducer";
 import notificationReducer from "./reducers/NotificationReducer";
 import processReducer from "./reducers/ProcessReducer";
+import releaseReducer from "./reducers/ReleaseReducer";
 import { AuthenticateAPI } from "../apis/AuthenticateAPIs";
 import { UserAPI } from "../apis/user/UserAPIs";
 import { setupListeners } from "@reduxjs/toolkit/query";
@@ -46,6 +47,7 @@ const store = configureStore({
     user: userReducer,
     notification: notificationReducer,
     process: processReducer,
+    release: releaseReducer,
     [AuthenticateAPI.reducerPath]: AuthenticateAPI.reducer,
     [DriveAPI.reducerPath]: DriveAPI.reducer,
     [MessageAPI.reducerPath]: MessageAPI.reducer,

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router";
 import type { UserResponseDto } from "../../types/dtos/UserDtos";
-import type { SubjectResponseDto } from "../../types/dtos/SubjectDtos";
 import type { AnnouncementResponseDto } from "../../types/dtos/AnnouncementDtos";
 import type { TaskResponseDto } from "../../types/dtos/TaskDtos";
 import type { ExamResponseDto } from "../../types/dtos/ExamDtos";
@@ -24,7 +23,6 @@ import { UserCard } from "../user/UserCard";
 import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
 import { useLazyGetAnnouncementsQuery } from "../../services/apis/user/AnnouncementAPIs";
-import { useLazyGetEnrolledCoursesQuery } from "../../services/apis/user/CourseAPIs";
 import type { NoteFormData } from "../notes/NoteForm";
 import {
     useCreateNoteMutation,
@@ -39,7 +37,6 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [getExams] = useLazyGetExamsQuery();
     const [getTasks] = useLazyGetTasksQuery();
     const [getAnnouncements] = useLazyGetAnnouncementsQuery();
-    const [getCourses] = useLazyGetEnrolledCoursesQuery();
     const [getCalendar] = useLazyGetCalendarTasksQuery();
     const [createNote, { isLoading: isCreatingNote }] = useCreateNoteMutation();
     const [updateNote, { isLoading: isUpdatingNote }] = useUpdateNoteMutation();
@@ -50,7 +47,6 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
     const [announcements, setAnnouncements] = useState<
         AnnouncementResponseDto[]
     >([]);
-    const [courses, setCourses] = useState<SubjectResponseDto[]>([]);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [eventsData, setEventsData] = useState<CalendarDayEventsDto>({});
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -96,14 +92,6 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         }
     }, [getAnnouncements]);
 
-    const fetchCourses = useCallback(async () => {
-        try {
-            const result = await getCourses().unwrap();
-            setCourses(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getCourses]);
 
     const fetchCalendar = useCallback(
         async (year: number, month: number) => {
@@ -129,14 +117,12 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                 fetchExams(),
                 fetchTasks(),
                 fetchAnnouncements(),
-                fetchCourses(),
                 fetchCalendar(currentYear, currentMonth),
             ]),
         [
             fetchExams,
             fetchTasks,
             fetchAnnouncements,
-            fetchCourses,
             fetchCalendar,
             currentYear,
             currentMonth,
@@ -368,7 +354,7 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
                         </Link>
                     </div>
                     <div className={styles["courses-list"]}>
-                        {courses.slice(0, 3).map((course) => (
+                        {(user.subjects ?? []).slice(0, 3).map((course) => (
                             <div
                                 key={course.id}
                                 className={styles["course-item"]}

@@ -16,12 +16,11 @@ import { Pagination } from "../../../components/pagination/Pagination";
 import { NoContentSection } from "../../../components/section/NoContentSection";
 import { formatDateTime, toIsoFormat } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
-import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
-import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 
 import styles from "./ExamsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 export const ExamsPage = () => {
     const navigate = useNavigate();
@@ -30,7 +29,7 @@ export const ExamsPage = () => {
     const setSearchQuery = getFilterSetter("query");
     const subjectFilter = getFilter("subject_id", "");
     const setSubjectFilter = getFilterSetter("subject_id");
-    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const subjects = useAppSelector((state) => state.user.user?.subjects ?? []);
     const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
@@ -38,17 +37,8 @@ export const ExamsPage = () => {
     const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getExams, { isFetching }] = useLazyGetExamsQuery();
 
-    const fetchSubjects = useCallback(async () => {
-        try {
-            const result = await getSubjects().unwrap();
-            setSubjects(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getSubjects]);
 
     const fetchExams = useCallback(async () => {
         try {
@@ -86,17 +76,12 @@ export const ExamsPage = () => {
         hasNextPage,
     ]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchSubjects()]),
-        [fetchSubjects],
-    );
 
     const authFetchExamsQuery = useCallback(
         () => fetchExams(),
         [fetchExams],
     );
 
-    useAuthQuery(authFilterQuery);
     useAuthQuery(authFetchExamsQuery);
 
     useEffect(() => {

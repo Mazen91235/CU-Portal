@@ -33,7 +33,7 @@ import styles from "./CreateAnnouncement.module.css";
 const announcementSchema = z.object({
     title: z.string().min(1, "Announcement title is required"),
     content: z.string().optional(),
-    subject_id: z.string().min(1, "Subject is required"),
+    subject_id: z.string().optional(),
     date_date: z.string().optional(),
     date_time: z.string().optional(),
     files: z.any().optional(),
@@ -45,7 +45,10 @@ type AnnouncementFormData = z.infer<typeof announcementSchema>;
 export const CreateAnnouncement = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const redirectUrl = getRedirectUrl(searchParams.get("redirect_url"), "/admin/announcements");
+    const redirectUrl = getRedirectUrl(
+        searchParams.get("redirect_url"),
+        "/admin/announcements",
+    );
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
 
@@ -131,7 +134,9 @@ export const CreateAnnouncement = () => {
             const announcementData = {
                 title: data.title,
                 content: data.content ?? "",
-                subject_id: parseInt(data.subject_id),
+                subject_id: data.subject_id
+                    ? parseInt(data.subject_id)
+                    : undefined,
                 date: toIsoFormat(
                     data.date_date
                         ? mergeDateAndTime(
