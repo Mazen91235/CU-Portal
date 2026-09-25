@@ -38,6 +38,7 @@ export const AuthenticateAPI = createApi({
                         SetCookie("oauth_state", "", -1);
                         localStorage.removeItem("user");
                         localStorage.removeItem("permissions");
+                        localStorage.removeItem("is-logged-in");
                     }
                 } catch {
                     return;
@@ -50,6 +51,21 @@ export const AuthenticateAPI = createApi({
                 method: "GET",
                 credentials: "include",
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data.success) {
+                        localStorage.setItem(
+                            "is-logged-in",
+                            JSON.stringify({
+                                last_fetched: Date.now(),
+                            }),
+                        );
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         getGoogleStoredToken: builder.mutation<
             GenericAPIResponse<string>,

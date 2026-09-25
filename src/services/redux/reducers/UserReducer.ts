@@ -37,6 +37,24 @@ const UserSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchPending,
+            (state) => {
+                state.isProcessing = true;
+            },
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchFulfilled,
+            (state) => {
+                state.isProcessing = false;
+            },
+        );
+        builder.addMatcher(
+            AuthenticateAPI.endpoints.isLoggedIn.matchRejected,
+            (state) => {
+                state.isProcessing = false;
+            },
+        );
+        builder.addMatcher(
             AuthenticateAPI.endpoints.logout.matchPending,
             (state) => {
                 state.isProcessing = true;
@@ -50,6 +68,7 @@ const UserSlice = createSlice({
                     state.permissions = null;
                     state.google_access_token = null;
                 }
+                state.isProcessing = false;
             },
         );
         builder.addMatcher(
@@ -62,8 +81,7 @@ const UserSlice = createSlice({
             AuthenticateAPI.endpoints.getGoogleStoredToken.matchFulfilled,
             (state, { payload }) => {
                 if (payload.success === true) {
-                    state.google_access_token =
-                        payload.data || null;
+                    state.google_access_token = payload.data || null;
                 }
             },
         );
@@ -71,8 +89,7 @@ const UserSlice = createSlice({
             AuthenticateAPI.endpoints.getGoogleAccessToken.matchFulfilled,
             (state, { payload }) => {
                 if (payload.success === true) {
-                    state.google_access_token =
-                        payload.data || null;
+                    state.google_access_token = payload.data || null;
                 }
             },
         );
