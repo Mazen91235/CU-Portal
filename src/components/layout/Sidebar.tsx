@@ -12,7 +12,7 @@ import IconComponent from "../IconComponent";
 
 import styles from "./Sidebar.module.css";
 import { captitalize } from "../../utils/Formatter";
-import { useLazyGetReleasesQuery } from "../../services/apis/user/ReleaseAPIs";
+import useGetLatestRelease from "../../hooks/useGetLatestRelease";
 
 type BadgeType = "Soon" | "Beta" | "New" | "Early Access";
 
@@ -423,25 +423,15 @@ export const Sidebar = ({
     const permissions = useAppSelector((state) => state.user.permissions);
     const [logout] = useLazyLogoutQuery();
     const [expandedSections, setExpandedSections] = useState<string[]>([]);
-    const [latestVersion, setLatestVersion] = useState<null | string>(null);
-    const [getReleases] = useLazyGetReleasesQuery();
+    const latestRelease = useGetLatestRelease();
+    const latestVersion =
+        latestRelease?.release_number ??
+        latestRelease?.release_version?.version_number?.toString() ??
+        null;
     const [navSections, setNavSections] = useState<NavSection[]>([
         ...navSectionsDefault,
     ]);
 
-    useEffect(() => {
-        getReleases({
-            data: {},
-            order_by: ["date"],
-            descending: true,
-            limit: 1,
-        })
-            .unwrap()
-            .then((result) => {
-                setLatestVersion(result.data?.[0]?.release_number ?? null);
-            })
-            .catch(() => undefined);
-    }, [getReleases]);
 
     useEffect(() => {
         if (permissions) {

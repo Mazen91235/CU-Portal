@@ -20,12 +20,11 @@ import {
     toIsoFormat,
 } from "../../../utils/Formatter";
 import { SelectFilter } from "../../../components/forms/SelectFilter";
-import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
-import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 
 import styles from "./AnnouncementsPage.module.css";
 import { copyToClipboard } from "../../../utils/ClipboardHandler";
 import { showToast } from "../../../utils/ToastsManager";
+import { useAppSelector } from "../../../services/redux/Hooks";
 
 export const AnnouncementsPage = () => {
     const navigate = useNavigate();
@@ -34,7 +33,7 @@ export const AnnouncementsPage = () => {
     const setSearchQuery = getFilterSetter("query");
     const subjectFilter = getFilter("subject_id", "");
     const setSubjectFilter = getFilterSetter("subject_id");
-    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
+    const subjects = useAppSelector((state) => state.user.user?.subjects ?? []);
     const dateFromFilter = getFilter("date_from", new Date().toLocaleDateString("en-CA"));
     const setDateFromFilter = getFilterSetter("date_from", true);
     const dateToFilter = getFilter("date_to", "");
@@ -44,17 +43,7 @@ export const AnnouncementsPage = () => {
     >([]);
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [getSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getAnnouncements, { isFetching }] = useLazyGetAnnouncementsQuery();
-
-    const fetchSubjects = useCallback(async () => {
-        try {
-            const result = await getSubjects().unwrap();
-            setSubjects(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getSubjects]);
 
     const fetchAnnouncements = useCallback(async () => {
         try {
@@ -95,17 +84,11 @@ export const AnnouncementsPage = () => {
         hasNextPage,
     ]);
 
-    const authFilterQuery = useCallback(
-        () => Promise.all([fetchSubjects()]),
-        [fetchSubjects],
-    );
-
     const authFetchAnnouncementsQuery = useCallback(
         () => fetchAnnouncements(),
         [fetchAnnouncements],
     );
 
-    useAuthQuery(authFilterQuery);
     useAuthQuery(authFetchAnnouncementsQuery);
 
     useEffect(() => {

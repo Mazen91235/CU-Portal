@@ -14,6 +14,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { buildRedirectUrl } from "../../../utils/Navigation";
 import useAuthQuery from "../../../hooks/useAuthQuery";
+import useGetLatestRelease from "../../../hooks/useGetLatestRelease";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import { NoContentSection } from "../../../components/section/NoContentSection";
@@ -61,8 +62,7 @@ export function ReleasesPage() {
     const setVersionFilter = getFilterSetter("version");
     const [releases, setReleases] = useState<ReleaseResponseDto[]>([]);
     const [versions, setVersions] = useState<VersionResponseDto[]>([]);
-    const [latestRelease, setLatestRelease] =
-        useState<ReleaseResponseDto | null>(null);
+    const latestRelease = useGetLatestRelease();
     const [getReleases] = useLazyGetReleasesQuery();
     const [getVersions] = useLazyGetVersionsQuery();
 
@@ -83,27 +83,17 @@ export function ReleasesPage() {
 
     const fetchReleases = useCallback(async () => {
         try {
-            const [releasesResult, latestResult] = await Promise.all([
-                getReleases({
-                    data: {
-                        release_version_id: versionFilter
-                            ? Number(versionFilter)
-                            : undefined,
-                    },
-                    includes: ["release_version", "release_items"],
-                    order_by: ["date_nearest"],
-                    limit: 1000,
-                }).unwrap(),
-                getReleases({
-                    data: {},
-                    includes: ["release_version", "release_items"],
-                    order_by: ["date"],
-                    descending: true,
-                    limit: 1,
-                }).unwrap(),
-            ]);
-            setReleases(releasesResult.data ?? []);
-            setLatestRelease(latestResult.data?.[0] ?? null);
+            const result = await getReleases({
+                data: {
+                    release_version_id: versionFilter
+                        ? Number(versionFilter)
+                        : undefined,
+                },
+                includes: ["release_version", "release_items"],
+                order_by: ["date_nearest"],
+                limit: 1000,
+            }).unwrap();
+            setReleases(result.data ?? []);
         } catch (error) {
             handlePopupErrors(error);
         }

@@ -12,6 +12,14 @@ import {
     maxRetries,
     retryCondition,
 } from "../../../utils/APIHandling";
+import {
+    getLatestReleaseCandidate,
+    isLatestReleaseQuery,
+    isReleaseAtLeastAsRecent,
+    isReleaseLater,
+    readLatestReleaseCache,
+    writeLatestReleaseCache,
+} from "../../../utils/LatestRelease";
 export const ReleaseAPI = createApi({
     reducerPath: "releaseAPI",
     baseQuery: retry(
@@ -39,6 +47,37 @@ export const ReleaseAPI = createApi({
                     query: JSON.stringify(query),
                 },
             }),
+            onQueryStarted: async (query, { queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (!data.success || !data.data?.length) return;
+
+                    const latestReleaseQuery = isLatestReleaseQuery(query);
+                    const candidate = getLatestReleaseCandidate(
+                        data.data,
+                        latestReleaseQuery,
+                    );
+                    if (!candidate) return;
+
+                    const cached = readLatestReleaseCache();
+
+                    if (
+                        (latestReleaseQuery &&
+                            (!cached ||
+                                isReleaseAtLeastAsRecent(
+                                    candidate,
+                                    cached.release,
+                                ))) ||
+                        (!latestReleaseQuery &&
+                            cached &&
+                            isReleaseLater(candidate, cached.release))
+                    ) {
+                        writeLatestReleaseCache(candidate);
+                    }
+                } catch {
+                    return;
+                }
+            },
         }),
         getRelease: builder.query<
             GenericAPIResponse<ReleaseResponseDto>,

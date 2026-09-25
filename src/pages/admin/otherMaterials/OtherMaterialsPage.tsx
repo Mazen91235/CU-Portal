@@ -9,7 +9,6 @@ import {
     useCopyMaterialsMutation,
 } from "../../../services/apis/admin/MaterialAPIs";
 import { useLazyGetMaterialParentsQuery } from "../../../services/apis/user/MaterialAPIs";
-import { useLazyGetEnrolledCoursesQuery } from "../../../services/apis/user/CourseAPIs";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
 import type { SubjectResponseDto } from "../../../types/dtos/SubjectDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
@@ -21,7 +20,7 @@ import {
 import { downloadFile, downloadMaterials } from "../../../utils/FileDownloader";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
-import { useAppDispatch } from "../../../services/redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../../services/redux/Hooks";
 import { PageSeo } from "../../../components/PageSeo";
 import { Layout } from "../../../components/layout/Layout";
 import { Banner } from "../../../components/banner/Banner";
@@ -64,9 +63,9 @@ export function OtherMaterialsPage() {
     );
     const [year, setYear] = useState<YearResponseDto | null>(null);
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [destinationSubjects, setDestinationSubjects] = useState<
-        SubjectResponseDto[]
-    >([]);
+    const destinationSubjects = useAppSelector(
+        (state) => state.user.user?.subjects ?? [],
+    );
     const [currentPath, setCurrentPath] = useState<MaterialResponseDto[]>([]);
     const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
@@ -78,7 +77,6 @@ export function OtherMaterialsPage() {
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
-    const [getEnrolledSubjects] = useLazyGetEnrolledCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
@@ -127,16 +125,6 @@ export function OtherMaterialsPage() {
         }
     }, [getSubjects, departmentId, yearId]);
 
-    // The subjects the admin can actually copy into — their own department,
-    // regardless of the foreign department/year currently being browsed.
-    const fetchDestinationSubjects = useCallback(async () => {
-        try {
-            const result = await getEnrolledSubjects().unwrap();
-            setDestinationSubjects(result.data || []);
-        } catch (error) {
-            handlePopupErrors(error);
-        }
-    }, [getEnrolledSubjects]);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
 
     const fetchMaterials = useCallback(
@@ -213,10 +201,6 @@ export function OtherMaterialsPage() {
     const authDepartmentQuery = useCallback(() => fetchDepartment(), [fetchDepartment]);
     const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
     const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
-    const authDestinationSubjectsQuery = useCallback(
-        () => fetchDestinationSubjects(),
-        [fetchDestinationSubjects],
-    );
     const authMaterialsQuery = useCallback(
         () => fetchMaterials(currentParentId),
         [fetchMaterials, currentParentId],
@@ -225,7 +209,6 @@ export function OtherMaterialsPage() {
     useAuthQuery(authDepartmentQuery);
     useAuthQuery(authYearQuery);
     useAuthQuery(authSubjectsQuery);
-    useAuthQuery(authDestinationSubjectsQuery);
     useAuthQuery(authMaterialsQuery);
 
     useEffect(() => {
