@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../../utils/CustomBaseQuery";
+import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -7,25 +9,13 @@ import type {
 } from "../../../types/dtos/EventDtos";
 import type { UserEventActionDto } from "../../../types/dtos/UserEventDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
-import {
-    timeout,
-    maxRetries,
-    retryCondition,
-} from "../../../utils/APIHandling";
 export const EventAPI = createApi({
     reducerPath: "eventAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetUserApiLink("/events"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetUserApiLink("/events"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         getEvents: builder.query<
             GenericAPIResponse<EventResponseDto[]>,

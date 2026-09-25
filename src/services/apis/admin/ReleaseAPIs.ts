@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../../utils/CustomBaseQuery";
+import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -10,11 +12,6 @@ import type {
 import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
 import {
-    timeout,
-    maxRetries,
-    retryCondition,
-} from "../../../utils/APIHandling";
-import {
     getLatestReleaseCandidate,
     isLatestReleaseQuery,
     isReleaseAtLeastAsRecent,
@@ -24,18 +21,11 @@ import {
 } from "../../../utils/LatestRelease";
 export const AdminReleaseAPI = createApi({
     reducerPath: "adminReleaseAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetAdminApiLink("/releases"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetAdminApiLink("/releases"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         getReleases: builder.query<
             GenericAPIResponse<ReleaseResponseDto[]>,

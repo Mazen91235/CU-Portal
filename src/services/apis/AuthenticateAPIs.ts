@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../utils/CustomBaseQuery";
+import { timeout } from "../../utils/APIHandling";
 import { SetCookie } from "../../utils/CookiesManager";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
@@ -8,21 +10,13 @@ import type {
     UserTokenDetailsResponseDto,
 } from "../../types/dtos/UserDtos";
 import { GetApiLink } from "../../utils/LinkHandler";
-import { timeout, maxRetries, retryCondition } from "../../utils/APIHandling";
 export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetApiLink("/auth"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetApiLink("/auth"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         logout: builder.query<GenericAPIResponse, void>({
             query: () => ({

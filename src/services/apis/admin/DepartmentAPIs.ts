@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "../../../utils/CustomBaseQuery";
+import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -8,25 +10,13 @@ import type {
     DepartmentUpdateDto,
 } from "../../../types/dtos/DepartmentDtos";
 import type { QueryModel } from "../../../types/models/QueryModel";
-import {
-    timeout,
-    maxRetries,
-    retryCondition,
-} from "../../../utils/APIHandling";
 export const AdminDepartmentAPI = createApi({
     reducerPath: "adminDepartmentAPI",
-    baseQuery: retry(
-        fetchBaseQuery({
-            baseUrl: GetAdminApiLink("/departments"),
-            timeout,
-            credentials: "include",
-        }),
-        {
-            maxRetries,
-            //@ts-expect-error RTK Query's types don't account for this parameter
-            retryCondition,
-        },
-    ),
+    baseQuery: customBaseQuery({
+        baseUrl: GetAdminApiLink("/departments"),
+        timeout,
+        credentials: "include",
+    }),
     endpoints: (builder) => ({
         getDepartments: builder.query<
             GenericAPIResponse<DepartmentResponseDto[]>,
