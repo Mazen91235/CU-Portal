@@ -18,7 +18,11 @@ import styles from "./DashboardCompleteView.module.css";
 import { useLazyGetCalendarTasksQuery } from "../../services/apis/user/CalendarAPIs";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
 import useAuthQuery from "../../hooks/useAuthQuery";
-import { formatDateTime, formatString } from "../../utils/Formatter";
+import {
+    formatDateTime,
+    formatString,
+    getMonthDateRangeIso,
+} from "../../utils/Formatter";
 import { UserCard } from "../user/UserCard";
 import { useLazyGetExamsQuery } from "../../services/apis/user/ExamAPIs";
 import { useLazyGetTasksQuery } from "../../services/apis/user/TaskAPIs";
@@ -92,13 +96,11 @@ export const DashboardCompleteView = ({ user }: { user: UserResponseDto }) => {
         }
     }, [getAnnouncements]);
 
-
     const fetchCalendar = useCallback(
         async (year: number, month: number) => {
             try {
                 const result = await getCalendar({
-                    date_from: `${year}-${String(month + 1).padStart(2, "0")}-01`,
-                    date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
+                    ...getMonthDateRangeIso(year, month),
                 }).unwrap();
 
                 setEventsData(

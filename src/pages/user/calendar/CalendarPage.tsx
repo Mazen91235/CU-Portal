@@ -8,7 +8,10 @@ import {
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { normalizeCalendarEvents } from "../../../utils/CalendarHandler";
-import { parseDateString } from "../../../utils/Formatter";
+import {
+    getMonthDateRangeIso,
+    parseDateString,
+} from "../../../utils/Formatter";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { PageSeo } from "../../../components/PageSeo";
 import { SubBanner } from "../../../components/banner/SubBanner";
@@ -51,8 +54,7 @@ export const CalendarPage = () => {
         async (year: number, month: number) => {
             try {
                 const result = await getCalendar({
-                    date_from: `${year}-${String(month + 1).padStart(2, "0")}-01`,
-                    date_to: `${year}-${String(month + 1).padStart(2, "0")}-${new Date(year, month + 1, 0).getDate()}`,
+                    ...getMonthDateRangeIso(year, month),
                 }).unwrap();
 
                 setEventsData(
