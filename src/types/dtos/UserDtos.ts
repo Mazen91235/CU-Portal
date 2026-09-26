@@ -181,9 +181,7 @@ export type UserStatisticsResponseDto = {
     users_count: number;
     users_this_month_count: number;
     percentage_increase: number;
-    active_now_count: number;
     pending_users_count: number;
-    last_five_users_active: string[];
 };
 
 export type UserDeviceActionDto = {

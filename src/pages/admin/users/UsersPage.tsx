@@ -22,7 +22,6 @@ import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import useFilterSearchParams from "../../../hooks/useFilterSearchParams";
 import IconComponent from "../../../components/IconComponent";
-import { Avatar } from "../../../components/avatar/Avatar";
 import { Table } from "../../../components/table/Table";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import styles from "./UsersPage.module.css";
@@ -289,30 +288,6 @@ export const UsersPage = () => {
                         </div>
                     </div>
 
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <IconComponent icon="monitor" size={48} />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Active Now
-                            </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.active_now_count || 0}
-                            </div>
-                            <div className={styles.infoCardAvatars}>
-                                {stats?.last_five_users_active?.map(
-                                    (avatarUrl, idx) => (
-                                        <Avatar
-                                            key={idx}
-                                            url={avatarUrl}
-                                            size="medium"
-                                        />
-                                    ),
-                                )}
-                            </div>
-                        </div>
-                    </div>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardIcon}>
                             <IconComponent icon="pending-clock-new" size={48} />
