@@ -23,7 +23,11 @@ import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
-import { formatDate, formatDateTime, toIsoFormat } from "../../../utils/Formatter";
+import {
+    formatDate,
+    formatDateTime,
+    toIsoFormat,
+} from "../../../utils/Formatter";
 import { showToast } from "../../../utils/ToastsManager";
 import { handlePopupErrors } from "../../../utils/ErrorHandling";
 import styles from "./WeeksPage.module.css";
@@ -43,9 +47,7 @@ const isCurrentWeek = (week: WeekResponseDto) => {
     const startKey = formatDateTime(week.start_date, true).slice(0, 10);
     const endKey = getWeekEndDate(week.start_date);
     const todayKey = getTodayKey();
-    return Boolean(
-        endKey && todayKey >= startKey && todayKey <= endKey,
-    );
+    return Boolean(endKey && todayKey >= startKey && todayKey <= endKey);
 };
 
 export function WeeksPage() {
@@ -99,13 +101,18 @@ export function WeeksPage() {
             const fetchedWeeks = result.data || [];
             const currentWeekIndex = fetchedWeeks.findIndex(isCurrentWeek);
 
-            if (currentWeekIndex > 0) {
-                const [currentWeek] = fetchedWeeks.splice(currentWeekIndex, 1);
-                fetchedWeeks.unshift(currentWeek);
-            }
-
-            setWeeks(fetchedWeeks);
+            setWeeks([
+                ...(currentWeekIndex !== -1
+                    ? [
+                          fetchedWeeks[currentWeekIndex],
+                          ...fetchedWeeks.filter(
+                              (_, index) => index !== currentWeekIndex,
+                          ),
+                      ]
+                    : fetchedWeeks),
+            ]);
         } catch (error) {
+            console.error("Error fetching weeks:", error);
             handlePopupErrors(error);
         }
     }, [
@@ -294,7 +301,9 @@ export function WeeksPage() {
                             ]}
                             button="View Week"
                             buttonAction={() =>
-                                navigate(buildRedirectUrl(`/admin/weeks/${week.id}`))
+                                navigate(
+                                    buildRedirectUrl(`/admin/weeks/${week.id}`),
+                                )
                             }
                             hasOptions
                             editable
