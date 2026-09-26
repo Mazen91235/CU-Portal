@@ -193,6 +193,14 @@ export const formatCalendarDay = (date: Date): string => {
     )}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
+export const getMonthDateRangeIso = (
+    year: number,
+    month: number,
+): { date_from: string; date_to: string } => ({
+    date_from: new Date(year, month, 1, 0, 0, 0, 0).toISOString(),
+    date_to: new Date(year, month + 1, 0, 23, 59, 59, 999).toISOString(),
+});
+
 const padDateValue = (value: number): string => String(value).padStart(2, "0");
 
 export const formatDateWithWeekday = (
