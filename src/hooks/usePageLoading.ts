@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { useLoading } from "../contexts/hooks/useLoading";
 import { useLocation } from "react-router";
 
@@ -6,51 +6,49 @@ export const usePageLoading = (
     execute: boolean = false,
     callback?: () => void,
 ) => {
-    const cleanupRef = useRef<(() => void) | null>(null);
     const { pathname } = useLocation();
     const { startLoading } = useLoading();
 
     const startPageLoading = useCallback(
         (cb?: () => void) => {
-            cleanupRef.current?.();
-            cleanupRef.current = null;
-
             const releaseLoading = startLoading();
-            let handled = false;
+            let released = false;
 
-            const release = () => {
-                if (handled) return false;
-                handled = true;
-                document.removeEventListener("readystatechange", handleLoaded);
+            const release = (callCallback: boolean = false) => {
+                if (released) return false;
+                released = true;
+
+                window.removeEventListener("load", handleLoaded);
                 releaseLoading();
-                cleanupRef.current = null;
+
+                if (callCallback) cb?.();
                 return true;
             };
 
             const handleLoaded = () => {
-                if (release()) cb?.();
+                if (document.readyState === "complete") {
+                    release(true);
+                }
             };
 
             if (document.readyState === "complete") {
-                handleLoaded();
+                release(true);
             } else {
-                document.addEventListener("readystatechange", handleLoaded);
-                cleanupRef.current = () => {
-                    release();
-                };
+                window.addEventListener("load", handleLoaded, { once: true });
             }
+
+            return () => {
+                release();
+            };
         },
         [startLoading],
     );
 
     useEffect(() => {
-        if (execute) startPageLoading(callback);
+        if (!execute) return;
 
-        return () => {
-            cleanupRef.current?.();
-            cleanupRef.current = null;
-        };
-    }, [pathname, execute, startPageLoading]);
+        return startPageLoading(callback);
+    }, [pathname, execute, startPageLoading, callback]);
 
     return startPageLoading;
 };
