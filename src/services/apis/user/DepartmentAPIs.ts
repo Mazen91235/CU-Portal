@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../../utils/CustomBaseQuery";
-import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetUserApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -12,7 +11,6 @@ export const DepartmentAPI = createApi({
     reducerPath: "departmentAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetUserApiLink("/departments"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

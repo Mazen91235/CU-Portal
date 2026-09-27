@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../../utils/CustomBaseQuery";
-import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type { LogResponseDto, LogSearchDto } from "../../../types/dtos/LogDtos";
@@ -9,7 +8,6 @@ export const AdminLogAPI = createApi({
     reducerPath: "adminLogAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetAdminApiLink("/logs"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

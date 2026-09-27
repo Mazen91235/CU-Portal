@@ -12,10 +12,10 @@ export function useAuthQuery<TTriggerArg, TReturn>(
     const isLoggedIn = useLogin();
     const user = useAppSelector((state) => state.user.user);
     const { pathname } = useLocation();
-    const { startLoading, stopLoading } = useLoading();
+    const { startLoading } = useLoading();
 
     useEffect(() => {
-        startLoading();
+        const releaseLoading = startLoading();
 
         const runQuery = async () => {
             try {
@@ -36,19 +36,12 @@ export function useAuthQuery<TTriggerArg, TReturn>(
             } catch (error) {
                 handlePopupErrors(error);
             } finally {
-                stopLoading();
+                releaseLoading();
             }
         };
 
         void runQuery();
-    }, [
-        user,
-        isLoggedIn,
-        trigger,
-        startLoading,
-        stopLoading,
-        pathname,
-    ]);
+    }, [user, isLoggedIn, trigger, startLoading, pathname]);
 }
 
 export default useAuthQuery;

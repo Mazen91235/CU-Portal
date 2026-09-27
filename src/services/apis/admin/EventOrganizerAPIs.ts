@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../../utils/CustomBaseQuery";
-import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import type {
     EventOrganizerCreateDto,
@@ -15,7 +14,6 @@ export const AdminEventOrganizerAPI = createApi({
     reducerPath: "adminEventOrganizerAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetAdminApiLink("/event-organizers"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

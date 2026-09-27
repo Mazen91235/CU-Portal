@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../../utils/CustomBaseQuery";
-import { timeout } from "../../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../../types/responses/GenericAPIResponse";
 import { GetAdminApiLink } from "../../../utils/LinkHandler";
 import type {
@@ -23,7 +22,6 @@ export const AdminReleaseAPI = createApi({
     reducerPath: "adminReleaseAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetAdminApiLink("/releases"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

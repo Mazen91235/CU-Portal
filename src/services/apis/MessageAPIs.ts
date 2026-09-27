@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../utils/CustomBaseQuery";
-import { timeout } from "../../utils/APIHandling";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
     MessageCreateDto,
@@ -11,7 +10,6 @@ export const MessageAPI = createApi({
     reducerPath: "messageAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetApiLink("/messages"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

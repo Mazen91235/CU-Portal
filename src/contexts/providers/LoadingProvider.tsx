@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { LoadingContext } from "../contexts/LoadingContext";
 
 export const LoadingProvider = ({
@@ -6,30 +6,28 @@ export const LoadingProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const [loadingCount, setLoadingCount] = useState<number>(0);
-    const loading = loadingCount > 0;
+    const loadingTokensRef = useRef<Set<number>>(new Set());
+    const nextTokenRef = useRef(0);
+    const [loading, setLoading] = useState(false);
 
-    const startLoading = useCallback(
-        () => setLoadingCount((count) => count + 1),
-        [],
-    );
+    const startLoading = useCallback(() => {
+        const token = nextTokenRef.current++;
+        loadingTokensRef.current.add(token);
+        setLoading(true);
 
-    const stopLoading = useCallback(
-        () => setLoadingCount((count) => Math.max(0, count - 1)),
-        [],
-    );
+        let released = false;
 
-    const value = useMemo(
-        () => ({
-            loading,
-            startLoading,
-            stopLoading,
-        }),
-        [loading, startLoading, stopLoading],
-    );
+        return () => {
+            if (released) return;
+            released = true;
+
+            loadingTokensRef.current.delete(token);
+            setLoading(loadingTokensRef.current.size > 0);
+        };
+    }, []);
 
     return (
-        <LoadingContext value={value}>
+        <LoadingContext value={{ loading, startLoading }}>
             {children}
         </LoadingContext>
     );

@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customBaseQuery } from "../../utils/CustomBaseQuery";
-import { timeout } from "../../utils/APIHandling";
 import { SetCookie } from "../../utils/CookiesManager";
 import type { GenericAPIResponse } from "../../types/responses/GenericAPIResponse";
 import type {
@@ -14,7 +13,6 @@ export const AuthenticateAPI = createApi({
     reducerPath: "authenticateAPI",
     baseQuery: customBaseQuery({
         baseUrl: GetApiLink("/auth"),
-        timeout,
         credentials: "include",
     }),
     endpoints: (builder) => ({

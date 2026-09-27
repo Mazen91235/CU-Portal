@@ -8,22 +8,27 @@ export const usePageLoading = (
 ) => {
     const cleanupRef = useRef<(() => void) | null>(null);
     const { pathname } = useLocation();
-    const { startLoading, stopLoading } = useLoading();
+    const { startLoading } = useLoading();
 
     const startPageLoading = useCallback(
         (cb?: () => void) => {
-            if (cleanupRef.current) {
-                cleanupRef.current();
-                cleanupRef.current = null;
-            }
+            cleanupRef.current?.();
+            cleanupRef.current = null;
 
-            startLoading();
+            const releaseLoading = startLoading();
+            let handled = false;
+
+            const release = () => {
+                if (handled) return false;
+                handled = true;
+                document.removeEventListener("readystatechange", handleLoaded);
+                releaseLoading();
+                cleanupRef.current = null;
+                return true;
+            };
 
             const handleLoaded = () => {
-                stopLoading();
-                document.removeEventListener("readystatechange", handleLoaded);
-                cleanupRef.current = null;
-                if (cb) cb();
+                if (release()) cb?.();
             };
 
             if (document.readyState === "complete") {
@@ -31,25 +36,19 @@ export const usePageLoading = (
             } else {
                 document.addEventListener("readystatechange", handleLoaded);
                 cleanupRef.current = () => {
-                    document.removeEventListener(
-                        "readystatechange",
-                        handleLoaded,
-                    );
-                    stopLoading();
+                    release();
                 };
             }
         },
-        [startLoading, stopLoading],
+        [startLoading],
     );
 
     useEffect(() => {
         if (execute) startPageLoading(callback);
 
         return () => {
-            if (cleanupRef.current) {
-                cleanupRef.current();
-                cleanupRef.current = null;
-            }
+            cleanupRef.current?.();
+            cleanupRef.current = null;
         };
     }, [pathname, execute, startPageLoading]);
 

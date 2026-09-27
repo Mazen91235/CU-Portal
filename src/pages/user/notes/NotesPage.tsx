@@ -133,7 +133,6 @@ export const NotesPage = () => {
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFrom}
-                            defaultDate={dateFrom}
                             value={dateFrom}
                         />
                         <DateFilter

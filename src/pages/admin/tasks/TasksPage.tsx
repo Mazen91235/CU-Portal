@@ -113,24 +113,21 @@ export const TasksPage = () => {
     const fetchSubjects = useCallback(async () => {
         try {
             if (!user) return;
-            if (user.canAccessAll) {
-                if (!facultyFilter || !departmentFilter || !yearFilter) {
-                    setSubjects([]);
-                    return;
-                }
+            if (!user.canAccessAll) {
+                setSubjects(user.subjects || []);
+                return;
             }
-            const data = user.canAccessAll
-                ? {
-                      faculty_id: parseInt(facultyFilter),
-                      department_id: parseInt(departmentFilter),
-                      year_id: parseInt(yearFilter),
-                  }
-                : {
-                      faculty_id: user.faculty?.id ?? undefined,
-                      department_id: user.department?.id ?? undefined,
-                      year_id: user.year?.id ?? undefined,
-                  };
-            const result = await searchCourses({ data }).unwrap();
+            if (!facultyFilter || !departmentFilter || !yearFilter) {
+                setSubjects([]);
+                return;
+            }
+            const result = await searchCourses({
+                data: {
+                    faculty_id: parseInt(facultyFilter),
+                    department_id: parseInt(departmentFilter),
+                    year_id: parseInt(yearFilter),
+                },
+            }).unwrap();
             setSubjects(result.data || []);
         } catch (error) {
             handlePopupErrors(error);
@@ -398,8 +395,7 @@ export const TasksPage = () => {
                         />
                         <DateFilter
                             placeholder="Date From"
-                            setValue={setDateFromFilter}
-                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            setValue={setDateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
                             value={dateFromFilter}
                         />
                         <DateFilter
