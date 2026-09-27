@@ -93,24 +93,14 @@ export function WeeksPage() {
                     start_date_from: toIsoFormat(dateFrom),
                     start_date_to: toIsoFormat(dateTo),
                 },
-                order_by: ["start_date_nearest"],
+                order_by: ["start_date"],
+                descending: false,
                 includes: ["faculty", "department", "year"],
                 limit: 1e6,
             }).unwrap();
 
             const fetchedWeeks = result.data || [];
-            const currentWeekIndex = fetchedWeeks.findIndex(isCurrentWeek);
-
-            setWeeks([
-                ...(currentWeekIndex !== -1
-                    ? [
-                          fetchedWeeks[currentWeekIndex],
-                          ...fetchedWeeks.filter(
-                              (_, index) => index !== currentWeekIndex,
-                          ),
-                      ]
-                    : fetchedWeeks),
-            ]);
+            setWeeks(fetchedWeeks);
         } catch (error) {
             console.error("Error fetching weeks:", error);
             handlePopupErrors(error);
