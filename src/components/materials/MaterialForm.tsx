@@ -128,16 +128,9 @@ export function MaterialForm({
 
                 if (cancelled) return;
 
-                const availableWeeks = (response.data || [])
-                    .filter(
-                        (week) => week.id != null && week.week_number != null,
-                    )
-                    .sort((a, b) => {
-                        const currentDifference =
-                            Number(isCurrentWeek(b)) - Number(isCurrentWeek(a));
-                        if (currentDifference !== 0) return currentDifference;
-                        return (a.week_number ?? 0) - (b.week_number ?? 0);
-                    });
+                const availableWeeks = (response.data || []).filter(
+                    (week) => week.id != null && week.week_number != null,
+                );
                 setWeeks(availableWeeks);
 
                 const currentWeekId = material?.week?.id;

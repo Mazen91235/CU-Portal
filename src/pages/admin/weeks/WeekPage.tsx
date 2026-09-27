@@ -26,7 +26,10 @@ import {
 import { useUpdateMaterialMutation } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
-import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    getErrorMessage,
+    handlePopupErrors,
+} from "../../../utils/ErrorHandling";
 import { showToast } from "../../../utils/ToastsManager";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import styles from "./WeekPage.module.css";
@@ -38,8 +41,19 @@ const getWeekEndDate = (startDate?: string | null) => {
     return date.toISOString().slice(0, 10);
 };
 
+const getTodayKey = () =>
+    new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+
+const isCurrentWeek = (week: WeekResponseDto) => {
+    if (!week.start_date) return false;
+    const startKey = formatDateTime(week.start_date, true).slice(0, 10);
+    const endKey = getWeekEndDate(week.start_date);
+    const todayKey = getTodayKey();
+    return Boolean(endKey && todayKey >= startKey && todayKey <= endKey);
+};
+
 const formatWeekOption = (week: WeekResponseDto) =>
-    `Week ${week.week_number ?? ""} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})`;
+    `Week ${week.week_number ?? ""} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})${isCurrentWeek(week) ? " (Current)" : ""}`;
 
 function MaterialAdminCard({
     material,
@@ -435,7 +449,9 @@ export function WeekPage() {
             if (weekId) {
                 navigate("/admin/weeks", {
                     replace: true,
-                    state: { error: getErrorMessage(error) || "Failed to fetch week" },
+                    state: {
+                        error: getErrorMessage(error) || "Failed to fetch week",
+                    },
                 });
             } else {
                 handlePopupErrors(error);

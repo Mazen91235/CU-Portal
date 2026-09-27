@@ -209,7 +209,7 @@ export function MaterialsPage() {
                         query: searchQuery || undefined,
                         author_id: authorId ? parseInt(authorId) : undefined,
                     },
-                    includes: ["subject", "children", "attachment"],
+                    includes: ["subject", "children", "attachment", "week"],
                 }).unwrap();
                 setMaterials(response.data || []);
             } catch (error) {
