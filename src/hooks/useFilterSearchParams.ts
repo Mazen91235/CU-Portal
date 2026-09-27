@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router";
+import {
+    createSearchParams,
+    useSearchParams,
+    type NavigateOptions,
+    type URLSearchParamsInit,
+} from "react-router";
 import type { SetStateAction } from "react";
 
 type FilterSetter = (
@@ -9,14 +14,14 @@ type FilterSetter = (
 
 type PendingNavigation = {
     searchParams: URLSearchParams;
-    replace: boolean;
+    options: NavigateOptions;
 };
 
 const areSearchParamsEqual = (left: URLSearchParams, right: URLSearchParams) =>
     left.toString() === right.toString();
 
 export const useFilterSearchParams = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParamsFromRouter] = useSearchParams();
     const searchParamsRef = useRef(searchParams);
     const pendingNavigationsRef = useRef<PendingNavigation[]>([]);
     const navigationInFlightRef = useRef(false);
@@ -33,10 +38,11 @@ export const useFilterSearchParams = () => {
         if (!nextNavigation) return;
 
         navigationInFlightRef.current = true;
-        setSearchParams(nextNavigation.searchParams, {
-            replace: nextNavigation.replace,
-        });
-    }, [setSearchParams]);
+        setSearchParamsFromRouter(
+            nextNavigation.searchParams,
+            nextNavigation.options,
+        );
+    }, [setSearchParamsFromRouter]);
 
     useEffect(() => {
         const current = new URLSearchParams(searchParams);
@@ -63,7 +69,7 @@ export const useFilterSearchParams = () => {
     const updateSearchParams = useCallback(
         (
             buildNext: (current: URLSearchParams) => URLSearchParams,
-            replace = false,
+            options: NavigateOptions = {},
         ) => {
             const pending = pendingNavigationsRef.current;
             const current =
@@ -76,12 +82,28 @@ export const useFilterSearchParams = () => {
 
             pending.push({
                 searchParams: next,
-                replace,
+                options,
             });
 
             startNextNavigation();
         },
         [startNextNavigation],
+    );
+
+    const setSearchParams = useCallback(
+        (
+            nextInit:
+                | URLSearchParamsInit
+                | ((prev: URLSearchParams) => URLSearchParamsInit),
+            options: NavigateOptions = {},
+        ) => {
+            updateSearchParams((current) => {
+                const resolvedInit =
+                    typeof nextInit === "function" ? nextInit(current) : nextInit;
+                return createSearchParams(resolvedInit);
+            }, options);
+        },
+        [updateSearchParams],
     );
 
     const getFilter = useCallback(
@@ -101,7 +123,7 @@ export const useFilterSearchParams = () => {
                 if (value || keepEmpty) current.set(key, value);
                 else current.delete(key);
                 return current;
-            }, replace);
+            }, { replace });
         },
         [updateSearchParams],
     );
@@ -122,7 +144,7 @@ export const useFilterSearchParams = () => {
                     if (nextValue || keepEmpty) current.set(key, nextValue);
                     else current.delete(key);
                     return current;
-                }, replace);
+                }, { replace });
             };
 
             setterCache.current.set(cacheKey, setter);
@@ -142,7 +164,7 @@ export const useFilterSearchParams = () => {
                     else current.delete(key);
                 });
                 return current;
-            }, replace);
+            }, { replace });
         },
         [updateSearchParams],
     );

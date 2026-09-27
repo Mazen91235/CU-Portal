@@ -398,7 +398,6 @@ export const EventsPage = () => {
                         <DateFilter
                             placeholder="Date From"
                             setValue={setDateFromFilter}
-                            defaultDate={dateFromFilter}
                             value={dateFromFilter}
                         />
                         <DateFilter

@@ -147,8 +147,7 @@ export const TasksPage = () => {
                         />
                         <DateFilter
                             placeholder="Date From"
-                            setValue={setDateFromFilter}
-                            defaultDate={dateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
+                            setValue={setDateFromFilter} // Set default date to today's date in "YYYY-MM-DD" format
                             value={dateFromFilter}
                         />
                         <DateFilter

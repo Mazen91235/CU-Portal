@@ -12,7 +12,6 @@ type DateFilterProps = {
     placeholder?: string;
     startRight?: boolean;
     startDay?: boolean;
-    defaultDate?: string;
     value?: string;
 };
 
@@ -21,7 +20,6 @@ export const DateFilter = ({
     placeholder = "Select Date",
     startRight = false,
     startDay = true,
-    defaultDate = "",
     value,
 }: DateFilterProps) => {
     const [selectedDate, setSelectedDate] = useState<string>("");
@@ -165,13 +163,15 @@ export const DateFilter = ({
     };
 
     useEffect(() => {
-        const nextValue = value ?? defaultDate;
-        if (!nextValue) return;
+        if (!value) {
+            setSelectedDate("");
+            setDisplayDate("");
+            return;
+        }
 
-        const parsedDate = new Date(nextValue);
+        const parsedDate = new Date(value);
         if (Number.isNaN(parsedDate.getTime())) return;
 
-        const normalizedValue = toIsoFormat(nextValue) || "";
         setSelectedDate(formatCalendarDay(parsedDate));
         setDisplayDate(
             parsedDate.toLocaleDateString("en-CA", {
@@ -183,17 +183,6 @@ export const DateFilter = ({
         setCurrentMonth(
             new Date(parsedDate.getFullYear(), parsedDate.getMonth(), 1),
         );
-
-        if (nextValue !== normalizedValue) {
-            setValue(normalizedValue, true);
-        }
-    }, [defaultDate, value, setValue]);
-
-    useEffect(() => {
-        if (value === "") {
-            setSelectedDate("");
-            setDisplayDate("");
-        }
     }, [value]);
 
     useEffect(() => {

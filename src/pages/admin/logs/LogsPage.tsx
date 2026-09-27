@@ -240,7 +240,6 @@ export const LogsPage = () => {
                     <DateFilter
                         placeholder="Date From"
                         setValue={setDateFromFilter}
-                        defaultDate={dateFromFilter}
                         value={dateFromFilter}
                         />
                     <DateFilter

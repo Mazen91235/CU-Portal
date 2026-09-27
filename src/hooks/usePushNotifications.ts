@@ -8,6 +8,7 @@ import {
 import { useMarkNotificationsAsSeenMutation } from "../services/apis/user/NotificationAPIs";
 import { useLogin } from "./useLogin";
 import { useAppSelector } from "../services/redux/Hooks";
+import { invalidateCustomBaseQueryCacheByUrl } from "../utils/CustomBaseQuery";
 
 type ForegroundNotification = {
     title: string;
@@ -167,6 +168,9 @@ export function usePushNotifications() {
                 const content =
                     payload.notification?.body || payload.data?.body || "";
                 const targetUrl = payload.data?.url || "/";
+                if (payload.data?.url) {
+                    invalidateCustomBaseQueryCacheByUrl(targetUrl);
+                }
                 const parsedNotificationId = Number.parseInt(
                     payload.data?.notification_id || "0",
                     10,

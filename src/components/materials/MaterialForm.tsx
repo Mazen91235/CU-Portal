@@ -24,6 +24,17 @@ const getWeekEndDate = (startDate?: string | null) => {
     return date.toISOString().slice(0, 10);
 };
 
+const getTodayKey = () =>
+    new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+
+const isCurrentWeek = (week: WeekResponseDto) => {
+    if (!week.start_date) return false;
+    const startKey = formatDateTime(week.start_date, true).slice(0, 10);
+    const endKey = getWeekEndDate(week.start_date);
+    const todayKey = getTodayKey();
+    return Boolean(endKey && todayKey >= startKey && todayKey <= endKey);
+};
+
 interface MaterialFormProps {
     materialType: "folder" | "file" | "drive" | "youtube" | "external" | null;
     material: MaterialResponseDto | null;
@@ -121,9 +132,12 @@ export function MaterialForm({
                     .filter(
                         (week) => week.id != null && week.week_number != null,
                     )
-                    .sort(
-                        (a, b) => (a.week_number ?? 0) - (b.week_number ?? 0),
-                    );
+                    .sort((a, b) => {
+                        const currentDifference =
+                            Number(isCurrentWeek(b)) - Number(isCurrentWeek(a));
+                        if (currentDifference !== 0) return currentDifference;
+                        return (a.week_number ?? 0) - (b.week_number ?? 0);
+                    });
                 setWeeks(availableWeeks);
 
                 const currentWeekId = material?.week?.id;
@@ -427,7 +441,7 @@ export function MaterialForm({
                                                 key={week.id}
                                                 value={week.id ?? ""}
                                             >
-                                                {`Week ${week.week_number} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})`}
+                                                {`Week ${week.week_number} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})${isCurrentWeek(week) ? " (Current)" : ""}`}
                                             </option>
                                         ))}
                                     </Select>
@@ -532,19 +546,21 @@ export function MaterialForm({
                             materialType === "youtube" ||
                             materialType === "external") && (
                             <div className={styles.formGroup}>
-                                <label htmlFor="link" className={styles.label}>
-                                    {materialType === "drive"
-                                        ? "Google Drive Link"
-                                        : materialType === "youtube"
-                                          ? "YouTube Video Link"
-                                          : "External Link"}
-                                </label>
-                                <input
+                                <Input<Record<string, unknown>>
+                                    name="link"
                                     type="url"
-                                    id="link"
-                                    className={styles.input}
+                                    errors={{}}
                                     value={link}
                                     onChange={(e) => setLink(e.target.value)}
+                                    id="link"
+                                    className={styles.input}
+                                    label={
+                                        materialType === "drive"
+                                            ? "Google Drive Link"
+                                            : materialType === "youtube"
+                                              ? "YouTube Video Link"
+                                              : "External Link"
+                                    }
                                     placeholder={
                                         materialType === "drive"
                                             ? "https://drive.google.com/..."

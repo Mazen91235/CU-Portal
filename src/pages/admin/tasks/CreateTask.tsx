@@ -80,6 +80,10 @@ export const CreateTask = () => {
                 year_id?: number;
             } = {};
             if (!user) return;
+            if (!user.canAccessAll) {
+                setSubjects(user.subjects || []);
+                return;
+            }
             params.faculty_id = user.faculty?.id ?? undefined;
             params.department_id = user.department?.id ?? undefined;
             params.year_id = user.year?.id ?? undefined;

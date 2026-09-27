@@ -5,7 +5,7 @@ import type {
     FetchBaseQueryError,
     FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query";
-import { maxRetries, retryCondition } from "./APIHandling";
+import { getTimeout, mutationTimeout } from "./APIHandling";
 
 type CustomBaseQuery = BaseQueryFn<
     string | FetchArgs,
@@ -41,9 +41,7 @@ const getUrl = (args: string | FetchArgs, baseUrl: string) => {
         const params =
             request.params instanceof URLSearchParams
                 ? request.params
-                : new URLSearchParams(
-                      request.params as Record<string, string>,
-                  );
+                : new URLSearchParams(request.params as Record<string, string>);
         params.forEach((value, key) => url.searchParams.append(key, value));
     }
 
@@ -51,9 +49,7 @@ const getUrl = (args: string | FetchArgs, baseUrl: string) => {
 };
 
 const extractModuleFromPath = (path: string) => {
-    const module = path
-        .replace(/^\/user\//, "")
-        .replace(/^\/admin\//, "");
+    const module = path.replace(/^\/user\//, "").replace(/^\/admin\//, "");
 
     if (!module || !module.includes("/")) return "user";
     if (module.includes("auth")) return "auth";
@@ -320,10 +316,7 @@ const serializeBody = async (body: unknown): Promise<string> => {
     }
 };
 
-const getCacheKey = async (
-    args: string | FetchArgs,
-    baseUrl: string,
-) => {
+const getCacheKey = async (args: string | FetchArgs, baseUrl: string) => {
     const request = getRequest(args);
     const url = getUrl(args, baseUrl);
     const requestPath = `${url.pathname}${url.search}`;
@@ -344,11 +337,49 @@ export const clearCustomBaseQueryCache = () => {
     clearAllGetCache();
 };
 
+const MAX_RETRIES = 4;
+
+const retryCondition = (
+    error: unknown,
+    _args: unknown,
+    { attempt }: { attempt: number },
+) => {
+    const status =
+        typeof error === "object" && error !== null && "status" in error
+            ? (error as { status?: unknown }).status
+            : undefined;
+
+    const isNetworkError = status === "FETCH_ERROR";
+    const isRetryableServerError = status === 502 || status === 503;
+
+    return (isNetworkError || isRetryableServerError) && attempt < MAX_RETRIES;
+};
+
+const isGoogleDriveRequest = (url: URL) =>
+    url.hostname.endsWith("googleapis.com") && url.pathname.includes("/drive/");
+
+export const invalidateCustomBaseQueryCacheByUrl = (url: string) => {
+    if (!url || typeof window === "undefined") return;
+
+    try {
+        const parsedUrl = new URL(url, window.location.origin);
+        const apiOrigin = new URL(import.meta.env.VITE_API_URL).origin;
+        if (
+            parsedUrl.origin !== window.location.origin &&
+            parsedUrl.origin !== apiOrigin
+        )
+            return;
+        invalidateGetCacheByModule(extractModuleFromPath(parsedUrl.pathname));
+    } catch {
+        return;
+    }
+};
+
 export const customBaseQuery = (
     config: Parameters<typeof fetchBaseQuery>[0],
 ): CustomBaseQuery => {
     const baseQuery = retry(fetchBaseQuery(config), {
-        maxRetries,
+        maxRetries: MAX_RETRIES,
         //@ts-expect-error RTK Query's types don't account for this parameter
         retryCondition,
     });
@@ -382,7 +413,14 @@ export const customBaseQuery = (
             >;
         }
 
-        const requestPromise = baseQuery(args, api, extraOptions);
+        const requestWithTimeout = isGoogleDriveRequest(requestUrl)
+            ? request
+            : {
+                  ...request,
+                  timeout: isGetRequest ? getTimeout : mutationTimeout,
+              };
+
+        const requestPromise = baseQuery(requestWithTimeout, api, extraOptions);
         inFlightRequests.set(cacheKey, requestPromise as Promise<unknown>);
 
         try {
@@ -394,11 +432,7 @@ export const customBaseQuery = (
                     getModuleInvalidationTime(module) ===
                         invalidationTimeAtStart
                 ) {
-                    writeCachedResponse(
-                        cacheKey,
-                        result.data,
-                        module,
-                    );
+                    writeCachedResponse(cacheKey, result.data, module);
                 } else if (!isGetRequest) {
                     invalidateGetCacheByModule(module);
                 } else if (api.endpoint === "logout") {
