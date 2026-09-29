@@ -989,7 +989,10 @@ export function MaterialsPage() {
     };
 
     const handleCreateMaterialFromUpload = useCallback(
-        async (uploadResult: Process): Promise<void> => {
+        async (
+            uploadResult: Process,
+            shouldOverwrite: boolean,
+        ): Promise<void> => {
             const parentId =
                 currentPath.length > 0
                     ? currentPath[currentPath.length - 1].id
@@ -997,7 +1000,7 @@ export function MaterialsPage() {
 
             const result = await createMaterial({
                 name: uploadResult.name,
-                should_overwrite: false,
+                should_overwrite: shouldOverwrite,
                 material_type: "file",
                 subject_id: parseInt(subjectFilter),
                 parent_id: parentId ?? undefined,

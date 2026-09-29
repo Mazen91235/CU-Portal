@@ -4,7 +4,7 @@ import { FloatingForm } from "../forms/FloatingForm";
 import { Select } from "../forms/Select";
 
 interface MaterialConflictFormProps {
-    operation: "copy" | "move";
+    operation: "copy" | "move" | "upload";
     isOpen: boolean;
     isSubmitting?: boolean;
     onClose: () => void;
@@ -35,7 +35,7 @@ export function MaterialConflictForm({
             isOpen={isOpen}
             onSubmit={handleSubmit}
             errors={{}}
-            title={`${operation === "copy" ? "Copy" : "Move"} Materials`}
+            title={`${operation === "copy" ? "Copy" : operation === "move" ? "Move" : "Upload"} Materials`}
             onClose={onClose}
             disabled={isSubmitting}
         >
@@ -70,9 +70,13 @@ export function MaterialConflictForm({
                 />
                 <Button
                     type="submit"
-                    text={operation === "copy" ? "Copy" : "Move"}
+                    text={operation === "copy" ? "Copy" : operation === "move" ? "Move" : "Upload"}
                     loadingText={
-                        operation === "copy" ? "Copying..." : "Moving..."
+                        operation === "copy"
+                            ? "Copying..."
+                            : operation === "move"
+                              ? "Moving..."
+                              : "Uploading..."
                     }
                     isSubmitting={isSubmitting}
                     isOrange={false}

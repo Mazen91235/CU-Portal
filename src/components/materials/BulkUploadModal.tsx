@@ -6,12 +6,16 @@ import {
 import { formatFileSize } from "../../utils/Formatter";
 import type { Process } from "../../types/Process";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
+import { MaterialConflictForm } from "./MaterialConflictForm";
 import styles from "./BulkUploadModal.module.css";
 
 type BulkUploadModalProps = {
     files: File[];
     onClose: () => void;
-    onMaterialCreate: (uploadResult: Process) => Promise<void>;
+    onMaterialCreate: (
+        uploadResult: Process,
+        shouldOverwrite: boolean,
+    ) => Promise<void>;
 };
 
 export function BulkUploadModal({
@@ -24,6 +28,7 @@ export function BulkUploadModal({
     const removeUploadedFiles = useRemoveUploadedFiles();
     const [isUploading, setIsUploading] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
+    const [showConflictForm, setShowConflictForm] = useState(false);
     const formDisabled = isUploading || uploadFileToDrive.isGoogleAccessTokenLoading;
 
     const handleRemoveFile = (index: number) => {
@@ -69,28 +74,34 @@ export function BulkUploadModal({
         }
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
+        if (files.length === 0 || formDisabled) return;
+        setShowConflictForm(true);
+    };
+
+    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
         if (files.length === 0 || formDisabled) return;
 
         setIsUploading(true);
-        onClose();
         try {
             for (const file of files) {
                 const result = await uploadFileToDrive(file, file.name);
                 if (!result?.url) continue;
                 try {
-                    await onMaterialCreate(result);
+                    await onMaterialCreate(result, shouldOverwrite);
                 } catch (error) {
                     await removeUploadedFiles([result.url]);
                     throw error;
                 }
             }
+            setShowConflictForm(false);
+            onClose();
         } catch (error) {
             handlePopupErrors(error);
         } finally {
             setIsUploading(false);
         }
-    }
+    };
 
     return (
         <div className={styles.overlay} onClick={formDisabled ? undefined : onClose}>
@@ -174,6 +185,14 @@ export function BulkUploadModal({
                     </button>
                 </div>
             </div>
+
+            <MaterialConflictForm
+                operation="upload"
+                isOpen={showConflictForm}
+                isSubmitting={isUploading}
+                onClose={() => setShowConflictForm(false)}
+                onConfirm={handleConflictConfirm}
+            />
         </div>
     );
 }
