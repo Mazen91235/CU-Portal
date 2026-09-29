@@ -37,6 +37,8 @@ export const UsersPage = () => {
     const setSelectedDepartment = getFilterSetter("department_id");
     const selectedYear = getFilter("year_id");
     const setSelectedYear = getFilterSetter("year_id");
+    const isActiveNow = getFilter("is_active_now") === "true";
+    const setIsActiveNow = getFilterSetter("is_active_now");
     const [page, setPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [users, setUsers] = useState<UserResponseDto[]>([]);
@@ -68,13 +70,21 @@ export const UsersPage = () => {
                 params.department_id = user.department?.id ?? undefined;
                 params.year_id = user.year?.id ?? undefined;
             }
-            await getUsersData({
-                data: params,
-            }).unwrap();
+            if (!isActiveNow)
+                await getUsersData({
+                    data: params,
+                }).unwrap();
         } catch (error) {
             handlePopupErrors(error);
         }
-    }, [selectedFaculty, selectedDepartment, selectedYear, user, getUsersData]);
+    }, [
+        selectedFaculty,
+        selectedDepartment,
+        selectedYear,
+        user,
+        isActiveNow,
+        getUsersData,
+    ]);
 
     const fetchFaculties = useCallback(async () => {
         try {
@@ -117,6 +127,7 @@ export const UsersPage = () => {
                 faculty_id?: number;
                 department_id?: number;
                 year_id?: number;
+                is_active_now?: boolean;
             } = {};
 
             if (searchQuery) params.query = searchQuery;
@@ -124,6 +135,7 @@ export const UsersPage = () => {
             if (selectedDepartment)
                 params.department_id = Number(selectedDepartment);
             if (selectedYear) params.year_id = Number(selectedYear);
+            if (isActiveNow) params.is_active_now = true;
 
             if (!user.canAccessAll) {
                 params.faculty_id = user.faculty?.id ?? undefined;
@@ -134,8 +146,16 @@ export const UsersPage = () => {
             const result = await getUsers({
                 data: params,
                 includes: ["role"],
-                page,
+                page: isActiveNow ? 1 : page,
+                limit: isActiveNow ? 1e6 : undefined,
             }).unwrap();
+
+            if (isActiveNow) {
+                setUsers(result.data || []);
+                setHasNextPage(false);
+                return;
+            }
+
             setUsers((prev) => {
                 const filteredPrev = prev.filter(
                     (user) =>
@@ -149,7 +169,6 @@ export const UsersPage = () => {
             handlePopupErrors(error);
         }
     }, [
-        getUsers,
         searchQuery,
         selectedFaculty,
         selectedDepartment,
@@ -157,6 +176,8 @@ export const UsersPage = () => {
         page,
         hasNextPage,
         user,
+        isActiveNow,
+        getUsers,
     ]);
 
     const authFacultiesQuery = useCallback(
@@ -182,7 +203,13 @@ export const UsersPage = () => {
     useEffect(() => {
         setPage(1);
         setHasNextPage(true);
-    }, [searchQuery, selectedFaculty, selectedDepartment, selectedYear]);
+    }, [
+        searchQuery,
+        selectedFaculty,
+        selectedDepartment,
+        selectedYear,
+        isActiveNow,
+    ]);
 
     const facultyOptions = useMemo(() => {
         return [
@@ -219,8 +246,8 @@ export const UsersPage = () => {
     }, [usersStatsData]);
 
     const handlePagination = () => {
-        if (hasNextPage && !isFetching && users.length > 0) {
-            setPage(page + 1);
+        if (!isActiveNow && hasNextPage && !isFetching && users.length > 0) {
+            setPage((currentPage) => currentPage + 1);
         }
     };
 
@@ -253,70 +280,116 @@ export const UsersPage = () => {
     return (
         <Layout>
             <PageSeo
-                title="Users Management - CU Portal"
+                title={`${isActiveNow ? "Manage Active Now Users" : "Users Management"} - CU Portal`}
                 description="Search, Filter, Approve, And Update Users All In One Place"
             />
 
             <Banner
-                title="Users Management"
+                title={
+                    isActiveNow
+                        ? `Manage Active Now Users (${users.length})`
+                        : "Users Management"
+                }
                 description="Search, Filter, Approve, And Update Users All In One Place"
             />
-            <section className={styles.infoCardsContainer}>
-                <div className={styles.infoCardsRow}>
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <IconComponent icon="users-total" size={48} />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Total Users
+            {!isActiveNow && (
+                <section className={styles.infoCardsContainer}>
+                    <div className={styles.infoCardsRow}>
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <IconComponent icon="users-total" size={48} />
                             </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.users_count || 0}
-                            </div>
-                            <div className={styles.infoCardGrowth}>
-                                <IconComponent
-                                    icon="arrow-up"
-                                    color="green"
-                                    size={16}
-                                />
-                                <span className={styles.infoCardGrowthText}>
-                                    {stats?.percentage_increase || 0}% This
-                                    Month
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.infoCard}>
-                        <div className={styles.infoCardIcon}>
-                            <IconComponent icon="pending-clock-new" size={48} />
-                        </div>
-                        <div className={styles.infoCardContent}>
-                            <div className={styles.infoCardTitle}>
-                                Pending Requests
-                            </div>
-                            <div className={styles.infoCardValue}>
-                                {stats?.pending_users_count || 0}
-                            </div>
-                            <Link
-                                to="/admin/users/pending"
-                                style={{ textDecoration: "none" }}
-                            >
-                                <div className={styles.infoCardAction}>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Total Users
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.users_count || 0}
+                                </div>
+                                <div className={styles.infoCardGrowth}>
                                     <IconComponent
-                                        icon="eye-review"
-                                        className={styles.infoCardReviewEye}
+                                        icon="arrow-up"
+                                        color="green"
+                                        size={16}
                                     />
-                                    <span className={styles.infoCardReview}>
-                                        Review Now
+                                    <span className={styles.infoCardGrowthText}>
+                                        {stats?.percentage_increase || 0}% This
+                                        Month
                                     </span>
                                 </div>
-                            </Link>
+                            </div>
+                        </div>
+
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <IconComponent
+                                    icon="pending-clock-new"
+                                    size={48}
+                                />
+                            </div>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Pending Requests
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.pending_users_count || 0}
+                                </div>
+                                <Link
+                                    to="/admin/users/pending"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className={styles.infoCardAction}>
+                                        <IconComponent
+                                            icon="eye-review"
+                                            className={styles.infoCardReviewEye}
+                                        />
+                                        <span className={styles.infoCardReview}>
+                                            Review Now
+                                        </span>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <IconComponent
+                                    icon="users-total"
+                                    size={48}
+                                    color="#16a34a"
+                                />
+                            </div>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Active Now
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.active_now_count || 0}
+                                </div>
+                                <Link
+                                    to={window.location}
+                                    style={{ textDecoration: "none" }}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsActiveNow("true");
+                                    }}
+                                >
+                                    <div className={styles.infoCardAction}>
+                                        <IconComponent
+                                            icon="eye-review"
+                                            className={styles.infoCardReviewEye}
+                                        />
+                                        <span className={styles.infoCardReview}>
+                                            View Active Now
+                                        </span>
+                                    </div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
+
             <section className={styles.filtersSection}>
                 <div className={styles.filtersBg}></div>
                 <div className={styles.filtersRow}>
@@ -371,7 +444,7 @@ export const UsersPage = () => {
                 }
             </section>
 
-            <Pagination onReached={handlePagination} />
+            {!isActiveNow && <Pagination onReached={handlePagination} />}
         </Layout>
     );
 };

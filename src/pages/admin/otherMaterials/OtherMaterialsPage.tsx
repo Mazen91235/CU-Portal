@@ -31,6 +31,7 @@ import { MaterialCard } from "../../../components/materials/MaterialCard";
 import { MaterialSelectionMenu } from "../../../components/materials/MaterialSelectionMenu";
 import { Navigator } from "../../../components/materials/Navigator";
 import { CrossSubjectDestinationPicker } from "../../../components/materials/CrossSubjectDestinationPicker";
+import { MaterialConflictForm } from "../../../components/materials/MaterialConflictForm";
 import { OtherMaterialsScopeHeader } from "../../../components/materials/OtherMaterialsScopeHeader";
 import { Preview } from "../../../components/preview/Preview";
 
@@ -70,6 +71,17 @@ export function OtherMaterialsPage() {
     const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
     const [showDestinationPicker, setShowDestinationPicker] = useState(false);
+    const [conflictForm, setConflictForm] = useState<{
+        isOpen: boolean;
+        materialIds: number[];
+        targetId: number | null;
+        subjectId: number;
+    }>({
+        isOpen: false,
+        materialIds: [],
+        targetId: null,
+        subjectId: 0,
+    });
     const [previewFile, setPreviewFile] = useState<{
         id: string;
         name: string;
@@ -80,7 +92,8 @@ export function OtherMaterialsPage() {
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
-    const [copyMaterials] = useCopyMaterialsMutation();
+    const [copyMaterials, { isLoading: isCopying }] =
+        useCopyMaterialsMutation();
     const createProcess = useCreateProcess({});
 
     const fetchDepartment = useCallback(async () => {
@@ -368,6 +381,7 @@ export function OtherMaterialsPage() {
         async (subjectId: number, name: string, parentId: number | null) => {
             await createMaterial({
                 name,
+                should_overwrite: false,
                 material_type: "folder",
                 subject_id: subjectId,
                 parent_id: parentId,
@@ -381,41 +395,66 @@ export function OtherMaterialsPage() {
         setShowDestinationPicker(false);
     };
 
-    const handleDestinationPickerConfirm = async (
+    const handleDestinationPickerConfirm = (
         targetId: number | null,
         subjectId: number,
     ) => {
         if (selectedMaterials.length === 0) return;
-        const processName = `Copying ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
-        const copiedMaterials = selectedMaterials;
-        setSelectedMaterials([]);
+
         setShowDestinationPicker(false);
+        setConflictForm({
+            isOpen: true,
+            materialIds: [...selectedMaterials],
+            targetId,
+            subjectId,
+        });
+    };
+
+    const handleConflictFormClose = () => {
+        setSelectedMaterials([]);
+        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+    };
+
+    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
+        if (
+            conflictForm.materialIds.length === 0 ||
+            !conflictForm.subjectId
+        )
+            return;
+
+        const { materialIds, targetId, subjectId } = conflictForm;
+        const processName = `Copying ${materialIds.length} Material${materialIds.length > 1 ? "s" : ""}`;
+
+        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+        setSelectedMaterials([]);
+
         try {
-            createProcess(processName).then(async (process) => {
-                try {
-                    if (!process) {
-                        showToast("error", "Error", "Failed to create process");
-                        return;
-                    }
-                    await copyMaterials({
-                        material_ids: copiedMaterials,
-                        destination_id: targetId,
-                        subject_id: subjectId,
-                    }).unwrap();
-                    dispatch(setProcess({ ...process, status: "completed" }));
-                    await fetchMaterials(currentParentId);
-                } catch (error) {
-                    const errorMessage =
-                        getErrorMessage(error) || "Operation failed";
-                    dispatch(
-                        setProcess({
-                            ...process,
-                            status: "failed",
-                            reason: errorMessage,
-                        }),
-                    );
-                }
-            });
+            const process = await createProcess(processName);
+            if (!process) {
+                showToast("error", "Error", "Failed to create process");
+                return;
+            }
+
+            try {
+                await copyMaterials({
+                    material_ids: materialIds,
+                    destination_id: targetId,
+                    subject_id: subjectId,
+                    should_overwrite: shouldOverwrite,
+                }).unwrap();
+                dispatch(setProcess({ ...process, status: "completed" }));
+                await fetchMaterials(currentParentId);
+            } catch (error) {
+                const errorMessage =
+                    getErrorMessage(error) || "Operation failed";
+                dispatch(
+                    setProcess({
+                        ...process,
+                        status: "failed",
+                        reason: errorMessage,
+                    }),
+                );
+            }
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -661,6 +700,14 @@ export function OtherMaterialsPage() {
                         createFolder={createDestinationFolder}
                     />
                 )}
+
+                <MaterialConflictForm
+                    operation="copy"
+                    isOpen={conflictForm.isOpen}
+                    isSubmitting={isCopying}
+                    onClose={handleConflictFormClose}
+                    onConfirm={handleConflictConfirm}
+                />
             </div>
         </Layout>
     );

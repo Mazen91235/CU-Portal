@@ -3,6 +3,8 @@ import { type ReactNode, isValidElement, cloneElement } from "react";
 const linkStyle = {
     color: "var(--badge-early-access-bg)",
     textDecoration: "underline",
+    wordBreak: "break-word" as const,
+    overflowWrap: "anywhere" as const,
 };
 
 // Captures only URLs starting with http://, https://, or www.

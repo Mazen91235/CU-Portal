@@ -45,6 +45,31 @@ export const UserPage = () => {
     const permissions = useAppSelector((state) => state.user.permissions);
     const canManageUsers = permissions?.includes("Manage Users") ?? false;
 
+    const latestActivityLog = user.logs?.reduce(
+        (latest, log) => {
+            const logTime = log.created_at
+                ? (new Date(formatDateTime(log.created_at, true))).getTime()
+                : Number.NaN;
+            if (Number.isNaN(logTime)) return latest;
+
+            const latestTime = latest?.created_at
+                ? (new Date(formatDateTime(latest.created_at, true))).getTime()
+                : Number.NaN;
+            if (!latest || Number.isNaN(latestTime) || logTime > latestTime) {
+                return log;
+            }
+            return latest;
+        },
+        undefined as NonNullable<typeof user.logs>[number] | undefined,
+    );
+    const latestActivityDate = latestActivityLog?.created_at
+        ? new Date(formatDateTime(latestActivityLog.created_at, true))
+        : null;
+    const isActiveNow =
+        latestActivityDate !== null &&
+        !Number.isNaN(latestActivityDate.getTime()) &&
+        Date.now() - latestActivityDate.getTime() <= 60 * 60 * 1000;
+
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
     const [updateUser] = useUpdateUsersMutation();
@@ -198,6 +223,22 @@ export const UserPage = () => {
                                             Early Access
                                         </span>
                                     )}
+                                    <span
+                                        className={`${styles.userActivityBadge} ${
+                                            isActiveNow
+                                                ? styles.userActivityActive
+                                                : styles.userActivityInactive
+                                        }`}
+                                    >
+                                        <span
+                                            className={styles.userActivityDot}
+                                        />
+                                        {isActiveNow
+                                            ? "Active Now"
+                                            : `Was Active · ${formatTimeAgo(
+                                                  latestActivityLog?.created_at,
+                                              )}`}
+                                    </span>
                                 </div>
                                 {canManageUsers &&
                                     (user.status ? (

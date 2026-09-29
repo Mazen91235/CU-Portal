@@ -64,6 +64,39 @@
     white-space: nowrap;
 }
 
+.userActivityBadge {
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.userActivityActive {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.userActivityInactive {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.userActivityDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: 0 0 8px;
+    background: #94a3b8;
+}
+
+.userActivityActive .userActivityDot {
+    background: #22c55e;
+}
+
 .editRoleBtn {
     background: #800080;
     color: white;

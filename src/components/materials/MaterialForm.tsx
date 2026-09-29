@@ -59,6 +59,7 @@ export function MaterialForm({
     const dispatch = useAppDispatch();
     const [name, setName] = useState(material?.name || "");
     const [weekId, setWeekId] = useState<number | "">(material?.week?.id ?? "");
+    const [shouldOverwrite, setShouldOverwrite] = useState(false);
     const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
     const [weeksLoading, setWeeksLoading] = useState(false);
     const [getWeeks] = useLazyGetWeeksQuery();
@@ -90,6 +91,7 @@ export function MaterialForm({
             );
             setLink(material.attachment?.url || "");
             setWeekId(material.week?.id ?? "");
+            setShouldOverwrite(false);
             if (material.material_type === "file" && material.attachment) {
                 setExistingFileData({
                     id: material.attachment.details?.file_data?.id || "",
@@ -101,6 +103,7 @@ export function MaterialForm({
             }
         } else {
             setWeekId("");
+            setShouldOverwrite(false);
         }
     }, [material]);
 
@@ -188,6 +191,11 @@ export function MaterialForm({
                 formData.append("parent_id", parentId.toString());
             }
 
+            formData.append(
+                "should_overwrite",
+                String(materialType !== "folder" && shouldOverwrite),
+            );
+
             if (material && material.id) {
                 formData.append("id", material.id.toString());
             }
@@ -268,6 +276,7 @@ export function MaterialForm({
         setMaterialType(
             value as "folder" | "file" | "drive" | "youtube" | "external",
         );
+        setShouldOverwrite(false);
         if (value !== "file") {
             setFile(null);
             setExistingFileData(null);
@@ -404,6 +413,25 @@ export function MaterialForm({
                                 </div>
                             )}
                         </div>
+
+                        {materialType !== "folder" && (
+                            <div className={styles.formGroup}>
+                                <Select<Record<string, unknown>>
+                                    name="should_overwrite"
+                                    errors={{}}
+                                    value={shouldOverwrite ? "true" : "false"}
+                                    onChange={(e) =>
+                                        setShouldOverwrite(
+                                            e.target.value === "true",
+                                        )
+                                    }
+                                    label="On Name Conflict?"
+                                >
+                                    <option value="false">Rename</option>
+                                    <option value="true">Overwrite</option>
+                                </Select>
+                            </div>
+                        )}
 
                         <div className={styles.formGroup}>
                             {materialType !== "folder" && (

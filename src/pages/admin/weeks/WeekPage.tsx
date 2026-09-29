@@ -119,6 +119,7 @@ function MaterialAdminCard({
             await updateMaterial({
                 material_id: material.id,
                 name: material.name || "",
+                should_overwrite: false,
                 material_type: material.material_type || "file",
                 week_id: materialWeekId ? Number(materialWeekId) : null,
                 details: {

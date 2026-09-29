@@ -40,6 +40,7 @@ import { MaterialForm } from "../../../components/materials/MaterialForm";
 import { FetchFromDriveForm } from "../../../components/materials/FetchFromDriveForm";
 import { Navigator } from "../../../components/materials/Navigator";
 import { FloatingContainer } from "../../../components/materials/FloatingContainer";
+import { MaterialConflictForm } from "../../../components/materials/MaterialConflictForm";
 import { Preview } from "../../../components/preview/Preview";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { DropZone } from "../../../components/materials/DropZone";
@@ -112,6 +113,19 @@ export function MaterialsPage() {
         targetId?: number | null;
         materialId?: number;
     }>({ isOpen: false, action: null });
+    const [conflictForm, setConflictForm] = useState<{
+        isOpen: boolean;
+        operation: "copy" | "move";
+        materialIds: number[];
+        targetId: number | null;
+        subjectId: number;
+    }>({
+        isOpen: false,
+        operation: "move",
+        materialIds: [],
+        targetId: null,
+        subjectId: 0,
+    });
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
@@ -135,7 +149,8 @@ export function MaterialsPage() {
     const [updateMaterial] = useUpdateMaterialMutation();
     const [deleteMaterials, { isLoading: isDeleting }] =
         useDeleteMaterialsMutation();
-    const [copyMaterials] = useCopyMaterialsMutation();
+    const [copyMaterials, { isLoading: isCopying }] =
+        useCopyMaterialsMutation();
     const [moveMaterials, { isLoading: isMoving }] = useMoveMaterialsMutation();
     const [getMaterialsFromDrive] = useFetchMaterialsFromDriveMutation();
     const createProcess = useCreateProcess({});
@@ -398,42 +413,16 @@ export function MaterialsPage() {
         });
     };
 
-    const confirmMove = async (targetId: number | null) => {
-        if (selectedMaterials.length === 0) return;
-        const processName = `Moving ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
-        setSelectedMaterials([]);
-        setIsSelectionMode(false);
+    const confirmMove = (targetId: number | null) => {
+        if (selectedMaterials.length === 0 || !subjectFilter) return;
         setConfirmModal({ isOpen: false, action: null, targetId: null });
-        try {
-            createProcess(processName).then(async (process) => {
-                try {
-                    await moveMaterials({
-                        material_ids: selectedMaterials,
-                        destination_id: targetId,
-                        subject_id: parseInt(subjectFilter),
-                    }).unwrap();
-                    dispatch(setProcess({ ...process, status: "completed" }));
-                    setCurrentPath((prev) => {
-                        const latestParentId =
-                            prev.length > 0 ? prev[prev.length - 1].id : null;
-                        fetchMaterials(latestParentId);
-                        return prev;
-                    });
-                } catch (error) {
-                    const errorMessage =
-                        getErrorMessage(error) || "Move failed";
-                    dispatch(
-                        setProcess({
-                            ...process,
-                            status: "failed",
-                            reason: errorMessage,
-                        }),
-                    );
-                }
-            });
-        } catch (error) {
-            handlePopupErrors(error);
-        }
+        setConflictForm({
+            isOpen: true,
+            operation: "move",
+            materialIds: [...selectedMaterials],
+            targetId,
+            subjectId: Number(subjectFilter),
+        });
     };
 
     const handleCreateMaterial = (
@@ -533,11 +522,15 @@ export function MaterialsPage() {
                         {
                             material_id: material.id,
                             name,
+                            should_overwrite: false,
                             material_type,
                             details: {
                                 url: url,
                             },
                         };
+
+                    updatePayload.should_overwrite =
+                        data.get("should_overwrite") === "true";
 
                     if (parsedWeekId !== undefined) {
                         updatePayload.week_id = parsedWeekId;
@@ -551,6 +544,8 @@ export function MaterialsPage() {
                         {
                             subject_id: parseInt(subjectFilter, 10),
                             name,
+                            should_overwrite:
+                                data.get("should_overwrite") === "true",
                             material_type,
                             details: {
                                 url: url,
@@ -746,55 +741,71 @@ export function MaterialsPage() {
         await fetchFolders(folderId);
     };
 
-    const handleFloatingConfirm = async (targetId: number | null) => {
-        if (selectedMaterials.length === 0) return;
-        const processName = `${floatingContainer.operation === "copy" ? "Copying" : "Moving"} ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
-        setSelectedMaterials([]);
-        setIsSelectionMode(false);
+    const handleFloatingConfirm = (targetId: number | null) => {
+        if (selectedMaterials.length === 0 || !subjectFilter) return;
         setFloatingContainer({
             show: false,
             operation: "copy",
             targetPath: [],
         });
+        setConflictForm({
+            isOpen: true,
+            operation: floatingContainer.operation,
+            materialIds: [...selectedMaterials],
+            targetId,
+            subjectId: Number(subjectFilter),
+        });
+    };
+
+    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
+        if (conflictForm.materialIds.length === 0 || !conflictForm.subjectId)
+            return;
+
+        const { operation, materialIds, targetId, subjectId } = conflictForm;
+        const processName = `${operation === "copy" ? "Copying" : "Moving"} ${materialIds.length} Material${materialIds.length > 1 ? "s" : ""}`;
+
+        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+        setSelectedMaterials([]);
+        setIsSelectionMode(false);
+
         try {
-            createProcess(processName).then(async (process) => {
-                try {
-                    if (!process) {
-                        showToast("error", "Error", "Failed to create process");
-                        return;
-                    }
-                    if (floatingContainer.operation === "copy") {
-                        await copyMaterials({
-                            material_ids: selectedMaterials,
-                            destination_id: targetId,
-                            subject_id: parseInt(subjectFilter),
-                        }).unwrap();
-                    } else {
-                        await moveMaterials({
-                            material_ids: selectedMaterials,
-                            destination_id: targetId,
-                            subject_id: parseInt(subjectFilter),
-                        }).unwrap();
-                    }
-                    dispatch(setProcess({ ...process, status: "completed" }));
-                    setCurrentPath((prev) => {
-                        const latestParentId =
-                            prev.length > 0 ? prev[prev.length - 1].id : null;
-                        fetchMaterials(latestParentId);
-                        return prev;
-                    });
-                } catch (error) {
-                    const errorMessage =
-                        getErrorMessage(error) || "Operation failed";
-                    dispatch(
-                        setProcess({
-                            ...process,
-                            status: "failed",
-                            reason: errorMessage,
-                        }),
-                    );
+            const process = await createProcess(processName);
+            if (!process) {
+                showToast("error", "Error", "Failed to create process");
+                return;
+            }
+
+            try {
+                const payload = {
+                    material_ids: materialIds,
+                    destination_id: targetId,
+                    subject_id: subjectId,
+                    should_overwrite: shouldOverwrite,
+                };
+
+                if (operation === "copy") {
+                    await copyMaterials(payload).unwrap();
+                } else {
+                    await moveMaterials(payload).unwrap();
                 }
-            });
+
+                dispatch(setProcess({ ...process, status: "completed" }));
+                const latestParentId =
+                    currentPath.length > 0
+                        ? currentPath[currentPath.length - 1].id
+                        : null;
+                await fetchMaterials(latestParentId);
+            } catch (error) {
+                const errorMessage =
+                    getErrorMessage(error) || "Operation failed";
+                dispatch(
+                    setProcess({
+                        ...process,
+                        status: "failed",
+                        reason: errorMessage,
+                    }),
+                );
+            }
         } catch (error) {
             handlePopupErrors(error);
         }
@@ -807,6 +818,7 @@ export function MaterialsPage() {
         try {
             await createMaterial({
                 name: name,
+                should_overwrite: false,
                 material_type: "folder",
                 parent_id: parentId ?? undefined,
                 subject_id: parseInt(subjectFilter),
@@ -985,6 +997,7 @@ export function MaterialsPage() {
 
             const result = await createMaterial({
                 name: uploadResult.name,
+                should_overwrite: false,
                 material_type: "file",
                 subject_id: parseInt(subjectFilter),
                 parent_id: parentId ?? undefined,
@@ -1028,7 +1041,7 @@ export function MaterialsPage() {
     );
 
     const handleFetchFromDrive = useCallback(
-        (url: string) => {
+        (url: string, shouldOverwrite: boolean) => {
             const parentId =
                 currentPath.length > 0
                     ? currentPath[currentPath.length - 1].id
@@ -1037,6 +1050,7 @@ export function MaterialsPage() {
                 try {
                     await getMaterialsFromDrive({
                         url,
+                        should_overwrite: shouldOverwrite,
                         subject_id: parseInt(subjectFilter),
                         parent_id: parentId ?? undefined,
                     }).unwrap();
@@ -1367,7 +1381,9 @@ export function MaterialsPage() {
                 {showFetchFromDriveForm && (
                     <FetchFromDriveForm
                         onClose={() => setShowFetchFromDriveForm(false)}
-                        onSubmit={(url: string) => handleFetchFromDrive(url)}
+                        onSubmit={(url: string, shouldOverwrite: boolean) =>
+                            handleFetchFromDrive(url, shouldOverwrite)
+                        }
                     />
                 )}
 
@@ -1438,6 +1454,18 @@ export function MaterialsPage() {
                         onCreateFolder={handleCreateFolderInFloating}
                     />
                 )}
+
+                <MaterialConflictForm
+                    isOpen={conflictForm.isOpen}
+                    operation={conflictForm.operation}
+                    isSubmitting={isMoving || isCopying}
+                    onClose={() => {
+                        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+                        setSelectedMaterials([]);
+                        setIsSelectionMode(false);
+                    }}
+                    onConfirm={handleConflictConfirm}
+                />
 
                 {previewFile && (
                     <Preview

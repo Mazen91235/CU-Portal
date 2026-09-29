@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button } from "../forms/Button";
 import { Input } from "../forms/Input";
+import { Select } from "../forms/Select";
 import styles from "./MaterialForm.module.css";
 import { showToast } from "../../utils/ToastsManager";
 
 interface FetchFromDriveFormProps {
     onClose: () => void;
-    onSubmit?: (url: string) => void | Promise<void>;
+    onSubmit?: (url: string, shouldOverwrite: boolean) => void | Promise<void>;
 }
 
 export function FetchFromDriveForm({
@@ -14,6 +15,7 @@ export function FetchFromDriveForm({
     onSubmit,
 }: FetchFromDriveFormProps) {
     const [driveUrl, setDriveUrl] = useState("");
+    const [shouldOverwrite, setShouldOverwrite] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const formDisabled = isSubmitting;
 
@@ -30,7 +32,7 @@ export function FetchFromDriveForm({
         if (onSubmit) {
             setIsSubmitting(true);
             try {
-                await onSubmit(driveUrl.trim());
+                await onSubmit(driveUrl.trim(), shouldOverwrite);
                 onClose();
             } finally {
                 setIsSubmitting(false);
@@ -75,6 +77,23 @@ export function FetchFromDriveForm({
                                 id="driveUrl"
                                 className={styles.input}
                             />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <Select<Record<string, unknown>>
+                                name="should_overwrite"
+                                errors={{}}
+                                value={shouldOverwrite ? "true" : "false"}
+                                onChange={(e) =>
+                                    setShouldOverwrite(
+                                        e.target.value === "true",
+                                    )
+                                }
+                                label="On Name Conflict?"
+                            >
+                                <option value="false">Rename</option>
+                                <option value="true">Overwrite</option>
+                            </Select>
                         </div>
 
                         <div className={styles.formActions}>
