@@ -322,42 +322,7 @@ export const UsersPage = () => {
 
                         <div className={styles.infoCard}>
                             <div className={styles.infoCardIcon}>
-                                <IconComponent
-                                    icon="pending-clock-new"
-                                    size={48}
-                                />
-                            </div>
-                            <div className={styles.infoCardContent}>
-                                <div className={styles.infoCardTitle}>
-                                    Pending Requests
-                                </div>
-                                <div className={styles.infoCardValue}>
-                                    {stats?.pending_users_count || 0}
-                                </div>
-                                <Link
-                                    to="/admin/users/pending"
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    <div className={styles.infoCardAction}>
-                                        <IconComponent
-                                            icon="eye-review"
-                                            className={styles.infoCardReviewEye}
-                                        />
-                                        <span className={styles.infoCardReview}>
-                                            Review Now
-                                        </span>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
-
-                        <div className={styles.infoCard}>
-                            <div className={styles.infoCardIcon}>
-                                <IconComponent
-                                    icon="users-total"
-                                    size={48}
-                                    color="#16a34a"
-                                />
+                                <IconComponent icon="users-total" size={48} />
                             </div>
                             <div className={styles.infoCardContent}>
                                 <div className={styles.infoCardTitle}>
@@ -381,6 +346,37 @@ export const UsersPage = () => {
                                         />
                                         <span className={styles.infoCardReview}>
                                             View Active Now
+                                        </span>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className={styles.infoCard}>
+                            <div className={styles.infoCardIcon}>
+                                <IconComponent
+                                    icon="pending-clock-new"
+                                    size={48}
+                                />
+                            </div>
+                            <div className={styles.infoCardContent}>
+                                <div className={styles.infoCardTitle}>
+                                    Pending Requests
+                                </div>
+                                <div className={styles.infoCardValue}>
+                                    {stats?.pending_users_count || 0}
+                                </div>
+                                <Link
+                                    to="/admin/users/pending"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className={styles.infoCardAction}>
+                                        <IconComponent
+                                            icon="eye-review"
+                                            className={styles.infoCardReviewEye}
+                                        />
+                                        <span className={styles.infoCardReview}>
+                                            Review Now
                                         </span>
                                     </div>
                                 </Link>

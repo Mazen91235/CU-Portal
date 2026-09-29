@@ -1181,267 +1181,267 @@
 /* Responsive */
 
 @media (max-width: 1024px) {
+    .userDetailsCard {
+        max-width: 98vw;
+        padding: 18px 8px 18px 8px;
+    }
 
-.userDetailsCard {
-    max-width: 98vw;
-    padding: 18px 8px 18px 8px;
-}
+    .userDetailsAvatar {
+        width: 72px;
+        height: 72px;
+    }
 
-.userDetailsAvatar {
-    width: 72px;
-    height: 72px;
-}
+    .userDetailsInfoTable {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+        display: table;
+        float: none;
+        border-spacing: 0 2px;
+    }
 
-.userDetailsInfoTable {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 350px;
-    margin-left: auto;
-    margin-right: auto;
-    display: table;
-    float: none;
-    border-spacing: 0 2px;
-}
+    .userDetailsInfoTable td {
+        padding: 6px 8px 6px 0;
+    }
 
-.userDetailsInfoTable td {
-    padding: 6px 8px 6px 0;
-}
+    .sectionsRow {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
 
-.sectionsRow {
-    grid-template-columns: 1fr;
-    gap: 0;
-}
+    .sectionsRow > .section {
+        width: 95vw;
+        max-width: 95vw;
+        margin: 0 auto;
+    }
 
-.sectionsRow > .section {
-    width: 95vw;
-    max-width: 95vw;
-    margin: 0 auto;
-}
+    .examsSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.examsSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .tasksSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.tasksSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .announcementSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.announcementSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .materialsSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.materialsSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .gradesSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.gradesSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .subjectsSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.subjectsSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .activityLogsSection {
+        width: 95vw;
+        max-width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.activityLogsSection {
-    width: 95vw;
-    max-width: 95vw;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .userDetailsMainRow {
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+        justify-content: center;
+    }
 
-.userDetailsMainRow {
-    flex-direction: column;
-    gap: 5px;
-    align-items: center;
-    justify-content: center;
-}
+    .userDetailsAvatarWrapper {
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0;
+        margin-right: 0;
+        width: 100%;
+    }
 
-.userDetailsAvatarWrapper {
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0;
-    margin-right: 0;
-    width: 100%;
-}
+    .userDetailsInfoTableWrapper {
+        width: 100%;
+        max-width: 98vw;
+        justify-content: center;
+        align-items: center;
+        padding-left: 16px;
+    }
 
-.userDetailsInfoTableWrapper {
-    width: 100%;
-    max-width: 98vw;
-    justify-content: center;
-    align-items: center;
-    padding-left: 16px;
-}
+    .userRoleContainer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
 
-.userRoleContainer {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-}
+    .userRoleContainer .userRoleLeft {
+        width: 100%;
+        flex-wrap: wrap;
+    }
 
-.userRoleContainer .userRoleLeft {
-    width: 100%;
-}
+    .userRoleActions {
+        width: 100%;
+        flex-direction: column;
+    }
 
-.userRoleActions {
-    width: 100%;
-    flex-direction: column;
-}
+    .userRoleActions .editRoleBtn {
+        width: 100%;
+    }
 
-.userRoleActions .editRoleBtn {
-    width: 100%;
-}
+    .userRoleActions .suspendUserBtn {
+        width: 100%;
+    }
 
-.userRoleActions .suspendUserBtn {
-    width: 100%;
-}
+    .userDetailsInfoTable tr {
+        display: flex;
+        flex-wrap: wrap;
+    }
 
-.userDetailsInfoTable tr {
-    display: flex;
-    flex-wrap: wrap;
-}
+    .examCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
 
-.examCard {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    min-width: 0;
-}
+    .taskCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
 
-.taskCard {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    min-width: 0;
-}
+    .eventCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
 
-.eventCard {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    min-width: 0;
-}
+    .materialsCard {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        min-width: 0;
+    }
 
-.materialsCard {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    min-width: 0;
-}
+    .examCardIcon {
+        margin-right: 10px;
+    }
 
-.examCardIcon {
-    margin-right: 10px;
-}
+    .taskCardIcon {
+        margin-right: 10px;
+    }
 
-.taskCardIcon {
-    margin-right: 10px;
-}
+    .eventCardIcon {
+        margin-right: 10px;
+    }
 
-.eventCardIcon {
-    margin-right: 10px;
-}
+    .materialsCardIcon {
+        margin-right: 10px;
+    }
 
-.materialsCardIcon {
-    margin-right: 10px;
-}
+    .examCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
 
-.examCardInfo {
-    min-width: 0;
-    flex: 1 1 auto;
-    width: auto;
-}
+    .taskCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
 
-.taskCardInfo {
-    min-width: 0;
-    flex: 1 1 auto;
-    width: auto;
-}
+    .eventCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
 
-.eventCardInfo {
-    min-width: 0;
-    flex: 1 1 auto;
-    width: auto;
-}
+    .materialsCardInfo {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: auto;
+    }
 
-.materialsCardInfo {
-    min-width: 0;
-    flex: 1 1 auto;
-    width: auto;
-}
+    .examCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
 
-.examCardBadges {
-    order: -1;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 8px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 6px;
-}
+    .taskCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
 
-.taskCardBadges {
-    order: -1;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 8px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 6px;
-}
+    .eventCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
 
-.eventCardBadges {
-    order: -1;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 8px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 6px;
-}
+    .materialsCardBadges {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+    }
 
-.materialsCardBadges {
-    order: -1;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 8px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 6px;
-}
+    .announcementCardTitleRow {
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
 
-.announcementCardTitleRow {
-    flex-direction: column-reverse;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
+    .announcementCardTitle {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
 
-.announcementCardTitle {
-    flex: 1 1 100%;
-    min-width: 0;
-}
-
-.announcementBadge {
-    margin-left: auto;
-}
+    .announcementBadge {
+        margin-left: auto;
+    }
 }

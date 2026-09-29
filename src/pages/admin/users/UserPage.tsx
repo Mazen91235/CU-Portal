@@ -12,7 +12,10 @@ import {
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
-import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    getErrorMessage,
+    handlePopupErrors,
+} from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type {
     UserResponseDto,
@@ -48,12 +51,12 @@ export const UserPage = () => {
     const latestActivityLog = user.logs?.reduce(
         (latest, log) => {
             const logTime = log.created_at
-                ? (new Date(formatDateTime(log.created_at, true))).getTime()
+                ? new Date(formatDateTime(log.created_at, true)).getTime()
                 : Number.NaN;
             if (Number.isNaN(logTime)) return latest;
 
             const latestTime = latest?.created_at
-                ? (new Date(formatDateTime(latest.created_at, true))).getTime()
+                ? new Date(formatDateTime(latest.created_at, true)).getTime()
                 : Number.NaN;
             if (!latest || Number.isNaN(latestTime) || logTime > latestTime) {
                 return log;
@@ -110,7 +113,10 @@ export const UserPage = () => {
             setUser(user);
         } catch (error) {
             navigate("/admin/users", {
-                state: { error: getErrorMessage(error) || "Failed to fetch user data" },
+                state: {
+                    error:
+                        getErrorMessage(error) || "Failed to fetch user data",
+                },
             });
         }
     }, [userId, getUser, navigate]);
@@ -223,22 +229,26 @@ export const UserPage = () => {
                                             Early Access
                                         </span>
                                     )}
-                                    <span
-                                        className={`${styles.userActivityBadge} ${
-                                            isActiveNow
-                                                ? styles.userActivityActive
-                                                : styles.userActivityInactive
-                                        }`}
-                                    >
+                                    {(isActiveNow || latestActivityLog) && (
                                         <span
-                                            className={styles.userActivityDot}
-                                        />
-                                        {isActiveNow
-                                            ? "Active Now"
-                                            : `Was Active · ${formatTimeAgo(
-                                                  latestActivityLog?.created_at,
-                                              )}`}
-                                    </span>
+                                            className={`${styles.userActivityBadge} ${
+                                                isActiveNow
+                                                    ? styles.userActivityActive
+                                                    : styles.userActivityInactive
+                                            }`}
+                                        >
+                                            <span
+                                                className={
+                                                    styles.userActivityDot
+                                                }
+                                            />
+                                            {isActiveNow
+                                                ? "Active Now"
+                                                : `Was Active · ${formatTimeAgo(
+                                                      latestActivityLog?.created_at,
+                                                  )}`}
+                                        </span>
+                                    )}
                                 </div>
                                 {canManageUsers &&
                                     (user.status ? (
