@@ -186,8 +186,16 @@ const getModuleInvalidationTime = (module: string) => {
     return Math.max(invalidations["*"] || 0, invalidations[module] || 0);
 };
 
+const normalizeModuleName = (module: string) => {
+    module = module.toLocaleLowerCase();
+    return module.endsWith("s")
+        ? module.substring(0, module.length - 1)
+        : module;
+};
+
 const invalidateGetCacheByModule = (module: string) => {
     const modules = getInvalidatedModules(module);
+    const normalizedModules = new Set([...modules].map(normalizeModuleName));
     const invalidatedAt = Date.now();
 
     if (!canUseLocalStorage()) return;
@@ -202,7 +210,10 @@ const invalidateGetCacheByModule = (module: string) => {
             const cached = JSON.parse(
                 localStorage.getItem(key) || "null",
             ) as Partial<PersistentCacheEntry> | null;
-            if (cached?.module && modules.has(cached.module)) {
+            if (
+                cached?.module &&
+                normalizedModules.has(normalizeModuleName(cached.module))
+            ) {
                 localStorage.removeItem(key);
             }
         } catch {
@@ -212,7 +223,7 @@ const invalidateGetCacheByModule = (module: string) => {
 
     try {
         const invalidations = readInvalidationTimes();
-        modules.forEach((invalidatedModule) => {
+        normalizedModules.forEach((invalidatedModule) => {
             invalidations[invalidatedModule] = invalidatedAt;
         });
         localStorage.setItem(

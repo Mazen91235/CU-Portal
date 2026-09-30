@@ -72,6 +72,7 @@
 .emptyList {
     color: var(--medium-grey);
     font-size: var(--secondary-font-size);
+    text-align: center;
 }
 
 .overlay,

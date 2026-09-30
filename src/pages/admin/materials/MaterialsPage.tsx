@@ -220,7 +220,12 @@ export function MaterialsPage() {
                     query: searchQuery || undefined,
                     author_id: authorId ? parseInt(authorId) : undefined,
                 },
-                includes: ["subject", "children", "attachment", "week_items.week"],
+                includes: [
+                    "subject",
+                    "children",
+                    "attachment",
+                    "week_items.week",
+                ],
             }).unwrap();
             setMaterials(response.data || []);
         } catch (error) {
@@ -533,21 +538,30 @@ export function MaterialsPage() {
 
                 if (weekItemsValue !== null) {
                     try {
-                        const parsed = JSON.parse(String(weekItemsValue)) as unknown;
+                        const parsed = JSON.parse(
+                            String(weekItemsValue),
+                        ) as unknown;
                         if (!Array.isArray(parsed)) {
                             throw new Error("Invalid week_items payload");
                         }
 
                         week_items = parsed
                             .filter(
-                                (item): item is { week_id: number; note?: unknown } =>
+                                (
+                                    item,
+                                ): item is {
+                                    week_id: number;
+                                    note?: unknown;
+                                } =>
                                     typeof item === "object" &&
                                     item !== null &&
-                                    typeof (item as { week_id?: unknown }).week_id === "number",
+                                    typeof (item as { week_id?: unknown })
+                                        .week_id === "number",
                             )
                             .map((item) => ({
                                 week_id: item.week_id,
-                                ...(typeof item.note === "string" && item.note.trim()
+                                ...(typeof item.note === "string" &&
+                                item.note.trim()
                                     ? { note: item.note.trim() }
                                     : {}),
                             }));
@@ -560,38 +574,47 @@ export function MaterialsPage() {
                 let result: GenericAPIResponse<MaterialResponseDto>;
 
                 if (material && material.id) {
-                    const updatePayload: Parameters<typeof updateMaterial>[0] = {
-                        material_id: material.id,
-                        name,
-                        should_overwrite: material_type !== "folder" && data.get("should_overwrite") === "true",
-                        material_type,
-                        details: {
-                            url: url,
-                        },
-                    };
+                    const updatePayload: Parameters<typeof updateMaterial>[0] =
+                        {
+                            material_id: material.id,
+                            name,
+                            should_overwrite: material_type !== "folder" &&
+                                data.get("should_overwrite") === "true",
+                            material_type,
+                            details: {
+                                url: url,
+                            },
+                        };
 
-                    if (material_type !== "folder" && week_items !== undefined) {
+                    if (
+                        material_type !== "folder" &&
+                        week_items !== undefined
+                    ) {
                         updatePayload.week_items = week_items;
                     }
 
                     result = await updateMaterial(updatePayload).unwrap();
                 } else {
-                    const createPayload: Parameters<typeof createMaterial>[0] = {
-                        subject_id: parseInt(subjectFilter, 10),
-                        name,
-                        should_overwrite:
-                            material_type !== "folder" &&
-                            data.get("should_overwrite") === "true",
-                        material_type,
-                        details: {
-                            url: url,
-                        },
-                        parent_id: parent_id
-                            ? parseInt(parent_id, 10)
-                            : null,
-                    };
+                    const createPayload: Parameters<typeof createMaterial>[0] =
+                        {
+                            subject_id: parseInt(subjectFilter, 10),
+                            name,
+                            should_overwrite:
+                                material_type !== "folder" &&
+                                data.get("should_overwrite") === "true",
+                            material_type,
+                            details: {
+                                url: url,
+                            },
+                            parent_id: parent_id
+                                ? parseInt(parent_id, 10)
+                                : null,
+                        };
 
-                    if (material_type !== "folder" && week_items !== undefined) {
+                    if (
+                        material_type !== "folder" &&
+                        week_items !== undefined
+                    ) {
                         createPayload.week_items = week_items;
                     }
 

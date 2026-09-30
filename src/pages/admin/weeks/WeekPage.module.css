@@ -301,7 +301,6 @@
 .modalActions button {
     min-height: 2.4rem;
     padding: 0.6rem 1rem;
-    border: 1px solid var(--primary-purple);
     border-radius: var(--primary-border-radius);
     background: var(--white);
     color: var(--primary-purple);

@@ -11,6 +11,7 @@ import { MaterialActionsDropdown } from "../../../components/materials/MaterialA
 import { downloadFile } from "../../../utils/FileDownloader";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
 import { formatDate, formatTimeAgo } from "../../../utils/Formatter";
+import { Button } from "../../../components/forms/Button";
 import { FaChevronUp } from "react-icons/fa";
 import { WeekItemsEditor } from "../../../components/materials/WeekItemsEditor";
 import { getWeekEndDate } from "../../../utils/WeekHelpers";
@@ -288,20 +289,22 @@ function MaterialAdminCard({
                                 disabled={isUpdating || isLoadingMaterial}
                             />
                             <div className={styles.modalActions}>
-                                <button
+                                <Button
+                                    text="Cancel"
+                                    loadingText="Saving..."
                                     type="button"
                                     onClick={() => setEditOpen(false)}
-                                    disabled={isUpdating}
-                                >
-                                    Cancel
-                                </button>
-                                <button
+                                    isSubmitting={isUpdating}
+                                    isSecondary
+                                />
+                                <Button
+                                    text="Update"
+                                    loadingText="Saving..."
+                                    isOrange={false}
                                     type="button"
                                     onClick={() => void save()}
-                                    disabled={isUpdating}
-                                >
-                                    {isUpdating ? "Saving..." : "Update"}
-                                </button>
+                                    isSubmitting={isUpdating}
+                                />
                             </div>
                         </fieldset>
                     </div>

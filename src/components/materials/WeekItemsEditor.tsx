@@ -90,9 +90,7 @@ export function WeekItemsEditor({
         setOpenOptionsIndex(null);
     };
 
-    const saveAssociation = (event: React.FormEvent) => {
-        console.log("saveAssociation called");
-        event.preventDefault();
+    const saveAssociation = () => {
         if (disabled || draftWeekId === "") return;
 
         const nextItem: WeekItemMutationDto = {
@@ -347,10 +345,9 @@ export function WeekItemsEditor({
                         }
                     }}
                 >
-                    <form
+                    <div
                         className={styles.editorModal}
                         onClick={(event) => event.stopPropagation()}
-                        onSubmit={saveAssociation}
                     >
                         <div className={styles.editorHeader}>
                             <h2>
@@ -421,7 +418,7 @@ export function WeekItemsEditor({
                                 onClick={closeAssociationEditor}
                             />
                             <Button
-                                type="submit"
+                                type="button"
                                 text={
                                     associationEditor.mode === "attach"
                                         ? "Attach"
@@ -435,9 +432,10 @@ export function WeekItemsEditor({
                                 isSubmitting={false}
                                 isOrange={false}
                                 disabled={draftWeekId === "" || disabled}
+                                onClick={saveAssociation}
                             />
                         </div>
-                    </form>
+                    </div>
                 </div>
             )}
         </div>
