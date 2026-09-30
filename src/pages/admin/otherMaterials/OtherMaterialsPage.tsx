@@ -88,7 +88,6 @@ export function OtherMaterialsPage() {
         name: string;
     } | null>(null);
     const fetchMaterialsRef = useRef<(() => Promise<void>) | null>(null);
-    const isMountedRef = useRef(false);
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
@@ -143,39 +142,48 @@ export function OtherMaterialsPage() {
 
     const [isSelectionMode, setIsSelectionMode] = useState(false);
 
-    const fetchMaterials = useCallback(
-        async () => {
-            if (!subjectFilter) return;
+    const fetchMaterials = useCallback(async () => {
+        if (!subjectFilter) return;
 
-            try {
-                const response = await getMaterials({
-                    data: {
-                        subject_id: parseInt(subjectFilter),
-                        parent_id: currentParentId ?? null,
-                        query: searchQuery || undefined,
-                    },
-                    includes: ["subject", "children", "attachment"],
-                }).unwrap();
-                setMaterials(response.data || []);
-            } catch (error) {
-                handlePopupErrors(error);
-            }
-        },
-        [subjectFilter, currentParentId, searchQuery, getMaterials],
-    );
+        try {
+            const response = await getMaterials({
+                data: {
+                    subject_id: parseInt(subjectFilter),
+                    parent_id: currentParentId ?? null,
+                    query: searchQuery || undefined,
+                },
+                includes: ["subject", "children", "attachment"],
+            }).unwrap();
+            setMaterials(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [subjectFilter, currentParentId, searchQuery, getMaterials]);
     fetchMaterialsRef.current = fetchMaterials;
 
-    useEffect(() => {
-        isMountedRef.current = true;
-        return () => {
-            isMountedRef.current = false;
-        };
-    }, []);
-
     const refreshMaterials = useCallback(async () => {
-        if (!isMountedRef.current || !fetchMaterialsRef.current) return;
+        if (!fetchMaterialsRef.current) return;
+        const differences_count = [
+            studyType != getFilter("study_type", ""),
+            departmentId != getFilter("department_id", ""),
+            yearId != getFilter("year_id", ""),
+            subjectFilter != getFilter("subject_id", ""),
+            parentFilter != getFilter("parent_id", ""),
+            materialIdFilter != getFilter("material_id", ""),
+            searchQuery != getFilter("query", ""),
+        ].reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+        if (differences_count) return;
         await fetchMaterialsRef.current();
-    }, []);
+    }, [
+        studyType,
+        departmentId,
+        yearId,
+        subjectFilter,
+        parentFilter,
+        materialIdFilter,
+        searchQuery,
+        getFilter,
+    ]);
 
     const buildMaterialsPath = useCallback(
         (
@@ -225,9 +233,15 @@ export function OtherMaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authDepartmentQuery = useCallback(() => fetchDepartment(), [fetchDepartment]);
+    const authDepartmentQuery = useCallback(
+        () => fetchDepartment(),
+        [fetchDepartment],
+    );
     const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
-    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
+    );
     const authMaterialsQuery = useCallback(
         () => fetchMaterials(),
         [fetchMaterials],
@@ -432,10 +446,7 @@ export function OtherMaterialsPage() {
     };
 
     const handleConflictConfirm = async (shouldOverwrite: boolean) => {
-        if (
-            conflictForm.materialIds.length === 0 ||
-            !conflictForm.subjectId
-        )
+        if (conflictForm.materialIds.length === 0 || !conflictForm.subjectId)
             return;
 
         const { materialIds, targetId, subjectId } = conflictForm;
@@ -532,7 +543,9 @@ export function OtherMaterialsPage() {
                     yearName={year?.year?.toString()}
                     onChangeHome={() => navigate("/admin/other-materials")}
                     onChangeStudyType={() =>
-                        navigate(`/admin/other-materials?study_type=${studyType}`)
+                        navigate(
+                            `/admin/other-materials?study_type=${studyType}`,
+                        )
                     }
                     onChangeDepartment={() =>
                         navigate(
@@ -556,7 +569,8 @@ export function OtherMaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery} value={searchQuery}
+                                setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
                     </div>

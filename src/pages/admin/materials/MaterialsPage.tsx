@@ -62,14 +62,16 @@ export function MaterialsPage() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const { getFilter, getFilterSetter, setFilters } = useFilterSearchParams();
-    const authorId = getFilter("author_id", "");
-    const materialIdFilter = getFilter("material_id", "");
-    const setMaterialIdFilter = getFilterSetter("material_id");
-    const searchQuery = getFilter("query", "");
-    const setSearchQuery = getFilterSetter("query");
     const facultyFilter = getFilter("faculty_id", "");
     const departmentFilter = getFilter("department_id", "");
     const yearFilter = getFilter("year_id", "");
+    const subjectFilter = getFilter("subject_id");
+    const parentFilter = getFilter("parent_id");
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
+    const authorId = getFilter("author_id", "");
+    const searchQuery = getFilter("query", "");
+    const setSearchQuery = getFilterSetter("query");
     const [draggedFilesState, setDraggedFilesState] = useState({
         active: false,
         x: 0,
@@ -125,8 +127,6 @@ export function MaterialsPage() {
     const [dropZoneVisible, setDropZoneVisible] = useState(false);
     const [bulkUploadFiles, setBulkUploadFiles] = useState<File[] | null>(null);
     const [isDraggingExternal, setIsDraggingExternal] = useState(false);
-    const subjectFilter = getFilter("subject_id");
-    const parentFilter = getFilter("parent_id");
     const currentParentId = parentFilter ? Number(parentFilter) : null;
     const selectedSubject = useMemo(
         () =>
@@ -135,7 +135,6 @@ export function MaterialsPage() {
         [subjectFilter, subjects],
     );
     const fetchMaterialsRef = useRef<(() => Promise<void>) | null>(null);
-    const isMountedRef = useRef(false);
     const [searchFaculties] = useLazyGetFacultiesQuery();
     const [searchDepartments] = useLazyGetDepartmentsQuery();
     const [searchYears] = useLazyGetYearsQuery();
@@ -230,17 +229,31 @@ export function MaterialsPage() {
 
     fetchMaterialsRef.current = fetchMaterials;
 
-    useEffect(() => {
-        isMountedRef.current = true;
-        return () => {
-            isMountedRef.current = false;
-        };
-    }, []);
-
     const refreshMaterials = useCallback(async () => {
-        if (!isMountedRef.current || !fetchMaterialsRef.current) return;
+        if (!fetchMaterialsRef.current) return;
+        const differences_count = [
+            facultyFilter != getFilter("faculty_id", ""),
+            departmentFilter != getFilter("department_id", ""),
+            yearFilter != getFilter("year_id", ""),
+            subjectFilter != getFilter("subject_id", ""),
+            parentFilter != getFilter("parent_id", ""),
+            materialIdFilter != getFilter("material_id", ""),
+            authorId != getFilter("author_id", ""),
+            searchQuery != getFilter("query", ""),
+        ].reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+        if (differences_count) return;
         await fetchMaterialsRef.current();
-    }, []);
+    }, [
+        authorId,
+        materialIdFilter,
+        searchQuery,
+        facultyFilter,
+        departmentFilter,
+        yearFilter,
+        subjectFilter,
+        parentFilter,
+        getFilter,
+    ]);
 
     const fetchFolders = useCallback(
         async (parentId?: number | null) => {
