@@ -1,7 +1,7 @@
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { WeekResponseDto } from "./WeekDtos";
-import type { WeekItemMutationDto } from "./WeekItemDtos";
+import type { WeekItemMutationDto, WeekItemResponseDto } from "./WeekItemDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { MaterialType } from "../entities/Material";
 import type { SearchDto } from "./BaseDtos";
@@ -31,6 +31,7 @@ export type MaterialResponseDto = {
     children?: MaterialResponseDto[] | null;
     attachment?: AttachmentResponseDto | null;
     weeks?: WeekResponseDto[] | null;
+    week_items?: WeekItemResponseDto[] | null;
 };
 
 export type MaterialUpdateDto = {

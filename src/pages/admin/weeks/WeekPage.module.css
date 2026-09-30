@@ -99,13 +99,32 @@
 
 .fileCard {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
     width: 100%;
     box-sizing: border-box;
     padding: 0.875rem 1.5rem;
     background: var(--white);
+}
+
+.fileMain {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+}
+
+.itemNote {
+    margin-top: 0.65rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 7px;
+    background: var(--grey-background);
+    color: var(--medium-grey);
+    font-size: var(--secondary-font-size);
+    line-height: 1.5;
+    white-space: pre-wrap;
 }
 
 .fileCard + .fileCard {
@@ -237,7 +256,7 @@
 }
 
 .modal {
-    width: min(100%, 460px);
+    width: min(100%, 560px);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -249,7 +268,7 @@
 }
 
 .modal h2 {
-    margin: 0;
+    margin: 0 0 0.75rem;
     color: var(--primary-purple);
 }
 
@@ -295,6 +314,13 @@
     color: var(--white);
 }
 
+.fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1024px) {
@@ -315,9 +341,13 @@
 }
 
 .fileCard {
-    align-items: center;
+    align-items: stretch;
     gap: 0.75rem;
     padding: 0.875rem 1rem;
+}
+
+.fileMain {
+    align-items: center;
 }
 
 .fileInfo {

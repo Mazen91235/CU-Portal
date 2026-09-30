@@ -2,6 +2,7 @@ import type { FacultyResponseDto } from "./FacultyDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
 import type { YearResponseDto } from "./YearDtos";
 import type { MaterialResponseDto } from "./MaterialDtos";
+import type { WeekItemResponseDto } from "./WeekItemDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type WeekCreateDto = {
@@ -22,6 +23,7 @@ export type WeekResponseDto = {
     department?: DepartmentResponseDto | null;
     year?: YearResponseDto | null;
     materials?: MaterialResponseDto[] | null;
+    week_items?: WeekItemResponseDto[] | null;
 };
 
 export type WeekUpdateDto = {

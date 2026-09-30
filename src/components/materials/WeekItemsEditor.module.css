@@ -1,0 +1,301 @@
+.section {
+    width: 100%;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+}
+
+.sectionLabel {
+    color: var(--dark-text);
+    font-size: var(--primary-font-size);
+    font-weight: var(--primary-font-weight);
+}
+
+.editWeeksButton,
+.attachButton {
+    border: 1px solid var(--primary-purple);
+    border-radius: var(--primary-border-radius);
+    background: var(--white);
+    color: var(--primary-purple);
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--secondary-font-size);
+    font-weight: var(--primary-font-weight);
+}
+
+.editWeeksButton {
+    max-width: 150px;
+}
+
+.editWeeksButton {
+    min-height: 2.25rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.editWeeksButton:hover:not(:disabled),
+.attachButton:hover:not(:disabled) {
+    background: var(--primary-purple);
+    color: var(--white);
+}
+
+.editWeeksButton:disabled,
+.attachButton:disabled,
+.optionsButton:disabled,
+.closeButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.attachedWeeks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.attachedWeek {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    color: var(--dark-text);
+    background: var(--white);
+    font-size: var(--secondary-font-size);
+}
+
+.emptyText,
+.emptyList {
+    color: var(--medium-grey);
+    font-size: var(--secondary-font-size);
+}
+
+.overlay,
+.overlayNested {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--overlay-bg);
+}
+
+.overlay {
+    z-index: 2100;
+}
+
+.overlayNested {
+    z-index: 2200;
+    background: rgba(20, 20, 20, 0.35);
+}
+
+.modal,
+.editorModal {
+    width: min(100%, 560px);
+    max-height: 85vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: var(--dark-box-shadow);
+}
+
+.modal {
+    padding: 1.25rem;
+}
+
+.editorModal {
+    padding: 1.5rem;
+}
+
+.modalHeader,
+.editorHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modalHeader h2,
+.editorHeader h2 {
+    margin: 0;
+    color: var(--dark-text);
+    font-size: 1.35rem;
+}
+
+.attachButton {
+    min-height: 2.3rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.modalHeaderActions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+}
+
+.emptyList {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.weekItem {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--light-grey);
+}
+
+.weekItem:first-child {
+    padding-top: 0.15rem;
+}
+
+.weekItem:last-child {
+    border-bottom: 0;
+}
+
+.weekItemContent {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 0.25rem;
+}
+
+.weekItemTitle {
+    color: var(--dark-text);
+    font-size: var(--primary-font-size);
+    font-weight: var(--primary-font-weight);
+    line-height: 1.4;
+}
+
+.weekItemNote {
+    margin-top: 0.35rem;
+    color: var(--medium-grey);
+    font-size: var(--secondary-font-size);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.optionsContainer {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.optionsButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--medium-grey);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.optionsButton:hover:not(:disabled) {
+    background: var(--grey-background);
+    color: var(--dark-text);
+}
+
+.optionsMenu {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    min-width: 120px;
+    padding: 0.35rem;
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: var(--dark-box-shadow);
+    z-index: 2;
+}
+
+.optionItem {
+    width: 100%;
+    display: block;
+    padding: 0.55rem 0.7rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--dark-text);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+
+.optionItem:hover {
+    background: var(--grey-background);
+}
+
+.deleteOption {
+    color: #dc2626;
+}
+
+.closeButton {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--medium-grey);
+    cursor: pointer;
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.closeButton:hover:not(:disabled) {
+    background: var(--grey-background);
+    color: var(--dark-text);
+}
+
+.modalActions,
+.editorActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.doneButton {
+    min-width: 90px;
+}
+
+@media (max-width: 1024px) {
+    .overlay,
+    .overlayNested {
+        padding: 0.75rem;
+    }
+
+    .modal,
+    .editorModal {
+        max-width: 94vw;
+        padding: 1rem;
+    }
+
+    .modalHeader,
+    .editorHeader,
+    .sectionHeader {
+        gap: 0.75rem;
+    }
+}
