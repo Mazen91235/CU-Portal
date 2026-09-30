@@ -16,6 +16,7 @@ import {
 } from "../../../services/apis/admin/MaterialAPIs";
 import { useLazyGetMaterialParentsQuery } from "../../../services/apis/user/MaterialAPIs";
 import type { MaterialResponseDto } from "../../../types/dtos/MaterialDtos";
+import type { WeekItemMutationDto } from "../../../types/dtos/WeekItemDtos";
 import type { FacultyResponseDto } from "../../../types/dtos/FacultyDtos";
 import type { DepartmentResponseDto } from "../../../types/dtos/DepartmentDtos";
 import type { YearResponseDto } from "../../../types/dtos/YearDtos";
@@ -219,7 +220,12 @@ export function MaterialsPage() {
                     query: searchQuery || undefined,
                     author_id: authorId ? parseInt(authorId) : undefined,
                 },
-                includes: ["subject", "children", "attachment", "week"],
+                includes: [
+                    "subject",
+                    "children",
+                    "attachment",
+                    "week_items.week",
+                ],
             }).unwrap();
             setMaterials(response.data || []);
         } catch (error) {
@@ -524,37 +530,68 @@ export function MaterialsPage() {
             try {
                 const material = formData.material;
                 const name = data.get("name") as string;
-                const weekId = data.get("week_id") as string | null;
                 const material_type = data.get("material_type") as MaterialType;
                 const url = data.get("url") as string | null;
                 const parent_id = data.get("parent_id") as string | null;
+                const weekItemsValue = data.get("week_items");
+                let week_items: WeekItemMutationDto[] | undefined;
+
+                if (weekItemsValue !== null) {
+                    try {
+                        const parsed = JSON.parse(
+                            String(weekItemsValue),
+                        ) as unknown;
+                        if (!Array.isArray(parsed)) {
+                            throw new Error("Invalid week_items payload");
+                        }
+
+                        week_items = parsed
+                            .filter(
+                                (
+                                    item,
+                                ): item is {
+                                    week_id: number;
+                                    note?: unknown;
+                                } =>
+                                    typeof item === "object" &&
+                                    item !== null &&
+                                    typeof (item as { week_id?: unknown })
+                                        .week_id === "number",
+                            )
+                            .map((item) => ({
+                                week_id: item.week_id,
+                                ...(typeof item.note === "string" &&
+                                item.note.trim()
+                                    ? { note: item.note.trim() }
+                                    : {}),
+                            }));
+                    } catch (error) {
+                        handlePopupErrors(error);
+                        return;
+                    }
+                }
+
                 let result: GenericAPIResponse<MaterialResponseDto>;
-                // The API rejects week_id for folder materials.
-                // Only real course materials (files/links) can be attached to a week.
-                const parsedWeekId =
-                    material_type !== "folder" && weekId
-                        ? parseInt(weekId, 10)
-                        : undefined;
 
                 if (material && material.id) {
                     const updatePayload: Parameters<typeof updateMaterial>[0] =
                         {
                             material_id: material.id,
                             name,
-                            should_overwrite: false,
+                            should_overwrite:
+                                material_type !== "folder" &&
+                                data.get("should_overwrite") === "true",
                             material_type,
                             details: {
                                 url: url,
                             },
                         };
 
-                    updatePayload.should_overwrite =
-                        data.get("should_overwrite") === "true";
-
-                    if (parsedWeekId !== undefined) {
-                        updatePayload.week_id = parsedWeekId;
-                    } else {
-                        updatePayload.week_id = null;
+                    if (
+                        material_type !== "folder" &&
+                        week_items !== undefined
+                    ) {
+                        updatePayload.week_items = week_items;
                     }
 
                     result = await updateMaterial(updatePayload).unwrap();
@@ -564,6 +601,7 @@ export function MaterialsPage() {
                             subject_id: parseInt(subjectFilter, 10),
                             name,
                             should_overwrite:
+                                material_type !== "folder" &&
                                 data.get("should_overwrite") === "true",
                             material_type,
                             details: {
@@ -574,12 +612,16 @@ export function MaterialsPage() {
                                 : null,
                         };
 
-                    if (parsedWeekId !== undefined) {
-                        createPayload.week_id = parsedWeekId;
+                    if (
+                        material_type !== "folder" &&
+                        week_items !== undefined
+                    ) {
+                        createPayload.week_items = week_items;
                     }
 
                     result = await createMaterial(createPayload).unwrap();
                 }
+
                 if (!uploadResult) {
                     showToast(
                         "success",

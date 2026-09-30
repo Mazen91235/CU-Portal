@@ -9,31 +9,12 @@ import {
 import { Button } from "../forms/Button";
 import { Input } from "../forms/Input";
 import { Select } from "../forms/Select";
+import { WeekItemsEditor } from "./WeekItemsEditor";
+import type { WeekItemMutationDto } from "../../types/dtos/WeekItemDtos";
 import type { FileDataWithExisting } from "../../types/entities/Attachment";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { formatDate, formatDateTime } from "../../utils/Formatter";
-import { useAppDispatch } from "../../services/redux/Hooks";
-import { setProcess } from "../../services/redux/reducers/ProcessReducer";
 import type { Process } from "../../types/Process";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./MaterialForm.module.css";
-
-const getWeekEndDate = (startDate?: string | null) => {
-    if (!startDate) return null;
-    const date = new Date(formatDateTime(startDate, true));
-    date.setUTCDate(date.getUTCDate() + 6);
-    return date.toISOString().slice(0, 10);
-};
-
-const getTodayKey = () =>
-    new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
-
-const isCurrentWeek = (week: WeekResponseDto) => {
-    if (!week.start_date) return false;
-    const startKey = formatDateTime(week.start_date, true).slice(0, 10);
-    const endKey = getWeekEndDate(week.start_date);
-    const todayKey = getTodayKey();
-    return Boolean(endKey && todayKey >= startKey && todayKey <= endKey);
-};
 
 interface MaterialFormProps {
     materialType: "folder" | "file" | "drive" | "youtube" | "external" | null;
@@ -56,9 +37,8 @@ export function MaterialForm({
     yearId,
     onSubmit,
 }: MaterialFormProps) {
-    const dispatch = useAppDispatch();
     const [name, setName] = useState(material?.name || "");
-    const [weekId, setWeekId] = useState<number | "">(material?.week?.id ?? "");
+    const [weekItems, setWeekItems] = useState<WeekItemMutationDto[]>([]);
     const [shouldOverwrite, setShouldOverwrite] = useState(false);
     const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
     const [weeksLoading, setWeeksLoading] = useState(false);
@@ -90,7 +70,14 @@ export function MaterialForm({
                     | "external",
             );
             setLink(material.attachment?.url || "");
-            setWeekId(material.week?.id ?? "");
+            setWeekItems(
+                (material.week_items || [])
+                    .filter((item) => item.week?.id != null)
+                    .map((item) => ({
+                        week_id: item.week!.id!,
+                        note: item.note?.trim() || undefined,
+                    })),
+            );
             setShouldOverwrite(false);
             if (material.material_type === "file" && material.attachment) {
                 setExistingFileData({
@@ -102,7 +89,7 @@ export function MaterialForm({
                 });
             }
         } else {
-            setWeekId("");
+            setWeekItems([]);
             setShouldOverwrite(false);
         }
     }, [material]);
@@ -113,7 +100,6 @@ export function MaterialForm({
         const fetchWeeks = async () => {
             if (!departmentId || !yearId) {
                 setWeeks([]);
-                setWeekId(material?.week?.id ?? "");
                 return;
             }
 
@@ -135,33 +121,21 @@ export function MaterialForm({
                     (week) => week.id != null && week.week_number != null,
                 );
                 setWeeks(availableWeeks);
-
-                const currentWeekId = material?.week?.id;
-                if (
-                    currentWeekId &&
-                    availableWeeks.some((week) => week.id === currentWeekId)
-                ) {
-                    setWeekId(currentWeekId);
-                } else {
-                    setWeekId("");
-                }
             } catch (error) {
                 if (!cancelled) {
                     setWeeks([]);
-                    setWeekId(material?.week?.id ?? "");
                     handlePopupErrors(error);
                 }
             } finally {
                 if (!cancelled) setWeeksLoading(false);
             }
         };
-
         void fetchWeeks();
 
         return () => {
             cancelled = true;
         };
-    }, [departmentId, facultyId, getWeeks, material?.week?.id, yearId]);
+    }, [departmentId, facultyId, getWeeks, yearId]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -175,49 +149,59 @@ export function MaterialForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        const uploadedUrls: string[] = [];
 
-        try {
+        const buildFormData = () => {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("material_type", materialType || "");
-            // Folders are containers only and the API explicitly rejects week_id for them.
-            // Files/links can be assigned to a weekly-guide week.
-            if (materialType !== "folder" && weekId !== "") {
-                formData.append("week_id", weekId.toString());
+            if (materialType !== "folder") {
+                formData.append("week_items", JSON.stringify(weekItems));
             }
             if (parentId) {
                 formData.append("parent_id", parentId.toString());
             }
-
             formData.append(
                 "should_overwrite",
                 String(materialType !== "folder" && shouldOverwrite),
             );
-
             if (material && material.id) {
                 formData.append("id", material.id.toString());
             }
-            if (materialType === "file") {
-                if (file) {
-                    const result = await uploadFile(file, name);
-                    if (!result) return;
-                    if (!result.url) {
-                        dispatch(
-                            setProcess({
-                                ...result,
-                                status: "failed",
-                                reason: "Failed to upload file",
-                            }),
-                        );
-                        return;
+            return formData;
+        };
+
+        if (materialType === "file" && file) {
+            const formData = buildFormData();
+            const uploadedUrls: string[] = [];
+            const uploadPromise = uploadFile(file, name);
+
+            onClose();
+
+            void (async () => {
+                try {
+                    const result = await uploadPromise;
+                    if (!result?.url) {
+                        throw new Error("Failed to upload file");
                     }
                     uploadedUrls.push(result.url);
                     formData.append("url", result.url);
                     await onSubmit(formData, result);
-                    onClose();
-                } else if (existingFileData) {
+                } catch (error) {
+                    await removeUploadedFiles(uploadedUrls);
+                    handlePopupErrors(error);
+                }
+            })();
+            return;
+        }
+
+        setIsLoading(true);
+        const uploadedUrls: string[] = [];
+
+        try {
+            const formData = buildFormData();
+
+            if (materialType === "file") {
+                if (existingFileData) {
                     formData.append("url", existingFileData.url || "");
                     await onSubmit(formData);
                     onClose();
@@ -433,52 +417,17 @@ export function MaterialForm({
                             </div>
                         )}
 
-                        <div className={styles.formGroup}>
-                            {materialType !== "folder" && (
-                                <>
-                                    <Select<Record<string, unknown>>
-                                        name="week_id"
-                                        errors={{}}
-                                        value={weekId}
-                                        onChange={(e) =>
-                                            setWeekId(
-                                                e.target.value
-                                                    ? Number(e.target.value)
-                                                    : "",
-                                            )
-                                        }
-                                        label="Week"
-                                        disabled={
-                                            weeksLoading || weeks.length === 0
-                                        }
-                                    >
-                                        <option value="">
-                                            {weeksLoading
-                                                ? "Loading weeks..."
-                                                : "No week"}
-                                        </option>
-                                        {weeks.map((week) => (
-                                            <option
-                                                key={week.id}
-                                                value={week.id ?? ""}
-                                            >
-                                                {`Week ${week.week_number} (${formatDate(week.start_date, false)} - ${formatDate(getWeekEndDate(week.start_date), false)})${isCurrentWeek(week) ? " (Current)" : ""}`}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    {!weeksLoading && weeks.length === 0 && (
-                                        <small
-                                            style={{
-                                                color: "var(--medium-grey)",
-                                            }}
-                                        >
-                                            No weekly-guide weeks exist for this
-                                            department and academic year.
-                                        </small>
-                                    )}
-                                </>
-                            )}
-                        </div>
+                        {materialType !== "folder" && (
+                            <div className={styles.formGroup}>
+                                <WeekItemsEditor
+                                    value={weekItems}
+                                    onChange={setWeekItems}
+                                    availableWeeks={weeks}
+                                    loading={weeksLoading}
+                                    disabled={isLoading}
+                                />
+                            </div>
+                        )}
 
                         {materialType === "file" && (
                             <div className={styles.formGroup}>
