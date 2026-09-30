@@ -986,7 +986,7 @@ export function MaterialsPage() {
                     : null;
 
             const result = await createMaterial({
-                name: uploadResult.name.replace("Uploading ", ""),
+                name: uploadResult.name.substring(10), // Removing 'Uploading ' prefix
                 should_overwrite: shouldOverwrite,
                 material_type: "file",
                 subject_id: parseInt(subjectFilter),
