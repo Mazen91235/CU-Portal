@@ -213,14 +213,14 @@ export function MaterialsPage() {
     }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
     const fetchMaterials = useCallback(
-        async (parentId?: number | null) => {
+        async () => {
             if (!subjectFilter) return;
 
             try {
                 const response = await getMaterials({
                     data: {
                         subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? null,
+                        parent_id: currentParentId ?? null,
                         query: searchQuery || undefined,
                         author_id: authorId ? parseInt(authorId) : undefined,
                     },
@@ -231,7 +231,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials, authorId],
+        [subjectFilter, currentParentId, searchQuery, getMaterials, authorId],
     );
 
     const fetchFolders = useCallback(
@@ -322,7 +322,7 @@ export function MaterialsPage() {
     const authMaterialsQuery = useCallback(
         () =>
             Promise.all([
-                fetchMaterials(currentParentId),
+                fetchMaterials(),
                 fetchFolders(currentParentId),
             ]),
         [fetchMaterials, fetchFolders, currentParentId],
@@ -590,9 +590,7 @@ export function MaterialsPage() {
                     );
                 }
                 setCurrentPath((prev) => {
-                    const latestParentId =
-                        prev.length > 0 ? prev[prev.length - 1].id : null;
-                    fetchMaterials(latestParentId);
+                    fetchMaterials();
                     return prev;
                 });
                 setFormData({ show: false, type: null, material: null });
@@ -790,11 +788,7 @@ export function MaterialsPage() {
                 }
 
                 dispatch(setProcess({ ...process, status: "completed" }));
-                const latestParentId =
-                    currentPath.length > 0
-                        ? currentPath[currentPath.length - 1].id
-                        : null;
-                await fetchMaterials(latestParentId);
+                await fetchMaterials();
             } catch (error) {
                 const errorMessage =
                     getErrorMessage(error) || "Operation failed";
@@ -1026,10 +1020,7 @@ export function MaterialsPage() {
                 }),
             );
             setCurrentPath((prev) => {
-                const latestParentId =
-                    (prev.length > 0 ? prev[prev.length - 1] : null)?.id ??
-                    null;
-                fetchMaterials(latestParentId);
+                fetchMaterials();
                 return prev;
             });
         },
@@ -1059,9 +1050,7 @@ export function MaterialsPage() {
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
                     setCurrentPath((prev) => {
-                        const latestParentId =
-                            prev.length > 0 ? prev[prev.length - 1].id : null;
-                        fetchMaterials(latestParentId);
+                        fetchMaterials();
                         return prev;
                     });
                 } catch (error) {

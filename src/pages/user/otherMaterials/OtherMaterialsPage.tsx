@@ -116,14 +116,14 @@ export function OtherMaterialsPage() {
     }, [getSubjects, departmentId, yearId, user]);
 
     const fetchMaterials = useCallback(
-        async (parentId?: number | null) => {
+        async () => {
             if (!subjectFilter) return;
 
             try {
                 const response = await getMaterials({
                     data: {
                         subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? null,
+                        parent_id: currentParentId ?? null,
                         query: searchQuery || undefined,
                     },
                     includes: ["subject", "children", "attachment"],
@@ -133,7 +133,7 @@ export function OtherMaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, currentParentId, searchQuery, getMaterials],
     );
 
     const buildMaterialsPath = useCallback(
@@ -190,8 +190,8 @@ export function OtherMaterialsPage() {
     const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
     const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
     const authMaterialsQuery = useCallback(
-        () => fetchMaterials(currentParentId),
-        [fetchMaterials, currentParentId],
+        () => fetchMaterials(),
+        [fetchMaterials],
     );
 
     useAuthQuery(authDepartmentQuery);

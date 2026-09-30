@@ -54,14 +54,14 @@ export function MaterialsPage() {
 
 
     const fetchMaterials = useCallback(
-        async (parentId?: number | null) => {
+        async () => {
             if (!subjectFilter) return;
 
             try {
                 const response = await getMaterials({
                     data: {
                         subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? null,
+                        parent_id: currentParentId ?? null,
                         query: searchQuery || undefined,
                     },
                     includes: ["subject", "children", "attachment"],
@@ -71,7 +71,7 @@ export function MaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, currentParentId, searchQuery, getMaterials],
     );
 
     const buildMaterialsPath = useCallback(
@@ -120,8 +120,8 @@ export function MaterialsPage() {
     );
 
     const authMaterialsQuery = useCallback(
-        () => fetchMaterials(currentParentId),
-        [fetchMaterials, currentParentId],
+        () => fetchMaterials(),
+        [fetchMaterials],
     );
 
     useAuthQuery(authMaterialsQuery);

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import {
+    useCreateProcess,
     useUploadFileToDriveChunked,
     useRemoveUploadedFiles,
 } from "../../hooks/useHandleProcesses";
+import { useAppDispatch } from "../../services/redux/Hooks";
+import { setProcess } from "../../services/redux/reducers/ProcessReducer";
 import { formatFileSize } from "../../utils/Formatter";
 import type { Process } from "../../types/Process";
 import { handlePopupErrors } from "../../utils/ErrorHandling";
@@ -26,6 +29,8 @@ export function BulkUploadModal({
     const [files, setFiles] = useState<File[]>(initialFiles);
     const uploadFileToDrive = useUploadFileToDriveChunked({});
     const removeUploadedFiles = useRemoveUploadedFiles();
+    const createProcess = useCreateProcess({});
+    const dispatch = useAppDispatch();
     const [isUploading, setIsUploading] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
     const [showConflictForm, setShowConflictForm] = useState(false);
@@ -79,23 +84,61 @@ export function BulkUploadModal({
         setShowConflictForm(true);
     };
 
-    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
-        if (files.length === 0 || formDisabled) return;
-
-        setIsUploading(true);
+    const handleFileUpload = async (
+        file: File,
+        process: Process,
+        shouldOverwrite: boolean,
+    ) => {
+        let uploadedUrl: string | undefined;
         try {
-            for (const file of files) {
-                const result = await uploadFileToDrive(file, file.name);
-                if (!result?.url) continue;
+            const result = await uploadFileToDrive(file, file.name, process);
+            uploadedUrl = result?.url;
+            if (!result || !uploadedUrl) return;
+
+            await onMaterialCreate(result, shouldOverwrite);
+        } catch (error) {
+            if (uploadedUrl) {
                 try {
-                    await onMaterialCreate(result, shouldOverwrite);
-                } catch (error) {
-                    await removeUploadedFiles([result.url]);
-                    throw error;
+                    await removeUploadedFiles([uploadedUrl]);
+                } catch {
+                    // Keep the material process failure visible even if Drive cleanup fails.
                 }
             }
+            dispatch(
+                setProcess({
+                    ...process,
+                    status: "failed",
+                    reason:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to create material",
+                }),
+            );
+        }
+    };
+
+    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
+        if (files.length === 0 || formDisabled) return;
+        
+        setIsUploading(true);
+        try {
+            const filesToUpload = [...files];
+            const processes = await Promise.all(
+                filesToUpload.map((file) =>
+                    createProcess(`Uploading ${file.name}`),
+                ),
+            );
+
             setShowConflictForm(false);
             onClose();
+
+            filesToUpload.forEach((file, index) => {
+                void handleFileUpload(
+                    file,
+                    processes[index],
+                    shouldOverwrite,
+                );
+            });
         } catch (error) {
             handlePopupErrors(error);
         } finally {

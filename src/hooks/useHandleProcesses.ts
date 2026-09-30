@@ -32,29 +32,49 @@ export function useUploadFileToDriveChunked({
     const [makeFilePublic] = useMakeFilePublicMutation();
     const dispatch = useAppDispatch();
     const uploadFileToDriveChunked = useCallback(
-        async (file: File | null, processName: string) => {
-            const process: Process = {
-                id: GenerateRandomString(16),
-                name: processName,
-                status: "processing",
-                progress: 0,
-            };
+        async (
+            file: File | null,
+            processName: string,
+            existingProcess?: Process,
+        ) => {
+            const process: Process =
+                existingProcess ?? {
+                    id: GenerateRandomString(16),
+                    name: processName,
+                    status: "processing",
+                    progress: 0,
+                };
             try {
                 if (!google_access_token) {
-                    showToast(
-                        "error",
-                        "Error",
-                        "Please Authenticate with Google First to Proceed.",
+                    const reason =
+                        "Please Authenticate with Google First to Proceed.";
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            status: "failed",
+                            reason,
+                        }),
                     );
                     return;
                 }
-                if (!file) return;
+                if (!file) {
+                    dispatch(
+                        setProcess({
+                            ...process,
+                            status: "failed",
+                            reason: "No file selected",
+                        }),
+                    );
+                    return;
+                }
                 const metadata = {
                     name: file.name,
                     mimeType: file.type,
                     parents: ["root"],
                 };
-                dispatch(setProcess(process));
+                if (!existingProcess) {
+                    dispatch(setProcess(process));
+                }
                 const resumableSessionURL = await getResumableSession({
                     metadata,
                     fileType: file.type,
