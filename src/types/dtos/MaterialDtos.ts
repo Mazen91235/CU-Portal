@@ -7,6 +7,7 @@ import type { SearchDto } from "./BaseDtos";
 
 export type MaterialCreateDto = {
     name: string;
+    should_overwrite: boolean;
     material_type: MaterialType;
     subject_id: number;
     parent_id?: number | null;
@@ -33,6 +34,7 @@ export type MaterialResponseDto = {
 
 export type MaterialUpdateDto = {
     name: string;
+    should_overwrite: boolean;
     material_type: MaterialType;
     week_id?: number | null;
     details?: {
@@ -59,12 +61,14 @@ export type MaterialSearchDto = {
 
 export type MaterialsCopyOrMoveDto = {
     material_ids: number[];
+    should_overwrite: boolean;
     subject_id: number;
     destination_id?: number | null;
 };
 
 export type MaterialsFetchFromDriveDto = {
     url: string;
+    should_overwrite: boolean;
     subject_id?: number | null;
     parent_id?: number | null;
 };

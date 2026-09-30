@@ -67,12 +67,6 @@
     font-weight: 500;
 }
 
-.infoCardAvatars {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
 .infoCardAction {
     display: flex;
     align-items: center;

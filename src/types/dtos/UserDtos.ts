@@ -75,6 +75,7 @@ export type UserUpdateDto = {
 
 export type UserSearchDto = {
     id?: number | null;
+    is_active_now?: boolean;
     faculty_id?: number | null;
     department_id?: number | null;
     year_id?: number | null;
@@ -182,6 +183,7 @@ export type UserStatisticsResponseDto = {
     users_this_month_count: number;
     percentage_increase: number;
     pending_users_count: number;
+    active_now_count: number;
 };
 
 export type UserDeviceActionDto = {

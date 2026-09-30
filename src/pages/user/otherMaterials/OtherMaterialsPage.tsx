@@ -38,14 +38,15 @@ import { isMobile } from "../../../utils/DeviceHandler";
 
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
     const studyType = getFilter("study_type", "");
     const departmentId = getFilter("department_id", "");
     const yearId = getFilter("year_id", "");
     const subjectFilter = getFilter("subject_id", "");
-    const currentParentId = getFilter("parent_id", "")
-        ? Number(getFilter("parent_id"))
-        : null;
+    const parentFilter = getFilter("parent_id", "");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
@@ -116,14 +117,14 @@ export function OtherMaterialsPage() {
     }, [getSubjects, departmentId, yearId, user]);
 
     const fetchMaterials = useCallback(
-        async (parentId?: number | null) => {
+        async () => {
             if (!subjectFilter) return;
 
             try {
                 const response = await getMaterials({
                     data: {
                         subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? null,
+                        parent_id: currentParentId ?? null,
                         query: searchQuery || undefined,
                     },
                     includes: ["subject", "children", "attachment"],
@@ -133,7 +134,7 @@ export function OtherMaterialsPage() {
                 handlePopupErrors(error);
             }
         },
-        [subjectFilter, searchQuery, getMaterials],
+        [subjectFilter, currentParentId, searchQuery, getMaterials],
     );
 
     const buildMaterialsPath = useCallback(
@@ -144,18 +145,16 @@ export function OtherMaterialsPage() {
             if (!studyType || !departmentId || !yearId) {
                 return "/user/other-materials";
             }
-            const params = new URLSearchParams(searchParams);
+            const params = new URLSearchParams();
             params.set("study_type", studyType);
             params.set("department_id", departmentId);
             params.set("year_id", yearId);
+            if (searchQuery) params.set("query", searchQuery);
             if (subjectValue) params.set("subject_id", String(subjectValue));
-            else params.delete("subject_id");
             if (parentValue) params.set("parent_id", String(parentValue));
-            else params.delete("parent_id");
-            params.delete("material_id");
             return `/user/other-materials/materials?${params.toString()}`;
         },
-        [studyType, departmentId, yearId, searchParams],
+        [studyType, departmentId, yearId, searchQuery],
     );
 
     const loadCurrentPath = useCallback(
@@ -190,8 +189,8 @@ export function OtherMaterialsPage() {
     const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
     const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
     const authMaterialsQuery = useCallback(
-        () => fetchMaterials(currentParentId),
-        [fetchMaterials, currentParentId],
+        () => fetchMaterials(),
+        [fetchMaterials],
     );
 
     useAuthQuery(authDepartmentQuery);
@@ -325,9 +324,11 @@ export function OtherMaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            const params = new URLSearchParams(searchParams);
-            if (materialId !== undefined) params.set("material_id", String(materialId));
-            url = `${window.location.origin}${url.split("?")[0]}?${params.toString()}`;
+            const fileUrl = new URL(url, window.location.origin);
+            if (materialId !== undefined) {
+                fileUrl.searchParams.set("material_id", String(materialId));
+            }
+            url = fileUrl.toString();
         } else {
             url =
                 materials.find((m) => m.id === materialId)?.attachment?.url ||
@@ -342,22 +343,19 @@ export function OtherMaterialsPage() {
     };
 
     useEffect(() => {
-        const material_id = searchParams.get("material_id");
-        if (material_id && materials.length > 0) {
+        if (materialIdFilter && materials.length > 0) {
             const material = materials.find(
-                (m) => m.id === parseInt(material_id),
+                (m) => m.id === parseInt(materialIdFilter),
             );
             if (material) {
                 handlePreview(
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                const nextParams = new URLSearchParams(searchParams);
-                nextParams.delete("material_id");
-                setSearchParams(nextParams, { replace: true });
+                setMaterialIdFilter("", true);
             }
         }
-    }, [searchParams, materials, handlePreview, setSearchParams]);
+    }, [materialIdFilter, materials, handlePreview, setMaterialIdFilter]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.material_type === "folder"),

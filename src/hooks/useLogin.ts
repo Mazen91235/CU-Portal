@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useLazyIsLoggedInQuery } from "../services/apis/AuthenticateAPIs";
 import { validateCachedData } from "../utils/Validators";
 import { useAppSelector } from "../services/redux/Hooks";
@@ -6,12 +6,17 @@ import { useAppSelector } from "../services/redux/Hooks";
 export const useLogin = () => {
     const [isLoggedIn] = useLazyIsLoggedInQuery();
     const isProcessing = useAppSelector((state) => state.user.isProcessing);
+    const isProcessingRef = useRef(isProcessing);
+
+    useEffect(() => {
+        isProcessingRef.current = isProcessing;
+    }, [isProcessing]);
 
     const checkLogin = useCallback(async () => {
-        if (isProcessing) {
+        while (isProcessingRef.current) {
             await new Promise((resolve) => setTimeout(resolve, 200));
-            return checkLogin();
         }
+
         const isLoggedInData = localStorage.getItem("is-logged-in");
         if (isLoggedInData) {
             const isLoggedInParsed = JSON.parse(isLoggedInData);
@@ -25,6 +30,7 @@ export const useLogin = () => {
         } catch {
             return false;
         }
-    }, [isLoggedIn, isProcessing]);
+    }, [isLoggedIn]);
+
     return checkLogin;
 };

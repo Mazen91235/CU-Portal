@@ -41,6 +41,10 @@ export function useAuthQuery<TTriggerArg, TReturn>(
         };
 
         void runQuery();
+
+        return () => {
+            releaseLoading();
+        };
     }, [user, isLoggedIn, trigger, startLoading, pathname]);
 }
 

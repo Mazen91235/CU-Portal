@@ -12,7 +12,10 @@ import {
 } from "../../../services/apis/admin/UserAPIs";
 import { useLazyGetRolesQuery } from "../../../services/apis/admin/RoleAPIs";
 import { showToast } from "../../../utils/ToastsManager";
-import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    getErrorMessage,
+    handlePopupErrors,
+} from "../../../utils/ErrorHandling";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import type {
     UserResponseDto,
@@ -44,6 +47,31 @@ export const UserPage = () => {
     const [roles, setRoles] = useState<RoleResponseDto[]>([]);
     const permissions = useAppSelector((state) => state.user.permissions);
     const canManageUsers = permissions?.includes("Manage Users") ?? false;
+
+    const latestActivityLog = user.logs?.reduce(
+        (latest, log) => {
+            const logTime = log.created_at
+                ? new Date(formatDateTime(log.created_at, true)).getTime()
+                : Number.NaN;
+            if (Number.isNaN(logTime)) return latest;
+
+            const latestTime = latest?.created_at
+                ? new Date(formatDateTime(latest.created_at, true)).getTime()
+                : Number.NaN;
+            if (!latest || Number.isNaN(latestTime) || logTime > latestTime) {
+                return log;
+            }
+            return latest;
+        },
+        undefined as NonNullable<typeof user.logs>[number] | undefined,
+    );
+    const latestActivityDate = latestActivityLog?.created_at
+        ? new Date(formatDateTime(latestActivityLog.created_at, true))
+        : null;
+    const isActiveNow =
+        latestActivityDate !== null &&
+        !Number.isNaN(latestActivityDate.getTime()) &&
+        Date.now() - latestActivityDate.getTime() <= 60 * 60 * 1000;
 
     const [getUser] = useLazyGetUserQuery();
     const [getRoles] = useLazyGetRolesQuery();
@@ -85,7 +113,10 @@ export const UserPage = () => {
             setUser(user);
         } catch (error) {
             navigate("/admin/users", {
-                state: { error: getErrorMessage(error) || "Failed to fetch user data" },
+                state: {
+                    error:
+                        getErrorMessage(error) || "Failed to fetch user data",
+                },
             });
         }
     }, [userId, getUser, navigate]);
@@ -196,6 +227,26 @@ export const UserPage = () => {
                                             }
                                         >
                                             Early Access
+                                        </span>
+                                    )}
+                                    {(isActiveNow || latestActivityLog) && (
+                                        <span
+                                            className={`${styles.userActivityBadge} ${
+                                                isActiveNow
+                                                    ? styles.userActivityActive
+                                                    : styles.userActivityInactive
+                                            }`}
+                                        >
+                                            <span
+                                                className={
+                                                    styles.userActivityDot
+                                                }
+                                            />
+                                            {isActiveNow
+                                                ? "Active Now"
+                                                : `Was Active · ${formatTimeAgo(
+                                                      latestActivityLog?.created_at,
+                                                  )}`}
                                         </span>
                                     )}
                                 </div>

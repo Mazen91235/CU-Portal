@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import { useLazyGetDepartmentQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -31,6 +31,7 @@ import { MaterialCard } from "../../../components/materials/MaterialCard";
 import { MaterialSelectionMenu } from "../../../components/materials/MaterialSelectionMenu";
 import { Navigator } from "../../../components/materials/Navigator";
 import { CrossSubjectDestinationPicker } from "../../../components/materials/CrossSubjectDestinationPicker";
+import { MaterialConflictForm } from "../../../components/materials/MaterialConflictForm";
 import { OtherMaterialsScopeHeader } from "../../../components/materials/OtherMaterialsScopeHeader";
 import { Preview } from "../../../components/preview/Preview";
 
@@ -47,14 +48,15 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
     const studyType = getFilter("study_type", "");
     const departmentId = getFilter("department_id", "");
     const yearId = getFilter("year_id", "");
     const subjectFilter = getFilter("subject_id", "");
-    const currentParentId = getFilter("parent_id", "")
-        ? Number(getFilter("parent_id"))
-        : null;
+    const parentFilter = getFilter("parent_id", "");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
@@ -70,17 +72,30 @@ export function OtherMaterialsPage() {
     const [materials, setMaterials] = useState<MaterialResponseDto[]>([]);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
     const [showDestinationPicker, setShowDestinationPicker] = useState(false);
+    const [conflictForm, setConflictForm] = useState<{
+        isOpen: boolean;
+        materialIds: number[];
+        targetId: number | null;
+        subjectId: number;
+    }>({
+        isOpen: false,
+        materialIds: [],
+        targetId: null,
+        subjectId: 0,
+    });
     const [previewFile, setPreviewFile] = useState<{
         id: string;
         name: string;
     } | null>(null);
+    const fetchMaterialsRef = useRef<(() => Promise<void>) | null>(null);
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
     const [createMaterial] = useCreateMaterialMutation();
-    const [copyMaterials] = useCopyMaterialsMutation();
+    const [copyMaterials, { isLoading: isCopying }] =
+        useCopyMaterialsMutation();
     const createProcess = useCreateProcess({});
 
     const fetchDepartment = useCallback(async () => {
@@ -127,26 +142,48 @@ export function OtherMaterialsPage() {
 
     const [isSelectionMode, setIsSelectionMode] = useState(false);
 
-    const fetchMaterials = useCallback(
-        async (parentId?: number | null) => {
-            if (!subjectFilter) return;
+    const fetchMaterials = useCallback(async () => {
+        if (!subjectFilter) return;
 
-            try {
-                const response = await getMaterials({
-                    data: {
-                        subject_id: parseInt(subjectFilter),
-                        parent_id: parentId ?? null,
-                        query: searchQuery || undefined,
-                    },
-                    includes: ["subject", "children", "attachment"],
-                }).unwrap();
-                setMaterials(response.data || []);
-            } catch (error) {
-                handlePopupErrors(error);
-            }
-        },
-        [subjectFilter, searchQuery, getMaterials],
-    );
+        try {
+            const response = await getMaterials({
+                data: {
+                    subject_id: parseInt(subjectFilter),
+                    parent_id: currentParentId ?? null,
+                    query: searchQuery || undefined,
+                },
+                includes: ["subject", "children", "attachment"],
+            }).unwrap();
+            setMaterials(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [subjectFilter, currentParentId, searchQuery, getMaterials]);
+    fetchMaterialsRef.current = fetchMaterials;
+
+    const refreshMaterials = useCallback(async () => {
+        if (!fetchMaterialsRef.current) return;
+        const differences_count = [
+            studyType != getFilter("study_type", ""),
+            departmentId != getFilter("department_id", ""),
+            yearId != getFilter("year_id", ""),
+            subjectFilter != getFilter("subject_id", ""),
+            parentFilter != getFilter("parent_id", ""),
+            materialIdFilter != getFilter("material_id", ""),
+            searchQuery != getFilter("query", ""),
+        ].reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+        if (differences_count) return;
+        await fetchMaterialsRef.current();
+    }, [
+        studyType,
+        departmentId,
+        yearId,
+        subjectFilter,
+        parentFilter,
+        materialIdFilter,
+        searchQuery,
+        getFilter,
+    ]);
 
     const buildMaterialsPath = useCallback(
         (
@@ -156,18 +193,16 @@ export function OtherMaterialsPage() {
             if (!studyType || !departmentId || !yearId) {
                 return "/admin/other-materials";
             }
-            const params = new URLSearchParams(searchParams);
+            const params = new URLSearchParams();
             params.set("study_type", studyType);
             params.set("department_id", departmentId);
             params.set("year_id", yearId);
+            if (searchQuery) params.set("query", searchQuery);
             if (subjectValue) params.set("subject_id", String(subjectValue));
-            else params.delete("subject_id");
             if (parentValue) params.set("parent_id", String(parentValue));
-            else params.delete("parent_id");
-            params.delete("material_id");
             return `/admin/other-materials/materials?${params.toString()}`;
         },
-        [studyType, departmentId, yearId, searchParams],
+        [studyType, departmentId, yearId, searchQuery],
     );
 
     const loadCurrentPath = useCallback(
@@ -198,12 +233,18 @@ export function OtherMaterialsPage() {
         [buildMaterialsPath, navigate, subjectFilter],
     );
 
-    const authDepartmentQuery = useCallback(() => fetchDepartment(), [fetchDepartment]);
+    const authDepartmentQuery = useCallback(
+        () => fetchDepartment(),
+        [fetchDepartment],
+    );
     const authYearQuery = useCallback(() => fetchYear(), [fetchYear]);
-    const authSubjectsQuery = useCallback(() => fetchSubjects(), [fetchSubjects]);
+    const authSubjectsQuery = useCallback(
+        () => fetchSubjects(),
+        [fetchSubjects],
+    );
     const authMaterialsQuery = useCallback(
-        () => fetchMaterials(currentParentId),
-        [fetchMaterials, currentParentId],
+        () => fetchMaterials(),
+        [fetchMaterials],
     );
 
     useAuthQuery(authDepartmentQuery);
@@ -291,9 +332,11 @@ export function OtherMaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            const params = new URLSearchParams(searchParams);
-            if (materialId !== undefined) params.set("material_id", String(materialId));
-            url = `${window.location.origin}${url.split("?")[0]}?${params.toString()}`;
+            const fileUrl = new URL(url, window.location.origin);
+            if (materialId !== undefined) {
+                fileUrl.searchParams.set("material_id", String(materialId));
+            }
+            url = fileUrl.toString();
         } else {
             url =
                 materials.find((material) => material.id === materialId)
@@ -368,6 +411,7 @@ export function OtherMaterialsPage() {
         async (subjectId: number, name: string, parentId: number | null) => {
             await createMaterial({
                 name,
+                should_overwrite: false,
                 material_type: "folder",
                 subject_id: subjectId,
                 parent_id: parentId,
@@ -381,63 +425,82 @@ export function OtherMaterialsPage() {
         setShowDestinationPicker(false);
     };
 
-    const handleDestinationPickerConfirm = async (
+    const handleDestinationPickerConfirm = (
         targetId: number | null,
         subjectId: number,
     ) => {
         if (selectedMaterials.length === 0) return;
-        const processName = `Copying ${selectedMaterials.length} Material${selectedMaterials.length > 1 ? "s" : ""}`;
-        const copiedMaterials = selectedMaterials;
-        setSelectedMaterials([]);
+
         setShowDestinationPicker(false);
+        setConflictForm({
+            isOpen: true,
+            materialIds: [...selectedMaterials],
+            targetId,
+            subjectId,
+        });
+    };
+
+    const handleConflictFormClose = () => {
+        setSelectedMaterials([]);
+        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+    };
+
+    const handleConflictConfirm = async (shouldOverwrite: boolean) => {
+        if (conflictForm.materialIds.length === 0 || !conflictForm.subjectId)
+            return;
+
+        const { materialIds, targetId, subjectId } = conflictForm;
+        const processName = `Copying ${materialIds.length} Material${materialIds.length > 1 ? "s" : ""}`;
+
+        setConflictForm((prev) => ({ ...prev, isOpen: false }));
+        setSelectedMaterials([]);
+
         try {
-            createProcess(processName).then(async (process) => {
-                try {
-                    if (!process) {
-                        showToast("error", "Error", "Failed to create process");
-                        return;
-                    }
-                    await copyMaterials({
-                        material_ids: copiedMaterials,
-                        destination_id: targetId,
-                        subject_id: subjectId,
-                    }).unwrap();
-                    dispatch(setProcess({ ...process, status: "completed" }));
-                    await fetchMaterials(currentParentId);
-                } catch (error) {
-                    const errorMessage =
-                        getErrorMessage(error) || "Operation failed";
-                    dispatch(
-                        setProcess({
-                            ...process,
-                            status: "failed",
-                            reason: errorMessage,
-                        }),
-                    );
-                }
-            });
+            const process = await createProcess(processName);
+            if (!process) {
+                showToast("error", "Error", "Failed to create process");
+                return;
+            }
+
+            try {
+                await copyMaterials({
+                    material_ids: materialIds,
+                    destination_id: targetId,
+                    subject_id: subjectId,
+                    should_overwrite: shouldOverwrite,
+                }).unwrap();
+                dispatch(setProcess({ ...process, status: "completed" }));
+                await refreshMaterials();
+            } catch (error) {
+                const errorMessage =
+                    getErrorMessage(error) || "Operation failed";
+                dispatch(
+                    setProcess({
+                        ...process,
+                        status: "failed",
+                        reason: errorMessage,
+                    }),
+                );
+            }
         } catch (error) {
             handlePopupErrors(error);
         }
     };
 
     useEffect(() => {
-        const material_id = searchParams.get("material_id");
-        if (material_id && materials.length > 0) {
+        if (materialIdFilter && materials.length > 0) {
             const material = materials.find(
-                (m) => m.id === parseInt(material_id),
+                (m) => m.id === parseInt(materialIdFilter),
             );
             if (material) {
                 handlePreview(
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                const nextParams = new URLSearchParams(searchParams);
-                nextParams.delete("material_id");
-                setSearchParams(nextParams, { replace: true });
+                setMaterialIdFilter("", true);
             }
         }
-    }, [searchParams, materials, handlePreview, setSearchParams]);
+    }, [materialIdFilter, materials, handlePreview, setMaterialIdFilter]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.material_type === "folder"),
@@ -480,7 +543,9 @@ export function OtherMaterialsPage() {
                     yearName={year?.year?.toString()}
                     onChangeHome={() => navigate("/admin/other-materials")}
                     onChangeStudyType={() =>
-                        navigate(`/admin/other-materials?study_type=${studyType}`)
+                        navigate(
+                            `/admin/other-materials?study_type=${studyType}`,
+                        )
                     }
                     onChangeDepartment={() =>
                         navigate(
@@ -504,7 +569,8 @@ export function OtherMaterialsPage() {
                         <div className={styles.searchContainer}>
                             <Search
                                 placeholder="Search Materials..."
-                                setValue={setSearchQuery} value={searchQuery}
+                                setValue={setSearchQuery}
+                                value={searchQuery}
                             />
                         </div>
                     </div>
@@ -661,6 +727,14 @@ export function OtherMaterialsPage() {
                         createFolder={createDestinationFolder}
                     />
                 )}
+
+                <MaterialConflictForm
+                    operation="copy"
+                    isOpen={conflictForm.isOpen}
+                    isSubmitting={isCopying}
+                    onClose={handleConflictFormClose}
+                    onConfirm={handleConflictConfirm}
+                />
             </div>
         </Layout>
     );
