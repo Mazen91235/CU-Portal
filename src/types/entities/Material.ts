@@ -1,6 +1,7 @@
 import type { Subject } from "./Subject";
 import type { User } from "./User";
 import type { Week } from "./Week";
+import type { WeekItem } from "./WeekItem";
 import type { Attachment } from "./Attachment";
 
 export type Material = {
@@ -17,8 +18,8 @@ export type Material = {
     parent_id?: number | null;
     parent?: Material | null;
     children?: Material[] | null;
-    week_id?: number | null;
-    week?: Week | null;
+    weeks?: Week[] | null;
+    week_items?: WeekItem[] | null;
     attachment?: Attachment | null;
 };
 

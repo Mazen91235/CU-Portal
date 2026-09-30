@@ -2,6 +2,7 @@ import type { Faculty } from "./Faculty";
 import type { Department } from "./Department";
 import type { Year } from "./Year";
 import type { Material } from "./Material";
+import type { WeekItem } from "./WeekItem";
 
 export type Week = {
     id?: number;
@@ -16,4 +17,5 @@ export type Week = {
     year_id?: number;
     year?: Year | null;
     materials?: Material[] | null;
+    week_items?: WeekItem[] | null;
 };

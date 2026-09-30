@@ -1,6 +1,7 @@
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { UserResponseDto } from "./UserDtos";
 import type { WeekResponseDto } from "./WeekDtos";
+import type { WeekItemMutationDto } from "./WeekItemDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
 import type { MaterialType } from "../entities/Material";
 import type { SearchDto } from "./BaseDtos";
@@ -11,7 +12,7 @@ export type MaterialCreateDto = {
     material_type: MaterialType;
     subject_id: number;
     parent_id?: number | null;
-    week_id?: number | null;
+    week_items?: WeekItemMutationDto[];
     details?: {
         url?: string | null;
     } | null;
@@ -29,14 +30,15 @@ export type MaterialResponseDto = {
     parent_id?: number | null;
     children?: MaterialResponseDto[] | null;
     attachment?: AttachmentResponseDto | null;
-    week?: WeekResponseDto | null;
+    weeks?: WeekResponseDto[] | null;
 };
 
 export type MaterialUpdateDto = {
+    id?: number | null;
     name: string;
     should_overwrite: boolean;
     material_type: MaterialType;
-    week_id?: number | null;
+    week_items?: WeekItemMutationDto[];
     details?: {
         url?: string | null;
     } | null;
@@ -51,7 +53,6 @@ export type MaterialSearchDto = {
     material_type?: MaterialType | null;
     subject_id?: number | null;
     parent_id?: number | null;
-    week_id?: number | null;
     author_id?: number | null;
     created_at_from?: string | null;
     created_at_to?: string | null;
