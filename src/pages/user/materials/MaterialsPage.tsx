@@ -31,8 +31,7 @@ import { isMobile } from "../../../utils/DeviceHandler";
 
 export function MaterialsPage() {
     const navigate = useNavigate();
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } =
-        useFilterSearchParams();
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
@@ -48,6 +47,9 @@ export function MaterialsPage() {
     const subjectFilter = getFilter("subject_id");
     const parentFilter = getFilter("parent_id");
     const currentParentId = parentFilter ? Number(parentFilter) : null;
+    const authorId = getFilter("author_id", "");
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
 
     const [getMaterials] = useLazyGetMaterialsQuery();
     const [getMaterialParents] = useLazyGetMaterialParentsQuery();
@@ -79,16 +81,15 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            const params = new URLSearchParams(searchParams);
+            const params = new URLSearchParams();
+            if (authorId) params.set("author_id", authorId);
+            if (searchQuery) params.set("query", searchQuery);
             if (subjectValue) params.set("subject_id", String(subjectValue));
-            else params.delete("subject_id");
             if (parentValue) params.set("parent_id", String(parentValue));
-            else params.delete("parent_id");
-            params.delete("material_id");
             const query = params.toString();
             return `/user/materials${query ? `?${query}` : ""}`;
         },
-        [searchParams],
+        [authorId, searchQuery],
     );
 
     const loadCurrentPath = useCallback(
@@ -271,22 +272,19 @@ export function MaterialsPage() {
     };
 
     useEffect(() => {
-        const material_id = searchParams.get("material_id");
-        if (material_id && materials.length > 0) {
+        if (materialIdFilter && materials.length > 0) {
             const material = materials.find(
-                (m) => m.id === parseInt(material_id),
+                (m) => m.id === parseInt(materialIdFilter),
             );
             if (material) {
                 handlePreview(
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                const nextParams = new URLSearchParams(searchParams);
-                nextParams.delete("material_id");
-                setSearchParams(nextParams, { replace: true });
+                setMaterialIdFilter("", true);
             }
         }
-    }, [searchParams, materials, handlePreview, setSearchParams]);
+    }, [materialIdFilter, materials, handlePreview, setMaterialIdFilter]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.material_type === "folder"),

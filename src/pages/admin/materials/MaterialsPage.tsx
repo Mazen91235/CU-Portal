@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { MaterialType } from "../../../types/entities/Material";
 import { useLazyGetFacultiesQuery } from "../../../services/apis/admin/FacultyAPIs";
@@ -61,14 +61,10 @@ export function MaterialsPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
-    const {
-        getFilter,
-        getFilterSetter,
-        searchParams,
-        setFilters,
-        setSearchParams,
-    } = useFilterSearchParams();
-    const authorId = searchParams.get("author_id");
+    const { getFilter, getFilterSetter, setFilters } = useFilterSearchParams();
+    const authorId = getFilter("author_id", "");
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
     const facultyFilter = getFilter("faculty_id", "");
@@ -138,7 +134,8 @@ export function MaterialsPage() {
             null,
         [subjectFilter, subjects],
     );
-
+    const fetchMaterialsRef = useRef<(() => Promise<void>) | null>(null);
+    const isMountedRef = useRef(false);
     const [searchFaculties] = useLazyGetFacultiesQuery();
     const [searchDepartments] = useLazyGetDepartmentsQuery();
     const [searchYears] = useLazyGetYearsQuery();
@@ -231,6 +228,20 @@ export function MaterialsPage() {
         }
     }, [subjectFilter, currentParentId, searchQuery, getMaterials, authorId]);
 
+    fetchMaterialsRef.current = fetchMaterials;
+
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+
+    const refreshMaterials = useCallback(async () => {
+        if (!isMountedRef.current || !fetchMaterialsRef.current) return;
+        await fetchMaterialsRef.current();
+    }, []);
+
     const fetchFolders = useCallback(
         async (parentId?: number | null) => {
             if (!subjectFilter) return;
@@ -257,16 +268,18 @@ export function MaterialsPage() {
             subjectValue?: string | number | null,
             parentValue?: string | number | null,
         ) => {
-            const params = new URLSearchParams(searchParams);
+            const params = new URLSearchParams();
+            if (facultyFilter) params.set("faculty_id", facultyFilter);
+            if (departmentFilter) params.set("department_id", departmentFilter);
+            if (yearFilter) params.set("year_id", yearFilter);
+            if (authorId) params.set("author_id", authorId);
+            if (searchQuery) params.set("query", searchQuery);
             if (subjectValue) params.set("subject_id", String(subjectValue));
-            else params.delete("subject_id");
             if (parentValue) params.set("parent_id", String(parentValue));
-            else params.delete("parent_id");
-            params.delete("material_id");
             const query = params.toString();
             return `/admin/materials${query ? `?${query}` : ""}`;
         },
-        [searchParams],
+        [facultyFilter, departmentFilter, yearFilter, authorId, searchQuery],
     );
 
     const loadCurrentPath = useCallback(
@@ -469,7 +482,7 @@ export function MaterialsPage() {
             setSelectedMaterials([]);
             setIsSelectionMode(false);
             setConfirmModal({ isOpen: false, action: null });
-            await fetchMaterials();
+            await refreshMaterials();
         } catch (error) {
             handlePopupErrors(error);
             setConfirmModal({ isOpen: false, action: null });
@@ -583,7 +596,7 @@ export function MaterialsPage() {
                     );
                 }
                 setCurrentPath((prev) => {
-                    fetchMaterials();
+                    refreshMaterials();
                     return prev;
                 });
                 setFormData({ show: false, type: null, material: null });
@@ -594,7 +607,7 @@ export function MaterialsPage() {
         [
             createMaterial,
             dispatch,
-            fetchMaterials,
+            refreshMaterials,
             buildMaterialsPath,
             subjectFilter,
             currentPath,
@@ -781,7 +794,7 @@ export function MaterialsPage() {
                 }
 
                 dispatch(setProcess({ ...process, status: "completed" }));
-                await fetchMaterials();
+                await refreshMaterials();
             } catch (error) {
                 const errorMessage =
                     getErrorMessage(error) || "Operation failed";
@@ -825,22 +838,19 @@ export function MaterialsPage() {
     };
 
     useEffect(() => {
-        const material_id = searchParams.get("material_id");
-        if (material_id && materials.length > 0) {
+        if (materialIdFilter && materials.length > 0) {
             const material = materials.find(
-                (m) => m.id === parseInt(material_id),
+                (m) => m.id === parseInt(materialIdFilter),
             );
             if (material) {
                 handlePreview(
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                const nextParams = new URLSearchParams(searchParams);
-                nextParams.delete("material_id");
-                setSearchParams(nextParams, { replace: true });
+                setMaterialIdFilter("", true);
             }
         }
-    }, [searchParams, materials, handlePreview, setSearchParams]);
+    }, [materialIdFilter, materials, handlePreview, setMaterialIdFilter]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.material_type === "folder"),
@@ -1012,15 +1022,12 @@ export function MaterialsPage() {
                     url: `${url.pathname}${url.search}`,
                 }),
             );
-            setCurrentPath((prev) => {
-                fetchMaterials();
-                return prev;
-            });
+            await refreshMaterials();
         },
         [
             createMaterial,
             dispatch,
-            fetchMaterials,
+            refreshMaterials,
             buildMaterialsPath,
             subjectFilter,
             currentPath,
@@ -1042,10 +1049,7 @@ export function MaterialsPage() {
                         parent_id: parentId ?? undefined,
                     }).unwrap();
                     dispatch(setProcess({ ...process, status: "completed" }));
-                    setCurrentPath((prev) => {
-                        fetchMaterials();
-                        return prev;
-                    });
+                    await refreshMaterials();
                 } catch (error) {
                     const errorMessage =
                         getErrorMessage(error) || "Fetch failed";
@@ -1065,7 +1069,7 @@ export function MaterialsPage() {
             createProcess,
             dispatch,
             getMaterialsFromDrive,
-            fetchMaterials,
+            refreshMaterials,
         ],
     );
 

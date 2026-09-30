@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useLazyGetCoursesQuery } from "../../../services/apis/admin/CourseAPIs";
 import { useLazyGetDepartmentQuery } from "../../../services/apis/admin/DepartmentAPIs";
@@ -48,14 +48,15 @@ import { copyToClipboard } from "../../../utils/ClipboardHandler";
 export function OtherMaterialsPage() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { getFilter, getFilterSetter, searchParams, setSearchParams } = useFilterSearchParams();
+    const { getFilter, getFilterSetter } = useFilterSearchParams();
     const studyType = getFilter("study_type", "");
     const departmentId = getFilter("department_id", "");
     const yearId = getFilter("year_id", "");
     const subjectFilter = getFilter("subject_id", "");
-    const currentParentId = getFilter("parent_id", "")
-        ? Number(getFilter("parent_id"))
-        : null;
+    const parentFilter = getFilter("parent_id", "");
+    const currentParentId = parentFilter ? Number(parentFilter) : null;
+    const materialIdFilter = getFilter("material_id", "");
+    const setMaterialIdFilter = getFilterSetter("material_id");
     const searchQuery = getFilter("query", "");
     const setSearchQuery = getFilterSetter("query");
 
@@ -86,6 +87,8 @@ export function OtherMaterialsPage() {
         id: string;
         name: string;
     } | null>(null);
+    const fetchMaterialsRef = useRef<(() => Promise<void>) | null>(null);
+    const isMountedRef = useRef(false);
     const [getDepartment] = useLazyGetDepartmentQuery();
     const [getYear] = useLazyGetYearQuery();
     const [getSubjects] = useLazyGetCoursesQuery();
@@ -160,6 +163,19 @@ export function OtherMaterialsPage() {
         },
         [subjectFilter, currentParentId, searchQuery, getMaterials],
     );
+    fetchMaterialsRef.current = fetchMaterials;
+
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+
+    const refreshMaterials = useCallback(async () => {
+        if (!isMountedRef.current || !fetchMaterialsRef.current) return;
+        await fetchMaterialsRef.current();
+    }, []);
 
     const buildMaterialsPath = useCallback(
         (
@@ -169,18 +185,16 @@ export function OtherMaterialsPage() {
             if (!studyType || !departmentId || !yearId) {
                 return "/admin/other-materials";
             }
-            const params = new URLSearchParams(searchParams);
+            const params = new URLSearchParams();
             params.set("study_type", studyType);
             params.set("department_id", departmentId);
             params.set("year_id", yearId);
+            if (searchQuery) params.set("query", searchQuery);
             if (subjectValue) params.set("subject_id", String(subjectValue));
-            else params.delete("subject_id");
             if (parentValue) params.set("parent_id", String(parentValue));
-            else params.delete("parent_id");
-            params.delete("material_id");
             return `/admin/other-materials/materials?${params.toString()}`;
         },
-        [studyType, departmentId, yearId, searchParams],
+        [studyType, departmentId, yearId, searchQuery],
     );
 
     const loadCurrentPath = useCallback(
@@ -304,9 +318,11 @@ export function OtherMaterialsPage() {
         if (type === "folder") {
             url = `${window.location.origin}${buildMaterialsPath(subjectFilter, materialId)}`;
         } else if (type === "file") {
-            const params = new URLSearchParams(searchParams);
-            if (materialId !== undefined) params.set("material_id", String(materialId));
-            url = `${window.location.origin}${url.split("?")[0]}?${params.toString()}`;
+            const fileUrl = new URL(url, window.location.origin);
+            if (materialId !== undefined) {
+                fileUrl.searchParams.set("material_id", String(materialId));
+            }
+            url = fileUrl.toString();
         } else {
             url =
                 materials.find((material) => material.id === materialId)
@@ -443,7 +459,7 @@ export function OtherMaterialsPage() {
                     should_overwrite: shouldOverwrite,
                 }).unwrap();
                 dispatch(setProcess({ ...process, status: "completed" }));
-                await fetchMaterials();
+                await refreshMaterials();
             } catch (error) {
                 const errorMessage =
                     getErrorMessage(error) || "Operation failed";
@@ -461,22 +477,19 @@ export function OtherMaterialsPage() {
     };
 
     useEffect(() => {
-        const material_id = searchParams.get("material_id");
-        if (material_id && materials.length > 0) {
+        if (materialIdFilter && materials.length > 0) {
             const material = materials.find(
-                (m) => m.id === parseInt(material_id),
+                (m) => m.id === parseInt(materialIdFilter),
             );
             if (material) {
                 handlePreview(
                     material.attachment?.details?.file_data?.id || "",
                     material.name || "Preview",
                 );
-                const nextParams = new URLSearchParams(searchParams);
-                nextParams.delete("material_id");
-                setSearchParams(nextParams, { replace: true });
+                setMaterialIdFilter("", true);
             }
         }
-    }, [searchParams, materials, handlePreview, setSearchParams]);
+    }, [materialIdFilter, materials, handlePreview, setMaterialIdFilter]);
 
     const folders = useMemo(
         () => materials.filter((m) => m.material_type === "folder"),
