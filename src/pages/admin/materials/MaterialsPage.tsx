@@ -212,27 +212,24 @@ export function MaterialsPage() {
         }
     }, [searchCourses, user, facultyFilter, departmentFilter, yearFilter]);
 
-    const fetchMaterials = useCallback(
-        async () => {
-            if (!subjectFilter) return;
+    const fetchMaterials = useCallback(async () => {
+        if (!subjectFilter) return;
 
-            try {
-                const response = await getMaterials({
-                    data: {
-                        subject_id: parseInt(subjectFilter),
-                        parent_id: currentParentId ?? null,
-                        query: searchQuery || undefined,
-                        author_id: authorId ? parseInt(authorId) : undefined,
-                    },
-                    includes: ["subject", "children", "attachment", "week"],
-                }).unwrap();
-                setMaterials(response.data || []);
-            } catch (error) {
-                handlePopupErrors(error);
-            }
-        },
-        [subjectFilter, currentParentId, searchQuery, getMaterials, authorId],
-    );
+        try {
+            const response = await getMaterials({
+                data: {
+                    subject_id: parseInt(subjectFilter),
+                    parent_id: currentParentId ?? null,
+                    query: searchQuery || undefined,
+                    author_id: authorId ? parseInt(authorId) : undefined,
+                },
+                includes: ["subject", "children", "attachment", "week"],
+            }).unwrap();
+            setMaterials(response.data || []);
+        } catch (error) {
+            handlePopupErrors(error);
+        }
+    }, [subjectFilter, currentParentId, searchQuery, getMaterials, authorId]);
 
     const fetchFolders = useCallback(
         async (parentId?: number | null) => {
@@ -320,11 +317,7 @@ export function MaterialsPage() {
     );
 
     const authMaterialsQuery = useCallback(
-        () =>
-            Promise.all([
-                fetchMaterials(),
-                fetchFolders(currentParentId),
-            ]),
+        () => Promise.all([fetchMaterials(), fetchFolders(currentParentId)]),
         [fetchMaterials, fetchFolders, currentParentId],
     );
 
@@ -993,7 +986,7 @@ export function MaterialsPage() {
                     : null;
 
             const result = await createMaterial({
-                name: uploadResult.name,
+                name: uploadResult.name.replace("Uploading ", ""),
                 should_overwrite: shouldOverwrite,
                 material_type: "file",
                 subject_id: parseInt(subjectFilter),
