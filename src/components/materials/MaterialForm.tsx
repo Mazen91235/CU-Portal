@@ -12,10 +12,8 @@ import { Select } from "../forms/Select";
 import { WeekItemsEditor } from "./WeekItemsEditor";
 import type { WeekItemMutationDto } from "../../types/dtos/WeekItemDtos";
 import type { FileDataWithExisting } from "../../types/entities/Attachment";
-import { handlePopupErrors } from "../../utils/ErrorHandling";
-import { useAppDispatch } from "../../services/redux/Hooks";
-import { setProcess } from "../../services/redux/reducers/ProcessReducer";
 import type { Process } from "../../types/Process";
+import { handlePopupErrors } from "../../utils/ErrorHandling";
 import styles from "./MaterialForm.module.css";
 
 interface MaterialFormProps {
@@ -39,7 +37,6 @@ export function MaterialForm({
     yearId,
     onSubmit,
 }: MaterialFormProps) {
-    const dispatch = useAppDispatch();
     const [name, setName] = useState(material?.name || "");
     const [weekItems, setWeekItems] = useState<WeekItemMutationDto[]>([]);
     const [shouldOverwrite, setShouldOverwrite] = useState(false);
@@ -152,10 +149,8 @@ export function MaterialForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        const uploadedUrls: string[] = [];
 
-        try {
+        const buildFormData = () => {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("material_type", materialType || "");
@@ -165,34 +160,48 @@ export function MaterialForm({
             if (parentId) {
                 formData.append("parent_id", parentId.toString());
             }
-
             formData.append(
                 "should_overwrite",
                 String(materialType !== "folder" && shouldOverwrite),
             );
-
             if (material && material.id) {
                 formData.append("id", material.id.toString());
             }
-            if (materialType === "file") {
-                if (file) {
-                    const result = await uploadFile(file, name);
-                    if (!result) return;
-                    if (!result.url) {
-                        dispatch(
-                            setProcess({
-                                ...result,
-                                status: "failed",
-                                reason: "Failed to upload file",
-                            }),
-                        );
-                        return;
+            return formData;
+        };
+
+        if (materialType === "file" && file) {
+            const formData = buildFormData();
+            const uploadedUrls: string[] = [];
+            const uploadPromise = uploadFile(file, name);
+
+            onClose();
+
+            void (async () => {
+                try {
+                    const result = await uploadPromise;
+                    if (!result?.url) {
+                        throw new Error("Failed to upload file");
                     }
                     uploadedUrls.push(result.url);
                     formData.append("url", result.url);
                     await onSubmit(formData, result);
-                    onClose();
-                } else if (existingFileData) {
+                } catch (error) {
+                    await removeUploadedFiles(uploadedUrls);
+                    handlePopupErrors(error);
+                }
+            })();
+            return;
+        }
+
+        setIsLoading(true);
+        const uploadedUrls: string[] = [];
+
+        try {
+            const formData = buildFormData();
+
+            if (materialType === "file") {
+                if (existingFileData) {
                     formData.append("url", existingFileData.url || "");
                     await onSubmit(formData);
                     onClose();

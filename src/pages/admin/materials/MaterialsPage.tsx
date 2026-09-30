@@ -578,7 +578,8 @@ export function MaterialsPage() {
                         {
                             material_id: material.id,
                             name,
-                            should_overwrite: material_type !== "folder" &&
+                            should_overwrite:
+                                material_type !== "folder" &&
                                 data.get("should_overwrite") === "true",
                             material_type,
                             details: {
@@ -620,6 +621,7 @@ export function MaterialsPage() {
 
                     result = await createMaterial(createPayload).unwrap();
                 }
+
                 if (!uploadResult) {
                     showToast(
                         "success",

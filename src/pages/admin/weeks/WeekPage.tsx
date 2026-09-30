@@ -19,6 +19,7 @@ import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import {
     useDeleteWeekMutation,
+    useLazyGetWeekQuery,
     useLazyGetWeeksQuery,
 } from "../../../services/apis/admin/WeekAPIs";
 import {
@@ -377,6 +378,7 @@ export function WeekPage() {
     const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
     const [weekItems, setWeekItems] = useState<WeekItemResponseDto[]>([]);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [getWeek] = useLazyGetWeekQuery();
     const [getWeeks] = useLazyGetWeeksQuery();
     const [deleteWeek] = useDeleteWeekMutation();
 
@@ -404,19 +406,11 @@ export function WeekPage() {
                 return;
             }
 
-            const selectedResponse = await getWeeks({
-                data: { id: weekId },
-                includes: [
-                    "faculty",
-                    "department",
-                    "year",
-                    "week_items.material.subject",
-                    "week_items.material.attachment",
-                ],
-                limit: 1,
+            const selectedResponse = await getWeek({
+                week_id: weekId,
             }).unwrap();
 
-            const selectedWeek = selectedResponse.data?.[0] || null;
+            const selectedWeek = selectedResponse.data || null;
             setWeek(selectedWeek);
 
             if (!selectedWeek) {
@@ -471,6 +465,7 @@ export function WeekPage() {
             }
         }
     }, [
+        getWeek,
         getWeeks,
         weekId,
         navigate,

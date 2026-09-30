@@ -8,7 +8,10 @@ import { PageSeo } from "../../../components/PageSeo";
 import { Preview } from "../../../components/preview/Preview";
 import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { downloadFile } from "../../../utils/FileDownloader";
-import { getErrorMessage, handlePopupErrors } from "../../../utils/ErrorHandling";
+import {
+    getErrorMessage,
+    handlePopupErrors,
+} from "../../../utils/ErrorHandling";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
 import {
     formatDate,
@@ -19,7 +22,10 @@ import {
 import { FaChevronUp } from "react-icons/fa";
 import { MonthPicker } from "../../../components/timeline/MonthPicker";
 import { EmptySection } from "../../../components/calendar/EmptySection";
-import { useLazyGetWeeksQuery } from "../../../services/apis/user/WeekAPIs";
+import {
+    useLazyGetWeekQuery,
+    useLazyGetWeeksQuery,
+} from "../../../services/apis/user/WeekAPIs";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
@@ -48,7 +54,10 @@ function WeeklyMaterialCard({ item }: { item: WeekItemResponseDto }) {
 
     const handlePreview = () => {
         if (fileData?.id) {
-            setPreviewFile({ id: fileData.id, name: material.name || "Preview" });
+            setPreviewFile({
+                id: fileData.id,
+                name: material.name || "Preview",
+            });
         }
     };
 
@@ -71,93 +80,106 @@ function WeeklyMaterialCard({ item }: { item: WeekItemResponseDto }) {
             <article className={styles.fileCard}>
                 <div className={styles.fileMain}>
                     <div className={styles.fileInfo}>
-                    <img
-                        src={getFileIcon(fileType || undefined)}
-                        alt=""
-                        className={styles.fileIcon}
-                    />
-                    <div className={styles.fileText}>
-                        <span className={styles.fileName}>
-                            {formatString(material.name || "Unnamed material", "CardTitle")}
-                        </span>
-                        <span className={styles.fileMeta}>
-                            {formatTimeAgo(
-                                material.updated_at || material.created_at || "",
-                            )}
-                        </span>
+                        <img
+                            src={getFileIcon(fileType || undefined)}
+                            alt=""
+                            className={styles.fileIcon}
+                        />
+                        <div className={styles.fileText}>
+                            <span className={styles.fileName}>
+                                {formatString(
+                                    material.name || "Unnamed material",
+                                    "CardTitle",
+                                )}
+                            </span>
+                            <span className={styles.fileMeta}>
+                                {formatTimeAgo(
+                                    material.updated_at ||
+                                        material.created_at ||
+                                        "",
+                                )}
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                {(isFile || isLink) && (
-                    <>
-                        <div className={styles.fileActions}>
-                            {isFile && fileData?.id && (
-                                <>
+                    {(isFile || isLink) && (
+                        <>
+                            <div className={styles.fileActions}>
+                                {isFile && fileData?.id && (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className={styles.fileActionButton}
+                                            onClick={handlePreview}
+                                        >
+                                            <i
+                                                className="fas fa-eye"
+                                                aria-hidden="true"
+                                            />
+                                            Preview
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={styles.fileActionButton}
+                                            onClick={() =>
+                                                void handleDownload()
+                                            }
+                                        >
+                                            <i
+                                                className="fas fa-download"
+                                                aria-hidden="true"
+                                            />
+                                            Download
+                                        </button>
+                                    </>
+                                )}
+                                {isLink && material.attachment?.url && (
                                     <button
                                         type="button"
                                         className={styles.fileActionButton}
-                                        onClick={handlePreview}
+                                        onClick={handleOpenLink}
                                     >
                                         <i
-                                            className="fas fa-eye"
+                                            className="fas fa-external-link"
                                             aria-hidden="true"
                                         />
-                                        Preview
+                                        Open
                                     </button>
-                                    <button
-                                        type="button"
-                                        className={styles.fileActionButton}
-                                        onClick={() => void handleDownload()}
-                                    >
-                                        <i
-                                            className="fas fa-download"
-                                            aria-hidden="true"
-                                        />
-                                        Download
-                                    </button>
-                                </>
-                            )}
-                            {isLink && material.attachment?.url && (
-                                <button
-                                    type="button"
-                                    className={styles.fileActionButton}
-                                    onClick={handleOpenLink}
-                                >
-                                    <i
-                                        className="fas fa-external-link"
-                                        aria-hidden="true"
-                                    />
-                                    Open
-                                </button>
-                            )}
-                        </div>
+                                )}
+                            </div>
 
-                        <div className={styles.fileActionsMobile}>
-                            <MaterialActionsDropdown
-                                onShare={() => {}}
-                                onMove={() => {}}
-                                onCopy={() => {}}
-                                onEdit={() => {}}
-                                onDelete={() => {}}
-                                onView={isFile ? handlePreview : handleOpenLink}
-                                onDownload={
-                                    isFile && fileData?.id
-                                        ? () => void handleDownload()
-                                        : undefined
-                                }
-                                showShare={false}
-                                showMove={false}
-                                showCopy={false}
-                                showEdit={false}
-                                showDelete={false}
-                                showDownload={isFile && Boolean(fileData?.id)}
-                            />
-                        </div>
-                    </>
-                )}
+                            <div className={styles.fileActionsMobile}>
+                                <MaterialActionsDropdown
+                                    onShare={() => {}}
+                                    onMove={() => {}}
+                                    onCopy={() => {}}
+                                    onEdit={() => {}}
+                                    onDelete={() => {}}
+                                    onView={
+                                        isFile ? handlePreview : handleOpenLink
+                                    }
+                                    onDownload={
+                                        isFile && fileData?.id
+                                            ? () => void handleDownload()
+                                            : undefined
+                                    }
+                                    showShare={false}
+                                    showMove={false}
+                                    showCopy={false}
+                                    showEdit={false}
+                                    showDelete={false}
+                                    showDownload={
+                                        isFile && Boolean(fileData?.id)
+                                    }
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
                 {item.note?.trim() && (
-                    <div className={styles.itemNote}>{formatString(item.note, "Content")}</div>
+                    <div className={styles.itemNote}>
+                        {formatString(item.note, "Content")}
+                    </div>
                 )}
             </article>
             {previewFile && (
@@ -296,6 +318,7 @@ export function WeekPage() {
     const [week, setWeek] = useState<WeekResponseDto | null>(null);
     const [weekItems, setWeekItems] = useState<WeekItemResponseDto[]>([]);
     const user = useAppSelector((state) => state.user.user);
+    const [getWeek] = useLazyGetWeekQuery();
     const [getWeeks] = useLazyGetWeeksQuery();
 
     const academicWeekFilter = useMemo(() => {
@@ -312,19 +335,12 @@ export function WeekPage() {
             let selectedWeek: WeekResponseDto | undefined;
 
             if (routeWeekId) {
-                selectedWeek = (
-                    await getWeeks({
-                        data: { ...academicWeekFilter, id: Number(routeWeekId) },
-                        includes: [
-                            "faculty",
-                            "department",
-                            "year", 
-                            "week_items.material.subject",
-                            "week_items.material.attachment",
-                        ],
-                        limit: 1,
-                    }).unwrap()
-                ).data?.[0];
+                selectedWeek =
+                    (
+                        await getWeek({
+                            week_id: Number(routeWeekId),
+                        }).unwrap()
+                    ).data ?? undefined;
 
                 if (!selectedWeek) {
                     navigate("/user/weeks", {
@@ -354,7 +370,10 @@ export function WeekPage() {
                 if (!selectedWeek) {
                     selectedWeek = (
                         await getWeeks({
-                            data: { ...academicWeekFilter, start_date_to: today },
+                            data: {
+                                ...academicWeekFilter,
+                                start_date_to: today,
+                            },
                             includes: [
                                 "faculty",
                                 "department",
@@ -372,7 +391,10 @@ export function WeekPage() {
                 if (!selectedWeek) {
                     selectedWeek = (
                         await getWeeks({
-                            data: { ...academicWeekFilter, start_date_from: today },
+                            data: {
+                                ...academicWeekFilter,
+                                start_date_from: today,
+                            },
                             includes: [
                                 "faculty",
                                 "department",
@@ -396,10 +418,12 @@ export function WeekPage() {
             setWeekItems(selectedWeek?.week_items || []);
         } catch (error) {
             navigate("/user/weeks", {
-                state: { error: getErrorMessage(error) || "Failed to fetch week" },
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch week",
+                },
             });
         }
-    }, [getWeeks, navigate, routeWeekId, academicWeekFilter]);
+    }, [getWeek, getWeeks, navigate, routeWeekId, academicWeekFilter]);
 
     useAuthQuery(fetchWeek);
 

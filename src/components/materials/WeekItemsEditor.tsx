@@ -42,6 +42,16 @@ export function WeekItemsEditor({
         [availableWeeks],
     );
 
+    const sortValueByWeekNumber = (items: WeekItemMutationDto[]) => {
+        const sortedItems = [...items];
+        sortedItems.sort((a, b) => {
+            const weekA = normalizedWeeks.find((w) => w.id === a.week_id);
+            const weekB = normalizedWeeks.find((w) => w.id === b.week_id);
+            return (weekA?.week_number ?? 0) - (weekB?.week_number ?? 0);
+        });
+        return sortedItems;
+    };
+
     useEffect(() => {
         if (openOptionsIndex === null) return;
 
@@ -106,7 +116,8 @@ export function WeekItemsEditor({
             nextValue[associationEditor.index] = nextItem;
             onChange(nextValue);
         } else if (associationEditor?.mode === "attach") {
-            onChange([...value, nextItem]);
+            const newValue = sortValueByWeekNumber([...value, nextItem]);
+            onChange(newValue);
         }
 
         setAssociationEditor(null);
@@ -145,10 +156,13 @@ export function WeekItemsEditor({
                 ) : value.length === 0 ? (
                     <span className={styles.emptyText}>No Weeks Attached</span>
                 ) : (
-                    value.map((item, index) => {
+                    sortValueByWeekNumber(value).map((item) => {
                         const week = normalizedWeeks.find(
                             (availableWeek) =>
                                 availableWeek.id === item.week_id,
+                        );
+                        const index = value.findIndex(
+                            (v) => v.week_id === item.week_id,
                         );
                         return (
                             <div
@@ -214,10 +228,13 @@ export function WeekItemsEditor({
                                     No Weeks Attached
                                 </div>
                             ) : (
-                                value.map((item, index) => {
+                                sortValueByWeekNumber(value).map((item) => {
                                     const week = normalizedWeeks.find(
                                         (availableWeek) =>
                                             availableWeek.id === item.week_id,
+                                    );
+                                    const index = value.findIndex(
+                                        (v) => v.week_id === item.week_id,
                                     );
                                     return (
                                         <div
