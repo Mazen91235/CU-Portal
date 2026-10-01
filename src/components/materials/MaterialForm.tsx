@@ -106,11 +106,7 @@ export function MaterialForm({
             setWeeksLoading(true);
             try {
                 const response = await getWeeks({
-                    data: {
-                        ...(facultyId ? { faculty_id: facultyId } : {}),
-                        department_id: departmentId,
-                        year_id: yearId,
-                    },
+                    data: {},
                     order_by: ["week_number"],
                     limit: 1e6,
                 }).unwrap();
