@@ -8,7 +8,7 @@ import type { ReleaseResponseDto } from "../../../types/dtos/ReleaseDtos";
 import type { VersionResponseDto } from "../../../types/dtos/VersionDtos";
 import type { ReleaseItemType } from "../../../types/entities/ReleaseItem";
 import { useCallback, useMemo, useState } from "react";
-import { formatDate } from "../../../utils/Formatter";
+import { formatDate, toIsoFormat } from "../../../utils/Formatter";
 import styles from "./ReleasesPage.module.css";
 import { useNavigate } from "react-router";
 import { buildRedirectUrl } from "../../../utils/Navigation";
@@ -68,14 +68,13 @@ export function ReleasesPage() {
                 },
                 includes: ["release_version", "release_items"],
                 order_by: ["date_nearest"],
-                limit: 1000,
+                limit: 1e6,
             }).unwrap();
             setReleases(result.data ?? []);
         } catch (error) {
             handlePopupErrors(error);
         }
     }, [getReleases, queryFilter, versionsFilter]);
-
 
     useAuthQuery(fetchVersions);
     useAuthQuery(fetchReleases);
@@ -88,9 +87,11 @@ export function ReleasesPage() {
                     !versionsFilter ||
                     release.release_version?.id?.toString() === versionsFilter;
                 const matchesDateFrom =
-                    !dateFromFilter || releaseDate >= dateFromFilter;
+                    !dateFromFilter ||
+                    releaseDate >= (toIsoFormat(dateFromFilter) ?? "");
                 const matchesDateTo =
-                    !dateToFilter || releaseDate <= dateToFilter;
+                    !dateToFilter ||
+                    releaseDate <= (toIsoFormat(dateToFilter) ?? "");
 
                 return matchesVersion && matchesDateFrom && matchesDateTo;
             }),
