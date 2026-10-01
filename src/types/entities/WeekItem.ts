@@ -1,5 +1,7 @@
 import type { Week } from "./Week";
 import type { Material } from "./Material";
+import type { User } from "./User";
+import type { UserCompletion } from "./UserCompletion";
 
 export type WeekItem = {
     id?: number;
@@ -10,4 +12,6 @@ export type WeekItem = {
     week?: Week | null;
     material_id?: number;
     material?: Material | null;
+    completed_by_users?: User[] | null;
+    user_completions?: UserCompletion[] | null;
 };
