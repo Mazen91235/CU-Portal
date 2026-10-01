@@ -10,11 +10,18 @@ import { Preview } from "../../../components/preview/Preview";
 import { MaterialActionsDropdown } from "../../../components/materials/MaterialActionsDropdown";
 import { downloadFile } from "../../../utils/FileDownloader";
 import { getFileIcon } from "../../../utils/MaterialHelpers";
-import { formatDate, formatTimeAgo } from "../../../utils/Formatter";
+import {
+    formatDate,
+    formatDateTime,
+    formatTimeAgo,
+} from "../../../utils/Formatter";
 import { Button } from "../../../components/forms/Button";
 import { FaChevronUp } from "react-icons/fa";
 import { WeekItemsEditor } from "../../../components/materials/WeekItemsEditor";
-import { getWeekEndDate } from "../../../utils/WeekHelpers";
+import {
+    getWeekDateTimeRange,
+    getWeekEndDate,
+} from "../../../utils/WeekHelpers";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
 import { useAppSelector } from "../../../services/redux/Hooks";
 import {
@@ -22,11 +29,15 @@ import {
     useLazyGetWeekQuery,
     useLazyGetWeeksQuery,
 } from "../../../services/apis/admin/WeekAPIs";
+import { useLazyGetTasksQuery } from "../../../services/apis/admin/TaskAPIs";
+import { useLazyGetExamsQuery } from "../../../services/apis/admin/ExamAPIs";
 import {
     useLazyGetMaterialQuery,
     useUpdateMaterialMutation,
 } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
+import type { TaskResponseDto } from "../../../types/dtos/TaskDtos";
+import type { ExamResponseDto } from "../../../types/dtos/ExamDtos";
 import type {
     WeekItemMutationDto,
     WeekItemResponseDto,
@@ -38,6 +49,8 @@ import {
 import { showToast } from "../../../utils/ToastsManager";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import styles from "./WeekPage.module.css";
+import taskIcon from "../../../assets/icons/task-icon.png";
+import examIcon from "../../../assets/icons/exam-icon.png";
 
 function MaterialAdminCard({
     weekItem,
@@ -315,19 +328,96 @@ function MaterialAdminCard({
     );
 }
 
+type WeeklyActivity =
+    | { type: "exam"; item: ExamResponseDto }
+    | { type: "task"; item: TaskResponseDto };
+
+type SubjectSection = {
+    key: string;
+    title: string;
+    exams: ExamResponseDto[];
+    tasks: TaskResponseDto[];
+    weekItems: WeekItemResponseDto[];
+};
+
+function WeeklyActivityCard({
+    activity,
+    onView,
+}: {
+    activity: WeeklyActivity;
+    onView: () => void;
+}) {
+    const isExam = activity.type === "exam";
+    const item = activity.item;
+
+    return (
+        <article className={styles.fileCard}>
+            <div className={styles.fileMain}>
+                <div className={styles.fileInfo}>
+                    <img
+                        src={isExam ? examIcon : taskIcon}
+                        alt=""
+                        className={styles.fileIcon}
+                    />
+                    <div className={styles.fileText}>
+                        <span className={styles.fileName}>
+                            {item.name ||
+                                (isExam ? "Untitled Exam" : "Untitled Task")}
+                        </span>
+                        <span className={styles.fileMeta}>
+                            Due: {formatDateTime(item.deadline)}
+                        </span>
+                    </div>
+                </div>
+
+                <div className={styles.fileActions}>
+                    <button
+                        type="button"
+                        className={styles.fileActionButton}
+                        onClick={onView}
+                    >
+                        <i className="fas fa-eye" aria-hidden="true" />
+                        View
+                    </button>
+                </div>
+
+                <div className={styles.fileActionsMobile}>
+                    <button
+                        type="button"
+                        className={styles.fileActionMobileButton}
+                        onClick={onView}
+                        aria-label="View"
+                        title="View"
+                    >
+                        <i className="fas fa-eye" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+        </article>
+    );
+}
+
 function AccordionSection({
     title,
+    exams,
+    tasks,
     weekItems,
     availableWeeks,
     onRefresh,
+    onViewTask,
+    onViewExam,
 }: {
     title: string;
+    exams: ExamResponseDto[];
+    tasks: TaskResponseDto[];
     weekItems: WeekItemResponseDto[];
     availableWeeks: WeekResponseDto[];
     onRefresh: () => Promise<void>;
+    onViewTask: (taskId: number) => void;
+    onViewExam: (examId: number) => void;
 }) {
     const [open, setOpen] = useState(true);
-    const count = weekItems.length;
+    const count = exams.length + tasks.length + weekItems.length;
 
     return (
         <div className={styles.section}>
@@ -344,13 +434,33 @@ function AccordionSection({
                     </span>
                 </span>
                 <span
-                    className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}
+                    className={`${styles.chevron} ${
+                        open ? styles.chevronOpen : ""
+                    }`}
                 >
                     <FaChevronUp aria-hidden="true" />
                 </span>
             </button>
             {open && count > 0 && (
                 <div className={styles.sectionBody}>
+                    {exams.map((exam) => (
+                        <WeeklyActivityCard
+                            key={`exam-${exam.id}`}
+                            activity={{ type: "exam", item: exam }}
+                            onView={() => {
+                                if (exam.id != null) onViewExam(exam.id);
+                            }}
+                        />
+                    ))}
+                    {tasks.map((task) => (
+                        <WeeklyActivityCard
+                            key={`task-${task.id}`}
+                            activity={{ type: "task", item: task }}
+                            onView={() => {
+                                if (task.id != null) onViewTask(task.id);
+                            }}
+                        />
+                    ))}
                     {weekItems.map((weekItem) => (
                         <MaterialAdminCard
                             key={weekItem.id ?? weekItem.material?.id}
@@ -377,9 +487,13 @@ export function WeekPage() {
     const [week, setWeek] = useState<WeekResponseDto | null>(null);
     const [weeks, setWeeks] = useState<WeekResponseDto[]>([]);
     const [weekItems, setWeekItems] = useState<WeekItemResponseDto[]>([]);
+    const [tasks, setTasks] = useState<TaskResponseDto[]>([]);
+    const [exams, setExams] = useState<ExamResponseDto[]>([]);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [getWeek] = useLazyGetWeekQuery();
     const [getWeeks] = useLazyGetWeeksQuery();
+    const [getTasks] = useLazyGetTasksQuery();
+    const [getExams] = useLazyGetExamsQuery();
     const [deleteWeek] = useDeleteWeekMutation();
 
     const fetchWeek = useCallback(async () => {
@@ -398,6 +512,8 @@ export function WeekPage() {
                 setWeeks(weeksResponse.data || []);
                 setWeek(null);
                 setWeekItems([]);
+                setTasks([]);
+                setExams([]);
                 if (weeksResponse.data?.[0]?.id) {
                     navigate(`/admin/weeks/${weeksResponse.data[0].id}`, {
                         replace: true,
@@ -415,6 +531,8 @@ export function WeekPage() {
 
             if (!selectedWeek) {
                 setWeekItems([]);
+                setTasks([]);
+                setExams([]);
                 navigate("/admin/weeks", {
                     replace: true,
                     state: { error: "Failed to fetch week" },
@@ -448,10 +566,41 @@ export function WeekPage() {
 
             if (!selectedWeek?.id) {
                 setWeekItems([]);
+                setTasks([]);
+                setExams([]);
                 return;
             }
 
             setWeekItems(selectedWeek.week_items || []);
+            setTasks([]);
+            setExams([]);
+
+            const { from, to } = getWeekDateTimeRange(selectedWeek.start_date);
+            const activityData = {
+                deadline_from: from,
+                deadline_to: to,
+                faculty_id: selectedWeek.faculty?.id || undefined,
+                department_id: selectedWeek.department?.id || undefined,
+                year_id: selectedWeek.year?.id || undefined,
+            };
+
+            const [tasksResponse, examsResponse] = await Promise.all([
+                getTasks({
+                    data: activityData,
+                    includes: ["subject"],
+                    order_by: ["deadline_nearest"],
+                    limit: 1e6,
+                }).unwrap(),
+                getExams({
+                    data: activityData,
+                    includes: ["subject"],
+                    order_by: ["deadline_nearest"],
+                    limit: 1e6,
+                }).unwrap(),
+            ]);
+
+            setTasks(tasksResponse.data || []);
+            setExams(examsResponse.data || []);
         } catch (error) {
             if (weekId) {
                 navigate("/admin/weeks", {
@@ -465,6 +614,8 @@ export function WeekPage() {
             }
         }
     }, [
+        getExams,
+        getTasks,
         getWeek,
         getWeeks,
         weekId,
@@ -499,22 +650,49 @@ export function WeekPage() {
     };
 
     const weekItemsBySubject = useMemo(() => {
-        const grouped = new Map<string, WeekItemResponseDto[]>();
-        (weekItems || []).forEach((weekItem) => {
-            const material = weekItem.material;
-            const subjectId = material?.subject?.id ?? "other";
-            const subjectName = material?.subject?.name || "Other Materials";
-            const key = `${subjectId}:${subjectName}`;
-            grouped.set(key, [...(grouped.get(key) || []), weekItem]);
+        const grouped = new Map<string, SubjectSection>();
+
+        const ensureSection = (subjectId: number | string, title: string) => {
+            const key = String(subjectId);
+            const existing = grouped.get(key);
+            if (existing) return existing;
+            const section: SubjectSection = {
+                key,
+                title,
+                exams: [],
+                tasks: [],
+                weekItems: [],
+            };
+            grouped.set(key, section);
+            return section;
+        };
+
+        weekItems.forEach((weekItem) => {
+            const subjectId = weekItem.material?.subject?.id ?? "other";
+            const title = weekItem.material?.subject?.name || "Other Materials";
+            ensureSection(subjectId, title).weekItems.push(weekItem);
         });
-        return Array.from(grouped.values()).map(
-            (items) =>
-                [
-                    items[0]?.material?.subject?.name || "Other Materials",
-                    items,
-                ] as [string, WeekItemResponseDto[]],
-        );
-    }, [weekItems]);
+        exams.forEach((exam) => {
+            const subjectId = exam.subject?.id ?? "other";
+            const title = exam.subject?.name || "Other Materials";
+            ensureSection(subjectId, title).exams.push(exam);
+        });
+        tasks.forEach((task) => {
+            const subjectId = task.subject?.id ?? "other";
+            const title = task.subject?.name || "Other Materials";
+            ensureSection(subjectId, title).tasks.push(task);
+        });
+
+        return Array.from(grouped.values());
+    }, [exams, tasks, weekItems]);
+
+    const handleViewTask = (taskId: number) => {
+        navigate(buildRedirectUrl(`/admin/tasks/${taskId}`));
+    };
+
+    const handleViewExam = (examId: number) => {
+        navigate(buildRedirectUrl(`/admin/exams/${examId}`));
+    };
 
     const removeWeek = async () => {
         if (!week?.id) return;
@@ -596,20 +774,24 @@ export function WeekPage() {
                     </div>
                     {weekItemsBySubject.length > 0 ? (
                         <div className={styles.sectionsList}>
-                            {weekItemsBySubject.map(([title, items]) => (
+                            {weekItemsBySubject.map((section) => (
                                 <AccordionSection
-                                    key={title}
-                                    title={title}
-                                    weekItems={items}
+                                    key={section.key}
+                                    title={section.title}
+                                    exams={section.exams}
+                                    tasks={section.tasks}
+                                    weekItems={section.weekItems}
                                     onRefresh={fetchWeek}
                                     availableWeeks={weeks}
+                                    onViewTask={handleViewTask}
+                                    onViewExam={handleViewExam}
                                 />
                             ))}
                         </div>
                     ) : (
                         <EmptySection
                             icon="calendar"
-                            title="No materials or weeks found for this week."
+                            title="No materials, tasks, or exams found for this week."
                         />
                     )}
                 </section>

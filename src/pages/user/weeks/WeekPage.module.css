@@ -113,6 +113,43 @@
     flex: 1 1 auto;
 }
 
+.completionButton {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid var(--medium-grey);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.completionButton:disabled {
+    cursor: default;
+}
+
+.completionButtonCompleted {
+    border-color: var(--dark-grey);
+    background: var(--dark-grey);
+}
+
+.fileIconCompleted {
+    filter: grayscale(1);
+    opacity: 0.55;
+}
+
+.fileNameCompleted {
+    color: var(--medium-grey);
+    text-decoration: line-through;
+    text-decoration-color: var(--dark-grey);
+}
+
 .fileIcon {
     width: 2.5rem;
     height: 2.5rem;
@@ -171,6 +208,25 @@
 }
 
 .fileActionButton:hover {
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.fileActionMobileButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    background: var(--grey-background);
+    color: var(--dark-text);
+    cursor: pointer;
+}
+
+.fileActionMobileButton:hover {
     border-color: var(--primary-purple);
     color: var(--primary-purple);
 }
