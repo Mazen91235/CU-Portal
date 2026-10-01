@@ -2,9 +2,7 @@ import type { DepartmentStudyType } from "../entities/Department";
 import type { UserResponseDto } from "./UserDtos";
 import type { FacultyResponseDto } from "./FacultyDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
-import type { TaskResponseDto } from "./TaskDtos";
 import type { AnnouncementResponseDto } from "./AnnouncementDtos";
-import type { WeekResponseDto } from "./WeekDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type DepartmentCreateDto = {
@@ -25,9 +23,7 @@ export type DepartmentResponseDto = {
     faculty?: FacultyResponseDto | null;
     users?: UserResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
-    tasks?: TaskResponseDto[] | null;
     announcements?: AnnouncementResponseDto[] | null;
-    weeks?: WeekResponseDto[] | null;
 };
 
 export type DepartmentUpdateDto = {

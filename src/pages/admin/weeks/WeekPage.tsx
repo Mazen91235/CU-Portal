@@ -23,7 +23,6 @@ import {
     getWeekEndDate,
 } from "../../../utils/WeekHelpers";
 import ConfirmModal from "../../../components/modal/ConfirmModal";
-import { useAppSelector } from "../../../services/redux/Hooks";
 import {
     useDeleteWeekMutation,
     useLazyGetWeekQuery,
@@ -33,6 +32,7 @@ import { useLazyGetTasksQuery } from "../../../services/apis/admin/TaskAPIs";
 import { useLazyGetExamsQuery } from "../../../services/apis/admin/ExamAPIs";
 import {
     useLazyGetMaterialQuery,
+    useLazyGetMaterialsQuery,
     useUpdateMaterialMutation,
 } from "../../../services/apis/admin/MaterialAPIs";
 import type { WeekResponseDto } from "../../../types/dtos/WeekDtos";
@@ -478,7 +478,6 @@ function AccordionSection({
 export function WeekPage() {
     const { weekId: routeWeekId } = useParams();
     const navigate = useNavigate();
-    const user = useAppSelector((state) => state.user.user);
     const parsedWeekId = Number(routeWeekId);
     const weekId =
         Number.isInteger(parsedWeekId) && parsedWeekId > 0
@@ -492,6 +491,7 @@ export function WeekPage() {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [getWeek] = useLazyGetWeekQuery();
     const [getWeeks] = useLazyGetWeeksQuery();
+    const [getMaterials] = useLazyGetMaterialsQuery();
     const [getTasks] = useLazyGetTasksQuery();
     const [getExams] = useLazyGetExamsQuery();
     const [deleteWeek] = useDeleteWeekMutation();
@@ -500,11 +500,7 @@ export function WeekPage() {
         try {
             if (!weekId) {
                 const weeksResponse = await getWeeks({
-                    data: {
-                        faculty_id: user?.faculty?.id || undefined,
-                        department_id: user?.department?.id || undefined,
-                        year_id: user?.year?.id || undefined,
-                    },
+                    data: {},
                     order_by: ["start_date"],
                     descending: true,
                     limit: 1e6,
@@ -540,29 +536,12 @@ export function WeekPage() {
                 return;
             }
 
-            if (
-                selectedWeek?.faculty?.id &&
-                selectedWeek.department?.id &&
-                selectedWeek.year?.id
-            ) {
-                const scopedResponse = await getWeeks({
-                    data: {
-                        faculty_id: selectedWeek.faculty.id,
-                        department_id: selectedWeek.department.id,
-                        year_id: selectedWeek.year.id,
-                    },
-                    order_by: ["start_date"],
-                    limit: 1e6,
-                }).unwrap();
-                const scopedWeeks = scopedResponse.data || [];
-                setWeeks(
-                    scopedWeeks.some((item) => item.id === selectedWeek.id)
-                        ? scopedWeeks
-                        : [selectedWeek, ...scopedWeeks],
-                );
-            } else {
-                setWeeks([selectedWeek]);
-            }
+            const weeksResponse = await getWeeks({
+                data: {},
+                order_by: ["start_date"],
+                limit: 1e6,
+            }).unwrap();
+            setWeeks(weeksResponse.data || []);
 
             if (!selectedWeek?.id) {
                 setWeekItems([]);
@@ -571,34 +550,49 @@ export function WeekPage() {
                 return;
             }
 
-            setWeekItems(selectedWeek.week_items || []);
+            setWeekItems([]);
             setTasks([]);
             setExams([]);
 
             const { from, to } = getWeekDateTimeRange(selectedWeek.start_date);
-            const activityData = {
-                deadline_from: from,
-                deadline_to: to,
-                faculty_id: selectedWeek.faculty?.id || undefined,
-                department_id: selectedWeek.department?.id || undefined,
-                year_id: selectedWeek.year?.id || undefined,
-            };
+            const [materialsResponse, tasksResponse, examsResponse] =
+                await Promise.all([
+                    getMaterials({
+                        data: { week_id: selectedWeek.id },
+                        includes: ["subject", "attachment", "week_items.week"],
+                        order_by: ["created_at"],
+                        descending: false,
+                        limit: 1e6,
+                    }).unwrap(),
+                    getTasks({
+                        data: {
+                            deadline_from: from,
+                            deadline_to: to,
+                        },
+                        includes: ["subject"],
+                        order_by: ["deadline_nearest"],
+                        limit: 1e6,
+                    }).unwrap(),
+                    getExams({
+                        data: {
+                            deadline_from: from,
+                            deadline_to: to,
+                        },
+                        includes: ["subject"],
+                        order_by: ["deadline_nearest"],
+                        limit: 1e6,
+                    }).unwrap(),
+                ]);
 
-            const [tasksResponse, examsResponse] = await Promise.all([
-                getTasks({
-                    data: activityData,
-                    includes: ["subject"],
-                    order_by: ["deadline_nearest"],
-                    limit: 1e6,
-                }).unwrap(),
-                getExams({
-                    data: activityData,
-                    includes: ["subject"],
-                    order_by: ["deadline_nearest"],
-                    limit: 1e6,
-                }).unwrap(),
-            ]);
-
+            setWeekItems(
+                (materialsResponse.data || []).flatMap((material) =>
+                    (material.week_items || [])
+                        .filter(
+                            (weekItem) => weekItem.week?.id === selectedWeek.id,
+                        )
+                        .map((weekItem) => ({ ...weekItem, material })),
+                ),
+            );
             setTasks(tasksResponse.data || []);
             setExams(examsResponse.data || []);
         } catch (error) {
@@ -613,17 +607,7 @@ export function WeekPage() {
                 handlePopupErrors(error);
             }
         }
-    }, [
-        getExams,
-        getTasks,
-        getWeek,
-        getWeeks,
-        weekId,
-        navigate,
-        user?.faculty?.id,
-        user?.department?.id,
-        user?.year?.id,
-    ]);
+    }, [getExams, getMaterials, getTasks, getWeek, getWeeks, weekId, navigate]);
 
     useAuthQuery(fetchWeek);
 
@@ -727,11 +711,7 @@ export function WeekPage() {
             />
             <SubBanner
                 title={week ? `Week ${week.week_number ?? ""}` : "Week"}
-                description={
-                    week
-                        ? `${week.faculty?.name || ""} · ${week.department?.name || ""} · ${week.year?.year || ""}`
-                        : "View week course materials"
-                }
+                description="View week course materials"
                 linkText="Back to Weeks"
                 linkTo="/admin/weeks"
                 button={week ? "Edit Week" : undefined}

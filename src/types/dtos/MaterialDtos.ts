@@ -52,6 +52,7 @@ export type MaterialsDeleteDto = {
 export type MaterialSearchDto = {
     id?: number | null;
     material_type?: MaterialType | null;
+    week_id?: number | null;
     subject_id?: number | null;
     parent_id?: number | null;
     author_id?: number | null;

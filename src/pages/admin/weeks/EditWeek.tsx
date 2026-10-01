@@ -74,19 +74,10 @@ export function EditWeek() {
     const onSubmit = async (data: WeekFormData) => {
         if (!weekId) return;
         try {
-            const response = await getWeek({
-                week_id: Number(weekId),
-            }).unwrap();
-            const week = response.data;
-            if (!week?.faculty?.id || !week.department?.id || !week.year?.id)
-                return;
             await updateWeek({
                 week_id: Number(weekId),
                 week_number: data.week_number,
                 start_date: `${data.start_date}T00:00:00.000Z`,
-                faculty_id: week.faculty.id,
-                department_id: week.department.id,
-                year_id: week.year.id,
             }).unwrap();
             showToast("success", "Saved", "Week updated successfully");
             navigate(redirectUrl);

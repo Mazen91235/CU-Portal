@@ -2,8 +2,6 @@ import type { UserResponseDto } from "./UserDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { AnnouncementResponseDto } from "./AnnouncementDtos";
 import type { DepartmentResponseDto } from "./DepartmentDtos";
-import type { TaskResponseDto } from "./TaskDtos";
-import type { WeekResponseDto } from "./WeekDtos";
 import type { SearchDto } from "./BaseDtos";
 
 export type FacultyCreateDto = {
@@ -19,9 +17,7 @@ export type FacultyResponseDto = {
     users?: UserResponseDto[] | null;
     departments?: DepartmentResponseDto[] | null;
     announcements?: AnnouncementResponseDto[] | null;
-    tasks?: TaskResponseDto[] | null;
     subjects?: SubjectResponseDto[] | null;
-    weeks?: WeekResponseDto[] | null;
 };
 
 export type FacultyUpdateDto = {
