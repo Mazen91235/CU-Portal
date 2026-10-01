@@ -40,7 +40,9 @@ export const TaskPage = () => {
             setTask(task);
         } catch (error) {
             navigate("/user/tasks", {
-                state: { error: getErrorMessage(error) || "Failed to fetch task" },
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch task",
+                },
             });
         }
     }, [getTask, navigate, taskId]);
@@ -100,7 +102,7 @@ export const TaskPage = () => {
                     </div>
 
                     <div className={styles.sidebar}>
-                        {task.url && <SubmissionSection url={task.url} />}
+                        <SubmissionSection url={task.url} taskId={task.id} />
 
                         <QuickInfoSection
                             items={[

@@ -8,6 +8,7 @@ import { SubBanner } from "../../../components/banner/SubBanner";
 import { StatCard } from "../../../components/card/StatCard";
 import { QuickInfoSection } from "../../../components/section/QuickInfoSection";
 import { LongSection } from "../../../components/section/LongSection";
+import { SubmissionSection } from "../../../components/section/SubmissionSection";
 import useAuthQuery from "../../../hooks/useAuthQuery";
 import { getErrorMessage } from "../../../utils/ErrorHandling";
 import { formatDateTime } from "../../../utils/Formatter";
@@ -38,7 +39,9 @@ export const ExamPage = () => {
             setExam(exam);
         } catch (error) {
             navigate("/user/exams", {
-                state: { error: getErrorMessage(error) || "Failed to fetch exam" },
+                state: {
+                    error: getErrorMessage(error) || "Failed to fetch exam",
+                },
             });
         }
     }, [getExam, navigate, examId]);
@@ -124,6 +127,7 @@ export const ExamPage = () => {
                     </div>
 
                     <div className={styles.sidebar}>
+                        <SubmissionSection taskId={exam.id} />
                         <QuickInfoSection
                             items={[
                                 { label: "Type:", value: "Exam" },
