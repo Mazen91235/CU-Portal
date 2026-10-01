@@ -93,24 +93,9 @@ export const formatCalendarDate = (
 ): string => {
     if (!dateString) return "N/A";
 
-    if (typeof dateString === "string") {
-        const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (match) {
-            const date = new Date(
-                Number(match[1]),
-                Number(match[2]) - 1,
-                Number(match[3]),
-            );
-            return date.toLocaleDateString([], {
-                weekday: weekDay ? "short" : undefined,
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-            });
-        }
-    }
+    const date = formatDateTime(dateString, true);
 
-    return formatDate(dateString, weekDay);
+    return date ? formatDate(date, weekDay) : "N/A";
 };
 
 export const formatTime = (dateTimeString?: string | Date | null): string => {
