@@ -1,6 +1,7 @@
 import type { UserResponseDto } from "./UserDtos";
 import type { SubjectResponseDto } from "./SubjectDtos";
 import type { AttachmentResponseDto } from "./AttachmentDtos";
+import type { UserCompletionResponseDto } from "./UserCompletionDtos";
 import type { SearchDto } from "./BaseDtos";
 import type { TaskDetails } from "../entities/Task";
 
@@ -25,6 +26,8 @@ export type TaskResponseDto = {
     author?: UserResponseDto | null;
     subject?: SubjectResponseDto | null;
     attachments?: AttachmentResponseDto[] | null;
+    completed_by_users?: UserResponseDto[] | null;
+    user_completions?: UserCompletionResponseDto[] | null;
 };
 
 export type TaskUpdateDto = {
