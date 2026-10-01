@@ -343,15 +343,20 @@ function WeeklyActivityCard({
                 </div>
 
                 <div className={styles.fileActionsMobile}>
-                    <button
-                        type="button"
-                        className={styles.fileActionMobileButton}
-                        onClick={onView}
-                        aria-label="View"
-                        title="View"
-                    >
-                        <i className="fas fa-eye" aria-hidden="true" />
-                    </button>
+                    <MaterialActionsDropdown
+                        onShare={() => {}}
+                        onMove={() => {}}
+                        onCopy={() => {}}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                        onView={onView}
+                        showShare={false}
+                        showMove={false}
+                        showCopy={false}
+                        showEdit={false}
+                        showDelete={false}
+                        showDownload={false}
+                    />
                 </div>
             </div>
         </article>
