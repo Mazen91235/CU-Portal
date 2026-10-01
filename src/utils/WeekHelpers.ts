@@ -1,6 +1,27 @@
 import type { WeekResponseDto } from "../types/dtos/WeekDtos";
 import { formatDate, formatDateTime } from "./Formatter";
 
+export const getWeekDateTimeRange = (startDate?: string | null) => {
+    if (!startDate) {
+        return { from: undefined, to: undefined };
+    }
+
+    const dateKey = startDate.slice(0, 10);
+    const start = new Date(`${dateKey}T00:00:00`);
+    if (Number.isNaN(start.getTime())) {
+        return { from: undefined, to: undefined };
+    }
+
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+
+    return {
+        from: start.toISOString(),
+        to: end.toISOString(),
+    };
+};
+
 export const getWeekEndDate = (startDate?: string | null) => {
     if (!startDate) return null;
     const date = new Date(formatDateTime(startDate, true));

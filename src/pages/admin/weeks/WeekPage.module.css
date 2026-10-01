@@ -205,6 +205,25 @@
     color: var(--primary-purple);
 }
 
+.fileActionMobileButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--primary-border-radius);
+    background: var(--grey-background);
+    color: var(--dark-text);
+    cursor: pointer;
+}
+
+.fileActionMobileButton:hover {
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
 .deleteActionButton {
     color: #dc2626;
 }

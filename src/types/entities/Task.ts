@@ -1,6 +1,7 @@
 import type { User } from "./User";
 import type { Subject } from "./Subject";
 import type { Attachment } from "./Attachment";
+import type { UserCompletion } from "./UserCompletion";
 
 export type LinkData = {
     title: string;
@@ -34,4 +35,6 @@ export type Task = {
     author_id?: number;
     author?: User | null;
     attachments?: Attachment[] | null;
+    completed_by_users?: User[] | null;
+    user_completions?: UserCompletion[] | null;
 };

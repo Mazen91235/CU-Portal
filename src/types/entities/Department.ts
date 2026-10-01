@@ -1,9 +1,7 @@
 import type { Faculty } from "./Faculty";
 import type { User } from "./User";
 import type { Subject } from "./Subject";
-import type { Task } from "./Task";
 import type { Announcement } from "./Announcement";
-import type { Week } from "./Week";
 import type { Event } from "./Event";
 
 export type Department = {
@@ -18,9 +16,7 @@ export type Department = {
     faculty?: Faculty | null;
     users?: User[] | null;
     subjects?: Subject[] | null;
-    tasks?: Task[] | null;
     announcements?: Announcement[] | null;
-    weeks?: Week[] | null;
     events?: Event[] | null;
 };
 

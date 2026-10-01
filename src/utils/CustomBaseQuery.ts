@@ -68,6 +68,13 @@ const getInvalidatedModules = (module: string) => {
         modules.add("calendar");
     }
 
+    if (["course", "subject"].some((value) => module.includes(value))) {
+        modules.add("material");
+        modules.add("task");
+        modules.add("exam");
+        modules.add("announcement");
+    }
+
     if (module.includes("auth")) {
         modules.add("user");
     }

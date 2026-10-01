@@ -20,6 +20,7 @@ import { DepartmentAPI } from "../apis/user/DepartmentAPIs";
 import { YearAPI } from "../apis/user/YearAPIs";
 import { EventAPI } from "../apis/user/EventAPIs";
 import { EventOrganizerAPI } from "../apis/user/EventOrganizerAPIs";
+import { UserCompletionAPI } from "../apis/user/UserCompletionAPIs";
 
 import { AdminCourseAPI } from "../apis/admin/CourseAPIs";
 import { AdminDepartmentAPI } from "../apis/admin/DepartmentAPIs";
@@ -65,6 +66,7 @@ const store = configureStore({
     [YearAPI.reducerPath]: YearAPI.reducer,
     [EventAPI.reducerPath]: EventAPI.reducer,
     [EventOrganizerAPI.reducerPath]: EventOrganizerAPI.reducer,
+    [UserCompletionAPI.reducerPath]: UserCompletionAPI.reducer,
     [WeekAPI.reducerPath]: WeekAPI.reducer,
     [AdminAnnouncementAPI.reducerPath]: AdminAnnouncementAPI.reducer,
     [AdminCourseAPI.reducerPath]: AdminCourseAPI.reducer,
@@ -103,6 +105,7 @@ const store = configureStore({
       YearAPI.middleware,
       EventAPI.middleware,
       EventOrganizerAPI.middleware,
+      UserCompletionAPI.middleware,
       WeekAPI.middleware,
       AdminAnnouncementAPI.middleware,
       AdminCourseAPI.middleware,
