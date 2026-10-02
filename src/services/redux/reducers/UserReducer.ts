@@ -11,8 +11,6 @@ import { CourseAPI } from "../../apis/user/CourseAPIs";
 
 const initialState = {
     user: null as UserResponseDto | null,
-    isProcessing: false,
-    pendingRequests: 0,
     google_access_token: null as string | null,
     permissions: null as string[] | null,
 };
@@ -35,40 +33,6 @@ const UserSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(
-            AuthenticateAPI.endpoints.isLoggedIn.matchPending,
-            (state) => {
-                state.pendingRequests += 1;
-                state.isProcessing = true;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.isLoggedIn.matchFulfilled,
-            (state) => {
-                state.pendingRequests = Math.max(
-                    0,
-                    state.pendingRequests - 1,
-                );
-                state.isProcessing = state.pendingRequests > 0;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.isLoggedIn.matchRejected,
-            (state) => {
-                state.pendingRequests = Math.max(
-                    0,
-                    state.pendingRequests - 1,
-                );
-                state.isProcessing = state.pendingRequests > 0;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.logout.matchPending,
-            (state) => {
-                state.pendingRequests += 1;
-                state.isProcessing = true;
-            },
-        );
-        builder.addMatcher(
             AuthenticateAPI.endpoints.logout.matchFulfilled,
             (state, { payload }) => {
                 if (payload.success === true) {
@@ -76,21 +40,6 @@ const UserSlice = createSlice({
                     state.permissions = null;
                     state.google_access_token = null;
                 }
-                state.pendingRequests = Math.max(
-                    0,
-                    state.pendingRequests - 1,
-                );
-                state.isProcessing = state.pendingRequests > 0;
-            },
-        );
-        builder.addMatcher(
-            AuthenticateAPI.endpoints.logout.matchRejected,
-            (state) => {
-                state.pendingRequests = Math.max(
-                    0,
-                    state.pendingRequests - 1,
-                );
-                state.isProcessing = state.pendingRequests > 0;
             },
         );
         builder.addMatcher(

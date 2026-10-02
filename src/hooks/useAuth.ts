@@ -24,7 +24,6 @@ export default function useAuth({
     const isLoggedIn = useLogin();
     const checkCrawler = useCheckCrawler();
     const user = useAppSelector((state) => state.user.user);
-    const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const permissions = useAppSelector((state) => state.user.permissions);
     const { pathname, state } = useLocation();
     useEffect(() => {
@@ -40,7 +39,6 @@ export default function useAuth({
                 });
                 return;
             }
-            if (isProcessing) return;
             const loggedIn = await isLoggedIn();
             try {
                 if (loggedIn && !permission && reverse) {
@@ -85,7 +83,6 @@ export default function useAuth({
         permissions,
         pathname,
         state,
-        isProcessing,
         navigate,
         logout,
         isLoggedIn,
