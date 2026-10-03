@@ -669,8 +669,8 @@ export function WeekPage() {
 
         return [
             {
-                key: "deliverables",
-                title: "Deliverables & Deadlines",
+                key: "deadlines",
+                title: "Deadlines",
                 exams,
                 tasks,
                 weekItems: [],
