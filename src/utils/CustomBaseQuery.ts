@@ -28,6 +28,8 @@ const REQUEST_CACHE_TTL = 5_000;
 const CACHE_STORAGE_PREFIX = "cu-portal-api-cache:";
 const CACHE_INVALIDATIONS_STORAGE_KEY = "cu-portal-api-cache-invalidations";
 
+const ENABLE_CACHE = true;
+
 const inFlightRequests = new Map<string, Promise<unknown>>();
 
 const getRequest = (args: string | FetchArgs) =>
@@ -123,6 +125,8 @@ const removeExpiredCacheEntries = () => {
 const readCachedResponse = (cacheKey: string) => {
     if (!canUseLocalStorage()) return undefined;
 
+    if (!ENABLE_CACHE) return undefined;
+
     const storageKey = getCacheStorageKey(cacheKey);
 
     try {
@@ -154,6 +158,8 @@ const writeCachedResponse = (
     ttl: number,
 ) => {
     if (!canUseLocalStorage()) return;
+
+    if (!ENABLE_CACHE) return;
 
     const storageKey = getCacheStorageKey(cacheKey);
     const value = JSON.stringify({
@@ -361,6 +367,12 @@ const getCacheKey = async (args: string | FetchArgs, baseUrl: string) => {
     return `${method}:${requestPath}:${await serializeBody(request.body)}`;
 };
 
+const nonCacheableGetEndpoints = new Set([
+    "logout",
+    "changeGoogleAccount",
+    "getTokenDetails",
+]);
+
 export const clearCustomBaseQueryCache = () => {
     clearAllGetCache();
 };
@@ -418,21 +430,21 @@ export const customBaseQuery = (
         const request = getRequest(args);
         const method = String(request.method || "GET").toUpperCase();
         const isGetRequest = method === "GET";
+        const shouldCache = !nonCacheableGetEndpoints.has(api.endpoint);
         const cacheKey = await getCacheKey(args, config?.baseUrl || "");
         const requestUrl = getUrl(args, config?.baseUrl || "");
-        const isLoginStatusRequest = requestUrl.pathname.endsWith(
-            "/is-logged-in",
-        );
+        const isLoginStatusRequest =
+            requestUrl.pathname.endsWith("/is-logged-in");
         const module = extractModuleFromPath(requestUrl.pathname);
         const invalidationTimeAtStart = getModuleInvalidationTime(module);
 
         const cachedResponse = readCachedResponse(cacheKey);
         if (cachedResponse) {
-            return ("result" in cachedResponse
-                ? cachedResponse.result
-                : { data: cachedResponse.data }) as Awaited<
-                ReturnType<typeof baseQuery>
-            >;
+            return (
+                "result" in cachedResponse
+                    ? cachedResponse.result
+                    : { data: cachedResponse.data }
+            ) as Awaited<ReturnType<typeof baseQuery>>;
         }
 
         const existingRequest = inFlightRequests.get(cacheKey);
@@ -456,9 +468,11 @@ export const customBaseQuery = (
             const result = await requestPromise;
 
             if (
-                "error" in result ||
-                !isGetRequest ||
-                getModuleInvalidationTime(module) === invalidationTimeAtStart
+                shouldCache &&
+                ("error" in result ||
+                    !isGetRequest ||
+                    getModuleInvalidationTime(module) ===
+                        invalidationTimeAtStart)
             ) {
                 writeCachedResponse(
                     cacheKey,
@@ -471,14 +485,9 @@ export const customBaseQuery = (
                 );
             }
 
-            if (!("error" in result) && !isGetRequest) {
-                if (api.endpoint === "logout") {
-                    clearAllGetCache();
-                } else if (api.endpoint === "changeGoogleAccount") {
-                    invalidateGetCacheByModule("user");
-                } else {
-                    invalidateGetCacheByModule(module);
-                }
+            if (!("error" in result)) {
+                if (api.endpoint === "logout") clearAllGetCache();
+                else if (!isGetRequest) invalidateGetCacheByModule(module);
             }
 
             return result;
