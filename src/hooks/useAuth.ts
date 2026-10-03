@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAppSelector } from "../services/redux/Hooks";
+import { useAppSelector, useAppDispatch } from "../services/redux/Hooks";
+import { setIsProcessing } from "../services/redux/reducers/UserReducer";
 import {
     useGetGoogleStoredTokenMutation,
     useLazyGetGoogleAccessTokenQuery,
@@ -23,13 +24,16 @@ export default function useAuth({
     const [logout] = useLazyLogoutQuery();
     const isLoggedIn = useLogin();
     const checkCrawler = useCheckCrawler();
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.user);
     const permissions = useAppSelector((state) => state.user.permissions);
+    const isProcessing = useAppSelector((state) => state.user.isProcessing);
     const { pathname, state } = useLocation();
     useEffect(() => {
         (async () => {
             if (checkCrawler()) return;
             if (state?.isProcessing) {
+                if (isProcessing) dispatch(setIsProcessing(false));
                 navigate(pathname, {
                     state: {
                         ...state,
@@ -39,6 +43,7 @@ export default function useAuth({
                 });
                 return;
             }
+            if (isProcessing) return;
             const loggedIn = await isLoggedIn();
             try {
                 if (loggedIn && !permission && reverse) {
@@ -70,7 +75,7 @@ export default function useAuth({
                     }
                 }
             } catch {
-                if (shouldNavigate)
+                if (shouldNavigate && !isProcessing)
                     navigate("/login", {
                         state: {
                             error: "You must be logged in to access this resource.",
@@ -83,6 +88,8 @@ export default function useAuth({
         permissions,
         pathname,
         state,
+        isProcessing,
+        dispatch,
         navigate,
         logout,
         isLoggedIn,
