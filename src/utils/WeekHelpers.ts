@@ -13,7 +13,7 @@ export const getWeekDateTimeRange = (startDate?: string | null) => {
     }
 
     const end = new Date(start);
-    end.setDate(end.getDate() + 6);
+    end.setDate(end.getDate() + 13);
     end.setHours(23, 59, 59, 999);
 
     return {

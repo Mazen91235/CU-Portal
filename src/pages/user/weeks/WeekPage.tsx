@@ -326,6 +326,9 @@ function WeeklyActivityCard({
                             )}
                         </span>
                         <span className={styles.fileMeta}>
+                            Subject: {item.subject?.name || "Unknown Subject"}
+                        </span>
+                        <span className={styles.fileMeta}>
                             Due: {formatDateTime(item.deadline)}
                         </span>
                     </div>
@@ -386,6 +389,10 @@ function AccordionSection({
 }) {
     const [open, setOpen] = useState(true);
     const totalCount = exams.length + tasks.length + weekItems.length;
+    const activities: WeeklyActivity[] = [
+        ...exams.map((exam) => ({ type: "exam" as const, item: exam })),
+        ...tasks.map((task) => ({ type: "task" as const, item: task })),
+    ];
     const remainingCount = [
         ...exams.map((exam) => ({ type: "exam" as const, item: exam })),
         ...tasks.map((task) => ({ type: "task" as const, item: task })),
@@ -421,15 +428,11 @@ function AccordionSection({
 
             {open && totalCount > 0 && (
                 <div className={styles.sectionBody}>
-                    {exams.map((exam) => {
-                        const activity: WeeklyActivity = {
-                            type: "exam",
-                            item: exam,
-                        };
+                    {activities.map((activity) => {
                         const key = getCompletionKey(activity);
                         return (
                             <WeeklyActivityCard
-                                key={`exam-${exam.id}`}
+                                key={`${activity.type}-${activity.item.id}`}
                                 activity={activity}
                                 completion={key ? completions[key] : undefined}
                                 pending={
@@ -439,30 +442,12 @@ function AccordionSection({
                                     onToggleCompletion(activity)
                                 }
                                 onView={() => {
-                                    if (exam.id != null) onViewExam(exam.id);
-                                }}
-                            />
-                        );
-                    })}
-                    {tasks.map((task) => {
-                        const activity: WeeklyActivity = {
-                            type: "task",
-                            item: task,
-                        };
-                        const key = getCompletionKey(activity);
-                        return (
-                            <WeeklyActivityCard
-                                key={`task-${task.id}`}
-                                activity={activity}
-                                completion={key ? completions[key] : undefined}
-                                pending={
-                                    key ? pendingCompletionKeys.has(key) : false
-                                }
-                                onToggleCompletion={() =>
-                                    onToggleCompletion(activity)
-                                }
-                                onView={() => {
-                                    if (task.id != null) onViewTask(task.id);
+                                    if (activity.item.id == null) return;
+                                    if (activity.type === "exam") {
+                                        onViewExam(activity.item.id);
+                                    } else {
+                                        onViewTask(activity.item.id);
+                                    }
                                 }}
                             />
                         );
@@ -543,18 +528,19 @@ export default function WeekMaterials({
             const title = weekItem.material?.subject?.name || "Other Materials";
             ensureSection(subjectId, title).weekItems.push(weekItem);
         });
-        exams.forEach((exam) => {
-            const subjectId = exam.subject?.id ?? "other";
-            const title = exam.subject?.name || "Other Materials";
-            ensureSection(subjectId, title).exams.push(exam);
-        });
-        tasks.forEach((task) => {
-            const subjectId = task.subject?.id ?? "other";
-            const title = task.subject?.name || "Other Materials";
-            ensureSection(subjectId, title).tasks.push(task);
-        });
+        const materialSections = Array.from(grouped.values());
+        if (exams.length === 0 && tasks.length === 0) return materialSections;
 
-        return Array.from(grouped.values());
+        return [
+            {
+                key: "deliverables",
+                title: "Deliverables & Deadlines",
+                exams,
+                tasks,
+                weekItems: [],
+            },
+            ...materialSections,
+        ];
     }, [exams, tasks, weekItems]);
 
     return (
