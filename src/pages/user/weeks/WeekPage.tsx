@@ -723,6 +723,7 @@ export function WeekPage() {
             try {
                 const completionsResponse = await getUserCompletions({
                     data: {},
+                    limit: 1e6,
                 }).unwrap();
                 const completionMap: CompletionMap = {};
                 (completionsResponse.data || []).forEach((completion) => {
