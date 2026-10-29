@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { isPlatformSuspended } from "../../utils/PlatformStatus";
 import styles from "./Footer.module.css";
 
 export const Footer = ({ compact = false }: { compact?: boolean }) => {
@@ -28,14 +29,18 @@ export const Footer = ({ compact = false }: { compact?: boolean }) => {
                         >
                             Our team
                         </button>
-                        <button
-                            className={styles.footerLink}
-                            onClick={() =>
-                                handleFooterLinkClick("contact-form-section")
-                            }
-                        >
-                            Contact Us
-                        </button>
+                        {!isPlatformSuspended() && (
+                            <button
+                                className={styles.footerLink}
+                                onClick={() =>
+                                    handleFooterLinkClick(
+                                        "contact-form-section",
+                                    )
+                                }
+                            >
+                                Contact Us
+                            </button>
+                        )}
                     </div>
                 </>
             )}
