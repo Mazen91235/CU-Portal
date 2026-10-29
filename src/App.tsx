@@ -85,6 +85,8 @@ import { ReleasePage as UserReleasePage } from "./pages/user/releases/ReleasePag
 import { PrivacyPolicyPage } from "./pages/landing/terms/PrivacyPolicyPage";
 import { TermsOfServicePage } from "./pages/landing/terms/TermsOfServicePage";
 import { TeamPage } from "./pages/landing/TeamPage";
+import { SuspendedPage } from "./pages/landing/SuspendedPage";
+import { useSuspensionRedirect } from "./hooks/useSuspensionRedirect";
 
 import "./App.css";
 import { WeekPage as AdminWeekPage } from "./pages/admin/weeks/WeekPage";
@@ -99,6 +101,7 @@ function App() {
     useRouteMessages();
     useValidateUserLevel();
     usePageLoading(true);
+    useSuspensionRedirect();
     const pushNotifications = usePushNotifications();
     return (
         <>
@@ -120,6 +123,7 @@ function App() {
                     element={<TermsOfServicePage />}
                 />
                 <Route path="our-team" element={<TeamPage />} />
+                <Route path="suspended" element={<SuspendedPage />} />
                 <Route path="" element={<ProtectedRoute reverse={true} />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route

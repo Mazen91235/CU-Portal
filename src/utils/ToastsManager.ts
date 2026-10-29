@@ -1,4 +1,5 @@
 import type { ToastData, ToastListener } from "../types/props/ToastProps";
+import { isPlatformSuspended } from "./PlatformStatus";
 
 let toastListeners: ToastListener[] = [];
 
@@ -14,6 +15,8 @@ export function showToast(
     title: string,
     message: string
 ): void {
+    if (isPlatformSuspended()) return;
+
     const toast: ToastData = {
         id: `${Date.now()}-${Math.random()}`,
         type,
