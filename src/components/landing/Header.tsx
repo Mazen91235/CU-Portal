@@ -8,15 +8,17 @@ export const Header = ({
     activeSection,
     setActiveSection,
     variant = "landing",
+    showActions = true,
 }: {
     activeSection: string;
     setActiveSection: React.Dispatch<React.SetStateAction<string>>;
-    variant?: "landing" | "team";
+    variant?: "landing" | "team" | "suspended";
+    showActions?: boolean;
 }) => {
     const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const user = useAppSelector((state) => state.user.user);
-    const isTeamPage = variant === "team";
+    const isTeamPage = variant !== "landing";
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -67,7 +69,9 @@ export const Header = ({
                             </Link>
                             <Link
                                 to="/our-team"
-                                className={`${styles.navLink} ${styles.active}`}
+                                className={`${styles.navLink} ${
+                                    variant === "team" ? styles.active : ""
+                                }`}
                             >
                                 Our Team
                             </Link>
@@ -148,7 +152,7 @@ export const Header = ({
                     )}
                 </nav>
                 <div className={styles.headerRight}>
-                    {!user ? (
+                    {showActions && (!user ? (
                         <>
                             <Link to="/login" className={styles.loginBtn}>
                                 Login
@@ -161,7 +165,7 @@ export const Header = ({
                         <Link to="/user" className={styles.dashboardBtn}>
                             Dashboard
                         </Link>
-                    )}
+                    ))}
                     <button
                         className={`${styles.mobileMenuToggle} ${
                             sidebarOpen ? styles.menuOpen : ""
@@ -199,7 +203,11 @@ export const Header = ({
                             <li>
                                 <Link
                                     to="/our-team"
-                                    className={`${styles.sidebarLink} ${styles.active}`}
+                                    className={`${styles.sidebarLink} ${
+                                        variant === "team"
+                                            ? styles.active
+                                            : ""
+                                    }`}
                                     onClick={closeSidebar}
                                 >
                                     Our Team
@@ -292,8 +300,8 @@ export const Header = ({
                             </li>
                         </>
                     )}
-                    <hr />
-                    {!user ? (
+                    {showActions && <hr />}
+                    {showActions && (!user ? (
                         <>
                             <li>
                                 <Link
@@ -321,7 +329,7 @@ export const Header = ({
                                 Dashboard
                             </Link>
                         </li>
-                    )}
+                    ))}
                 </ul>
             </nav>
         </>

@@ -6,6 +6,7 @@ import type {
     FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query";
 import { getTimeout, mutationTimeout } from "./APIHandling";
+import { isPlatformSuspended } from "./PlatformStatus";
 
 type CustomBaseQuery = BaseQueryFn<
     string | FetchArgs,
@@ -425,6 +426,8 @@ export const customBaseQuery = (
     });
 
     return async (args, api, extraOptions) => {
+        if (isPlatformSuspended()) return { data: undefined };
+
         removeExpiredCacheEntries();
 
         const request = getRequest(args);
