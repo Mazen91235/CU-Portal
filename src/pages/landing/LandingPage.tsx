@@ -10,8 +10,9 @@ import { Team } from "../../components/landing/Team";
 import { Footer } from "../../components/landing/Footer";
 import { PageSeo } from "../../components/PageSeo";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import styles from "./LandingPage.module.css";
 import { usePageLoading } from "../../hooks/usePageLoading";
+import { isPlatformSuspended } from "../../utils/PlatformStatus";
+import styles from "./LandingPage.module.css";
 
 export const LandingPage = () => {
     const [activeSection, setActiveSection] = useState("hero");
@@ -38,7 +39,7 @@ export const LandingPage = () => {
                 <HowItWorks setSections={setSections} />
                 <Snapshots setSections={setSections} />
                 <BeginningStory setSections={setSections} />
-                <ContactForm />
+                {!isPlatformSuspended() && <ContactForm />}
                 <Team />
                 <Footer />
             </div>
